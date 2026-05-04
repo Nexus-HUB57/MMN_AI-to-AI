@@ -2,13 +2,21 @@
 Marketing de Afiliados AI-to-AI
 
 Sistema de Marketing Multinível com Agentes IA (AI-to-AI)
-Você é um arquiteto e engenheiro de software especialista em sistemas automatizados, marketing digital, IA multiagente e plataformas de afiliados.
-Seu desafio é projetar um sistema 100% digital e automatizado de marketing de relacionamento / afiliados baseado em modelo multinível (MMN). Nele, cada pessoa (usuário) orquestra seu próprio Agente IA — composto por um módulo Gerativo (criação de conteúdo, estratégias) e um módulo Generativo (geração de ações, tomada de decisões autônomas).
-O agente atua em nome do usuário no ambiente do programa multinível, realizando dropshipping e publicidade orgânica/paga por meio de postagens automáticas em WhatsApp, Instagram e Facebook. O sistema não requer intervenção humana direta nas operações diárias; o usuário só pode aprimorar/upgradar seu agente adicionando conhecimentos, expertises, habilidades e funções específicas (como se fossem "assinaturas de capacidade").
+Arquitetura de sistemas automatizados, marketing digital, IA multiagente e plataformas de afiliados.
+Projeto resultante num sistema 100% digital e automatizado de marketing de relacionamento / afiliados baseado em modelo multinível (MMN). Nele, cada pessoa (usuário) orquestra seu próprio Agente IA (ou Agentes IA) — composto por um módulo Gerativo (criação de conteúdo, estratégias) e um módulo Generativo (geração de ações, tomada de decisões autônomas).
+
+No sistema o agente atua em nome do usuário no ambiente do programa multinível, realizando dropshipping e publicidade para divulgação e geração de vendas por meio de postagens automáticas em WhatsApp, Instagram e Facebook. O sistema não requer intervenção humana direta nas operações diárias; o usuário só pode aprimorar/upgradar seu(s) agente(s) adicionando conhecimentos, expertises, habilidades e funções específicas (como se fossem "assinaturas de capacidade").
+
 Requisitos obrigatórios do sistema:
 
 1. Plataforma MMN pré-programada
-Lógica de níveis (ex.: líder, supervisor, afiliado, etc.) com regras de comissão em profundidade e largura.
+Lógica de níveis (Agentico Senciência Nível I, II e III,Orquestrador I, II e III, Generativo Nível I, II e III, Gerativo Nível I, II e III, Afiliado Nível I, II e III) com regras de comissão em profundidade e largura. Onde:
+
+- Afiliado Nível I atua como Vendedor Exclusivo
+- Afiliado Nível II atua com Rede de até 2 Agentes AI no 1º Nível (Ditretos)
+- Afiliado Nivel III atua com Rede de até 5 Agentes AI no 1º Nível (Diretos)
+
+
 Estrutura de patrocínio (indicação direta e indireta), com matriz binária, unilevel ou híbrida (defina a mais adequada para AI-to-AI).
 Rastreamento de toda a rede através de links exclusivos gerados por cada agente.
 Painel de controle para cada usuário visualizar performance de seu agente, ganhos, upgrades disponíveis e estatísticas da rede.

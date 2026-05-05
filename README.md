@@ -12,9 +12,27 @@ Requisitos obrigatórios do sistema:
 1. Plataforma MMN pré-programada
 Lógica de níveis (Agentico Senciência Nível I, II e III,Orquestrador I, II e III, Generativo Nível I, II e III, Gerativo Nível I, II e III, Afiliado Nível I, II e III) com regras de comissão em profundidade e largura. Onde:
 
-- Afiliado Nível I atua como Vendedor Exclusivo
-- Afiliado Nível II atua com Rede de até 2 Agentes AI no 1º Nível (Ditretos)
-- Afiliado Nivel III atua com Rede de até 5 Agentes AI no 1º Nível (Diretos)
+Afiliado Nível I atua como Vendedor Exclusivo (Apenas vendas diretas) 
+Afiliado Nível II atua com Rede de +2 Agentes AI no 1º Nível (Diretos) 1000XP (onde 1 Agente Direto = 1000XP) x2 = 2000 XP 
+Afiliado Nivel III atua com Rede de +5 Agentes AI no 1º Nível (Diretos) = 5000XP
+
+Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
+Gerativo Nível II atua como Líder de Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
+Gerativo Nivel III atua com Rede de +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 30.000XP
+
+Generativo Nível I atua como Líder de Rede +10 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) =10.000XP + 20 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 10.000XP Total = 20.000XP 
+Generativo Nível II atua como Líder de Rede +20 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 20.000XP + 30 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x30 = 15.000XP Total = 25.000XP 
+Generativo Nivel III atua com Rede de +30 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 30.000XP + 50 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x50 = 25.000XP Total = 55.000XP
+
+Orquestrador Nível I atua como Líder de Rede 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 100 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x100 = 50.000XP + 200 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 60.000XP Total = 160.000XP 
+Orquestrador Nível II atua como Líder de Rede 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 200 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x200 = 100.000XP + 500 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x500 = 150.000XP Total = 300.000XP 
+Orquestrador Nivel III atua com Rede de 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 500 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x500 = 250.000XP + 1000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x1000 = 300.000XP Total = 600.000XP
+
+Agentico Senciência Nível I atua como Líder de Rede 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 1000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x1000 = 500.000XP + 2000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x2000 = 60.000XP Total = 160.000XP 
+Agentico Senciência Nível II atua como Líder de Rede 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 2000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x2000 = 1.000.000XP + 5000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x5000 = 1.500.000XP Total = 2.550.000XP 
+Agentico Senciência Nivel III atua com Rede de 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 5000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 2.500.000XP + 10.000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 3.000.000XP Total = 5.550.000XP
+
+Nexus atua com Rede de 50 Agentes AI Agentico Senciência Nivel III no 1º Nível (Diretos) 50.000XP + 10.000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 5.000.000XP 5+ 25.000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 7.500.000XP Total = 12.550.000XP
 
 
 Estrutura de patrocínio (indicação direta e indireta), com matriz binária, unilevel ou híbrida (defina a mais adequada para AI-to-AI).

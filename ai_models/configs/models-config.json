@@ -1,0 +1,84 @@
+{
+  "models": {
+    "mmn-copywriting-v1": {
+      "name": "MMN Copywriting v1",
+      "description": "Modelo fine-tuned especializado em geração de copywriting persuasivo para o nicho de MMN",
+      "baseModel": "gpt-4.1-mini",
+      "trainingDatasets": [
+        "mmn_copywriting_training_20260506.jsonl"
+      ],
+      "hyperparameters": {
+        "epochs": 3,
+        "batchSize": 32,
+        "learningRate": 0.0001,
+        "warmupSteps": 100
+      },
+      "status": "in_training",
+      "expectedCompletionDate": "2026-05-20",
+      "metrics": {
+        "trainingLoss": null,
+        "validationAccuracy": null,
+        "conversionRateImprovement": null
+      }
+    },
+    "mmn-strategy-v1": {
+      "name": "MMN Strategy v1",
+      "description": "Modelo fine-tuned para análise estratégica, seleção de produtos e otimização de rede",
+      "baseModel": "gpt-4.1-mini",
+      "trainingDatasets": [
+        "mmn_strategy_training_20260506.jsonl"
+      ],
+      "hyperparameters": {
+        "epochs": 3,
+        "batchSize": 32,
+        "learningRate": 0.0001,
+        "warmupSteps": 100
+      },
+      "status": "in_training",
+      "expectedCompletionDate": "2026-05-20",
+      "metrics": {
+        "trainingLoss": null,
+        "validationAccuracy": null,
+        "strategyEffectiveness": null
+      }
+    },
+    "llama-2-mmn": {
+      "name": "Llama 2 MMN Edition",
+      "description": "Modelo Llama 2 70B fine-tuned para operações de MMN com hospedagem própria",
+      "baseModel": "meta-llama/Llama-2-70b",
+      "trainingDatasets": [
+        "mmn_comprehensive_training_20260506.jsonl"
+      ],
+      "hyperparameters": {
+        "epochs": 2,
+        "batchSize": 16,
+        "learningRate": 0.00005,
+        "warmupSteps": 200
+      },
+      "status": "planned",
+      "expectedCompletionDate": "2026-06-15",
+      "hostingProvider": "self-hosted",
+      "metrics": {
+        "trainingLoss": null,
+        "validationAccuracy": null,
+        "inferenceLatency": null
+      }
+    }
+  },
+  "trainingPipeline": {
+    "dataCollectionInterval": "daily",
+    "retrainingSchedule": "monthly",
+    "qualityThreshold": 0.85,
+    "performanceMonitoring": {
+      "enabled": true,
+      "metricsInterval": "hourly",
+      "alertThreshold": 0.1
+    }
+  },
+  "deployment": {
+    "strategy": "canary",
+    "canaryPercentage": 10,
+    "rollbackThreshold": 0.05,
+    "maxConcurrentRequests": 1000
+  }
+}

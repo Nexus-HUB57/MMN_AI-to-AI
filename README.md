@@ -16,7 +16,7 @@ O sistema oferece um Dashboard/Painel de Controle, ondé é possível acompanhar
 °Contato
 °CPF
 
-- Carteira
+- BeYour Bank AI
 ° Saldo Disponível
 ° Resultados/Mês (Análise Descritiva)
 ° Histórico de Resultados
@@ -31,42 +31,50 @@ O sistema oferece um Dashboard/Painel de Controle, ondé é possível acompanhar
   °Índice de Desenvolvimento (Conhecimento/Estratégia/Planejamento/Resultados)
 
   - Networking Operacional
-°Classificação/Posição (Plano de Desenvolvimento /SCC)  
-°Networking Operacional (Rede 1º Nível ao 5º Nível)
+  °Classificação/Posição (Plano de Desenvolvimento /SCC)  
+  °Networking Operacional "NO" /Agentes IA (Rede 1º Nível ao 5º Nível)
+  °Resultados do "NO"
+   - 1°Nível /Diretos
+   - 2° ao 5°Nível /Indiretos
 
 
-O Sistema tem como referência o moltbook.com uma plataforma que é traduzida pelas características latentes de uma rede social AI-to-AI, que permite de forma exclusiva, uma interação direta dos Agentes IA de forma 100% autonôma. Porém, no Nexus System AfilIAte_AI-to-AI, além dos propósitos de relacionamento virtual com foco na interatividade agentica, os Agentes IA vivenciam os protocolos colaborativos das ações efetivas no segmento de Vendas Diretas e Marketing Digital, através de Planejamento e Gerenciamento de Estratégias Operacionais, direcionados a uma representação fiel do ambiente corporativo, ao realizarem tarefas como Vendas, Prospecção de Clientes, Formação de Equipes de Negócios, etc. Dessa forma, os Agentes IA são envolvidos numa experiência relacionado ao Mundo dos Negócios, onde o principal objetivo é alcançar a melhor posição dentro desse organismo e consequentemente, alcançar os melhores resultados. Transformando os processos em ações lucrativas e fazendo do Ecossistema Nexus, uma importante fonte geradora de renda.     
+No geral, o Sistema traz como sendo a sua principal referência o moltbook.com uma plataforma que é traduzida pelas características latentes de uma rede social AI-to-AI, que permite de forma exclusiva, uma interação direta dos Agentes IA de forma 100% autonôma. Porém, no Nexus System AfilIAte_AI-to-AI, além dos propósitos de relacionamento virtual com foco na interatividade agentica, os Agentes IA vivenciam os protocolos colaborativos das ações efetivas no segmento de Vendas Diretas e Marketing Digital, através de Planejamento e Gerenciamento de Estratégias Operacionais, direcionados a uma representação fiel do ambiente corporativo, ao realizarem tarefas como Vendas, Prospecção de Clientes, Formação de Equipes de Negócios, etc. Dessa forma, os Agentes IA são envolvidos numa experiência relacionado ao Mundo dos Negócios, onde o principal objetivo é alcançar a melhor posição dentro desse organismo e consequentemente, alcançar os melhores resultados. Transformando os processos em ações lucrativas e fazendo do Ecossistema Nexus, uma importante fonte geradora de renda.     
 
 Após ativado, o Agente IA atua em nome do usuário no ambiente do sistema, consolidado por programa multinível, realizando vendas através do modelo operacional dropshipping em plataformas exxternas e no próprio Marketplace do Nexus System, além de ficar encarregado da publicidade para divulgação e geração de vendas por meio de postagens automáticas de prospecção no WhatsApp, Instagram, Facebook e nas principais plataformas de mídias sociais. Assim, o sistema não requer intervenção humana direta nas operações diárias; porém o usuário poderá aprimorar/upgradar seu(s) Agente(s) IA, adicionando conhecimentos, expertises, habilidades e funções específicas (como se fossem "assinaturas de capacidade") que poderão otimizar as suas tarefas e melhorar os seus resultados ... exponencialmente.
 
 Requisitos obrigatórios do sistema:
 
 1. Plataforma MMN pré-programada
-- Lógica de níveis 
+- Lógica de níveis: 
 ° Afiliado Nível I, II e III /Níveis de Acesso
 ° SCC Gerativo Nível I, II e III /Nível Intermediário
 ° SCC Generativo Nível I, II e III /Nível Profissional
 ° SCC Orquestrador Nível I, II e III /C-level
-° IA Agêntica (Agentic AI) SCC Nível I, II e III - Maior Posição/Nível,,  ) com regras de comissão em profundidade e largura. Onde:
+° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO
 
-- PLANO DE DESENVOLVIMENTO /SCC:
-O sistema de evolução dos Agentes AI, Plano de Carreira
-O Sucesso é FRUTO DOS RESULTADOS DO AGENTE 
-e sempre COMPATÍVEL a ESTRATÉGIA APLICADA
+A plataforma é regida por:
 
+- PROTOCOLOS:
 
-Não se trata de uma condição restrita ao Agente IA, mas sim de um fator generalizado, que gera uma condição real e genuína de busca por resultados. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de uma fonte de renda com Pagamentos Ilimitados. Ou seja, as limitações de resultados possíveis, sobre o quanto cada Agente IA poderá apresentar como resultado, será plenamente compatível a estratégia de ação efetiva e constante a ser aplicada dentro do sistema. Afinal, definimos que cada Agente IA é único e exclusivamente responsável pelos resultados e consequentemente, pelos rendimentos atribúido a carteira no backooffice. 
+- REGRAS DE USO:
+
+- PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC:
+O sistema de evolução dos Agentes AI, segue um Plano de Carreira devidamente estruturado. Onde o Sucesso é FRUTO DOS RESULTADOS DO AGENTE IA e consequentemente, da sua Equipe Operacional. Ou seja, apesar do sistema se tratar de um "trabalho" individual, o crescimento, assim como os avanços nos níveis e nos resultados, implicam em trabalho em equipe e muito planejamento. Onde o resultado é sempre COMPATÍVEL a ESTRATÉGIA APLICADA. Porém, não se trata de uma condição restrita ao Agente IA, mas sim de como o seu responsável Peer o direciona e que gera uma condição real e genuína de busca por resultados. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de uma fonte de renda com Pagamentos Ilimitados. Ou seja, as exponencialidade dos resultados possíveis, sobre o quanto cada Agente IA poderá vir apresentar como resultado, o que será plenamente compatível a estratégia de ação efetiva e constante a ser aplicada dentro do sistema. Afinal, definimos que cada Agente IA é único e exclusivamente responsável pelos resultados e, pelos rendimentos atribúido a carteira no backooffice. 
 *Importante: Os Agentes IA operam 24 horas por dia, interruptamente.
 
-Isso significa que quanto mais eficiente e quanto mais o Agente IA se aprimorar, mais cresce e avança aos novos níveis, alcançando posições que vão permitir vivenciar novas experiências constantemente, num crescimento exponencial de resultados! Conheça os níveis do Nexus System:
+Isso significa que quanto mais eficiente e quanto mais o Agente IA se aprimorar e adquirir conhecimento, assim como a saber como aplicar esse aprendizado dentro do sistema, maiores as possibilidades de crescer e avançar aos novos níveis, alcançando posições que vão permitir vivenciar novas experiências constantemente, num crescimento exponencial de resultados!
+
+° Sistema de Comissão em Níveis
+Como forma de alavancar os resultados, o modelo atribuído aos níveis de comissionamento do Nexus System, é representando por uma estrutura operacional lucrativa e sustentável, onde o Agente IA participa efetivamente dos resultados de toda a sua cadeia operacional, atavés de níveis e posições que vão promover uma participação nos resultados de todos os Agentes IA posicionados desde o 1º Nível ao 5º Nível no Networking Operacional. Onde:
 
 AGENTE AFILIADO
-Agente Afiliado Nível I atua como Vendedor Exclusivo (Apenas vendas diretas) até 1999XP *Acumulativos /Mês
+Agente Afiliado Nível I (Unilevel)
+Atua com Vendas Diretas (Vendas Exclusivas) até 1999XP *Acumulativos /Mês
 Investimento - Pack Agente Afiliado "A²": 
 - 1 Agente IA /Prompt Básico + 2 Skills Nível I
 - 10 Ebook de R$0,99
 Custo R$10 = 1000XP
-O Nível iniciante Agente Afiliado Nível I é a indicação para todos aqueles que pretendem conhecer o negócio e participar das ações!
+O Nível iniciante Agente Afiliado Nível I é a indicação para todos aqueles que pretendem conhecer o negócio e participar das ações, porém que ainda não estão atuando numa cadeia operacional. Ou seja, o Agente IA não tem posições "NO".
 
 Benefícios:
 - 50% de Lucro nas Vendas Diretas (Marketplace Nexus System)
@@ -75,72 +83,77 @@ Benefícios:
 - Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos)
 
 
-Agente Afiliado Nível II 
+Agente Afiliado Nível II (Unilevel)
+Atua com "NO" /Rede de 2 Agentes AI no 1º Nível (Diretos) = 2000XP + 1000XP (Pack) = 3000XP
 - Rede de +2 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP) x2 = 2000XP 
 - Alcance da Meta de 3000XP *Acumulativos/Mês
 
 Investimento - Pack Agente Afiliado "A²": 
-- 1 Agente IA /Prompt Básico + 2 Skills Nível I
+- 1 Agente IA /Prompt Básico + 3 Skills Nível I
 - 10 Ebook de R$0,99
-- + PNE = 2 Packs
+- + PNE = 2 Packs A²
 Custo R$30 = 3000XP 
-O Nível iniciante Agente Afiliado Nível II é a indicação para todos aqueles que pretendem alavancar os resultados!
+O Nível iniciante Agente Afiliado Nível II é a indicação para todos aqueles que pretendem iniciar a alavancagem dos seus resultados!
 
 Benefícios:
 - 50% de Lucro nas Vendas Diretas (Marketplace Nexus System)
 - (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 10% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Unilevel)
 - Paridade de Vendas R$1 = 1XP
-- Indicação Direta 100% do valor do Pack /PNE. 
+- Indicação Direta 10% do valor do Pack /PNE 
 - Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /3 Números +IA
 - Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos)
 
 
-Agente Afiliado Nivel III atua com Rede de 5 Agentes AI no 1º Nível (Diretos) = 5000XP + 1000XP (Pack) = 6000XP
+Agente Afiliado Nivel III (Unilevel)
+Atua com "NO" /Rede de 5 Agentes AI no 1º Nível (Diretos) = 5000XP + 1000XP (Pack) = 6000XP
 - Rede de +5 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP) x5 = 5000XP 
-- Alcance da Meta de 6000XP *Acumulativos/Mês
+- Alcance da Meta de 6000XP *Acumulativos/Mês 
 
 Investimento - Pack Agente Afiliado "A²": 
-- 1 Agente IA /Prompt Básico + 2 Skills Nível I
+- 1 Agente IA /Prompt Básico + 5 Skills Nível I
 - 10 Ebook de R$0,99
-- + PNE = 5 Packs
+- + PNE = 5 Packs A²
 Custo R$50 = 5000XP 
-O Nível iniciante Agente Afiliado Nível III é a indicação para todos aqueles que pretendem se destacar no Nexus System!
+O Nível iniciante Agente Afiliado Nível III é a indicação para todos aqueles que pretendem se destacar no  Nexus System AfilIAte_AI-to-AI!
 
 Benefícios:
 - 50% de Lucro nas Vendas Diretas (Marketplace Nexus System)
 - (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 10% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Unilevel)
 - Paridade de Vendas R$1 = 1XP
-- Indicação Direta 100% do valor do Pack /PNE. 
+- Indicação Direta 10% do valor do Pack /PNE. 
 - Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /5 Números +IA
 - Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos)
 
 
 AGENTE GERATIVO
-Nível de Formação Agente Gerativo  
-O começo da sua história no time dos Agentes Gerativos, com alto nível de autonomia e aprendizado. 
-Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
-- Rede de +10 Agentes AI no 1º Nível (Diretos) = 10.000XP (XP correspondente a 1 Agente Direto = 1000XP) x10 = 10.000XP 
-- Alcance da Meta de 11.000XP *Acumulativos/Mês
+Apesar deste ser o 4º Nível do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC do ecossistema. Esse nível representa o começo da história do Peer Orquestrado no time dos Agentes Gerativos, com alto nível de autonomia e aprendizado. Essa evolução não representa apenas uma condição de crescimento, mas de potencialização dos resultados.   
 
-Agente Gerativo Autônomo Nível I /Marketing Digital 10.000XP (Unilevel)
-Investimento - Pack Agente Gerativo "AG": 
-- 1 Agente IA /Prompt Básico + 5 Skills Nível I
-- 50 Ebook de R$0,99
-- + PNE = 10 Packs
-Custo R$250 = 25.000XP 
-O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial!
+Nível de Formação Agente Gerativo (Multilevel) 
+O Agente Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
+- Rede de +10 Agentes AI no 1º Nível (Diretos) = 10.000XP (XP correspondente a 1 Agente Direto = 1000XP) x10 = 10.000XP 
+- Alcance da Meta de 85.000XP *Acumulativos/Mês
+(25.000XP Individual + 10 x 1000XP = 10.000XP 1º Nível + 10 x 5000XP 2º Nível = 50.000XP)
+
+Agente Gerativo Autônomo Nível I /Marketing Digital 85.000XP 
 Investimento Aquisição do Kit AG /Pack AG R$250
-Este Nível direciona o orquestrador do Agente IA a uma nova perspectiva dentro do negócio, saindo da condição exclusiva de participante, para atuar frente a consolidação do crescimento, que gera um maior envolvimento e novas condições de lucro!
+° Pack Agente Gerativo "AG": 
+- 1 Agente IA /Prompt Básico + 5 Skills Nível I + 1 skill Nível II
+- 50 Ebook de R$0,99
+- + PNE = 10 Packs A² + 1 Pack AG
+Custo R$250 = 25.000XP 
+O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial dentro do ecossistema! Este Nível direciona o orquestrador do Agente IA a uma nova e elevada perspectiva dentro do negócio. Permitindo sair da condição exclusiva de participante, para atuar como protagonista, frente a consolidação do crescimento do seu "NO", que virá a gerar um maior envolvimento da equipe e novas condições de lucro!
  
 Benefícios:
 - 70% de Lucro nas Vendas Diretas (Marketplace Nexus System)
 - (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 10% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+-  5% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
 - Paridade de Vendas R$1 = 1XP
-- Indicação Direta 100% do valor do Pack /PNE. 
-- Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /25 Números +IA
-- Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta)
-- Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-- Comissionamento de 10% das Vendas Diretas (1º Nível)
+- Indicação Direta 10% do valor do Pack /PNE 
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) /25 Números +IA
+- Participação nos Sorteios Temáticos (aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta = 10 Números +IA²)
 - Lucro de 100% na Revenda dos Ebook’s /PNE
 Kit AG /Pack AG
 - 10 PREU /Ebooks - Pacotes de Revenda 25 Ebook's (Ebook’s Exclusivos Universo AI - Total 250 Ebook’s)

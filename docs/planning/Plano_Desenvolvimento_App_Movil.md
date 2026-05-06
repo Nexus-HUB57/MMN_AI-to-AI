@@ -82,49 +82,49 @@ Com base no `design.md` e no `todo.md`, cada tela principal terá os seguintes r
 
 ## 3. Roadmap de Desenvolvimento e Marcos de Entrega (Milestones)
 
-O desenvolvimento será dividido em sprints ágeis, com marcos claros para cada fase. A duração estimada é de 16 semanas, com entregas incrementais.
+O desenvolvimento do aplicativo móvel será dividido em sprints ágeis, com marcos claros para cada fase, alinhados com o `todo.md` do projeto principal. A duração estimada é de 16 semanas, com entregas incrementais.
 
-| Milestone | Fases Abrangidas | Descrição | Duração Estimada |
-| :-------- | :--------------- | :-------- | :--------------- |
-| **M1: Estrutura Base** | Fase 1 | Configuração do ambiente, tema, componentes base, Tab Bar e integração tRPC client. | 2 semanas |
-| **M2: Telas Essenciais** | Fase 2 (Home, Perfil) | Implementação das telas Home/Dashboard e Perfil com dados mockados/estáticos. | 2 semanas |
-| **M3: Telas de Rede e Agente** | Fase 2 (Rede, Agente) | Implementação das telas Rede e Agente IA com dados mockados/estáticos. | 2 semanas |
-| **M4: Telas de Comissões e Marketplace** | Fase 2 (Comissões, Marketplace) | Implementação das telas Comissões e Marketplace com dados mockados/estáticos. | 2 semanas |
-| **M5: Autenticação e Integração Backend** | Fase 3 (Autenticação), Fase 4 (Home, Perfil) | Integração OAuth Manus. Conexão das telas Home e Perfil com o backend via tRPC. | 2 semanas |
-| **M6: Integração Backend Completa** | Fase 4 (Rede, Agente, Comissões, Marketplace) | Conexão das demais telas com o backend via tRPC. | 2 semanas |
-| **M7: Funcionalidades Avançadas** | Fase 3 (Compartilhamento, Saque, Gráficos) | Implementação de compartilhamento, solicitação de saque e gráficos de ganhos. | 2 semanas |
-| **M8: Notificações e Sincronização** | Fase 5 | Implementação de notificações push, sincronização em background e cache local. | 2 semanas |
-| **M9: Testes e Polimento** | Fase 6 | Testes unitários, de integração, navegação, performance e em dispositivos reais. Correção de bugs e otimizações. | 2 semanas |
+| Milestone | Fases Abrangidas (todo.md) | Descrição | Duração Estimada |
+| :-------- | :------------------------- | :-------- | :--------------- |
+| **M1: Estrutura Base e Autenticação** | Fase 9 (parcial) | Configuração do ambiente (React Native, Expo, TypeScript, Tailwind CSS), tema, componentes base, Tab Bar, integração tRPC client e implementação da página de login e logout. | 2 semanas |
+| **M2: Telas Essenciais (Dashboard e Perfil)** | Fase 9 (parcial), Fase 10 (parcial) | Implementação das telas Home/Dashboard e Perfil com dados mockados/estáticos, incluindo KPIs e informações básicas do usuário. | 2 semanas |
+| **M3: Telas de Rede e Agente IA** | Fase 10 (parcial), Fase 12 (parcial) | Implementação das telas Rede (árvore de indicados) e Agente IA (status, métricas) com dados mockados/estáticos. | 2 semanas |
+| **M4: Telas de Comissões e Marketplace** | Fase 10 (parcial), Fase 13 (parcial) | Implementação das telas Comissões (histórico) e Marketplace (produtos recomendados) com dados mockados/estáticos. | 2 semanas |
+| **M5: Integração Backend - Autenticação e Dados Essenciais** | Fase 3, Fase 4 (parcial) | Integração OAuth Manus. Conexão das telas Home e Perfil com o backend via tRPC para dados de perfil, comissões totais e status do agente. | 2 semanas |
+| **M6: Integração Backend - Rede, Agente e Comissões** | Fase 4 (parcial), Fase 6 (parcial) | Conexão das telas Rede, Agente IA e Comissões com o backend via tRPC para dados dinâmicos e funcionalidades de gerenciamento. | 2 semanas |
+| **M7: Integração Backend - Marketplace e Funcionalidades Avançadas** | Fase 7 (parcial), Fase 13 (parcial) | Conexão da tela Marketplace com o backend via tRPC. Implementação de compartilhamento de link de indicação, solicitação de saque e gráficos de ganhos. | 2 semanas |
+| **M8: Notificações, Sincronização e Otimização** | Fase 5 (parcial), Fase 14 (parcial) | Implementação de notificações push, sincronização em background e cache local. Inclusão de funcionalidades de bônus e materiais de divulgação. | 2 semanas |
+| **M9: Testes, Polimento e Preparação para Publicação** | Fase 15, Fase 16 | Testes unitários, de integração, navegação, performance e em dispositivos reais. Correção de bugs e otimizações. Preparação de metadados e certificações para publicação nas lojas. | 2 semanas |
 
 ## 4. Estratégia de Testes, CI/CD e Publicação
 
 ### 4.1. Estratégia de Testes
 
-*   **Testes Unitários**: Utilização de `Jest` e `React Native Testing Library` para testar componentes isolados e lógicas de negócio.
-*   **Testes de Integração**: Foco na comunicação entre componentes e com o backend (tRPC). Testes end-to-end com `Detox` ou `Appium` para fluxos críticos.
-*   **Testes de UI/Snapshot**: Garantir a consistência visual da interface em diferentes dispositivos e versões de OS.
-*   **Testes de Performance**: Monitoramento de FPS, uso de memória e CPU para garantir uma experiência fluida.
-*   **Testes em Dispositivos Reais**: Utilização do Expo Go para testes rápidos durante o desenvolvimento e builds de produção para testes em dispositivos físicos e emuladores.
+*   **Testes Unitários**: Utilização de `Jest` e `React Native Testing Library` para testar componentes isolados e lógicas de negócio no frontend. No backend, testes unitários serão aplicados para autenticação, lógica de comissões, agentes IA e integração com marketplaces, conforme detalhado nas Fases 3, 4, 5, 6, 7 e 15 do `todo.md`.
+*   **Testes de Integração**: Foco na comunicação entre componentes e com o backend (tRPC), garantindo a tipagem segura de ponta a ponta. Testes end-to-end com `Detox` ou `Appium` serão implementados para fluxos críticos, como login, registro de indicação, solicitação de saque e compra no marketplace. Serão validados os fluxos de comissionamento e dropshipping, conforme as Fases 4, 5, 7 e 8 do `todo.md`.
+*   **Testes de UI/Snapshot**: Garantir a consistência visual da interface em diferentes dispositivos e versões de OS, utilizando ferramentas como `Storybook` (se implementado) para isolar e testar componentes visuais.
+*   **Testes de Performance**: Monitoramento de FPS, uso de memória e CPU para garantir uma experiência fluida, especialmente em telas com grande volume de dados (ex: árvore de rede, histórico de comissões). Serão realizados testes de carga para avaliar a responsividade da aplicação sob diferentes condições de rede e uso.
+*   **Testes em Dispositivos Reais**: Utilização do Expo Go para testes rápidos durante o desenvolvimento e builds de produção para testes em dispositivos físicos e emuladores, cobrindo uma ampla gama de dispositivos iOS e Android.
 
 ### 4.2. CI/CD (Integração Contínua / Entrega Contínua)
 
-*   **Plataforma**: GitHub Actions será utilizada para automatizar o pipeline de CI/CD.
-*   **Fluxo de CI**: Cada push para o repositório disparará a execução de testes unitários, linting e build do aplicativo.
-*   **Fluxo de CD**: Após a aprovação em CI, builds de pré-produção serão gerados e distribuídos automaticamente para testadores (ex: Expo Prebuild, TestFlight, Google Play Internal Test Track). Builds de produção serão gerados e submetidos às lojas após aprovação manual.
-*   **Ferramentas**: `eas-cli` (Expo Application Services CLI) para gerenciar builds e submissões às lojas.
+*   **Plataforma**: GitHub Actions será utilizada para automatizar o pipeline de CI/CD, conforme as melhores práticas de DevOps.
+*   **Fluxo de CI**: Cada push para o repositório disparará a execução de testes unitários (Fase 15 do `todo.md`), linting e build do aplicativo (utilizando `pnpm build` para o frontend e backend, conforme `TECHNICAL_DOCUMENTATION.md`). Serão configurados workflows para garantir a qualidade do código e a detecção precoce de erros.
+*   **Fluxo de CD**: Após a aprovação em CI, builds de pré-produção serão gerados e distribuídos automaticamente para testadores (ex: Expo Prebuild, TestFlight, Google Play Internal Test Track). Builds de produção serão gerados e submetidos às lojas após aprovação manual, utilizando o `eas-cli` para gerenciar o processo de build e submissão.
+*   **Ferramentas**: `eas-cli` (Expo Application Services CLI) para gerenciar builds e submissões às lojas, e `pnpm drizzle-kit push` para sincronizar o schema do banco de dados, garantindo a consistência entre o ambiente de desenvolvimento e produção.
 
 ### 4.3. Publicação nas Lojas (App Store / Google Play Store)
 
 *   **Requisitos Legais**: Garantir conformidade com as diretrizes da Apple App Store e Google Play Store (privacidade, termos de uso, etc.).
-*   **Metadados**: Preparação de ícones, screenshots, descrições e palavras-chave otimizadas para ASO (App Store Optimization).
-*   **Certificados e Provisionamento**: Gerenciamento de certificados de desenvolvedor e perfis de provisionamento para iOS.
-*   **Processo de Submissão**: Utilização do `eas-cli` para automatizar o processo de submissão, mas com revisão e aprovação manual das versões finais.
+*   **Metadados**: Preparação de ícones, screenshots, descrições e palavras-chave otimizadas para ASO (App Store Optimization), crucial para a visibilidade e descoberta do aplicativo nas lojas.
+*   **Certificados e Provisionamento**: Gerenciamento de certificados de desenvolvedor e perfis de provisionamento para iOS, garantindo a assinatura correta do aplicativo.
+*   **Processo de Submissão**: Utilização do `eas-cli` para automatizar o processo de submissão, mas com revisão e aprovação manual das versões finais. Após a publicação, será implementado um processo de monitoramento contínuo para avaliar o desempenho do aplicativo e coletar feedback dos usuários.
 
 ## 5. Considerações Adicionais
 
-*   **Internacionalização**: Planejar desde o início a estrutura para suportar múltiplos idiomas, caso haja planos de expansão global.
-*   **Acessibilidade**: Garantir que o aplicativo seja acessível para usuários com deficiência, seguindo as diretrizes de acessibilidade de iOS e Android.
-*   **Segurança**: Implementar as melhores práticas de segurança, como armazenamento seguro de dados sensíveis, comunicação criptografada e proteção contra engenharia reversa.))
+*   **Internacionalização**: Planejar desde o início a estrutura para suportar múltiplos idiomas, caso haja planos de expansão global, utilizando ferramentas como `expo-localization`.
+*   **Acessibilidade**: Garantir que o aplicativo seja acessível para usuários com deficiência, seguindo as diretrizes de acessibilidade de iOS e Android, e utilizando os recursos de acessibilidade do React Native.
+*   **Segurança**: Implementar as melhores práticas de segurança, como armazenamento seguro de dados sensíveis (ex: `expo-secure-store`), comunicação criptografada (HTTPS), validação de input via **Zod** (conforme `TECHNICAL_DOCUMENTATION.md`), e proteção contra engenharia reversa. A autenticação será gerenciada via JWT + Cookies, com RBAC para controle de acesso, conforme detalhado na `TECHNICAL_DOCUMENTATION.md`.
 
 ## Referências
 

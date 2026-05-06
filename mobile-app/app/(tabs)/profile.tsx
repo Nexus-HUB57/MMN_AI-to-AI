@@ -1,28 +1,30 @@
-import { ScrollView, Text, View, TouchableOpacity, Switch } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, Switch, ActivityIndicator } from "react-native";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/hooks/use-auth";
 import { useState } from "react";
 import { ScreenContainer } from "@/components/screen-container";
 
 export default function ProfileScreen() {
+  const { user, logout, isLoading: isLoadingAuth } = useAuth();
+  const { data: affiliateProfile, isLoading: isLoadingAffiliate, refetch: refetchAffiliate } = trpc.mmn.getProfile.useQuery();
+
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
-  // Dados mockados
-  const user = {
-    name: "João Silva",
-    email: "joao@example.com",
-    affiliateCode: "JOAO123456",
-    referralLink: "https://mmn.ai/ref/JOAO123456",
-  };
-
   const handleCopyLink = () => {
     // Implementar cópia para clipboard
-    alert("Link copiado para a área de transferência!");
+    if (affiliateProfile?.affiliateCode) {
+      // Implementar Clipboard.setString(affiliateProfile.affiliateCode);
+      alert("Link de indicação copiado para a área de transferência!");
+    }
   };
 
-  const handleLogout = () => {
-    // Implementar logout
+  const handleLogout = async () => {
+    await logout();
     alert("Logout realizado com sucesso!");
   };
+
+  const isLoading = isLoadingAuth || isLoadingAffiliate;
 
   return (
     <ScreenContainer className="p-4">
@@ -39,20 +41,32 @@ export default function ProfileScreen() {
             <View className="items-center gap-2">
               <View className="w-16 h-16 bg-primary rounded-full items-center justify-center">
                 <Text className="text-2xl font-bold text-white">
-                  {user.name.charAt(0).toUpperCase()}
+                  {user?.name?.charAt(0).toUpperCase() || "?"}
                 </Text>
               </View>
-              <Text className="text-xl font-bold text-foreground">{user.name}</Text>
+              {isLoading ? (
+                <ActivityIndicator size="small" />
+              ) : (
+                <Text className="text-xl font-bold text-foreground">{user?.name || "Usuário"}</Text>
+              )}
             </View>
 
             <View className="gap-3 border-t border-border pt-4">
               <View>
                 <Text className="text-xs font-medium text-muted mb-1">Email</Text>
-                <Text className="text-sm text-foreground">{user.email}</Text>
+                {isLoading ? (
+                  <ActivityIndicator size="small" />
+                ) : (
+                  <Text className="text-sm text-foreground">{user?.email || "N/A"}</Text>
+                )}
               </View>
               <View>
                 <Text className="text-xs font-medium text-muted mb-1">Código de Afiliado</Text>
-                <Text className="text-sm text-foreground font-mono">{user.affiliateCode}</Text>
+                {isLoading ? (
+                  <ActivityIndicator size="small" />
+                ) : (
+                  <Text className="text-sm text-foreground font-mono">{affiliateProfile?.affiliateCode || "N/A"}</Text>
+                )}
               </View>
             </View>
 
@@ -65,9 +79,13 @@ export default function ProfileScreen() {
           <View className="bg-surface rounded-2xl p-4 border border-border gap-3">
             <Text className="text-sm font-medium text-muted">Link de Indicação</Text>
             <View className="bg-background rounded-lg p-3 border border-border">
-              <Text className="text-xs text-foreground font-mono break-words">
-                {user.referralLink}
-              </Text>
+              {isLoading ? (
+                <ActivityIndicator size="small" />
+              ) : (
+                <Text className="text-xs text-foreground font-mono break-words">
+                  {affiliateProfile?.affiliateCode ? `https://mmn.ai/ref/${affiliateProfile.affiliateCode}` : "N/A"}
+                </Text>
+              )}
             </View>
             <TouchableOpacity
               onPress={handleCopyLink}

@@ -1,4 +1,5 @@
-import { ScrollView, Text, View, TouchableOpacity, RefreshControl } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, RefreshControl, ActivityIndicator } from "react-native";
+import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { ScreenContainer } from "@/components/screen-container";
 import { useColors } from "@/hooks/use-colors";
@@ -7,20 +8,25 @@ export default function HomeScreen() {
   const colors = useColors();
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = () => {
+  const { data: metricsData, isLoading: isLoadingMetrics, refetch: refetchMetrics } = trpc.dashboard.getMetrics.useQuery(undefined, { pollingInterval: 5000 });
+  const { data: recentSalesData, isLoading: isLoadingRecentSales, refetch: refetchRecentSales } = trpc.dashboard.getRecentSales.useQuery({ limit: 3 }, { pollingInterval: 5000 });
+
+  const onRefresh = async () => {
     setRefreshing(true);
-    // Simular carregamento de dados
-    setTimeout(() => setRefreshing(false), 1000);
+    await Promise.all([
+      refetchMetrics(),
+      refetchRecentSales(),
+    ]);
+    setRefreshing(false);
   };
 
-  // Dados mockados
-  const totalCommissions = 1250.50;
-  const agentStatus = "Ativo";
-  const recentSales = [
-    { id: 1, product: "Produto A", value: 150.00, date: "Hoje" },
-    { id: 2, product: "Produto B", value: 200.00, date: "Ontem" },
-    { id: 3, product: "Produto C", value: 100.00, date: "2 dias atrás" },
-  ];
+  const totalCommissions = metricsData?.commissions.total || 0;
+  const agentStatus = metricsData?.agent?.status || "Inativo";
+  const agentEnergy = metricsData?.agent?.vitals?.energy || 0;
+  const agentHealth = metricsData?.agent?.vitals?.health || 0;
+  const recentSales = recentSalesData || [];
+
+  const isLoading = isLoadingMetrics || isLoadingRecentSales;
 
   return (
     <ScreenContainer className="p-4">
@@ -38,7 +44,11 @@ export default function HomeScreen() {
           {/* Saldo Total */}
           <View className="bg-primary rounded-2xl p-6 gap-3">
             <Text className="text-sm font-medium text-white opacity-90">Saldo Total de Comissões</Text>
-            <Text className="text-4xl font-bold text-white">R$ {totalCommissions.toFixed(2)}</Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text className="text-4xl font-bold text-white">R$ {totalCommissions.toFixed(2)}</Text>
+            )}
             <View className="flex-row gap-3 pt-2">
               <TouchableOpacity className="flex-1 bg-white/20 rounded-lg py-2 px-3 active:opacity-70">
                 <Text className="text-white font-semibold text-center text-sm">Sacar</Text>
@@ -53,26 +63,37 @@ export default function HomeScreen() {
           <View className="bg-surface rounded-2xl p-4 border border-border gap-3">
             <View className="flex-row justify-between items-center">
               <Text className="text-lg font-semibold text-foreground">Agente IA</Text>
-              <View className="bg-success/20 rounded-full px-3 py-1">
-                <Text className="text-success font-medium text-xs">{agentStatus}</Text>
-              </View>
+              {isLoading ? (
+                <ActivityIndicator size="small" color={colors.success} />
+              ) : (
+                <View className="bg-success/20 rounded-full px-3 py-1">
+                  <Text className="text-success font-medium text-xs">{agentStatus}</Text>
+                </View>
+              )}
             </View>
             <View className="gap-2">
               <View className="flex-row justify-between">
                 <Text className="text-sm text-muted">Energia</Text>
-                <Text className="text-sm font-semibold text-foreground">85%</Text>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={colors.foreground} />
+                ) : (
+                  <Text className="text-sm font-semibold text-foreground">{agentEnergy}%</Text>
+                )}
               </View>
               <View className="h-2 bg-border rounded-full overflow-hidden">
-                <View className="h-full w-[85%] bg-success" />
+                <View className="h-full" style={{ width: `${agentEnergy}%`, backgroundColor: colors.success }} />
               </View>
             </View>
             <View className="gap-2">
               <View className="flex-row justify-between">
-                <Text className="text-sm text-muted">Saúde</Text>
-                <Text className="text-sm font-semibold text-foreground">92%</Text>
+                <Text className="text-sm text-muted">Saúde</n                {isLoading ? (
+                  <ActivityIndicator size="small" color={colors.foreground} />
+                ) : (
+                  <Text className="text-sm font-semibold text-foreground">{agentHealth}%</Text>
+                )}
               </View>
               <View className="h-2 bg-border rounded-full overflow-hidden">
-                <View className="h-full w-[92%] bg-success" />
+                <View className="h-full" style={{ width: `${agentHealth}%`, backgroundColor: colors.success }} />
               </View>
             </View>
           </View>
@@ -80,7 +101,10 @@ export default function HomeScreen() {
           {/* Últimas Vendas */}
           <View className="gap-3">
             <Text className="text-lg font-semibold text-foreground">Últimas Vendas</Text>
-            {recentSales.map((sale) => (
+            {isLoadingRecentSales ? (
+              <ActivityIndicator size="large" color={colors.primary} />
+            ) : recentSales.length > 0 ? (
+              recentSales.map((sale) => (
               <TouchableOpacity
                 key={sale.id}
                 className="bg-surface rounded-lg p-4 border border-border flex-row justify-between items-center active:opacity-70"
@@ -91,7 +115,11 @@ export default function HomeScreen() {
                 </View>
                 <Text className="text-sm font-bold text-primary">R$ {sale.value.toFixed(2)}</Text>
               </TouchableOpacity>
-            ))}
+            )) : (
+              <View className="py-8 items-center">
+                <Text className="text-muted">Nenhuma venda recente.</Text>
+              </View>
+            )}
           </View>
 
           {/* Mini Gráfico */}
@@ -106,7 +134,11 @@ export default function HomeScreen() {
                   />
                   <Text className="text-xs text-muted">{idx + 1}</Text>
                 </View>
-              ))}
+              )) : (
+              <View className="py-8 items-center">
+                <Text className="text-muted">Nenhuma venda recente.</Text>
+              </View>
+            )}
             </View>
           </View>
         </View>

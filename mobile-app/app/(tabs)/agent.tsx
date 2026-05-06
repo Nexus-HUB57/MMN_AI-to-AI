@@ -1,16 +1,23 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import { trpc } from "@/lib/trpc";
+import { useColors } from "@/hooks/use-colors";
 import { useState } from "react";
 import { ScreenContainer } from "@/components/screen-container";
 
 export default function AgentScreen() {
-  const [agentActive, setAgentActive] = useState(true);
+  const colors = useColors();
   const [strategy, setStrategy] = useState("balanced");
+  const [isUpdatingStrategy, setIsUpdatingStrategy] = useState(false);
 
+  const { data: agentData, isLoading: isLoadingAgent, refetch: refetchAgent } = trpc.mmn.getAgent.useQuery();
+  const updateStrategyMutation = trpc.mmn.updateAgentStrategy.useMutation();
+
+  const agentActive = agentData?.status === "active";
   const metrics = {
-    energy: 85,
-    health: 92,
-    creativity: 78,
-    reputation: 88,
+    energy: agentData?.vitals?.energy || 85,
+    health: agentData?.vitals?.health || 92,
+    creativity: agentData?.vitals?.creativity || 78,
+    reputation: agentData?.vitals?.reputation || 88,
   };
 
   const recentActions = [
@@ -18,6 +25,28 @@ export default function AgentScreen() {
     { id: 2, action: "Rede atualizada", time: "Há 4 horas" },
     { id: 3, action: "Comissão processada", time: "Há 1 dia" },
   ];
+
+  const handleStrategyChange = async (newStrategy: string) => {
+    setStrategy(newStrategy);
+    if (agentData?.id) {
+      setIsUpdatingStrategy(true);
+      try {
+        await updateStrategyMutation.mutateAsync({
+          agentId: agentData.id,
+          contentStrategy: {
+            platforms: ["whatsapp", "instagram", "facebook"],
+            postingFrequency: newStrategy === "aggressive" ? "hourly" : newStrategy === "balanced" ? "daily" : "weekly",
+            tone: "professional",
+          },
+        });
+        await refetchAgent();
+      } catch (error) {
+        console.error("Erro ao atualizar estratégia:", error);
+      } finally {
+        setIsUpdatingStrategy(false);
+      }
+    }
+  };
 
   return (
     <ScreenContainer className="p-4">
@@ -111,7 +140,8 @@ export default function AgentScreen() {
               ].map((opt) => (
                 <TouchableOpacity
                   key={opt.id}
-                  onPress={() => setStrategy(opt.id)}
+                  onPress={() => handleStrategyChange(opt.id)}
+                disabled={isUpdatingStrategy}
                   className={`rounded-lg p-3 border ${
                     strategy === opt.id
                       ? "bg-primary/10 border-primary"

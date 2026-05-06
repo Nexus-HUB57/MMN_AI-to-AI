@@ -4,6 +4,8 @@ import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import * as db from "./db";
 import * as llm from "./llm";
+import { dashboardRouter } from "./dashboardRouter";
+import { mmnRouter } from "../services/mmn";
 
 // ============ AGENTS ROUTER ============
 
@@ -581,6 +583,8 @@ export const appRouter = router({
   funding: fundingRouter,
   communications: communicationsRouter,
   telemetry: telemetryRouter,
+  dashboard: dashboardRouter,
+  mmn: mmnRouter,
 });
 
 export type AppRouter = typeof appRouter;

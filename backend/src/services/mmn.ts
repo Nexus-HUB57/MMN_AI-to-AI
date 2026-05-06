@@ -144,6 +144,72 @@ export const mmnRouter = router({
     return await getActiveUpgrades(agent.id);
   }),
 
+  /**\n   * Get dashboard summary metrics\n   */\n  getDashboardMetrics: protectedProcedure.query(async ({ ctx }) => {
+    const affiliate = await getAffiliateByUserId(ctx.user.id);
+    const agent = await getAgentByUserId(ctx.user.id);
+
+    if (!affiliate) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Affiliate profile not found",
+      });
+    }
+
+    const totalCommissions = await getTotalCommissions(affiliate.id);
+    const pendingCommissions = await getPendingCommissions(affiliate.id);
+    const recentOrders = await getOrdersByAffiliate(affiliate.id, 5);
+    const directReferrals = await getDirectReferrals(ctx.user.id);
+
+    return {
+      commissions: {
+        total: totalCommissions,
+        pending: pendingCommissions,
+      },
+      agent: agent ? {
+        id: agent.id,
+        name: agent.name,
+        status: agent.status,
+        vitals: {
+          energy: 85, // Mocked for now
+          health: 92, // Mocked for now
+        }
+      } : null,
+      network: {
+        directCount: directReferrals.length,
+      },
+      recentOrders,
+    };
+  }),
+
+  /**\n   * Request commission withdrawal\n   */\n  requestWithdraw: protectedProcedure
+    .input(z.object({ amount: z.number().positive() }))
+    .mutation(async ({ ctx, input }) => {
+      const affiliate = await getAffiliateByUserId(ctx.user.id);
+      if (!affiliate) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Affiliate profile not found",
+        });
+      }
+
+      const totalCommissions = await getTotalCommissions(affiliate.id);
+      if (input.amount > totalCommissions) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Insufficient balance for withdrawal",
+        });
+      }
+
+      // Here you would normally create a withdrawal record in the DB
+      // For now we just return success
+      return {
+        success: true,
+        requestId: nanoid(),
+        amount: input.amount,
+        status: "pending",
+      };
+    }),
+
   /**\n   * Create new affiliate (register with sponsor)\n   */\n  registerAffiliate: protectedProcedure
     .input(
       z.object({

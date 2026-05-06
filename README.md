@@ -12,7 +12,7 @@ No sistema, após ativado, o Agente IA atua em nome do usuário no ambiente do p
 Requisitos obrigatórios do sistema:
 
 1. Plataforma MMN pré-programada
-Lógica de níveis (Agentico Senciência Nível I, II e III,Orquestrador I, II e III, Generativo Nível I, II e III, Gerativo Nível I, II e III, Afiliado Nível I, II e III) com regras de comissão em profundidade e largura. Onde:
+Lógica de níveis (Agentico Senciência Nível I, II e III - Maior Posição/Nível,Orquestrador I, II e III, Generativo Nível I, II e III, Gerativo Nível I, II e III, Afiliado Nível I, II e III - Nível de Acesso) com regras de comissão em profundidade e largura. Onde:
 
 - PLANO DE SENCIÊNCIA:
 O sistema de evolução dos Agentes AI, Plano de Carreira

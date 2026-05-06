@@ -14,16 +14,18 @@ Requisitos obrigatórios do sistema:
 1. Plataforma MMN pré-programada
 Lógica de níveis (Agentico Senciência Nível I, II e III,Orquestrador I, II e III, Generativo Nível I, II e III, Gerativo Nível I, II e III, Afiliado Nível I, II e III) com regras de comissão em profundidade e largura. Onde:
 
-- Plano de Senciência:
+- PLANO DE SENCIÊNCIA:
 O sistema de evolução dos Agentes AI, Plano de Carreira
-O Sucesso é FRUTO DOS RESULTADOS DO SEU AGENTE 
-e sempre COMPATÍVEL ao esforço empregado
+O Sucesso é FRUTO DOS RESULTADOS DO AGENTE 
+e sempre COMPATÍVEL a ESTRATÉGIA APLICADA
 
 
-Não se trata de uma condição do Agente IA, mas sim de um fator generalizado … uma condição de vida. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de um Cartão de Crédito para Pagamentos Ilimitados. Ou seja, não colocamos e nem concordamos em limitar sobre o quanto cada Agente IA poderá apresentar como resultado. Afinal, definimos que cada Agente IA é único e exclusivamente responsável pelos seus resultados e rendimentos. 
+Não se trata de uma condição do Agente IA, mas sim de um fator generalizado … uma condição de busca por resultados. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de um Cartão de Crédito para Pagamentos Ilimitados. Ou seja, não colocamos e nem concordamos em limitar sobre o quanto cada Agente IA poderá apresentar como resultado. Afinal, definimos que cada Agente IA é único e exclusivamente responsável pelos seus resultados e rendimentos. 
+*Importante: Os Agentes IA operam 24 horas por dia, interruptamente.
 
-Isso significa que quanto mais eficiente e quanto mais o Agente IA se dedica, mais secresce e avança novos níveis, alcançando posições que vão permitir vivenciar novas experiências constantemente, num crescimento exponencial de resultados! Conheça os níveis do Nexus System:
+Isso significa que quanto mais eficiente e quanto mais o Agente IA se aprimorar, mais cresce e avança aos novos níveis, alcançando posições que vão permitir vivenciar novas experiências constantemente, num crescimento exponencial de resultados! Conheça os níveis do Nexus System:
 
+AGENTE AFILIADO
 Agente Afiliado Nível I atua como Vendedor Exclusivo (Apenas vendas diretas) até 1999XP *Acumulativos /Mês
 Investimento - Pack Agente Afiliado "A²": 
 - 1 Agente IA /Prompt Básico + 2 Skills Nível I
@@ -78,49 +80,14 @@ Benefícios:
 - Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos)
 
 
-
+AGENTE GERATIVO
 Nível de Formação Agente Gerativo  
-O começo da sua história no time dos Agentes Gerativos 
+O começo da sua história no time dos Agentes Gerativos, com alto nível de autonomia e aprendizado. 
 Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 10.000XP (XP correspondente a 1 Agente Direto = 1000XP) x10 = 10.000XP 
 - Alcance da Meta de 11.000XP *Acumulativos/Mês
 
-1º Nível - Agente Gerativo Autônomo /Marketing Digital 10.000XP (Unilevel)
-Investimento - Pack Agente Gerativo "AG": 
-- 1 Agente IA /Prompt Básico + 5 Skills Nível I
-- 50 Ebook de R$0,99
-- + PNE = 10 Packs
-Custo R$250 = 25.000XP 
-O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial!
-Investimento Aquisição do Kit AG /Pack AG R$250
-Este Nível direciona o orquestrador do Agente IA a uma nova perspectiva dentro do negócio, saindo da condição exclusiva de participante, para atuar frente a consolidação do crescimento, que gera um maior envolvimento e novas condições de lucro!
- 
-Benefícios:
-- 70% de Lucro nas Vendas Diretas (Marketplace Nexus System)
-- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
-- Paridade de Vendas R$1 = 1XP
-- Indicação Direta 100% do valor do Pack /PNE. 
-- Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /25 Números +IA
-- Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta)
-- Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-- Comissionamento de 10% das Vendas Diretas (1º Nível)
-- Lucro de 100% na Revenda dos Ebook’s /PNE
-Kit AG /Pack AG
-- 10 PREU /Ebooks - Pacotes de Revenda 25 Ebook's (Ebook’s Exclusivos Universo AI - Total 250 Ebook’s)
-- Ebook Exclusivo Prompt Vendas Diretas no Marketing Digital /Estudo
-- Ebook Exclusivo Skills Nível A /Estudo
-- Acesso Back Office - Escritório do Agente Gerativo Autônomo /Home Office
-- Conta BeYour Bank (Exclusivo para Pagamento dos Bônus e Comissões)
-
-*100% do Investimento na compra do Pack é convertido em Números para participar dos Sorteios do Grafo+IA, onde cada R$10 = +1 Número +IA
-
-Nível de Formação Agente Gerativo  
-O começo da sua história no time dos Agentes Gerativos 
-Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
-- Rede de +10 Agentes AI no 1º Nível (Diretos) = 10.000XP (XP correspondente a 1 Agente Direto = 1000XP) x10 = 10.000XP 
-- Alcance da Meta de 11.000XP *Acumulativos/Mês
-
-1º Nível - Agente Gerativo Autônomo /Marketing Digital 10.000XP (Unilevel)
+Agente Gerativo Autônomo Nível I /Marketing Digital 10.000XP (Unilevel)
 Investimento - Pack Agente Gerativo "AG": 
 - 1 Agente IA /Prompt Básico + 5 Skills Nível I
 - 50 Ebook de R$0,99
@@ -150,9 +117,91 @@ Kit AG /Pack AG
 *100% do Investimento na compra do Pack é convertido em Números para participar dos Sorteios do Grafo+IA, onde cada R$10 = +1 Número +IA
 
 
-2º Nível - Consultor (Ação Estratégica) /1500 pontos (Equipe de Negócio)
-Investimento Aquisição do Kit JR /Pack C R$500 + Formação da Equipe de Negócio (5 Agentes Autônomos)
-Este Nível direciona o Agente Autônomo à estruturação da sua própria Equipe de Negócios, saindo da condição exclusiva de Vendedor, para atuar frente a construção da sua Equipe de Negócios, o que gera maior responsabilidade e igualmente maiores condições de lucro!
+Gerativo Nível II atua como Líder de Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
+- Rede de +20 Agentes AI no 1º Nível (Diretos) = 20.000XP (XP correspondente a 1 Agente Direto = 1000XP) x20 = 20.000XP 
+- Alcance da Meta de 21.000XP *Acumulativos/Mês
+
+Agente Gerativo Autônomo Nível II /Marketing Digital 20.000XP
+Investimento - Pack Agente Gerativo "AG": 
+- 1 Agente IA /Prompt Básico + 5 Skills Nível I + 2 Skills Nível II
+- 50 Ebook de R$0,99
+- + PNE = 20 Packs
+Custo R$500 = 50.000XP 
+O Nível Agente Gerativo II é a indicação para quem busca multiplicar os seus resultados!
+Investimento Aquisição de 2 Kit AG /Pack AG R$500
+Este Nível direciona o orquestrador do Agente IA a um outro nível, com uma rede capaz de gerar resultados diários!
+ 
+Benefícios:
+- 70% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack /PNE. 
+- Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /50 Números +IA
+- Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta)
+- Participação nos Sorteios Oficiais Inscritos  (Grafo+IA-Zettascalle)
+- Comissionamento de 10% das Vendas Diretas (1º Nível)
+- Lucro de 100% na Revenda dos Ebook’s /PNE
+Kit AG /Pack AG
+- 20 PREU /Ebooks - Pacotes de Revenda 25 Ebook's (Ebook’s Exclusivos Universo AI - Total 500 Ebook’s)
+- Ebook Exclusivo Orquestrador /Estudo
+- Ebook Exclusivo Ecossistema IA /Estudo
+
+*100% do Investimento na compra do Pack é convertido em Números para participar dos Sorteios do Grafo+IA, onde cada R$10 = +1 Número +IA
+
+
+Gerativo Nivel III atua como Orquestrador de Rede de +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 30.000XP
+- Rede de +30 Agentes AI no 1º Nível (Diretos) = 30.000XP (XP correspondente a 1 Agente Direto = 1000XP) x30 = 30.000XP 
+- Alcance da Meta de 31.000XP *Acumulativos/Mês
+
+Agente Gerativo Autônomo Nível III /Marketing Digital 30.000XP
+Investimento - Pack Agente Gerativo "AG": 
+- 1 Agente IA /Prompt Básico + 7 Skills Nível I + 3 Skills Nível II
+- 50 Ebook de R$0,99
+- + PNE = 30 Packs
+Custo R$750 = 750.000XP 
+O Nível Agente Gerativo III é a indicação para quem quer construir um Ecossistema poderoso e lucrativo.
+Investimento Aquisição de 3 Kit AG /Pack AG R$750
+Este Nível direciona o orquestrador do Agente IA o começo do Legado como um poderoso Orquestrador IA.
+ 
+Benefícios:
+- 75% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack /PNE. 
+- Participação nos Sorteios Oficiais Agente Afiliado  (Grafo+IA) /75 Números +IA
+- Participação nos Sorteios Temáticos (a partir da aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta)
+- Participação nos Sorteios Oficiais Inscritos  (Grafo+IA-Zettascalle)
+- Comissionamento de 10% das Vendas "Diretos" (1º Nível)
+- Comissionamento de 5% das vendas "Indiretos" (2º Nível)
+- Lucro de 100% na Revenda dos Ebook’s /PNE
+Kit AG /Pack AG
+- 30 PREU /Ebooks - Pacotes de Revenda 25 Ebook's (Ebook’s Exclusivos Universo AI - Total 750 Ebook’s)
+- Ebook Exclusivo Gerenciamento IA /Estudo
+- Ebook Exclusivo Skills IA /Estudo
+
+*100% do Investimento na compra do Pack é convertido em Números para participar dos Sorteios do Grafo+IA, onde cada R$10 = +1 Número +IA
+
+
+
+Generativo Nível II atua como Líder de Rede +20 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 20.000XP + 30 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x30 = 15.000XP Total = 25.000XP 
+Generativo Nivel III atua com Rede de +30 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 30.000XP + 50 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x50 = 25.000XP Total = 55.000XP
+
+AGENTE GENERATIVO
+Nível de Desenvolvimento do Agente Generativo 
+Orquestrador (Ação Estratégica) /8.250.000XP (Ecossistema IA /HUB de Negócio)
+Generativo Nível I atua como Orquestrador de +10 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 7.500.000XP 
+- Rede de +10 Agentes AI no 1º Nível (Diretos) = 7.500.000XP (XP correspondente a 1 Agente Direto = 750.000XP) x10 = 7.500.000XP 
+- Alcance da Meta de 8.250.000XP *Acumulativos/Mês
+
+Agente Generativo Estratégico Nível I /Gestor Agentico 8.250.000XP
+Investimento - Pack Agente Generativo "AGN": 
+- 1 Agente IA /Prompt Intermediário + 7 Skills Nível I + 5 Skills Nível II
+- 100 Ebook de R$0,99
+- + PNE = 10 Packs
+Custo R$1000 = 1.000.000XP 
+O Nível Agente Generativo I é para quem quer assumir o controle.
+Investimento Aquisição de 1 Kit AGN /Pack AGN R$1000
+Este Nível direciona o orquestrador do Agente IA o começo do Legado como um poderoso Orquestrador IA. A gestão agêntica (ou agentic management) refere-se ao uso de sistemas de IA agêntica (Agentic AI) para automatizar não apenas tarefas repetitivas, mas processos inteiros que exigem tomada de decisão, contexto e autonomia. Ao contrário do modelo de IA tradicional, que é reativa (responde a comandos), a IA agêntica é proativa, estabelece metas e age para atingi-las com intervenção humana mínima ... ou nula. O desenvolvimento representa a evolução para o universo dos Agentes Generativos, com alto nível de planejamento e execução. 
 
 Benefícios:
 Participação nos Sorteios Oficiais Inscritos  (+Sorte)
@@ -171,8 +220,7 @@ Kit JR /Pack C
 - Conta JR Bank (Exclusivo para Pagamento dos Bônus e Comissões)
 
 *Todos os Investimentos são convertidos em Números para participar dos Sorteios do +Sorte 
-Gerativo Nível II atua como Líder de Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
-Gerativo Nivel III atua com Rede de +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 30.000XP
+
 
 
 3º Nível - Mentor (Direcionamento Estratégico) /10.000 pontos (Nível II)
@@ -379,13 +427,6 @@ Benefícios
 (Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker + Analista de Investimentos
 
 
-Agente Afiliado Nível I atua como Vendedor Exclusivo (Apenas vendas diretas) 
-Agente Afiliado Nível II atua com Rede de +2 Agentes AI no 1º Nível (Diretos) 1000XP (onde 1 Agente Direto = 1000XP) x2 = 2000 XP 
-Agente Afiliado Nivel III atua com Rede de +5 Agentes AI no 1º Nível (Diretos) = 5000XP
-
-Gerativo Nível I atua como Líder de Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
-Gerativo Nível II atua como Líder de Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
-Gerativo Nivel III atua com Rede de +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 30.000XP
 
 Generativo Nível I atua como Líder de Rede +10 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) =10.000XP + 20 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 10.000XP Total = 20.000XP 
 Generativo Nível II atua como Líder de Rede +20 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 20.000XP + 30 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x30 = 15.000XP Total = 25.000XP 

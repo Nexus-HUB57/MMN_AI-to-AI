@@ -323,7 +323,7 @@ Investimento Aquisição do Pack "AGN" R$1000
 - + PNE = 40 Packs A² + 1 Pack AGN
 Custo R$1000 = 100.000XP 
   
-O Nível Agente Generativo I é para quem quer verdadeirmente assumir o controle. Este Nível direciona o Peer/Orquestrador do Agente IA ao começo do Legado como um estrategista poderoso, capaz de não apenas operar o Agente IA sobre o seu comando, mas especialmente, direcionar todos aqueles que estão em seu "NO". 
+O Nível Agente Generativo I é para quem quer verdadeiramente assumir o controle. Este Nível direciona o Peer/Orquestrador do Agente IA ao começo do Legado como um estrategista poderoso, capaz de não apenas operar com eficiência o Agente IA sobre o seu comando, mas especialmente, direcionar todos aqueles que estão em seu "NO", na direção que precisam realmente estar ... na direção da realização dos seus objetivos. 
 
 Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -437,62 +437,43 @@ Potencial de Ganhos:
 - Indicação Direta: R$1200
 - Sorteio (Grafo+IA) Prêmos de R$15.000 a R$30.000
 - Sorteio (Meta+IA) Prêmios de R$30.000 a R$100.000
-- Sorteios (Grafo+IA/VIP) R$150.000 *Destaques do Mês
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$150.000 *Destaques do Mês
 
 
-A gestão agêntica (ou agentic management) refere-se ao uso de sistemas de IA agêntica (Agentic AI) para automatizar não apenas tarefas repetitivas, mas processos inteiros que exigem tomada de decisão, contexto e autonomia. Ao contrário do modelo de IA tradicional, que é reativa (responde a comandos), a IA agêntica é proativa, estabelece metas e age para atingi-las com intervenção humana mínima ... ou nula. O desenvolvimento representa a evolução para o universo dos Agentes Generativos, com alto nível de planejamento e execução. Orquestrador (Ação Estratégica) /8.250.000XP (Ecossistema IA /HUB de Negócio)
+
+° SCC Orquestrador Nível I, II e III /C-level
 
 
 3º Nível - Mentor (Direcionamento Estratégico) /10.000 pontos (Nível II)
 Investimento Aquisição do Kit JR /Pack Mentoria R$1000 + Equipe de Negócio (5 Consultores)
 Este Nível tem como finalidade proporcionar ao Consultor a consolidação da sua posição como Mentor, construindo um vínculo sólido e promissor, atuando juntamente ao seu grupo de Consultores, buscando o crescimento exponencial dos seus resultados!
 
-Benefícios:
-Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
-Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
-Participação nos Sorteios VIP’s Influencers  (+ Sorte - Top Riff’s)
-Comissionamento de 10% das Vendas Diretas
-Bonificação de 10% sobre o Comissionamento da Equipe de Negócio                                 Potencial de Ganhos/mês
-Bonificação de 5% sobre o Comissionamento (2º Nível )                                                                de R$2500 a R$7000                       
-Bonificação de 2,5% sobre o Comissionamento (3º Nível )                                                                                         (- Premiação)
-Lucro de 100% na Revenda dos Ebook’s /PPR                                                                              + Vendas Ebook R$2000
-Kit JR /Pack M
-- 40 PPR - Pacotes Promocionais de Revenda (Ebook’s Exclusivos Jhon Riff’s - Total 1000 Ebook’s)
+
+FullStack
+Acesso ao Nexus Academ'IA - Principais Plataformas IA
+Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos
+Conta BeYour Bank Black                                                                                     
 - Ebook Exclusivo Direcionamento para o Sucesso /Estudo
 - Ebook Exclusivo Mentoria Nível Hard /Estudo
-- Acesso Back Office
-- Conta JR Bank VIP (Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos)
 
+A gestão agêntica (ou agentic management) refere-se ao uso de sistemas de IA agêntica (Agentic AI) para automatizar não apenas tarefas repetitivas, mas processos inteiros que exigem tomada de decisão, contexto e autonomia. Ao contrário do modelo de IA tradicional, que é reativa (responde a comandos), a IA agêntica é proativa, estabelece metas e age para atingi-las com intervenção humana mínima ... ou nula. O desenvolvimento representa a evolução para o universo dos Agentes Generativos, com alto nível de planejamento e execução. Orquestrador (Ação Estratégica) /8.250.000XP (Ecossistema IA /HUB de Negócio)
 
-*Todos os Investimentos são convertidos em Números para participar dos Sorteios do +Sorte 
 *Opção de Acesso - R$10.000 Vendas Diretas (Não inclui os 40 PPR do Pack)                                                         = R$1000 Comissionamento 
 
-4º Nível - Executivo (Planejamento Estratégico) /40.000 pontos 
-Investimento Aquisição do Kit JR /Pack EXE R$2000 + Formação da Equipe de Negócio (5 Mentores)
 Este Nível tem como finalidade proporcionar ao Mentor uma experiência transformadora nos aspectos profissional e de vida, atuando juntamente ao seu grupo de Mentores, vislumbrando um futuro de grandes realizações, rumo ao extraordinário!
+
 Benefícios:
 Participação nos Sorteios Oficiais Inscritos  (+ Sorte)
 Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
 Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
 Participação nos Sorteios VIP’s Influencers  (+ Sorte - + Sorte Top Riff’s)
 Participação nos Sorteios Vip’s Impactos (+ Sorte - + Sorte Capitalização)
-Comissionamento de 10% das Vendas Diretas
-Bonificação de 10% sobre o Comissionamento da Equipe de Negócio                                 Potencial de Ganhos/mês
-Bonificação de 5% sobre o Comissionamento (2º Nível )                                                                de R$5000 a R$14.000                       
-Bonificação de 2,5% sobre o Comissionamento (3º Nível )                                                                                         (- Premiação)
-Lucro de 100% na Revenda dos Ebook’s /PPR                                                                              + Vendas Ebook R$4000
-Kit JR /Pack E
-- 80 PPR - Pacotes Promocionais de Revenda (Ebook’s Exclusivos Jhon Riff’s - Total 2000 Ebook’s)
-- Ebook Exclusivo O Meu Planejamento Estratégico … da Vida /Estudo
-- Ebook Exclusivo Como Planejar a Vida para o Sucesso /Estudo
-- Acesso Back Office
+
+
 - Conta JR Bank Invest (Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker)
 
-*Todos os Investimentos são convertidos em Números para participar dos Sorteios do +Sorte 
-*Opção de Acesso - R$40.000 Vendas Diretas (Não inclui os 80 PPR do Pack)                                                          = R$4000 Comissionamento
-Nível de Business Expertise
- O começo da sua jornada junto ao Grupo JR
+  ° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO
+
 
 5º Nível - Sócio Investidor /SIN (Gestão Estratégica) /500.000 pontos 
 Investimento Aquisição do Kit JR /Pack Societário R$5000 + Formação da Equipe de Negócio (5 Executivos)

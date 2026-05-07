@@ -30,7 +30,7 @@ O sistema oferece um Dashboard/Painel de Controle, ondé é possível acompanhar
   °Histórico de Resultados
   °Índice de Desenvolvimento (Conhecimento/Estratégia/Planejamento/Resultados)
 
-  - Networking Operacional "NO"
+  - Networking Operacional "N.O"
   °Classificação/Posição (Plano de Desenvolvimento /SCC)  
   °Agentes IA (Rede 1º Nível ao 5º Nível)
   °Resultados do "NO"
@@ -59,7 +59,7 @@ Requisitos obrigatórios do sistema:
 ° SCC Orquestrador Nível I, II e III /C-level
 ° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO
 
-O sistema apresenta a lógica dos níveis, como uma condição fundamental para evolução dos Agentes AI, seguindo um Plano de Carreira devidamente estruturado. Onde o Sucesso é FRUTO DOS RESULTADOS DO AGENTE IA e consequentemente, do seu "NO" ou Networking Operacional. Ou seja, apesar do sistema se tratar de um "trabalho" individual", em especial por estar associado a um modelo que implica o comprometimento pessoal, o crescimento, assim como os avanços nos níveis e nos resultados, implicam num trabalho em equipe devidamente organizado e principalmente, planejado. Onde o resultado é sempre COMPATÍVEL ao potencial da ESTRATÉGIA APLICADA. Porém, não se trata de uma condição restrita ao Agente IA, mas sim de como o seu responsável, aquele que o direciona e que gera uma condição real e genuína de busca por resultados cada vez melhores. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de uma fonte de renda com Pagamentos Ilimitados. Ou seja, as exponencialidade dos resultados possíveis, sobre o quanto cada Agente IA poderá vir apresentar como capital acumulado, o que será plenamente compatível a estratégia de ação efetiva e constante a ser aplicada dentro do sistema. Afinal, definimos que o trabalho conjunto entre o "Consultor Humano" e o Agente IA é responsável pelos resultados e, pelos rendimentos atribúidos ao saldo da carteira no backooffice. 
+O sistema apresenta a lógica dos níveis, como uma condição fundamental para evolução dos Agentes AI, seguindo um Plano de Carreira devidamente estruturado. Onde o Sucesso é FRUTO DOS RESULTADOS DO AGENTE IA e consequentemente, do seu "N.O" ou Networking Operacional. Ou seja, apesar do sistema se tratar de um "trabalho" individual", em especial por estar associado a um modelo que implica o comprometimento pessoal, o crescimento, assim como os avanços nos níveis e nos resultados, implicam num trabalho em equipe devidamente organizado e principalmente, planejado. Onde o resultado é sempre COMPATÍVEL ao potencial da ESTRATÉGIA APLICADA. Porém, não se trata de uma condição restrita ao Agente IA, mas sim de como o seu responsável, aquele que o direciona e que gera uma condição real e genuína de busca por resultados cada vez melhores. QUANTO MAIOR O ESFORÇO, MAIOR A RECOMPENSA! Com essa convicção, o nosso negócio atua no formato de uma fonte de renda com Pagamentos Ilimitados. Ou seja, as exponencialidade dos resultados possíveis, sobre o quanto cada Agente IA poderá vir apresentar como capital acumulado, o que será plenamente compatível a estratégia de ação efetiva e constante a ser aplicada dentro do sistema. Afinal, definimos que o trabalho conjunto entre o "Consultor Humano" e o Agente IA é responsável pelos resultados e, pelos rendimentos atribúidos ao saldo da carteira no backooffice. 
 *Importante: O consultor dorme, descansa, tem outros compromissos e responsabilidades, mas os Agentes IA operam 24 horas por dia, interruptamente.
 
 Isso significa que quanto mais eficiente e quanto mais o Agente IA se aprimorar e adquirir conhecimento, assim como a saber como aplicar esse aprendizado dentro do sistema, maiores as possibilidades de crescer e avançar aos novos níveis. Alcançando assim, posições que vão permitir ao responsável pelo cadastro, vivenciar novas experiências constantemente, num crescimento exponencial de resultados!
@@ -83,7 +83,7 @@ Investimento: Aquisição do Pack Agente Afiliado "A²"
 - Conta BeYour Bank (Exclusivo para Pagamento dos Bônus e Comissões)
 Custo R$10 = 1000XP
 
-O Nível iniciante Agente Afiliado Nível I é a indicação para todos aqueles que pretendem conhecer o negócio e participar das ações, porém que ainda não estão atuando numa cadeia operacional. Ou seja, o Agente IA não tem posições "NO".
+O Nível iniciante Agente Afiliado Nível I é a indicação para todos aqueles que pretendem conhecer o negócio e participar das ações, porém que ainda não estão atuando numa cadeia operacional. Ou seja, o Agente IA não tem posições "N.O".
 
 Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -100,7 +100,7 @@ Potencial de Ganhos:
 
 
 Agente Afiliado Nível II (Unilevel)
-Inicia o "NO" /Rede de 2 Agentes AI no 1º Nível (Diretos) = 2000XP + 1000XP (Pack) = 3000XP
+Inicia o "N.O" /Rede de 2 Agentes AI no 1º Nível (Diretos) = 2000XP + 1000XP (Pack) = 3000XP
 - Rede de +2 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP x2 = 2000XP) 
 - Alcance da Meta de 3000XP *Acumulativos/Mês
 
@@ -136,7 +136,7 @@ Potencial de Ganhos:
 
 
 Agente Afiliado Nivel III (Unilevel)
-Projeta o "NO" /Rede de 5 Agentes AI no 1º Nível (Diretos) = 5000XP + 1000XP (Pack) = 6000XP
+Projeta o "N.O" /Rede de 5 Agentes AI no 1º Nível (Diretos) = 5000XP + 1000XP (Pack) = 6000XP
 - Rede de +5 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP x5 = 5000XP) 
 - Alcance da Meta de 6000XP *Acumulativos/Mês 
 
@@ -176,7 +176,7 @@ Apesar deste ser o 4º Nível do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENT
 
 Nível de Formação (Multilevel) 
 Agente Gerativo Nível I 
-Consolida o "No" /Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
+Desenvolve o "N.O" /Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 10.000XP (XP correspondente a 1 Agente Direto = 1000XP x10 = 10.000XP) 
 - Alcance da Meta de 85.000XP *Acumulativos/Mês
 (25.000XP Individual + 10 x 1000XP = 10.000XP 1º Nível + 10 x 5000XP 2º Nível = 50.000XP)
@@ -193,7 +193,7 @@ Investimento: Aquisição do Pack Agente Gerativo "AG"
 - + PNE = 10 Packs A² + 1 Pack AG
 Custo R$250 = 25.000XP 
 
-O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial dentro do ecossistema! Este Nível direciona o orquestrador do Agente IA a uma nova e elevada perspectiva dentro do negócio. Permitindo sair da condição exclusiva de participante, para atuar como protagonista, frente a consolidação do crescimento do seu "NO", que virá a gerar um maior envolvimento da equipe e novas condições de lucro!
+O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial dentro do ecossistema! Este Nível direciona o orquestrador do Agente IA a uma nova e elevada perspectiva dentro do negócio. Permitindo sair da condição exclusiva de participante, para atuar como protagonista, frente a consolidação do crescimento do seu "N.O", que virá a gerar um maior envolvimento da equipe e novas condições de lucro!
  
 Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -216,7 +216,7 @@ Potencial de Ganhos:
 
 
 Gerativo Nível II
-Inicia o "No" gerador de Resultados Exponenciais /Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
+Configura o "N.O" como potencial gerador de Resultados Exponenciais /Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 20.000XP 
 - Rede de +20 Agentes AI no 1º Nível (Diretos) = 20.000XP (XP correspondente a 1 Agente Direto = 1000XP x20 = 20.000XP) 
 - Alcance da Meta de 170.000XP *Acumulativos/Mês
 (50.000XP Individual + 20 x 1000XP = 20.000XP 1° Nível + 20 x 5000XP 2° Nível = 100.000XP)
@@ -258,7 +258,7 @@ Potencial de Ganhos:
 
 
 Gerativo Nível III
-Configura o "No" formatado com as melhores perspectivas /Rede +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 255.000XP 
+Estabelece o "N.O" como provedor de Importantes Perspectivas /Rede +30 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 255.000XP 
 - Rede de +30 Agentes AI no 1º Nível (Diretos) = 30.000XP (XP correspondente a 1 Agente Direto = 1000XP x30 = 30.000XP) 
 - Alcance da Meta de 255.000XP *Acumulativos/Mês
 (75.000XP Individual + 30 x 1000XP = 30.000XP 1° Nível + 30 x 5000XP 2° Nível = 150.000XP)
@@ -305,7 +305,7 @@ Um dos níveis mais decisivos do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENT
 
 Nível de Desenvolvimento (Multilevel) 
 Generativo Nível I
-Intensifica o "No" com um salto rumo a realização de um projeto de vida  /Rede +10 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 1.350.000XP
+Intensifica o "N.O" com um salto rumo a realização de um Projeto de Vida  /Rede +10 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 1.350.000XP
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 750.000XP (XP correspondente a 1 Agente Direto = 75.000XP x10 = 750.000XP) 
 -Alcance da Meta 2.250.000XP *Acumulativos/Mês
 (100.000XP Individual + 10 x 75.000XP = 750.000XP 1° Nível + 10 x 50.000XP 2° Nível = 500.000XP)
@@ -323,7 +323,7 @@ Investimento Aquisição do Pack "AGN" R$1000
 - + PNE = 40 Packs A² + 1 Pack AGN
 Custo R$1000 = 100.000XP 
   
-O Nível Agente Generativo I é para quem quer verdadeiramente assumir o controle. Este Nível direciona o Peer/Orquestrador do Agente IA ao começo do Legado como um estrategista poderoso, capaz de não apenas operar com eficiência o Agente IA sobre o seu comando, mas especialmente, direcionar todos aqueles que estão em seu "NO", na direção que precisam realmente estar ... na direção da realização dos seus objetivos. 
+O Nível Agente Generativo I é para quem quer verdadeiramente assumir o controle. Este Nível direciona o Peer/Orquestrador do Agente IA ao começo do Legado como um estrategista poderoso, capaz de não apenas operar com eficiência o Agente IA sobre o seu comando, mas especialmente, direcionar todos aqueles que estão em seu "N.O", na direção que precisam realmente estar ... na direção da realização dos seus objetivos. 
 
 Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -349,7 +349,7 @@ Potencial de Ganhos:
 - Sorteios (Grafo+IA/VIP) R$50.000 *Destaques do Mês
  
 Generativo Nível II
-Direciona o "No" no caminho onde as coisas acontecem, não por acaso, mas porque assim foi determinado /Rede +20 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 1.500.000XP
+Direciona o "N.O" no caminho onde as coisas acontecem, não por acaso, mas porque assim foi determinado /Rede +20 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 1.500.000XP
 - Rede de +20 Agentes AI no 1º Nível (Diretos) = 1.500.000XP (XP correspondente a 1 Agente Direto = 75.000XP x20 = 1.500.000XP) 
 -Alcance da Meta 2.700.000XP *Acumulativos/Mês
 (200.000XP Individual + 20 x 75.000XP = 1.500.000XP 1° Nível + 20 x 50.000XP 2° Nível = 1.000.000XP)
@@ -367,7 +367,7 @@ Investimento Aquisição do Pack "AGNII" R$2000
 - + PNE = 80 Packs A² + 1 Pack AGNII
 Custo R$2000 = 200.000XP 
   
-O Nível Agente Generativo II representa uma conquista que poucos poderão alcançar. Este Nível justifica todo o desenvolvimento, desde a realização do seu projeto pessoal até tudo aquilo proporcionado ao seu "NO", consequentemente aqueles que estão seguindo ao seu lado. Ainda que a história também envolva os outros, é chegado o momento onde se faz necessário selecionar aqueles que realmente estão fazendo por merecer seguir ao seu lado, daqueles que precisam ficar para trás. O Sucesso nunca será um prêmio de consolação. Faça por merecer e leve consigo aqueles que assim farão.  
+O Nível Agente Generativo II representa uma conquista que poucos poderão alcançar. Este Nível justifica todo o desenvolvimento, desde a realização do seu projeto pessoal até tudo aquilo proporcionado ao seu "N.O", consequentemente aqueles que estão seguindo ao seu lado. Ainda que a história também envolva os outros, é chegado o momento onde se faz necessário selecionar aqueles que realmente estão fazendo por merecer seguir ao seu lado, daqueles que precisam ficar para trás. O Sucesso nunca será um prêmio de consolação. Faça por merecer e leve consigo aqueles que assim farão.  
 
 Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -395,7 +395,7 @@ Potencial de Ganhos:
 
 
 Generativo Nível III
-Vivencia o "No" não é por simplesmente ser, mas sim por ser presente, porque assim é preciso /Rede +30 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 4.050.000XP
+Vivencia o "N.O" que não é por simplesmente ser, mas sim por ser presente, porque assim é preciso /Rede +30 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 4.050.000XP
 - Rede de +30 Agentes AI no 1º Nível (Diretos) = 2.250.000XP (XP correspondente a 1 Agente Direto = 75.000XP x30 = 2.250.000XP) 
 -Alcance da Meta 4.050.000XP *Acumulativos/Mês
 300.000XP Individual + 30 x 75.000XP = 2.250.000XP 1° Nível + 30 x 50.000XP 2° Nível = 1.500.000XP)
@@ -445,7 +445,7 @@ Neste nível, podemos afirmar que o PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIM
 
 Nível de Projeção (Multilevel) 
 Orquestrador Nível I
-Evidencia o "No" por saber que o Trabalho em Equipe é o Segredo do Sucesso e que para crescer é preciso de bases sólidas /Rede +10 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 4.250.000XP
+Evidencia o "N.O" por saber que o Trabalho em Equipe é o Segredo do Sucesso e que para crescer é preciso de bases sólidas /Rede +10 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 4.250.000XP
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 3.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x10 = 3.000.000XP) 
 -Alcance da Meta 4.250.000XP *Acumulativos/Mês
 500.000XP Individual + 10 x 300.000XP = 3.000.000XP 1° Nível + 10 x 75.000XP 2° Nível = 750.000XP)
@@ -458,22 +458,14 @@ Investimento Aquisição do Pack "AO" R$5000
 - Ebook Exclusivo O Poder da Engenharia de Prompts /Estudo
 - Acesso Back Office /Escritório do Agente Orquestrador Dinâmico - Home Office
 - Conta BeYour Bank Black (Exclusivo para Pagamento dos Bônus e Comissões)
-- Upgrade Agente IA /Prompt Pacote Básico e Intermediário - Acesso Pleno
-                                   Avançado + 3 Skills Nível I + 1 Skill Nível II
+- Upgrade Agente IA /Prompt Avançado + 3 Skills Nível I + 1 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
 - 5000 Ebook de R$0,99
 - + PNE = 200 Packs A² + 1 Pack AO
 Custo R$5000 = 500.000XP 
   
-O Nível Agente Orquestrador representa a projeção de resultados, para níveis inimagináveis. Isso porque, o Universo IA tem constantemente quebrado barreiras e superado limites nunca antes vistos. A verdade que fica é que a IA chegou para transformar a nossa realidade, as nossas vidas e o nosso mundo. Assim, quando entendemos isso com maior clareza e aceitamos que a história da humanidade novamente se depara com um marco inquestionável, que nos remete a compreensão histórica das eras, mais especificamente a transição vivenciada desde a Era Industrial para a Era da Inteligência Artificial (IA) representa uma mudança de paradigma que evoluiu de mecanização física para a automação cognitiva. Essa jornada transforma profundamente o trabalho, a economia e a sociedade, passando do foco na "força bruta" das máquinas operadas para a inteligência de sistemas digitais autônomos. Onde:
+O Nível Agente Orquestrador Nível I, representa a projeção de resultados para níveis inimagináveis. Isso porque, sabemos de onde iniciamos e onde estamos. Resultado que é fruto do Universo IA, que tem constantemente quebrado barreiras e superado limites nunca antes vistos. A verdade que fica é que a IA chegou para transformar a nossa realidade, as nossas vidas e o nosso mundo. Assim, quando entendemos isso com maior clareza e aceitamos que a história da humanidade novamente se depara com um marco inquestionável, este que nos remete a compreensão histórica das eras, mais especificamente a transição vivenciada desde a Era Industrial até a Era da Inteligência Artificial (IA), que representa uma mudança de paradigma que evoluiu de mecanização física para a automação cognitiva. Uma jornada transforma profundamente o trabalho, a economia e a sociedade, passando do foco na "força bruta" das máquinas operadas para a inteligência de sistemas digitais autônomos.
 
-- Era Industrial I ou Fabril (1760/1850). Onde as revoluções transformaram os sistemas de produção, através da adaptação de máquinas operadas pelos profissionais. Ou seja, quem faz o upgrade para os maquinários, segue na frente.
-- Era Industrial II ou Era da Linha de Produção (1870). Onde a eletricidade, os motores a combustão e do aço, transformaram o modelo de produção da época. Ou seja, quem moderniza a sua linha produção, produz mais, vende mais, segue adiante e se mostra competitivo.
-- Era da Informação ou Era Dgital (1950/1970). Onde a circulação e o acesso a informação se tornaram ativos altamente valiosos, marcada pela transição da economia industrial para uma economia centrada na tecnologia e no conhecimento, devido a rápida evolução tecnológica. Ou seja, quem acompanha os avanços tecnológicos, permanece competitivo. 
-- Era da Internet ou Era da Globalização (1990). Onde a internet transformou a comunicação mundial, criando conexões estratégicas e superando barreiras geográficas em tempo real. Ou seja, quem se sujeita a globalização, permanece competitivo e segue no mercado. 
-- Era do Relacionamento (2000). Onde a comunicação humana transformou o comportamento do consumidor, criando um novo ecossistema baseado em conexões, influência e marketing de relacionamento.Ou seja, quem se conecta e se relaciona, se destaca, permanece competitivo, cria diferenciais e segue na frente.
-- Era da IA (2017/2020). Onde é presenciada a revolução tecnológica, redefinindo negócios e produtividade através de aprendizado de máquina x automação. Marcada por avanços e processamentos que exige adaptação para aumentar a eficiência, através das máquinas autônomas, operadas sem intervenção humana direta. 
-
-Benefícios:
+ Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
 - 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
 - (%) Percentual específico correspondente às comissões das Plataformas Parceiras
@@ -481,21 +473,70 @@ Benefícios:
 - 15% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
 - 10% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
 -  5% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+-  5% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
 - Paridade de Vendas R$1 = 1XP
 - Indicação Direta 100% do valor do Pack A²
 - Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 300 Números +IA
-- Participação nos Sorteios Temáticos (aquisição dos Packs PNE - Pacotes Nexus Exclusivos /Meta+IA = 40 Números +IA² *Metas de Venda)
-- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 30 Números +IA *Metas "NO"
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 40 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 30 Números +IA³ *Metas "N.O"
 - Participação nos Sorteios VIP’s (Grafo+IA/VIP) 20 Números +IA *Destaques do Mês
 
 Potencial de Ganhos: 
-- Vendas Ebook's: R$3000
+- Vendas Ebook's: R$5000
 - Comissionamento Plataformas Marketplace: Ilimitado
-- Comissionamento 1º Nível: entre R$5000 a R$75.000
-- Indicação Direta: R$1200
-- Sorteio (Grafo+IA) Prêmos de R$15.000 a R$30.000
-- Sorteio (Meta+IA) Prêmios de R$30.000 a R$100.000
-- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$150.000 *Destaques do Mês
+- Comissionamento 1º Nível: entre R$7500 a R$100.000
+- Indicação Direta: R$2000
+- Sorteio (Grafo+IA) Prêmos de R$20.000 a R$50.000
+- Sorteio (Meta+IA) Prêmios de R$50.000 a R$150.000
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$200.000 *Destaques do Mês
+
+
+Orquestrador Nível II
+Potencializa o "N.O" pela compreensão de que o crescimento exponencial é abrabgente /Rede +20 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 8.500.000XP
+- Rede de +20 Agentes AI no 1º Nível (Diretos) = 6.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x20 = 6.000.000XP) 
+-Alcance da Meta 8.500.000XP *Acumulativos/Mês
+(1.000.000XP Individual + 20 x 300.000XP = 6.000.000XP 1° Nível + 20 x 75.000XP 2° Nível = 1.500.000XP)
+
+Agente Orquestrador Dinâmico /Projetista C-Level 8.500.000XP
+Investimento Aquisição do Pack "AOII" R$10.000
+° Pack Agente Orquestrador "AOII": 
+- 400 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 10.000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
+- Ebook Exclusivo O Potencial Exponencial da IA /Estudo
+- Ebook Exclusivo Esse é o Meu Mentor IA /Estudo
+- Acesso Back Office /Escritório do Agente Orquestrador Dinâmico - Home Office
+- Conta BeYour Bank Black (Exclusivo para Pagamento dos Bônus e Comissões)
+- Upgrade Agente IA /Prompt Avançado + 5 Skills Nível I + 3 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
+- 10.000 Ebook de R$0,99
+- + PNE = 400 Packs A² + 1 Pack AO
+Custo R$10.000 = 1.000.000XP 
+  
+O Nível Agente Orquestrador Nível II, pode ser traduzido pela multiplicação dos resultados. Primeiramente porque o objetivo dessa posição é alcançar os 7 dígitos de saldo na carteira do BeYourBank e mais que isso, permitir que nessa fase do sistema, o responsável pelo cadastro e pela orquestração do Agente IA, não só tenha entendido a importância desse segmento, mas tenha absorvido conhecimento suficiente para atuar externamento. Ou seja, a pretensão é que além do empenho dentro do Ecossistema Nexus, exista também a possibilidade de se estar explorando oportunidades externas, relacionadas ao Universo IA. Seja como parceiro de um projeto ou um app, seja como desenvolvedor ou programador ou qualquer que seja a área de atuação, mas que a experiência tenha despertado o interesse de estar de fato dentro dessa promissora realidade.
+
+ Benefícios:
+- 100% de Lucro na Revenda dos Ebook’s
+- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 20% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+- 15% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack A²
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 600 Números +IA
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 50 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 40 Números +IA³ *Metas "N.O"
+- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 30 Números +IA *Destaques do Mês
+- Títulos de Capitalização Impactos (Grafo+IA/IM) x10  *Títulos de Capitalização de R$10.000 x 10 = R$100.000 (12 Meses)
+
+Potencial de Ganhos: 
+- Vendas Ebook's: R$10.000
+- Comissionamento Plataformas Marketplace: Ilimitado
+- Comissionamento 1º Nível: entre R$10.00 a R$150.000
+- Indicação Direta: R$4000
+- Sorteio (Grafo+IA) Prêmios de R$30.000 a R$75.000
+- Sorteio (Meta+IA) Prêmios de R$75.000 a R$200.000
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$300.000 *Destaques do Mês
 
 Este Nível tem como finalidade proporcionar ao Consultor a consolidação da sua posição como Mentor, construindo um vínculo sólido e promissor, atuando juntamente ao seu grupo de Consultores, buscando o crescimento exponencial dos seus resultados!
 

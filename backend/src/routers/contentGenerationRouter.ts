@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
+import { protectedProcedure, router } from "../config/trpc";
 import { TRPCError } from "@trpc/server";
-import { invokeLLM } from "../_core/llm";
+import { invokeLLM } from "../services/llm-v2";
 
 /**
  * Content Generation Router
@@ -48,7 +48,7 @@ Always include relevant emojis and hashtags where appropriate.`,
         });
 
         const content =
-          response.choices[0]?.message.content || "Failed to generate content";
+          response.content || "Failed to generate content";
 
         return {
           success: true,
@@ -105,7 +105,7 @@ Always include relevant emojis and hashtags where appropriate.`,
           variations.push({
             variation: i + 1,
             tone,
-            content: response.choices[0]?.message.content || "",
+            content: response.content || "",
           });
         }
 
@@ -152,7 +152,7 @@ Return only hashtags separated by spaces, no explanations.`,
         });
 
         const hashtags =
-          response.choices[0]?.message.content?.toString().split(/\s+/) || [];
+          response.content?.toString().split(/\s+/) || [];
 
         return {
           success: true,
@@ -215,7 +215,7 @@ Return only hashtags separated by spaces, no explanations.`,
         });
 
         const result = JSON.parse(
-          response.choices[0]?.message.content?.toString() || "{}"
+          response.content?.toString() || "{}"
         );
 
         return {
@@ -269,7 +269,7 @@ Make it persuasive, include benefits, and add appropriate emojis and call-to-act
           success: true,
           productName: input.productName,
           platform: input.platform,
-          description: response.choices[0]?.message.content || "",
+          description: response.content || "",
           generatedAt: new Date(),
         };
       } catch (error) {
@@ -326,7 +326,7 @@ Include: subject line, greeting, body, and CTA.`,
           emails.push({
             emailNumber: i,
             type: emailType,
-            content: response.choices[0]?.message.content || "",
+            content: response.content || "",
           });
         }
 

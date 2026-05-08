@@ -1,8 +1,8 @@
 import { eq, and, lte, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
-  InsertUser, users, agents, upgrades, agentUpgrades, 
-  InsertAgent, Agent, Upgrade, AgentUpgrade,
+  InsertUser, users, agents, upgrades, agentUpgrades, payments, bonuses, materials,
+  InsertAgent, Agent, Upgrade, AgentUpgrade, Payment, InsertPayment, Bonus, InsertBonus, Material, InsertMaterial,
   affiliates, network, orders, products, notifications
 } from "./schema-final";
 import { ENV } from '../../backend/src/config/env';

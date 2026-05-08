@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { systemRouter } from "./_core/systemRouter";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import * as db from "./db";
-import * as llm from "./llm";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "../config/trpc";
+import * as db from "../../database/schemas/db";
+import * as llm from "../services/llm";
 import { dashboardRouter } from "./dashboardRouter";
 import { mmnRouter } from "../services/mmn";
 

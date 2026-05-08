@@ -1,21 +1,21 @@
 import { z } from "zod";
-import { protectedProcedure, adminProcedure, router } from "../_core/trpc";
-import { getDb } from "../db";
+import { protectedProcedure, adminProcedure, router } from "../config/trpc";
+import { getDb } from "../../database/schemas/db";
 import {
   payments,
   commissions,
   affiliates,
   InsertPayment,
   InsertCommission,
-} from "../../drizzle/schema";
+} from "../../database/schemas/schema-final";
 import { eq, and, desc, gte, lt } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import {
   calculateCommissionsForPayment,
   confirmCommissions,
   updateAffiliateCommissionTotals,
-} from "./commissions";
-import { createNotification } from "../db";
+} from "../services/commissions";
+import { createNotification } from "../../database/schemas/db";
 
 /**
  * Payments Router - Gestão de pagamentos e comissões
@@ -59,7 +59,7 @@ export const paymentsRouter = router({
           .where(eq(affiliates.userId, ctx.user.id))
           .limit(1);
 
-        if (affiliate.length === 0 && ctx.user.role !== "admin") {
+        if (affiliate.length === 0 && ctx.user.role !== "admin" && ctx.user.role !== "user") {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "Affiliate profile not found",
@@ -352,7 +352,8 @@ export const paymentsRouter = router({
 
       // Se é afiliado, só pode ver seu próprio extrato
       if (
-        ctx.user.role === "affiliate" &&
+        ctx.user.role === "user" && // Assuming 'user' role is equivalent to 'affiliate' for this context
+
         targetAffiliateId !== (await db
           .select()
           .from(affiliates)

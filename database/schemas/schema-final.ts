@@ -1,4 +1,4 @@
-import { mysqlTable, int, varchar, text, mysqlEnum, timestamp, index, unique, decimal } from "drizzle-orm/mysql-core";
+import { mysqlTable, int, varchar, text, mysqlEnum, timestamp, index, unique, decimal, json, boolean, bigint } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 
 export const users = mysqlTable("users", {
@@ -70,6 +70,22 @@ export const commissions = mysqlTable("commissions", {
   updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
 });
 
+export const payments = mysqlTable("payments", {
+  id: int("id").primaryKey().autoincrement(),
+  affiliateId: int("affiliateId").notNull(),
+  amount: int("amount").notNull(),
+  method: varchar("method", { length: 64 }).notNull(),
+  status: mysqlEnum("status", ["pending", "confirmed", "failed", "cancelled"]).notNull().default("pending"),
+  bankCode: varchar("bankCode", { length: 10 }),
+  bankNumber: varchar("bankNumber", { length: 20 }),
+  agency: varchar("agency", { length: 10 }),
+  account: varchar("account", { length: 20 }),
+  paymentDate: timestamp("paymentDate"),
+  confirmedAt: timestamp("confirmedAt"),
+  createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
+  updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+});
+
 export const notifications = mysqlTable("notifications", {
   id: int("id").primaryKey().autoincrement(),
   userId: int("userId"),
@@ -118,6 +134,30 @@ export const agentUpgrades = mysqlTable("agent_upgrades", {
   expiresAt: timestamp("expiresAt"),
 });
 
+export const bonuses = mysqlTable("bonuses", {
+  id: int("id").primaryKey().autoincrement(),
+  affiliateId: int("affiliateId").notNull(),
+  amount: int("amount").notNull(),
+  type: varchar("type", { length: 64 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["pending", "confirmed", "paid", "cancelled"]).notNull().default("pending"),
+  createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
+  updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+});
+
+export const materials = mysqlTable("materials", {
+  id: int("id").primaryKey().autoincrement(),
+  affiliateId: int("affiliateId"),
+  name: varchar("name", { length: 128 }).notNull(),
+  type: varchar("type", { length: 64 }).notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  fileKey: text("fileKey").notNull(),
+  description: text("description"),
+  downloads: int("downloads").notNull().default(0),
+  createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
+});
+
+// Tipos exportados para compatibilidade
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type Affiliate = typeof affiliates.$inferSelect;
@@ -128,7 +168,13 @@ export type Order = typeof orders.$inferSelect;
 export type InsertOrder = typeof orders.$inferInsert;
 export type Commission = typeof commissions.$inferSelect;
 export type InsertCommission = typeof commissions.$inferInsert;
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = typeof payments.$inferInsert;
 export type Agent = typeof agents.$inferSelect;
 export type InsertAgent = typeof agents.$inferInsert;
 export type Upgrade = typeof upgrades.$inferSelect;
 export type AgentUpgrade = typeof agentUpgrades.$inferSelect;
+export type Bonus = typeof bonuses.$inferSelect;
+export type InsertBonus = typeof bonuses.$inferInsert;
+export type Material = typeof materials.$inferSelect;
+export type InsertMaterial = typeof materials.$inferInsert;

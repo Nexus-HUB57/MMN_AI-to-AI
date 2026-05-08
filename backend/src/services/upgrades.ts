@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
-import { getDb } from "../db";
-import { upgrades, agentUpgrades, InsertUpgrade, InsertAgentUpgrade } from "../../drizzle/schema";
-import { getAgentByUserId, getActiveUpgrades } from "../db";
+import { protectedProcedure, publicProcedure, router } from "../config/trpc";
+import { getDb } from "../../database/schemas/db";
+import { upgrades, agentUpgrades, Upgrade as InsertUpgrade, AgentUpgrade as InsertAgentUpgrade } from "../../database/schemas/schema-final";
+import { getAgentByUserId, getActiveUpgrades } from "../../database/schemas/db";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 

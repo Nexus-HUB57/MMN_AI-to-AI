@@ -5,7 +5,7 @@ import {
   InsertAgent, Agent, Upgrade, AgentUpgrade,
   affiliates, network, orders, products, notifications
 } from "./schema-final";
-import { ENV } from './env';
+import { ENV } from '../../backend/src/config/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 

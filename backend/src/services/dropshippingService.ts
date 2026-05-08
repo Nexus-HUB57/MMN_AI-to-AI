@@ -77,7 +77,7 @@ export const registerDropshippingOrder = async (input: {
 
   // Notificação ao fornecedor (ATENÇÃO: userId 1 é um placeholder para o admin/fornecedor. Em uma implementação real, a lógica para identificar o fornecedor seria mais complexa, possivelmente buscando o fornecedor associado ao `productId` ou `marketplace`, e enviando a notificação para um sistema externo ou um usuário específico do fornecedor.)
   await createNotification({
-    userId: 1, // Assumindo que o userId 1 é o admin/fornecedor
+    userId: 1, // ATENÇÃO: userId 1 é um placeholder para o admin/fornecedor. Em uma implementação real, a lógica para identificar o fornecedor seria mais complexa, possivelmente buscando o fornecedor associado ao `productId` ou `marketplace`, e enviando a notificação para um sistema externo ou um usuário específico do fornecedor.
     type: "new_dropshipping_order",
     title: `Novo Pedido Dropshipping #${orderId}`,
     content: `Um novo pedido de dropshipping para o produto '${product.title}' (ID: ${product.id}) foi registrado. Cliente: ${input.customerName}, Email: ${input.customerEmail}, Endereço: ${input.shippingAddress}.`,

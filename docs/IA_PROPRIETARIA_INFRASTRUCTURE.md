@@ -43,7 +43,7 @@ O processo de criação de um novo modelo proprietário segue estas etapas:
 | :--- | :--- | :--- | :--- |
 | `mmn-copywriting-v1` | Geração de conteúdo persuasivo | gpt-4.1-mini | Em Preparação |
 | `mmn-strategy-v1` | Análise de mercado e rede | gpt-4.1-mini | Em Preparação |
-| `llama-2-mmn` | Operações gerais (Self-hosted) | Llama 2 70B | Planejado |
+| `llama-2` | Operações gerais (Self-hosted) | Llama 2 70B | Planejado |
 
 ## 5. Próximos Passos
 

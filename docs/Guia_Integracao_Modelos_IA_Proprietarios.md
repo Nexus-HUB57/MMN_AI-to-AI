@@ -55,9 +55,29 @@ const modelRegistry: Record<ModelType, ModelConfig> = {
     modelId: "mmn-copywriting-v1",
     maxTokens: 2048,
     temperature: 0.8,
-    isAvailable: false, // Atualmente indisponível
+    isAvailable: false, // Será ativado após fine-tuning
   },
-  // ... outros modelos
+  "mmn-strategy-v1": {
+    provider: "proprietary",
+    modelId: "mmn-strategy-v1",
+    maxTokens: 3000,
+    temperature: 0.6,
+    isAvailable: false, // Será ativado após fine-tuning
+  },
+  "llama-2": {
+    provider: "proprietary",
+    modelId: "llama-2-70b",
+    maxTokens: 4096,
+    temperature: 0.7,
+    isAvailable: false, // Requer hospedagem própria
+  },
+  "mistral": {
+    provider: "proprietary",
+    modelId: "mistral-7b",
+    maxTokens: 4096,
+    temperature: 0.7,
+    isAvailable: false, // Requer hospedagem própria
+  },
 };
 ```
 
@@ -93,9 +113,9 @@ Primeiro, adicione uma nova entrada ao `modelRegistry` em `llm-v2.ts`:
 ```typescript
 const modelRegistry: Record<ModelType, ModelConfig> = {
   // ... modelos existentes
-  "novo-modelo-proprietario-v1": {
+  "seu-novo-modelo": {
     provider: "proprietary",
-    modelId: "novo-modelo-proprietario-v1",
+    modelId: "seu-novo-modelo",
     maxTokens: 8192, // Ajuste conforme o modelo
     temperature: 0.7, // Ajuste conforme o modelo
     isAvailable: false, // Defina como true após a implementação da invocação
@@ -117,30 +137,23 @@ async function invokeProprietaryModel(
     `[LLM] Invocando modelo proprietário: ${modelConfig.modelId}`
   );
 
-  switch (modelConfig.modelId) {
-    case "mmn-copywriting-v1":
-      // Lógica para invocar mmn-copywriting-v1 (ex: API interna, fine-tuned OpenAI)
-      // return invokeFineTunedOpenAI(messages, response_format, modelConfig);
-      throw new Error(`Modelo proprietário ${modelConfig.modelId} ainda não está disponível.`);
-    case "novo-modelo-proprietario-v1":
-      // Implemente a lógica para chamar seu novo modelo aqui.
-      // Isso pode envolver:
-      // 1. Fazer uma requisição HTTP para uma API externa (ex: Replicate, Together AI).
-      // 2. Chamar um serviço local que hospeda o modelo (ex: um endpoint FastAPI).
-      // 3. Utilizar uma biblioteca específica para o modelo (se aplicável).
-      console.log(`Chamando API para ${modelConfig.modelId} com mensagens:`, messages);
-      // Exemplo hipotético de chamada a uma API externa:
-      // const externalApiResponse = await fetch("https://api.seumodelo.com/predict", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ model: modelConfig.modelId, messages, response_format }),
-      // });
-      // const data = await externalApiResponse.json();
-      // return { content: data.generated_text, modelUsed: modelConfig.modelId, provider: "proprietary", tokensUsed: data.tokens };
-      throw new Error(`Implementação para ${modelConfig.modelId} pendente.`);
-    default:
-      throw new Error(`Modelo proprietário desconhecido: ${modelConfig.modelId}`);
-  }
+  // Placeholder: Por enquanto, retorna um erro indicando que o modelo não está pronto
+  throw new Error(
+    `Modelo proprietário ${modelConfig.modelId} ainda não está disponível. ` +
+      `Aguardando conclusão do fine-tuning.`
+  );
+
+  // Implementação futura:
+  // switch (modelConfig.modelId) {
+  //   case "mmn-copywriting-v1":
+  //     return invokeFineTunedOpenAI(messages, response_format, modelConfig);
+  //   case "llama-2-70b":
+  //     return invokeLlamaViaReplicate(messages, response_format, modelConfig);
+  //   case "mistral-7b":
+  //     return invokeMistralViaTogether(messages, response_format, modelConfig);
+  //   default:
+  //     throw new Error(`Modelo proprietário desconhecido: ${modelConfig.modelId}`);
+  // }
 }
 ```
 

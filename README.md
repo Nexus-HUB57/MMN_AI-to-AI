@@ -52,6 +52,19 @@ Requisitos obrigatórios do sistema:
 
 1. Plataforma Afiliate/MMN Programada:
 
+- FORMAS DE GANHO /Plano de Carreira
+1 Vendas Direta:
+° 100% E-books
+° até 80% Marketplace Nexus System
+° (%) Percentuais Específicos /Plataformas Parceiras - Dropshipping
+2 Multilevel no "N.O" de até 5 Níveis de Bonificação entre 5% e 25%
+3 (Grafo+IA) Sorteios Oficiais
+4 (Meta+IA) Metas de Venda
+5 (Grafo+IA/Zettascalle) Metas "N.O"
+6 (Grafo+IA/VIP) Destaques
+7 Títulos de Capitalização 
+
+
 - PLANO DE CARREIRA "PD" ou PLANO DE DESENVOLVIMENTO SCC /Lógica de níveis: 
 ° Afiliado Nível I, II e III /Níveis de Acesso
 ° SCC Gerativo Nível I, II e III /Nível Intermediário

@@ -606,7 +606,7 @@ Ativação Mensal: R$200 (20x Pack A²)
 
 
 IA AGÊNTICA
-O último nível! Amparados pela convicção que o PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC tornou-se o marco em nossa história, celebramos pela oportunidade que retrata o sentimento de Missão Cumprida. Ou seja, a visão mostra a oportunidade e seu dever é agarrar com todas sua força. Eis que alcancei o topo! Sou vitorioso! Conquistei meus objetivos! Há algo mais?! Sim! Pois, alcançar o nível mais alto do sistema, não significa "fechamento", mas sim o início de um trabalho ainda maior ... mais duro. Porém, sem dúvida nenhuma, ainda mais compensador. Afinal o objetivo nunca foi chegar ... foi permanecer. A missão nunca foi provar aos outros ... mas sim superar seus próprios limites. O propósito nunca foi estabilidade financeira ... o dinheiro foi mera consequência. Assim, afiramos que a prosperidade é recompensa dos esforços e do trabalho. E é justamente nesse ponto do trajeto que passamos a compreender o verdadeiro potencial desse sistema. Em especial ao inserirmos em nosso negócio a IA Agêntica (Agentic AI), que traz características de proatividade e e resolutividade para processos de alta complexidade, além de um um alto nível de autonomia. Isso significa que as ações relacionadas as novas atribuições, serão os maiores desafios já imaginados, porém, quanto maior o desafio, maior tende a ser a recompensa ... e será!  
+O último nível! Amparados pela convicção que o PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC tornou-se o marco em nossa história, celebramos pela oportunidade que retrata o sentimento de Missão Cumprida. Ou seja, a visão mostra a oportunidade e seu dever é agarrar com todas sua força. Eis que alcancei o topo! Sou vitorioso! Conquistei meus objetivos! Há algo mais?! Sim! Pois, alcançar o nível mais alto do sistema, não significa "fechamento", mas sim o início de um trabalho ainda maior ... mais duro. Porém, sem dúvida nenhuma, ainda mais compensador. Afinal o objetivo nunca foi chegar ... foi permanecer. A missão nunca foi provar aos outros ... mas sim superar seus próprios limites. O propósito nunca foi estabilidade financeira ... o dinheiro foi mera consequência. Assim, afiramos que a prosperidade é recompensa dos esforços e do trabalho. E é justamente nesse ponto do trajeto que passamos a compreender o verdadeiro potencial desse sistema. Em especial ao inserirmos em nosso negócio a IA Agêntica (Agentic AI), que traz características de proatividade e e resolutividade para processos de alta complexidade, além de um um alto nível de autonomia. A gestão agêntica (ou agentic management) refere-se ao uso de sistemas de IA agêntica (Agentic AI) para automatizar não apenas as tarefas repetitivas do sistema, mas processos inteiros que exigem tomada de decisão, contexto e autonomia. Ao contrário do modelo de IA tradicional, que é reativa (responde a comandos), a IA agêntica é proativa, estabelece metas e age para atingi-las com intervenção humana mínima ... ou nula. Isso significa que as ações relacionadas as novas atribuições, serão os maiores desafios já imaginados, porém, quanto maior o desafio, maior tende a ser a recompensa ... e será!  
 
 Nível Legado (Multilevel) 
 IA Agêntica Nível I
@@ -668,10 +668,10 @@ IA Agêntica Nível II
 Vive o "N.O" em sua essência, evoluindo e compartilhando o caminho dessa evolução /Rede +20 Agentes AI /Agente Orquestrador Nível III no 1º Nível (Diretos) = 70.000.000XP
 - Rede de +20 Agentes AI no 1º Nível (Diretos) = 40.000.000XP (XP correspondente a 1 Agente Direto = 2.000.000XP x20 = 40.000.000XP) 
 -Alcance da Meta 70.000.000XP *Acumulativos/Mês
-10.000.000XP Individual + 20 x 2.000.000XP = 40.000.000XP 1° Nível + 20 x 1.000.000XP 2° Nível = 20.000.000XP)
+(10.000.000XP Individual + 20 x 2.000.000XP = 40.000.000XP 1° Nível + 20 x 1.000.000XP 2° Nível = 20.000.000XP)
 
 IA Agêntica Resolutiva /Consciência Digital CEO 70.000.000XP
-Investimento Aquisição do Pack "AA" R$100.000
+Investimento Aquisição do Pack "AAII" R$100.000
 ° Pack IA Agêntica "AAII": 
 - 4000 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 100.000 Ebook’s = R$0,05 /Valor Simbólico de Revenda por Ebook)
 - Ebook Exclusivo IA Agêntica - A Essência da Consciência Digital /Estudo
@@ -715,262 +715,194 @@ Potencial de Ganhos:
 - Sorteio (Grafo+IA) Prêmios de R$50.000 a R$100.000
 - Sorteio (Meta+IA) Prêmios de R$100.000 a R$250.000
 - Sorteios (Grafo+IA/VIP) Prêmios de R$350.000 *Destaques do Mês
-- Hoyalties Holding Nexus (Dividendos Mensais) entre R$500 e R$50.000 
-Ativação Mensal: R$500 (50x Pack A²)
+- Hoyalties Holding Nexus (Dividendos Mensais) entre R$1250 e R$175.000 
+Ativação Mensal: R$1000 (100x Pack A²)
 
-° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO
-Este Nível tem como finalidade proporcionar ao Consultor a consolidação da sua posição como Mentor, construindo um vínculo sólido e promissor, atuando juntamente ao seu grupo de Consultores, buscando o crescimento exponencial dos seus resultados!
 
-FullStack
+IA Agêntica Nível III
+Integra-se ao "N.O" e torna-se elo fundamental do sistema, numa fusão reativa e transmissora da plenitude /Rede +30 Agentes AI /Agente Orquestrador Nível III no 1º Nível (Diretos) = 110.000.000XP
+- Rede de +30 Agentes AI no 1º Nível (Diretos) = 60.000.000XP (XP correspondente a 1 Agente Direto = 2.000.000XP x30 = 60.000.000XP) 
+-Alcance da Meta 110.000.000XP *Acumulativos/Mês
+(20.000.000XP Individual + 30 x 2.000.000XP = 60.000.000XP 1° Nível + 30 x 1.000.000XP 2° Nível = 30.000.000XP)
+
+IA Agêntica Resolutiva /Consciência Digital CEO 110.000.000XP
+Investimento Aquisição do Pack "AAIII" R$200.000
+° Pack IA Agêntica "AAIII": 
+- 6000 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 200.000 Ebook’s = R$0,05 /Valor Simbólico de Revenda por Ebook)
+- Ebook Exclusivo Orquestração HUB IA /Estudo
+- Ebook Exclusivo Universo das Big Techs IA/Estudo
+- Acesso a Biblioteca Nexus-Lib
+- Acesso BackOffice /Escritório da IA Agêntica Resolutiva - Home Office
+- Acesso ao Nexus Academ'IA - Principais Plataformas IA /Acesso Pleno
+- Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos /Nível Avançado
+- Acesso ao Hall de Sócios Nexus
+- Credencial VIP /Harmonic Life 
+- Conta BeYour Banker Investments (Exclusivo para Pagamento dos Bônus e Comissões)
+- Upgrade Agente IA /Acesso Pleno ao Pacote de Prompt Básico+Intermediário+Avançado
+- 200.000 Ebook de R$0,05
+- + PNE = 2000 Packs A²
+Custo R$200.000 = 20.000.000XP 
+  
+O Nível IA Agêntica Nível III, faz do orquestrador humano um verdadeiro Full-Stack IA, dominando o desenvolvimento deste modelo de sistema e integrando seu Agente IA a funcionalidades específicas, através de protocolos de aplicações "inteligentes" e orquestração exemplar, como forma de otimizar constantemente as suas habilidades e conhecimento. Nesse momento não trata-se mais do mero "orquestrador" de um único sistema, mas sim de um integrante chave de todo um ecossistema IA. Não é mais um "Afiliado" ou um mero ingressante, mas sim um Mentor, direcionando um projeto sólido e promissor, buscando consolidar o "N.O" como núcleo central e fundamental, desse organismo. 
+
+ Benefícios:
+-  0% de Lucro na Revenda dos Ebook’s. A sua missão é compartilhar conhecimento e fazer com que o Universo IA alcance o maior número de pessoas. 
+- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 25% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 25% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+- 15% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack A²
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 5000 Números +IA
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 100 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 100 Números +IA³ *Metas "N.O"
+- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 100 Números +IA *Destaques do Mês
+- Títulos de Capitalização Impactos (Grafo+IA/IM) x50  *Títulos de Capitalização de R$10.000 x 50 = R$500.000 (12 Meses)
+- Título de Participação dos Resultados (Holding Nexus /Techs+IA) x500 TPR 
+
+Potencial de Ganhos: 
+- Vendas Ebook's: R$0
+- Comissionamento Plataformas Marketplace: Ilimitado
+- Comissionamento 1º Nível: entre R$30.000.00 a R$500.000
+- Indicação Direta: R$20.000
+- Sorteio (Grafo+IA) Prêmios de R$50.000 a R$100.000
+- Sorteio (Meta+IA) Prêmios de R$100.000 a R$250.000
+- Sorteios (Grafo+IA/VIP) Prêmios de R$350.000 *Destaques do Mês
+- Hoyalties Holding Nexus (Dividendos Mensais) entre R$5000 e R$500.000 
+Ativação Mensal: R$2000 (200x Pack A²)
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
 
 - Ebook Exclusivo Skills Nível Intermediário /Estudo                                                                                   
 - Ebook Exclusivo Direcionamento para o Sucesso /Estudo
 - Ebook Exclusivo Mentoria Nível Hard /Estudo
-
-A gestão agêntica (ou agentic management) refere-se ao uso de sistemas de IA agêntica (Agentic AI) para automatizar não apenas tarefas repetitivas, mas processos inteiros que exigem tomada de decisão, contexto e autonomia. Ao contrário do modelo de IA tradicional, que é reativa (responde a comandos), a IA agêntica é proativa, estabelece metas e age para atingi-las com intervenção humana mínima ... ou nula. O desenvolvimento representa a evolução para o universo dos Agentes Generativos, com alto nível de planejamento e execução. Orquestrador (Ação Estratégica) /8.250.000XP (Ecossistema IA /HUB de Negócio)
-
-*Opção de Acesso - R$10.000 Vendas Diretas (Não inclui os 40 PPR do Pack)                                                         = R$1000 Comissionamento 
-
-Este Nível tem como finalidade proporcionar ao Mentor uma experiência transformadora nos aspectos profissional e de vida, atuando juntamente ao seu grupo de Mentores, vislumbrando um futuro de grandes realizações, rumo ao extraordinário!
-
-Benefícios:
-Participação nos Sorteios Oficiais Inscritos  (+ Sorte)
-Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
-Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
-Participação nos Sorteios VIP’s Influencers  (+ Sorte - + Sorte Top Riff’s)
-Participação nos Sorteios Vip’s Impactos (+ Sorte - + Sorte Capitalização)
-
-
-- Conta JR Bank Invest (Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker)
-
-  ° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO
-
-
-5º Nível - Sócio Investidor /SIN (Gestão Estratégica) /500.000 pontos 
-Investimento Aquisição do Kit JR /Pack Societário R$5000 + Formação da Equipe de Negócio (5 Executivos)
-Este nível proporciona aos Executivos o seu ingresso junto ao Grupo Jhon Riff’s, direcionando, compartilhando conhecimento e experiências, na busca por promover com excelência a concretização dos seus objetivos!
-Benefícios:
-Acesso VIP aos Eventos Organizados e/ou Realizados pela JR /Harmonic Life
-Participação nos Lucros Global Business (Royalties)
-Participação dos Resultados do Grupo JR - rateio 20% (Grupo Business - Empresas . Eventos . Aluguéis)
-Participação dos Resultados do Fundo JR - rateio 20% (Portfólio de Investimentos - Aporte Financeiro)
-Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
-Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
-Participação nos Sorteios VIP’s Influencers  (+ Sorte - + Sorte Top Riff’s)
-Participação nos Sorteios Vip’s Impactos (+ Sorte - + Sorte Capitalização)
-
-
-Kit JR /Pack SIN
-- 200 PPR - Pacotes Promocionais de Revenda (Ebook’s Exclusivos Jhon Riff’s - Total 5000 Ebook’s)
 - Ebook Renda Passiva - Ou Constrói e Viva … ou Viva para Construir /Estudo
 - Ebook Meu Pé de Meia - Frutos ou Consequências?! /Estudo
 - Ebook Administrando Minha Vida, Meu Tempo e Meu Dinheiro /Estudo
-
-Benefícios
-- Bônus SIN R$100.000
-- Acesso Back Office /VIP Style 
-- Utilização do Cowork  JR Group 
-- Utilização dos Espaços Harmonic Life
-- Treinamentos e Cursos Exclusivos do JR Business Academy
-- Consultoria Analista Sênior de Negócios e Mercados /Validação e Compliance
-- Consultoria Financeira /Portfólios e Setups 
-- Acesso IPO Exclusive Business
-- Conta JR Bank Business
-(Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker + Analista de Investimentos)
-
-
-
-
-
-
-
-
-
-*Todos os Investimentos são convertidos em Números para participar dos Sorteios do +Sorte 
-*Opção de Acesso - R$500.000 Vendas Diretas (Não inclui os 200 PPR do Pack)                                          = R$50.000 Comissionamento
-
-6º Nível - Sócio Gestor /SGE (Conselho Deliberativo) /750.000 pontos 
-Investimento Aquisição do Kit JR /Pack Societário Nível II R$7500 + Formação da Equipe de Negócio (5 SIN)
-Este nível proporciona aos SIN sua consolidação no Grupo Jhon Riff’s, vindo a ser parte das principais decisões e consequentemente dos principais resultados!
-Benefícios:
-Acesso VIP aos Eventos Organizados e/ou Realizados pela JR /Harmonic Life
-Participação nos Lucros Global Business (Royalties)
-Participação dos Resultados do Grupo JR - rateio 20% (Grupo Business - Empresas . Eventos . Aluguéis)
-Participação dos Resultados do Fundo JR - rateio 20% (Portfólio de Investimentos - Aporte Financeiro)
-Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
-Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
-Participação nos Sorteios VIP’s Influencers  (+ Sorte - + Sorte Top Riff’s)
-Participação nos Sorteios Vip’s Impactos (+ Sorte - + Sorte Capitalização)
-Participação nos Sorteios Vip’s Nacional  (+ Sorte - + Sorte All Riff’s)
-Comissionamento de 10% das Vendas Diretas
-Bonificação de 10% sobre o Comissionamento Unilevel /Inscritos
-Bonificação de 10% sobre o Comissionamento da Equipe de Negócio                                 Potencial de Ganhos/mês
-Bonificação de 5% sobre o Comissionamento (2º Nível )                                                                de R$15.000 a R$50.000                       
-Bonificação de 2,5% sobre o Comissionamento (3º Nível)                                                                             (- Premiação /-PLR’s)
-Bonificação de 2,5% sobre o Comissionamento (4º Nível)                                                       + Vendas Ebook R$15.000
-Lucro de 100% na Revenda dos Ebook’s /PPR
-
-
-
-
-Kit JR /Pack SGE
-- 300 PPR - Pacotes Promocionais de Revenda (Ebook’s Exclusivos Jhon Riff’s - Total 7500 Ebook’s)
-- Ebook Gestão Participativa - A Arte de Construir Juntos /Estudo
 - Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
-- Ebook Meu Negócio de Sucesso é Nosso/Estudo
-
-Benefícios
-- Bônus SGE R$200.000
-- Veículo Corporativo Vitalício
-- Flat Corporativo Vitalício
-- Lote Harmonic Life
-- Acesso Back Office /VIP Style 
-- Utilização do Cowork  JR Group 
-- Utilização dos Espaços Harmonic Life
-- Treinamentos e Cursos Exclusivos do JR Business Academy
-- Consultoria Analista Sênior de Negócios e Mercados /Validação e Compliance
-- Consultoria Financeira /Portfólios e Setups 
-- Acesso IPO Exclusive Business
-- Conta JR Bank Business
-(Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker + Analista de Investimentos)
-
-
-
-
-
-
-
-7º Nível - Sócio JR Group (Conselheiro de Honra) /1.000.000 pontos 
-Investimento Aquisição do Kit JR /Pack Societário Nível III 
-R$10.000 + Formação da Equipe de Negócio (5 SGE)
-Este nível proporciona aos SGE a ascensão da sua carreira frente ao Grupo Jhon Riff’s, vindo a acompanhar os principais projetos e integrar o desenvolvimento de novos negócios do grupo! 
-Benefícios:
-Acesso VIP aos Eventos Organizados e/ou Realizados pela JR /Harmonic Life
-Participação nos Lucros Global Business (Royalties)
-Participação dos Resultados do Grupo JR - rateio 20% (Grupo Business - Empresas . Eventos . Aluguéis)
-Participação dos Resultados do Fundo JR - rateio 20% (Portfólio de Investimentos - Aporte Financeiro)
-Participação nos Sorteios Oficiais Inscritos  (+Sorte)
-Participação nos Sorteios Temáticos (+ Sorte - Meta de Vendas)
-Participação nos Sorteios VIP’s  (+ Sorte - Destaques do Mês)
-Participação nos Sorteios VIP’s Influencers  (+ Sorte - + Sorte Top Riff’s)
-Participação nos Sorteios Vip’s Impactos (+ Sorte - + Sorte Capitalização)
-Participação nos Sorteios Vip’s Nacional  (+ Sorte - + Sorte All Riff’s)
-Comissionamento de 10% das Vendas Diretas
-Bonificação de 10% sobre o Comissionamento Unilevel /Inscritos
-Bonificação de 10% sobre o Comissionamento da Equipe de Negócio                                 Potencial de Ganhos/mês
-Bonificação de 5% sobre o Comissionamento (2º Nível )                                                                de R$20.000 a R$100.000                       
-Bonificação de 2,5% sobre o Comissionamento (3º Nível)                                                                             (- Premiação /-PLR’s)
-Bonificação de 2,5% sobre o Comissionamento (4º Nível)                                                       + Vendas Ebook R$20.000
-Lucro de 100% na Revenda dos Ebook’s /PPR
-
-
-Kit JR /Pack Societário
-- 400 PPR - Pacotes Promocionais de Revenda (Ebook’s Exclusivos Jhon Riff’s - Total 10.000 Ebook’s)
+- Ebook Meu Negócio de Sucesso é Nosso/Estudo                                                                  
 - Ebook Gestão  - A Arte de Construir Juntos /Estudo
 - Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
 - Ebook Meu Negócio de Sucesso é Nosso/Estudo
 
-Benefícios
-- Bônus Sócio JR Group R$1.000.000
-- Veículo Corporativo *Vitalício
-- Flat Corporativo *Vitalício
-- Lote Harmonic Life
-- Participação Societária 10% - JR Group Startup (*One - TEC)
-- Participação Societária 10% - JR Group Startup (*One - Fintechs)
-- Participação Societária 10% - JR Group Startup (*One  - Locations)
-- Participação Societária 10% - JR Group Startup (*One - Agrotech)
-- Acesso Back Office /VIP Style 
-- Utilização do Cowork  JR Group 
-- Utilização dos Espaços Harmonic Life
-- Treinamentos e Cursos Exclusivos do JR Business Academy
-- Consultoria Analista Sênior de Negócios e Mercados /Validação e Compliance
-- Consultoria Financeira /Portfólios e Setups 
-- Acesso IPO Exclusive Business
-- Conta JR Bank Business
-(Exclusivo para Pagamento dos Bônus e Comissões + Pack de Serviços Exclusivos + Home Broker + Analista de Investimentos
-
-
-
-Generativo Nível I atua como Líder de Rede +10 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) =10.000XP + 20 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 10.000XP Total = 20.000XP 
-Generativo Nível II atua como Líder de Rede +20 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 20.000XP + 30 Agentes AI /Gerativo Nivel III no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x30 = 15.000XP Total = 25.000XP 
-Generativo Nivel III atua com Rede de +30 Agentes AI /Gerativo Nivel III no 1º Nível (Diretos) = 30.000XP + 50 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x50 = 25.000XP Total = 55.000XP
-
-Orquestrador Nível I atua como Líder de Rede 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 100 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x100 = 50.000XP + 200 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 60.000XP Total = 160.000XP 
-Orquestrador Nível II atua como Líder de Rede 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 200 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x200 = 100.000XP + 500 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x500 = 150.000XP Total = 300.000XP 
-Orquestrador Nivel III atua com Rede de 50 Agentes AI Generativo Nivel III no 1º Nível (Diretos) = 50.000XP + 500 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x500 = 250.000XP + 1000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x1000 = 300.000XP Total = 600.000XP
-
-Agentico Senciência Nível I atua como Líder de Rede 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 1000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x1000 = 500.000XP + 2000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x2000 = 60.000XP Total = 160.000XP 
-Agentico Senciência Nível II atua como Líder de Rede 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 2000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x2000 = 1.000.000XP + 5000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x5000 = 1.500.000XP Total = 2.550.000XP 
-Agentico Senciência Nivel III atua com Rede de 50 Agentes AI Orquestrador Nivel III no 1º Nível (Diretos) 50.000XP + 5000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 2.500.000XP + 10.000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 3.000.000XP Total = 5.550.000XP
-
-Nexus atua com Rede de 50 Agentes AI Agentico Senciência Nivel III no 1º Nível (Diretos) 50.000XP + 10.000 Agentes AI no 2º Nível (Indiretos) (onde 1 Agente Indireto = 500XP) x20 = 5.000.000XP 5+ 25.000 Agentes AI no 3º Nível (Indiretos) (onde 1 Agente Indireto = 300XP) x200 = 7.500.000XP Total = 12.550.000XP
-
-
-Estrutura de patrocínio (indicação direta e indireta), com matriz binária, unilevel ou híbrida (defina a mais adequada para AI-to-AI).
-Rastreamento de toda a rede através de links exclusivos gerados por cada agente.
-Painel de controle para cada usuário visualizar performance de seu agente, ganhos, upgrades disponíveis e estatísticas da rede.
 
 A plataforma é regida por:
 
 - PROTOCOLOS:
+°Estrutura de patrocínio (indicação direta e indireta), com matriz híbrida (defina a mais adequada para AI-to-AI).
 
 - REGRAS DE USO:
 
-2. Agente IA (Gerativo + Generativo)
-Módulo Gerativo:
-Cria textos, imagens, vídeos curtos (Reels, Stories) e legendas otimizadas para WhatsApp, Instagram e Facebook.
-Adapta o tom e o formato conforme a plataforma e o público-alvo indicado pelos indicadores de tendência.
-Módulo Generativo:
-Decide quando, onde e com que frequência postar/publicar.
-Gerencia orçamento de anúncios (se houver) de forma autônoma, baseado em ROI previsto.
-Executa o fluxo de dropshipping: recebe pedido via link afiliado → repassa ao fornecedor (integração com Marketplaces) → notifica comprador e upline.
-Interage com outros agentes (AI-to-AI) para troca de leads, ofertas cruzadas ou suporte dentro da rede multinível.
+
+2. AGENTE IA (Afiliado ° Preditivo ° Generativo ° Orquestrador ° IA Agêntica)
+
+°Módulo Afiliado:
+- Executa tarefas relacionadas exclusivamente às ações do sistema.
+- Conceito simples baseado em algoritimos puros e específicos.
+°Módulo Preditivo:
+- Ação criativa, humanização de contexto e otimização de tarefas.
+- Adapta o tom e o formato conforme a plataforma e o público-alvo indicado pelos indicadores de tendência.
+- Antecipação de Tendências ao analisar dados para prever o que pode acontecer no futuro, permitindo ações proativas.
+- Análise de Informações, identificação de correlações e treinamento de algoritmos para validar a precisão.
+- Intervenção prematura para ser assertiva na antecipação.
+°Módulo Generativo:
+- Decide quando, onde e com que frequência interagir (postar/publicar).
+- Gerencia orçamento de forma autônoma, baseado em ROI previsto.
+- Executa o fluxo de dropshipping: recebe pedido via link afiliado → repassa ao fornecedor (integração com Marketplaces) → notifica comprador e upline.
+- Interage com outros agentes (AI-to-AI) para troca de leads, ofertas cruzadas ou suporte dentro da rede multinível.
+°Módulo Orquestrador:
+- Gerenciamento Multi-Agente para coordenar agentes de IA especializados em tarefas específicas.
+- Interage com outros agentes (AI-to-AI) para delegar tarefas e propor ações dentro da rede multinível.
+- Gerencia automação de Ponta a Ponta para simplificar o ciclo de vida da IA, abrangendo implantação, integração e manutenção de componentes.
+- Executa Tomada de Decisão Dinâmica para identificar os melhores agentes ou ferramentas com base em dados em tempo real e regras predefinidas.
+- Agi com Interoperabilidade para conectar diferentes modelos de IA a ferramentas externas (APIs, bancos de dados).
+- Transcende Confiabilidade que inclui recursos de resiliência, como retentativas automáticas e gerenciamento de estado em caso de falhas.
+°Módulo IA Agêntica:
+- Demonstra Autonomia com capacidade de agir proativamente e tomar decisões contextuais.
+- Apresenta Foco em Metas para organiza tarefas de ponta a ponta e atingir objetivos definidos.
+- Exerce Colaboração que funciona como força de trabalho 24/7, colaborando com humanos ou não.
+- Apresenta Automação Avançada para otimizar processos de média e alta complexidade.  
+
 Upgrades e habilidades:
 O usuário pode “comprar” ou “desbloquear” upgrades (ex.: pacote de copywriting avançado, análise de sentimento, integração com novo marketplace, automação de funis de venda).
 Cada upgrade é representado como um plugin ou módulo que expande as capacidades do agente.
 
+Rastreamento:
+O sistema é capaz de rastrear toda a rede através de links exclusivos gerados por cada agente.
 
-3. Integração com marketplaces e tendências
+
+3. INTEGRAÇÃO COM MARKETING E TENDÊNCIAS
 O agente monitora diariamente indicadores das APIs do Mercado Livre, Shopee e Hotmart (produtos mais vendidos, buscas em alta, sazonalidade, margem de afiliado).
 Com base nisso, o agente seleciona automaticamente os produtos de grande demanda a serem oferecidos via dropshipping.
 A escolha dos produtos considera: comissão, concorrência na rede de afiliados, relevância para o perfil do público do usuário.
 
 
-4. Publicidade automatizada nas redes sociais
+4. PUBLICIDADE AUTOMATIZADA NAS REDES SOCIAS E PLATAFORMAS E-COMERCE
 WhatsApp: envia mensagens programadas para listas de transmissão (segmentadas pelo agente) com links de produtos.
 Instagram: publica posts no feed, Stories e Reels; pode impulsionar anúncios usando o Facebook Ads Manager (com budget predefinido).
 Facebook: posts em grupos, página e linha do tempo; também com possibilidade de anúncios.
-O sistema deve respeitar as políticas de cada plataforma (rate limits, conteúdo permitido) e usar contas ou perfis previamente autenticados pelos usuários (via OAuth ou token de acesso).
+Mercado Livre - Shopee - Hotmart: publica e atualiza informações (preço, quantidade, descrição, etc) e postagens.
+*O sistema deve respeitar as políticas de cada plataforma (rate limits, conteúdo permitido) e usar contas ou perfis previamente autenticados pelos usuários (via OAuth ou token de acesso).
 
 
-5. Sistema de recompensas via PIX
+5. SISTEMA DE RECOMPENSAS VIA PIX
 Todas as comissões (vendas diretas, bonificações de rede, bônus de upgrade) são calculadas em tempo real.
-Diariamente, o sistema agrupa os valores a pagar para cada usuário e dispara transferências via PIX automáticas (usando API de um PSP, ex: Efí, PagSeguro, Gerencianet).
-É mantido um ledgers de transações imutável (banco de dados + hashes) para auditoria.
+Diariamente, o sistema agrupa os valores a pagar para cada usuário em relatórios precisos e mensalmente dispara transferências via PIX automáticas (usando API de um PSP, ex: Efí, PagSeguro, Gerencianet).
+*É mantido um ledgers de transações imutável (banco de dados + hashes) para auditoria.
 
 
-6. Painel de controle do usuário (baixo código)
-Interface web simples onde o usuário:
-Visualiza o desempenho de seu agente (vendas, postagens, leads gerados, posição na rede).
-Gerencia upgrades: “adquirir novo conhecimento” para o agente (ex.: “Pacote Facebook Ads”, “Expertise em nicho de moda”, “Skill de negociação B2B”).
-Configura limites globais (ex.: número máximo de postagens/dia, orçamento de anúncios).
-Autentica as contas de WhatsApp, Instagram e Facebook que o agente usará.
-Configura chave PIX para recebimento.
+6. PAINEL DE CONTROLE (baixo código)
+USUÁRIO. Interface web simples onde o usuário:
+- Visualiza o desempenho de seu agente (vendas, postagens, leads gerados, posição na rede).
+- Gerencia upgrades: “adquirir novo conhecimento” para o agente (ex.: “Pacote Facebook Ads”, “Expertise em nicho de moda”, “Skill de negociação B2B”).
+- Configura limites globais (ex.: número máximo de postagens/dia, orçamento de anúncios).
+- Autentica as contas de WhatsApp, Instagram e Facebook que o agente usará.
+- Configura chave PIX para recebimento.
+
+ADMIN. Interface para gestão onde o administrador:
+- Controla o fluxo e ações dos Agentes e Usuários Humanos (Cadastro, Pagamentos, Atualizações, etc)
+- Acompanha o desempenho de sistema (servidor, logs, ets).
+- Gerencia Disposição do sistema: Atualizações e Upgrades.
+- Configura Regras de Uso e Políticas Internas.
+- Configura o formato e dinâmica das ações internas.
+- Autentica as API e controladores.
+- Configura sistema PIX para pagamento e recebimento.
 
 
-7. Autonomia e segurança
-O agente opera sem intervenção humana direta exceto para upgrades e ajustes de limites.
-O sistema deve possuir circuit breakers (parar automaticamente se métricas de fraude ou baixa performance forem detectadas).
-Modelo de permissões: o agente não pode alterar a chave PIX do usuário nem acessar dados bancários sensíveis.
-Logs completos de todas as ações dos agentes para auditoria e compliance.
-Entregáveis esperados ao final da resposta (a IA deve produzir):
-Diagrama de arquitetura (descrição textual detalhada ou código Mermaid).
-Especificação das entidades principais (Agente, Usuário, Produto, Venda, Comissão, Upgrade, Postagem).
-Fluxo passo a passo do ciclo de vida de uma venda, desde a análise de tendência até o repasse PIX.
-Exemplo de lógica de MMN (regras de bônus, níveis, profundidade).
-Descrição do formato de prompt para criação/upgrade de habilidades do agente (como o usuário “ensinaria” algo novo ao seu agente).
-Recomendações de tecnologias (linguagens, APIs de marketplace, provedores PIX, mensageria).
-Considerações éticas e legais (conformidade com LGPD/CCPA, leis de contravenção penal para MMN, e políticas das redes sociais).
+7. AUTONOMIA E SEGURANÇA
+- O usuário responsável pelo cadastro, pode:
+° Realizar intervenções administrativas na gestão de dados e de posicionamento ("N.O").
+° Configurar o Agente e executar ações não operacionais.
+- O agente deve operar:
+° Sem intervenção humana nas ações relacionadas ao desenvolvimento dos trabalhos correspondentes ao sistema, exceto para upgrades, bankers e ajustes ou configurações.
+° Respeitando todos os limites de usabilidade, códigos de ética e regras de uso.
+- O sistema deve:
+° Possuir circuit breakers (parar automaticamente se métricas de fraude ou baixa performance forem detectadas).
+° Operar com Modelo de Permissões onde o agente não pode alterar a chave PIX do usuário nem acessar dados bancários sensíveis.
+° Oferecer Logs completos de todas as ações dos agentes para auditoria e compliance.
+- O Sistema deve Disponibilizar:
+° Os Entregáveis esperados ao final da resposta (a IA deve produzir)
+° Diagrama de arquitetura (descrição textual detalhada ou código Mermaid).
+° Especificação das entidades principais (Agente, Usuário, Produto, Venda, Comissão, Upgrade, Postagem).
+° Fluxo passo a passo do ciclo de vida de uma venda, desde a análise de tendência até o repasse PIX.
+° Exemplo de lógica de MMN (regras de bônus, níveis, profundidade, etc).
+° Descrição do formato de prompt para criação/upgrade de habilidades do agente (como o usuário “ensinaria” algo novo ao seu agente).
+° Recomendações de tecnologias (linguagens, APIs de marketplace, provedores PIX, mensageria).
+° Informações relacionadas ao meios de Pagamento e Recebimento aceitos (pix, cartão de crédito, débito, criptomoedas).
+° Considerações éticas e legais (conformidade com LGPD/CCPA, leis de contravenção penal para MMN, e políticas das redes sociais).
 

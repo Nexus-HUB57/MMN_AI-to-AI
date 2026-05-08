@@ -1,4 +1,4 @@
-import { invokeLLM } from "../_core/llm";
+import { invokeLLM } from "./llm-v2";
 
 /**
  * Hotmart API Integration
@@ -256,7 +256,7 @@ export async function analyzeHotmartProductTrends(product: HotmartProduct): Prom
     - recommendation: "buy", "hold", "sell" ou "avoid"
     - profitabilityScore (0-100): Potencial de lucro`;
 
-    const response = await invokeLLM({
+        const response = await invokeLLM({
       messages: [
         {
           role: "system",
@@ -300,7 +300,7 @@ export async function analyzeHotmartProductTrends(product: HotmartProduct): Prom
       },
     });
 
-    const content = response.choices[0]?.message.content;
+    const content = response.content;
     if (typeof content === "string") {
       return JSON.parse(content);
     }

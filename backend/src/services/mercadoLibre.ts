@@ -1,4 +1,4 @@
-import { invokeLLM } from "../_core/llm";
+import { invokeLLM } from "./llm-v2";
 
 /**
  * Mercado Libre API Integration
@@ -230,7 +230,7 @@ export async function analyzeMercadoLibreProductTrends(product: MLProduct): Prom
       },
     });
 
-    const content = response.choices[0]?.message.content;
+    const content = response.content;
     if (typeof content === "string") {
       return JSON.parse(content);
     }

@@ -1,4 +1,4 @@
-import { invokeLLM } from "../_core/llm";
+import { invokeLLM } from "./llm-v2";
 
 /**
  * Shopee API Integration
@@ -267,7 +267,7 @@ export async function analyzeShopeeProductTrends(product: ShopeeProduct): Promis
       },
     });
 
-    const content = response.choices[0]?.message.content;
+    const content = response.content;
     if (typeof content === "string") {
       return JSON.parse(content);
     }

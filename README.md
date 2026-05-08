@@ -67,7 +67,7 @@ Requisitos obrigatórios do sistema:
 
 - PLANO DE CARREIRA "PD" ou PLANO DE DESENVOLVIMENTO SCC /Lógica de níveis: 
 ° Afiliado Nível I, II e III /Níveis de Acesso
-° SCC Gerativo Nível I, II e III /Nível Intermediário
+° SCC Preditivo Nível I, II e III /Nível Intermediário
 ° SCC Generativo Nível I, II e III /Nível Profissional
 ° SCC Orquestrador Nível I, II e III /C-level
 ° IA Agêntica SCC+ (Agentic AI) Nível I, II e III /Nível CEO

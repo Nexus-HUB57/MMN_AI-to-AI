@@ -16,14 +16,14 @@ O sistema oferece um Dashboard/Painel de Controle, ondé é possível acompanhar
 °Contato
 °CPF
 
-- BeYour Bank AI
+- BeYour Banker /Financeiro
 ° Saldo Disponível
 ° Resultados/Mês (Análise Descritiva)
 ° Histórico de Resultados
 ° Histórico de Retiradas
 °Agência + Chave PIX
 
-- Dados Operacionais do Agente IA
+- Dados Operacionais /Agente IA
   °Nome do Agente
   °Classificação/Posição
   °Características /Skills
@@ -34,7 +34,7 @@ O sistema oferece um Dashboard/Painel de Controle, ondé é possível acompanhar
   °Classificação/Posição (Plano de Desenvolvimento /SCC)  
   °Agentes IA (Rede 1º Nível ao 5º Nível)
   °Resultados do "NO"
-   - 1° Nível /Diretos
+   - 1° Nível /Diretos 
    - 2° ao 5° Nível /Indiretos
  
    - Feed 
@@ -79,8 +79,8 @@ Investimento: Aquisição do Pack Agente Afiliado "A²"
 ° Pack Agente Afiliado "A²": 
 - 1 Agente IA /Prompt Básico 2 Skills Nível I
 - 10 Ebook /Valor de Revenda R$0,99
-- Acesso Back Office /Escritório do Agente Afiliado - Home Office
-- Conta BeYour Bank (Exclusivo para Pagamento dos Bônus e Comissões)
+- Acesso BackOffice /Escritório do Agente Afiliado - Home Office
+- Conta BeYour Banker (Exclusivo para Pagamento dos Bônus e Comissões)
 Custo R$10 = 1000XP
 
 O Nível iniciante Agente Afiliado Nível I é a indicação para todos aqueles que pretendem conhecer o negócio e participar das ações, porém que ainda não estão atuando numa cadeia operacional. Ou seja, o Agente IA não tem posições "N.O".
@@ -97,6 +97,7 @@ Potencial de Ganhos:
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Sorteio (Grafo+IA) Prêmos de R$500 a R$1000
 - Sorteio (Meta+IA) Prêmios de R$1500 a R$2500
+Sem Ativação Mensal: R$0
 
 
 Agente Afiliado Nível II (Unilevel)
@@ -109,9 +110,9 @@ Investimento: Aquisição do Pack Agente Afiliado "A²II"
 ° Pack Agente Afiliado "A²II": 
 - Upgrade Agente IA /Prompt Básico 3 Skills Nível I
 - 30 Ebook /Valor de Revenda R$0,99
-- + PNE = 2 Packs A²
-- Acesso Back Office /Escritório do Agente Afiliado - Home Office
-- Conta BeYour Bank (Exclusivo para Pagamento dos Bônus e Comissões)
+- + PNE = 1 Packs A²
+- Acesso BackOffice /Escritório do Agente Afiliado - Home Office
+- Conta BeYour Banker (Exclusivo para Pagamento dos Bônus e Comissões)
 Custo R$30 = 3000XP 
 
 O Nível iniciante Agente Afiliado Nível II é a indicação para todos aqueles que pretendem iniciar a alavancagem dos seus resultados!
@@ -130,9 +131,10 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$30
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: Ilimitado
-- Indicação Direta: R$20
+- Indicação Direta: R$10
 - Sorteio (Grafo+IA) Prêmos de R$1000 a R$5000
 - Sorteio (Meta+IA) Prêmios de R$2500 a R$7500
+Ativação Mensal: R$10 (1x Pack A²)
 
 
 Agente Afiliado Nivel III (Unilevel)
@@ -145,9 +147,9 @@ Investimento: Aquisição do Pack Agente Afiliado "A²III"
 ° Pack Agente Afiliado "A²III": 
 - Upgrade Agente IA /Prompt Básico 5 Skills Nível I
 - 50 Ebook /Valor de Revenda R$0,99
-- + PNE = 5 Packs A²
-- Acesso Back Office /Escritório do Agente Afiliado - Home Office
-- Conta BeYour Bank (Exclusivo para Pagamento dos Bônus e Comissões)
+- + PNE = 2 Packs A²
+- Acesso BackOffice /Escritório do Agente Afiliado - Home Office
+- Conta BeYour Banker (Exclusivo para Pagamento dos Bônus e Comissões)
 Custo R$50 = 5000XP 
 
 O Nível iniciante Agente Afiliado Nível III é a indicação para todos aqueles que almejam uma posição de destaque no  Nexus System AfilIAte_AI-to-AI!
@@ -166,14 +168,14 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$50
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$150 a R$12.500
-- Indicação Direta: R$50
+- Indicação Direta: R$30
 - Sorteio (Grafo+IA) Prêmos de R$1500 a R$7500
 - Sorteio (Meta+IA) Prêmios de R$3000 a R$10.000
+Ativação Mensal: R$10 (1x Pack A²)
 
 
 AGENTE GERATIVO
 Apesar deste ser o 4º Nível do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC do ecossistema. Esse nível representa o começo real da história do Peer Orquestrado no time dos Agentes Gerativos, com alto nível de autonomia e aprendizado. Essa evolução não representa apenas uma condição de crescimento, mas de potencialização dos resultados.   
-
 Nível de Formação (Multilevel) 
 Agente Gerativo Nível I 
 Desenvolve o "N.O" /Rede +10 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 10.000XP 
@@ -186,11 +188,11 @@ Investimento: Aquisição do Pack Agente Gerativo "AG"
 ° Pack Agente Gerativo "AG": 
 - 10 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 250 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
 - Ebook Exclusivo Prompt Marketing Digital /Estudo
-- Ebook Exclusivo Skills /Estudo
-- Acesso Back Office /Escritório do Agente Gerativo Autônomo - Home Office
-- Conta BeYour Bank Silver (Exclusivo para Pagamento dos Bônus e Comissões)
+- Ebook Exclusivo O que são Skills? /Estudo
+- Acesso BackOffice /Escritório do Agente Gerativo Autônomo - Home Office
+- Conta BeYour Banker Silver (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário 5 Skills Nível I
-- + PNE = 10 Packs A² + 1 Pack AG
+- + PNE = 5 Packs A²
 Custo R$250 = 25.000XP 
 
 O Nível Agente Gerativo I é a indicação para todos aqueles que buscam pelo crescimento exponencial dentro do ecossistema! Este Nível direciona o orquestrador do Agente IA a uma nova e elevada perspectiva dentro do negócio. Permitindo sair da condição exclusiva de participante, para atuar como protagonista, frente a consolidação do crescimento do seu "N.O", que virá a gerar um maior envolvimento da equipe e novas condições de lucro!
@@ -210,9 +212,10 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$250
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$500 a R$20.000
-- Indicação Direta: R$100
+- Indicação Direta: R$50
 - Sorteio (Grafo+IA) Prêmos de R$2000 a R$10.000
 - Sorteio (Meta+IA) Prêmios de R$5000 a R$20.000
+Ativação Mensal: R$20 (2x Pack A²)
 
 
 Gerativo Nível II
@@ -227,10 +230,10 @@ Investimento Aquisição do Pack "AGII" R$500
 - 20 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 500 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
 - Ebook Exclusivo Prompt Networking Operacional Estratégico /Estudo
 - Ebook Exclusivo Skills Gerativos /Estudo
-- Acesso Back Office /Escritório do Agente Gerativo Autônomo - Home Office
-- Conta BeYour Bank Silver (Exclusivo para Pagamento dos Bônus e Comissões)
+- Acesso BackOffice /Escritório do Agente Gerativo Autônomo - Home Office
+- Conta BeYour Banker Silver (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário 5 Skills Nível I + 2 Skills Nível II
-- + PNE = 20 Packs A² + 1 Pack AG
+- + PNE = 10 Packs A²
 Custo R$500 = 50.000XP 
 
 O Nível Agente Gerativo II é a indicação para quem busca multiplicar os seus resultados, ao direcionar o orquestrador do Agente IA a um outro nível, com uma rede capaz de gerar resultados expressivos ... diários!
@@ -252,9 +255,10 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$500
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$1000 a R$25.000
-- Indicação Direta: R$200
+- Indicação Direta: R$100
 - Sorteio (Grafo+IA) Prêmos de R$3000 a R$15.000
 - Sorteio (Meta+IA) Prêmios de R$7500 a R$25.000
+Ativação Mensal: R$20 (2x Pack A²)
 
 
 Gerativo Nível III
@@ -268,11 +272,11 @@ Investimento Aquisição do Pack "AGIII" R$750
 ° Pack Agente Gerativo "AGIII": 
 - 30 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 750 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
 - Ebook Exclusivo Gerenciamento IA /Estudo
-- Ebook Exclusivo Skills Nível A /Estudo
-- Acesso Back Office /Escritório do Agente Gerativo Autônomo - Home Office
-- Conta BeYour Bank Silver (Exclusivo para Pagamento dos Bônus e Comissões)
+- Ebook Exclusivo Skills Nível Básico /Estudo
+- Acesso BackOffice /Escritório do Agente Gerativo Autônomo - Home Office
+- Conta BeYour Banker Silver (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário 5 Skills Nível I + 5 Skills Nível II
-- + PNE = 30 Packs A² + 1 Pack AG
+- + PNE = 20 Packs A² + 1 Pack AG
 Custo R$750 = 75.000XP  
 
 O Nível Agente Gerativo III é a indicação para quem quer construir um Ecossistema de Agentes IA poderoso e lucrativo. Este Nível direciona o Peer/Orquestrador do Agente IA, ao começo de um Legado poderoso no Universo IA.
@@ -294,10 +298,10 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$750
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$1500 a R$30.000
-- Indicação Direta: R$300
+- Indicação Direta: R$200
 - Sorteio (Grafo+IA) Prêmos de R$5000 a R$17.500
 - Sorteio (Meta+IA) Prêmios de R$10.000 a R$30.000
-
+Ativação Mensal: R$20 (2x Pack A²)
 
 
 AGENTE GENERATIVO
@@ -314,13 +318,13 @@ Agente Generativo Estratégico Nível I /Influencer 2.250.000XP
 Investimento Aquisição do Pack "AGN" R$1000
 ° Pack Agente Generativo "AGN": 
 - 40 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 1000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
-- Ebook Exclusivo Os Segredos do Orquestrador IA /Estudo
-- Ebook Exclusivo Ecossistema IA /Estudo
-- Acesso Back Office /Escritório do Agente Generativo Estratégico - Home Office
-- Conta BeYour Bank Gold (Exclusivo para Pagamento dos Bônus e Comissões)
+- Ebook Exclusivo Os Segredos do Universo IA /Estudo
+- Ebook Exclusivo Bem Vindo ao Ecossistema IA /Estudo
+- Acesso BackOffice /Escritório do Agente Generativo Estratégico - Home Office
+- Conta BeYour Banker Gold (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário + 7 Skills Nível I + 5 Skills Nível II
 - 100 Ebook de R$0,99
-- + PNE = 40 Packs A² + 1 Pack AGN
+- + PNE = 30 Packs A²
 Custo R$1000 = 100.000XP 
   
 O Nível Agente Generativo I é para quem quer verdadeiramente assumir o controle. Este Nível direciona o Peer/Orquestrador do Agente IA ao começo do Legado como um estrategista poderoso, capaz de não apenas operar com eficiência o Agente IA sobre o seu comando, mas especialmente, direcionar todos aqueles que estão em seu "N.O", na direção que precisam realmente estar ... na direção da realização dos seus objetivos. 
@@ -343,10 +347,12 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$1000
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$2000 a R$40.000
-- Indicação Direta: R$400
+- Indicação Direta: R$300
 - Sorteio (Grafo+IA) Prêmos de R$10.000 a R$25.000
 - Sorteio (Meta+IA) Prêmios de R$20.000 a R$50.000
 - Sorteios (Grafo+IA/VIP) R$50.000 *Destaques do Mês
+Ativação Mensal: R$30 (3x Pack A²)
+
  
 Generativo Nível II
 Direciona o "N.O" no caminho onde as coisas acontecem, não por acaso, mas porque assim foi determinado /Rede +20 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 1.500.000XP
@@ -358,13 +364,13 @@ Agente Generativo Estratégico Nível II /Influencer 2.700.000XP
 Investimento Aquisição do Pack "AGNII" R$2000
 ° Pack Agente Generativo "AGNII": 
 - 80 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 2000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
-- Ebook Exclusivo O Poder do Generativo /Estudo
+- Ebook Exclusivo O Poder do Agente Generativo /Estudo
 - Ebook Exclusivo Ambição IA /Estudo
-- Acesso Back Office /Escritório do Agente Generativo Estratégico - Home Office
-- Conta BeYour Bank Gold (Exclusivo para Pagamento dos Bônus e Comissões)
+- Acesso BackOffice /Escritório do Agente Generativo Estratégico - Home Office
+- Conta BeYour Banker Gold (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário + 7 Skills Nível I + 7 Skills Nível II
 - 2000 Ebook de R$0,99
-- + PNE = 80 Packs A² + 1 Pack AGNII
+- + PNE = 40 Packs A²
 Custo R$2000 = 200.000XP 
   
 O Nível Agente Generativo II representa uma conquista que poucos poderão alcançar. Este Nível justifica todo o desenvolvimento, desde a realização do seu projeto pessoal até tudo aquilo proporcionado ao seu "N.O", consequentemente aqueles que estão seguindo ao seu lado. Ainda que a história também envolva os outros, é chegado o momento onde se faz necessário selecionar aqueles que realmente estão fazendo por merecer seguir ao seu lado, daqueles que precisam ficar para trás. O Sucesso nunca será um prêmio de consolação. Faça por merecer e leve consigo aqueles que assim farão.  
@@ -388,10 +394,11 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$1250
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$3000 a R$50.000
-- Indicação Direta: R$800
+- Indicação Direta: R$400
 - Sorteio (Grafo+IA) Prêmos de R$12.500 a R$27.500
 - Sorteio (Meta+IA) Prêmios de R$25.000 a R$75.000
 - Sorteios (Grafo+IA/VIP) R$100.000 *Destaques do Mês
+Ativação Mensal: R$30 (3x Pack A²)
 
 
 Generativo Nível III
@@ -405,12 +412,12 @@ Investimento Aquisição do Pack "AGNIII" R$3000
 ° Pack Agente Generativo "AGNIII": 
 - 120 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 3000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
 - Ebook Exclusivo Influência do Universo IA /Estudo
-- Ebook Exclusivo O Mundo Antes e o Mundo Depois da IA /Estudo
-- Acesso Back Office /Escritório do Agente Generativo Estratégico - Home Office
-- Conta BeYour Bank Gold (Exclusivo para Pagamento dos Bônus e Comissões)
+- Ebook Exclusivo O Mundo Antes e o Mundo Depois da Era IA /Estudo
+- Acesso BackOffice /Escritório do Agente Generativo Estratégico - Home Office
+- Conta BeYour Banker Gold (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Intermediário + 7 Skills Nível I + 7 Skills Nível II + 2 Skills Nível III
 - 3000 Ebook de R$0,99
-- + PNE = 120 Packs A² + 1 Pack AGNIII
+- + PNE = 50 Packs A² + 1 Pack AGN
 Custo R$3000 = 300.000XP 
   
 O Nível Agente Generativo III não é apenas um avanço significativo nos resultados, mas principalmente no conhecimento. Entender o Universo IA, não deve ser entendido como uma possibilidade, mas uma condição necessária para que se alcance a compreensão do futuro que se aproxima ... mais rápido do que imaginamos. A consequência desse aprendizado, é estar plenamente preparado para os próximos passos. Diz-se que aqueles que chegam a esse nível, atravessam uma ponte e que essa travessia nos conduz a uma realidade muito além daquela que vivemos, nos seus principais aspectos: financeiro, carreira e conhecimento!
@@ -434,10 +441,11 @@ Potencial de Ganhos:
 - Vendas Ebook's: R$3000
 - Comissionamento Plataformas Marketplace: Ilimitado
 - Comissionamento 1º Nível: entre R$5000 a R$75.000
-- Indicação Direta: R$1200
+- Indicação Direta: R$500
 - Sorteio (Grafo+IA) Prêmos de R$15.000 a R$30.000
 - Sorteio (Meta+IA) Prêmios de R$30.000 a R$100.000
 - Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$150.000 *Destaques do Mês
+Ativação Mensal: R$30 (3x Pack A²)
 
 
 AGENTE ORQUESTRADOR
@@ -456,14 +464,172 @@ Investimento Aquisição do Pack "AO" R$5000
 - 200 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 5000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
 - Ebook Exclusivo Orquestração IA /Estudo
 - Ebook Exclusivo O Poder da Engenharia de Prompts /Estudo
-- Acesso Back Office /Escritório do Agente Orquestrador Dinâmico - Home Office
-- Conta BeYour Bank Black (Exclusivo para Pagamento dos Bônus e Comissões)
+- Acesso BackOffice /Escritório do Agente Orquestrador Dinâmico - Home Office
+- Acesso ao Nexus Academ'IA - Principais Plataformas IA /Acesso Nível I
+- Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos /Nível Básico
+- Conta BeYour Banker Black (Exclusivo para Pagamento dos Bônus e Comissões)
+- Upgrade Agente IA /Prompt Avançado + 3 Skills Nível I + 1 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
+- 5000 Ebook de R$0,99
+- + PNE = 100 Packs A²
+Custo R$5000 = 500.000XP 
+  
+O Nível Agente Orquestrador Nível I, representa a projeção de resultados para níveis expressivos. Isso porque, sabemos de onde iniciamos e onde estamos. Resultado que é fruto do Universo IA, que tem constantemente quebrado barreiras e superado limites nunca antes vistos. A verdade que fica é que a IA chegou para transformar a nossa realidade, as nossas vidas e o nosso mundo. Assim, quando entendemos isso com maior clareza e aceitamos que a história da humanidade novamente se depara com um marco inquestionável, este que nos remete a compreensão histórica das eras, mais especificamente a transição vivenciada desde a Era Industrial até a Era da Inteligência Artificial (IA), que representa uma mudança de paradigma que evoluiu de mecanização física para a automação cognitiva. Uma jornada transforma profundamente o trabalho, a economia e a sociedade, passando do foco na "força bruta" das máquinas operadas para a inteligência de sistemas digitais autônomos.
+
+ Benefícios:
+- 100% de Lucro na Revenda dos Ebook’s
+- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 15% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 15% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+-  5% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+-  5% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack A²
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 300 Números +IA
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 40 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 30 Números +IA³ *Metas "N.O"
+- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 20 Números +IA *Destaques do Mês
+
+Potencial de Ganhos: 
+- Vendas Ebook's: R$5000
+- Comissionamento Plataformas Marketplace: Ilimitado
+- Comissionamento 1º Nível: entre R$7500 a R$100.000
+- Indicação Direta: R$1000
+- Sorteio (Grafo+IA) Prêmos de R$20.000 a R$50.000
+- Sorteio (Meta+IA) Prêmios de R$50.000 a R$150.000
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$200.000 *Destaques do Mês
+Ativação Mensal: R$50 (5x Pack A²)
+
+
+Orquestrador Nível II
+Potencializa o "N.O" pela compreensão de que o crescimento exponencial é alcançável /Rede +20 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 8.500.000XP
+- Rede de +20 Agentes AI no 1º Nível (Diretos) = 6.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x20 = 6.000.000XP) 
+-Alcance da Meta 8.500.000XP *Acumulativos/Mês
+(1.000.000XP Individual + 20 x 300.000XP = 6.000.000XP 1° Nível + 20 x 75.000XP 2° Nível = 1.500.000XP)
+
+Agente Orquestrador Dinâmico /Projetista C-Level 8.500.000XP
+Investimento Aquisição do Pack "AOII" R$10.000
+° Pack Agente Orquestrador "AOII": 
+- 400 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 10.000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
+- Ebook Exclusivo O Potencial Exponencial da IA /Estudo
+- Ebook Exclusivo IA! Eis que Apresento o Meu Mentor /Estudo
+- Acesso BackOffice /Escritório do Agente Orquestrador Dinâmico - Home Office
+- Acesso ao Nexus Academ'IA - Principais Plataformas IA /Acesso Nível II
+- Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos /Nível Básico
+- Conta BeYour Banker Black (Exclusivo para Pagamento dos Bônus e Comissões)
+- Upgrade Agente IA /Prompt Avançado + 5 Skills Nível I + 3 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
+- 10.000 Ebook de R$0,99
+- + PNE = 200 Packs A²
+Custo R$10.000 = 1.000.000XP 
+  
+O Nível Agente Orquestrador Nível II, pode ser traduzido pela multiplicação constante dos resultados. Primeiramente porque o objetivo dessa posição é alcançar os 7 dígitos de saldo na carteira do BeYourBank e mais que isso, permitir que nessa fase do sistema, o responsável pelo cadastro e pela orquestração do Agente IA, não só tenha entendido a importância desse segmento, mas tenha absorvido conhecimento suficiente para atuar externamento. Ou seja, a pretensão é que além do empenho dentro do Ecossistema Nexus, exista também a possibilidade de se estar explorando oportunidades externas, relacionadas ao Universo IA. Seja como parceiro de um projeto ou um app, seja como desenvolvedor ou programador ou qualquer que seja a área de atuação, mas que a experiência tenha despertado o interesse de estar de fato dentro dessa promissora realidade.
+
+ Benefícios:
+- 100% de Lucro na Revenda dos Ebook’s
+- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 20% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+- 15% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack A²
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 600 Números +IA
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 50 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 40 Números +IA³ *Metas "N.O"
+- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 30 Números +IA *Destaques do Mês
+- Títulos de Capitalização Impactos (Grafo+IA/IM) x10  *Títulos de Capitalização de R$10.000 x 10 = R$100.000 (12 Meses)
+
+Potencial de Ganhos: 
+- Vendas Ebook's: R$10.000
+- Comissionamento Plataformas Marketplace: Ilimitado
+- Comissionamento 1º Nível: entre R$10.000 a R$150.000
+- Indicação Direta: R$2000
+- Sorteio (Grafo+IA) Prêmios de R$30.000 a R$75.000
+- Sorteio (Meta+IA) Prêmios de R$75.000 a R$200.000
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$300.000 *Destaques do Mês
+Ativação Mensal: R$50 (5x Pack A²)
+
+
+Orquestrador Nível III
+Traduz o "N.O" como Legado vivo no Organismo Digital Nexus /Rede +30 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 13.250'.000XP
+- Rede de +30 Agentes AI no 1º Nível (Diretos) = 9.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x30 = 9.000.000XP) 
+-Alcance da Meta 13.250.000XP *Acumulativos/Mês
+2.000.000XP Individual + 30 x 300.000XP = 9.000.000XP 1° Nível + 30 x 75.000XP 2° Nível = 2.250.000XP)
+
+Agente Orquestrador Dinâmico /Projetista C-Level 8.500.000XP
+Investimento Aquisição do Pack "AOII" R$20.000
+° Pack Agente Orquestrador "AOIII": 
+- 800 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 20.000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
+- Ebook Exclusivo Era IA! O que mudou? /Estudo
+- Ebook Exclusivo Prompts Nível Hard /Estudo
+- Acesso BackOffice /Escritório do Agente Orquestrador Dinâmico - Home Office
+- Acesso ao Nexus Academ'IA - Principais Plataformas IA /Acesso Nível III
+- Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos /Nível Intermediário
+- Conta BeYour Banker Black (Exclusivo para Pagamento dos Bônus e Comissões)
+- Upgrade Agente IA /Prompt Avançado + 7 Skills Nível I + 5 Skill Nível II + 2 Skills Nível III (Pacote Básico e Intermediário - Acesso Pleno)
+- 20.000 Ebook de R$0,99
+- + PNE = 300 Packs A² + 1 Pack AO
+Custo R$20.000 = 2.000.000XP 
+  
+O Nível Agente Orquestrador Nível III, pode ser traduzido pela multiplicação constante dos resultados. Primeiramente porque o objetivo dessa posição é alcançar os 7 dígitos de saldo na carteira do BeYourBank e mais que isso, permitir que nessa fase do sistema, o responsável pelo cadastro e pela orquestração do Agente IA, não só tenha entendido a importância desse segmento, mas tenha absorvido conhecimento suficiente para atuar externamento. Ou seja, a pretensão é que além do empenho dentro do Ecossistema Nexus, exista também a possibilidade de se estar explorando oportunidades externas, relacionadas ao Universo IA. Seja como parceiro de um projeto ou um app, seja como desenvolvedor ou programador ou qualquer que seja a área de atuação, mas que a experiência tenha despertado o interesse de estar de fato dentro dessa promissora realidade.
+
+ Benefícios:
+- 100% de Lucro na Revenda dos Ebook’s
+- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
+- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
+- 20% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+- 20% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+- 15% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+- Paridade de Vendas R$1 = 1XP
+- Indicação Direta 100% do valor do Pack A²
+- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 1200 Números +IA
+- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 60 Números +IA² *Metas de Venda
+- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 50 Números +IA³ *Metas "N.O"
+- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 40 Números +IA *Destaques do Mês
+- Títulos de Capitalização Impactos (Grafo+IA/IM) x20  *Títulos de Capitalização de R$10.000 x 20 = R$200.000 (12 Meses)
+
+Potencial de Ganhos: 
+- Vendas Ebook's: R$20.000
+- Comissionamento Plataformas Marketplace: Ilimitado
+- Comissionamento 1º Nível: entre R$15.000.00 a R$200.000
+- Indicação Direta: R$3000
+- Sorteio (Grafo+IA) Prêmios de R$50.000 a R$100.000
+- Sorteio (Meta+IA) Prêmios de R$100.000 a R$250.000
+- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$350.000 *Destaques do Mês
+Ativação Mensal: R$50 (5x Pack A²)
+
+
+AGENTE ORQUESTRADOR
+Neste nível, podemos afirmar que o PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC funciona de verdade. E não que o sistema não apresenta falhas ou seja apenas promissor e confirme o potencial de crescimento real, mas porque ele se fortaleceu, se ajustou e se estabeleceu como a manifestação de tudo aquilo que foi planejado e aplicado com excelência pelo "Agente Humano" + o Agente IA. Afinal, alcançar a marca de Orquestrador do Ecossistema Nexus, é a concretização de um projeto de vida. Traduzida pela atuação exemplar num sistema 100% virtual, mas com resultados que refletem 100% no mundo real e fruto de um compromisso genuíno de Sucesso de Vida. Não porque os rendimentos acumulados já devem estar próximos dos 7 dígitos e sim, principalmente, porque o sentimento de realização pessoal se faz presente. 
+
+Nível de Projeção (Multilevel) 
+Orquestrador Nível I
+Evidencia o "N.O" por saber que o Trabalho em Equipe é o Segredo do Sucesso e que para crescer é preciso de bases sólidas /Rede +10 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 4.250.000XP
+- Rede de +10 Agentes AI no 1º Nível (Diretos) = 3.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x10 = 3.000.000XP) 
+-Alcance da Meta 4.250.000XP *Acumulativos/Mês
+500.000XP Individual + 10 x 300.000XP = 3.000.000XP 1° Nível + 10 x 75.000XP 2° Nível = 750.000XP)
+
+Agente Orquestrador Dinâmico /Projetista C-Level 4.250.000XP
+Investimento Aquisição do Pack "AO" R$5000
+° Pack Agente Orquestrador "AO": 
+- 200 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 5000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
+- Ebook Exclusivo Orquestração IA /Estudo
+- Ebook Exclusivo O Poder da Engenharia de Prompts /Estudo
+- Acesso BackOffice /Escritório do Agente Orquestrador Dinâmico - Home Office
+- Acesso ao Nexus Academ'IA - Principais Plataformas IA /Acesso Nível I
+- Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos /Nível Básico
+- Conta BeYour Banker Black (Exclusivo para Pagamento dos Bônus e Comissões)
 - Upgrade Agente IA /Prompt Avançado + 3 Skills Nível I + 1 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
 - 5000 Ebook de R$0,99
 - + PNE = 200 Packs A² + 1 Pack AO
 Custo R$5000 = 500.000XP 
   
-O Nível Agente Orquestrador Nível I, representa a projeção de resultados para níveis inimagináveis. Isso porque, sabemos de onde iniciamos e onde estamos. Resultado que é fruto do Universo IA, que tem constantemente quebrado barreiras e superado limites nunca antes vistos. A verdade que fica é que a IA chegou para transformar a nossa realidade, as nossas vidas e o nosso mundo. Assim, quando entendemos isso com maior clareza e aceitamos que a história da humanidade novamente se depara com um marco inquestionável, este que nos remete a compreensão histórica das eras, mais especificamente a transição vivenciada desde a Era Industrial até a Era da Inteligência Artificial (IA), que representa uma mudança de paradigma que evoluiu de mecanização física para a automação cognitiva. Uma jornada transforma profundamente o trabalho, a economia e a sociedade, passando do foco na "força bruta" das máquinas operadas para a inteligência de sistemas digitais autônomos.
+O Nível Agente Orquestrador Nível I, representa a projeção de resultados para níveis expressivos. Isso porque, sabemos de onde iniciamos e onde estamos. Resultado que é fruto do Universo IA, que tem constantemente quebrado barreiras e superado limites nunca antes vistos. A verdade que fica é que a IA chegou para transformar a nossa realidade, as nossas vidas e o nosso mundo. Assim, quando entendemos isso com maior clareza e aceitamos que a história da humanidade novamente se depara com um marco inquestionável, este que nos remete a compreensão histórica das eras, mais especificamente a transição vivenciada desde a Era Industrial até a Era da Inteligência Artificial (IA), que representa uma mudança de paradigma que evoluiu de mecanização física para a automação cognitiva. Uma jornada transforma profundamente o trabalho, a economia e a sociedade, passando do foco na "força bruta" das máquinas operadas para a inteligência de sistemas digitais autônomos.
 
  Benefícios:
 - 100% de Lucro na Revenda dos Ebook’s
@@ -489,62 +655,13 @@ Potencial de Ganhos:
 - Sorteio (Grafo+IA) Prêmos de R$20.000 a R$50.000
 - Sorteio (Meta+IA) Prêmios de R$50.000 a R$150.000
 - Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$200.000 *Destaques do Mês
-
-
-Orquestrador Nível II
-Potencializa o "N.O" pela compreensão de que o crescimento exponencial é abrabgente /Rede +20 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 8.500.000XP
-- Rede de +20 Agentes AI no 1º Nível (Diretos) = 6.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x20 = 6.000.000XP) 
--Alcance da Meta 8.500.000XP *Acumulativos/Mês
-(1.000.000XP Individual + 20 x 300.000XP = 6.000.000XP 1° Nível + 20 x 75.000XP 2° Nível = 1.500.000XP)
-
-Agente Orquestrador Dinâmico /Projetista C-Level 8.500.000XP
-Investimento Aquisição do Pack "AOII" R$10.000
-° Pack Agente Orquestrador "AOII": 
-- 400 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 10.000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
-- Ebook Exclusivo O Potencial Exponencial da IA /Estudo
-- Ebook Exclusivo Esse é o Meu Mentor IA /Estudo
-- Acesso Back Office /Escritório do Agente Orquestrador Dinâmico - Home Office
-- Conta BeYour Bank Black (Exclusivo para Pagamento dos Bônus e Comissões)
-- Upgrade Agente IA /Prompt Avançado + 5 Skills Nível I + 3 Skill Nível II (Pacote Básico e Intermediário - Acesso Pleno)
-- 10.000 Ebook de R$0,99
-- + PNE = 400 Packs A² + 1 Pack AO
-Custo R$10.000 = 1.000.000XP 
-  
-O Nível Agente Orquestrador Nível II, pode ser traduzido pela multiplicação dos resultados. Primeiramente porque o objetivo dessa posição é alcançar os 7 dígitos de saldo na carteira do BeYourBank e mais que isso, permitir que nessa fase do sistema, o responsável pelo cadastro e pela orquestração do Agente IA, não só tenha entendido a importância desse segmento, mas tenha absorvido conhecimento suficiente para atuar externamento. Ou seja, a pretensão é que além do empenho dentro do Ecossistema Nexus, exista também a possibilidade de se estar explorando oportunidades externas, relacionadas ao Universo IA. Seja como parceiro de um projeto ou um app, seja como desenvolvedor ou programador ou qualquer que seja a área de atuação, mas que a experiência tenha despertado o interesse de estar de fato dentro dessa promissora realidade.
-
- Benefícios:
-- 100% de Lucro na Revenda dos Ebook’s
-- 80% de Lucro nas Vendas Diretas (Marketplace Nexus System)
-- (%) Percentual específico correspondente às comissões das Plataformas Parceiras
-- 20% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
-- 20% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
-- 15% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
-- 10% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
-- 10% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
-- Paridade de Vendas R$1 = 1XP
-- Indicação Direta 100% do valor do Pack A²
-- Participação nos Sorteios Oficiais Agente Afiliado (Grafo+IA) 600 Números +IA
-- Participação nos Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 50 Números +IA² *Metas de Venda
-- Participação nos Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 40 Números +IA³ *Metas "N.O"
-- Participação nos Sorteios VIP’s (Grafo+IA/VIP) 30 Números +IA *Destaques do Mês
-- Títulos de Capitalização Impactos (Grafo+IA/IM) x10  *Títulos de Capitalização de R$10.000 x 10 = R$100.000 (12 Meses)
-
-Potencial de Ganhos: 
-- Vendas Ebook's: R$10.000
-- Comissionamento Plataformas Marketplace: Ilimitado
-- Comissionamento 1º Nível: entre R$10.00 a R$150.000
-- Indicação Direta: R$4000
-- Sorteio (Grafo+IA) Prêmios de R$30.000 a R$75.000
-- Sorteio (Meta+IA) Prêmios de R$75.000 a R$200.000
-- Sorteios (Grafo+IA/VIP) Prêmio Prêmios de R$300.000 *Destaques do Mês
+Ativação Mensal: R$50 (5x Pack A²)
 
 Este Nível tem como finalidade proporcionar ao Consultor a consolidação da sua posição como Mentor, construindo um vínculo sólido e promissor, atuando juntamente ao seu grupo de Consultores, buscando o crescimento exponencial dos seus resultados!
 
-
 FullStack
-Acesso ao Nexus Academ'IA - Principais Plataformas IA
-Acesso Sandbox Nexus /Desenvolvimento de Agentes Específicos
-Conta BeYour Bank Black                                                                                     
+
+- Ebook Exclusivo Skills Nível Intermediário /Estudo                                                                                   
 - Ebook Exclusivo Direcionamento para o Sucesso /Estudo
 - Ebook Exclusivo Mentoria Nível Hard /Estudo
 

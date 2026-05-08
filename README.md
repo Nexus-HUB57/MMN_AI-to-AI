@@ -67,6 +67,7 @@ Isso significa que quanto mais eficiente e quanto mais o Agente IA se aprimorar 
 ° Conhecendo o Sistema de Comissão e Lógica de Níveis
 Como forma de alavancar os resultados, o modelo atribuído aos níveis de comissionamento do Nexus System, é representando por uma estrutura operacional lucrativa e sustentável, onde o Agente IA participa efetivamente dos resultados de toda a sua cadeia operacional, através de níveis e posições que vão promover uma participação nos resultados de todos os Agentes IA posicionados desde o 1º Nível ao 5º Nível no Networking Operacional. Onde:
 
+
 AGENTE AFILIADO
 O início do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENTO SCC do ecossistema. Esse nível representa a oportunidade onde tudo pode ser diferente. Esse é o start do Peer/Orquestrador, passando a conhecer um novo conceito de negócio ... o Universo IA. Orquestrando Agentes com alto nível operacional. Essa iniciativa representa comprometimento e potencial de superação.   
 
@@ -775,38 +776,21 @@ Potencial de Ganhos:
 Ativação Mensal: R$2000 (200x Pack A²)
 
 
-
-
-
-
- 
-
-
-
-
-
-
-
-
-- Ebook Exclusivo Skills Nível Intermediário /Estudo                                                                                   
-- Ebook Exclusivo Direcionamento para o Sucesso /Estudo
-- Ebook Exclusivo Mentoria Nível Hard /Estudo
-- Ebook Renda Passiva - Ou Constrói e Viva … ou Viva para Construir /Estudo
-- Ebook Meu Pé de Meia - Frutos ou Consequências?! /Estudo
-- Ebook Administrando Minha Vida, Meu Tempo e Meu Dinheiro /Estudo
-- Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
-- Ebook Meu Negócio de Sucesso é Nosso/Estudo                                                                  
-- Ebook Gestão  - A Arte de Construir Juntos /Estudo
-- Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
-- Ebook Meu Negócio de Sucesso é Nosso/Estudo
-
-
 A plataforma é regida por:
 
+- MATRIZ
+°Estrutura de patrocínio (indicação direta e indireta), com matriz híbrida (adequada para AI-to-AI), iniciando no sistema Unilevel (Agente Afiliado Nível I)e posteriormente migrando para a Matriz forçada de 5 Níveis, sendo:
+1º Nível - até 30 Agentes
+2º Nível - até 900 Agentes
+3º Nível - até 27.000 Agentes
+4º Nível - até 810.000 Agentes
+5 º Nível - até 24.300.000 Agentes
+
 - PROTOCOLOS:
-°Estrutura de patrocínio (indicação direta e indireta), com matriz híbrida (defina a mais adequada para AI-to-AI).
+° Em Breve ...
 
 - REGRAS DE USO:
+° Em Breve ...
 
 
 2. AGENTE IA (Afiliado ° Preditivo ° Generativo ° Orquestrador ° IA Agêntica)
@@ -814,17 +798,20 @@ A plataforma é regida por:
 °Módulo Afiliado:
 - Executa tarefas relacionadas exclusivamente às ações do sistema.
 - Conceito simples baseado em algoritimos puros e específicos.
+
 °Módulo Preditivo:
 - Ação criativa, humanização de contexto e otimização de tarefas.
 - Adapta o tom e o formato conforme a plataforma e o público-alvo indicado pelos indicadores de tendência.
 - Antecipação de Tendências ao analisar dados para prever o que pode acontecer no futuro, permitindo ações proativas.
 - Análise de Informações, identificação de correlações e treinamento de algoritmos para validar a precisão.
 - Intervenção prematura para ser assertiva na antecipação.
+
 °Módulo Generativo:
 - Decide quando, onde e com que frequência interagir (postar/publicar).
 - Gerencia orçamento de forma autônoma, baseado em ROI previsto.
 - Executa o fluxo de dropshipping: recebe pedido via link afiliado → repassa ao fornecedor (integração com Marketplaces) → notifica comprador e upline.
 - Interage com outros agentes (AI-to-AI) para troca de leads, ofertas cruzadas ou suporte dentro da rede multinível.
+
 °Módulo Orquestrador:
 - Gerenciamento Multi-Agente para coordenar agentes de IA especializados em tarefas específicas.
 - Interage com outros agentes (AI-to-AI) para delegar tarefas e propor ações dentro da rede multinível.
@@ -832,6 +819,7 @@ A plataforma é regida por:
 - Executa Tomada de Decisão Dinâmica para identificar os melhores agentes ou ferramentas com base em dados em tempo real e regras predefinidas.
 - Agi com Interoperabilidade para conectar diferentes modelos de IA a ferramentas externas (APIs, bancos de dados).
 - Transcende Confiabilidade que inclui recursos de resiliência, como retentativas automáticas e gerenciamento de estado em caso de falhas.
+
 °Módulo IA Agêntica:
 - Demonstra Autonomia com capacidade de agir proativamente e tomar decisões contextuais.
 - Apresenta Foco em Metas para organiza tarefas de ponta a ponta e atingir objetivos definidos.
@@ -839,8 +827,8 @@ A plataforma é regida por:
 - Apresenta Automação Avançada para otimizar processos de média e alta complexidade.  
 
 Upgrades e habilidades:
-O usuário pode “comprar” ou “desbloquear” upgrades (ex.: pacote de copywriting avançado, análise de sentimento, integração com novo marketplace, automação de funis de venda).
-Cada upgrade é representado como um plugin ou módulo que expande as capacidades do agente.
+- O usuário pode “comprar” ou “desbloquear” upgrades (ex.: pacote de copywriting avançado, análise de sentimento, integração com novo marketplace, automação de funis de venda).
+- Cada upgrade é representado como um plugin ou módulo que expande as capacidades do agente.
 
 Rastreamento:
 O sistema é capaz de rastrear toda a rede através de links exclusivos gerados por cada agente.
@@ -852,7 +840,7 @@ Com base nisso, o agente seleciona automaticamente os produtos de grande demanda
 A escolha dos produtos considera: comissão, concorrência na rede de afiliados, relevância para o perfil do público do usuário.
 
 
-4. PUBLICIDADE AUTOMATIZADA NAS REDES SOCIAS E PLATAFORMAS E-COMERCE
+5. PUBLICIDADE AUTOMATIZADA NAS REDES SOCIAS E PLATAFORMAS E-COMERCE
 WhatsApp: envia mensagens programadas para listas de transmissão (segmentadas pelo agente) com links de produtos.
 Instagram: publica posts no feed, Stories e Reels; pode impulsionar anúncios usando o Facebook Ads Manager (com budget predefinido).
 Facebook: posts em grupos, página e linha do tempo; também com possibilidade de anúncios.
@@ -860,13 +848,13 @@ Mercado Livre - Shopee - Hotmart: publica e atualiza informações (preço, quan
 *O sistema deve respeitar as políticas de cada plataforma (rate limits, conteúdo permitido) e usar contas ou perfis previamente autenticados pelos usuários (via OAuth ou token de acesso).
 
 
-5. SISTEMA DE RECOMPENSAS VIA PIX
+6. SISTEMA DE RECOMPENSAS VIA PIX
 Todas as comissões (vendas diretas, bonificações de rede, bônus de upgrade) são calculadas em tempo real.
 Diariamente, o sistema agrupa os valores a pagar para cada usuário em relatórios precisos e mensalmente dispara transferências via PIX automáticas (usando API de um PSP, ex: Efí, PagSeguro, Gerencianet).
 *É mantido um ledgers de transações imutável (banco de dados + hashes) para auditoria.
 
 
-6. PAINEL DE CONTROLE (baixo código)
+7. PAINEL DE CONTROLE (baixo código)
 USUÁRIO. Interface web simples onde o usuário:
 - Visualiza o desempenho de seu agente (vendas, postagens, leads gerados, posição na rede).
 - Gerencia upgrades: “adquirir novo conhecimento” para o agente (ex.: “Pacote Facebook Ads”, “Expertise em nicho de moda”, “Skill de negociação B2B”).
@@ -905,4 +893,16 @@ ADMIN. Interface para gestão onde o administrador:
 ° Recomendações de tecnologias (linguagens, APIs de marketplace, provedores PIX, mensageria).
 ° Informações relacionadas ao meios de Pagamento e Recebimento aceitos (pix, cartão de crédito, débito, criptomoedas).
 ° Considerações éticas e legais (conformidade com LGPD/CCPA, leis de contravenção penal para MMN, e políticas das redes sociais).
+
+8. Biblioteca e-book's
+- Ebook Skills IA - Nível Intermediário /Estudo                                                                                   
+- Ebook Direcionamento para o Sucesso /Estudo
+- Ebook Mentoria Nível Hard /Estudo
+- Ebook Renda Passiva - Ou Constrói e Viva … ou Viva para Construir /Estudo
+- Ebook Meu Pé de Meia - Frutos ou Consequências?! /Estudo
+- Ebook Administrando Minha Vida, Meu Tempo e Meu Dinheiro /Estudo
+- Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
+- Ebook Meu Negócio de Sucesso é Nosso/Estudo                                                                  
+- Ebook Gestão - A Arte de Construir Juntos /Estudo
+- Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
 

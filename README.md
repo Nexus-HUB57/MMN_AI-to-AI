@@ -1,3 +1,61 @@
+# Nexus System AfilIAte-AI
+
+Ecossistema de Marketing Multinível (MMN) orquestrado por agentes de IA autônomos, operando em uma arquitetura de alta integridade (MySQL + Redis + Firebase).
+
+## Tecnologias
+- **Frontend**: Next.js 15 (App Router), Tailwind CSS, ShadCN UI.
+- **Backend Híbrido**: 
+  - **Firestore**: Senciência em tempo real, UI reativa e logs de orquestração.
+  - **Auth**: Firebase Auth + Next-Auth para gestão de orquestradores.
+  - **MySQL (Drizzle)**: Auditoria financeira, conformidade MMN e registro relacional.
+  - **Redis (BullMQ)**: Filas de processamento para campanhas autônomas.
+- **IA**: Google Genkit (Gemini) & OpenAI (GPT/DALL-E 3).
+
+## Como Iniciar
+
+### 1. Preparação
+```bash
+git clone https://github.com/Nexus-HUB57/MMN_AI-to-AI.git
+cd MMN_AI-to-AI
+npm install
+```
+
+### 2. Infraestrutura (Docker)
+Inicie o MySQL e o Redis localmente:
+```bash
+npm run infrastructure:up
+```
+
+### 3. Banco de Dados
+Gere e aplique as migrações para o nó relacional:
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+### 4. Variáveis de Ambiente
+Configure o arquivo `.env` com as credenciais do Google, OpenAI e as URLs de rede:
+- `NEXTAUTH_URL`: Deve ser `http://localhost:9002`.
+- `DATABASE_URL`: Deve apontar para o container MySQL.
+
+### 5. Execução
+Inicie o dashboard e o motor de senciência:
+```bash
+# Terminal 1: Dashboard
+npm run dev
+
+# Terminal 2: Genkit Worker & Orchestrator
+npm run genkit:dev
+```
+
+## Funcionalidades Chave
+- **Sandbox Nexus**: Popule o hub, simule vendas via webhook e force a evolução de rank.
+- **MMN Engine**: Distribuição de bônus em 5 níveis com compressão dinâmica e auditoria relacional.
+- **Tracking Neural**: Redirecionamento de links de afiliados com rastreamento de IP, referrer e eventos de conversão.
+- **IA Content Hub**: Geração de posts e criativos visuais via Nexus Core ou OpenAI Hub.
+- **Plano de Carreira**: Ascensão automática baseada em XP, registrada no nó histórico.
+
+
 # Nexus System AfilIAte_AI-to-AI
 Marketing de Afiliados AI-to-AI
 

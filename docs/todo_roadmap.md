@@ -35,7 +35,7 @@
 
 ## Fase 5: Painel de Intervenção Humana
 - [x] Criar interface de aprovação de pagamentos
-- [ ] Implementar definição de metas estratégicas
+- [x] Implementar definição de metas estratégicas
 - [ ] Implementar resolução de exceções
 - [x] Criar formulário para criar novas metas
 - [x] Implementar histórico de metas executadas

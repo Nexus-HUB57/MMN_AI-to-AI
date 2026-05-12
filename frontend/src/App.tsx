@@ -5,6 +5,7 @@ import Dashboard from "@/pages/Dashboard";
 import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import OrchestrationDashboard from "@/pages/OrchestrationDashboard";
 import AdminScheduler from "@/pages/AdminScheduler";
+import AdminAgentDetails from "@/pages/AdminAgentDetails";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/orchestration"} component={OrchestrationDashboard} />
       <Route path={"/admin/scheduler"} component={AdminScheduler} />
+      <Route path={"/admin/agent/:id"} component={AdminAgentDetails} />
       <Route path={"/afiliado/:code"} component={AffiliateMiniSite} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

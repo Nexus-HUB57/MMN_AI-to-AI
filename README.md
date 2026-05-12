@@ -55,11 +55,121 @@ npm run genkit:dev
 - **IA Content Hub**: Geração de posts e criativos visuais via Nexus Core ou OpenAI Hub.
 - **Plano de Carreira**: Ascensão automática baseada em XP, registrada no nó histórico.
 
+**App Fullstack MMN_AI-to-AI** 
+
+Este documento apresenta uma análise técnica detalhada do repositório MMN_AI-to-AI, um aplicativo fullstack focado em Marketing Multinível (MMN) com integração de Inteligência Artificial e Dropshipping. A análise abrange a arquitetura do sistema, a lógica de negócios, a estrutura do banco de dados e a integração entre frontend e backend.
+
+1. Visão Geral da Arquitetura
+
+O projeto MMN_AI-to-AI é estruturado como um monorepo, contendo diretórios distintos para o backend, frontend, aplicativo mobile e banco de dados. A stack tecnológica principal inclui:
+
+•
+Backend: Node.js com TypeScript, utilizando tRPC para a construção de APIs tipadas.
+
+•
+Frontend: React com TypeScript, utilizando Vite como bundler e TailwindCSS para estilização. O roteamento é gerenciado pelo wouter.
+
+•
+Banco de Dados: MySQL, gerenciado através do ORM Drizzle.
+
+•
+Mobile: React Native com Expo (evidenciado pela presença do diretório mobile-app e configurações do tRPC).
+
+A arquitetura segue um modelo cliente-servidor, onde o frontend e o aplicativo mobile consomem as APIs expostas pelo backend via tRPC, garantindo segurança de tipos de ponta a ponta.
+
+2. Estrutura do Banco de Dados
+
+O esquema do banco de dados, definido em database/schemas/schema-final.ts, é robusto e modela as complexidades de um sistema de MMN e e-commerce. As principais tabelas incluem:
+
+•
+users: Armazena informações básicas dos usuários, incluindo autenticação via openId e controle de papéis (role: user, admin).
+
+•
+affiliates: Representa o perfil de afiliado de um usuário, contendo o código de afiliado, ID do patrocinador, percentual de comissão e totais de ganhos.
+
+•
+network: Modela a árvore da rede multinível, registrando a relação entre um usuário e seu patrocinador, bem como o nível de profundidade na rede.
+
+•
+products e orders: Gerenciam o catálogo de produtos (integrado com marketplaces) e os pedidos realizados, essenciais para a funcionalidade de dropshipping.
+
+•
+commissions e payments: Controlam o fluxo financeiro, registrando comissões geradas por vendas ou bônus de rede, e os pagamentos efetuados aos afiliados.
+
+•
+agents e agent_upgrades: Suportam a funcionalidade de IA, armazenando a configuração dos agentes virtuais associados aos usuários e seus upgrades.
+
+A utilização do Drizzle ORM facilita a interação com o banco de dados, proporcionando consultas tipadas e migrações seguras.
+
+3. Lógica de Negócios e Backend
+
+O backend, localizado em backend/src, concentra a lógica central do aplicativo. A comunicação é estabelecida via tRPC, com roteadores específicos para diferentes domínios.
+
+3.1. Sistema de Comissões e Rede (MMN)
+
+A lógica de MMN é o coração do sistema, implementada principalmente em services/commissions.ts e exposta via routers/mmnRouter.ts. O sistema suporta:
+
+•
+Comissões em Cascata: Quando um pagamento é confirmado, a função calculateCommissionsForPayment distribui comissões para a rede ascendente do afiliado (patrocinadores), suportando até 15 níveis de profundidade. O valor é calculado com base no percentual de comissão de cada patrocinador.
+
+•
+Bônus por Largura: A função calculateWidthCommission recompensa afiliados que atingem um número mínimo de indicações diretas, incentivando a expansão horizontal da rede.
+
+•
+Comissões por Consumo: Vendas de produtos (dropshipping) geram comissões diretas através da função calculateConsumptionCommission.
+
+3.2. Dropshipping e Marketplaces
+
+O serviço de dropshipping (services/dropshippingService.ts) integra a venda de produtos com o sistema de afiliados. Ao registrar um pedido (registerDropshippingOrder), o sistema identifica o afiliado responsável, calcula a comissão baseada no produto e gera notificações. Quando o status do pedido é atualizado para "entregue", a comissão é confirmada e creditada ao afiliado.
+
+3.3. Integração de Inteligência Artificial
+
+A funcionalidade de IA é gerenciada pelo serviço services/llm-v2.ts, que atua como um roteador dinâmico para diferentes modelos de linguagem (LLMs). O sistema suporta a API da OpenAI (gpt-4.1-mini) e prevê a integração de modelos proprietários e open-source (como Llama 2 e Mistral). O roteador contentGenerationRouter.ts utiliza este serviço para gerar textos de marketing, variações de conteúdo e análises de sentimento, auxiliando os afiliados em suas campanhas.
+
+4. Frontend e Interface do Usuário
+
+O frontend web (frontend/src) oferece painéis administrativos e áreas exclusivas para afiliados.
+
+4.1. Dashboard do Afiliado
+
+O componente Dashboard.tsx atua como o centro de controle do afiliado. Ele consome dados do backend via tRPC para exibir:
+
+•
+Métricas Principais: Ganhos totais, comissões pendentes e número de indicados diretos.
+
+•
+Gráficos de Performance: Visualização da evolução de comissões e novas indicações ao longo do tempo (atualmente utilizando dados mockados para o gráfico).
+
+•
+Gestão de Rede: Lista de indicados diretos e seus respectivos ganhos.
+
+•
+Produtos em Alta: Sugestões de produtos para promoção, baseadas em tendências.
+
+4.2. Mini Sites de Afiliados
+
+O sistema gera páginas públicas para cada afiliado (AffiliateMiniSite.tsx), acessíveis através de URLs como /afiliado/:code. Estas páginas funcionam como landing pages para atração de novos membros para a rede, exibindo os ganhos do patrocinador, benefícios do programa e um call-to-action para registro.
+
+4.3. Observações sobre a Integração
+
+Durante a análise, foram identificadas algumas divergências entre o frontend e o backend que requerem atenção:
+
+•
+Inconsistência de Rotas tRPC: O componente AffiliateMiniSite.tsx tenta consumir a rota trpc.affiliate.getAffiliateByCode, enquanto o backend expõe esta funcionalidade em trpc.mmn.getAffiliateByCode.
+
+•
+Campos Inexistentes: O componente AffiliateProfile.tsx (e o Mini Site) referenciam campos como totalEarnings e totalNetworkSize, que não estão presentes no esquema do banco de dados (schema-final.ts) ou no retorno da API.
+
+•
+Configuração do Cliente tRPC: A configuração completa do cliente tRPC foi encontrada apenas no diretório mobile-app, sugerindo que o frontend web pode estar dependendo de configurações não comitadas ou de uma estrutura compartilhada ausente.
+
+
+
 
 # Nexus System AfilIAte_AI-to-AI
 Marketing de Afiliados AI-to-AI
 
-Sistema de Marketing Multinível com Agentes IA (AI-to-AI)
+**Sistema de Marketing Multinível com Agentes IA (AI-to-AI)**
 Arquitetura de sistemas automatizados, marketing digital, IA multiagente e plataformas de afiliados.
 Projeto corresponde a um sistema 100% digital e automatizado de marketing de relacionamento /afiliados baseado em modelo multinível (MMN) híbrido. A plataforma /app permite que cada Peer/Orquestrador - pessoa cadastrada (CPF-Cadastro de Pessoa Física), se torne responsável por controlar a orquestração do seu próprio Agente IA (ou Agentes IA). O sistema opera num modelo híbrido, onde a intervenção humana é propositiva, contributiva e deliberativa, porém complementar, cabendo além da gestão administrativa, um direcionamento assertivo, organizado e reflexivo na estruturação das estratégias. Assim, enquanto a administração fica por conta do operador humano, os Agentes IA são exclusivamente responsáveis pelo operacional. Fatores estes correspondentes a orquestração dos núcleos interativos, funcionais e responsivos, integrado ao Nexus System AfilIAte AI-to-AI — composto por dois núcleos operacionais: o módulo Gerativo (Núcleo Administrativo/Marketing para criação de conteúdo, estratégias, planejamento, entre outras funções relacionadas) e o módulo Generativo (Núcleo Executivo para geração de ações, base de conhecimento/skills, tomada de decisões autônomas, entre outras funções relacionadas), além de toda a lógica atribuída ao terceiro núcleo: o Núcleo Orquestrador, responsável por toda a Gestão Operacional, inclusive o controle dos demais núcleos, sob orquestração exclusiva e fulltime do Agente IA (SCC-Senciência Agêntica). 
 

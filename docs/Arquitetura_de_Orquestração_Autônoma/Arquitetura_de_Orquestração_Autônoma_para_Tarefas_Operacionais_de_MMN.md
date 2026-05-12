@@ -382,3 +382,4 @@ Este roadmap fornece um caminho estruturado para evoluir o Nexus System AfilIAte
 [7] Nexus-HUB57. (n.d.). MMN_AI-to-AI/package.json. GitHub. Disponível em:
 [8] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/llm-v2.ts. GitHub. Disponível em:
 [9] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/commissions.ts. GitHub. Disponível em:
+

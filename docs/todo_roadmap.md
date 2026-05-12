@@ -34,7 +34,7 @@
 - [x] Criar página de detalhes de cada agente
 
 ## Fase 5: Painel de Intervenção Humana
-- [ ] Criar interface de aprovação de pagamentos
+- [x] Criar interface de aprovação de pagamentos
 - [ ] Implementar definição de metas estratégicas
 - [ ] Implementar resolução de exceções
 - [x] Criar formulário para criar novas metas

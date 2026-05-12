@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   X,
+  Calendar,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -28,6 +29,7 @@ const MENU_ITEMS = [
   { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
+  { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
 ];
 
 export default function AdminDashboardLayout({ children }: AdminDashboardLayoutProps) {

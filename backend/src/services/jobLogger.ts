@@ -1,20 +1,7 @@
-import { getDb } from '../db';
+import { getDb } from '../database/schemas/db';
+import { jobLogs, JobLog } from '../database/schemas/schema';
 import { nanoid } from 'nanoid';
-
-export interface JobLog {
-  id: string;
-  jobId: string;
-  queueName: string;
-  jobType: string;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
-  input: Record<string, unknown>;
-  output?: Record<string, unknown>;
-  error?: string;
-  startedAt?: Date;
-  completedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { eq, desc } from 'drizzle-orm';
 
 /**
  * Log de execução de um job
@@ -26,18 +13,32 @@ export async function logJobStart(
   input: Record<string, unknown>
 ): Promise<string> {
   const logId = nanoid();
-  const now = new Date();
+  const db = await getDb();
+  
+  if (db) {
+    try {
+      await db.insert(jobLogs).values({
+        id: logId,
+        jobId,
+        queueName,
+        jobType,
+        status: 'processing',
+        input: JSON.stringify(input),
+        startedAt: new Date(),
+      });
+    } catch (error) {
+      console.error(`[JobLog] Failed to persist start log:`, error);
+    }
+  }
 
-  // Aqui você implementaria a lógica de persistência
-  // Por enquanto, apenas logamos no console
   console.log(`[JobLog] START - ${logId}`, {
     jobId,
     queueName,
     jobType,
     input,
-    timestamp: now.toISOString(),
+    timestamp: new Date().toISOString(),
   });
-
+  
   return logId;
 }
 
@@ -49,12 +50,26 @@ export async function logJobComplete(
   jobId: string,
   output: Record<string, unknown>
 ): Promise<void> {
-  const now = new Date();
+  const db = await getDb();
+  
+  if (db) {
+    try {
+      await db.update(jobLogs)
+        .set({
+          status: 'completed',
+          output: JSON.stringify(output),
+          completedAt: new Date(),
+        })
+        .where(eq(jobLogs.id, logId));
+    } catch (error) {
+      console.error(`[JobLog] Failed to persist completion log:`, error);
+    }
+  }
 
   console.log(`[JobLog] COMPLETE - ${logId}`, {
     jobId,
     output,
-    timestamp: now.toISOString(),
+    timestamp: new Date().toISOString(),
   });
 }
 
@@ -66,13 +81,27 @@ export async function logJobFailed(
   jobId: string,
   error: string | Error
 ): Promise<void> {
-  const now = new Date();
+  const db = await getDb();
   const errorMessage = error instanceof Error ? error.message : String(error);
+  
+  if (db) {
+    try {
+      await db.update(jobLogs)
+        .set({
+          status: 'failed',
+          error: errorMessage,
+          completedAt: new Date(),
+        })
+        .where(eq(jobLogs.id, logId));
+    } catch (error) {
+      console.error(`[JobLog] Failed to persist failure log:`, error);
+    }
+  }
 
   console.log(`[JobLog] FAILED - ${logId}`, {
     jobId,
     error: errorMessage,
-    timestamp: now.toISOString(),
+    timestamp: new Date().toISOString(),
   });
 }
 
@@ -80,15 +109,28 @@ export async function logJobFailed(
  * Obter histórico de logs de um job
  */
 export async function getJobLogs(jobId: string): Promise<JobLog[]> {
-  // Implementar busca de logs
-  console.log(`[JobLog] Fetching logs for job: ${jobId}`);
-  return [];
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    return await db.select().from(jobLogs).where(eq(jobLogs.jobId, jobId)).orderBy(desc(jobLogs.createdAt));
+  } catch (error) {
+    console.error(`[JobLog] Failed to fetch logs for job ${jobId}:`, error);
+    return [];
+  }
 }
 
 /**
  * Obter logs de uma fila
  */
 export async function getQueueLogs(queueName: string, limit: number = 100): Promise<JobLog[]> {
-  console.log(`[JobLog] Fetching logs for queue: ${queueName}`);
-  return [];
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    return await db.select().from(jobLogs).where(eq(jobLogs.queueName, queueName)).limit(limit).orderBy(desc(jobLogs.createdAt));
+  } catch (error) {
+    console.error(`[JobLog] Failed to fetch logs for queue ${queueName}:`, error);
+    return [];
+  }
 }

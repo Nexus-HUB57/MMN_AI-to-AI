@@ -41,15 +41,15 @@
 - [x] Implementar histórico de metas executadas
 
 ## Fase 6: Sistema de Alertas
-- [ ] Implementar notificações de falhas em workers
-- [ ] Implementar notificações de jobs com erro
-- [ ] Implementar notificações de comissões confirmadas
-- [ ] Implementar notificações de exceções que exigem intervenção
-- [ ] Integrar com sistema de notificação do Manus
+- [x] Implementar notificações de falhas em workers
+- [x] Implementar notificações de jobs com erro
+- [x] Implementar notificações de comissões confirmadas
+- [x] Implementar notificações de exceções que exigem intervenção
+- [x] Integrar com sistema de notificação do Manus
 
 ## Fase 7: Histórico e Logs
-- [ ] Criar tabela de logs de execução
-- [ ] Implementar rastreabilidade de jobs
+- [x] Criar tabela de logs de execução (Schema definido)
+- [x] Implementar rastreabilidade de jobs (JobLogger persistente)
 - [ ] Criar página de visualização de histórico
 - [ ] Implementar filtros e busca de logs
 - [ ] Implementar exportação de logs

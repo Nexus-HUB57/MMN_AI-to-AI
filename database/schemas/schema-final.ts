@@ -245,3 +245,4 @@ export const performanceMetrics = mysqlTable('performance_metrics', {
 
 export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
 export type InsertPerformanceMetric = typeof performanceMetrics.$inferInsert;
+

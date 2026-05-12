@@ -168,3 +168,218 @@ Desenvolvimento e Fine-tuning de Modelos de IA Proprietários: O llm-v2.ts
 [7] Nexus-HUB57. (n.d.). MMN_AI-to-AI/package.json. GitHub. Disponível em:
 [8] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/llm-v2.ts. GitHub. Disponível em:
 [9] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/commissions.ts. GitHub. Disponível em:
+
+Roadmap de Ajustes para Autonomia do Sistema MMN_AI-to-AI
+
+Autor: Manus AI
+
+1. Introdução
+
+Este roadmap detalha os ajustes necessários para o Nexus System AfilIAte-AI operar em um modelo híbrido otimizado, onde a intervenção humana é restrita a aspectos administrativos, de gestão e financeiros, enquanto as ações operacionais de Marketing Multinível (MMN) – como vendas, publicações, convites, prospecção e demais tarefas operacionais – são executadas de forma 100% autônoma pelos Agentes de IA. O objetivo é mitigar as discrepâncias identificadas na análise técnica prévia, que apontou a necessidade de intervenção humana em pontos críticos que deveriam ser automatizados.
+
+2. Visão Geral do Roadmap
+
+O roadmap será dividido em fases, abordando a implementação de infraestrutura de orquestração, a automação de processos operacionais e a integração de capacidades de IA, sempre com foco na minimização da intervenção humana nas tarefas designadas aos agentes.
+
+3. Fases do Roadmap
+
+Fase 1: Implementação da Infraestrutura de Filas e Workers
+
+Objetivo: Estabelecer um sistema robusto para processamento assíncrono e escalável de tarefas, conforme a menção de Redis e BullMQ no README.md 
+.
+
+Ações:
+
+•
+1.1. Configuração do Redis:
+
+•
+Garantir que o Redis esteja configurado e acessível para o backend. Isso pode envolver a configuração de um serviço Redis em ambiente de produção ou o uso de um serviço gerenciado.
+
+
+
+•
+1.2. Integração do BullMQ:
+
+•
+Instalar e configurar a biblioteca BullMQ no projeto backend.
+
+•
+Criar instâncias de filas (Queue) para diferentes tipos de tarefas (e.g., content_generation_queue, marketplace_sync_queue, order_processing_queue, commission_processing_queue).
+
+
+
+•
+1.3. Desenvolvimento de Workers:
+
+•
+Criar workers dedicados para cada fila, responsáveis por consumir os jobs e executar a lógica de negócio correspondente. Cada worker deve ser um processo separado, capaz de escalar independentemente.
+
+•
+ContentGenerationWorker: Consumirá jobs da content_generation_queue e invocará as funções do contentGenerationRouter.ts 
+ para gerar conteúdo.
+
+•
+MarketplaceSyncWorker: Consumirá jobs da marketplace_sync_queue e invocará o serviço syncMarketplaceProducts.ts 
+ para sincronizar produtos.
+
+•
+OrderProcessingWorker: Consumirá jobs da order_processing_queue e invocará o serviço dropshippingService.ts para registrar e atualizar pedidos.
+
+•
+CommissionProcessingWorker: Consumirá jobs da commission_processing_queue e invocará o serviço commissions.ts 
+ para calcular e confirmar comissões.
+
+
+
+•
+1.4. Atualização do package.json:
+
+•
+Adicionar scripts de inicialização para os workers no package.json 
+, permitindo que sejam executados como processos em segundo plano ou em contêineres dedicados.
+
+
+
+Fase 2: Automação da Orquestração de Tarefas Operacionais de MMN
+
+Objetivo: Garantir que as tarefas de marketing, vendas e prospecção sejam iniciadas e gerenciadas pelos Agentes de IA sem intervenção humana direta.
+
+Ações:
+
+•
+2.1. Desenvolvimento do Agente Orquestrador Central:
+
+•
+Implementar um serviço ou módulo que atue como o "cérebro" dos agentes de IA, utilizando o Google Genkit (conforme README.md 
+) ou uma solução customizada.
+
+•
+Este orquestrador será responsável por:
+
+•
+Receber metas de alto nível (definidas estrategicamente por humanos).
+
+•
+Quebrar metas em subtarefas operacionais acionáveis.
+
+•
+Adicionar jobs às filas do BullMQ para que os workers executem as subtarefas.
+
+•
+Monitorar o progresso dos jobs e o desempenho dos agentes.
+
+•
+Utilizar o llm-v2.ts 
+ para tomada de decisões e adaptação de estratégias.
+
+
+
+
+
+•
+2.2. Implementação de Scheduler (Agendador):
+
+•
+Integrar um agendador baseado em cron (e.g., node-cron, agenda.js ou um serviço de cron externo) para disparar o Agente Orquestrador e outras tarefas recorrentes.
+
+•
+Configurar tarefas agendadas para:
+
+•
+Acionar o MarketplaceSyncWorker periodicamente (e.g., diariamente).
+
+•
+Disparar o Agente Orquestrador para iniciar novas campanhas ou ajustar estratégias de marketing em intervalos definidos.
+
+
+
+
+
+•
+2.3. Automação do Processamento de Pedidos e Comissões:
+
+•
+Modificar o dropshippingService.ts para que, ao registrar um pedido, ele adicione um job à order_processing_queue em vez de processar imediatamente, permitindo que o OrderProcessingWorker o faça de forma assíncrona.
+
+•
+Garantir que o CommissionProcessingWorker seja acionado automaticamente quando um pedido é marcado como "delivered" ou quando um bônus é elegível, calculando e confirmando as comissões sem intervenção manual.
+
+
+
+Fase 3: Refinamento e Ativação de Modelos de IA Proprietários
+
+Objetivo: Desbloquear o potencial total dos agentes de IA através da ativação de modelos especializados.
+
+Ações:
+
+•
+3.1. Desenvolvimento/Fine-tuning de Modelos Proprietários:
+
+•
+Continuar o desenvolvimento e fine-tuning dos modelos mmn-copywriting-v1 e mmn-strategy-v1.
+
+•
+Pesquisar e implementar soluções de hospedagem para modelos open-source como Llama 2 e Mistral, conforme previsto no llm-v2.ts 
+.
+
+
+
+•
+3.2. Integração e Ativação:
+
+•
+Atualizar o llm-v2.ts para que os modelos proprietários sejam ativados (isAvailable: true) e integrados corretamente, permitindo que o Agente Orquestrador e os workers os utilizem para tarefas específicas.
+
+
+
+Fase 4: Definição Clara dos Pontos de Intervenção Humana
+
+Objetivo: Formalizar os processos que exigem intervenção humana, garantindo clareza e eficiência no modelo híbrido.
+
+Ações:
+
+•
+4.1. Revisão dos Procedimentos Administrativos:
+
+•
+Documentar explicitamente que a confirmação e o cancelamento de pagamentos via paymentsRouter.ts 
+ são adminProcedure e requerem aprovação manual.
+
+•
+Definir fluxos de trabalho claros para administradores lidarem com pagamentos pendentes e exceções financeiras.
+
+
+
+•
+4.2. Definição de Papéis e Responsabilidades:
+
+•
+Esclarecer os papéis do operador humano (gestão estratégica, financeira, resolução de exceções) e dos Agentes de IA (execução operacional autônoma).
+
+
+
+•
+4.3. Implementação de Alertas e Notificações:
+
+•
+Configurar o sistema para enviar alertas e notificações (e.g., via e-mail, dashboard) aos administradores quando houver pagamentos pendentes, falhas em processos automatizados ou situações que exijam atenção humana.
+
+
+
+4. Conclusão
+
+Este roadmap fornece um caminho estruturado para evoluir o Nexus System AfilIAte-AI em direção à sua visão de um ecossistema MMN altamente autônomo. Ao implementar a infraestrutura de filas e workers, automatizar a orquestração das tarefas operacionais e refinar os modelos de IA, o sistema poderá liberar os operadores humanos para se concentrarem em decisões estratégicas e financeiras, enquanto os Agentes de IA gerenciam o dia a dia das operações de marketing e vendas de forma eficiente e sem interrupções.
+
+5. Referências
+
+[1] Nexus-HUB57. (n.d.). MMN_AI-to-AI/README.md. GitHub. Disponível em:
+[2] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/routers/agentsRouter.ts. GitHub. Disponível em:
+[3] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/routers/contentGenerationRouter.ts. GitHub. Disponível em:
+[4] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/routers/paymentsRouter.ts. GitHub. Disponível em:
+[5] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/syncMarketplaceProducts.ts. GitHub. Disponível em:
+[6] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/routers/marketplacesRouter.ts. GitHub. Disponível em:
+[7] Nexus-HUB57. (n.d.). MMN_AI-to-AI/package.json. GitHub. Disponível em:
+[8] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/llm-v2.ts. GitHub. Disponível em:
+[9] Nexus-HUB57. (n.d.). MMN_AI-to-AI/backend/src/services/commissions.ts. GitHub. Disponível em:
+

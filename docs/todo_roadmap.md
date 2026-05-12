@@ -31,7 +31,7 @@
 - [x] Implementar visualização de jobs em execução
 - [x] Implementar métricas de desempenho (taxa de sucesso, tempo médio de execução)
 - [x] Implementar gráficos de tendências
-- [ ] Criar página de detalhes de cada agente
+- [x] Criar página de detalhes de cada agente
 
 ## Fase 5: Painel de Intervenção Humana
 - [ ] Criar interface de aprovação de pagamentos

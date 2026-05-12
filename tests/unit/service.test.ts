@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { registerDropshippingOrder, updateDropshippingOrderStatus } from "./dropshippingService";
-import { products, affiliates, orders, commissions } from "./schema-final";
+import { products, affiliates, orders, commissions } from "./schema-fields";
 
 // Mock de dados
 const mockProduct = { id: 1, price: 10000, commissionPercentage: 10, title: "Produto Teste", marketplace: "MercadoLivre" };

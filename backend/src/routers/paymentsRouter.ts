@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { protectedProcedure, adminProcedure, router } from "../config/trpc";
-import { getDb } from "../../database/schemas/db";
+import { getDb } from "../../../database/schemas/db";
 import {
   payments,
   commissions,
   affiliates,
   InsertPayment,
   InsertCommission,
-} from "../../database/schemas/schema-final";
+} from "../../../database/schemas/schema-final";
 import { eq, and, desc, gte, lt } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import {
@@ -15,7 +15,7 @@ import {
   confirmCommissions,
   updateAffiliateCommissionTotals,
 } from "../services/commissions";
-import { createNotification } from "../../database/schemas/db";
+import { createNotification } from "../../../database/schemas/db";
 
 /**
  * Payments Router - Gestão de pagamentos e comissões

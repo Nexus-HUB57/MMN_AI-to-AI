@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import Dashboard from "@/pages/Dashboard";
+import ExecutionLogs from "@/pages/ExecutionLogs";
 import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -13,6 +14,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/admin/logs"} component={ExecutionLogs} />
       <Route path={"/afiliado/:code"} component={AffiliateMiniSite} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

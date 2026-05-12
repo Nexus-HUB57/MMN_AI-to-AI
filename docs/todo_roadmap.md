@@ -50,9 +50,9 @@
 ## Fase 7: Histórico e Logs
 - [x] Criar tabela de logs de execução (Schema definido)
 - [x] Implementar rastreabilidade de jobs (JobLogger persistente)
-- [ ] Criar página de visualização de histórico
-- [ ] Implementar filtros e busca de logs
-- [ ] Implementar exportação de logs
+- [x] Criar página de visualização de histórico
+- [x] Implementar filtros e busca de logs
+- [x] Implementar exportação de logs
 
 ## Fase 8: Integração e Testes
 - [ ] Testes unitários de workers

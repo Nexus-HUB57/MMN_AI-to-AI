@@ -28,6 +28,7 @@ const MENU_ITEMS = [
   { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
+  { label: "Logs de Execução", path: "/admin/logs", icon: FileText },
 ];
 
 export default function AdminDashboardLayout({ children }: AdminDashboardLayoutProps) {

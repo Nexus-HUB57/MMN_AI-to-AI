@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { systemRouter } from "./_core/systemRouter";
+import { logRouter } from "./logRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../config/trpc";
 import * as db from "../../database/schemas/db";
 import * as llm from "../services/llm";
@@ -585,6 +586,7 @@ export const appRouter = router({
   telemetry: telemetryRouter,
   dashboard: dashboardRouter,
   mmn: mmnRouter,
+  logs: logRouter,
 });
 
 export type AppRouter = typeof appRouter;

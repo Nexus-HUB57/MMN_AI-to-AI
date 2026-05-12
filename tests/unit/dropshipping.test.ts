@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { dropshippingRouter } from "./dropshippingRouter";
+import { dropshippingRouter } from "../../backend/src/routers/dropshippingRouter";
 import { TRPCError } from "@trpc/server";
-import { products, affiliates, users, orders, commissions } from "./schema-final";
+import { products, affiliates, users, orders, commissions } from "../../database/schemas/schema-final";
 
 // Mock de dados
 const mockProduct = { id: 1, price: 10000, commissionPercentage: 10, title: "Produto Teste", marketplace: "MercadoLivre" };
@@ -51,7 +51,7 @@ const mockDb = {
 };
 
 // Mock de db.ts
-vi.mock("./db", () => ({
+vi.mock("../../database/schemas/db", () => ({
   getDb: vi.fn(async () => mockDb),
   createNotification: vi.fn(async () => {}),
   getAffiliateByUserId: vi.fn(async () => mockAffiliate),
@@ -59,7 +59,7 @@ vi.mock("./db", () => ({
 }));
 
 // Mock de commissions.ts
-vi.mock("./commissions", () => ({
+vi.mock("../../backend/src/services/commissions", () => ({
   calculateConsumptionCommission: vi.fn(async (affiliateId, amount) => {
     const commission = { id: mockCommissions.length + 1, affiliateId, amount: 1000, status: "pending" };
     mockCommissions.push(commission);

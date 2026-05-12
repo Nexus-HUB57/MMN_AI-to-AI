@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { getDb, createNotification, getAffiliateByUserId, getUserByEmail } from "./db";
+import { getDb, createNotification, getAffiliateByUserId, getUserByEmail } from "../../../database/schemas/db";
 import {
   orders,
   products,
   affiliates,
   InsertOrder,
-} from "./schema-final";
+} from "../../../database/schemas/schema-final";
 import { eq, and, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { calculateConsumptionCommission, confirmCommissions, updateAffiliateCommissionTotals } from "./commissions";

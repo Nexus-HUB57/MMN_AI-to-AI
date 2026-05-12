@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { protectedProcedure, adminProcedure, router } from "./trpc";
-import { registerDropshippingOrder, updateDropshippingOrderStatus } from "./dropshippingService";
+import { protectedProcedure, adminProcedure, router } from "../config/trpc";
+import { registerDropshippingOrder, updateDropshippingOrderStatus } from "../services/dropshippingService";
 import { TRPCError } from "@trpc/server";
 
 /**

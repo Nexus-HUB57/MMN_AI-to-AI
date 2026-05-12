@@ -1,5 +1,5 @@
-import { getDb } from "./db";
-import { commissions, InsertCommission, network, affiliates } from "./schema-final";
+import { getDb } from "../../../database/schemas/db";
+import { commissions, InsertCommission, network, affiliates } from "../../../database/schemas/schema-final";
 import { eq, and } from "drizzle-orm";
 
 /**

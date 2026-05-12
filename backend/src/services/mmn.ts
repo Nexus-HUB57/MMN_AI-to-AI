@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../config/trpc";
-import { getDb } from "../../database/schemas/db";
+import { getDb } from "../../../database/schemas/db";
 import {
   getAffiliateByUserId,
   getAffiliateByCode,
@@ -12,8 +12,8 @@ import {
   getOrdersByAffiliate,
   getTrendingProducts,
   getActiveUpgrades,
-} from "../../database/schemas/db";
-import { affiliates, agents, network, InsertAffiliate, InsertAgent } from "../../database/schemas/schema-final";
+} from "../../../database/schemas/db";
+import { affiliates, agents, network, InsertAffiliate, InsertAgent } from "../../../database/schemas/schema-final";
 import { nanoid } from "nanoid";
 import { TRPCError } from "@trpc/server";
 

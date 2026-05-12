@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Crown, TrendingUp, Users, DollarSign } from "lucide-react";
+import { Crown, TrendingUp, Users, DollarSign, Zap, Target } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface Sponsor {
@@ -10,11 +10,12 @@ interface Sponsor {
   avatar?: string;
   affiliateCode: string;
   level: number;
-  totalCommissions: string;
+  totalCommissions: number;
   directReferrals: number;
   networkSize: number;
   status: "active" | "inactive";
   joinedDate: string;
+  monthlyGrowth?: number;
 }
 
 interface TopSponsorsProps {
@@ -36,11 +37,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos",
         affiliateCode: "CARLOS001",
         level: 5,
-        totalCommissions: "15.500,00",
+        totalCommissions: 15500,
         directReferrals: 12,
         networkSize: 145,
         status: "active",
         joinedDate: "2023-01-15",
+        monthlyGrowth: 12.5,
       },
       {
         id: 2,
@@ -48,11 +50,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marina",
         affiliateCode: "MARINA002",
         level: 4,
-        totalCommissions: "12.300,00",
+        totalCommissions: 12300,
         directReferrals: 9,
         networkSize: 98,
         status: "active",
         joinedDate: "2023-03-22",
+        monthlyGrowth: 8.3,
       },
       {
         id: 3,
@@ -60,11 +63,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Joao",
         affiliateCode: "JOAO003",
         level: 4,
-        totalCommissions: "10.800,00",
+        totalCommissions: 10800,
         directReferrals: 8,
         networkSize: 87,
         status: "active",
         joinedDate: "2023-02-10",
+        monthlyGrowth: 6.7,
       },
       {
         id: 4,
@@ -72,11 +76,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Fernanda",
         affiliateCode: "FERNANDA004",
         level: 3,
-        totalCommissions: "8.200,00",
+        totalCommissions: 8200,
         directReferrals: 6,
         networkSize: 62,
         status: "active",
         joinedDate: "2023-04-05",
+        monthlyGrowth: 5.2,
       },
       {
         id: 5,
@@ -84,11 +89,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ricardo",
         affiliateCode: "RICARDO005",
         level: 3,
-        totalCommissions: "7.500,00",
+        totalCommissions: 7500,
         directReferrals: 5,
         networkSize: 55,
         status: "active",
         joinedDate: "2023-05-18",
+        monthlyGrowth: 4.1,
       },
       {
         id: 6,
@@ -96,11 +102,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Beatriz",
         affiliateCode: "BEATRIZ006",
         level: 2,
-        totalCommissions: "5.900,00",
+        totalCommissions: 5900,
         directReferrals: 4,
         networkSize: 42,
         status: "active",
         joinedDate: "2023-06-12",
+        monthlyGrowth: 3.8,
       },
       {
         id: 7,
@@ -108,11 +115,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas",
         affiliateCode: "LUCAS007",
         level: 2,
-        totalCommissions: "4.300,00",
+        totalCommissions: 4300,
         directReferrals: 3,
         networkSize: 28,
         status: "active",
         joinedDate: "2023-07-08",
+        monthlyGrowth: 2.9,
       },
       {
         id: 8,
@@ -120,11 +128,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Gabriela",
         affiliateCode: "GABRIELA008",
         level: 2,
-        totalCommissions: "3.800,00",
+        totalCommissions: 3800,
         directReferrals: 3,
         networkSize: 24,
         status: "active",
         joinedDate: "2023-08-20",
+        monthlyGrowth: 2.1,
       },
       {
         id: 9,
@@ -132,11 +141,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felipe",
         affiliateCode: "FELIPE009",
         level: 1,
-        totalCommissions: "2.100,00",
+        totalCommissions: 2100,
         directReferrals: 2,
         networkSize: 15,
         status: "active",
         joinedDate: "2023-09-14",
+        monthlyGrowth: 1.5,
       },
       {
         id: 10,
@@ -144,11 +154,12 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Camila",
         affiliateCode: "CAMILA010",
         level: 1,
-        totalCommissions: "1.500,00",
+        totalCommissions: 1500,
         directReferrals: 1,
         networkSize: 8,
         status: "active",
         joinedDate: "2023-10-03",
+        monthlyGrowth: 0.8,
       },
     ];
 
@@ -162,15 +173,15 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
   const getLevelBadgeColor = (level: number) => {
     switch (level) {
       case 5:
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
       case 4:
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
       case 3:
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
       case 2:
-        return "bg-green-100 text-green-800";
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
     }
   };
 
@@ -185,11 +196,18 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
     return levels[level as keyof typeof levels] || "Iniciante";
   };
 
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
+  };
+
   if (isLoading) {
     return (
-      <Card>
+      <Card className="hud-frame bg-black/40 border-neon-cyan/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-neon-cyan font-orbitron">
             <Crown className="w-5 h-5 text-yellow-500" />
             Top Patrocinadores
           </CardTitle>
@@ -197,7 +215,10 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded animate-pulse" />
+              <div
+                key={i}
+                className="h-12 bg-black/60 rounded border border-neon-cyan/20 animate-pulse"
+              />
             ))}
           </div>
         </CardContent>
@@ -207,19 +228,25 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card className="hud-frame bg-black/40 border-neon-cyan/30">
+        <div className="corner-bracket top-left"></div>
+        <div className="corner-bracket top-right"></div>
+        <div className="corner-bracket bottom-left"></div>
+        <div className="corner-bracket bottom-right"></div>
+
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-neon-cyan font-orbitron">
             <Crown className="w-5 h-5 text-yellow-500" />
             Top {limit} Patrocinadores
           </CardTitle>
         </CardHeader>
+
         <CardContent>
           <div className="space-y-3">
             {sponsors.map((sponsor, index) => (
               <div
                 key={sponsor.id}
-                className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 cursor-pointer transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg border border-neon-cyan/20 hover:border-neon-cyan/60 bg-black/30 hover:bg-black/50 cursor-pointer transition-all"
                 onClick={() => {
                   setSelectedSponsor(sponsor);
                   onSponsorSelect?.(sponsor);
@@ -234,35 +261,41 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
                   ) : index === 2 ? (
                     <span className="text-2xl">🥉</span>
                   ) : (
-                    <span className="text-gray-600">#{index + 1}</span>
+                    <span className="text-neon-cyan font-orbitron">#{index + 1}</span>
                   )}
                 </div>
 
                 {/* Avatar and Name */}
                 <div className="flex-shrink-0">
-                  <Avatar className="w-10 h-10">
+                  <Avatar className="w-10 h-10 border border-neon-cyan/30">
                     <AvatarImage src={sponsor.avatar} alt={sponsor.name} />
-                    <AvatarFallback>{sponsor.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback className="bg-black/60 text-neon-cyan">
+                      {sponsor.name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold text-sm truncate">{sponsor.name}</p>
+                    <p className="font-semibold text-sm truncate text-white font-orbitron">
+                      {sponsor.name}
+                    </p>
                     <Badge className={`text-xs ${getLevelBadgeColor(sponsor.level)}`}>
                       {getLevelName(sponsor.level)}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500">{sponsor.affiliateCode}</p>
+                  <p className="text-xs text-text-secondary font-space-mono">
+                    {sponsor.affiliateCode}
+                  </p>
                 </div>
 
                 {/* Stats */}
                 <div className="flex-shrink-0 text-right">
-                  <div className="text-sm font-bold text-green-600">
-                    R$ {sponsor.totalCommissions}
+                  <div className="text-sm font-bold text-neon-pink font-orbitron">
+                    {formatCurrency(sponsor.totalCommissions)}
                   </div>
-                  <div className="text-xs text-gray-500 flex items-center justify-end gap-1">
+                  <div className="text-xs text-text-secondary flex items-center justify-end gap-1 font-space-mono">
                     <Users className="w-3 h-3" />
                     {sponsor.networkSize}
                   </div>
@@ -275,17 +308,28 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
 
       {/* Sponsor Details */}
       {selectedSponsor && (
-        <Card className="border-2 border-blue-200">
+        <Card className="hud-frame bg-black/40 border-neon-pink/30">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Avatar className="w-12 h-12">
+                <Avatar className="w-12 h-12 border border-neon-pink/30">
                   <AvatarImage src={selectedSponsor.avatar} alt={selectedSponsor.name} />
-                  <AvatarFallback>{selectedSponsor.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className="bg-black/60 text-neon-pink">
+                    {selectedSponsor.name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle>{selectedSponsor.name}</CardTitle>
-                  <p className="text-sm text-gray-600">{selectedSponsor.affiliateCode}</p>
+                  <CardTitle className="text-white font-orbitron">
+                    {selectedSponsor.name}
+                  </CardTitle>
+                  <p className="text-sm text-text-secondary font-space-mono">
+                    {selectedSponsor.affiliateCode}
+                  </p>
                 </div>
               </div>
               <Badge className={`text-sm ${getLevelBadgeColor(selectedSponsor.level)}`}>
@@ -293,32 +337,67 @@ export default function TopSponsors({ limit = 10, onSponsorSelect }: TopSponsors
               </Badge>
             </div>
           </CardHeader>
+
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-green-600" />
+              <div className="flex items-center gap-2 p-3 bg-black/60 rounded border border-neon-cyan/20">
+                <DollarSign className="w-4 h-4 text-neon-pink" />
                 <div>
-                  <p className="text-xs text-gray-600">Comissões Totais</p>
-                  <p className="font-bold">R$ {selectedSponsor.totalCommissions}</p>
+                  <p className="text-xs text-text-secondary uppercase font-space-mono">
+                    Comissões Totais
+                  </p>
+                  <p className="font-bold text-neon-pink font-orbitron">
+                    {formatCurrency(selectedSponsor.totalCommissions)}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-blue-600" />
+
+              <div className="flex items-center gap-2 p-3 bg-black/60 rounded border border-neon-cyan/20">
+                <Users className="w-4 h-4 text-neon-cyan" />
                 <div>
-                  <p className="text-xs text-gray-600">Rede Total</p>
-                  <p className="font-bold">{selectedSponsor.networkSize} pessoas</p>
+                  <p className="text-xs text-text-secondary uppercase font-space-mono">
+                    Rede Total
+                  </p>
+                  <p className="font-bold text-neon-cyan font-orbitron">
+                    {selectedSponsor.networkSize} pessoas
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-purple-600" />
+
+              <div className="flex items-center gap-2 p-3 bg-black/60 rounded border border-neon-cyan/20">
+                <TrendingUp className="w-4 h-4 text-purple-500" />
                 <div>
-                  <p className="text-xs text-gray-600">Diretos</p>
-                  <p className="font-bold">{selectedSponsor.directReferrals}</p>
+                  <p className="text-xs text-text-secondary uppercase font-space-mono">
+                    Diretos
+                  </p>
+                  <p className="font-bold text-purple-500 font-orbitron">
+                    {selectedSponsor.directReferrals}
+                  </p>
                 </div>
               </div>
-              <div>
-                <p className="text-xs text-gray-600">Membro desde</p>
-                <p className="font-bold">{new Date(selectedSponsor.joinedDate).toLocaleDateString("pt-BR")}</p>
+
+              <div className="flex items-center gap-2 p-3 bg-black/60 rounded border border-neon-cyan/20">
+                <Zap className="w-4 h-4 text-yellow-500" />
+                <div>
+                  <p className="text-xs text-text-secondary uppercase font-space-mono">
+                    Crescimento
+                  </p>
+                  <p className="font-bold text-yellow-500 font-orbitron">
+                    {selectedSponsor.monthlyGrowth?.toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+
+              <div className="col-span-2 flex items-center gap-2 p-3 bg-black/60 rounded border border-neon-cyan/20">
+                <Target className="w-4 h-4 text-green-500" />
+                <div className="flex-1">
+                  <p className="text-xs text-text-secondary uppercase font-space-mono">
+                    Membro desde
+                  </p>
+                  <p className="font-bold text-green-500 font-orbitron">
+                    {new Date(selectedSponsor.joinedDate).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>

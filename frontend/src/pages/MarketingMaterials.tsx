@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Download, Eye, Share2, Copy, FileText, Image, Video, Link as LinkIcon, TrendingUp } from "lucide-react";
+import { Download, Eye, Share2, Copy, FileText, Image, Video, Link as LinkIcon, TrendingUp, Grid3x3, List, Zap } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -150,18 +150,93 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
       description: "Template de carrossel para Instagram com 5 slides otimizados",
       category: "social_media",
       type: "image",
-      url: "https://example.com/materials/instagram-carousel.psd",
-      fileSize: "12.4 MB",
-      downloadCount: 223,
+      url: "https://example.com/materials/instagram-carousel.zip",
+      fileSize: "12.5 MB",
+      downloadCount: 203,
       status: "active",
       createdAt: "2024-04-12",
       thumbnail: "https://via.placeholder.com/400x300?text=Instagram",
     },
   ]);
 
+  const getTypeLabel = (type: string) => {
+    return materialTypes.find((t) => t.value === type)?.label || type;
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case "banner":
+        return <Image className="w-4 h-4" />;
+      case "text":
+        return <FileText className="w-4 h-4" />;
+      case "link":
+        return <LinkIcon className="w-4 h-4" />;
+      case "video":
+        return <Video className="w-4 h-4" />;
+      case "image":
+        return <Image className="w-4 h-4" />;
+      case "document":
+        return <FileText className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  const getCategoryLabel = (category: string) => {
+    return categories.find((c) => c.value === category)?.label || category;
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "banner":
+        return "bg-neon-pink/20 text-neon-pink border border-neon-pink/30";
+      case "text":
+        return "bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30";
+      case "link":
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
+      case "video":
+        return "bg-red-500/20 text-red-400 border border-red-500/30";
+      case "image":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "document":
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "promotional":
+        return "bg-neon-pink/20 text-neon-pink border border-neon-pink/30";
+      case "educational":
+        return "bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30";
+      case "social_media":
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
+      case "email":
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
+      case "landing_page":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
+      case "inactive":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "archived":
+        return "bg-red-500/20 text-red-400 border border-red-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
   const handleDownloadMaterial = (material: Material) => {
     toast.success(`Iniciando download de ${material.title}`);
-    // In production, this would trigger actual download
   };
 
   const handleCopyLink = (material: Material) => {
@@ -171,22 +246,6 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
 
   const handleShareMaterial = (material: Material) => {
     toast.success(`Compartilhando ${material.title}`);
-    // In production, this would open share options
-  };
-
-  const getTypeIcon = (type: string) => {
-    const typeObj = materialTypes.find((t) => t.value === type);
-    return typeObj?.icon || <FileText className="w-4 h-4" />;
-  };
-
-  const getTypeLabel = (type: string) => {
-    const typeObj = materialTypes.find((t) => t.value === type);
-    return typeObj?.label || "Arquivo";
-  };
-
-  const getCategoryLabel = (category: string) => {
-    const cat = categories.find((c) => c.value === category);
-    return cat?.label || category;
   };
 
   const filteredMaterials = materials.filter((material) => {
@@ -197,208 +256,214 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
     return matchesSearch && matchesType && matchesCategory;
   });
 
-  const topDownloads = [...materials].sort((a, b) => b.downloadCount - a.downloadCount).slice(0, 5);
+  const topDownloads = [...materials]
+    .sort((a, b) => b.downloadCount - a.downloadCount)
+    .slice(0, 5);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 p-8">
       {/* Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-900">Materiais de Divulgação</h2>
-        <p className="text-gray-600 mt-2">Acesse e baixe todos os materiais disponíveis para sua estratégia de marketing</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-orbitron font-bold text-glow-pink">
+            Materiais de Divulgação
+          </h1>
+          <p className="text-neon-cyan font-space-mono mt-2">
+            Acesse banners, textos, vídeos e outros materiais para promover seus produtos
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={viewMode === "grid" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("grid")}
+            className={viewMode === "grid" ? "btn-neon-cyan" : "border-neon-cyan/30 text-neon-cyan"}
+          >
+            <Grid3x3 size={16} />
+          </Button>
+          <Button
+            variant={viewMode === "list" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode("list")}
+            className={viewMode === "list" ? "btn-neon-cyan" : "border-neon-cyan/30 text-neon-cyan"}
+          >
+            <List size={16} />
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-900">Total de Materiais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-blue-600">{materials.length}</div>
-            <p className="text-xs text-blue-700 mt-1">Disponíveis para download</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-900">Downloads Totais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-green-600">
-              {materials.reduce((sum, m) => sum + m.downloadCount, 0).toLocaleString()}
-            </div>
-            <p className="text-xs text-green-700 mt-1">De todos os materiais</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-900">Tipos de Materiais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-purple-600">
-              {new Set(materials.map((m) => m.type)).size}
-            </div>
-            <p className="text-xs text-purple-700 mt-1">Diferentes formatos</p>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-orange-900">Mais Baixado</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-orange-600">
-              {topDownloads[0]?.downloadCount || 0}
-            </div>
-            <p className="text-xs text-orange-700 mt-1">Downloads do top material</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="space-y-4">
-        <div className="flex gap-4 flex-wrap items-center">
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Buscar
+          </label>
           <Input
-            placeholder="Pesquisar materiais..."
+            placeholder="Buscar materiais..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 min-w-[200px]"
+            className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Tipo
+          </label>
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os Tipos</SelectItem>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todos</SelectItem>
               {materialTypes.map((type) => (
-                <SelectItem key={type.value} value={type.value}>
+                <SelectItem key={type.value} value={type.value} className="text-white">
                   {type.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Categoria
+          </label>
           <Select value={filterCategory} onValueChange={setFilterCategory}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas as Categorias</SelectItem>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todas</SelectItem>
               {categories.map((cat) => (
-                <SelectItem key={cat.value} value={cat.value}>
+                <SelectItem key={cat.value} value={cat.value} className="text-white">
                   {cat.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <div className="flex gap-2 border rounded-lg p-1">
-            <Button
-              variant={viewMode === "grid" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("grid")}
-            >
-              Grid
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("list")}
-            >
-              Lista
-            </Button>
-          </div>
+        </div>
+
+        <div className="flex items-end">
+          <Button
+            onClick={() => {
+              setFilterType("all");
+              setFilterCategory("all");
+              setSearchTerm("");
+            }}
+            variant="outline"
+            className="w-full border-neon-cyan/30 text-neon-cyan font-orbitron"
+          >
+            Limpar Filtros
+          </Button>
         </div>
       </div>
 
-      {/* Materials Display */}
+      {/* Materials Grid/List */}
       {viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMaterials.length > 0 ? (
             filteredMaterials.map((material) => (
               <Card
                 key={material.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                className="hud-frame bg-black/40 border-neon-cyan/30 overflow-hidden hover:border-neon-cyan/60 transition-all cursor-pointer"
                 onClick={() => setSelectedMaterial(material)}
               >
+                <div className="corner-bracket top-left"></div>
+                <div className="corner-bracket top-right"></div>
+                <div className="corner-bracket bottom-left"></div>
+                <div className="corner-bracket bottom-right"></div>
+
+                {/* Thumbnail */}
                 {material.thumbnail && (
-                  <div className="relative h-40 bg-gray-200">
+                  <div className="relative h-40 bg-black/60 border-b border-neon-cyan/20 overflow-hidden">
                     <img
                       src={material.thumbnail}
                       alt={material.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity"
                     />
-                    <Badge className="absolute top-2 right-2 bg-blue-500">
-                      {getTypeLabel(material.type)}
-                    </Badge>
                   </div>
                 )}
 
-                <CardHeader className="pb-2">
-                  <div className="flex items-start gap-2">
-                    <div className="p-2 bg-gray-100 rounded-lg">
+                <CardContent className={`${material.thumbnail ? "pt-4" : "pt-6"} space-y-3`}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <h3 className="font-orbitron text-neon-pink font-bold truncate">
+                        {material.title}
+                      </h3>
+                      <p className="text-xs text-text-secondary font-space-mono truncate">
+                        {material.description}
+                      </p>
+                    </div>
+                    <div className="p-2 bg-black/60 rounded border border-neon-cyan/20">
                       {getTypeIcon(material.type)}
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-base line-clamp-2">{material.title}</CardTitle>
-                      <Badge variant="outline" className="mt-1">
-                        {getCategoryLabel(material.category)}
-                      </Badge>
+                  </div>
+
+                  <div className="flex gap-2 flex-wrap">
+                    <Badge className={getTypeColor(material.type)}>
+                      {getTypeLabel(material.type)}
+                    </Badge>
+                    <Badge className={getCategoryColor(material.category)}>
+                      {getCategoryLabel(material.category)}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs font-space-mono text-text-secondary">
+                    {material.fileSize && (
+                      <div>
+                        <p className="text-gray-600">Tamanho</p>
+                        <p className="text-neon-cyan">{material.fileSize}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-gray-600">Downloads</p>
+                      <p className="text-neon-pink">{material.downloadCount}</p>
                     </div>
                   </div>
-                </CardHeader>
 
-                <CardContent className="space-y-3">
-                  <p className="text-sm text-gray-600 line-clamp-2">{material.description}</p>
-
-                  <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span className="flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4" />
-                      {material.downloadCount} downloads
-                    </span>
-                    {material.fileSize && <span>{material.fileSize}</span>}
-                  </div>
-
-                  <div className="flex gap-2 pt-2 border-t">
+                  <div className="flex gap-2 pt-2 border-t border-neon-cyan/20">
                     <Button
-                      variant="outline"
                       size="sm"
-                      className="flex-1"
+                      variant="outline"
+                      className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDownloadMaterial(material);
                       }}
                     >
-                      <Download size={16} />
+                      <Download size={14} />
                     </Button>
                     <Button
-                      variant="outline"
                       size="sm"
-                      className="flex-1"
+                      variant="outline"
+                      className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCopyLink(material);
                       }}
                     >
-                      <Copy size={16} />
+                      <Copy size={14} />
                     </Button>
                     <Button
-                      variant="outline"
                       size="sm"
-                      className="flex-1"
+                      variant="outline"
+                      className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleShareMaterial(material);
                       }}
                     >
-                      <Share2 size={16} />
+                      <Share2 size={14} />
                     </Button>
                   </div>
                 </CardContent>
               </Card>
             ))
           ) : (
-            <div className="col-span-3 text-center py-12">
-              <p className="text-gray-500 mb-4">Nenhum material encontrado</p>
+            <div className="col-span-full text-center py-12">
+              <FileText className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <p className="text-text-secondary font-space-mono">Nenhum material encontrado</p>
             </div>
           )}
         </div>
@@ -408,62 +473,74 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
             filteredMaterials.map((material) => (
               <Card
                 key={material.id}
-                className="p-4 hover:shadow-lg transition-shadow cursor-pointer"
+                className="hud-frame bg-black/40 border-neon-cyan/30 hover:border-neon-cyan/60 transition-all cursor-pointer"
                 onClick={() => setSelectedMaterial(material)}
               >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gray-100 rounded-lg">
-                    {getTypeIcon(material.type)}
-                  </div>
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-black/60 rounded border border-neon-cyan/20">
+                      {getTypeIcon(material.type)}
+                    </div>
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 line-clamp-1">{material.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-1">{material.description}</p>
-                    <div className="flex gap-2 mt-2">
-                      <Badge variant="outline" className="text-xs">
-                        {getTypeLabel(material.type)}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {getCategoryLabel(material.category)}
-                      </Badge>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-orbitron text-neon-pink font-bold truncate">
+                        {material.title}
+                      </h3>
+                      <p className="text-xs text-text-secondary font-space-mono truncate">
+                        {material.description}
+                      </p>
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        <Badge className={getTypeColor(material.type)}>
+                          {getTypeLabel(material.type)}
+                        </Badge>
+                        <Badge className={getCategoryColor(material.category)}>
+                          {getCategoryLabel(material.category)}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-sm font-bold text-neon-pink font-orbitron">
+                        {material.downloadCount} downloads
+                      </p>
+                      {material.fileSize && (
+                        <p className="text-xs text-text-secondary font-space-mono">
+                          {material.fileSize}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownloadMaterial(material);
+                        }}
+                      >
+                        <Download size={14} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyLink(material);
+                        }}
+                      >
+                        <Copy size={14} />
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-sm font-medium text-gray-900">
-                      {material.downloadCount}
-                    </div>
-                    <div className="text-xs text-gray-600">downloads</div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDownloadMaterial(material);
-                      }}
-                    >
-                      <Download size={16} />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCopyLink(material);
-                      }}
-                    >
-                      <Copy size={16} />
-                    </Button>
-                  </div>
-                </div>
+                </CardContent>
               </Card>
             ))
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500">Nenhum material encontrado</p>
+              <p className="text-text-secondary font-space-mono">Nenhum material encontrado</p>
             </div>
           )}
         </div>
@@ -471,62 +548,85 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
 
       {/* Material Details Modal */}
       {selectedMaterial && (
-        <Card className="border-2 border-blue-200">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  {getTypeIcon(selectedMaterial.type)}
-                </div>
-                <div>
-                  <CardTitle>{selectedMaterial.title}</CardTitle>
-                  <p className="text-sm text-gray-600">{getCategoryLabel(selectedMaterial.category)}</p>
-                </div>
+        <Card className="fixed inset-0 z-50 m-4 max-w-2xl mx-auto my-auto hud-frame bg-black/95 border-neon-cyan/30">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-black/60 rounded-lg border border-neon-cyan/20">
+                {getTypeIcon(selectedMaterial.type)}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedMaterial(null)}
-              >
-                ✕
-              </Button>
+              <div>
+                <CardTitle className="text-neon-pink font-orbitron">
+                  {selectedMaterial.title}
+                </CardTitle>
+                <p className="text-sm text-text-secondary font-space-mono">
+                  {getCategoryLabel(selectedMaterial.category)}
+                </p>
+              </div>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedMaterial(null)}
+              className="text-neon-cyan border-neon-cyan/30"
+            >
+              ✕
+            </Button>
           </CardHeader>
+
           <CardContent className="space-y-4">
             {selectedMaterial.thumbnail && (
               <img
                 src={selectedMaterial.thumbnail}
                 alt={selectedMaterial.title}
-                className="w-full rounded-lg border max-h-96 object-cover"
+                className="w-full rounded border border-neon-cyan/20 max-h-96 object-cover"
               />
             )}
 
-            <p className="text-gray-600">{selectedMaterial.description}</p>
+            <p className="text-text-secondary font-space-mono">
+              {selectedMaterial.description}
+            </p>
 
-            <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-2 gap-4 p-4 bg-black/60 rounded border border-neon-cyan/20">
               <div>
-                <p className="text-sm text-gray-600">Tipo</p>
-                <p className="font-bold">{getTypeLabel(selectedMaterial.type)}</p>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Tipo
+                </p>
+                <Badge className={getTypeColor(selectedMaterial.type)}>
+                  {getTypeLabel(selectedMaterial.type)}
+                </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-600">Downloads</p>
-                <p className="font-bold text-blue-600">{selectedMaterial.downloadCount}</p>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Categoria
+                </p>
+                <Badge className={getCategoryColor(selectedMaterial.category)}>
+                  {getCategoryLabel(selectedMaterial.category)}
+                </Badge>
               </div>
               {selectedMaterial.fileSize && (
                 <div>
-                  <p className="text-sm text-gray-600">Tamanho</p>
-                  <p className="font-bold">{selectedMaterial.fileSize}</p>
+                  <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                    Tamanho
+                  </p>
+                  <p className="font-bold text-neon-cyan font-orbitron">{selectedMaterial.fileSize}</p>
                 </div>
               )}
               <div>
-                <p className="text-sm text-gray-600">Criado em</p>
-                <p className="font-bold">{new Date(selectedMaterial.createdAt).toLocaleDateString("pt-BR")}</p>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Downloads
+                </p>
+                <p className="font-bold text-neon-pink font-orbitron">{selectedMaterial.downloadCount}</p>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4 border-t">
+            <div className="flex gap-3 pt-4 border-t border-neon-cyan/20">
               <Button
-                className="flex-1"
+                className="flex-1 btn-neon-cyan font-orbitron text-sm"
                 onClick={() => handleDownloadMaterial(selectedMaterial)}
               >
                 <Download size={16} className="mr-2" />
@@ -534,7 +634,7 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
               </Button>
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
                 onClick={() => handleCopyLink(selectedMaterial)}
               >
                 <Copy size={16} className="mr-2" />
@@ -542,7 +642,7 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
               </Button>
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
                 onClick={() => handleShareMaterial(selectedMaterial)}
               >
                 <Share2 size={16} className="mr-2" />
@@ -554,27 +654,36 @@ export default function MarketingMaterials({ affiliateId }: MarketingMaterialsPr
       )}
 
       {/* Top Downloads Section */}
-      <Card>
+      <Card className="hud-frame bg-black/40 border-neon-cyan/30">
+        <div className="corner-bracket top-left"></div>
+        <div className="corner-bracket top-right"></div>
+        <div className="corner-bracket bottom-left"></div>
+        <div className="corner-bracket bottom-right"></div>
+
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-orange-500" />
+          <CardTitle className="flex items-center gap-2 text-neon-cyan font-orbitron">
+            <TrendingUp className="w-5 h-5 text-yellow-500" />
             Materiais Mais Baixados
           </CardTitle>
         </CardHeader>
+
         <CardContent>
           <div className="space-y-3">
             {topDownloads.map((material, index) => (
-              <div key={material.id} className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50">
+              <div
+                key={material.id}
+                className="flex items-center gap-3 p-3 rounded-lg border border-neon-cyan/20 hover:border-neon-cyan/60 hover:bg-black/50 transition-all"
+              >
                 <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center font-bold">
                   {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{material.title}</p>
-                  <p className="text-xs text-gray-600">{getTypeLabel(material.type)}</p>
+                  <p className="font-orbitron text-neon-pink text-sm truncate">{material.title}</p>
+                  <p className="text-xs text-text-secondary font-space-mono">{getTypeLabel(material.type)}</p>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="font-bold text-sm">{material.downloadCount}</p>
-                  <p className="text-xs text-gray-600">downloads</p>
+                  <p className="font-bold text-neon-cyan font-orbitron text-sm">{material.downloadCount}</p>
+                  <p className="text-xs text-text-secondary font-space-mono">downloads</p>
                 </div>
               </div>
             ))}

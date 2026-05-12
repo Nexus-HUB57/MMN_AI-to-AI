@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Download, Eye, Trash2, BookOpen, FileText, Lock, Users } from "lucide-react";
+import { Plus, Download, Eye, Trash2, BookOpen, FileText, Lock, Users, Zap, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -101,51 +101,51 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
     },
     {
       id: 3,
-      title: "Empreendedorismo Digital: Do Zero ao Sucesso",
+      title: "Segredos do Empreendedorismo",
       author: "João Santos",
-      description: "Tudo que você precisa saber para começar seu negócio digital",
+      description: "Descubra os segredos dos empreendedores de sucesso",
       category: "business",
-      pages: 289,
-      fileSize: "7.1 MB",
+      pages: 287,
+      fileSize: "6.5 MB",
       downloadUrl: "https://example.com/ebooks/empreendedorismo.pdf",
-      downloads: 2103,
-      accessLevel: "public",
+      downloads: 634,
+      accessLevel: "exclusive",
       status: "active",
       createdAt: "2024-03-05",
-      updatedAt: "2024-04-21",
+      updatedAt: "2024-04-19",
       coverImage: "https://via.placeholder.com/200x300?text=Empreendedorismo",
     },
     {
       id: 4,
-      title: "Treinamento Exclusivo: Sistema MMN Avançado",
-      author: "Admin",
-      description: "Acesso exclusivo ao treinamento completo do sistema MMN",
+      title: "Treinamento em Liderança",
+      author: "Fernanda Lima",
+      description: "Desenvolva suas habilidades de liderança e gestão de equipes",
       category: "training",
-      pages: 412,
-      fileSize: "12.5 MB",
-      downloadUrl: "https://example.com/ebooks/mmn-avancado.pdf",
-      downloads: 234,
-      accessLevel: "exclusive",
+      pages: 198,
+      fileSize: "4.9 MB",
+      downloadUrl: "https://example.com/ebooks/lideranca.pdf",
+      downloads: 521,
+      accessLevel: "premium",
       status: "active",
-      createdAt: "2024-01-20",
-      updatedAt: "2024-04-19",
-      coverImage: "https://via.placeholder.com/200x300?text=MMN+Avancado",
+      createdAt: "2024-03-20",
+      updatedAt: "2024-04-17",
+      coverImage: "https://via.placeholder.com/200x300?text=Lideranca",
     },
     {
       id: 5,
-      title: "Guia Prático: Otimizando Suas Comissões",
-      author: "Fernanda Lima",
-      description: "Estratégias práticas para maximizar seus ganhos no programa de afiliados",
+      title: "Guia Prático de Produtividade",
+      author: "Ricardo Oliveira",
+      description: "Técnicas práticas para aumentar sua produtividade em 300%",
       category: "guides",
-      pages: 87,
-      fileSize: "2.3 MB",
-      downloadUrl: "https://example.com/ebooks/comissoes.pdf",
-      downloads: 567,
-      accessLevel: "premium",
+      pages: 142,
+      fileSize: "3.7 MB",
+      downloadUrl: "https://example.com/ebooks/produtividade.pdf",
+      downloads: 1089,
+      accessLevel: "public",
       status: "active",
-      createdAt: "2024-02-28",
-      updatedAt: "2024-04-15",
-      coverImage: "https://via.placeholder.com/200x300?text=Comissoes",
+      createdAt: "2024-04-01",
+      updatedAt: "2024-04-21",
+      coverImage: "https://via.placeholder.com/200x300?text=Produtividade",
     },
   ]);
 
@@ -182,46 +182,81 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
 
   const handleDownloadEbook = (ebook: Ebook) => {
     toast.success(`Iniciando download de ${ebook.title}`);
-    // In production, this would trigger actual download
+  };
+
+  const getAccessIcon = (level: string) => {
+    const access = accessLevels.find((a) => a.value === level);
+    return access?.icon || "🌐";
+  };
+
+  const getAccessColor = (level: string) => {
+    switch (level) {
+      case "public":
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
+      case "premium":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "exclusive":
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
+      case "inactive":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "archived":
+        return "bg-red-500/20 text-red-400 border border-red-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "marketing":
+        return "bg-neon-pink/20 text-neon-pink border border-neon-pink/30";
+      case "sales":
+        return "bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30";
+      case "business":
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
+      case "training":
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
+      case "guides":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
   };
 
   const filteredEbooks = ebooks.filter((ebook) => {
     const matchesSearch = ebook.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ebook.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ebook.description.toLowerCase().includes(searchTerm.toLowerCase());
+      ebook.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === "all" || ebook.status === filterStatus;
     const matchesCategory = filterCategory === "all" || ebook.category === filterCategory;
     const matchesAccess = filterAccess === "all" || ebook.accessLevel === filterAccess;
     return matchesSearch && matchesStatus && matchesCategory && matchesAccess;
   });
 
-  const getAccessIcon = (level: string) => {
-    const access = accessLevels.find((a) => a.value === level);
-    return access?.icon || "📄";
-  };
-
-  const getAccessColor = (level: string) => {
-    switch (level) {
-      case "public":
-        return "bg-blue-100 text-blue-800";
-      case "premium":
-        return "bg-purple-100 text-purple-800";
-      case "exclusive":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Gerenciador de E-books</h2>
-          <p className="text-gray-600 mt-2">Gerencie sua biblioteca de e-books e materiais educacionais</p>
+          <h1 className="text-4xl font-orbitron font-bold text-glow-pink">
+            Gerenciador de E-books
+          </h1>
+          <p className="text-neon-cyan font-space-mono mt-2">
+            Gerencie sua biblioteca de conteúdo educacional
+          </p>
         </div>
-        <Button onClick={() => setIsCreating(!isCreating)} className="gap-2">
+        <Button
+          onClick={() => setIsCreating(!isCreating)}
+          className="gap-2 btn-neon-cyan font-orbitron"
+        >
           <Plus size={20} />
           Novo E-book
         </Button>
@@ -229,38 +264,49 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
 
       {/* Create Form */}
       {isCreating && (
-        <Card className="p-6 bg-purple-50 border-2 border-purple-200">
-          <h3 className="text-lg font-semibold mb-6 text-gray-900">Criar Novo E-book</h3>
+        <Card className="hud-frame bg-black/40 border-neon-cyan/30 p-6">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
+          <h3 className="text-xl font-orbitron text-neon-pink mb-6">
+            Criar Novo E-book
+          </h3>
+
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Título *
                 </label>
                 <Input
-                  placeholder="Ex: Guia de Marketing Digital"
+                  placeholder="Título do e-book"
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
+                  className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
                 />
               </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Autor *
                 </label>
                 <Input
-                  placeholder="Ex: João Silva"
+                  placeholder="Nome do autor"
                   value={formData.author}
                   onChange={(e) =>
                     setFormData({ ...formData, author: e.target.value })
                   }
+                  className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                 Descrição
               </label>
               <Input
@@ -269,23 +315,24 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
+                className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Categoria
                 </label>
                 <Select value={formData.category} onValueChange={(value) =>
                   setFormData({ ...formData, category: value })
                 }>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black/80 border-neon-cyan/30">
                     {ebookCategories.map((cat) => (
-                      <SelectItem key={cat.value} value={cat.value}>
+                      <SelectItem key={cat.value} value={cat.value} className="text-white">
                         {cat.label}
                       </SelectItem>
                     ))}
@@ -294,54 +341,56 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Nível de Acesso
                 </label>
                 <Select value={formData.accessLevel} onValueChange={(value: any) =>
                   setFormData({ ...formData, accessLevel: value })
                 }>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black/80 border-neon-cyan/30">
                     {accessLevels.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>
+                      <SelectItem key={level.value} value={level.value} className="text-white">
                         {level.icon} {level.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
+
+              <div>
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+                  Arquivo PDF *
+                </label>
+                <Input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) =>
+                    setFormData({ ...formData, file: e.target.files?.[0] || null })
+                  }
+                  className="bg-black/60 border-neon-cyan/30 text-white"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Arquivo PDF *
-              </label>
-              <Input
-                type="file"
-                accept=".pdf"
-                onChange={(e) =>
-                  setFormData({ ...formData, file: e.target.files?.[0] || null })
-                }
-              />
-              {formData.file && (
-                <p className="text-sm text-green-600 mt-2">
-                  ✓ {formData.file.name}
-                </p>
-              )}
-            </div>
+            {formData.file && (
+              <p className="text-sm text-green-400 font-space-mono">
+                ✓ {formData.file.name}
+              </p>
+            )}
 
             <div className="flex gap-3">
               <Button
                 onClick={handleCreateEbook}
-                className="flex-1 bg-purple-600 hover:bg-purple-700"
+                className="flex-1 btn-neon-cyan font-orbitron"
               >
                 Criar E-book
               </Button>
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron"
                 onClick={() => {
                   setIsCreating(false);
                   setFormData({
@@ -362,201 +411,290 @@ export default function EbookManager({ affiliateId }: EbookManagerProps) {
       )}
 
       {/* Filters */}
-      <div className="flex gap-4 flex-wrap">
-        <Input
-          placeholder="Pesquisar e-books..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 min-w-[200px]"
-        />
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os Status</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
-            <SelectItem value="inactive">Inativo</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as Categorias</SelectItem>
-            {ebookCategories.map((cat) => (
-              <SelectItem key={cat.value} value={cat.value}>
-                {cat.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={filterAccess} onValueChange={setFilterAccess}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os Acessos</SelectItem>
-            {accessLevels.map((level) => (
-              <SelectItem key={level.value} value={level.value}>
-                {level.icon} {level.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Buscar
+          </label>
+          <Input
+            placeholder="Buscar e-books..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Categoria
+          </label>
+          <Select value={filterCategory} onValueChange={setFilterCategory}>
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todas</SelectItem>
+              {ebookCategories.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value} className="text-white">
+                  {cat.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Acesso
+          </label>
+          <Select value={filterAccess} onValueChange={setFilterAccess}>
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todos</SelectItem>
+              {accessLevels.map((level) => (
+                <SelectItem key={level.value} value={level.value} className="text-white">
+                  {level.icon} {level.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Status
+          </label>
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todos</SelectItem>
+              <SelectItem value="active" className="text-white">Ativo</SelectItem>
+              <SelectItem value="inactive" className="text-white">Inativo</SelectItem>
+              <SelectItem value="archived" className="text-white">Arquivado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* E-books Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredEbooks.length > 0 ? (
           filteredEbooks.map((ebook) => (
-            <Card key={ebook.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
-              <div className="relative bg-gradient-to-br from-purple-100 to-purple-200 p-4 h-40 flex items-center justify-center">
+            <Card
+              key={ebook.id}
+              className="hud-frame bg-black/40 border-neon-cyan/30 overflow-hidden hover:border-neon-cyan/60 transition-all cursor-pointer"
+              onClick={() => setSelectedEbook(ebook)}
+            >
+              <div className="corner-bracket top-left"></div>
+              <div className="corner-bracket top-right"></div>
+              <div className="corner-bracket bottom-left"></div>
+              <div className="corner-bracket bottom-right"></div>
+
+              {/* Cover */}
+              <div className="relative h-48 bg-black/60 border-b border-neon-cyan/20 overflow-hidden">
                 <img
                   src={ebook.coverImage}
                   alt={ebook.title}
-                  className="h-full object-cover rounded"
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity"
                 />
-              </div>
-
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg line-clamp-2">{ebook.title}</CardTitle>
-                    <p className="text-sm text-gray-600">por {ebook.author}</p>
-                  </div>
+                <div className="absolute top-2 right-2 flex gap-2 flex-wrap justify-end">
+                  <Badge className={getStatusColor(ebook.status)}>
+                    {ebook.status === "active" ? "Ativo" : ebook.status === "inactive" ? "Inativo" : "Arquivado"}
+                  </Badge>
                   <Badge className={getAccessColor(ebook.accessLevel)}>
-                    {getAccessIcon(ebook.accessLevel)}
+                    {getAccessIcon(ebook.accessLevel)} {accessLevels.find((a) => a.value === ebook.accessLevel)?.label}
                   </Badge>
                 </div>
-              </CardHeader>
+              </div>
 
-              <CardContent className="space-y-4 flex-1 flex flex-col">
-                <p className="text-sm text-gray-600 line-clamp-2 flex-1">{ebook.description}</p>
+              <CardContent className="pt-4 space-y-3">
+                <div>
+                  <h3 className="font-orbitron text-neon-pink font-bold truncate">
+                    {ebook.title}
+                  </h3>
+                  <p className="text-xs text-text-secondary font-space-mono">
+                    por {ebook.author}
+                  </p>
+                </div>
 
-                <div className="space-y-2 text-sm border-t pt-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Categoria:</span>
-                    <span className="font-medium">
-                      {ebookCategories.find((c) => c.value === ebook.category)?.label}
-                    </span>
+                <p className="text-xs text-text-secondary font-space-mono line-clamp-2">
+                  {ebook.description}
+                </p>
+
+                <Badge className={getCategoryColor(ebook.category)}>
+                  {ebookCategories.find((c) => c.value === ebook.category)?.label}
+                </Badge>
+
+                <div className="grid grid-cols-3 gap-2 text-xs font-space-mono text-text-secondary">
+                  <div>
+                    <p className="text-gray-600">Páginas</p>
+                    <p className="text-neon-cyan font-bold">{ebook.pages}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Páginas:</span>
-                    <span className="font-medium">{ebook.pages}</span>
+                  <div>
+                    <p className="text-gray-600">Tamanho</p>
+                    <p className="text-neon-pink font-bold">{ebook.fileSize}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tamanho:</span>
-                    <span className="font-medium">{ebook.fileSize}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Downloads:</span>
-                    <span className="font-medium text-blue-600">{ebook.downloads}</span>
+                  <div>
+                    <p className="text-gray-600">Downloads</p>
+                    <p className="text-yellow-500 font-bold">{ebook.downloads}</p>
                   </div>
                 </div>
 
-                <div className="flex gap-2 pt-2 border-t">
+                <div className="flex gap-2 pt-2 border-t border-neon-cyan/20">
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1"
-                    onClick={() => setSelectedEbook(ebook)}
+                    variant="outline"
+                    className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedEbook(ebook);
+                    }}
                   >
-                    <Eye size={16} />
+                    <Eye size={14} />
                   </Button>
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1"
-                    onClick={() => handleDownloadEbook(ebook)}
+                    variant="outline"
+                    className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadEbook(ebook);
+                    }}
                   >
-                    <Download size={16} />
+                    <Download size={14} />
                   </Button>
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1 text-red-600 hover:text-red-700"
-                    onClick={() => handleDeleteEbook(ebook.id)}
+                    variant="outline"
+                    className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteEbook(ebook.id);
+                    }}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ))
         ) : (
-          <div className="col-span-3 text-center py-12">
-            <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 mb-4">Nenhum e-book encontrado</p>
-            <Button onClick={() => setIsCreating(true)}>Criar Primeiro E-book</Button>
+          <div className="col-span-full text-center py-12">
+            <BookOpen className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-text-secondary font-space-mono mb-4">Nenhum e-book encontrado</p>
+            <Button onClick={() => setIsCreating(true)} className="btn-neon-cyan font-orbitron">
+              Criar Primeiro E-book
+            </Button>
           </div>
         )}
       </div>
 
-      {/* E-book Details */}
+      {/* E-book Details Modal */}
       {selectedEbook && (
-        <Card className="border-2 border-purple-200">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Detalhes do E-book</CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedEbook(null)}
-              >
-                ✕
-              </Button>
+        <Card className="fixed inset-0 z-50 m-4 max-w-2xl mx-auto my-auto hud-frame bg-black/95 border-neon-cyan/30">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <CardTitle className="text-neon-pink font-orbitron">
+                {selectedEbook.title}
+              </CardTitle>
+              <p className="text-sm text-text-secondary font-space-mono mt-1">
+                por {selectedEbook.author}
+              </p>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedEbook(null)}
+              className="text-neon-cyan border-neon-cyan/30"
+            >
+              ✕
+            </Button>
           </CardHeader>
+
           <CardContent className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
-              <div>
+              <div className="col-span-1">
                 <img
                   src={selectedEbook.coverImage}
                   alt={selectedEbook.title}
-                  className="w-full rounded-lg border"
+                  className="w-full rounded border border-neon-cyan/20"
                 />
               </div>
               <div className="col-span-2 space-y-3">
-                <div>
-                  <h3 className="font-bold text-lg">{selectedEbook.title}</h3>
-                  <p className="text-sm text-gray-600">por {selectedEbook.author}</p>
-                </div>
-                <p className="text-gray-600">{selectedEbook.description}</p>
-                <div className="grid grid-cols-2 gap-4">
+                <p className="text-text-secondary font-space-mono">
+                  {selectedEbook.description}
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 p-4 bg-black/60 rounded border border-neon-cyan/20">
                   <div>
-                    <p className="text-sm text-gray-600">Páginas</p>
-                    <p className="font-bold">{selectedEbook.pages}</p>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Categoria
+                    </p>
+                    <Badge className={getCategoryColor(selectedEbook.category)}>
+                      {ebookCategories.find((c) => c.value === selectedEbook.category)?.label}
+                    </Badge>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Tamanho</p>
-                    <p className="font-bold">{selectedEbook.fileSize}</p>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Acesso
+                    </p>
+                    <Badge className={getAccessColor(selectedEbook.accessLevel)}>
+                      {getAccessIcon(selectedEbook.accessLevel)} {accessLevels.find((a) => a.value === selectedEbook.accessLevel)?.label}
+                    </Badge>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Downloads</p>
-                    <p className="font-bold text-blue-600">{selectedEbook.downloads}</p>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Páginas
+                    </p>
+                    <p className="font-bold text-neon-cyan font-orbitron">{selectedEbook.pages}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Acesso</p>
-                    <p className="font-bold">{getAccessIcon(selectedEbook.accessLevel)}</p>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Tamanho
+                    </p>
+                    <p className="font-bold text-neon-pink font-orbitron">{selectedEbook.fileSize}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Downloads
+                    </p>
+                    <p className="font-bold text-yellow-500 font-orbitron">{selectedEbook.downloads}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                      Status
+                    </p>
+                    <Badge className={getStatusColor(selectedEbook.status)}>
+                      {selectedEbook.status === "active" ? "Ativo" : selectedEbook.status === "inactive" ? "Inativo" : "Arquivado"}
+                    </Badge>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4 border-t">
+            <div className="flex gap-3 pt-4 border-t border-neon-cyan/20">
               <Button
-                className="flex-1"
+                className="flex-1 btn-neon-cyan font-orbitron text-sm"
                 onClick={() => handleDownloadEbook(selectedEbook)}
               >
                 <Download size={16} className="mr-2" />
                 Baixar E-book
               </Button>
-              <Button variant="outline" className="flex-1">
-                <Users size={16} className="mr-2" />
-                Compartilhar
+              <Button
+                variant="outline"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
+                onClick={() => setSelectedEbook(null)}
+              >
+                Fechar
               </Button>
             </div>
           </CardContent>

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Download, Edit2, Trash2, Eye, Copy } from "lucide-react";
+import { Plus, Download, Edit2, Trash2, Eye, Copy, Image as ImageIcon, Zap } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -165,12 +165,41 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
 
   const handleDownloadBanner = (banner: Banner) => {
     toast.success(`Iniciando download de ${banner.title}`);
-    // In production, this would trigger actual download
   };
 
   const handleCopyLink = (banner: Banner) => {
     navigator.clipboard.writeText(banner.downloadUrl);
     toast.success("Link copiado para a área de transferência");
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500/20 text-green-400 border border-green-500/30";
+      case "inactive":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "archived":
+        return "bg-red-500/20 text-red-400 border border-red-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "promotional":
+        return "bg-neon-pink/20 text-neon-pink border border-neon-pink/30";
+      case "seasonal":
+        return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30";
+      case "product":
+        return "bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30";
+      case "event":
+        return "bg-purple-500/20 text-purple-400 border border-purple-500/30";
+      case "social_media":
+        return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border border-gray-500/30";
+    }
   };
 
   const filteredBanners = banners.filter((banner) => {
@@ -182,14 +211,21 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900">Gerenciador de Banners</h2>
-          <p className="text-gray-600 mt-2">Gerencie seus banners promocionais e materiais visuais</p>
+          <h1 className="text-4xl font-orbitron font-bold text-glow-pink">
+            Gerenciador de Banners
+          </h1>
+          <p className="text-neon-cyan font-space-mono mt-2">
+            Gerencie seus banners promocionais e materiais visuais
+          </p>
         </div>
-        <Button onClick={() => setIsCreating(!isCreating)} className="gap-2">
+        <Button
+          onClick={() => setIsCreating(!isCreating)}
+          className="gap-2 btn-neon-cyan font-orbitron"
+        >
           <Plus size={20} />
           Novo Banner
         </Button>
@@ -197,11 +233,19 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
 
       {/* Create Form */}
       {isCreating && (
-        <Card className="p-6 bg-blue-50 border-2 border-blue-200">
-          <h3 className="text-lg font-semibold mb-6 text-gray-900">Criar Novo Banner</h3>
+        <Card className="hud-frame bg-black/40 border-neon-cyan/30 p-6">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
+          <h3 className="text-xl font-orbitron text-neon-pink mb-6">
+            Criar Novo Banner
+          </h3>
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                 Título *
               </label>
               <Input
@@ -210,11 +254,12 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
+                className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                 Descrição
               </label>
               <Input
@@ -223,23 +268,24 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
+                className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Categoria
                 </label>
                 <Select value={formData.category} onValueChange={(value) =>
                   setFormData({ ...formData, category: value })
                 }>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black/80 border-neon-cyan/30">
                     {bannerCategories.map((cat) => (
-                      <SelectItem key={cat.value} value={cat.value}>
+                      <SelectItem key={cat.value} value={cat.value} className="text-white">
                         {cat.label}
                       </SelectItem>
                     ))}
@@ -248,18 +294,18 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                   Tamanho
                 </label>
                 <Select value={formData.size} onValueChange={(value) =>
                   setFormData({ ...formData, size: value })
                 }>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black/80 border-neon-cyan/30">
                     {bannerSizes.map((size) => (
-                      <SelectItem key={size.value} value={size.value}>
+                      <SelectItem key={size.value} value={size.value} className="text-white">
                         {size.label}
                       </SelectItem>
                     ))}
@@ -269,7 +315,7 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-space-mono text-neon-cyan mb-2">
                 Imagem *
               </label>
               <Input
@@ -278,9 +324,10 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, imageFile: e.target.files?.[0] || null })
                 }
+                className="bg-black/60 border-neon-cyan/30 text-white"
               />
               {formData.imageFile && (
-                <p className="text-sm text-green-600 mt-2">
+                <p className="text-sm text-green-400 mt-2 font-space-mono">
                   ✓ {formData.imageFile.name}
                 </p>
               )}
@@ -289,13 +336,13 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
             <div className="flex gap-3">
               <Button
                 onClick={handleCreateBanner}
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                className="flex-1 btn-neon-cyan font-orbitron"
               >
                 Criar Banner
               </Button>
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron"
                 onClick={() => {
                   setIsCreating(false);
                   setFormData({
@@ -315,181 +362,244 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
       )}
 
       {/* Filters */}
-      <div className="flex gap-4 flex-wrap">
-        <Input
-          placeholder="Pesquisar banners..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 min-w-[200px]"
-        />
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os Status</SelectItem>
-            <SelectItem value="active">Ativo</SelectItem>
-            <SelectItem value="inactive">Inativo</SelectItem>
-            <SelectItem value="archived">Arquivado</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as Categorias</SelectItem>
-            {bannerCategories.map((cat) => (
-              <SelectItem key={cat.value} value={cat.value}>
-                {cat.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Buscar
+          </label>
+          <Input
+            placeholder="Buscar banners..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-black/60 border-neon-cyan/30 text-white placeholder:text-gray-600"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Status
+          </label>
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todos</SelectItem>
+              <SelectItem value="active" className="text-white">Ativo</SelectItem>
+              <SelectItem value="inactive" className="text-white">Inativo</SelectItem>
+              <SelectItem value="archived" className="text-white">Arquivado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-space-mono text-neon-cyan mb-2">
+            Categoria
+          </label>
+          <Select value={filterCategory} onValueChange={setFilterCategory}>
+            <SelectTrigger className="bg-black/60 border-neon-cyan/30 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-black/80 border-neon-cyan/30">
+              <SelectItem value="all" className="text-white">Todas</SelectItem>
+              {bannerCategories.map((cat) => (
+                <SelectItem key={cat.value} value={cat.value} className="text-white">
+                  {cat.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Banners Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBanners.length > 0 ? (
           filteredBanners.map((banner) => (
-            <Card key={banner.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative">
+            <Card
+              key={banner.id}
+              className="hud-frame bg-black/40 border-neon-cyan/30 overflow-hidden hover:border-neon-cyan/60 transition-all cursor-pointer"
+              onClick={() => setSelectedBanner(banner)}
+            >
+              <div className="corner-bracket top-left"></div>
+              <div className="corner-bracket top-right"></div>
+              <div className="corner-bracket bottom-left"></div>
+              <div className="corner-bracket bottom-right"></div>
+
+              {/* Preview */}
+              <div className="relative h-40 bg-black/60 border-b border-neon-cyan/20 overflow-hidden">
                 <img
                   src={banner.imageUrl}
                   alt={banner.title}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity"
                 />
-                <Badge
-                  className={`absolute top-2 right-2 ${
-                    banner.status === "active"
-                      ? "bg-green-500"
-                      : banner.status === "inactive"
-                      ? "bg-gray-500"
-                      : "bg-yellow-500"
-                  }`}
-                >
-                  {banner.status === "active"
-                    ? "Ativo"
-                    : banner.status === "inactive"
-                    ? "Inativo"
-                    : "Arquivado"}
-                </Badge>
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <Badge className={getStatusColor(banner.status)}>
+                    {banner.status === "active" ? "Ativo" : banner.status === "inactive" ? "Inativo" : "Arquivado"}
+                  </Badge>
+                </div>
               </div>
 
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg line-clamp-2">{banner.title}</CardTitle>
-                <p className="text-sm text-gray-600 line-clamp-2">{banner.description}</p>
-              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                <div>
+                  <h3 className="font-orbitron text-neon-pink font-bold truncate">
+                    {banner.title}
+                  </h3>
+                  <p className="text-xs text-text-secondary font-space-mono truncate">
+                    {banner.description}
+                  </p>
+                </div>
 
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Categoria:</span>
-                    <span className="font-medium">
-                      {bannerCategories.find((c) => c.value === banner.category)?.label}
-                    </span>
+                <div className="flex gap-2 flex-wrap">
+                  <Badge className={getCategoryColor(banner.category)}>
+                    {bannerCategories.find((c) => c.value === banner.category)?.label}
+                  </Badge>
+                  <Badge className="bg-black/60 text-neon-cyan border border-neon-cyan/30">
+                    {banner.dimensions}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs font-space-mono text-text-secondary">
+                  <div>
+                    <p className="text-gray-600">Tamanho</p>
+                    <p className="text-neon-cyan">{banner.size}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Dimensões:</span>
-                    <span className="font-medium">{banner.dimensions}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tamanho:</span>
-                    <span className="font-medium">{banner.size}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Downloads:</span>
-                    <span className="font-medium text-blue-600">{banner.downloads}</span>
+                  <div>
+                    <p className="text-gray-600">Downloads</p>
+                    <p className="text-neon-pink">{banner.downloads}</p>
                   </div>
                 </div>
 
-                <div className="flex gap-2 pt-2 border-t">
+                <div className="flex gap-2 pt-2 border-t border-neon-cyan/20">
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1"
-                    onClick={() => setSelectedBanner(banner)}
+                    variant="outline"
+                    className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDownloadBanner(banner);
+                    }}
                   >
-                    <Eye size={16} />
+                    <Download size={14} />
                   </Button>
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1"
-                    onClick={() => handleDownloadBanner(banner)}
+                    variant="outline"
+                    className="flex-1 border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyLink(banner);
+                    }}
                   >
-                    <Download size={16} />
+                    <Copy size={14} />
                   </Button>
                   <Button
-                    variant="outline"
                     size="sm"
-                    className="flex-1"
-                    onClick={() => handleCopyLink(banner)}
-                  >
-                    <Copy size={16} />
-                  </Button>
-                  <Button
                     variant="outline"
-                    size="sm"
-                    className="flex-1 text-red-600 hover:text-red-700"
-                    onClick={() => handleDeleteBanner(banner.id)}
+                    className="flex-1 border-red-500/30 text-red-400 hover:bg-red-500/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteBanner(banner.id);
+                    }}
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={14} />
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ))
         ) : (
-          <div className="col-span-3 text-center py-12">
-            <p className="text-gray-500 mb-4">Nenhum banner encontrado</p>
-            <Button onClick={() => setIsCreating(true)}>Criar Primeiro Banner</Button>
+          <div className="col-span-full text-center py-12">
+            <ImageIcon className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-text-secondary font-space-mono mb-4">Nenhum banner encontrado</p>
+            <Button onClick={() => setIsCreating(true)} className="btn-neon-cyan font-orbitron">
+              Criar Primeiro Banner
+            </Button>
           </div>
         )}
       </div>
 
-      {/* Banner Preview */}
+      {/* Banner Details Modal */}
       {selectedBanner && (
-        <Card className="border-2 border-blue-200">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Visualizar Banner</CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedBanner(null)}
-              >
-                ✕
-              </Button>
-            </div>
+        <Card className="fixed inset-0 z-50 m-4 max-w-2xl mx-auto my-auto hud-frame bg-black/95 border-neon-cyan/30">
+          <div className="corner-bracket top-left"></div>
+          <div className="corner-bracket top-right"></div>
+          <div className="corner-bracket bottom-left"></div>
+          <div className="corner-bracket bottom-right"></div>
+
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-neon-pink font-orbitron">
+              {selectedBanner.title}
+            </CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedBanner(null)}
+              className="text-neon-cyan border-neon-cyan/30"
+            >
+              ✕
+            </Button>
           </CardHeader>
+
           <CardContent className="space-y-4">
             <img
               src={selectedBanner.imageUrl}
               alt={selectedBanner.title}
-              className="w-full rounded-lg border"
+              className="w-full rounded border border-neon-cyan/20 max-h-96 object-cover"
             />
-            <div className="space-y-2">
-              <h3 className="font-bold text-lg">{selectedBanner.title}</h3>
-              <p className="text-gray-600">{selectedBanner.description}</p>
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <div>
-                  <p className="text-sm text-gray-600">Criado em</p>
-                  <p className="font-medium">
-                    {new Date(selectedBanner.createdAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Atualizado em</p>
-                  <p className="font-medium">
-                    {new Date(selectedBanner.updatedAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
+
+            <p className="text-text-secondary font-space-mono">
+              {selectedBanner.description}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4 p-4 bg-black/60 rounded border border-neon-cyan/20">
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Categoria
+                </p>
+                <Badge className={getCategoryColor(selectedBanner.category)}>
+                  {bannerCategories.find((c) => c.value === selectedBanner.category)?.label}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Status
+                </p>
+                <Badge className={getStatusColor(selectedBanner.status)}>
+                  {selectedBanner.status === "active" ? "Ativo" : selectedBanner.status === "inactive" ? "Inativo" : "Arquivado"}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Dimensões
+                </p>
+                <p className="font-bold text-neon-cyan font-orbitron">{selectedBanner.dimensions}</p>
+              </div>
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Tamanho
+                </p>
+                <p className="font-bold text-neon-pink font-orbitron">{selectedBanner.size}</p>
+              </div>
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Downloads
+                </p>
+                <p className="font-bold text-yellow-500 font-orbitron">{selectedBanner.downloads}</p>
+              </div>
+              <div>
+                <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
+                  Atualizado
+                </p>
+                <p className="font-bold text-green-500 font-orbitron">
+                  {new Date(selectedBanner.updatedAt).toLocaleDateString("pt-BR")}
+                </p>
               </div>
             </div>
-            <div className="flex gap-2">
+
+            <div className="flex gap-3 pt-4 border-t border-neon-cyan/20">
               <Button
-                className="flex-1"
+                className="flex-1 btn-neon-cyan font-orbitron text-sm"
                 onClick={() => handleDownloadBanner(selectedBanner)}
               >
                 <Download size={16} className="mr-2" />
@@ -497,11 +607,18 @@ export default function BannerManager({ affiliateId }: BannerManagerProps) {
               </Button>
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
                 onClick={() => handleCopyLink(selectedBanner)}
               >
                 <Copy size={16} className="mr-2" />
                 Copiar Link
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
+                onClick={() => setSelectedBanner(null)}
+              >
+                Fechar
               </Button>
             </div>
           </CardContent>

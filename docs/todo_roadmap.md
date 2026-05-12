@@ -22,7 +22,7 @@
 - [x] Configurar sincronização diária/semanal de marketplaces
 - [x] Configurar geração periódica de conteúdo para redes sociais
 - [x] Configurar verificação de status de pedidos e comissões
-- [ ] Criar interface para gerenciar agendamentos
+- [x] Criar interface para gerenciar agendamentos
 
 ## Fase 4: Dashboard Administrativo
 - [x] Criar layout do dashboard com sidebar

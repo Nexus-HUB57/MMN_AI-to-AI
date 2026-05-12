@@ -1,5 +1,6 @@
 import { protectedProcedure, router } from "../config/trpc";
 import { getAffiliateByUserId, getAgentByUserId, getTotalCommissions, getOrdersByAffiliate } from "../../database/schemas/db";
+import { getQueueLogs, getJobLogs } from "../services/jobLogger";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -50,5 +51,28 @@ export const dashboardRouter = router({
         });
       }
       return await getOrdersByAffiliate(affiliate.id, input.limit);
+    }),
+
+  /**
+   * Get execution logs for a specific queue (Phase 7)
+   */
+  getQueueLogs: protectedProcedure
+    .input(z.object({ 
+      queueName: z.string(),
+      limit: z.number().optional().default(50)
+    }))
+    .query(async ({ input }) => {
+      return await getQueueLogs(input.queueName, input.limit);
+    }),
+
+  /**
+   * Get logs for a specific job (Phase 7)
+   */
+  getJobLogs: protectedProcedure
+    .input(z.object({ 
+      jobId: z.string()
+    }))
+    .query(async ({ input }) => {
+      return await getJobLogs(input.jobId);
     }),
 });

@@ -11,6 +11,11 @@ export const users = mysqlTable("users", {
   loginMethod: varchar("loginMethod", { length: 50 }),
   createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
   updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+  // Campos Legados para Migração
+  legacyId: int("legacyId"),
+  legacyPassword: text("legacyPassword"), // Senha hash MD5 do PHP
+  cpf: varchar("cpf", { length: 100 }),
+  phone: varchar("phone", { length: 50 }),
 });
 
 export const affiliates = mysqlTable("affiliates", {
@@ -24,6 +29,10 @@ export const affiliates = mysqlTable("affiliates", {
   pendingCommissions: int("pendingCommissions").notNull().default(0),
   createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
   updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+  // Campos Legados para Migração
+  legacyStatus: varchar("legacyStatus", { length: 50 }),
+  expirationDate: timestamp("expirationDate"),
+  points: int("points").default(0),
 });
 
 export const products = mysqlTable("products", {
@@ -245,4 +254,3 @@ export const performanceMetrics = mysqlTable('performance_metrics', {
 
 export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
 export type InsertPerformanceMetric = typeof performanceMetrics.$inferInsert;
-

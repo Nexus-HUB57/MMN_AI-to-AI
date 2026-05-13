@@ -29,6 +29,7 @@ const MENU_ITEMS = [
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
   { label: "Logs de Execução", path: "/admin/logs", icon: FileText },
+  { label: "Agendamentos", path: "/admin/schedules", icon: Clock },
 ];
 
 export default function AdminDashboardLayout({ children }: AdminDashboardLayoutProps) {

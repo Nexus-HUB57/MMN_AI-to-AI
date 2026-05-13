@@ -22,7 +22,7 @@
 - [x] Configurar sincronização diária/semanal de marketplaces
 - [x] Configurar geração periódica de conteúdo para redes sociais
 - [x] Configurar verificação de status de pedidos e comissões
-- [ ] Criar interface para gerenciar agendamentos
+- [x] Criar interface para gerenciar agendamentos (Integrado ao Dashboard)
 
 ## Fase 4: Dashboard Administrativo
 - [x] Criar layout do dashboard com sidebar
@@ -31,12 +31,12 @@
 - [x] Implementar visualização de jobs em execução
 - [x] Implementar métricas de desempenho (taxa de sucesso, tempo médio de execução)
 - [x] Implementar gráficos de tendências
-- [ ] Criar página de detalhes de cada agente
+- [x] Criar página de detalhes de cada agente
 
 ## Fase 5: Painel de Intervenção Humana
-- [ ] Criar interface de aprovação de pagamentos
-- [ ] Implementar definição de metas estratégicas
-- [ ] Implementar resolução de exceções
+- [x] Criar interface de aprovação de pagamentos (Implementado em AdminPayments)
+- [x] Implementar definição de metas estratégicas (Implementado em GoalCreation)
+- [x] Implementar resolução de exceções (Integrado ao Dashboard de Orquestração)
 - [x] Criar formulário para criar novas metas
 - [x] Implementar histórico de metas executadas
 
@@ -66,5 +66,5 @@
 ## Fase 9: Documentação e Deploy
 - [x] Documentar arquitetura
 - [x] Documentar APIs
-- [ ] Documentar procedimentos de operação
-- [ ] Preparar para deploy
+- [x] Documentar procedimentos de operação (docs/operacao.md)
+- [x] Preparar para deploy (Dockerfile e docker-compose.yml criados)

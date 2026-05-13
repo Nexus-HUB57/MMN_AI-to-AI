@@ -22,7 +22,7 @@ Liderança da fusão entre o sistema legado PHP e o moderno MMN AI-to-AI, preser
 | Sistema de Pagamentos/Faturas | fatura/, boletos123/ | backend/src/routers/paymentRouter.ts | Pendente |
 | Geração de Conteúdo IA | Não existia | backend/src/services/llm-v2.ts | Novo! |
 
-## Fase 1: Fundação e Banco de Dados
+## Fase 1: Fundação e Banco de Dados (EM EXECUÇÃO)
 - Migração de dados respeitando o schema `database/schemas/schema-final.ts`.
 - Autenticação híbrida (Firebase Auth + Next-Auth).
 

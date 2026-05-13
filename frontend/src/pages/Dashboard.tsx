@@ -1,386 +1,292 @@
-import { useEffect, useState } from 'react';
-import { trpc } from '@/lib/trpc';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { RefreshCw, AlertCircle, CheckCircle, Clock, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+/**
+ * Dashboard Page - Glassmorphism Futurista
+ * Design: Cards com vidro fosco, gráficos com cores neon, layout assimétrico
+ * Componentes: Sidebar transparente, stats cards com glow, tabs com gradientes
+ */
 
-interface QueueStats {
-  pending: number;
-  active: number;
-  completed: number;
-  failed: number;
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { 
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, 
+  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell 
+} from "recharts";
+import { 
+  RefreshCw, AlertCircle, CheckCircle, Clock, Zap, TrendingUp, 
+  Users, DollarSign, Activity, ArrowUpRight, ArrowDownRight 
+} from "lucide-react";
+
+interface StatCard {
+  label: string;
+  value: string;
+  change: number;
+  icon: React.ReactNode;
+  color: string;
 }
 
 export default function Dashboard() {
   const [refreshInterval, setRefreshInterval] = useState(5000);
-  const [selectedQueue, setSelectedQueue] = useState<'content_generation' | 'marketplace_sync' | 'order_processing' | 'commission_processing'>('content_generation');
 
-  // Fetch queue status
-  const { data: queueStatus, refetch: refetchQueueStatus } = trpc.orchestration.getQueueStatus.useQuery(undefined, {
-    refetchInterval: refreshInterval,
-  });
-
-  // Fetch queue jobs
-  const { data: queueJobs } = trpc.orchestration.getQueueJobs.useQuery(
+  // Mock data for stats
+  const stats: StatCard[] = [
     {
-      queueName: selectedQueue,
-      limit: 20,
+      label: "Comissões Totais",
+      value: "R$ 12.450,00",
+      change: 12.5,
+      icon: <DollarSign className="w-5 h-5" />,
+      color: "from-cyan-500 to-blue-500",
     },
     {
-      refetchInterval: refreshInterval,
-    }
-  );
-
-  // Fetch scheduled tasks
-  const { data: scheduledTasks } = trpc.orchestration.getScheduledTasks.useQuery(undefined, {
-    refetchInterval: 30000, // Refresh every 30 seconds
-  });
-
-  // Fetch goal history
-  const { data: goalHistory } = trpc.orchestration.getGoalHistory.useQuery(undefined, {
-    refetchInterval: 10000, // Refresh every 10 seconds
-  });
-
-  if (!queueStatus) {
-    return <div className="p-8">Carregando...</div>;
-  }
-
-  const queues = queueStatus.queues;
-  const totalPending = Object.values(queues).reduce((sum, q) => sum + q.pending, 0);
-  const totalActive = Object.values(queues).reduce((sum, q) => sum + q.active, 0);
-  const totalCompleted = Object.values(queues).reduce((sum, q) => sum + q.completed, 0);
-  const totalFailed = Object.values(queues).reduce((sum, q) => sum + q.failed, 0);
-
-  // Dados para gráficos
-  const queueChartData = [
-    {
-      name: 'Content Gen',
-      pending: queues.content_generation.pending,
-      active: queues.content_generation.active,
-      completed: queues.content_generation.completed,
-      failed: queues.content_generation.failed,
+      label: "Afiliados Ativos",
+      value: "247",
+      change: 8.2,
+      icon: <Users className="w-5 h-5" />,
+      color: "from-purple-500 to-pink-500",
     },
     {
-      name: 'Marketplace',
-      pending: queues.marketplace_sync.pending,
-      active: queues.marketplace_sync.active,
-      completed: queues.marketplace_sync.completed,
-      failed: queues.marketplace_sync.failed,
+      label: "Vendas Este Mês",
+      value: "1.234",
+      change: 23.1,
+      icon: <TrendingUp className="w-5 h-5" />,
+      color: "from-cyan-400 to-purple-400",
     },
     {
-      name: 'Orders',
-      pending: queues.order_processing.pending,
-      active: queues.order_processing.active,
-      completed: queues.order_processing.completed,
-      failed: queues.order_processing.failed,
-    },
-    {
-      name: 'Commissions',
-      pending: queues.commission_processing.pending,
-      active: queues.commission_processing.active,
-      completed: queues.commission_processing.completed,
-      failed: queues.commission_processing.failed,
+      label: "Taxa de Conversão",
+      value: "8.4%",
+      change: -2.3,
+      icon: <Activity className="w-5 h-5" />,
+      color: "from-orange-500 to-red-500",
     },
   ];
 
-  const statusPieData = [
-    { name: 'Pendentes', value: totalPending, color: '#fbbf24' },
-    { name: 'Ativos', value: totalActive, color: '#3b82f6' },
-    { name: 'Concluídos', value: totalCompleted, color: '#10b981' },
-    { name: 'Falhados', value: totalFailed, color: '#ef4444' },
+  // Mock chart data
+  const chartData = [
+    { name: "Jan", vendas: 400, comissoes: 240 },
+    { name: "Fev", vendas: 300, comissoes: 221 },
+    { name: "Mar", vendas: 200, comissoes: 229 },
+    { name: "Abr", vendas: 278, comissoes: 200 },
+    { name: "Mai", vendas: 189, comissoes: 229 },
+    { name: "Jun", vendas: 239, comissoes: 200 },
   ];
 
-  const COLORS = ['#fbbf24', '#3b82f6', '#10b981', '#ef4444'];
+  const pieData = [
+    { name: "Diretas", value: 400 },
+    { name: "Nível 1", value: 300 },
+    { name: "Nível 2", value: 200 },
+    { name: "Nível 3", value: 100 },
+  ];
+
+  const COLORS = ["#00D9FF", "#9D4EDD", "#FF006E", "#FB5607"];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+      </div>
+
+      {/* Header */}
+      <div className="relative z-10 border-b border-cyan-500/20 bg-slate-950/40 backdrop-blur-md sticky top-0">
+        <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Dashboard de Orquestração</h1>
-            <p className="text-slate-400">Monitoramento de agentes autônomos e filas de tarefas</p>
+            <h1 className="text-2xl font-bold text-white font-mono">Dashboard</h1>
+            <p className="text-slate-400 text-sm">Bem-vindo ao seu painel de controle</p>
           </div>
-          <Button
-            onClick={() => refetchQueueStatus()}
-            variant="outline"
-            className="gap-2"
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4 mr-2" />
             Atualizar
           </Button>
         </div>
+      </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                Pendentes
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-yellow-400">{totalPending}</div>
-              <p className="text-xs text-slate-400 mt-1">Jobs aguardando processamento</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <Zap className="w-4 h-4" />
-                Ativos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-400">{totalActive}</div>
-              <p className="text-xs text-slate-400 mt-1">Jobs em processamento</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <CheckCircle className="w-4 h-4" />
-                Concluídos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-400">{totalCompleted}</div>
-              <p className="text-xs text-slate-400 mt-1">Jobs completados com sucesso</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" />
-                Falhados
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-400">{totalFailed}</div>
-              <p className="text-xs text-slate-400 mt-1">Jobs com erro</p>
-            </CardContent>
-          </Card>
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-8 py-8">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, idx) => (
+            <div 
+              key={idx}
+              className="glass rounded-2xl p-6 border-cyan-500/20 hover:border-cyan-500/50 transition-all group"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} p-2.5 text-white group-hover:shadow-lg group-hover:shadow-cyan-500/30 transition-all`}>
+                  {stat.icon}
+                </div>
+                <div className={`flex items-center gap-1 text-sm font-semibold ${stat.change >= 0 ? 'text-cyan-400' : 'text-red-400'}`}>
+                  {stat.change >= 0 ? (
+                    <ArrowUpRight className="w-4 h-4" />
+                  ) : (
+                    <ArrowDownRight className="w-4 h-4" />
+                  )}
+                  {Math.abs(stat.change)}%
+                </div>
+              </div>
+              <p className="text-slate-400 text-sm mb-2">{stat.label}</p>
+              <p className="text-2xl font-bold text-white font-mono">{stat.value}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Charts */}
+        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="lg:col-span-2 bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white">Status das Filas</CardTitle>
-              <CardDescription>Distribuição de jobs por fila</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={queueChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-                  <XAxis dataKey="name" stroke="#94a3b8" />
-                  <YAxis stroke="#94a3b8" />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }}
-                    labelStyle={{ color: '#e2e8f0' }}
-                  />
-                  <Legend />
-                  <Bar dataKey="pending" fill="#fbbf24" />
-                  <Bar dataKey="active" fill="#3b82f6" />
-                  <Bar dataKey="completed" fill="#10b981" />
-                  <Bar dataKey="failed" fill="#ef4444" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          {/* Line Chart */}
+          <div className="lg:col-span-2 glass rounded-2xl p-6 border-cyan-500/20">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white font-mono mb-2">Vendas e Comissões</h2>
+              <p className="text-slate-400 text-sm">Últimos 6 meses</p>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 217, 255, 0.1)" />
+                <XAxis stroke="rgba(255, 255, 255, 0.5)" />
+                <YAxis stroke="rgba(255, 255, 255, 0.5)" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: "rgba(15, 23, 42, 0.9)", 
+                    border: "1px solid rgba(0, 217, 255, 0.3)",
+                    borderRadius: "12px"
+                  }}
+                  labelStyle={{ color: "#00D9FF" }}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="vendas" 
+                  stroke="#00D9FF" 
+                  strokeWidth={2}
+                  dot={{ fill: "#00D9FF", r: 4 }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="comissoes" 
+                  stroke="#9D4EDD" 
+                  strokeWidth={2}
+                  dot={{ fill: "#9D4EDD", r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
 
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white">Distribuição Geral</CardTitle>
-              <CardDescription>Total de jobs por status</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={statusPieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: ${value}`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {statusPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }}
-                    labelStyle={{ color: '#e2e8f0' }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+          {/* Pie Chart */}
+          <div className="glass rounded-2xl p-6 border-cyan-500/20">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white font-mono mb-2">Distribuição</h2>
+              <p className="text-slate-400 text-sm">Por nível de afiliado</p>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, value }) => `${name}: ${value}`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: "rgba(15, 23, 42, 0.9)", 
+                    border: "1px solid rgba(0, 217, 255, 0.3)",
+                    borderRadius: "12px"
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="jobs" className="w-full">
-          <TabsList className="bg-slate-800 border-b border-slate-700">
-            <TabsTrigger value="jobs" className="text-slate-300 data-[state=active]:text-white">
-              Jobs da Fila
-            </TabsTrigger>
-            <TabsTrigger value="goals" className="text-slate-300 data-[state=active]:text-white">
-              Metas
-            </TabsTrigger>
-            <TabsTrigger value="scheduler" className="text-slate-300 data-[state=active]:text-white">
-              Agendador
-            </TabsTrigger>
-          </TabsList>
+        {/* Tabs Section */}
+        <div className="glass rounded-2xl p-6 border-cyan-500/20">
+          <Tabs defaultValue="recent" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg p-1">
+              <TabsTrigger 
+                value="recent"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
+              >
+                Atividades Recentes
+              </TabsTrigger>
+              <TabsTrigger 
+                value="agents"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
+              >
+                Agentes IA
+              </TabsTrigger>
+              <TabsTrigger 
+                value="content"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
+              >
+                Conteúdo Gerado
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="jobs" className="mt-6">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle className="text-white">Jobs da Fila: {selectedQueue}</CardTitle>
-                    <CardDescription>Últimos 20 jobs</CardDescription>
+            <TabsContent value="recent" className="mt-6 space-y-4">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">Venda realizada</p>
+                      <p className="text-slate-400 text-sm">Há 2 horas</p>
+                    </div>
                   </div>
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">+R$ 125,00</Badge>
+                </div>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="agents" className="mt-6 space-y-4">
+              {[1, 2].map((item) => (
+                <div key={item} className="p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-semibold font-mono">Agente IA #{item}</h3>
+                    <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Ativo</Badge>
+                  </div>
+                  <p className="text-slate-400 text-sm mb-3">Especialização: Marketing Digital</p>
                   <div className="flex gap-2">
-                    {(['content_generation', 'marketplace_sync', 'order_processing', 'commission_processing'] as const).map(
-                      (queue) => (
-                        <Button
-                          key={queue}
-                          variant={selectedQueue === queue ? 'default' : 'outline'}
-                          size="sm"
-                          onClick={() => setSelectedQueue(queue)}
-                          className="text-xs"
-                        >
-                          {queue.split('_')[0]}
-                        </Button>
-                      )
-                    )}
+                    <Button size="sm" variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
+                      Configurar
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
+                      Histórico
+                    </Button>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-700">
-                        <th className="text-left py-2 px-4 text-slate-300">ID</th>
-                        <th className="text-left py-2 px-4 text-slate-300">Nome</th>
-                        <th className="text-left py-2 px-4 text-slate-300">Status</th>
-                        <th className="text-left py-2 px-4 text-slate-300">Tentativas</th>
-                        <th className="text-left py-2 px-4 text-slate-300">Timestamp</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {queueJobs && queueJobs.length > 0 ? (
-                        queueJobs.map((job: unknown, idx: number) => {
-                          const j = job as Record<string, unknown>;
-                          return (
-                            <tr key={`${String(j.id)}-${idx}`} className="border-b border-slate-700 hover:bg-slate-700/50">
-                              <td className="py-2 px-4 text-slate-300 font-mono text-xs">{String(j.id).slice(0, 8)}</td>
-                              <td className="py-2 px-4 text-slate-300">{String(j.name)}</td>
-                              <td className="py-2 px-4">
-                                <Badge variant="outline" className="text-xs">
-                                  {j.failedReason ? 'Falhado' : 'Ativo'}
-                                </Badge>
-                              </td>
-                              <td className="py-2 px-4 text-slate-300">{String(j.attempts)}</td>
-                              <td className="py-2 px-4 text-slate-400 text-xs">
-                                {new Date(Number(j.timestamp) || 0).toLocaleString()}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={5} className="py-4 px-4 text-center text-slate-400">
-                            Nenhum job encontrado
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+              ))}
+            </TabsContent>
+
+            <TabsContent value="content" className="mt-6 space-y-4">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-semibold">Post para Instagram</h3>
+                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Texto</Badge>
+                  </div>
+                  <p className="text-slate-400 text-sm line-clamp-2 mb-3">
+                    Conteúdo gerado pelo agente IA para maximizar engajamento...
+                  </p>
+                  <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold">
+                    Usar Conteúdo
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="goals" className="mt-6">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Histórico de Metas</CardTitle>
-                <CardDescription>Metas de orquestração criadas</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {goalHistory && goalHistory.length > 0 ? (
-                  <div className="space-y-4">
-                    {goalHistory && goalHistory.map((goal: unknown) => {
-                      const g = goal as Record<string, unknown>;
-                      return (
-                        <div key={String(g.id)} className="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
-                          <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <h3 className="font-semibold text-white">{String(g.title)}</h3>
-                              <p className="text-sm text-slate-400 mt-1">{String(g.description)}</p>
-                            </div>
-                            <Badge
-                              variant={
-                                g.status === 'completed'
-                                  ? 'default'
-                                  : g.status === 'failed'
-                                    ? 'destructive'
-                                    : 'secondary'
-                              }
-                            >
-                              {String(g.status)}
-                            </Badge>
-                          </div>
-                          <div className="flex gap-4 text-xs text-slate-400">
-                            <span>Prioridade: {String(g.priority)}</span>
-                            <span>Criada em: {new Date(String(g.createdAt)).toLocaleString()}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-center text-slate-400">Nenhuma meta criada ainda</p>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="scheduler" className="mt-6">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white">Tarefas Agendadas</CardTitle>
-                <CardDescription>Cron jobs em execução</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {scheduledTasks && scheduledTasks.tasks.length > 0 ? (
-                  <div className="space-y-2">
-                    {(scheduledTasks.tasks as string[]).map((task: string, idx: number) => (
-                      <div key={`${task}-${idx}`} className="p-3 bg-slate-700/50 rounded-lg border border-slate-600 flex items-center gap-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-slate-300 font-mono text-sm">{task}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-center text-slate-400">Nenhuma tarefa agendada</p>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              ))}
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

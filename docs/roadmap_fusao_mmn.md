@@ -9,6 +9,10 @@ Liderança da fusão entre o sistema legado PHP e o moderno MMN AI-to-AI, preser
 
 ## Fase 0: Mapeamento e Análise (EM EXECUÇÃO)
 | Funcionalidade (Legado PHP) | Referência | Destino no Novo Sistema | Status |
+| Usuários / Clientes | area123_clientes | users / affiliates | Mapeado |
+| Hierarquia / Patrocinador | area123_clientes.patrocinador | network / affiliates.sponsorId | Mapeado |
+| Histórico de Comissões | pagamentos123_comissao | commissions | Mapeado |
+| Configurações de Banco | pagamentos123_bancos | payments (bank fields) | Mapeado |
 | :--- | :--- | :--- | :--- |
 | Página inicial / landing page | index.php | frontend/src/pages/landing | Pendente |
 | Painel do Afiliado | /painel | frontend/src/components/Dashboard.tsx | Em Análise |

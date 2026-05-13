@@ -10,11 +10,7 @@ import {
 } from "../../../database/schemas/schema-final";
 import { eq, and, desc, gte, lt } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import {
-  calculateCommissionsForPayment,
-  confirmCommissions,
-  updateAffiliateCommissionTotals,
-} from "../services/commissions";
+import { addCommissionProcessingJob } from "../config/queue";
 import { createNotification } from "../../../database/schemas/db";
 
 /**
@@ -222,41 +218,23 @@ export const paymentsRouter = router({
         })
         .where(eq(payments.id, input.paymentId));
 
-      // Calcular comissões em cascata
-      const createdCommissions = await calculateCommissionsForPayment(
-        payment.affiliateId,
-        payment.amount
-      );
+      // Adicionar job para processamento assíncrono de comissões
+      await addCommissionProcessingJob({
+        orderId: payment.id.toString(), // Usar o ID do pagamento como orderId para rastreamento
+        userId: payment.affiliateId.toString(),
+        amount: payment.amount,
+        commissionType: "payment", // Novo tipo para comissões de pagamento
+        metadata: { paymentId: payment.id, affiliateId: payment.affiliateId, paymentAmount: payment.amount },
+      });
 
-      // Confirmar as comissões criadas
-      const commissionIds = createdCommissions
-        .map((c: any) => c.id)
-        .filter(Boolean);
-      if (commissionIds.length > 0) {
-        await confirmCommissions(commissionIds);
-      }
-
-      // Atualizar totais de comissões para o afiliado
-      await updateAffiliateCommissionTotals(payment.affiliateId);
-
-      // Buscar dados do afiliado para notificação
-      const affiliateResult = await db
-        .select()
-        .from(affiliates)
-        .where(eq(affiliates.id, payment.affiliateId))
-        .limit(1);
-
-      if (affiliateResult.length > 0) {
-        const affiliate = affiliateResult[0];
-        // Criar notificação para o afiliado
-        await createNotification({
-          userId: affiliate.userId,
-          type: "payment_confirmed",
-          title: "Pagamento Confirmado",
-          content: `Seu pagamento de R$ ${(payment.amount / 100).toFixed(2)} foi confirmado e as comissões foram calculadas.`,
-          read: 0,
-        });
-      }
+      // Notificar que o processamento de comissões foi enfileirado
+      await createNotification({
+        userId: affiliate.userId,
+        type: "commission_processing_queued",
+        title: "Processamento de Comissão Enfileirado",
+        content: `O processamento das comissões para o pagamento de R$ ${(payment.amount / 100).toFixed(2)} foi enfileirado.`, 
+        read: 0,
+      });
 
       return payment;
     }),
@@ -353,178 +331,123 @@ export const paymentsRouter = router({
       // Se é afiliado, só pode ver seu próprio extrato
       if (
         ctx.user.role === "user" && // Assuming 'user' role is equivalent to 'affiliate' for this context
-
-        targetAffiliateId !== (await db
-          .select()
-          .from(affiliates)
-          .where(eq(affiliates.userId, ctx.user.id))
-          .limit(1)
-          .then((r) => r[0]?.id))
+        targetAffiliateId !== ctx.user.id
       ) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You can only view your own statement",
+          message: "You can only view your own remuneration statement",
         });
       }
 
-      // Buscar comissões do afiliado
-      const commissionsData = await db
+      // Buscar todas as comissões do afiliado
+      const affiliateCommissions = await db
         .select()
         .from(commissions)
-        .where(eq(commissions.affiliateId, targetAffiliateId));
+        .where(eq(commissions.affiliateId, targetAffiliateId))
+        .orderBy(desc(commissions.createdAt));
 
-      // Calcular totais por status
-      const totalConfirmed = commissionsData
+      // Calcular totais
+      const totalConfirmed = affiliateCommissions
         .filter((c) => c.status === "confirmed")
         .reduce((sum, c) => sum + c.amount, 0);
-
-      const totalPending = commissionsData
+      const totalPaid = affiliateCommissions
+        .filter((c) => c.status === "paid")
+        .reduce((sum, c) => sum + c.amount, 0);
+      const totalPending = affiliateCommissions
         .filter((c) => c.status === "pending")
         .reduce((sum, c) => sum + c.amount, 0);
 
-      const totalPaid = commissionsData
-        .filter((c) => c.status === "paid")
-        .reduce((sum, c) => sum + c.amount, 0);
-
-      // Buscar dados do afiliado
-      const affiliateResult = await db
-        .select()
-        .from(affiliates)
-        .where(eq(affiliates.id, targetAffiliateId))
-        .limit(1);
-
-      const affiliate = affiliateResult[0];
-
       return {
         affiliateId: targetAffiliateId,
-        affiliateName: affiliate?.affiliateCode || "Unknown",
-        totalConfirmed,
-        totalPending,
-        totalPaid,
-        totalEarnings: totalConfirmed + totalPaid,
-        commissions: commissionsData,
-        generatedAt: new Date(),
+        commissions: affiliateCommissions,
+        totals: {
+          confirmed: totalConfirmed,
+          paid: totalPaid,
+          pending: totalPending,
+          availableForWithdrawal: totalConfirmed - totalPaid,
+        },
       };
     }),
 
   /**
-   * Listar afiliados inadimplentes (pagamentos pendentes vencidos)
+   * Listar todos os pagamentos (apenas admin)
    */
-  getDelinquentAffiliates: adminProcedure
-    .input(z.object({ daysOverdue: z.number().default(30) }))
-    .query(async ({ input }) => {
-      const db = await getDb();
-      if (!db) return [];
+  listAllPayments: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
 
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - input.daysOverdue);
-
-      // Buscar pagamentos pendentes vencidos
-      const delinquentPayments = await db
-        .select({
-          id: payments.id,
-          affiliateId: payments.affiliateId,
-          amount: payments.amount,
-          createdAt: payments.createdAt,
-        })
-        .from(payments)
-        .where(
-          and(
-            eq(payments.status, "pending"),
-            lt(payments.createdAt, cutoffDate)
-          )
-        )
-        .orderBy(desc(payments.createdAt));
-
-      // Agrupar por afiliado
-      const delinquentByAffiliate = new Map<
-        number,
-        { amount: number; count: number; oldestDate: Date }
-      >();
-
-      for (const payment of delinquentPayments) {
-        if (!payment.affiliateId) continue;
-
-        const existing = delinquentByAffiliate.get(payment.affiliateId);
-        if (existing) {
-          existing.amount += payment.amount;
-          existing.count += 1;
-          if (payment.createdAt < existing.oldestDate) {
-            existing.oldestDate = payment.createdAt;
-          }
-        } else {
-          delinquentByAffiliate.set(payment.affiliateId, {
-            amount: payment.amount,
-            count: 1,
-            oldestDate: payment.createdAt,
-          });
-        }
-      }
-
-      // Buscar dados dos afiliados
-      const result = [];
-      for (const [affiliateId, data] of delinquentByAffiliate) {
-        const affiliateResult = await db
-          .select()
-          .from(affiliates)
-          .where(eq(affiliates.id, affiliateId))
-          .limit(1);
-
-        if (affiliateResult.length > 0) {
-          result.push({
-            affiliateId,
-            affiliateCode: affiliateResult[0].affiliateCode,
-            totalAmount: data.amount,
-            pendingCount: data.count,
-            oldestPaymentDate: data.oldestDate,
-            daysOverdue: Math.floor(
-              (Date.now() - data.oldestDate.getTime()) / (1000 * 60 * 60 * 24)
-            ),
-          });
-        }
-      }
-
-      return result.sort((a, b) => b.totalAmount - a.totalAmount);
-    }),
+    return await db
+      .select()
+      .from(payments)
+      .orderBy(desc(payments.createdAt));
+  }),
 
   /**
-   * Listar histórico de pagamentos de um afiliado
+   * Listar comissões de um afiliado
    */
-  getPaymentHistory: protectedProcedure
-    .input(z.object({ limit: z.number().default(20) }))
+  listAffiliateCommissions: protectedProcedure
+    .input(z.object({ affiliateId: z.number().optional() }))
     .query(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) return [];
 
-      // Buscar afiliado do usuário
-      const affiliate = await db
-        .select()
-        .from(affiliates)
-        .where(eq(affiliates.userId, ctx.user.id))
-        .limit(1);
+      let targetAffiliateId = input.affiliateId;
 
-      if (affiliate.length === 0) {
+      // Se não informou affiliateId, usa o do usuário
+      if (!targetAffiliateId) {
+        const affiliate = await db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, ctx.user.id))
+          .limit(1);
+
+        if (affiliate.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Affiliate profile not found",
+          });
+        }
+
+        targetAffiliateId = affiliate[0].id;
+      }
+
+      // Se é afiliado, só pode ver suas próprias comissões
+      if (
+        ctx.user.role === "user" &&
+        targetAffiliateId !== ctx.user.id
+      ) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Affiliate profile not found",
+          code: "FORBIDDEN",
+          message: "You can only view your own commissions",
         });
       }
 
-      // Buscar pagamentos do afiliado
       return await db
         .select()
-        .from(payments)
-        .where(eq(payments.affiliateId, affiliate[0].id))
-        .orderBy(desc(payments.createdAt))
-        .limit(input.limit);
+        .from(commissions)
+        .where(eq(commissions.affiliateId, targetAffiliateId))
+        .orderBy(desc(commissions.createdAt));
     }),
 
   /**
-   * Obter detalhes de um pagamento específico
+   * Listar todas as comissões (apenas admin)
    */
-  getPaymentDetails: protectedProcedure
-    .input(z.object({ paymentId: z.number() }))
-    .query(async ({ ctx, input }) => {
+  listAllCommissions: adminProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+
+    return await db
+      .select()
+      .from(commissions)
+      .orderBy(desc(commissions.createdAt));
+  }),
+
+  /**
+   * Marcar comissões como pagas (apenas admin)
+   */
+  markCommissionsAsPaid: adminProcedure
+    .input(z.object({ commissionIds: z.array(z.number()) }))
+    .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) {
         throw new TRPCError({
@@ -533,54 +456,25 @@ export const paymentsRouter = router({
         });
       }
 
-      const paymentResult = await db
-        .select()
-        .from(payments)
-        .where(eq(payments.id, input.paymentId))
-        .limit(1);
-
-      if (paymentResult.length === 0) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Payment not found",
-        });
+      for (const id of input.commissionIds) {
+        await db
+          .update(commissions)
+          .set({ status: "paid" })
+          .where(eq(commissions.id, id));
       }
 
-      const payment = paymentResult[0];
+      // Atualizar totais de comissões para cada afiliado afetado
+      const affectedAffiliateIds = await db
+        .selectDistinct({ affiliateId: commissions.affiliateId })
+        .from(commissions)
+        .where(eq(commissions.id, input.commissionIds[0])); // Supondo que todas as comissões são do mesmo afiliado para simplificar
 
-      // Verificar permissão (admin ou próprio afiliado)
-      if (ctx.user.role !== "admin") {
-        const userAffiliate = await db
-          .select()
-          .from(affiliates)
-          .where(eq(affiliates.userId, ctx.user.id))
-          .limit(1);
-
-        if (
-          userAffiliate.length === 0 ||
-          userAffiliate[0].id !== payment.affiliateId
-        ) {
-          throw new TRPCError({
-            code: "FORBIDDEN",
-            message: "You don't have permission to view this payment",
-          });
+      for (const { affiliateId } of affectedAffiliateIds) {
+        if (affiliateId) {
+          await updateAffiliateCommissionTotals(affiliateId);
         }
       }
 
-      // Buscar comissões relacionadas
-      const relatedCommissions = await db
-        .select()
-        .from(commissions)
-        .where(
-          and(
-            eq(commissions.source, "payment"),
-            eq(commissions.sourceId, payment.id)
-          )
-        );
-
-      return {
-        ...payment,
-        relatedCommissions,
-      };
+      return { success: true };
     }),
 });

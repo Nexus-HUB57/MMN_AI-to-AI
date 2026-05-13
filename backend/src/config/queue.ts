@@ -88,7 +88,7 @@ export interface CommissionProcessingJob {
   orderId: string;
   userId: string;
   amount: number;
-  commissionType: 'direct' | 'network' | 'bonus';
+  commissionType: 'direct' | 'network' | 'bonus' | 'payment';
   metadata?: Record<string, unknown>;
 }
 

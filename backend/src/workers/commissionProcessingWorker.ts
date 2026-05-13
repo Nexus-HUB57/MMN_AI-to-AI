@@ -2,6 +2,14 @@ import { Worker, Job } from 'bullmq';
 import { commissionProcessingQueue, CommissionProcessingJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
 import { notifyOwner } from '../_core/notification';
+import {
+  calculateCommissionsForPayment,
+  confirmCommissions,
+  updateAffiliateCommissionTotals,
+} from "../services/commissions";
+import { getDb } from "../../../database/schemas/db";
+import { commissions as commissionsTable } from "../../../database/schemas/schema-final";
+import { eq } from "drizzle-orm";
 
 /**
  * CommissionProcessingWorker
@@ -77,41 +85,68 @@ class CommissionProcessingWorker {
   private async processCommission(data: CommissionProcessingJob): Promise<Record<string, unknown>> {
     console.log('[CommissionProcessingWorker] Processing commission:', data);
 
-    // Validar dados de comissão
-    if (!data.orderId || !data.userId || data.amount <= 0) {
-      throw new Error('Invalid commission data');
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+
+    if (data.commissionType === "payment") {
+      const affiliateId = parseInt(data.userId);
+      const paymentAmount = data.amount;
+
+      // Calcular comissões em cascata
+      const createdCommissions = await calculateCommissionsForPayment(
+        affiliateId,
+        paymentAmount
+      );
+
+      // Confirmar as comissões criadas
+      const commissionIds = createdCommissions
+        .map((c: any) => c.id)
+        .filter(Boolean);
+      if (commissionIds.length > 0) {
+        await confirmCommissions(commissionIds);
+      }
+
+      // Atualizar totais de comissões para o afiliado
+      await updateAffiliateCommissionTotals(affiliateId);
+
+      return { status: "Comissões de pagamento processadas", createdCommissions };
+    } else {
+      // Lógica existente para outros tipos de comissão (direta, rede, bônus)
+      // Validar dados de comissão
+      if (!data.orderId || !data.userId || data.amount <= 0) {
+        throw new Error('Invalid commission data');
+      }
+
+      // Calcular comissão baseada no tipo
+      let commissionAmount = data.amount;
+      let rate = 0;
+
+      switch (data.commissionType) {
+        case 'direct':
+          rate = 0.10; // 10% para comissão direta
+          break;
+        case 'network':
+          rate = 0.05; // 5% para comissão de rede
+          break;
+        case 'bonus':
+          rate = 0.02; // 2% para bônus
+          break;
+      }
+
+      commissionAmount = data.amount * rate;
+
+      const result: Record<string, unknown> = {
+        orderId: data.orderId,
+        userId: data.userId,
+        commissionType: data.commissionType,
+        originalAmount: data.amount,
+        commissionAmount,
+        rate: `${(rate * 100).toFixed(1)}%`,
+        status: 'processed',
+        timestamp: new Date().toISOString(),
+      };
+      return result;
     }
-
-    // Calcular comissão baseada no tipo
-    let commissionAmount = data.amount;
-    let rate = 0;
-
-    switch (data.commissionType) {
-      case 'direct':
-        rate = 0.10; // 10% para comissão direta
-        break;
-      case 'network':
-        rate = 0.05; // 5% para comissão de rede
-        break;
-      case 'bonus':
-        rate = 0.02; // 2% para bônus
-        break;
-    }
-
-    commissionAmount = data.amount * rate;
-
-    const result: Record<string, unknown> = {
-      orderId: data.orderId,
-      userId: data.userId,
-      commissionType: data.commissionType,
-      originalAmount: data.amount,
-      commissionAmount,
-      rate: `${(rate * 100).toFixed(1)}%`,
-      status: 'processed',
-      timestamp: new Date().toISOString(),
-    };
-
-    return result;
   }
 
   async start() {

@@ -13,7 +13,7 @@ Este documento detalha as Fases 5 e 6 do roadmap de fusão MMN AI-to-AI, que cob
 
 ### Status Atual
 - ✅ Fase 0-4: Concluídas (100%)
-- 📍 Fase 5: Em Planejamento
+- 🏗️ Fase 5: Em Desenvolvimento (Sprint 2)
 - 📍 Fase 6: Em Planejamento
 
 ---
@@ -64,9 +64,9 @@ Fixes #123
 **Objetivo**: Conectar frontend com APIs reais
 
 **Tasks**:
-- [ ] Implementar tRPC client no frontend
-- [ ] Criar hooks customizados para queries/mutations
-- [ ] Integrar autenticação (Firebase Auth + Next-Auth)
+- [x] Implementar tRPC client no frontend
+- [x] Criar hooks customizados para queries/mutations
+- [x] Integrar autenticação (Firebase Auth + Next-Auth)
 - [ ] Implementar error handling global
 - [ ] Adicionar retry logic para requisições
 
@@ -96,10 +96,10 @@ fix(error): implementar tratamento global de erros
 **Objetivo**: Implementar painel do afiliado com dados reais
 
 **Tasks**:
-- [ ] Dashboard com comissões reais
-- [ ] Rede de afiliados (visualização em árvore)
-- [ ] Histórico de vendas
-- [ ] Relatórios de performance
+- [x] Dashboard com comissões reais
+- [x] Rede de afiliados (visualização em árvore)
+- [x] Histórico de vendas
+- [x] Relatórios de performance
 - [ ] Exportação de dados (CSV/PDF)
 
 **Componentes Novos**:

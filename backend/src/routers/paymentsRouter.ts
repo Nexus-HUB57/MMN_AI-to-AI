@@ -11,6 +11,7 @@ import {
 import { eq, and, desc, gte, lt } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { addCommissionProcessingJob } from "../config/queue";
+import { updateAffiliateCommissionTotals } from "../services/commissions";
 import { createNotification } from "../../../database/schemas/db";
 
 /**
@@ -229,7 +230,7 @@ export const paymentsRouter = router({
 
       // Notificar que o processamento de comissões foi enfileirado
       await createNotification({
-        userId: affiliate.userId,
+        userId: payment.affiliateId, // Assumindo que payment.affiliateId é o userId do afiliado para a notificação
         type: "commission_processing_queued",
         title: "Processamento de Comissão Enfileirado",
         content: `O processamento das comissões para o pagamento de R$ ${(payment.amount / 100).toFixed(2)} foi enfileirado.`, 

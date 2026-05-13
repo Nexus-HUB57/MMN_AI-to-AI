@@ -55,16 +55,16 @@
 - [x] Implementar exportação de logs
 
 ## Fase 8: Integração e Testes
-- [ ] Testes unitários de workers
-- [ ] Testes de integração de filas
-- [ ] Testes do orquestrador
-- [ ] Testes do scheduler
-- [ ] Testes do dashboard
-- [ ] Testes de alertas
-- [ ] Validação end-to-end
+- [x] Testes unitários de workers
+- [x] Testes de integração de filas
+- [x] Testes do orquestrador
+- [x] Testes do scheduler
+- [x] Testes do dashboard
+- [x] Testes de alertas
+- [x] Validação end-to-end
 
 ## Fase 9: Documentação e Deploy
-- [ ] Documentar arquitetura
-- [ ] Documentar APIs
+- [x] Documentar arquitetura
+- [x] Documentar APIs
 - [ ] Documentar procedimentos de operação
 - [ ] Preparar para deploy

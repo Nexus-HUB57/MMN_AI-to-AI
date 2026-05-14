@@ -767,4 +767,48 @@ export const aiContentHubRouter = router({
         });
       }
     }),
+
+  /**
+   * Gerar URL de autorização OAuth para redes sociais
+   */
+  getSocialAuthUrl: protectedProcedure
+    .input(z.object({ platform: z.enum(["instagram", "linkedin", "twitter", "tiktok"]) }))
+    .query(async ({ input }) => {
+      const mockUrls = {
+        instagram: "https://api.instagram.com/oauth/authorize",
+        linkedin: "https://www.linkedin.com/oauth/v2/authorization",
+        twitter: "https://twitter.com/i/oauth2/authorize",
+        tiktok: "https://www.tiktok.com/auth/authorize/",
+      };
+
+      return {
+        success: true,
+        url: `${mockUrls[input.platform]}?client_id=...&redirect_uri=...`,
+      };
+    }),
+
+  /**
+   * Conectar conta de rede social (Callback OAuth)
+   */
+  connectSocialAccount: protectedProcedure
+    .input(
+      z.object({
+        platform: z.enum(["instagram", "linkedin", "twitter", "tiktok"]),
+        code: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        // TODO: Trocar código por token e salvar no banco
+        return {
+          success: true,
+          message: `Conta do ${input.platform} conectada com sucesso`,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao conectar conta social",
+        });
+      }
+    }),
 });

@@ -6,6 +6,8 @@ import ContentHub from "@/pages/ContentHub";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { TRPCProvider } from "./components/trpc-provider";
 import Home from "./pages/Home";
 
 
@@ -30,15 +32,19 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="dark"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
+      <TRPCProvider>
+        <AuthProvider>
+          <ThemeProvider
+            defaultTheme="dark"
+            // switchable
+          >
+            <TooltipProvider>
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </TRPCProvider>
     </ErrorBoundary>
   );
 }

@@ -10,6 +10,17 @@ import {
   getModelStats,
   ContentGenerationRequest,
 } from "../services/genkit-integration";
+import {
+  getOrSet,
+  CACHE_KEYS,
+  CACHE_TTL,
+  invalidateCachePattern,
+} from "../services/cache-service";
+import {
+  rateLimitMiddleware,
+  RATE_LIMIT_CONFIG,
+} from "../services/rate-limiter";
+import mediaService from "../services/media-service";
 
 /**
  * Router para funcionalidades avançadas do IA Content Hub (Sprint 4)
@@ -20,14 +31,33 @@ export const aiContentHubRouter = router({
   /**
    * Listar modelos de IA disponíveis
    */
-  listModels: protectedProcedure.query(async () => {
+  listModels: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const models = getAvailableModels();
-      return {
-        success: true,
-        models,
-        totalModels: models.length,
-      };
+      // Rate Limiting
+      const rateLimit = await rateLimitMiddleware(
+        ctx.user?.id || 0,
+        "listModels"
+      );
+      if (!rateLimit.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Limite de requisições excedido",
+        });
+      }
+
+      // Cache
+      return await getOrSet(
+        CACHE_KEYS.AVAILABLE_MODELS,
+        async () => {
+          const models = getAvailableModels();
+          return {
+            success: true,
+            models,
+            totalModels: models.length,
+          };
+        },
+        CACHE_TTL.MODELS
+      );
     } catch (error) {
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
@@ -42,19 +72,38 @@ export const aiContentHubRouter = router({
    */
   getModel: protectedProcedure
     .input(z.object({ modelId: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const model = getModelInfo(input.modelId);
-        if (!model) {
+        // Rate Limiting
+        const rateLimit = await rateLimitMiddleware(
+          ctx.user?.id || 0,
+          "listModels" // Usando o mesmo config de listModels
+        );
+        if (!rateLimit.allowed) {
           throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Modelo não encontrado",
+            code: "TOO_MANY_REQUESTS",
+            message: "Limite de requisições excedido",
           });
         }
-        return {
-          success: true,
-          model,
-        };
+
+        // Cache
+        return await getOrSet(
+          CACHE_KEYS.MODEL_INFO(input.modelId),
+          async () => {
+            const model = getModelInfo(input.modelId);
+            if (!model) {
+              throw new TRPCError({
+                code: "NOT_FOUND",
+                message: "Modelo não encontrado",
+              });
+            }
+            return {
+              success: true,
+              model,
+            };
+          },
+          CACHE_TTL.MODEL_INFO
+        );
       } catch (error) {
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
@@ -67,13 +116,32 @@ export const aiContentHubRouter = router({
   /**
    * Obter estatísticas de modelos
    */
-  getModelStats: protectedProcedure.query(async () => {
+  getModelStats: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const stats = getModelStats();
-      return {
-        success: true,
-        stats,
-      };
+      // Rate Limiting
+      const rateLimit = await rateLimitMiddleware(
+        ctx.user?.id || 0,
+        "listModels"
+      );
+      if (!rateLimit.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Limite de requisições excedido",
+        });
+      }
+
+      // Cache
+      return await getOrSet(
+        CACHE_KEYS.MODEL_STATS,
+        async () => {
+          const stats = getModelStats();
+          return {
+            success: true,
+            stats,
+          };
+        },
+        CACHE_TTL.MODEL_STATS
+      );
     } catch (error) {
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
@@ -103,8 +171,20 @@ export const aiContentHubRouter = router({
         includeEmojis: z.boolean().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
+        // Rate Limiting
+        const rateLimit = await rateLimitMiddleware(
+          ctx.user?.id || 0,
+          "generateContent"
+        );
+        if (!rateLimit.allowed) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Limite de requisições excedido",
+          });
+        }
+
         const request: ContentGenerationRequest = {
           prompt: input.prompt,
           modelId: input.modelId,
@@ -258,9 +338,24 @@ export const aiContentHubRouter = router({
         mediaUrls: z.array(z.string()).optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
+        // Rate Limiting
+        const rateLimit = await rateLimitMiddleware(
+          ctx.user?.id || 0,
+          "schedulePost"
+        );
+        if (!rateLimit.allowed) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Limite de requisições excedido",
+          });
+        }
+
         // TODO: Adicionar à fila de agendamento (BullMQ)
+        // Invalidação de cache após agendamento
+        await invalidateCachePattern(CACHE_KEYS.POSTS_PATTERN(ctx.user?.id || 0));
+
         return {
           success: true,
           post: {
@@ -310,10 +405,47 @@ export const aiContentHubRouter = router({
           .optional(),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        // TODO: Buscar analytics do banco de dados ou serviço externo
-        return {
+        // Rate Limiting
+        const rateLimit = await rateLimitMiddleware(
+          ctx.user?.id || 0,
+          "analytics"
+        );
+        if (!rateLimit.allowed) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Limite de requisições excedido",
+          });
+        }
+
+        // Cache
+        return await getOrSet(
+          CACHE_KEYS.ANALYTICS(
+            ctx.user?.id || 0,
+            input.period,
+            input.platform
+          ),
+          async () => {
+            // TODO: Buscar analytics do banco de dados ou serviço externo
+            return {
+              success: true,
+              analytics: {
+                period: input.period,
+                platform: input.platform,
+                totalPosts: 0,
+                totalViews: 0,
+                totalLikes: 0,
+                totalShares: 0,
+                totalComments: 0,
+                avgEngagement: 0,
+                topPost: null,
+              },
+            };
+          },
+          CACHE_TTL.ANALYTICS
+        );
+      } catch (error) {
           success: true,
           analytics: {
             period: input.period,
@@ -351,6 +483,10 @@ export const aiContentHubRouter = router({
             message: "Modelo não encontrado",
           });
         }
+
+        // Invalidação de cache
+        await invalidateCachePattern(CACHE_KEYS.MODELS_PATTERN);
+
         return {
           success: true,
           message: `Modelo ${input.modelId} ativado com sucesso`,
@@ -379,6 +515,10 @@ export const aiContentHubRouter = router({
             message: "Modelo não encontrado",
           });
         }
+
+        // Invalidação de cache
+        await invalidateCachePattern(CACHE_KEYS.MODELS_PATTERN);
+
         return {
           success: true,
           message: `Modelo ${input.modelId} desativado com sucesso`,
@@ -388,6 +528,87 @@ export const aiContentHubRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao desativar modelo",
+        });
+      }
+    }),
+  
+  /**
+   * Listar mídia do usuário
+   */
+  listMedia: protectedProcedure
+    .input(z.object({ 
+      mediaType: z.enum(["image", "video"]) 
+    }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const media = await mediaService.listUserMedia(
+          ctx.user?.id || 0,
+          input.mediaType
+        );
+        return {
+          success: true,
+          media,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao listar mídia",
+        });
+      }
+    }),
+
+  /**
+   * Deletar mídia
+   */
+  deleteMedia: protectedProcedure
+    .input(z.object({ 
+      key: z.string() 
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        const success = await mediaService.deleteFromS3(input.key);
+        return {
+          success,
+          message: success ? "Mídia deletada com sucesso" : "Erro ao deletar mídia",
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao deletar mídia",
+        });
+      }
+    }),
+
+  /**
+   * Gerar URL para upload (Presigned URL)
+   */
+  getUploadUrl: protectedProcedure
+    .input(z.object({
+      fileName: z.string(),
+      fileType: z.string(),
+      mediaType: z.enum(["image", "video"])
+    }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const key = mediaService.generateS3Key(
+          ctx.user?.id || 0,
+          input.mediaType,
+          input.fileName
+        );
+        
+        // Nota: Em um cenário real, usaríamos s3.getSignedUrl('putObject', ...)
+        // Aqui estamos simulando a integração com o mediaService
+        const uploadUrl = await mediaService.generatePresignedUrl(key, 3600);
+        
+        return {
+          success: true,
+          uploadUrl,
+          key,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao gerar URL de upload",
         });
       }
     }),

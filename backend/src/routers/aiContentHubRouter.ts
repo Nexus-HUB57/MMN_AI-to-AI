@@ -305,16 +305,29 @@ export const aiContentHubRouter = router({
     }),
 
   /**
-   * Listar templates de conteúdo
+   * Listar templates de conteúdo com paginação
    */
-  listTemplates: protectedProcedure.query(async () => {
-    try {
-      // TODO: Buscar templates do banco de dados
-      return {
-        success: true,
-        templates: [],
-      };
-    } catch (error) {
+  listTemplates: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        offset: z.number().min(0).default(0),
+        category: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      try {
+        // TODO: Buscar templates do banco de dados com paginação
+        return {
+          success: true,
+          templates: [],
+          pagination: {
+            limit: input.limit,
+            offset: input.offset,
+            total: 0,
+          },
+        };
+      } catch (error) {
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -375,16 +388,31 @@ export const aiContentHubRouter = router({
     }),
 
   /**
-   * Listar posts agendados
+   * Listar posts agendados com paginação
    */
-  listScheduledPosts: protectedProcedure.query(async () => {
-    try {
-      // TODO: Buscar posts agendados do banco de dados
-      return {
-        success: true,
-        posts: [],
-      };
-    } catch (error) {
+  listScheduledPosts: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        offset: z.number().min(0).default(0),
+        status: z
+          .enum(["scheduled", "published", "failed", "cancelled"])
+          .optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      try {
+        // TODO: Buscar posts agendados do banco de dados com paginação
+        return {
+          success: true,
+          posts: [],
+          pagination: {
+            limit: input.limit,
+            offset: input.offset,
+            total: 0,
+          },
+        };
+      } catch (error) {
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

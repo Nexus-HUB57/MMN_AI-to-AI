@@ -1,12 +1,16 @@
-version: '3.8'
+# Execute a partir da raiz do repositório:
+#   docker compose -f infra/docker-compose.yml up -d
 
 services:
   app:
-    build: .
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL:-mysql://root:password@db:3306/mmn_ai}
       - REDIS_URL=redis://redis:6379
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
@@ -15,7 +19,7 @@ services:
       - db
 
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     ports:
       - "6379:6379"
     volumes:
@@ -24,7 +28,7 @@ services:
   db:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-password}
       - MYSQL_DATABASE=mmn_ai
     ports:
       - "3306:3306"

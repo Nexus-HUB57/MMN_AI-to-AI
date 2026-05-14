@@ -1,18 +1,51 @@
 {
+  "name": "mmn-ai-to-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nexus System AfilIAte-AI — Monorepo (frontend React+Vite, backend tRPC+Drizzle+MySQL, mobile Expo)",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "mobile"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n frontend,backend -c blue,green \"npm --workspace frontend run dev\" \"npm --workspace backend run dev\"",
+    "dev:frontend": "npm --workspace frontend run dev",
+    "dev:backend": "npm --workspace backend run dev",
+    "dev:mobile": "npm --workspace mobile run dev",
+    "build": "npm --workspace frontend run build && npm --workspace backend run build",
+    "build:frontend": "npm --workspace frontend run build",
+    "build:backend": "npm --workspace backend run build",
+    "start": "npm --workspace backend run start",
+    "infrastructure:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infrastructure:down": "docker compose -f infra/docker-compose.yml down",
+    "infrastructure:logs": "docker compose -f infra/docker-compose.yml logs -f",
+    "db:generate": "drizzle-kit generate --config=infra/drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=infra/drizzle.config.ts",
+    "db:push": "drizzle-kit push --config=infra/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config=infra/drizzle.config.ts",
+    "genkit:dev": "npm --workspace backend run genkit:dev",
+    "lint": "npm --workspace frontend run lint && npm --workspace backend run lint",
+    "test": "vitest run",
+    "test:phase8": "vitest run tests/unit/dropshipping.test.ts",
+    "test:watch": "vitest"
+  },
   "dependencies": {
     "@trpc/server": "^11.17.0",
-    "@types/node": "^25.7.0",
     "drizzle-orm": "^0.45.2",
     "mysql2": "^3.22.3",
     "nanoid": "^5.1.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.6",
     "zod": "^4.4.3"
   },
-  "scripts": {
-    "test": "vitest run",
-    "test:phase8": "vitest run tests/unit/dropshipping.test.ts"
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "concurrently": "^9.1.0",
+    "drizzle-kit": "^0.31.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
-

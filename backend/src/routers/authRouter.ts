@@ -7,7 +7,7 @@ import { adminProcedure, protectedProcedure, publicProcedure, router } from "../
 import * as db from "../../database/schemas/db";
 import * as llm from "../services/llm";
 import { dashboardRouter } from "./dashboardRouter";
-import { mmnRouter } from "../services/mmn";
+import { mmnRouter } from "./mmnRouter";
 
 // ============ AGENTS ROUTER ============
 

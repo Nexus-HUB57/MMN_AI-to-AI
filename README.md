@@ -2,14 +2,16 @@
 
 Ecossistema de Marketing Multinível (MMN) orquestrado por agentes de IA autônomos, operando em uma arquitetura de alta integridade (MySQL + Redis + Firebase).
 
-## Tecnologias
-- **Frontend**: Next.js 15 (App Router), Tailwind CSS, ShadCN UI.
-- **Backend Híbrido**: 
-  - **Firestore**: Senciência em tempo real, UI reativa e logs de orquestração.
-  - **Auth**: Firebase Auth + Next-Auth para gestão de orquestradores.
-  - **MySQL (Drizzle)**: Auditoria financeira, conformidade MMN e registro relacional.
-  - **Redis (BullMQ)**: Filas de processamento para campanhas autônomas.
-- **IA**: Google Genkit (Gemini) & OpenAI (GPT/DALL-E 3).
+## Tecnologias (stack real)
+- **Frontend Web**: **React 18 + Vite + wouter (router) + TailwindCSS**, tRPC client e TanStack Query.
+- **Backend**: Node.js + TypeScript + **tRPC v11**.
+  - **MySQL (Drizzle ORM)**: persistência relacional (afiliados, comissões, ordens, rede, agentes).
+  - **Redis + BullMQ**: filas de processamento (geração de conteúdo, sync de marketplaces, processamento de comissões e ordens).
+- **Mobile**: React Native + **Expo Router** (diretório `mobile/`).
+- **IA**: **Google Genkit (Gemini)** + **OpenAI** (roteador dinâmico em `backend/src/services/llm-v2.ts`).
+- **Auth**: implementação atual baseada em JWT/contexto tRPC (`backend/src/trpc/trpc.ts` + `frontend/src/contexts/AuthContext.tsx`). Integrações Firebase Auth/Next-Auth estão previstas no roadmap, **ainda não implementadas**.
+
+> ⚠️ Versões anteriores deste README declaravam **Next.js 15** no frontend e diretório `mobile-app/`. Isso foi corrigido: o frontend é **React + Vite + wouter** e o diretório mobile é **`mobile/`**.
 
 ## Como Iniciar
 
@@ -17,35 +19,57 @@ Ecossistema de Marketing Multinível (MMN) orquestrado por agentes de IA autôno
 ```bash
 git clone https://github.com/Nexus-HUB57/MMN_AI-to-AI.git
 cd MMN_AI-to-AI
-npm install
+npm install               # instala dependências dos workspaces (frontend, backend, mobile)
 ```
 
 ### 2. Infraestrutura (Docker)
-Inicie o MySQL e o Redis localmente:
+Sobe MySQL 8 e Redis 7 localmente (via `infra/docker-compose.yml`):
 ```bash
-npm run infrastructure:up
+npm run infrastructure:up      # docker compose up -d
+npm run infrastructure:logs    # acompanhar logs
+npm run infrastructure:down    # derrubar containers
 ```
 
-### 3. Banco de Dados
-Gere e aplique as migrações para o nó relacional:
+### 3. Banco de Dados (Drizzle + MySQL)
+Gere e aplique as migrações Drizzle (config em `infra/drizzle.config.ts`, dialeto `mysql`):
 ```bash
-npm run db:generate
-npm run db:migrate
+npm run db:generate    # drizzle-kit generate
+npm run db:migrate     # drizzle-kit migrate
+npm run db:studio      # GUI opcional
 ```
 
 ### 4. Variáveis de Ambiente
-Configure o arquivo `.env` com as credenciais do Google, OpenAI e as URLs de rede:
-- `NEXTAUTH_URL`: Deve ser `http://localhost:9002`.
-- `DATABASE_URL`: Deve apontar para o container MySQL.
+Copie `.env.example` para `.env` e preencha:
+- `DATABASE_URL` → string MySQL (ex.: `mysql://root:password@localhost:3306/mmn_ai`)
+- `REDIS_URL` → ex.: `redis://localhost:6379`
+- `OPENAI_API_KEY`, `JWT_SECRET`, `MYSQL_ROOT_PASSWORD`, `PORT`
 
-### 5. Execução
-Inicie o dashboard e o motor de senciência:
+### 5. Execução em desenvolvimento
 ```bash
-# Terminal 1: Dashboard
+# Frontend + Backend juntos (concurrently)
 npm run dev
 
-# Terminal 2: Genkit Worker & Orchestrator
+# Ou separadamente:
+npm run dev:frontend     # Vite dev server (porta 5173 por padrão)
+npm run dev:backend      # tsx watch do backend/src/index.ts
+npm run dev:mobile       # Expo dev server (workspace mobile/)
+
+# Workers BullMQ (rodar em terminais separados se necessário)
+npm --workspace backend run worker:content
+npm --workspace backend run worker:commissions
+npm --workspace backend run worker:marketplace
+npm --workspace backend run worker:orders
+
+# Genkit dev (Gemini)
 npm run genkit:dev
+```
+
+### 6. Build de produção
+```bash
+npm run build            # builda frontend (vite) e backend (tsc)
+npm run start            # roda backend compilado
+# ou via Docker:
+docker build -f infra/Dockerfile -t mmn-ai-to-ai .
 ```
 
 ## Funcionalidades Chave
@@ -73,7 +97,7 @@ Frontend: React com TypeScript, utilizando Vite como bundler e TailwindCSS para 
 Banco de Dados: MySQL, gerenciado através do ORM Drizzle.
 
 •
-Mobile: React Native com Expo (evidenciado pela presença do diretório mobile-app e configurações do tRPC).
+Mobile: React Native com Expo Router (diretório `mobile/` na raiz do monorepo) integrado ao backend via tRPC.
 
 A arquitetura segue um modelo cliente-servidor, onde o frontend e o aplicativo mobile consomem as APIs expostas pelo backend via tRPC, garantindo segurança de tipos de ponta a ponta.
 
@@ -161,7 +185,7 @@ Inconsistência de Rotas tRPC: O componente AffiliateMiniSite.tsx tenta consumir
 Campos Inexistentes: O componente AffiliateProfile.tsx (e o Mini Site) referenciam campos como totalEarnings e totalNetworkSize, que não estão presentes no esquema do banco de dados (schema-final.ts) ou no retorno da API.
 
 •
-Configuração do Cliente tRPC: A configuração completa do cliente tRPC foi encontrada apenas no diretório mobile-app, sugerindo que o frontend web pode estar dependendo de configurações não comitadas ou de uma estrutura compartilhada ausente.
+Configuração do Cliente tRPC: A configuração completa do cliente tRPC encontra-se no diretório `mobile/`. O frontend web possui um cliente simplificado em `frontend/src/lib/trpc.ts` que ainda usa `AppRouter = any` — esse ponto continua aberto e deverá importar o tipo real exportado pelo backend para garantir type-safety ponta a ponta.
 
 
 

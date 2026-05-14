@@ -1,3 +1,5 @@
+> NOTA HISTÓRICA (2026-05-14): Este arquivo é um snapshot de planejamento original. Menções a 'Firebase'/'PostgreSQL' representam ideias iniciais — a stack implementada é MySQL 8 + Drizzle ORM + Redis/BullMQ. Ver README.md e docs/technical-documentation.md.
+
 4. Publicidade automatizada nas redes sociais
 WhatsApp: envia mensagens programadas para listas de transmissão (segmentadas pelo agente) com links de produtos.
 Instagram: publica posts no feed, Stories e Reels; pode impulsionar anúncios usando o Facebook Ads Manager (com budget predefinido).

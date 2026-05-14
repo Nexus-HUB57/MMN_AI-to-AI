@@ -526,7 +526,7 @@ Feedback Coletado (loop)
 | Sentry | $100 | Error tracking |
 | DataDog | $200 | Monitoring |
 | PagerDuty | $50 | Alertas |
-| Database (RDS) | $300 | PostgreSQL |
+| Database (RDS) | $300 | MySQL 8 |
 | Redis Cache | $50 | Caching |
 | Email Service | $50 | Transacional |
 | **Total** | **$770** | |

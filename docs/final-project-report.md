@@ -21,8 +21,8 @@ A plataforma foi construída com uma arquitetura de microsserviços, utilizando 
 | Categoria       | Tecnologia    | Propósito                                                              |
 | :-------------- | :------------ | :--------------------------------------------------------------------- |
 | **Frontend**    | React, TypeScript, TailwindCSS | Interface de usuário dinâmica e responsiva.                            |
-| **Backend**     | Node.js, TypeScript, tRPC, Prisma | Lógica de negócios, APIs Type-Safe, ORM.                               |
-| **Banco de Dados**| MySQL/PostgreSQL| Persistência de dados relacional.                                      |
+| **Backend**     | Node.js, TypeScript, tRPC, **Drizzle ORM** | Lógica de negócios, APIs Type-Safe, ORM TypeScript-first. |
+| **Banco de Dados**| **MySQL 8**     | Persistência relacional (esquema em `database/schemas/schema-final.ts`). |
 | **Testes**      | Vitest        | Garantia de qualidade e estabilidade do código.                        |
 | **Controle de Versão**| Git/GitHub    | Colaboração e rastreamento de alterações.                              |
 
@@ -80,5 +80,5 @@ O projeto MMN AI-to-AI foi concluído com sucesso, entregando uma plataforma rob
 [2] [Documentação Oficial tRPC](https://trpc.io/docs/)
 [3] [Documentação Oficial React](https://react.dev/)
 [4] [Documentação Oficial Node.js](https://nodejs.org/docs/latest/api/)
-[5] [Documentação Oficial Prisma](https://www.prisma.io/docs/)
+[5] [Documentação Oficial Drizzle ORM](https://orm.drizzle.team/docs/overview)
 [6] [JSON Web Tokens (JWT)](https://jwt.io/introduction/)

@@ -29,6 +29,7 @@ export const aiContentHubRouter = router({
         totalModels: models.length,
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Erro ao listar modelos",
@@ -55,6 +56,7 @@ export const aiContentHubRouter = router({
           model,
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao obter informações do modelo",
@@ -73,6 +75,7 @@ export const aiContentHubRouter = router({
         stats,
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Erro ao obter estatísticas",
@@ -117,6 +120,7 @@ export const aiContentHubRouter = router({
         return response;
       } catch (error) {
         console.error("[AIContentHub] Erro ao gerar conteúdo:", error);
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message:
@@ -176,6 +180,7 @@ export const aiContentHubRouter = router({
           generatedAt: new Date(),
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao gerar variações",
@@ -211,6 +216,7 @@ export const aiContentHubRouter = router({
           },
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao criar template",
@@ -229,6 +235,7 @@ export const aiContentHubRouter = router({
         templates: [],
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Erro ao listar templates",
@@ -264,6 +271,7 @@ export const aiContentHubRouter = router({
           },
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao agendar post",
@@ -282,6 +290,7 @@ export const aiContentHubRouter = router({
         posts: [],
       };
     } catch (error) {
+      if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Erro ao listar posts agendados",
@@ -319,6 +328,7 @@ export const aiContentHubRouter = router({
           },
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao obter analytics",
@@ -346,6 +356,7 @@ export const aiContentHubRouter = router({
           message: `Modelo ${input.modelId} ativado com sucesso`,
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao ativar modelo",
@@ -373,6 +384,7 @@ export const aiContentHubRouter = router({
           message: `Modelo ${input.modelId} desativado com sucesso`,
         };
       } catch (error) {
+        if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao desativar modelo",

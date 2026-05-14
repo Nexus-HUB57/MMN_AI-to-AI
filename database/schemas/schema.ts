@@ -1,4 +1,4 @@
-import { decimal, int, json, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { decimal, int, json, mysqlEnum, mysqlTable, text, timestamp, varchar, index } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
 /**
@@ -40,7 +40,9 @@ export const contentTemplates = mysqlTable("content_templates", {
   platform: varchar("platform", { length: 50 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => ({
+  userPlatformIdx: index("user_platform_idx").on(table.userId, table.platform),
+}));
 
 export type ContentTemplate = typeof contentTemplates.$inferSelect;
 export type InsertContentTemplate = typeof contentTemplates.$inferInsert;
@@ -59,7 +61,9 @@ export const scheduledPosts = mysqlTable("scheduled_posts", {
   mediaUrls: json("mediaUrls").$type<string[]>(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   publishedAt: timestamp("publishedAt"),
-});
+}, (table) => ({
+  userStatusDateIdx: index("user_status_date_idx").on(table.userId, table.status, table.scheduledFor),
+}));
 
 export type ScheduledPost = typeof scheduledPosts.$inferSelect;
 export type InsertScheduledPost = typeof scheduledPosts.$inferInsert;
@@ -77,7 +81,9 @@ export const contentAnalytics = mysqlTable("content_analytics", {
   comments: int("comments").default(0).notNull(),
   engagementRate: decimal("engagementRate", { precision: 5, scale: 2 }).default("0"),
   recordedAt: timestamp("recordedAt").defaultNow().notNull(),
-});
+}, (table) => ({
+  postPlatformDateIdx: index("post_platform_date_idx").on(table.postId, table.platform, table.recordedAt),
+}));
 
 export type ContentAnalytic = typeof contentAnalytics.$inferSelect;
 export type InsertContentAnalytic = typeof contentAnalytics.$inferInsert;
@@ -94,7 +100,9 @@ export const generatedContent = mysqlTable("generated_content", {
   temperature: decimal("temperature", { precision: 3, scale: 2 }).default("0.7"),
   maxTokens: int("maxTokens").default(1000),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => ({
+  userCreatedIdx: index("user_created_idx").on(table.userId, table.createdAt),
+}));
 
 export type GeneratedContent = typeof generatedContent.$inferSelect;
 export type InsertGeneratedContent = typeof generatedContent.$inferInsert;

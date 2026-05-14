@@ -21,6 +21,7 @@ import {
   RATE_LIMIT_CONFIG,
 } from "../services/rate-limiter";
 import mediaService from "../services/media-service";
+import sentimentService from "../services/sentiment-analysis-service";
 
 /**
  * Router para funcionalidades avançadas do IA Content Hub (Sprint 4)
@@ -197,7 +198,16 @@ export const aiContentHubRouter = router({
         };
 
         const response = await generateContent(request);
-        return response;
+
+        // Análise de sentimento automática para o conteúdo gerado
+        const sentiment = await sentimentService.analyzeSentiment({
+          content: response.content,
+        });
+
+        return {
+          ...response,
+          sentiment,
+        };
       } catch (error) {
         console.error("[AIContentHub] Erro ao gerar conteúdo:", error);
         if (error instanceof TRPCError) throw error;
@@ -492,6 +502,123 @@ export const aiContentHubRouter = router({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Erro ao obter analytics",
+        });
+      }
+    }),
+
+  /**
+   * Upload de mídia para o Content Hub
+   */
+  uploadMedia: protectedProcedure
+    .input(
+      z.object({
+        fileName: z.string(),
+        fileSize: z.number(),
+        mediaType: z.enum(["image", "video"]),
+        contentType: z.string(),
+        tempFilePath: z.string(), // Em produção, isso viria de um middleware de upload
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        // Rate Limiting
+        const rateLimit = await rateLimitMiddleware(
+          ctx.user?.id || 0,
+          "uploadMedia"
+        );
+        if (!rateLimit.allowed) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Limite de requisições excedido",
+          });
+        }
+
+        // Validar arquivo
+        const validation = await mediaService.validateMediaFile(
+          input.tempFilePath,
+          input.fileSize,
+          input.mediaType === "image"
+        );
+
+        if (!validation.valid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: validation.error,
+          });
+        }
+
+        // Gerar chave S3
+        const s3Key = mediaService.generateS3Key(
+          ctx.user?.id || 0,
+          input.mediaType,
+          input.fileName
+        );
+
+        // Upload para S3
+        const url = await mediaService.uploadToS3(
+          input.tempFilePath,
+          s3Key,
+          input.contentType
+        );
+
+        return {
+          success: true,
+          media: {
+            key: s3Key,
+            url,
+            type: input.mediaType,
+          },
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao realizar upload de mídia",
+        });
+      }
+    }),
+
+  /**
+   * Listar mídias do usuário
+   */
+  listMedia: protectedProcedure
+    .input(z.object({ mediaType: z.enum(["image", "video"]) }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const mediaList = await mediaService.listUserMedia(
+          ctx.user?.id || 0,
+          input.mediaType
+        );
+        return {
+          success: true,
+          media: mediaList,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao listar mídias",
+        });
+      }
+    }),
+
+  /**
+   * Analisar sentimento de um conteúdo existente
+   */
+  analyzeSentiment: protectedProcedure
+    .input(z.object({ content: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const sentiment = await sentimentService.analyzeSentiment({
+          content: input.content,
+        });
+        return {
+          success: true,
+          sentiment,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao analisar sentimento",
         });
       }
     }),

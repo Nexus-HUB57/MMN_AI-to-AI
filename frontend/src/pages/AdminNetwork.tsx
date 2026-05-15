@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function AdminNetwork() {
   const [selectedAffiliate, setSelectedAffiliate] = useState<number | null>(null);
 
-  const { data: affiliates, isLoading: affiliatesLoading } = trpc.affiliates.list.useQuery({
+  const { data: affiliates, isLoading: affiliatesLoading } = trpc.mmns.list.useQuery({
     limit: 100,
     offset: 0,
   });

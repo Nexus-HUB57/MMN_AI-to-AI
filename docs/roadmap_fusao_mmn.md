@@ -29,9 +29,10 @@ Este roadmap orienta a fusão entre o **sistema legado PHP** e o **MMN AI-to-AI*
 - Resultado documentado em `docs/VALIDACAO_FUSAO_FASE1.md`.
 
 ## Fase 2 — Reintrodução controlada dos módulos
+- **Parcialmente executada**: o frontend bootstrap já consome o backend via tRPC com tipagem compartilhada do `appRouter` bootstrap.
 - Reativar routers reais de forma incremental (`system`, `mmn`, `dashboard`, `payments`).
 - Normalizar middlewares de autenticação e contexto.
-- Remover placeholders de tipagem entre frontend e backend.
+- Expandir a tipagem compartilhada além do router bootstrap.
 - Criar testes de contrato para namespaces tRPC reintroduzidos.
 
 ## Fase 3 — Compatibilidade de dados

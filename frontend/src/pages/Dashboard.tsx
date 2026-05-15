@@ -1,98 +1,62 @@
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
-
-interface HealthResponse {
-  ok: boolean;
-  service: string;
-  mode: string;
-  timestamp: string;
-}
-
-interface RootResponse {
-  name: string;
-  service: string;
-  mode: string;
-  trpc: string;
-  health: string;
-}
+import { trpc } from "../lib/trpc";
 
 export default function Dashboard() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [rootInfo, setRootInfo] = useState<RootResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-
-    async function load() {
-      try {
-        const [healthRes, rootRes] = await Promise.all([
-          fetch("http://localhost:3000/health"),
-          fetch("http://localhost:3000/"),
-        ]);
-
-        if (!healthRes.ok || !rootRes.ok) {
-          throw new Error("Backend indisponível");
-        }
-
-        const [healthData, rootData] = await Promise.all([
-          healthRes.json(),
-          rootRes.json(),
-        ]);
-
-        if (active) {
-          setHealth(healthData);
-          setRootInfo(rootData);
-          setError(null);
-        }
-      } catch (err) {
-        if (active) {
-          setError(err instanceof Error ? err.message : "Falha ao consultar backend");
-        }
-      }
-    }
-
-    load();
-    const timer = window.setInterval(load, 10000);
-    return () => {
-      active = false;
-      window.clearInterval(timer);
-    };
-  }, []);
+  const health = trpc.system.health.useQuery();
+  const systemInfo = trpc.system.info.useQuery();
+  const currentUser = trpc.auth.me.useQuery();
 
   return (
     <main className="page-shell">
       <div className="topbar">
         <h1>Dashboard Bootstrap</h1>
-        <Link href="/" className="btn btn-secondary">Voltar</Link>
+        <Link href="/" className="btn btn-secondary">
+          Voltar
+        </Link>
       </div>
-
-      {error ? <section className="panel"><p className="error">{error}</p></section> : null}
 
       <section className="grid">
         <article className="panel">
-          <h2>Healthcheck do backend</h2>
-          {health ? (
+          <h2>Healthcheck tRPC</h2>
+          {health.isLoading ? <p>Consultando system.health...</p> : null}
+          {health.error ? <p className="error">{health.error.message}</p> : null}
+          {health.data ? (
             <dl className="kv-list">
-              <div><dt>ok</dt><dd>{String(health.ok)}</dd></div>
-              <div><dt>service</dt><dd>{health.service}</dd></div>
-              <div><dt>mode</dt><dd>{health.mode}</dd></div>
-              <div><dt>timestamp</dt><dd>{health.timestamp}</dd></div>
+              <div><dt>ok</dt><dd>{String(health.data.ok)}</dd></div>
+              <div><dt>service</dt><dd>{health.data.service}</dd></div>
+              <div><dt>mode</dt><dd>{health.data.mode}</dd></div>
+              <div><dt>timestamp</dt><dd>{health.data.timestamp}</dd></div>
+              <div><dt>uptime</dt><dd>{health.data.uptimeSeconds}s</dd></div>
             </dl>
-          ) : <p>Consultando backend...</p>}
+          ) : null}
         </article>
 
         <article className="panel">
-          <h2>Raiz HTTP do backend</h2>
-          {rootInfo ? (
+          <h2>Informações do runtime</h2>
+          {systemInfo.isLoading ? <p>Consultando system.info...</p> : null}
+          {systemInfo.error ? <p className="error">{systemInfo.error.message}</p> : null}
+          {systemInfo.data ? (
             <dl className="kv-list">
-              <div><dt>name</dt><dd>{rootInfo.name}</dd></div>
-              <div><dt>service</dt><dd>{rootInfo.service}</dd></div>
-              <div><dt>mode</dt><dd>{rootInfo.mode}</dd></div>
-              <div><dt>trpc</dt><dd>{rootInfo.trpc}</dd></div>
-              <div><dt>health</dt><dd>{rootInfo.health}</dd></div>
+              <div><dt>name</dt><dd>{systemInfo.data.name}</dd></div>
+              <div><dt>runtime</dt><dd>{systemInfo.data.runtime}</dd></div>
+              <div><dt>database</dt><dd>{systemInfo.data.database}</dd></div>
+              <div><dt>redis</dt><dd>{systemInfo.data.redis}</dd></div>
             </dl>
-          ) : <p>Carregando metadados...</p>}
+          ) : null}
+        </article>
+
+        <article className="panel">
+          <h2>Contexto autenticado</h2>
+          {currentUser.isLoading ? <p>Consultando auth.me...</p> : null}
+          {currentUser.error ? <p className="error">{currentUser.error.message}</p> : null}
+          {currentUser.data ? (
+            <dl className="kv-list">
+              <div><dt>id</dt><dd>{String(currentUser.data.id)}</dd></div>
+              <div><dt>role</dt><dd>{currentUser.data.role}</dd></div>
+            </dl>
+          ) : (
+            !currentUser.isLoading && <p>Nenhum usuário autenticado no contexto bootstrap.</p>
+          )}
         </article>
       </section>
     </main>

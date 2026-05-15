@@ -1,57 +1,53 @@
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
-
-interface TrpcEnvelope {
-  result?: unknown;
-}
+import { trpc } from "../lib/trpc";
 
 export default function ContentHub() {
-  const [trpcStatus, setTrpcStatus] = useState<string>("Consultando endpoint tRPC...");
-
-  useEffect(() => {
-    let active = true;
-
-    async function probeTrpc() {
-      try {
-        const response = await fetch("http://localhost:3000/trpc/system.health?batch=1&input=%7B%7D");
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const data = (await response.json()) as TrpcEnvelope;
-        if (active) {
-          setTrpcStatus(data ? "Endpoint tRPC respondeu com sucesso." : "Endpoint tRPC respondeu vazio.");
-        }
-      } catch (error) {
-        if (active) {
-          setTrpcStatus(error instanceof Error ? error.message : "Falha ao consultar tRPC");
-        }
-      }
-    }
-
-    probeTrpc();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const bootstrapStatus = trpc.bootstrap.status.useQuery();
+  const systemInfo = trpc.system.info.useQuery();
 
   return (
     <main className="page-shell">
       <div className="topbar">
         <h1>Content Hub Bootstrap</h1>
-        <Link href="/" className="btn btn-secondary">Voltar</Link>
+        <Link href="/" className="btn btn-secondary">
+          Voltar
+        </Link>
       </div>
 
       <section className="panel">
         <h2>Modo bootstrap</h2>
         <p>
-          Esta tela comprova que o frontend está executando e que o backend bootstrap está acessível
-          tanto por HTTP simples quanto pelo endpoint <code>/trpc</code>.
+          Esta tela comprova que o frontend está consumindo o backend bootstrap diretamente por tRPC,
+          preparando a reintrodução gradual dos módulos reais do ecossistema MMN AI-to-AI.
         </p>
       </section>
 
-      <section className="panel">
-        <h2>Probe do tRPC</h2>
-        <p>{trpcStatus}</p>
+      <section className="grid">
+        <article className="panel">
+          <h2>Probe do bootstrap</h2>
+          {bootstrapStatus.isLoading ? <p>Consultando bootstrap.status...</p> : null}
+          {bootstrapStatus.error ? <p className="error">{bootstrapStatus.error.message}</p> : null}
+          {bootstrapStatus.data ? (
+            <dl className="kv-list">
+              <div><dt>frontend</dt><dd>{bootstrapStatus.data.frontend}</dd></div>
+              <div><dt>backend</dt><dd>{bootstrapStatus.data.backend}</dd></div>
+              <div><dt>genkit</dt><dd>{bootstrapStatus.data.genkit}</dd></div>
+            </dl>
+          ) : null}
+        </article>
+
+        <article className="panel">
+          <h2>Notas do runtime</h2>
+          {systemInfo.isLoading ? <p>Consultando system.info...</p> : null}
+          {systemInfo.error ? <p className="error">{systemInfo.error.message}</p> : null}
+          {systemInfo.data ? (
+            <ul>
+              {systemInfo.data.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          ) : null}
+        </article>
       </section>
     </main>
   );

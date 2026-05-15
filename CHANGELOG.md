@@ -1,5 +1,14 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-15 — Integração tRPC do frontend bootstrap + validação da Fase 2
+
+### `feat(bootstrap-trpc)` — frontend passa a consumir o contrato real do backend
+- **Religado** o `TRPCProvider` em `frontend/src/App.tsx`, permitindo queries reais do bootstrap no frontend.
+- **Substituído** o placeholder `AppRouter = any` em `frontend/src/lib/trpc.ts` por importação do tipo real exportado em `backend/src/appRouter.ts`.
+- **Migradas** as páginas `Home`, `Dashboard` e `ContentHub` para consumo do backend via hooks tRPC (`system.info`, `system.health`, `bootstrap.status`, `auth.me`) em vez de `fetch` manual.
+- **Validado** o runtime bootstrap com resposta positiva dos endpoints `/health` e `/trpc/system.info`.
+- **Criado** `docs/VALIDACAO_FUSAO_FASE2.md` documentando escopo, evidências, limites e próximos passos da fase.
+
 ## 2026-05-15 — Validação da Fase 1 de fusão + higiene de repositório
 
 ### `docs(fusao)` — validação formal da fundação técnica

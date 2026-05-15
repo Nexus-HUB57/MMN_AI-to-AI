@@ -251,7 +251,271 @@ const legacyUsers = [
 
 ---
 
-**Gerado automaticamente por: Manus AI**
+Status atual do MMN AI-to-AI
+Não, o sistema ainda não pode ser considerado 100% operacional em produção.
+A boa notícia é que ele saiu de um estado “quebrado” para um estado de bootstrap parcialmente funcional:
+
+o build raiz (npm run build) passou com sucesso;
+o frontend conseguiu subir em modo preview;
+houve correções estruturais importantes no monorepo, README, Docker, scripts e alinhamento de docs;
+o PR de correção das 10 divergências foi criado e mergeado na main. Source
+Mas ainda restam sinais claros de que a operação completa não está fechada:
+
+o backend teve histórico de falhas de runtime e timeout na validação de /health;
+houve erros de TypeScript relevantes antes dos ajustes de bootstrap;
+ainda existem placeholders, TODOs funcionais e trechos não totalmente integrados;
+a fusão com o sistema legacy/ continua sendo mais um processo arquitetural em andamento do que uma integração concluída. Source
+Veredito objetivo
+Hoje eu classificaria assim:
+
+Build/compilação: alto avanço
+Bootstrap local: viável
+Runtime integrado ponta a ponta: ainda não comprovado
+Pronto para produção sem ressalvas: não
+Fusão MMN novo + legado: parcial / em transição Source
+Análise técnica da fusão entre o sistema novo e o legacy
+1. Situação arquitetural real
+O repositório mostra dois mundos coexistindo:
+
+Sistema novo
+
+monorepo com frontend, backend, mobile, infra, database;
+stack moderna com React + Vite + wouter no front;
+tRPC no backend;
+Drizzle + MySQL;
+BullMQ/Redis;
+Genkit/OpenAI;
+observabilidade e infraestrutura já apontadas na documentação. Source
+Sistema legado
+
+base PHP volumosa;
+milhares de arquivos;
+forte acoplamento funcional;
+presença de código obfuscado;
+includes e autenticação antiga;
+estrutura difícil de mapear automaticamente. Source
+Conclusão técnica: a fusão ainda não é uma substituição completa; o cenário atual é de coexistência híbrida, com o sistema novo tentando assumir domínio funcional sobre um legado grande, opaco e acoplado.
+
+2. Principal problema da fusão: fronteira de domínio ainda difusa
+O maior risco não é só “fazer o legado conversar com o novo”, e sim definir quem é dono de cada responsabilidade.
+Hoje o projeto sugere estes domínios centrais:
+
+autenticação/usuários/afiliados;
+árvore MMN / rede;
+agentes e automações;
+conteúdo e marketplace;
+pagamentos/comissões;
+notificações e painéis. Source
+Se o legado ainda executa parte dessas responsabilidades em PHP enquanto o novo backend também tenta expor essas rotas via tRPC, surgem 4 riscos clássicos:
+
+dual write
+dois sistemas atualizando o mesmo conceito em bases ou formatos diferentes;
+
+divergência semântica
+por exemplo, “afiliado ativo” significar coisas diferentes no PHP e no novo schema;
+
+duplicação de regra de negócio
+comissão, upgrade, árvore de rede, pedidos e bônus podem ser recalculados por engines distintas;
+
+migração incompleta mascarada de integração
+o sistema parece unificado na UI, mas por baixo ainda depende de chamadas frágeis ao legado.
+
+3. Leitura técnica do legado: risco elevado de integração direta
+O histórico mostra que o diretório legacy/ contém:
+
+cerca de 3.154 arquivos;
+1.470 arquivos PHP;
+código com trechos obfuscados;
+autenticação antiga com eval/constantes codificadas em partes do sistema;
+includes e scripts administrativos numerosos. Source
+Isso muda totalmente a estratégia.
+Integração direta linha a linha é uma má ideia.
+
+Por quê:
+
+o código obfuscado reduz previsibilidade;
+fica difícil garantir segurança e idempotência;
+aumenta o custo de debugging;
+qualquer tentativa de “modernizar tudo de uma vez” tende a quebrar operação histórica.
+Decisão correta: adotar padrão Strangler Fig, não “big bang rewrite”.
+Ou seja: o novo sistema cerca o legado por domínio, substituindo funcionalidades gradualmente.
+
+4. O que já favorece a fusão
+Apesar dos problemas, o repositório já tem elementos bons para uma fusão progressiva:
+
+backend centralizado em TypeScript/tRPC;
+modelagem mais explícita com Drizzle + MySQL;
+possibilidade de filas assíncronas com BullMQ;
+frontend novo desacoplado do PHP;
+estrutura de observabilidade e infraestrutura mais moderna. Source
+Isso permite um desenho de fusão em 5 camadas:
+
+Camada A — Compatibilidade de identidade
+Criar uma ponte entre usuário legado e usuário novo:
+
+mapear legacyUserId, legacyEmail, legacyAffiliateCode;
+suportar login híbrido temporário;
+registrar “origem” da conta: legacy, native, migrated.
+Camada B — Compatibilidade de dados
+Construir ETL/replicação controlada:
+
+usuários;
+afiliados;
+patrocinador/sponsor;
+pedidos;
+comissões;
+upgrades.
+Camada C — Compatibilidade de API
+O backend novo vira a face pública única:
+
+UI moderna fala só com tRPC/HTTP do sistema novo;
+backend novo consulta o legado apenas quando necessário;
+o legado deixa de ser exposto diretamente ao cliente.
+Camada D — Compatibilidade operacional
+Filas assíncronas para sync:
+
+reprocessar comissão;
+sincronizar pedidos;
+reconciliar status de upgrade;
+registrar auditoria de divergência.
+Camada E — Desligamento progressivo
+Cada módulo legado só é desligado quando:
+
+a nova implementação produz o mesmo resultado;
+existem métricas, logs e reconciliação;
+o rollback é conhecido.
+5. Onde a fusão tende a falhar primeiro
+a) Autenticação
+O README já foi corrigido para descrever a autenticação atual com mais honestidade, mas ainda há placeholders e transição incompleta entre o que a doc prometia e o que o código realmente entrega. Em fusões desse tipo, login é sempre o primeiro gargalo. Source
+
+Risco real:
+um usuário existir no legado, mas não estar corretamente espelhado na camada nova — ou vice-versa.
+
+Necessidade técnica:
+um identity bridge com tabela de correspondência e política clara de verdade canônica.
+
+b) Rede MMN / árvore de afiliados
+Esse é o coração do negócio.
+A fusão só é segura se a árvore da rede tiver:
+
+relação patrocinador/descendente consistente;
+código de afiliado único;
+cálculo de comissão determinístico;
+histórico versionado de mudanças.
+Como já houve duplicidade de mmnRouter e necessidade de unificação, isso indica que esse domínio ainda estava sofrendo com sobreposição de implementação. A correção foi importante, mas não prova que a regra de negócio do legado já foi totalmente absorvida. Source
+
+c) Financeiro / comissões / upgrades
+Quando legado e novo convivem, esse domínio precisa de reconciliação diária.
+Sem isso, basta um pedido cair em fluxos diferentes para gerar:
+
+saldo divergente;
+comissão duplicada;
+upgrade incorreto;
+contestação operacional.
+O backend novo já aponta serviços e workers para esse tipo de domínio, o que é bom. Mas isso só vira fusão robusta quando existir um job de reconciliação entre legado e novo, com trilha de auditoria. Source
+
+d) Conteúdo, IA e automações
+Esse é o melhor candidato para nascer 100% no sistema novo e não ser portado do legado.
+
+Em outras palavras:
+
+conteúdo, agentes, Genkit, marketplace assistido por IA, dashboards novos;
+tudo isso pode ser “greenfield” no backend novo;
+o legado só entrega o núcleo transacional antigo enquanto a substituição não termina.
+Esse é o caminho certo porque evita reimplementar em PHP áreas que já fazem mais sentido no stack moderno.
+
+6. Maturidade da fusão: avaliação por camada
+Minha leitura técnica atual:
+
+Camada	Situação
+Estrutura de monorepo	boa
+Documentação vs código	melhorou bastante
+Build	funcional
+Runtime integrado	ainda incompleto
+Legado mapeado	parcial
+Migração de domínio crítico	parcial
+Auth unificada	incompleta
+Reconciliação de dados	não evidenciada
+Desligamento de módulos legados	não concluído
+Síntese:
+a fusão está em um estágio de preparação arquitetural + bootstrap técnico, mas ainda não em convergência operacional completa.
+
+Recomendação técnica de fusão
+Estratégia ideal: Strangler Fig com “backend anticorruption layer”
+O melhor desenho para MMN AI-to-AI + legado é:
+
+Frontend novo nunca fala com PHP diretamente
+só conversa com o backend novo;
+
+Backend novo encapsula legado
+cria adapters específicos para dados antigos;
+
+cada domínio tem um “owner” claro
+ex.: auth = novo, rede = híbrido temporário, conteúdo IA = novo, comissão = híbrido com reconciliação;
+
+sincronização por eventos/filas
+nada de acoplamento síncrono em cascata sempre que possível;
+
+shadow mode antes de desligar o legado
+o novo calcula em paralelo e compara resultado com o antigo;
+
+cutover por módulo, nunca por sistema inteiro.
+
+Plano Técnico - Próximos Passos ...
+
+Fase 1 — Congelar fronteiras
+Definir por escrito:
+
+o que ainda roda no legado;
+o que já é canônico no novo;
+qual base é fonte da verdade por domínio.
+
+Fase 2 — Criar mapa de equivalência
+Tabela de correspondência:
+
+legacy_user_id -> users.id
+legacy_affiliate_code -> affiliates.affiliateCode
+legacy_order_id -> orders.id
+legacy_upgrade_id -> upgrades.id
+
+Fase 3 — Reconciliar dados críticos
+Jobs automáticos para comparar:
+
+árvore de afiliados;
+pedidos;
+comissões;
+upgrades;
+saldo por usuário.
+
+Fase 4 — Botar módulos novos em ownership exclusivo
+Mover totalmente para o novo:
+
+dashboards;
+conteúdo;
+agentes;
+notificações;
+observabilidade.
+
+Fase 5 — Desativação progressiva do PHP
+Começar pelos módulos administrativos menos críticos, deixando por último:
+
+login;
+comissões;
+rede;
+pagamentos.
+
+Conclusão
+A fusão entre o MMN AI-to-AI e o sistema original legacy é tecnicamente viável, mas ainda está em fase de transição, não de conclusão.
+
+O quadro atual é:
+
+correções estruturais importantes já foram feitas;
+bootstrap técnico melhorou bastante;
+o projeto já tem base moderna suficiente para substituir o legado por etapas;
+porém a fusão ainda sofre com o que toda migração desse tipo sofre: domínio duplicado, auth transitória, risco de divergência de dados e falta de prova de operação ponta a ponta. Source Source
+
+Conclusão Executiva
+Não está 100%. Está em um estado “bootstrap funcional + fusão parcial”, com boa direção arquitetural, mas ainda sem evidência suficiente de operação plena integrada entre novo e legado. Source
 
 ## Referências
 [1] `frontend/src/pages/AdminScheduler.tsx` e `frontend/src/pages/AdminAgentDetails.tsx` não encontrados na estrutura de diretórios.

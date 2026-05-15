@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "ignoreDeprecations": "6.0"
+    "skipDefaultLibCheck": true
   },
   "include": [
     "src/index.ts",

@@ -1,293 +1,100 @@
-/**
- * Dashboard Page - Glassmorphism Futurista
- * Design: Cards com vidro fosco, gráficos com cores neon, layout assimétrico
- * Componentes: Sidebar transparente, stats cards com glow, tabs com gradientes
- */
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { 
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell 
-} from "recharts";
-import { 
-  RefreshCw, AlertCircle, CheckCircle, Clock, Zap, TrendingUp, 
-  Users, DollarSign, Activity, ArrowUpRight, ArrowDownRight 
-} from "lucide-react";
+interface HealthResponse {
+  ok: boolean;
+  service: string;
+  mode: string;
+  timestamp: string;
+}
 
-interface StatCard {
-  label: string;
-  value: string;
-  change: number;
-  icon: React.ReactNode;
-  color: string;
+interface RootResponse {
+  name: string;
+  service: string;
+  mode: string;
+  trpc: string;
+  health: string;
 }
 
 export default function Dashboard() {
-  const [refreshInterval, setRefreshInterval] = useState(5000);
+  const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [rootInfo, setRootInfo] = useState<RootResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data for stats
-  const stats: StatCard[] = [
-    {
-      label: "Comissões Totais",
-      value: "R$ 12.450,00",
-      change: 12.5,
-      icon: <DollarSign className="w-5 h-5" />,
-      color: "from-cyan-500 to-blue-500",
-    },
-    {
-      label: "Afiliados Ativos",
-      value: "247",
-      change: 8.2,
-      icon: <Users className="w-5 h-5" />,
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      label: "Vendas Este Mês",
-      value: "1.234",
-      change: 23.1,
-      icon: <TrendingUp className="w-5 h-5" />,
-      color: "from-cyan-400 to-purple-400",
-    },
-    {
-      label: "Taxa de Conversão",
-      value: "8.4%",
-      change: -2.3,
-      icon: <Activity className="w-5 h-5" />,
-      color: "from-orange-500 to-red-500",
-    },
-  ];
+  useEffect(() => {
+    let active = true;
 
-  // Mock chart data
-  const chartData = [
-    { name: "Jan", vendas: 400, comissoes: 240 },
-    { name: "Fev", vendas: 300, comissoes: 221 },
-    { name: "Mar", vendas: 200, comissoes: 229 },
-    { name: "Abr", vendas: 278, comissoes: 200 },
-    { name: "Mai", vendas: 189, comissoes: 229 },
-    { name: "Jun", vendas: 239, comissoes: 200 },
-  ];
+    async function load() {
+      try {
+        const [healthRes, rootRes] = await Promise.all([
+          fetch("http://localhost:3000/health"),
+          fetch("http://localhost:3000/"),
+        ]);
 
-  const pieData = [
-    { name: "Diretas", value: 400 },
-    { name: "Nível 1", value: 300 },
-    { name: "Nível 2", value: 200 },
-    { name: "Nível 3", value: 100 },
-  ];
+        if (!healthRes.ok || !rootRes.ok) {
+          throw new Error("Backend indisponível");
+        }
 
-  const COLORS = ["#00D9FF", "#9D4EDD", "#FF006E", "#FB5607"];
+        const [healthData, rootData] = await Promise.all([
+          healthRes.json(),
+          rootRes.json(),
+        ]);
+
+        if (active) {
+          setHealth(healthData);
+          setRootInfo(rootData);
+          setError(null);
+        }
+      } catch (err) {
+        if (active) {
+          setError(err instanceof Error ? err.message : "Falha ao consultar backend");
+        }
+      }
+    }
+
+    load();
+    const timer = window.setInterval(load, 10000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+    <main className="page-shell">
+      <div className="topbar">
+        <h1>Dashboard Bootstrap</h1>
+        <Link href="/" className="btn btn-secondary">Voltar</Link>
       </div>
 
-      {/* Header */}
-      <div className="relative z-10 border-b border-cyan-500/20 bg-slate-950/40 backdrop-blur-md sticky top-0">
-        <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white font-mono">Dashboard</h1>
-            <p className="text-slate-400 text-sm">Bem-vindo ao seu painel de controle</p>
-          </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Atualizar
-          </Button>
-        </div>
-      </div>
+      {error ? <section className="panel"><p className="error">{error}</p></section> : null}
 
-      {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-8 py-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, idx) => (
-            <div 
-              key={idx}
-              className="glass rounded-2xl p-6 border-cyan-500/20 hover:border-cyan-500/50 transition-all group"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} p-2.5 text-white group-hover:shadow-lg group-hover:shadow-cyan-500/30 transition-all`}>
-                  {stat.icon}
-                </div>
-                <div className={`flex items-center gap-1 text-sm font-semibold ${stat.change >= 0 ? 'text-cyan-400' : 'text-red-400'}`}>
-                  {stat.change >= 0 ? (
-                    <ArrowUpRight className="w-4 h-4" />
-                  ) : (
-                    <ArrowDownRight className="w-4 h-4" />
-                  )}
-                  {Math.abs(stat.change)}%
-                </div>
-              </div>
-              <p className="text-slate-400 text-sm mb-2">{stat.label}</p>
-              <p className="text-2xl font-bold text-white font-mono">{stat.value}</p>
-            </div>
-          ))}
-        </div>
+      <section className="grid">
+        <article className="panel">
+          <h2>Healthcheck do backend</h2>
+          {health ? (
+            <dl className="kv-list">
+              <div><dt>ok</dt><dd>{String(health.ok)}</dd></div>
+              <div><dt>service</dt><dd>{health.service}</dd></div>
+              <div><dt>mode</dt><dd>{health.mode}</dd></div>
+              <div><dt>timestamp</dt><dd>{health.timestamp}</dd></div>
+            </dl>
+          ) : <p>Consultando backend...</p>}
+        </article>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Line Chart */}
-          <div className="lg:col-span-2 glass rounded-2xl p-6 border-cyan-500/20">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-white font-mono mb-2">Vendas e Comissões</h2>
-              <p className="text-slate-400 text-sm">Últimos 6 meses</p>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0, 217, 255, 0.1)" />
-                <XAxis stroke="rgba(255, 255, 255, 0.5)" />
-                <YAxis stroke="rgba(255, 255, 255, 0.5)" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: "rgba(15, 23, 42, 0.9)", 
-                    border: "1px solid rgba(0, 217, 255, 0.3)",
-                    borderRadius: "12px"
-                  }}
-                  labelStyle={{ color: "#00D9FF" }}
-                />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="vendas" 
-                  stroke="#00D9FF" 
-                  strokeWidth={2}
-                  dot={{ fill: "#00D9FF", r: 4 }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="comissoes" 
-                  stroke="#9D4EDD" 
-                  strokeWidth={2}
-                  dot={{ fill: "#9D4EDD", r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Pie Chart */}
-          <div className="glass rounded-2xl p-6 border-cyan-500/20">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-white font-mono mb-2">Distribuição</h2>
-              <p className="text-slate-400 text-sm">Por nível de afiliado</p>
-            </div>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: "rgba(15, 23, 42, 0.9)", 
-                    border: "1px solid rgba(0, 217, 255, 0.3)",
-                    borderRadius: "12px"
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Tabs Section */}
-        <div className="glass rounded-2xl p-6 border-cyan-500/20">
-          <Tabs defaultValue="recent" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg p-1">
-              <TabsTrigger 
-                value="recent"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
-              >
-                Atividades Recentes
-              </TabsTrigger>
-              <TabsTrigger 
-                value="agents"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
-              >
-                Agentes IA
-              </TabsTrigger>
-              <TabsTrigger 
-                value="content"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500 data-[state=active]:to-purple-500 data-[state=active]:text-slate-950 rounded-md transition-all"
-              >
-                Conteúdo Gerado
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="recent" className="mt-6 space-y-4">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="flex items-center justify-between p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
-                      <Activity className="w-5 h-5 text-cyan-400" />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold">Venda realizada</p>
-                      <p className="text-slate-400 text-sm">Há 2 horas</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-green-500/20 text-green-400 border-green-500/30">+R$ 125,00</Badge>
-                </div>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="agents" className="mt-6 space-y-4">
-              {[1, 2].map((item) => (
-                <div key={item} className="p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-white font-semibold font-mono">Agente IA #{item}</h3>
-                    <Badge className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Ativo</Badge>
-                  </div>
-                  <p className="text-slate-400 text-sm mb-3">Especialização: Marketing Digital</p>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
-                      Configurar
-                    </Button>
-                    <Button size="sm" variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
-                      Histórico
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="content" className="mt-6 space-y-4">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="p-4 bg-slate-900/30 rounded-lg border border-cyan-500/10 hover:border-cyan-500/30 transition-all">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-white font-semibold">Post para Instagram</h3>
-                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Texto</Badge>
-                  </div>
-                  <p className="text-slate-400 text-sm line-clamp-2 mb-3">
-                    Conteúdo gerado pelo agente IA para maximizar engajamento...
-                  </p>
-                  <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold">
-                    Usar Conteúdo
-                  </Button>
-                </div>
-              ))}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
-    </div>
+        <article className="panel">
+          <h2>Raiz HTTP do backend</h2>
+          {rootInfo ? (
+            <dl className="kv-list">
+              <div><dt>name</dt><dd>{rootInfo.name}</dd></div>
+              <div><dt>service</dt><dd>{rootInfo.service}</dd></div>
+              <div><dt>mode</dt><dd>{rootInfo.mode}</dd></div>
+              <div><dt>trpc</dt><dd>{rootInfo.trpc}</dd></div>
+              <div><dt>health</dt><dd>{rootInfo.health}</dd></div>
+            </dl>
+          ) : <p>Carregando metadados...</p>}
+        </article>
+      </section>
+    </main>
   );
 }

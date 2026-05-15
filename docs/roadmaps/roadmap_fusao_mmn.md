@@ -1,43 +1,50 @@
 # Roadmap de Fusão MMN AI-to-AI
 
-## Persona e Contexto
-Liderança da fusão entre o sistema legado PHP e o moderno MMN AI-to-AI, preservando regras de negócio e evoluindo a tecnologia.
+## Contexto
+Este roadmap orienta a fusão entre o **sistema legado PHP** e o **MMN AI-to-AI**, preservando regras de negócio críticas enquanto a plataforma moderna assume gradualmente a operação.
 
-## Sistemas Envolvidos
-- **Novo sistema MMN AI-to-AI**: Next.js 15, Tailwind, tRPC, Drizzle ORM, Google Genkit.
-- **Sistema legado PHP**: Localizado em `Legado_PHP/`. Referência demo: [Painel Afiliado](https://demo.br20.net/marketing/painel/) / [Painel ADM](https://demo.br20.net/marketing/adm/).
+## Sistemas envolvidos
+- **Novo sistema MMN AI-to-AI**: React 18 + Vite + wouter no frontend; Node.js + Express + tRPC no backend; Drizzle ORM + MySQL 8; Redis/BullMQ; Genkit.
+- **Sistema legado PHP**: localizado em `legacy/`, com módulos administrativos, autenticação histórica, afiliados, comissões e pagamentos ainda em fase de mapeamento técnico.
 
-## Fase 0: Mapeamento e Análise (EM EXECUÇÃO)
-| Funcionalidade (Legado PHP) | Referência | Destino no Novo Sistema | Status |
-| Usuários / Clientes | area123_clientes | users / affiliates | Mapeado |
-| Hierarquia / Patrocinador | area123_clientes.patrocinador | network / affiliates.sponsorId | Mapeado |
-| Histórico de Comissões | pagamentos123_comissao | commissions | Mapeado |
-| Configurações de Banco | pagamentos123_bancos | payments (bank fields) | Mapeado |
-| :--- | :--- | :--- | :--- |
-| Página inicial / landing page | index.php | frontend/src/pages/landing | Pendente |
-| Painel do Afiliado | /painel | frontend/src/components/Dashboard.tsx | Em Análise |
-| Painel Administrativo | /adm | frontend/src/pages/admin | Em Análise |
-| Lógica de Comissões | inc123/pgto_functions.php | backend/src/services/commissions.ts | Mapeado |
-| Rede de Afiliados | clientes/ | backend/src/routers/mmnRouter.ts | Pendente |
-| Sistema de Pagamentos/Faturas | fatura/, boletos123/ | backend/src/routers/paymentRouter.ts | Pendente |
-| Geração de Conteúdo IA | Não existia | backend/src/services/llm-v2.ts | Novo! |
+## Princípios da fusão
+1. **Strangler Fig**: substituir o legado por domínio, não por reescrita total.
+2. **Backend como camada anti-corrupção**: o frontend moderno deve falar apenas com o backend novo.
+3. **Fonte da verdade explícita**: cada domínio deve ter ownership definido durante a transição.
+4. **Reconciliação antes de corte**: pagamentos, comissões, upgrades e árvore MMN exigem validação comparativa.
 
-## Fase 1: Fundação e Banco de Dados (EM EXECUÇÃO)
-- Migração de dados respeitando o schema `database/schemas/schema-final.ts`.
-- Autenticação híbrida (Firebase Auth + Next-Auth).
+## Fase 0 — Mapeamento e análise
+| Domínio | Origem legada | Destino no sistema novo | Status |
+|---|---|---|---|
+| Usuários / clientes | arquivos e tabelas legadas | `users` / `affiliates` | Parcialmente mapeado |
+| Patrocínio / rede | regras MMN antigas | `network`, `affiliates.sponsorId` | Em análise |
+| Comissões | lógica PHP histórica | `backend/src/services/commissions.ts` | Parcialmente mapeado |
+| Pagamentos / faturas | módulos legados | `payments`, `orders`, `commissions` | Pendente |
+| Conteúdo / IA | não existia no legado | `backend/src/services/llm-v2.ts`, Genkit | Nativo do sistema novo |
 
-## Fase 2: Migração de Regras de Negócio e Backend
-- Motor MMN: Refinar `commissions.ts` com regras legadas.
-- Tracking Neural: Adaptação do rastreamento de links.
-- Processamento assíncrono via BullMQ/Redis.
+## Fase 1 — Fundação técnica
+- Bootstrap mínimo validado para frontend e backend.
+- Documentação alinhada ao código real.
+- `.gitignore` e versionamento saneados para evitar artefatos locais no repositório.
+- Resultado documentado em `docs/VALIDACAO_FUSAO_FASE1.md`.
 
-## Fase 3: Modernização do Frontend
-- Reconstrução das páginas com ShadCN UI e Tailwind.
-- Interfaces para IA Content Hub.
+## Fase 2 — Reintrodução controlada dos módulos
+- Reativar routers reais de forma incremental (`system`, `mmn`, `dashboard`, `payments`).
+- Normalizar middlewares de autenticação e contexto.
+- Remover placeholders de tipagem entre frontend e backend.
+- Criar testes de contrato para namespaces tRPC reintroduzidos.
 
-## Fase 4: Testes e Validação Final
-- Simulação no Sandbox Nexus.
-- Testes de regressão e documentação final.
+## Fase 3 — Compatibilidade de dados
+- Criar tabela de equivalência entre IDs do legado e IDs do sistema novo.
+- Migrar e reconciliar usuários, afiliados, patrocinadores, pedidos e comissões.
+- Implementar jobs BullMQ para sincronização e auditoria.
 
-## Fase 5: Atualização Contínua
-- Commits atômicos e push em tempo real para a branch main.
+## Fase 4 — Validação operacional
+- Homologar runtime ponta a ponta.
+- Validar `/health`, `/trpc/system.health`, autenticação, CORS e workers.
+- Executar reconciliação entre resultados do legado e do sistema novo (shadow mode).
+
+## Fase 5 — Cutover progressivo
+- Definir data de corte por domínio.
+- Desligar módulos PHP apenas após validação funcional e monitoramento.
+- Manter rollback e trilha de auditoria durante toda a transição.

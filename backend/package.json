@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Nexus AfilIAte-AI — Backend (Node.js + tRPC + Drizzle ORM + MySQL + Redis/BullMQ + Genkit)",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -14,8 +13,8 @@
     "check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "genkit:dev": "genkit start -- tsx watch src/genkit/index.ts",
-    "genkit:start": "genkit start",
+    "genkit:dev": "tsx watch src/genkit/index.ts",
+    "genkit:start": "tsx src/genkit/index.ts",
     "worker:content": "tsx src/workers/contentGenerationWorker.ts",
     "worker:commissions": "tsx src/workers/commissionProcessingWorker.ts",
     "worker:marketplace": "tsx src/workers/marketplaceSyncWorker.ts",

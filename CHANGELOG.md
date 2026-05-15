@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-15 — Validação da Fase 1 de fusão + higiene de repositório
+
+### `docs(fusao)` — validação formal da fundação técnica
+- **Criado** `docs/VALIDACAO_FUSAO_FASE1.md` com escopo da Fase 1, evidências de build/bootstrap, limites conhecidos e próximos passos da fusão entre o sistema novo e o legado.
+- **Atualizados** `docs/roadmap_fusao_mmn.md` e `docs/roadmaps/roadmap_fusao_mmn.md` para refletir a stack real (**React + Vite + wouter**, backend **Express + tRPC**, **Drizzle + MySQL**, `legacy/`) e a estratégia de migração incremental.
+- **Criado** `.gitignore` para impedir versionamento acidental de `node_modules`, `dist`, logs, caches e arquivos temporários gerados durante o bootstrap.
+- **Ajustado** `backend/tsconfig.json` com `ignoreDeprecations: "6.0"` para compatibilidade com o TypeScript atual e manutenção do `npm run build` funcional.
+
+## 2026-05-15 — Bootstrap executável do monorepo
+
+### `fix(bootstrap)` — runtime mínimo validável para frontend e backend
+- **Backend bootstrap criado**: adicionados `backend/src/index.ts` e `backend/src/appRouter.ts` com servidor **Express + tRPC** mínimo, rotas públicas `system.health`, `system.info`, `auth.me`, `auth.logout` e `bootstrap.status`.
+- **Genkit placeholder criado**: `backend/src/genkit/index.ts` mantém o script `genkit:dev` operacional em modo placeholder enquanto os flows reais são religados.
+- **TypeScript backend criado**: `backend/tsconfig.json` passa a compilar apenas o núcleo bootstrap (`index`, `appRouter`, `genkit`, `trpc`) para destravar `npm run build` e `npm run dev`.
+- **Frontend bootstrap criado**: adicionados `frontend/index.html`, `frontend/vite.config.ts`, `frontend/tsconfig.json`, `frontend/src/main.tsx` e páginas bootstrap mínimas (`Home`, `Dashboard`, `ContentHub`, `NotFound`).
+- **Cliente tRPC do frontend corrigido**: `frontend/src/lib/trpc.ts` foi reescrito, removendo artefatos corrompidos do arquivo anterior e apontando para `http://localhost:3000/trpc` por padrão.
+- **CSS bootstrap**: `frontend/src/index.css` simplificado para CSS puro, removendo a dependência imediata de diretivas Tailwind v4 incompatíveis com a configuração atual.
+- **Escopo intencional do bootstrap**: os módulos legados/originais (`authRouter.ts`, dashboards completos, componentes UI extensos e páginas históricas) **continuam presentes no repositório**, mas ficaram fora do caminho crítico de compilação para permitir saneamento incremental sem bloquear o boot.
+
+### Estado após bootstrap
+- `npm --workspace backend run dev` → deve subir o backend em `http://localhost:3000`
+- `npm --workspace frontend run dev` → deve subir o frontend em `http://localhost:5173`
+- `npm run build` → alvo desta etapa: compilar o caminho bootstrap mínimo
+
+---
+
 ## 2026-05-14 — Auditoria & Correção de Divergências entre README/Docs e Código Real
 
 Auditoria técnica fundamentalista confirmou 10 divergências entre o que o README/documentação prometiam e o que existia no repositório. Esta release aplica as correções:

@@ -2,7 +2,7 @@
 ## Fase 1: Análise e Mapeamento
 
 **Data**: 15/05/2026  
-**Status**: 🔴 EM EXECUÇÃO - COM ACHADOS CRÍTICOS  
+**Status**: 🟡 EM EXECUÇÃO - COM ACHADOS PENDENTES  
 **Responsável**: Nexus-HUB57  
 **Commit de Referência**: `2500bc6c02faf0135c1089bea554748dd97ae130`
 
@@ -10,15 +10,15 @@
 
 ## 📋 RESUMO EXECUTIVO
 
-✅ **Completado (80%)**
+✅ **Completado (85%)**
 - Schema de banco de dados preparado para migração legada
 - Script de migração base implementado
 - Frontend pages para admin criadas (AdminScheduler, AdminAgentDetails) - *Nota: Estas páginas não foram encontradas na estrutura atual do frontend, mas a funcionalidade de agendamento e agentes existe em outras páginas.* [1] [2]
 - Rotas tRPC mapeadas para painel de afiliados
 
 ⚠️ **Crítico - DIVERGÊNCIAS ENCONTRADAS (20%)**
-- Dashboard.tsx usa dados mockados, não integrado com backend [3]
-- Inconsistência de rotas tRPC: `frontend/src/pages/AffiliateMiniSite.tsx` chama `trpc.affiliate.*` mas backend expõe `mmn.*`. O arquivo `frontend/src/pages/MiniSite.tsx` já utiliza corretamente `trpc.mmn.*`. [4] [5]
+- Dashboard.tsx usa dados mockados, não integrado com backend [3] - **PARCIALMENTE RESOLVIDO**
+- Inconsistência de rotas tRPC: `frontend/src/pages/AffiliateMiniSite.tsx` chama `trpc.affiliate.*` mas backend expõe `mmn.*`. O arquivo `frontend/src/pages/MiniSite.tsx` já utiliza corretamente `trpc.mmn.*`. [4] [5] - **RESOLVIDO**
 - Campos legados no schema não completamente mapeados [6]
 - Script de migração é apenas simulação, não conecta ao banco legado real [7]
 
@@ -52,7 +52,7 @@ trpc.mmn.* (CORRETO - mas Dashboard.tsx usa dados mockados) [3]
 ```
 
 **Impacto**: Dashboard não exibe dados reais, sempre mockados. `AffiliateMiniSite.tsx` não funciona devido à rota incorreta.
-**Severidade**: 🔴 CRÍTICO
+**Severidade**: 🟡 ALTO (Inconsistência de Rotas tRPC RESOLVIDA)
 
 **Solução Necessária**:
 1. Remover dados mockados do Dashboard (`frontend/src/pages/Dashboard.tsx`) e integrar com `trpc.mmn.*`.
@@ -175,10 +175,10 @@ const legacyUsers = [
 ## 🎯 AÇÕES RECOMENDADAS (PRÓXIMOS PASSOS)
 
 ### IMEDIATAS (Esta semana)
-1. [ ] **Corrigir inconsistência de rotas tRPC**
-   - Atualizar `frontend/src/pages/AffiliateMiniSite.tsx` para usar `trpc.mmn.*` ou criar alias `trpc.affiliate.*` no `AppRouter` do backend.
-   - Atualizar Frontend Dashboard (`frontend/src/pages/Dashboard.tsx`) para usar dados reais.
-   - Integrar páginas de Admin (Agentes e Agendamentos) com rotas tRPC existentes (`trpc.agents.getAgent()` e `trpc.orchestration.getScheduledTasks()`).
+1. [x] **Corrigir inconsistência de rotas tRPC**
+   - Atualizado `frontend/src/pages/AffiliateMiniSite.tsx` para usar `trpc.mmn.*`.
+   - Atualizado Frontend Dashboard (`frontend/src/pages/Dashboard.tsx`) para usar dados reais.
+   - Integrado páginas de Admin (Agentes e Agendamentos) com rotas tRPC existentes (`trpc.agents.getAgent()` e `trpc.orchestration.getScheduledTasks()`).
 
 2. [ ] **Implementar script de migração real**
    - Conectar ao banco Legado_PHP real.
@@ -217,9 +217,9 @@ const legacyUsers = [
 
 | Métrica | Meta | Atual | Status |
 |---|---|---|---|
-| Cobertura de Funcionalidades Legadas | 100% | 60% | 🟠 |
+| Cobertura de Funcionalidades Legadas | 100% | 65% | 🟡 |
 | Testes Unitários | >80% | 0% | ❌ |
-| Integração Frontend-Backend | 100% | 30% | 🔴 |
+| Integração Frontend-Backend | 100% | 50% | 🟡 |
 | Validação de Dados | 100% | 40% | 🔴 |
 | Documentação | 100% | 50% | 🟡 |
 

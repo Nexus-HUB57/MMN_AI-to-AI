@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from "../config/trpc";
-import { getAffiliateByUserId, getAgentByUserId, getTotalCommissions, getOrdersByAffiliate } from "../../database/schemas/db";
+import { getAffiliateByUserId, getAgentByUserId, getTotalCommissions, getOrdersByAffiliate } from "../../../database/schemas/db";
 import { getQueueLogs, getJobLogs } from "../services/jobLogger";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";

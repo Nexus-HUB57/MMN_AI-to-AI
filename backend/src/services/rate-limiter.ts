@@ -1,51 +1,15 @@
 import Redis from "ioredis";
 
 /**
- * Serviço de Rate Limiting
- * Implementa controle de taxa de requisições por usuário e IP
+ * Serviço de rate limit com fallback em memória.
+ * Não abre conexão Redis no carregamento do módulo para não bloquear o runtime
+ * bootstrap quando a infraestrutura ainda não está disponível.
  */
 
 interface RateLimitConfig {
   maxRequests: number;
-  windowMs: number; // em milissegundos
+  windowMs: number;
 }
-
-// Inicializar cliente Redis
-const redis = new Redis({
-  host: process.env.REDIS_HOST || "localhost",
-  port: parseInt(process.env.REDIS_PORT || "6379"),
-});
-
-/**
- * Configurações de rate limit por endpoint
- */
-export const RATE_LIMIT_CONFIG = {
-  // Geração de conteúdo: 100 requisições por minuto
-  generateContent: {
-    maxRequests: 100,
-    windowMs: 60 * 1000,
-  },
-  // Agendamento de posts: 50 requisições por minuto
-  schedulePost: {
-    maxRequests: 50,
-    windowMs: 60 * 1000,
-  },
-  // Analytics: 200 requisições por minuto
-  analytics: {
-    maxRequests: 200,
-    windowMs: 60 * 1000,
-  },
-  // Listar modelos: 500 requisições por minuto
-  listModels: {
-    maxRequests: 500,
-    windowMs: 60 * 1000,
-  },
-  // Templates: 100 requisições por minuto
-  templates: {
-    maxRequests: 100,
-    windowMs: 60 * 1000,
-  },
-};
 
 interface RateLimitResult {
   allowed: boolean;
@@ -54,67 +18,170 @@ interface RateLimitResult {
   retryAfter?: number;
 }
 
-/**
- * Verificar rate limit por usuário
- */
+type MemoryRateEntry = {
+  count: number;
+  expiresAt: number;
+};
+
+const memoryRateLimits = new Map<string, MemoryRateEntry>();
+let redisPromise: Promise<Redis | null> | null = null;
+let redisUnavailableLogged = false;
+
+export const RATE_LIMIT_CONFIG = {
+  generateContent: { maxRequests: 100, windowMs: 60 * 1000 },
+  schedulePost: { maxRequests: 50, windowMs: 60 * 1000 },
+  analytics: { maxRequests: 200, windowMs: 60 * 1000 },
+  listModels: { maxRequests: 500, windowMs: 60 * 1000 },
+  templates: { maxRequests: 100, windowMs: 60 * 1000 },
+};
+
+async function getRedis(): Promise<Redis | null> {
+  const redisUrl = process.env.REDIS_URL;
+  const redisHost = process.env.REDIS_HOST;
+
+  if (!redisUrl && !redisHost) {
+    return null;
+  }
+
+  if (!redisPromise) {
+    redisPromise = (async () => {
+      try {
+        const client = redisUrl
+          ? new Redis(redisUrl, {
+              lazyConnect: true,
+              maxRetriesPerRequest: 1,
+              enableOfflineQueue: false,
+            })
+          : new Redis({
+              host: redisHost,
+              port: parseInt(process.env.REDIS_PORT || "6379", 10),
+              lazyConnect: true,
+              maxRetriesPerRequest: 1,
+              enableOfflineQueue: false,
+            });
+
+        client.on("error", (err) => {
+          if (!redisUnavailableLogged) {
+            redisUnavailableLogged = true;
+            console.warn("[RateLimit] Redis indisponível; usando fallback em memória.", err);
+          }
+        });
+
+        await client.connect();
+        return client;
+      } catch (error) {
+        if (!redisUnavailableLogged) {
+          redisUnavailableLogged = true;
+          console.warn("[RateLimit] Redis indisponível; usando fallback em memória.", error);
+        }
+        return null;
+      }
+    })();
+  }
+
+  return redisPromise;
+}
+
+function now() {
+  return Date.now();
+}
+
+function cleanupMemory() {
+  const timestamp = now();
+  for (const [key, entry] of memoryRateLimits.entries()) {
+    if (entry.expiresAt <= timestamp) {
+      memoryRateLimits.delete(key);
+    }
+  }
+}
+
+async function checkRateLimitInMemory(
+  key: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  cleanupMemory();
+
+  const timestamp = now();
+  const existing = memoryRateLimits.get(key);
+
+  if (!existing || existing.expiresAt <= timestamp) {
+    memoryRateLimits.set(key, {
+      count: 1,
+      expiresAt: timestamp + config.windowMs,
+    });
+
+    return {
+      allowed: true,
+      remaining: config.maxRequests - 1,
+      resetAt: new Date(timestamp + config.windowMs),
+    };
+  }
+
+  if (existing.count >= config.maxRequests) {
+    const retryAfterMs = existing.expiresAt - timestamp;
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: new Date(existing.expiresAt),
+      retryAfter: Math.max(1, Math.ceil(retryAfterMs / 1000)),
+    };
+  }
+
+  existing.count += 1;
+  memoryRateLimits.set(key, existing);
+
+  return {
+    allowed: true,
+    remaining: config.maxRequests - existing.count,
+    resetAt: new Date(existing.expiresAt),
+  };
+}
+
 export async function checkRateLimit(
   userId: number,
   endpoint: string,
   config: RateLimitConfig = RATE_LIMIT_CONFIG.generateContent
 ): Promise<RateLimitResult> {
   const key = `ratelimit:user:${userId}:${endpoint}`;
-  const now = Date.now();
-  const windowStart = now - config.windowMs;
 
   try {
-    // Obter contador atual
-    const current = await redis.get(key);
-    const count = current ? parseInt(current) : 0;
+    const redis = await getRedis();
+    if (redis) {
+      const current = await redis.get(key);
+      const count = current ? parseInt(current, 10) : 0;
 
-    if (count >= config.maxRequests) {
-      // Limite excedido
-      const ttl = await redis.pttl(key);
+      if (count >= config.maxRequests) {
+        const ttl = await redis.pttl(key);
+        return {
+          allowed: false,
+          remaining: 0,
+          resetAt: new Date(now() + ttl),
+          retryAfter: Math.ceil(ttl / 1000),
+        };
+      }
+
+      const newCount = count + 1;
+      const pipeline = redis.pipeline();
+      if (count === 0) {
+        pipeline.setex(key, Math.ceil(config.windowMs / 1000), "1");
+      } else {
+        pipeline.incr(key);
+      }
+      await pipeline.exec();
+
       return {
-        allowed: false,
-        remaining: 0,
-        resetAt: new Date(now + ttl),
-        retryAfter: Math.ceil(ttl / 1000),
+        allowed: true,
+        remaining: config.maxRequests - newCount,
+        resetAt: new Date(now() + config.windowMs),
       };
     }
-
-    // Incrementar contador
-    const newCount = count + 1;
-    const pipeline = redis.pipeline();
-
-    if (count === 0) {
-      // Primeira requisição na janela
-      pipeline.setex(key, Math.ceil(config.windowMs / 1000), "1");
-    } else {
-      // Incrementar
-      pipeline.incr(key);
-    }
-
-    await pipeline.exec();
-
-    return {
-      allowed: true,
-      remaining: config.maxRequests - newCount,
-      resetAt: new Date(now + config.windowMs),
-    };
   } catch (error) {
-    console.error(`[RateLimit] Error checking rate limit for ${key}:`, error);
-    // Em caso de erro, permitir a requisição
-    return {
-      allowed: true,
-      remaining: config.maxRequests,
-      resetAt: new Date(Date.now() + config.windowMs),
-    };
+    console.warn(`[RateLimit] Falha no Redis para ${key}; usando memória.`, error);
   }
+
+  return checkRateLimitInMemory(key, config);
 }
 
-/**
- * Verificar rate limit por IP
- */
 export async function checkRateLimitByIP(
   ip: string,
   endpoint: string,
@@ -123,65 +190,62 @@ export async function checkRateLimitByIP(
   const key = `ratelimit:ip:${ip}:${endpoint}`;
 
   try {
-    const current = await redis.get(key);
-    const count = current ? parseInt(current) : 0;
+    const redis = await getRedis();
+    if (redis) {
+      const current = await redis.get(key);
+      const count = current ? parseInt(current, 10) : 0;
 
-    if (count >= config.maxRequests) {
-      const ttl = await redis.pttl(key);
+      if (count >= config.maxRequests) {
+        const ttl = await redis.pttl(key);
+        return {
+          allowed: false,
+          remaining: 0,
+          resetAt: new Date(now() + ttl),
+          retryAfter: Math.ceil(ttl / 1000),
+        };
+      }
+
+      const newCount = count + 1;
+      const pipeline = redis.pipeline();
+      if (count === 0) {
+        pipeline.setex(key, Math.ceil(config.windowMs / 1000), "1");
+      } else {
+        pipeline.incr(key);
+      }
+      await pipeline.exec();
+
       return {
-        allowed: false,
-        remaining: 0,
-        resetAt: new Date(Date.now() + ttl),
-        retryAfter: Math.ceil(ttl / 1000),
+        allowed: true,
+        remaining: config.maxRequests - newCount,
+        resetAt: new Date(now() + config.windowMs),
       };
     }
-
-    const newCount = count + 1;
-    const pipeline = redis.pipeline();
-
-    if (count === 0) {
-      pipeline.setex(key, Math.ceil(config.windowMs / 1000), "1");
-    } else {
-      pipeline.incr(key);
-    }
-
-    await pipeline.exec();
-
-    return {
-      allowed: true,
-      remaining: config.maxRequests - newCount,
-      resetAt: new Date(Date.now() + config.windowMs),
-    };
   } catch (error) {
-    console.error(`[RateLimit] Error checking rate limit for IP ${ip}:`, error);
-    return {
-      allowed: true,
-      remaining: config.maxRequests,
-      resetAt: new Date(Date.now() + config.windowMs),
-    };
+    console.warn(`[RateLimit] Falha no Redis para IP ${ip}; usando memória.`, error);
   }
+
+  return checkRateLimitInMemory(key, config);
 }
 
-/**
- * Resetar rate limit para um usuário
- */
 export async function resetRateLimit(
   userId: number,
   endpoint: string
 ): Promise<boolean> {
   const key = `ratelimit:user:${userId}:${endpoint}`;
+  memoryRateLimits.delete(key);
+
   try {
-    await redis.del(key);
+    const redis = await getRedis();
+    if (redis) {
+      await redis.del(key);
+    }
     return true;
   } catch (error) {
-    console.error(`[RateLimit] Error resetting rate limit for ${key}:`, error);
-    return false;
+    console.warn(`[RateLimit] Falha ao resetar ${key} no Redis.`, error);
+    return true;
   }
 }
 
-/**
- * Obter estatísticas de rate limit
- */
 export async function getRateLimitStats(
   userId: number,
   endpoint: string
@@ -197,33 +261,35 @@ export async function getRateLimitStats(
     RATE_LIMIT_CONFIG.generateContent;
 
   try {
-    const current = await redis.get(key);
-    const count = current ? parseInt(current) : 0;
-    const ttl = await redis.pttl(key);
-
-    return {
-      current: count,
-      limit: config.maxRequests,
-      remaining: Math.max(0, config.maxRequests - count),
-      resetAt: new Date(Date.now() + (ttl > 0 ? ttl : config.windowMs)),
-    };
+    const redis = await getRedis();
+    if (redis) {
+      const current = await redis.get(key);
+      const count = current ? parseInt(current, 10) : 0;
+      const ttl = await redis.pttl(key);
+      return {
+        current: count,
+        limit: config.maxRequests,
+        remaining: Math.max(0, config.maxRequests - count),
+        resetAt: new Date(now() + (ttl > 0 ? ttl : config.windowMs)),
+      };
+    }
   } catch (error) {
-    console.error(
-      `[RateLimit] Error getting rate limit stats for ${key}:`,
-      error
-    );
-    return {
-      current: 0,
-      limit: config.maxRequests,
-      remaining: config.maxRequests,
-      resetAt: new Date(Date.now() + config.windowMs),
-    };
+    console.warn(`[RateLimit] Falha ao obter stats de ${key} no Redis.`, error);
   }
+
+  cleanupMemory();
+  const memory = memoryRateLimits.get(key);
+  const current = memory?.count || 0;
+  const expiresAt = memory?.expiresAt || now() + config.windowMs;
+
+  return {
+    current,
+    limit: config.maxRequests,
+    remaining: Math.max(0, config.maxRequests - current),
+    resetAt: new Date(expiresAt),
+  };
 }
 
-/**
- * Middleware para tRPC - Verificar rate limit
- */
 export async function rateLimitMiddleware(
   userId: number,
   endpoint: string,
@@ -233,9 +299,7 @@ export async function rateLimitMiddleware(
     RATE_LIMIT_CONFIG[endpoint as keyof typeof RATE_LIMIT_CONFIG] ||
     RATE_LIMIT_CONFIG.generateContent;
 
-  // Verificar rate limit por usuário
   const userLimit = await checkRateLimit(userId, endpoint, config);
-
   if (!userLimit.allowed) {
     return {
       allowed: false,
@@ -248,7 +312,6 @@ export async function rateLimitMiddleware(
     };
   }
 
-  // Se IP foi fornecido, também verificar rate limit por IP
   if (ip) {
     const ipLimit = await checkRateLimitByIP(ip, endpoint, config);
     if (!ipLimit.allowed) {
@@ -274,4 +337,11 @@ export async function rateLimitMiddleware(
   };
 }
 
-export default redis;
+export default {
+  RATE_LIMIT_CONFIG,
+  checkRateLimit,
+  checkRateLimitByIP,
+  resetRateLimit,
+  getRateLimitStats,
+  rateLimitMiddleware,
+};

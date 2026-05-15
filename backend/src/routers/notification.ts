@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNotification } from "../database/schemas/db";
+import { createNotification } from "../../../database/schemas/db";
 
 export interface NotificationInput {
   userId?: number;

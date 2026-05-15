@@ -1,21 +1,18 @@
-import { createTRPCReact } from '@trpc/react-query';
-import { httpBatchLink } from '@trpc/client';
-// Importação do tipo do router do backend
-import type { AppRouter } from '../../../backend/src/routers/authRouter';
-
-export type { AppRouter };
+import { httpBatchLink } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
+import type { AppRouter } from "../../../backend/src/appRouter";
 
 export const trpc = createTRPCReact<AppRouter>();
 
 export const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: '/api/trpc',
-      // Headers customizados para autenticação podem ser adicionados aqui
-      async headers() {
-        return {
-          // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        };
+      url: import.meta.env.VITE_TRPC_URL || "http://localhost:3000/trpc",
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: "include",
+        });
       },
     }),
   ],

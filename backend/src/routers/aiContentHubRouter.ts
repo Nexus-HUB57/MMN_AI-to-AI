@@ -484,20 +484,6 @@ export const aiContentHubRouter = router({
           CACHE_TTL.ANALYTICS
         );
       } catch (error) {
-          success: true,
-          analytics: {
-            period: input.period,
-            platform: input.platform,
-            totalPosts: 0,
-            totalViews: 0,
-            totalLikes: 0,
-            totalShares: 0,
-            totalComments: 0,
-            avgEngagement: 0,
-            topPost: null,
-          },
-        };
-      } catch (error) {
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -687,31 +673,6 @@ export const aiContentHubRouter = router({
       }
     }),
   
-  /**
-   * Listar mídia do usuário
-   */
-  listMedia: protectedProcedure
-    .input(z.object({ 
-      mediaType: z.enum(["image", "video"]) 
-    }))
-    .query(async ({ input, ctx }) => {
-      try {
-        const media = await mediaService.listUserMedia(
-          ctx.user?.id || 0,
-          input.mediaType
-        );
-        return {
-          success: true,
-          media,
-        };
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Erro ao listar mídia",
-        });
-      }
-    }),
-
   /**
    * Deletar mídia
    */

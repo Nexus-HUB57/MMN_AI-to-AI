@@ -1,5 +1,15 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-15 — Preparação da Fase 3 com shims de compatibilidade do backend
+
+### `refactor(backend-compat)` — saneamento do grafo de imports para reintrodução dos routers reais
+- **Normalizados** imports relativos de `authRouter`, `systemRouter`, `dashboardRouter`, `mmnRouter`, `notification` e `_core/notification`.
+- **Criados shims de compatibilidade** para caminhos históricos de `trpc`, `db`, `drizzle/schema`, `database/schemas`, `integrations` e `env`, reduzindo atrito entre a estrutura antiga e o monorepo atual.
+- **Criado** `backend/src/services/llm.ts` como adapter transitório para manter o `authRouter` histórico carregável sem reativar ainda a IA final.
+- **Validado** que `backend/src/routers` ficou com **0 imports relativos quebrados** após a rodada de correções.
+- **Confirmado** o carregamento com `tsx` de `systemRouter`, `dashboardRouter` e `mmnRouter`; o próximo bloqueador ficou isolado em `backend/src/routers/aiContentHubRouter.ts`.
+- **Criado** `docs/VALIDACAO_FUSAO_FASE3_PREP.md` com escopo, evidências e próximos passos.
+
 ## 2026-05-15 — Integração tRPC do frontend bootstrap + validação da Fase 2
 
 ### `feat(bootstrap-trpc)` — frontend passa a consumir o contrato real do backend

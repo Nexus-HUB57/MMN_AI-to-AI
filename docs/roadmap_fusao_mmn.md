@@ -36,6 +36,7 @@ Este roadmap orienta a fusão entre o **sistema legado PHP** e o **MMN AI-to-AI*
 - Criar testes de contrato para namespaces tRPC reintroduzidos.
 
 ## Fase 3 — Compatibilidade de dados
+- **Preparação iniciada** com saneamento do grafo de imports dos routers principais e criação de shims de compatibilidade para caminhos herdados do backend.
 - Criar tabela de equivalência entre IDs do legado e IDs do sistema novo.
 - Migrar e reconciliar usuários, afiliados, patrocinadores, pedidos e comissões.
 - Implementar jobs BullMQ para sincronização e auditoria.

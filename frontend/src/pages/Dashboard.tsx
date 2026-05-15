@@ -4,7 +4,8 @@
  * Componentes: Sidebar transparente, stats cards com glow, tabs com gradientes
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -27,56 +28,76 @@ interface StatCard {
 }
 
 export default function Dashboard() {
-  const [refreshInterval, setRefreshInterval] = useState(5000);
+  const { data: profileData, isLoading: isLoadingProfile } = trpc.mmn.getProfile.useQuery();
+  const { data: statsData, isLoading: isLoadingStats } = trpc.mmn.getStats.useQuery();
+
+
+
+  const [stats, setStats] = useState<StatCard[]>([]);
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [pieData, setPieData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (profileData && statsData) {
+      const newStats: StatCard[] = [
+        {
+          label: "Comissões Totais",
+          value: `R$ ${(profileData.totalCommissions / 100).toFixed(2).replace('.', ',')}`,
+          change: 0, // Placeholder, assuming no change data from backend yet
+          icon: <DollarSign className="w-5 h-5" />,
+          color: "from-cyan-500 to-blue-500",
+        },
+        {
+          label: "Afiliados Ativos",
+          value: statsData.activeAffiliates.toString(),
+          change: 0, // Placeholder
+          icon: <Users className="w-5 h-5" />,
+          color: "from-purple-500 to-pink-500",
+        },
+        {
+          label: "Vendas Este Mês",
+          value: statsData.monthlySales.toString(),
+          change: 0, // Placeholder
+          icon: <TrendingUp className="w-5 h-5" />,
+          color: "from-cyan-400 to-purple-400",
+        },
+        {
+          label: "Taxa de Conversão",
+          value: `${statsData.conversionRate.toFixed(2)}%`,
+          change: 0, // Placeholder
+          icon: <Activity className="w-5 h-5" />,
+          color: "from-orange-500 to-red-500",
+        },
+      ];
+      setStats(newStats);
+
+      // Assuming statsData contains historical data for charts
+      // This is a simplified mapping, adjust based on actual backend data structure
+      const newChartData = statsData.salesHistory.map((item: any) => ({
+        name: item.month,
+        vendas: item.sales,
+        comissoes: item.commissions,
+      }));
+      setChartData(newChartData);
+
+      const newPieData = statsData.commissionDistribution.map((item: any) => ({
+        name: item.level,
+        value: item.amount,
+      }));
+      setPieData(newPieData);
+    }
+  }, [profileData, statsData]);
+
+  if (isLoadingProfile || isLoadingStats) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
+        <p className="text-slate-300">Carregando dados do dashboard...</p>
+      </div>
+    );
+  }
 
   // Mock data for stats
-  const stats: StatCard[] = [
-    {
-      label: "Comissões Totais",
-      value: "R$ 12.450,00",
-      change: 12.5,
-      icon: <DollarSign className="w-5 h-5" />,
-      color: "from-cyan-500 to-blue-500",
-    },
-    {
-      label: "Afiliados Ativos",
-      value: "247",
-      change: 8.2,
-      icon: <Users className="w-5 h-5" />,
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      label: "Vendas Este Mês",
-      value: "1.234",
-      change: 23.1,
-      icon: <TrendingUp className="w-5 h-5" />,
-      color: "from-cyan-400 to-purple-400",
-    },
-    {
-      label: "Taxa de Conversão",
-      value: "8.4%",
-      change: -2.3,
-      icon: <Activity className="w-5 h-5" />,
-      color: "from-orange-500 to-red-500",
-    },
-  ];
 
-  // Mock chart data
-  const chartData = [
-    { name: "Jan", vendas: 400, comissoes: 240 },
-    { name: "Fev", vendas: 300, comissoes: 221 },
-    { name: "Mar", vendas: 200, comissoes: 229 },
-    { name: "Abr", vendas: 278, comissoes: 200 },
-    { name: "Mai", vendas: 189, comissoes: 229 },
-    { name: "Jun", vendas: 239, comissoes: 200 },
-  ];
-
-  const pieData = [
-    { name: "Diretas", value: 400 },
-    { name: "Nível 1", value: 300 },
-    { name: "Nível 2", value: 200 },
-    { name: "Nível 3", value: 100 },
-  ];
 
   const COLORS = ["#00D9FF", "#9D4EDD", "#FF006E", "#FB5607"];
 

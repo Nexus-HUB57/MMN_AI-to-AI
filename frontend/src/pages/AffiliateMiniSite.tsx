@@ -8,7 +8,7 @@ export default function AffiliateMiniSite() {
   const [match, params] = useRoute("/afiliado/:code");
   const code = params?.code as string;
 
-  const { data: affiliate, isLoading } = trpc.affiliate.getAffiliateByCode.useQuery(
+  const { data: affiliate, isLoading } = trpc.mmn.getAffiliateByCode.useQuery(
     { code: code || "" },
     { enabled: !!code }
   );

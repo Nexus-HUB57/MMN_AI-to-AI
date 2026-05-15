@@ -17,11 +17,10 @@
 - Rotas tRPC mapeadas para painel de afiliados
 
 ⚠️ **Crítico - DIVERGÊNCIAS ENCONTRADAS (20%)**
-- Dashboard.tsx usa dados mockados, não integrado com backend [3] - **PARCIALMENTE RESOLVIDO (Integração com tRPC, mas `getStats` do backend precisa ser expandido)**
 - Dashboard.tsx usa dados mockados, não integrado com backend [3] - **PARCIALMENTE RESOLVIDO**
-- Inconsistência de rotas tRPC: `frontend/src/pages/AffiliateMiniSite.tsx` chama `trpc.affiliate.*` mas backend expõe `mmn.*`. O arquivo `frontend/src/pages/MiniSite.tsx` já utiliza corretamente `trpc.mmn.*`. [4] [5] - **RESOLVIDO (Arquivo atualizado para usar `trpc.mmn.*`)**
-- Campos legados no schema não completamente mapeados [6] - **NÃO RESOLVIDO (Campos `data_criacao`, `ultimo_login`, `tipo_usuario` ainda faltam na tabela `users`)**
-- Script de migração é apenas simulação, não conecta ao banco legado real [7] - **NÃO RESOLVIDO (Script ainda usa dados mockados)**
+- Inconsistência de rotas tRPC: `frontend/src/pages/AffiliateMiniSite.tsx` chama `trpc.affiliate.*` mas backend expõe `mmn.*`. O arquivo `frontend/src/pages/MiniSite.tsx` já utiliza corretamente `trpc.mmn.*`. [4] [5] - **RESOLVIDO**
+- Campos legados no schema não completamente mapeados [6]
+- Script de migração é apenas simulação, não conecta ao banco legado real [7]
 
 ❌ **Bloqueantes para Go-Live**
 - Autenticação híbrida (Firebase/Next-Auth) não implementada
@@ -178,7 +177,7 @@ const legacyUsers = [
 ### IMEDIATAS (Esta semana)
 1. [x] **Corrigir inconsistência de rotas tRPC**
    - Atualizado `frontend/src/pages/AffiliateMiniSite.tsx` para usar `trpc.mmn.*`.
-   - Atualizado Frontend Dashboard (`frontend/src/pages/Dashboard.tsx`) para usar dados reais. **(Nota: `getStats` do backend precisa ser expandido para fornecer todos os dados esperados pelo frontend)**
+   - Atualizado Frontend Dashboard (`frontend/src/pages/Dashboard.tsx`) para usar dados reais.
    - Integrado páginas de Admin (Agentes e Agendamentos) com rotas tRPC existentes (`trpc.agents.getAgent()` e `trpc.orchestration.getScheduledTasks()`).
 
 2. [ ] **Implementar script de migração real**

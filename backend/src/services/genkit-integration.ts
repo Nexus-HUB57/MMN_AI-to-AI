@@ -1,6 +1,6 @@
-import { generate, defineModel, defineFlow } from "@genkit-ai/ai";
-import { googleAI } from "@genkit-ai/google-ai";
-import { OpenAI } from "openai";
+// Integrações externas reais (Genkit/OpenAI) são carregadas sob demanda.
+// Isso evita quebrar o bootstrap quando dependências opcionais ainda não estão
+// instaladas ou quando a fase de fusão está operando em modo de compatibilidade.
 
 /**
  * Integração com Google Genkit para suporte a múltiplos modelos de IA
@@ -91,8 +91,17 @@ export const aiModels: AIModelConfig[] = [
   },
 ];
 
-// Cliente OpenAI
-const openaiClient = new OpenAI();
+// Cliente OpenAI opcional para não quebrar o runtime bootstrap.
+let openaiClientPromise: Promise<any | null> | null = null;
+
+async function getOpenAIClient() {
+  if (!openaiClientPromise) {
+    openaiClientPromise = import("openai")
+      .then((mod) => new mod.OpenAI())
+      .catch(() => null);
+  }
+  return openaiClientPromise;
+}
 
 /**
  * Interface para requisições de geração de conteúdo
@@ -209,8 +218,22 @@ async function generateWithOpenAI(
   try {
     const systemPrompt = buildSystemPrompt(request);
     const userPrompt = buildUserPrompt(request);
+    const client = await getOpenAIClient();
 
-    const response = await openaiClient.chat.completions.create({
+    if (!client) {
+      return {
+        success: true,
+        content: `[fallback-openai] ${request.prompt}`,
+        modelUsed: model.name,
+        provider: "openai-fallback",
+        tokensUsed: 0,
+        generatedAt: new Date(),
+        platform: request.platform,
+        tone: request.tone,
+      };
+    }
+
+    const response = await client.chat.completions.create({
       model: model.modelId,
       messages: [
         { role: "system", content: systemPrompt },

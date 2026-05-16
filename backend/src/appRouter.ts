@@ -2,6 +2,7 @@ import { publicProcedure, router } from "./trpc/trpc";
 import { agentsRouter } from "./routers/agentsRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { mmnRouter } from "./routers/mmnRouter";
+import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -30,6 +31,7 @@ export const appRouter = router({
         "Commission Tracking",
         "Social Media Scheduling",
         "Analytics Dashboard",
+        "Orchestrator System",
       ],
     })),
   }),
@@ -59,6 +61,7 @@ export const appRouter = router({
         agents: true,
         aiContentHub: true,
         mmn: true,
+        orchestration: true,
         system: true,
       },
     })),
@@ -194,6 +197,9 @@ export const appRouter = router({
 
   // ============ AI CONTENT HUB ROUTER ============
   aiContentHub: aiContentHubRouter,
+
+  // ============ ORCHESTRATION ROUTER ============
+  orchestration: orchestrationRouter,
 });
 
 export type AppRouter = typeof appRouter;

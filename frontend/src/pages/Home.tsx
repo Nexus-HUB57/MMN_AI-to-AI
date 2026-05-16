@@ -64,6 +64,7 @@ export default function Home() {
                   <div><dt>agents</dt><dd>{bootstrapStatus.data.routers.agents ? "✓" : "✗"}</dd></div>
                   <div><dt>aiContentHub</dt><dd>{bootstrapStatus.data.routers.aiContentHub ? "✓" : "✗"}</dd></div>
                   <div><dt>mmn</dt><dd>{bootstrapStatus.data.routers.mmn ? "✓" : "✗"}</dd></div>
+                  <div><dt>orchestration</dt><dd>{bootstrapStatus.data.routers.orchestration ? "✓" : "✗"}</dd></div>
                   <div><dt>system</dt><dd>{bootstrapStatus.data.routers.system ? "✓" : "✗"}</dd></div>
                 </>
               )}
@@ -79,6 +80,7 @@ export default function Home() {
             <li>🧠 Agentes IA autônomos com aprendizado contínuo</li>
             <li>📊 Engine MMN com comissões em cascata</li>
             <li>🤖 AI Content Hub para geração de conteúdo</li>
+            <li>🎭 Sistema Orquestrador multi-agente</li>
             <li>🛒 Integração com marketplaces (Hotmart, Mercado Livre, Shopee)</li>
             <li>📅 Agendamento de posts em múltiplas plataformas</li>
             <li>💰 Sistema de pagamentos PIX via API PSP</li>

@@ -4,6 +4,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import ContentHub from "./pages/ContentHub";
+import OrchestratorDashboard from "./pages/OrchestratorDashboard";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" component={Home} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/content-hub" component={ContentHub} />
+          <Route path="/orchestrator" component={OrchestratorDashboard} />
           <Route component={NotFound} />
         </Switch>
       </AuthProvider>

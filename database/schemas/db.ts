@@ -1,5 +1,6 @@
 import { eq, and, lte, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise"; // Importar o driver mysql2
 import { 
   InsertUser, users, agents, upgrades, agentUpgrades, payments, bonuses, materials,
   InsertAgent, Agent, Upgrade, AgentUpgrade, Payment, InsertPayment, Bonus, InsertBonus, Material, InsertMaterial,
@@ -8,16 +9,27 @@ import {
 import { ENV } from "../../backend/src/config/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
+let _pool: mysql.Pool | null = null; // Declarar a variável para o pool
 
 export async function getDb() {
   if (!_db) {
     const dbUrl = process.env.DATABASE_URL || ENV.DATABASE_URL;
     if (dbUrl) {
       try {
-        _db = drizzle(dbUrl);
+        if (!_pool) {
+          // Criar um pool de conexões se ainda não existir
+          _pool = mysql.createPool({
+            uri: dbUrl,
+            waitForConnections: true,
+            connectionLimit: 10, // Ajuste este valor conforme a necessidade do seu ambiente
+            queueLimit: 0
+          });
+        }
+        _db = drizzle(_pool); // Usar o pool com Drizzle
       } catch (error) {
-        console.warn("[Database] Failed to connect:", error);
+        console.warn("[Database] Falha ao conectar ou criar pool:", error);
         _db = null;
+        _pool = null;
       }
     }
   }

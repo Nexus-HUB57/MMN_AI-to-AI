@@ -27,6 +27,7 @@
     "@genkit-ai/core": "^1.0.0",
     "@genkit-ai/googleai": "^1.0.0",
     "@trpc/server": "^11.0.0",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "bullmq": "^5.28.2",
     "cookie": "^1.0.2",
@@ -36,13 +37,12 @@
     "genkit": "^1.0.0",
     "ioredis": "^5.4.2",
     "jose": "^5.9.6",
-    "mysql2": "^3.12.0",
+    "mysql2": "^3.22.3",
     "nanoid": "^5.0.9",
     "node-cron": "^4.0.3",
     "openai": "^4.77.0",
     "sharp": "^0.33.5",
     "superjson": "^2.2.2",
-    "aws-sdk": "^2.1692.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

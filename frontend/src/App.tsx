@@ -1,23 +1,26 @@
+import React, { Suspense } from 'react';
 import { Route, Switch } from "wouter";
 import { TRPCProvider } from "./components/trpc-provider";
 import { AuthProvider } from "./contexts/AuthContext";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import ContentHub from "./pages/ContentHub";
-import OrchestratorDashboard from "./pages/OrchestratorDashboard";
-import NotFound from "./pages/NotFound";
+const Home = React.lazy(() => import("./pages/Home"));
+const Dashboard = React.lazy(() => import("./pages/Dashboard"));
+const ContentHub = React.lazy(() => import("./pages/ContentHub"));
+const OrchestratorDashboard = React.lazy(() => import("./pages/OrchestratorDashboard"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 export default function App() {
   return (
     <TRPCProvider>
       <AuthProvider>
-        <Switch>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <Switch>
           <Route path="/" component={Home} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/content-hub" component={ContentHub} />
           <Route path="/orchestrator" component={OrchestratorDashboard} />
           <Route component={NotFound} />
         </Switch>
+        </Suspense>
       </AuthProvider>
     </TRPCProvider>
   );

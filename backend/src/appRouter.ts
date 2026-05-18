@@ -1,8 +1,12 @@
 import { publicProcedure, router } from "./trpc/trpc";
 import { agentsRouter } from "./routers/agentsRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
+import { contentGenerationRouter } from "./routers/contentGenerationRouter";
+import { dropshippingRouter } from "./routers/dropshippingRouter";
 import { mmnRouter } from "./routers/mmnRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
+import { paymentsRouter } from "./routers/paymentsRouter";
+import { upgradesRouter } from "./routers/upgradesRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -65,9 +69,13 @@ export const appRouter = router({
       routers: {
         agents: true,
         aiContentHub: true,
+        content: true,
+        dropshipping: true,
         mmn: true,
         orchestration: true,
+        payments: true,
         system: true,
+        upgrades: true,
       },
     })),
   }),
@@ -203,8 +211,20 @@ export const appRouter = router({
   // ============ AI CONTENT HUB ROUTER ============
   aiContentHub: aiContentHubRouter,
 
+  // ============ CONTENT GENERATION ROUTER ============
+  content: contentGenerationRouter,
+
+  // ============ DROPSHIPPING ROUTER ============
+  dropshipping: dropshippingRouter,
+
   // ============ ORCHESTRATION ROUTER ============
   orchestration: orchestrationRouter,
+
+  // ============ PAYMENTS ROUTER ============
+  payments: paymentsRouter,
+
+  // ============ UPGRADES ROUTER ============
+  upgrades: upgradesRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -47,10 +47,11 @@ export default function ContentGeneration() {
   const [productPlatform, setProductPlatform] = useState<"instagram" | "facebook" | "whatsapp">("instagram");
   const [productDescription, setProductDescription] = useState<string | null>(null);
 
-  // Image Generation State
+  // Image Generation State (Coming Soon)
   const [imagePrompt, setImagePrompt] = useState("");
   const [originalImageUrl, setOriginalImageUrl] = useState("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [imageSectionEnabled, setImageSectionEnabled] = useState(false); // Disabled until backend supports it
 
   // Mutations
   const { mutate: generateText, isPending: textLoading } = trpc.content.generateText.useMutation({
@@ -103,15 +104,8 @@ export default function ContentGeneration() {
     },
   });
 
-  const { mutate: generateImage, isPending: imageLoading } = trpc.content.generateImage.useMutation({
-    onSuccess: (result) => {
-      setGeneratedImageUrl(result.imageUrl || null);
-      toast.success("Image generated successfully");
-    },
-    onError: () => {
-      toast.error("Failed to generate image");
-    },
-  });
+  // Note: trpc.content.generateImage is not implemented in backend yet
+  // The image generation feature is marked as "Coming Soon"
 
   if (authLoading) {
     return (
@@ -630,12 +624,13 @@ export default function ContentGeneration() {
         </TabsContent>
       </Tabs>
 
-      {/* Image Generation Section */}
-      <Card>
+      {/* Image Generation Section - Coming Soon */}
+      <Card className="bg-gray-50 border-gray-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ImageIcon className="h-5 w-5" />
             Generate Promotional Images
+            <Badge variant="outline" className="ml-2 bg-yellow-100 text-yellow-800">Coming Soon</Badge>
           </CardTitle>
           <CardDescription>Create AI-powered images for your marketing campaigns</CardDescription>
         </CardHeader>
@@ -648,6 +643,7 @@ export default function ContentGeneration() {
               onChange={(e) => setImagePrompt(e.target.value)}
               placeholder="Describe the image you want to generate..."
               rows={3}
+              disabled
             />
           </div>
 
@@ -658,27 +654,22 @@ export default function ContentGeneration() {
               value={originalImageUrl}
               onChange={(e) => setOriginalImageUrl(e.target.value)}
               placeholder="https://example.com/image.jpg"
+              disabled
             />
             <p className="text-xs text-gray-500">Use this to edit an existing image</p>
           </div>
 
           <Button
-            onClick={() => generateImage({ prompt: imagePrompt, originalImageUrl: originalImageUrl || undefined })}
-            disabled={imageLoading || !imagePrompt}
+            disabled
             className="w-full"
           >
-            {imageLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating Image...
-              </>
-            ) : (
-              <>
-                <ImageIcon className="mr-2 h-4 w-4" />
-                Generate Image
-              </>
-            )}
+            <ImageIcon className="mr-2 h-4 w-4" />
+            Generate Image - Coming Soon
           </Button>
+
+          <p className="text-sm text-gray-500 text-center py-4">
+            Image generation will be available soon. Stay tuned for updates!
+          </p>
 
           {generatedImageUrl && (
             <Card className="bg-gray-50">

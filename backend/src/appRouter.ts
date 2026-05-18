@@ -3,7 +3,7 @@ import { agentsRouter } from "./routers/agentsRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { mmnRouter } from "./routers/mmnRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
-import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../database/schemas/db";
+import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -32,6 +32,11 @@ export const appRouter = router({
         "Social Media Scheduling",
         "Analytics Dashboard",
         "Orchestrator System",
+      ],
+      notes: [
+        "Core transacional preservado e camada agentic em evolução incremental.",
+        "Fila de orquestração e dashboards administrativos já disponíveis para expansão gradual.",
+        "Autonomia plena depende de policy, observabilidade e validação operacional em produção.",
       ],
     })),
   }),

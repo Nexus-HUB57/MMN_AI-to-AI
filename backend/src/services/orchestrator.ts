@@ -8,7 +8,7 @@ import {
   OrderProcessingJob,
   CommissionProcessingJob,
 } from '../config/queue';
-import { invokeLLM } from '../_core/llm';
+import { invokeLLM } from './llm-v2';
 import { notifyOwner } from '../_core/notification';
 
 export interface HighLevelGoal {

@@ -35,7 +35,7 @@ export const agentsRouter = router({
 
         const newAgent = await createAgent({
           userId: ctx.user.id,
-          name: `Agent - ${ctx.user.name || "User"}`,
+          name: `Agent - User ${ctx.user.id}`,
           status: "learning",
           contentStrategy: JSON.stringify(defaultContentStrategy),
           performanceScore: 0,

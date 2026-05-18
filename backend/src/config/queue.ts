@@ -1,14 +1,12 @@
 import { Queue, Worker, QueueEvents } from 'bullmq';
-import { createClient } from 'redis';
-import { ENV } from '../_core/env';
+import IORedis from 'ioredis';
 
 // Criar cliente Redis
-export const redisClient = createClient({
-  socket: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT || '6379'),
-  },
-  password: process.env.REDIS_PASSWORD,
+export const redisClient = new IORedis({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
+  password: process.env.REDIS_PASSWORD || undefined,
+  maxRetriesPerRequest: null,
 });
 
 redisClient.on('error', (err) => {
@@ -22,7 +20,9 @@ redisClient.on('connect', () => {
 // Conectar ao Redis
 export async function connectRedis() {
   try {
-    await redisClient.connect();
+    if (redisClient.status === 'wait') {
+      await redisClient.connect();
+    }
     console.log('[Redis] Connection established');
   } catch (error) {
     console.error('[Redis] Failed to connect:', error);
@@ -33,7 +33,9 @@ export async function connectRedis() {
 // Desconectar do Redis
 export async function disconnectRedis() {
   try {
-    await redisClient.quit();
+    if (redisClient.status !== 'end') {
+      await redisClient.quit();
+    }
     console.log('[Redis] Disconnected');
   } catch (error) {
     console.error('[Redis] Failed to disconnect:', error);

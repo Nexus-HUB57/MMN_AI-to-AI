@@ -2,7 +2,10 @@ import { publicProcedure, router } from "./trpc/trpc";
 import { agentsRouter } from "./routers/agentsRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { contentGenerationRouter } from "./routers/contentGenerationRouter";
+import { dashboardRouter } from "./routers/dashboardRouter";
 import { dropshippingRouter } from "./routers/dropshippingRouter";
+import { logRouter } from "./routers/logRouter";
+import { marketplacesRouter } from "./routers/marketplacesRouter";
 import { mmnRouter } from "./routers/mmnRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { paymentsRouter } from "./routers/paymentsRouter";
@@ -70,7 +73,10 @@ export const appRouter = router({
         agents: true,
         aiContentHub: true,
         content: true,
+        dashboard: true,
         dropshipping: true,
+        logs: true,
+        marketplaces: true,
         mmn: true,
         orchestration: true,
         payments: true,
@@ -214,8 +220,17 @@ export const appRouter = router({
   // ============ CONTENT GENERATION ROUTER ============
   content: contentGenerationRouter,
 
+  // ============ DASHBOARD ROUTER ============
+  dashboard: dashboardRouter,
+
   // ============ DROPSHIPPING ROUTER ============
   dropshipping: dropshippingRouter,
+
+  // ============ LOG ROUTER ============
+  logs: logRouter,
+
+  // ============ MARKETPLACES ROUTER ============
+  marketplaces: marketplacesRouter,
 
   // ============ ORCHESTRATION ROUTER ============
   orchestration: orchestrationRouter,

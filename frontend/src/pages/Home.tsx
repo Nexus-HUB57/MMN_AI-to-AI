@@ -67,7 +67,10 @@ export default function Home() {
                   <div><dt>agents</dt><dd>{bootstrapStatus.data.routers.agents ? "✓" : "✗"}</dd></div>
                   <div><dt>aiContentHub</dt><dd>{bootstrapStatus.data.routers.aiContentHub ? "✓" : "✗"}</dd></div>
                   <div><dt>content</dt><dd>{bootstrapStatus.data.routers.content ? "✓" : "✗"}</dd></div>
+                  <div><dt>dashboard</dt><dd>{bootstrapStatus.data.routers.dashboard ? "✓" : "✗"}</dd></div>
                   <div><dt>dropshipping</dt><dd>{bootstrapStatus.data.routers.dropshipping ? "✓" : "✗"}</dd></div>
+                  <div><dt>logs</dt><dd>{bootstrapStatus.data.routers.logs ? "✓" : "✗"}</dd></div>
+                  <div><dt>marketplaces</dt><dd>{bootstrapStatus.data.routers.marketplaces ? "✓" : "✗"}</dd></div>
                   <div><dt>mmn</dt><dd>{bootstrapStatus.data.routers.mmn ? "✓" : "✗"}</dd></div>
                   <div><dt>orchestration</dt><dd>{bootstrapStatus.data.routers.orchestration ? "✓" : "✗"}</dd></div>
                   <div><dt>payments</dt><dd>{bootstrapStatus.data.routers.payments ? "✓" : "✗"}</dd></div>

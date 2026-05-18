@@ -354,3 +354,103 @@ export const aiModels = mysqlTable("ai_models", {
 
 export type AIModel = typeof aiModels.$inferSelect;
 export type InsertAIModel = typeof aiModels.$inferInsert;
+
+// =============================================================================
+// XP E CARREIRAS (PD/SCC)
+// =============================================================================
+
+/**
+ * Career Levels - Níveis de carreira do sistema PD/SCC
+ * 27 níveis organizados em 5 categorias
+ */
+export const careerLevels = mysqlTable('career_levels', {
+  id: int("id").primaryKey().autoincrement(),
+  level: int("level").notNull(), // 1-27
+  name: varchar("name", { length: 100 }).notNull(),
+  category: mysqlEnum("category", ["affiliado", "preditivo", "generativo", "orquestrador", "ia_agentica"]).notNull(),
+  tier: int("tier").notNull(), // 1, 2 ou 3 dentro da categoria
+  minXp: int("minXp").notNull().default(0), // XP mínimo para atingir
+  monthlyXpRequired: int("monthlyXpRequired").notNull().default(0), // XP mensal necessário
+  commissionBonus: int("commissionBonus").notNull().default(0), // Bônus percentual
+  benefits: text("benefits"), // Benefícios do nível
+  icon: varchar("icon", { length: 50 }), // Ícone do nível
+  color: varchar("color", { length: 20 }), // Cor do badge
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  levelIdx: index("career_level_idx").on(table.level),
+  categoryIdx: index("career_category_idx").on(table.category),
+}));
+
+export type CareerLevel = typeof careerLevels.$inferSelect;
+export type InsertCareerLevel = typeof careerLevels.$inferInsert;
+
+/**
+ * Affiliate XP - Pontos de experiência dos afiliados
+ */
+export const affiliateXP = mysqlTable('affiliate_xp', {
+  id: int("id").primaryKey().autoincrement(),
+  affiliateId: int("affiliateId").notNull().unique(),
+  totalXp: int("totalXp").notNull().default(0), // XP total acumulado
+  currentLevel: int("currentLevel").notNull().default(1), // Nível atual
+  monthlyXp: int("monthlyXp").notNull().default(0), // XP do mês atual
+  monthlyXpResetAt: timestamp("monthlyXpResetAt"), // Data do último reset mensal
+  xpHistory: json("xpHistory").$type<Array<{
+    date: string;
+    amount: number;
+    source: string;
+    description: string;
+  }>>(), // Histórico de XP
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  affiliateIdIdx: index("affiliate_xp_affiliate_idx").on(table.affiliateId),
+  currentLevelIdx: index("affiliate_xp_level_idx").on(table.currentLevel),
+}));
+
+export type AffiliateXP = typeof affiliateXP.$inferSelect;
+export type InsertAffiliateXP = typeof affiliateXP.$inferInsert;
+
+/**
+ * XP Transactions - Transações de XP (ganhos e perdas)
+ */
+export const xpTransactions = mysqlTable('xp_transactions', {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  affiliateId: int("affiliateId").notNull(),
+  amount: int("amount").notNull(), // Positivo ou negativo
+  source: mysqlEnum("source", ["sale", "commission", "bonus", "network", "challenge", "penalty"]).notNull(),
+  sourceId: varchar("sourceId", { length: 64 }), // ID da transação relacionada
+  description: text("description").notNull(),
+  xpBefore: int("xpBefore").notNull(), // XP antes da transação
+  xpAfter: int("xpAfter").notNull(), // XP depois da transação
+  levelBefore: int("levelBefore").notNull(), // Nível antes
+  levelAfter: int("levelAfter").notNull(), // Nível depois
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  affiliateIdIdx: index("xp_trans_affiliate_idx").on(table.affiliateId),
+  sourceIdx: index("xp_trans_source_idx").on(table.source),
+  createdAtIdx: index("xp_trans_date_idx").on(table.createdAt),
+}));
+
+export type XPTransaction = typeof xpTransactions.$inferSelect;
+export type InsertXPTransaction = typeof xpTransactions.$inferInsert;
+
+/**
+ * Dashboard Metrics - Métricas do dashboard
+ */
+export const dashboardMetrics = mysqlTable('dashboard_metrics', {
+  id: int("id").primaryKey().autoincrement(),
+  affiliateId: int("affiliateId").notNull(),
+  totalEarnings: int("totalEarnings").notNull().default(0),
+  pendingCommissions: int("pendingCommissions").notNull().default(0),
+  directReferrals: int("directReferrals").notNull().default(0),
+  networkSize: int("networkSize").notNull().default(0),
+  currentRank: int("currentRank").notNull().default(1),
+  monthlySales: int("monthlySales").notNull().default(0),
+  monthlyRevenue: int("monthlyRevenue").notNull().default(0),
+  lastUpdated: timestamp("lastUpdated").defaultNow().notNull(),
+}, (table) => ({
+  affiliateIdIdx: index("dash_metrics_affiliate_idx").on(table.affiliateId),
+}));
+
+export type DashboardMetric = typeof dashboardMetrics.$inferSelect;
+export type InsertDashboardMetric = typeof dashboardMetrics.$inferInsert;

@@ -10,6 +10,7 @@ import { marketplacesRouter } from "./routers/marketplacesRouter";
 import { mmnRouter } from "./routers/mmnRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { paymentsRouter } from "./routers/paymentsRouter";
+import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
@@ -84,6 +85,7 @@ export const appRouter = router({
         mmn: true,
         orchestration: true,
         payments: true,
+        xp: true,
         system: true,
         upgrades: true,
       },
@@ -244,6 +246,9 @@ export const appRouter = router({
 
   // ============ PAYMENTS ROUTER ============
   payments: paymentsRouter,
+
+  // ============ XP ROUTER ============
+  xp: xpRouter,
 
   // ============ UPGRADES ROUTER ============
   upgrades: upgradesRouter,

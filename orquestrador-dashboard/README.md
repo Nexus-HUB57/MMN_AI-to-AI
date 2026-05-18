@@ -1,50 +1,178 @@
-# React + TypeScript + Vite
+# Orquestrador Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Multi-Module AI Agent Management Interface for Nexus-HUB57 AI-to-AI Marketing Platform**
 
-Currently, two official plugins are available:
+Dashboard React para gerenciamento e monitoramento do sistema Orquestrador - uma arquitetura de agentes IA especializados que orquestram tarefas de marketing multinível (MMN) e operações P2P.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Visão Geral (Overview)**: Dashboard com métricas em tempo real do sistema
+- **Gerenciamento de Tasks**: Criação, monitoramento e rastreamento de tarefas
+- **Monitoramento de Agentes**: Status e métricas dos 5 módulos de IA
+- **Análise de Tendências**: Gráficos de performance e indicadores
+- **Gestão de Metas**: Definição e acompanhamento de objetivos
+- **Programa de Afiliados**: Gerenciamento de rede de afiliados
+- **Dropshipping**: Interface para operações automatizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Arquitetura de Agentes
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ORQUESTRADOR CENTRAL                      │
+│         (Orquestração de fluxo entre módulos)               │
+└─────────────────────────────────────────────────────────────┘
+        │           │           │           │           │
+        ▼           ▼           ▼           ▼           ▼
+┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
+│ AFILIADO │ │PREditivo │ │GENERATIVO│ │  ORQUEST │ │ AGENTE   │
+│          │ │          │ │          │ │  RADOR   │ │ CA       │
+│ - Links  │ │ - Análise│ │ - Copy   │ │ - Fluxo  │ │ - Execução│
+│ - Comissões│ - Forecast│ │ - Imagens │ │ - Tasks │ │ - Scripts│
+└──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Tech Stack
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **Frontend**: React 18 + TypeScript
+- **Build**: Vite
+- **Styling**: Tailwind CSS + Radix UI
+- **Charts**: Recharts
+- **Backend**: Supabase (PostgreSQL)
+- **API**: tRPC-style pattern
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Setup
+
+### 1. Install Dependencies
+
+```bash
+pnpm install
 ```
+
+### 2. Configure Environment Variables
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```bash
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+Ou copie o template:
+
+```bash
+cp .env.example .env
+```
+
+### 3. Setup Database
+
+Execute o schema SQL no Supabase Dashboard > SQL Editor:
+
+```bash
+# Conteúdo está em supabase-schema.sql
+```
+
+O schema cria as seguintes tabelas:
+- `agents` - Registro dos agentes IA
+- `tasks` - Tarefas do sistema
+- `affiliates` - Dados de afiliados
+- `commissions` - Comissões e pagamentos
+- `predictions` - Análises preditivas
+- `generated_content` - Conteúdo gerado por IA
+- `workflows` - Fluxos de trabalho
+- `executions` - Execuções de comandos
+- `events` - Log de eventos
+
+### 4. Run Development Server
+
+```bash
+pnpm dev
+```
+
+### 5. Build for Production
+
+```bash
+pnpm build
+```
+
+## Scripts Disponíveis
+
+| Script | Descrição |
+|--------|-----------|
+| `pnpm dev` | Servidor de desenvolvimento |
+| `pnpm build` | Build de produção |
+| `pnpm preview` | Preview do build |
+| `pnpm lint` | Verificação de lint |
+
+## Estrutura do Projeto
+
+```
+orquestrador-dashboard/
+├── src/
+│   ├── components/
+│   │   └── ErrorBoundary.tsx
+│   ├── hooks/
+│   │   ├── use-mobile.tsx
+│   │   └── useOrquestrador.ts    # Hooks para Supabase
+│   ├── lib/
+│   │   ├── supabase.ts           # Cliente Supabase
+│   │   └── utils.ts
+│   ├── App.tsx
+│   ├── App.css
+│   ├── index.css
+│   ├── main.tsx
+│   └── Orquestrador.tsx         # Componente principal
+├── supabase-schema.sql          # Schema do banco
+├── .env.example                 # Template de variáveis
+└── tailwind.config.js
+```
+
+## Integração com Supabase
+
+O dashboard utiliza Supabase para:
+
+1. **Persistência de Dados**: Agents, tasks, afiliados
+2. **Tempo Real**: Updates automáticos via subscriptions
+3. **Auth**: Sistema de autenticação integrado
+4. **RLS**: Segurança em nível de linha
+
+### Tipos de Dados
+
+```typescript
+// Agent
+{
+  id: string
+  name: string
+  type: 'afiliado' | 'preditivo' | 'generativo' | 'orquestrador' | 'agente_ca'
+  status: 'idle' | 'busy' | 'offline'
+  capabilities: string[]
+  metrics: { tasksCompleted, tasksFailed, avgResponseTime, lastActive }
+}
+
+// Task
+{
+  id: string
+  type: 'affiliate_management' | 'predictive_analysis' | 'content_generation'
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  status: 'pending' | 'in_progress' | 'completed' | 'failed'
+  data: Record<string, any>
+  assigned_agent_id: string
+}
+```
+
+## Deploy
+
+### Build
+
+```bash
+pnpm build
+```
+
+Os arquivos estáticos serão gerados em `dist/`.
+
+### Deploy Automático
+
+O projeto está configurado para deploy automático via GitHub Actions ou ferramentas CI/CD.
+
+## Licença
+
+Proprietary - Nexus-HUB57

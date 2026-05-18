@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { trpc } from "../lib/trpc";
 
 export default function AgentMonitor() {
@@ -6,18 +6,57 @@ export default function AgentMonitor() {
   const [audience, setAudience] = useState("afiliados em onboarding");
   const [offer, setOffer] = useState("sequência com CTA para diagnóstico gratuito");
   const [channel, setChannel] = useState<"instagram" | "whatsapp">("instagram");
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [memoryQuery, setMemoryQuery] = useState("");
 
   const monitor = trpc.agentic.getMonitor.useQuery({ limit: 5 }, { refetchInterval: 15000 });
   const utils = trpc.useUtils();
 
+  const sessionDetail = trpc.agentic.getSession.useQuery(
+    { sessionId: selectedSessionId || "" },
+    { enabled: Boolean(selectedSessionId), refetchInterval: 15000 },
+  );
+
+  const memorySearch = trpc.agentic.searchMemories.useQuery(
+    {
+      query: memoryQuery,
+      sessionId: selectedSessionId || undefined,
+      limit: 6,
+    },
+    {
+      enabled: memoryQuery.trim().length >= 2,
+    },
+  );
+
+  useEffect(() => {
+    const recentSessions = monitor.data?.sessions || [];
+    if (!recentSessions.length) return;
+
+    const stillExists = recentSessions.some((session) => session.id === selectedSessionId);
+    if (!selectedSessionId || !stillExists) {
+      setSelectedSessionId(recentSessions[0].id);
+    }
+  }, [monitor.data?.sessions, selectedSessionId]);
+
   const launchCampaign = trpc.agentic.launchCampaign.useMutation({
-    onSuccess: async () => {
-      await utils.agentic.getMonitor.invalidate();
-      await utils.agentic.listSessions.invalidate();
+    onSuccess: async (result) => {
+      setSelectedSessionId(result.session.id);
+      await Promise.all([
+        utils.agentic.getMonitor.invalidate(),
+        utils.agentic.listSessions.invalidate(),
+        utils.agentic.getSession.invalidate(),
+        utils.agentic.searchMemories.invalidate(),
+      ]);
     },
   });
 
-  const latestSession = useMemo(() => monitor.data?.sessions?.[0], [monitor.data]);
+  const latestSession = useMemo(() => {
+    return sessionDetail.data || monitor.data?.sessions?.[0] || null;
+  }, [monitor.data, sessionDetail.data]);
+
+  const checkpointTotal = sessionDetail.data
+    ? sessionDetail.data.checkpointsList.length
+    : latestSession?.checkpoints || 0;
 
   const handleLaunch = (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,7 +72,7 @@ export default function AgentMonitor() {
             <h2>Agent Monitor</h2>
             <p className="lead compact">
               Monitor em tempo real da camada agentic com graph de marketing, queue runtime,
-              audit trail, memória vetorial e judge de qualidade.
+              audit trail, memória vetorial, checkpoints operacionais e judge de qualidade.
             </p>
           </div>
           <button className="btn btn-secondary" onClick={() => monitor.refetch()}>
@@ -121,7 +160,12 @@ export default function AgentMonitor() {
             {monitor.data?.sessions?.length ? (
               <div className="goal-list compact-list">
                 {monitor.data.sessions.map((session) => (
-                  <div key={session.id} className={`goal-card ${session.status}`}>
+                  <button
+                    key={session.id}
+                    type="button"
+                    className={`goal-card ${session.status}`}
+                    onClick={() => setSelectedSessionId(session.id)}
+                  >
                     <div className="goal-header">
                       <h3>{session.goal}</h3>
                       <span className={`status-badge ${session.status}`}>{session.status}</span>
@@ -131,11 +175,42 @@ export default function AgentMonitor() {
                       <span>{session.channel}</span>
                       <span>score {session.qualityScore}</span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             ) : (
               <p>Nenhuma sessão agentic executada ainda.</p>
+            )}
+          </div>
+
+          <div className="monitor-card">
+            <h3>Busca de memória</h3>
+            <div className="form-group">
+              <label htmlFor="memory-search">Consulta</label>
+              <input
+                id="memory-search"
+                value={memoryQuery}
+                onChange={(event) => setMemoryQuery(event.target.value)}
+                placeholder="ex: onboarding, CTA, score alto"
+              />
+            </div>
+            {memoryQuery.trim().length < 2 ? (
+              <p>Digite pelo menos 2 caracteres para consultar a memória vetorial.</p>
+            ) : memorySearch.isLoading ? (
+              <p>Buscando memórias...</p>
+            ) : memorySearch.data?.length ? (
+              <ul className="feature-list slim">
+                {memorySearch.data.map((memory) => (
+                  <li key={memory.id}>
+                    <strong>{memory.memoryType}</strong>
+                    {typeof memory.similarity === "number" ? ` • similaridade ${memory.similarity.toFixed(2)}` : ""}
+                    <br />
+                    <span>{memory.content}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Nenhuma memória relevante encontrada.</p>
             )}
           </div>
 
@@ -201,15 +276,80 @@ export default function AgentMonitor() {
           </div>
         </div>
 
-        {latestSession?.latestDraft ? (
+        {latestSession ? (
           <div className="panel inset-panel">
-            <h3>Último draft aprovado</h3>
-            <p><strong>{latestSession.latestDraft.headline}</strong></p>
-            <p>{latestSession.latestDraft.body}</p>
-            <p><strong>CTA:</strong> {latestSession.latestDraft.cta}</p>
-            <p><strong>Checkpoints:</strong> {latestSession.checkpoints}</p>
-            {latestSession.latestDraft.hashtags?.length ? (
-              <p><strong>Hashtags:</strong> {latestSession.latestDraft.hashtags.join(" ")}</p>
+            <h3>Detalhe da sessão</h3>
+            <p><strong>ID:</strong> {latestSession.id}</p>
+            <p><strong>Status:</strong> {latestSession.status}</p>
+            <p><strong>Canal:</strong> {latestSession.channel}</p>
+            <p><strong>Resumo:</strong> {latestSession.summary || "sem resumo"}</p>
+            <p><strong>Score:</strong> {latestSession.qualityScore}</p>
+            <p><strong>Checkpoints:</strong> {checkpointTotal}</p>
+            <p><strong>Plano:</strong> {latestSession.plan.join(" → ")}</p>
+
+            {latestSession.latestDraft ? (
+              <>
+                <p><strong>{latestSession.latestDraft.headline}</strong></p>
+                <p>{latestSession.latestDraft.body}</p>
+                <p><strong>CTA:</strong> {latestSession.latestDraft.cta}</p>
+                {latestSession.latestDraft.hashtags?.length ? (
+                  <p><strong>Hashtags:</strong> {latestSession.latestDraft.hashtags.join(" ")}</p>
+                ) : null}
+              </>
+            ) : null}
+
+            {sessionDetail.data ? (
+              <div className="grid monitor-grid">
+                <div className="monitor-card">
+                  <h3>Timeline de ações</h3>
+                  {sessionDetail.data.actions.length ? (
+                    <ul className="feature-list slim">
+                      {sessionDetail.data.actions.map((action) => (
+                        <li key={action.id}>
+                          <strong>{action.actionKey}</strong> • {action.status}
+                          {typeof action.score === "number" ? ` • score ${action.score}` : ""}
+                          {action.outputSummary ? <><br />{action.outputSummary}</> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Sem ações detalhadas.</p>
+                  )}
+                </div>
+
+                <div className="monitor-card">
+                  <h3>Checkpoints da sessão</h3>
+                  {sessionDetail.data.checkpointsList.length ? (
+                    <ul className="feature-list slim">
+                      {sessionDetail.data.checkpointsList.map((checkpoint) => (
+                        <li key={checkpoint.id}>
+                          <strong>{checkpoint.reason}</strong> • {new Date(checkpoint.createdAt).toLocaleString()}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Sem checkpoints na sessão.</p>
+                  )}
+                </div>
+
+                <div className="monitor-card">
+                  <h3>Queue jobs da sessão</h3>
+                  {sessionDetail.data.queueJobs.length ? (
+                    <ul className="feature-list slim">
+                      {sessionDetail.data.queueJobs.map((job) => (
+                        <li key={job.id}>
+                          <strong>{job.type}</strong> • {job.status}
+                          {job.error ? <><br />{job.error}</> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Sem jobs na sessão.</p>
+                  )}
+                </div>
+              </div>
+            ) : selectedSessionId ? (
+              <p>Carregando detalhe completo da sessão...</p>
             ) : null}
           </div>
         ) : null}

@@ -105,3 +105,10 @@ export interface AgentQueueJob {
   result?: Record<string, unknown>;
   error?: string;
 }
+
+export interface AgenticSessionDetail extends AgenticSession {
+  actions: AgentActionAudit[];
+  memories: AgentMemoryRecord[];
+  checkpointsList: AgentCheckpoint[];
+  queueJobs: AgentQueueJob[];
+}

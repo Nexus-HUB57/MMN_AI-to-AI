@@ -14,6 +14,7 @@ import type {
   AgentQueueJob,
   AgenticChannel,
   AgenticSession,
+  AgenticSessionDetail,
 } from "./types";
 
 function mergeById<T extends { id: string }>(primary: T[], secondary: T[], limit: number) {
@@ -107,10 +108,27 @@ export class MarketingOrchestrator {
     this.sessions.set(sessionId, runningSession);
     await agenticRepository.upsertSession(runningSession);
 
-    const result = await marketingAgent.runCampaign(runningSession);
-    this.sessions.set(sessionId, result.session);
-    await agenticRepository.upsertSession(result.session);
-    return result;
+    try {
+      const result = await marketingAgent.runCampaign(runningSession);
+      this.sessions.set(sessionId, result.session);
+      await agenticRepository.upsertSession(result.session);
+      return result;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Falha inesperada na execução da sessão agentic.";
+      const failedAt = new Date().toISOString();
+      const failedSession: AgenticSession = {
+        ...runningSession,
+        status: "failed",
+        summary: `Sessão interrompida por erro: ${message}`,
+        updatedAt: failedAt,
+        completedAt: failedAt,
+        checkpoints: agentCheckpointer.list(sessionId).length,
+      };
+      agentCheckpointer.save(sessionId, "session-failed", { error: message, sessionId });
+      this.sessions.set(sessionId, failedSession);
+      await agenticRepository.upsertSession(failedSession);
+      throw error;
+    }
   }
 
   async launch(input: {
@@ -127,7 +145,7 @@ export class MarketingOrchestrator {
     return this.runSession(session.id);
   }
 
-  async getSession(sessionId: string) {
+  async getSession(sessionId: string): Promise<AgenticSessionDetail | null> {
     const session = this.sessions.get(sessionId) || (await agenticRepository.getSession(sessionId));
     if (!session) return null;
 
@@ -144,7 +162,7 @@ export class MarketingOrchestrator {
       ...session,
       actions: mergeById<AgentActionAudit>(memoryActions, persistedActions, 20),
       memories: mergeById<AgentMemoryRecord>(memoryRecords, persistedMemories, 10),
-      checkpoints: mergeById<AgentCheckpoint>(memoryCheckpoints, persistedCheckpoints, 10),
+      checkpointsList: mergeById<AgentCheckpoint>(memoryCheckpoints, persistedCheckpoints, 10),
       queueJobs: mergeById<AgentQueueJob>(memoryQueueJobs, persistedQueueJobs, 10),
     };
   }
@@ -194,7 +212,7 @@ export class MarketingOrchestrator {
         judge: "llm-as-judge-ready",
         memory: "vector-memory-ready",
         audit: "action-audit-ready",
-        storage: process.env.DATABASE_URL ? "mysql-persistence-enabled" : "memory-fallback-mode",
+        storage: agenticRepository.getStorageMode(),
         channels: ["instagram", "whatsapp"],
       },
     };

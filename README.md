@@ -76,8 +76,10 @@ docker build -f infra/Dockerfile -t mmn-ai-to-ai .
 - [Roadmap Agentic de Execução](docs/agentic/ROADMAP_AGENTIC_EXECUCAO.md)
 - [Arquitetura Agentic Alvo](docs/agentic/ARQUITETURA_AGENTIC_ALVO.md)
 - [Operação Agentic, SRE e Compliance](docs/agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md)
+- [Épicos e Issues Detalhadas](docs/agentic/EPICOS_E_ISSUES_AGENTIC.md)
+- [Plano de Execução por Sprint](docs/agentic/PLANO_SPRINTS_AGENTIC.md)
 
-Esses documentos consolidam a evolução recomendada para a camada de autonomia do projeto, com foco em rollout progressivo, preservação do core transacional e critérios objetivos para declarar operação agentic madura.
+Esses documentos consolidam a evolução recomendada para a camada de autonomia do projeto, com foco em rollout progressivo, preservação do core transacional, backlog executável para GitHub Issues/Projects e critérios objetivos para declarar operação agentic madura.
 
 ## Funcionalidades Chave
 - **Sandbox Nexus**: Popule o hub, simule vendas via webhook e force a evolução de rank.

@@ -1,5 +1,13 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-18 — Backlog executável da camada agentic
+
+### `docs(agentic-backlog)` — épicos, issues detalhadas e plano de sprint
+- **Criados** `docs/agentic/EPICOS_E_ISSUES_AGENTIC.md` e `docs/agentic/PLANO_SPRINTS_AGENTIC.md` para transformar a trilha agentic em backlog acionável para GitHub Issues/Projects.
+- **Estruturados** 7 épicos e 24+ issues com título, contexto, critérios de aceite, labels recomendadas, prioridade e ordem de execução.
+- **Convertido** o roadmap em plano sequencial de 8 sprints, respeitando dependências entre estabilização, control plane, governança, observabilidade, integrações externas, compliance e memória.
+- **Atualizado** o `README.md` com links para o backlog detalhado e o plano de execução por sprint.
+
 ## 2026-05-18 — Consolidação documental da camada agentic
 
 ### `docs(agentic)` — roadmap, arquitetura-alvo e operação segura

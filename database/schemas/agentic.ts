@@ -69,9 +69,47 @@ export const agentMemories = mysqlTable(
   }),
 );
 
+export const agentCheckpoints = mysqlTable(
+  "agent_checkpoints",
+  {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    sessionId: varchar("sessionId", { length: 64 }).notNull(),
+    reason: varchar("reason", { length: 128 }).notNull(),
+    snapshot: json("snapshot").$type<Record<string, unknown>>().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    sessionCreatedIdx: index("agent_checkpoints_session_created_idx").on(table.sessionId, table.createdAt),
+    reasonIdx: index("agent_checkpoints_reason_idx").on(table.reason),
+  }),
+);
+
+export const agentQueueJobs = mysqlTable(
+  "agent_queue_jobs",
+  {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    sessionId: varchar("sessionId", { length: 64 }).notNull(),
+    type: varchar("type", { length: 128 }).notNull(),
+    status: mysqlEnum("status", ["queued", "running", "completed", "failed"]).notNull(),
+    payload: json("payload").$type<Record<string, unknown>>().notNull(),
+    result: json("result").$type<Record<string, unknown> | null>(),
+    error: text("error"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    sessionStatusIdx: index("agent_queue_jobs_session_status_idx").on(table.sessionId, table.status),
+    typeIdx: index("agent_queue_jobs_type_idx").on(table.type),
+  }),
+);
+
 export type AgentSession = typeof agentSessions.$inferSelect;
 export type InsertAgentSession = typeof agentSessions.$inferInsert;
 export type AgentActionsAudit = typeof agentActionsAudit.$inferSelect;
 export type InsertAgentActionsAudit = typeof agentActionsAudit.$inferInsert;
 export type AgentMemory = typeof agentMemories.$inferSelect;
 export type InsertAgentMemory = typeof agentMemories.$inferInsert;
+export type AgentCheckpointRow = typeof agentCheckpoints.$inferSelect;
+export type InsertAgentCheckpoint = typeof agentCheckpoints.$inferInsert;
+export type AgentQueueJobRow = typeof agentQueueJobs.$inferSelect;
+export type InsertAgentQueueJob = typeof agentQueueJobs.$inferInsert;

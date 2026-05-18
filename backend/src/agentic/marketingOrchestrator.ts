@@ -7,7 +7,14 @@ import { agentRuntimeQueue } from "./queue";
 import { marketingAgent } from "./agents/marketingAgent";
 import { agenticRepository } from "./repository";
 import { listAgenticTools } from "./tools";
-import type { AgentActionAudit, AgentMemoryRecord, AgenticChannel, AgenticSession } from "./types";
+import type {
+  AgentActionAudit,
+  AgentCheckpoint,
+  AgentMemoryRecord,
+  AgentQueueJob,
+  AgenticChannel,
+  AgenticSession,
+} from "./types";
 
 function mergeById<T extends { id: string }>(primary: T[], secondary: T[], limit: number) {
   const merged = new Map<string, T>();
@@ -17,6 +24,17 @@ function mergeById<T extends { id: string }>(primary: T[], secondary: T[], limit
     }
   }
   return Array.from(merged.values()).slice(0, limit);
+}
+
+function mergeQueueStats(memoryJobs: AgentQueueJob[], persistedJobs: AgentQueueJob[]) {
+  const jobs = mergeById(memoryJobs, persistedJobs, Math.max(memoryJobs.length, persistedJobs.length, 200));
+  return {
+    queued: jobs.filter((job) => job.status === "queued").length,
+    running: jobs.filter((job) => job.status === "running").length,
+    completed: jobs.filter((job) => job.status === "completed").length,
+    failed: jobs.filter((job) => job.status === "failed").length,
+    total: jobs.length,
+  };
 }
 
 export class MarketingOrchestrator {
@@ -68,7 +86,7 @@ export class MarketingOrchestrator {
 
   async runSession(sessionId: string) {
     const memorySession = this.sessions.get(sessionId);
-    const session = memorySession || await agenticRepository.getSession(sessionId);
+    const session = memorySession || (await agenticRepository.getSession(sessionId));
     if (!session) {
       throw new Error(`Sessão agentic ${sessionId} não encontrada.`);
     }
@@ -110,26 +128,29 @@ export class MarketingOrchestrator {
   }
 
   async getSession(sessionId: string) {
-    const session = this.sessions.get(sessionId) || await agenticRepository.getSession(sessionId);
+    const session = this.sessions.get(sessionId) || (await agenticRepository.getSession(sessionId));
     if (!session) return null;
 
     const memoryActions = agentAuditStore.listBySession(sessionId, 20);
     const persistedActions = await agenticRepository.listActionsBySession(sessionId, 20);
     const memoryRecords = vectorMemory.listBySession(sessionId, 10);
     const persistedMemories = await agenticRepository.listMemoriesBySession(sessionId, 10);
+    const memoryCheckpoints = agentCheckpointer.list(sessionId);
+    const persistedCheckpoints = await agenticRepository.listCheckpointsBySession(sessionId, 10);
+    const memoryQueueJobs = agentRuntimeQueue.listBySession(sessionId, 10);
+    const persistedQueueJobs = await agenticRepository.listQueueJobsBySession(sessionId, 10);
 
     return {
       ...session,
       actions: mergeById<AgentActionAudit>(memoryActions, persistedActions, 20),
       memories: mergeById<AgentMemoryRecord>(memoryRecords, persistedMemories, 10),
-      checkpoints: agentCheckpointer.list(sessionId),
-      queueJobs: agentRuntimeQueue.listBySession(sessionId, 10),
+      checkpoints: mergeById<AgentCheckpoint>(memoryCheckpoints, persistedCheckpoints, 10),
+      queueJobs: mergeById<AgentQueueJob>(memoryQueueJobs, persistedQueueJobs, 10),
     };
   }
 
   async listSessions(limit = 10) {
-    const memorySessions = Array.from(this.sessions.values())
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    const memorySessions = Array.from(this.sessions.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     const persistedSessions = await agenticRepository.listSessions(limit);
 
     return mergeById<AgenticSession>(memorySessions, persistedSessions, limit).sort(
@@ -149,14 +170,26 @@ export class MarketingOrchestrator {
       await agenticRepository.listRecentMemories(limit * 3),
       limit * 3,
     );
+    const recentCheckpoints = mergeById<AgentCheckpoint>(
+      agentCheckpointer.listRecent(limit * 3),
+      await agenticRepository.listRecentCheckpoints(limit * 3),
+      limit * 3,
+    );
+    const recentQueueJobs = mergeById<AgentQueueJob>(
+      agentRuntimeQueue.listRecent(limit * 5),
+      await agenticRepository.listRecentQueueJobs(limit * 5),
+      limit * 5,
+    );
 
     return {
       graph: marketingWorkflowGraph,
       tools: listAgenticTools(),
-      queue: agentRuntimeQueue.getStats(),
+      queue: mergeQueueStats(agentRuntimeQueue.listRecent(200), recentQueueJobs),
       sessions,
       recentActions,
       recentMemories,
+      recentCheckpoints,
+      recentQueueJobs,
       readiness: {
         judge: "llm-as-judge-ready",
         memory: "vector-memory-ready",

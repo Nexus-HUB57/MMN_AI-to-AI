@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { agenticRepository } from "./repository";
 import type { AgentCheckpoint } from "./types";
 
 export class AgentCheckpointer {
@@ -16,11 +17,19 @@ export class AgentCheckpointer {
     const existing = this.checkpoints.get(sessionId) || [];
     existing.unshift(checkpoint);
     this.checkpoints.set(sessionId, existing.slice(0, 20));
+    void agenticRepository.insertCheckpoint(checkpoint);
     return checkpoint;
   }
 
   list(sessionId: string): AgentCheckpoint[] {
     return this.checkpoints.get(sessionId) || [];
+  }
+
+  listRecent(limit = 20): AgentCheckpoint[] {
+    return Array.from(this.checkpoints.values())
+      .flat()
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .slice(0, limit);
   }
 }
 

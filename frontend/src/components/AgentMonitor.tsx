@@ -63,6 +63,7 @@ export default function AgentMonitor() {
                 <li>Judge: {monitor.data.readiness.judge}</li>
                 <li>Memory: {monitor.data.readiness.memory}</li>
                 <li>Audit: {monitor.data.readiness.audit}</li>
+                <li>Storage: {monitor.data.readiness.storage}</li>
                 <li>Canais: {monitor.data.readiness.channels.join(", ")}</li>
               </ul>
             ) : (
@@ -168,6 +169,36 @@ export default function AgentMonitor() {
               <p>Sem memórias vetoriais registradas.</p>
             )}
           </div>
+
+          <div className="monitor-card">
+            <h3>Checkpoints recentes</h3>
+            {monitor.data?.recentCheckpoints?.length ? (
+              <ul className="feature-list slim">
+                {monitor.data.recentCheckpoints.slice(0, 6).map((checkpoint) => (
+                  <li key={checkpoint.id}>
+                    <strong>{checkpoint.reason}</strong> • {new Date(checkpoint.createdAt).toLocaleTimeString()}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Sem checkpoints persistidos.</p>
+            )}
+          </div>
+
+          <div className="monitor-card">
+            <h3>Queue jobs recentes</h3>
+            {monitor.data?.recentQueueJobs?.length ? (
+              <ul className="feature-list slim">
+                {monitor.data.recentQueueJobs.slice(0, 6).map((job) => (
+                  <li key={job.id}>
+                    <strong>{job.type}</strong> • {job.status}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Sem jobs agentic registrados.</p>
+            )}
+          </div>
         </div>
 
         {latestSession?.latestDraft ? (
@@ -176,6 +207,7 @@ export default function AgentMonitor() {
             <p><strong>{latestSession.latestDraft.headline}</strong></p>
             <p>{latestSession.latestDraft.body}</p>
             <p><strong>CTA:</strong> {latestSession.latestDraft.cta}</p>
+            <p><strong>Checkpoints:</strong> {latestSession.checkpoints}</p>
             {latestSession.latestDraft.hashtags?.length ? (
               <p><strong>Hashtags:</strong> {latestSession.latestDraft.hashtags.join(" ")}</p>
             ) : null}

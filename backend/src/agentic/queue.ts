@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { agenticRepository } from "./repository";
 import type { AgentQueueJob } from "./types";
 
 export class AgentRuntimeQueue {
@@ -17,6 +18,7 @@ export class AgentRuntimeQueue {
     };
 
     this.jobs.set(job.id, job);
+    void agenticRepository.upsertQueueJob(job);
     return job;
   }
 
@@ -43,6 +45,7 @@ export class AgentRuntimeQueue {
     };
 
     this.jobs.set(jobId, next);
+    void agenticRepository.upsertQueueJob(next);
     return next;
   }
 

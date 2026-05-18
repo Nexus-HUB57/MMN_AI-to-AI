@@ -1,7 +1,19 @@
 import { and, desc, eq, like } from "drizzle-orm";
 import { getDb } from "../database/schemas/db";
-import { agentActionsAudit, agentMemories, agentSessions } from "../database/schemas/schema";
-import type { AgentActionAudit, AgentMemoryRecord, AgenticSession } from "./types";
+import {
+  agentActionsAudit,
+  agentCheckpoints,
+  agentMemories,
+  agentQueueJobs,
+  agentSessions,
+} from "../database/schemas/schema";
+import type {
+  AgentActionAudit,
+  AgentCheckpoint,
+  AgentMemoryRecord,
+  AgentQueueJob,
+  AgenticSession,
+} from "./types";
 
 function toIso(value: unknown) {
   if (!value) return new Date().toISOString();
@@ -59,6 +71,30 @@ function mapMemory(row: typeof agentMemories.$inferSelect): AgentMemoryRecord {
     tags: row.tags || [],
     vector: row.vector || [],
     importance: row.importance || 0,
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+function mapCheckpoint(row: typeof agentCheckpoints.$inferSelect): AgentCheckpoint {
+  return {
+    id: row.id,
+    sessionId: row.sessionId,
+    reason: row.reason,
+    snapshot: (row.snapshot as Record<string, unknown>) || {},
+    createdAt: toIso(row.createdAt),
+  };
+}
+
+function mapQueueJob(row: typeof agentQueueJobs.$inferSelect): AgentQueueJob {
+  return {
+    id: row.id,
+    sessionId: row.sessionId,
+    type: row.type,
+    status: row.status,
+    payload: (row.payload as Record<string, unknown>) || {},
+    result: (row.result as Record<string, unknown>) || undefined,
+    error: row.error || undefined,
     createdAt: toIso(row.createdAt),
     updatedAt: toIso(row.updatedAt),
   };
@@ -176,6 +212,57 @@ export class AgenticRepository {
     }
   }
 
+  async insertCheckpoint(checkpoint: AgentCheckpoint): Promise<void> {
+    const db = await getDb();
+    if (!db) return;
+
+    try {
+      await db.insert(agentCheckpoints).values({
+        id: checkpoint.id,
+        sessionId: checkpoint.sessionId,
+        reason: checkpoint.reason,
+        snapshot: checkpoint.snapshot,
+        createdAt: new Date(checkpoint.createdAt),
+      }).onDuplicateKeyUpdate({
+        set: {
+          reason: checkpoint.reason,
+          snapshot: checkpoint.snapshot,
+        },
+      });
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to insert checkpoint:", error);
+    }
+  }
+
+  async upsertQueueJob(job: AgentQueueJob): Promise<void> {
+    const db = await getDb();
+    if (!db) return;
+
+    try {
+      await db.insert(agentQueueJobs).values({
+        id: job.id,
+        sessionId: job.sessionId,
+        type: job.type,
+        status: job.status,
+        payload: job.payload,
+        result: job.result || null,
+        error: job.error || null,
+        createdAt: new Date(job.createdAt),
+        updatedAt: new Date(job.updatedAt),
+      }).onDuplicateKeyUpdate({
+        set: {
+          status: job.status,
+          payload: job.payload,
+          result: job.result || null,
+          error: job.error || null,
+          updatedAt: new Date(job.updatedAt),
+        },
+      });
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to upsert queue job:", error);
+    }
+  }
+
   async getSession(sessionId: string): Promise<AgenticSession | null> {
     const db = await getDb();
     if (!db) return null;
@@ -207,7 +294,12 @@ export class AgenticRepository {
     if (!db) return [];
 
     try {
-      const rows = await db.select().from(agentActionsAudit).where(eq(agentActionsAudit.sessionId, sessionId)).orderBy(desc(agentActionsAudit.createdAt)).limit(limit);
+      const rows = await db
+        .select()
+        .from(agentActionsAudit)
+        .where(eq(agentActionsAudit.sessionId, sessionId))
+        .orderBy(desc(agentActionsAudit.createdAt))
+        .limit(limit);
       return rows.map(mapAction);
     } catch (error) {
       console.error("[AgenticRepository] Failed to list session actions:", error);
@@ -233,7 +325,12 @@ export class AgenticRepository {
     if (!db) return [];
 
     try {
-      const rows = await db.select().from(agentMemories).where(eq(agentMemories.sessionId, sessionId)).orderBy(desc(agentMemories.createdAt)).limit(limit);
+      const rows = await db
+        .select()
+        .from(agentMemories)
+        .where(eq(agentMemories.sessionId, sessionId))
+        .orderBy(desc(agentMemories.createdAt))
+        .limit(limit);
       return rows.map(mapMemory);
     } catch (error) {
       console.error("[AgenticRepository] Failed to list session memories:", error);
@@ -261,11 +358,83 @@ export class AgenticRepository {
     try {
       const pattern = `%${query}%`;
       const rows = sessionId
-        ? await db.select().from(agentMemories).where(and(eq(agentMemories.sessionId, sessionId), like(agentMemories.content, pattern))).orderBy(desc(agentMemories.importance), desc(agentMemories.createdAt)).limit(limit)
-        : await db.select().from(agentMemories).where(like(agentMemories.content, pattern)).orderBy(desc(agentMemories.importance), desc(agentMemories.createdAt)).limit(limit);
+        ? await db
+            .select()
+            .from(agentMemories)
+            .where(and(eq(agentMemories.sessionId, sessionId), like(agentMemories.content, pattern)))
+            .orderBy(desc(agentMemories.importance), desc(agentMemories.createdAt))
+            .limit(limit)
+        : await db
+            .select()
+            .from(agentMemories)
+            .where(like(agentMemories.content, pattern))
+            .orderBy(desc(agentMemories.importance), desc(agentMemories.createdAt))
+            .limit(limit);
       return rows.map(mapMemory);
     } catch (error) {
       console.error("[AgenticRepository] Failed to search memories:", error);
+      return [];
+    }
+  }
+
+  async listCheckpointsBySession(sessionId: string, limit = 20): Promise<AgentCheckpoint[]> {
+    const db = await getDb();
+    if (!db) return [];
+
+    try {
+      const rows = await db
+        .select()
+        .from(agentCheckpoints)
+        .where(eq(agentCheckpoints.sessionId, sessionId))
+        .orderBy(desc(agentCheckpoints.createdAt))
+        .limit(limit);
+      return rows.map(mapCheckpoint);
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to list checkpoints:", error);
+      return [];
+    }
+  }
+
+  async listRecentCheckpoints(limit = 50): Promise<AgentCheckpoint[]> {
+    const db = await getDb();
+    if (!db) return [];
+
+    try {
+      const rows = await db.select().from(agentCheckpoints).orderBy(desc(agentCheckpoints.createdAt)).limit(limit);
+      return rows.map(mapCheckpoint);
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to list recent checkpoints:", error);
+      return [];
+    }
+  }
+
+  async listQueueJobsBySession(sessionId: string, limit = 20): Promise<AgentQueueJob[]> {
+    const db = await getDb();
+    if (!db) return [];
+
+    try {
+      const rows = await db
+        .select()
+        .from(agentQueueJobs)
+        .where(eq(agentQueueJobs.sessionId, sessionId))
+        .orderBy(desc(agentQueueJobs.createdAt))
+        .limit(limit);
+      return rows.map(mapQueueJob);
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to list session queue jobs:", error);
+      return [];
+    }
+  }
+
+  async listRecentQueueJobs(limit = 50): Promise<AgentQueueJob[]> {
+    const db = await getDb();
+    if (!db) return [];
+
+    try {
+      const rows = await db.select().from(agentQueueJobs).orderBy(desc(agentQueueJobs.createdAt)).limit(limit);
+      return rows.map(mapQueueJob);
+    } catch (error) {
+      console.error("[AgenticRepository] Failed to list queue jobs:", error);
       return [];
     }
   }

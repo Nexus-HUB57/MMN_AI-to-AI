@@ -1,5 +1,13 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-18 — Consolidação documental da camada agentic
+
+### `docs(agentic)` — roadmap, arquitetura-alvo e operação segura
+- **Criados** `docs/agentic/ROADMAP_AGENTIC_EXECUCAO.md`, `docs/agentic/ARQUITETURA_AGENTIC_ALVO.md` e `docs/agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md` para consolidar a evolução da autonomia do sistema com uma visão mais executável e aderente ao estado real do repositório.
+- **Esclarecido** que a visão de autonomia total depende de validação operacional progressiva, preservando o core transacional de MMN, orders, payments e commissions como fonte oficial de verdade.
+- **Documentados** critérios de rollout híbrido -> supervisionado -> autônomo controlado, além de KPIs de autonomia, requisitos mínimos de auditoria, budgets, observabilidade e compliance.
+- **Atualizado** o `README.md` com links para a nova trilha documental agentic.
+
 ## 2026-05-15 — Preparação da Fase 3 com shims de compatibilidade do backend
 
 ### `refactor(backend-compat)` — saneamento do grafo de imports para reintrodução dos routers reais

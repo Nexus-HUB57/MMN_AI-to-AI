@@ -72,6 +72,13 @@ npm run start            # roda backend compilado
 docker build -f infra/Dockerfile -t mmn-ai-to-ai .
 ```
 
+## Documentação de Evolução Agentic
+- [Roadmap Agentic de Execução](docs/agentic/ROADMAP_AGENTIC_EXECUCAO.md)
+- [Arquitetura Agentic Alvo](docs/agentic/ARQUITETURA_AGENTIC_ALVO.md)
+- [Operação Agentic, SRE e Compliance](docs/agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md)
+
+Esses documentos consolidam a evolução recomendada para a camada de autonomia do projeto, com foco em rollout progressivo, preservação do core transacional e critérios objetivos para declarar operação agentic madura.
+
 ## Funcionalidades Chave
 - **Sandbox Nexus**: Popule o hub, simule vendas via webhook e force a evolução de rank.
 - **MMN Engine**: Distribuição de bônus em 5 níveis com compressão dinâmica e auditoria relacional.

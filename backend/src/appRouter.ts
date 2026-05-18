@@ -15,6 +15,9 @@ import { socialRouter } from "./routers/socialRouter";
 import { marketplaceRouter } from "./routers/marketplaceRouter";
 import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
+import { newsletterRouter } from "./routers/newsletterRouter";
+import { cmsRouter } from "./routers/cmsRouter";
+import { billingRouter } from "./routers/billingRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -91,6 +94,9 @@ export const appRouter = router({
         xp: true,
         system: true,
         upgrades: true,
+        newsletter: true,
+        cms: true,
+        billing: true,
       },
     })),
   }),
@@ -264,6 +270,15 @@ export const appRouter = router({
 
   // ============ UPGRADES ROUTER ============
   upgrades: upgradesRouter,
+
+  // ============ NEWSLETTER ROUTER ============
+  newsletter: newsletterRouter,
+
+  // ============ CMS ROUTER ============
+  cms: cmsRouter,
+
+  // ============ BILLING ROUTER ============
+  billing: billingRouter,
 });
 
 export type AppRouter = typeof appRouter;

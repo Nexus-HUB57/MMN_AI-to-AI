@@ -66,7 +66,7 @@ npm run genkit:dev
 
 ### 6. Build de produção
 ```bash
-npm run build            # builda frontend (vite) e backend (tsc)
+npm run build            # builda frontend (vite) e backend (esbuild)
 npm run start            # roda backend compilado
 # ou via Docker:
 docker build -f infra/Dockerfile -t mmn-ai-to-ai .

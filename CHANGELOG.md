@@ -1,5 +1,14 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-18 — Estabilização do build do monorepo
+
+### `fix(build)` — build previsível sem estouro de memória no bootstrap atual
+- **Corrigido** o build do frontend para usar `vite build` diretamente, evitando o acoplamento de typecheck com o backend durante a etapa de empacotamento.
+- **Migrado** o build do backend de `tsc` para `esbuild`, gerando `backend/dist/index.js` com baixo consumo de memória e preservando o `start` em Node.js.
+- **Adicionadas** dependências operacionais ausentes no backend (`aws-sdk`, `sharp`, `node-cron`) e a dependência de build `esbuild`.
+- **Ajustado** `backend/src/services/orchestrator.ts` para consumir o contrato real retornado por `llm-v2` (`response.content`).
+- **Resultado validado** com `npm run build` concluindo com sucesso na raiz do monorepo.
+
 ## 2026-05-18 — Backlog executável da camada agentic
 
 ### `docs(agentic-backlog)` — épicos, issues detalhadas e plano de sprint

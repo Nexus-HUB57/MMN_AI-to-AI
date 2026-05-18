@@ -1,5 +1,78 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-19 — Workers BullMQ + Marketplace Nexus + PIX Middleware
+
+### `feat(workers)` — Workers BullMQ para processamento de saques
+
+**Backend:**
+- **withdrawalProcessingWorker.ts**: Worker dedicado para processamento assíncrono de saques
+  - ProcessaPixJob: Simula envio de PIX via API bancária
+  - Atualiza status do saque para 'processing' → 'completed' ou 'failed'
+  - Registra transação no histórico com todas as informações do PIX
+  - Error handling robusto com exponential backoff
+- **queue.ts atualizado**: Adicionados `withdrawalQueue`, `withdrawalQueueEvents`, `WithdrawalJob` interface e `addWithdrawalJob()` function
+
+### `feat(marketplace)` — Marketplace Nexus (catálogo próprio)
+
+**Database Schema (`database/schemas/marketplace-schema.ts`):**
+- `marketplace_products` — Catálogo de produtos com pricing, estoque, variations
+- `product_categories` — Categorias hierárquicas de produtos
+- `product_variations` — Variações (tamanho, cor, etc)
+- `marketplace_orders` — Pedidos do marketplace com fluxo completo
+- `order_items` — Itens dos pedidos
+- `product_reviews` — Avaliações e reviews de produtos
+- `wishlists` / `wishlist_items` — Listas de desejos
+- `coupons` — Sistema de cupons de desconto (percentage, fixed, free_shipping, buy_x_get_y)
+- `affiliate_marketplace_settings` — Configurações por afiliado
+
+**Backend Router (`marketplaceRouter.ts`):**
+- CRUD completo de produtos, categorias e variações
+- Sistema de pedidos com cupons e validações
+- Reviews com moderação (approved/rejected/flagged)
+- Dashboard de estatísticas admin
+- Validação e aplicação de cupons
+
+### `feat(pix)` — Middleware de integração PIX
+
+**Backend (`backend/src/middleware/pixMiddleware.ts`):**
+- `createPixPayment()` — Gera QR Code PIX com EMV válido
+- `handlePixWebhook()` — Processa webhooks de confirmação
+- `getPixPaymentStatus()` — Consulta status do pagamento
+- `requestPixWithdrawal()` — Solicita saque via PIX
+- `cancelPixPayment()` — Cancela pagamento pendente
+- `generateStaticPixQRCode()` — Gera QR Code para valores fixos
+- `pixWebhookMiddleware()` — Middleware Express para webhooks
+- CRC16 calculation para EMV compliance
+- Geração de TXID (transaction ID de 25 caracteres)
+
+### `feat(frontend)` — Páginas de Calendário e Tracking
+
+**ContentCalendar.tsx:**
+- Visualização semanal e mensal do calendário
+- CRUD completo de posts agendados
+- Filtros por plataforma e status
+- Preview de posts por dia
+- Lista de próximas postagens
+- Dialog para criação/edição de posts
+- Integração com socialRouter
+
+**TrackingDashboard.tsx:**
+- Dashboard completo de Tracking Neural
+- Criação de links rastreáveis com UTM
+- Métricas: cliques, cliques únicos, conversões, receita
+- Análise por plataforma (WhatsApp, Instagram, Facebook, etc)
+- Histórico de conversões
+- Gráficos de performance
+- Estatísticas de conversion rate
+- Links com melhor desempenho
+
+### `chore(routers)` — Registro de novos routers
+
+- `appRouter.ts` atualizado com:
+  - Import de `marketplaceRouter`
+  - Registro de `marketplace: marketplaceRouter`
+- `database/schemas/index.ts` atualizado com export de `banking-schema`, `marketplace-schema`
+
 ## 2026-05-19 — BeYour Banker + Posts Automatizados + Tracking Neural
 
 ### `feat(banking)` — Sistema BeYour Banker implementado

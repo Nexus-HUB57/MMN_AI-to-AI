@@ -12,6 +12,7 @@ import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { paymentsRouter } from "./routers/paymentsRouter";
 import { bankingRouter } from "./routers/bankingRouter";
 import { socialRouter } from "./routers/socialRouter";
+import { marketplaceRouter } from "./routers/marketplaceRouter";
 import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
@@ -254,6 +255,9 @@ export const appRouter = router({
 
   // ============ SOCIAL ROUTER ============
   social: socialRouter,
+
+  // ============ MARKETPLACE ROUTER ============
+  marketplace: marketplaceRouter,
 
   // ============ XP ROUTER ============
   xp: xpRouter,

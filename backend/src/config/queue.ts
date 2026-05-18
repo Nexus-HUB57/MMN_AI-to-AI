@@ -57,12 +57,14 @@ export const contentGenerationQueue = new Queue('content_generation_queue', defa
 export const marketplaceSyncQueue = new Queue('marketplace_sync_queue', defaultQueueConfig);
 export const orderProcessingQueue = new Queue('order_processing_queue', defaultQueueConfig);
 export const commissionProcessingQueue = new Queue('commission_processing_queue', defaultQueueConfig);
+export const withdrawalQueue = new Queue('withdrawal_processing_queue', defaultQueueConfig);
 
 // Criar eventos de fila para monitoramento
 export const contentGenerationQueueEvents = new QueueEvents('content_generation_queue', defaultQueueConfig);
 export const marketplaceSyncQueueEvents = new QueueEvents('marketplace_sync_queue', defaultQueueConfig);
 export const orderProcessingQueueEvents = new QueueEvents('order_processing_queue', defaultQueueConfig);
 export const commissionProcessingQueueEvents = new QueueEvents('commission_processing_queue', defaultQueueConfig);
+export const withdrawalQueueEvents = new QueueEvents('withdrawal_processing_queue', defaultQueueConfig);
 
 // Tipos de jobs
 export interface ContentGenerationJob {
@@ -92,6 +94,16 @@ export interface CommissionProcessingJob {
   amount: number;
   commissionType: 'direct' | 'network' | 'bonus' | 'payment';
   metadata?: Record<string, unknown>;
+}
+
+export interface WithdrawalJob {
+  withdrawalId: number;
+  affiliateId: number;
+  userId: number;
+  amount: number;
+  pixKey: string;
+  pixKeyType: string;
+  holderName: string;
 }
 
 // Função para adicionar job à fila
@@ -136,6 +148,19 @@ export async function addOrderProcessingJob(job: OrderProcessingJob, options?: R
 
 export async function addCommissionProcessingJob(job: CommissionProcessingJob, options?: Record<string, unknown>) {
   return commissionProcessingQueue.add('commission-processing', job, {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: true,
+    removeOnFail: false,
+    ...options,
+  });
+}
+
+export async function addWithdrawalJob(job: WithdrawalJob, options?: Record<string, unknown>) {
+  return withdrawalQueue.add('withdrawal-processing', job, {
     attempts: 3,
     backoff: {
       type: 'exponential',

@@ -16,6 +16,12 @@
 // Re-export all schemas from schema-final as the single source of truth
 export * from "./schema-final";
 
+// Re-export banking, social and tracking schemas
+export * from "./banking-schema";
+
+// Re-export marketplace schema
+export * from "./marketplace-schema";
+
 import { mysqlTable, int, varchar, text, mysqlEnum, timestamp, index, decimal, json, bigint } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 

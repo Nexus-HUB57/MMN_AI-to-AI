@@ -4,6 +4,7 @@ export * from "./audit";
 export * from "./checkpointer";
 export * from "./queue";
 export * from "./marketingOrchestrator";
+export * from "./repository";
 export * from "./memory/vectorMemory";
 export * from "./judge/llmJudge";
 export * from "./tools";

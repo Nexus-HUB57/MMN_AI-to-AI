@@ -5,13 +5,24 @@ import { buildMarketingPlan, marketingWorkflowGraph } from "./graph";
 import { vectorMemory } from "./memory/vectorMemory";
 import { agentRuntimeQueue } from "./queue";
 import { marketingAgent } from "./agents/marketingAgent";
+import { agenticRepository } from "./repository";
 import { listAgenticTools } from "./tools";
-import type { AgenticChannel, AgenticSession } from "./types";
+import type { AgentActionAudit, AgentMemoryRecord, AgenticChannel, AgenticSession } from "./types";
+
+function mergeById<T extends { id: string }>(primary: T[], secondary: T[], limit: number) {
+  const merged = new Map<string, T>();
+  for (const item of [...primary, ...secondary]) {
+    if (!merged.has(item.id)) {
+      merged.set(item.id, item);
+    }
+  }
+  return Array.from(merged.values()).slice(0, limit);
+}
 
 export class MarketingOrchestrator {
   private sessions = new Map<string, AgenticSession>();
 
-  createSession(input: {
+  async createSession(input: {
     userId?: number;
     goal: string;
     audience: string;
@@ -20,7 +31,7 @@ export class MarketingOrchestrator {
     brandVoice?: string;
     constraints?: string[];
     cta?: string;
-  }): AgenticSession {
+  }): Promise<AgenticSession> {
     const now = new Date().toISOString();
     const session: AgenticSession = {
       id: nanoid(),
@@ -44,15 +55,20 @@ export class MarketingOrchestrator {
 
     this.sessions.set(session.id, session);
     agentCheckpointer.save(session.id, "session-created", session as unknown as Record<string, unknown>);
-    this.sessions.set(session.id, {
+
+    const persisted: AgenticSession = {
       ...session,
       checkpoints: agentCheckpointer.list(session.id).length,
-    });
-    return this.sessions.get(session.id)!;
+    };
+
+    this.sessions.set(session.id, persisted);
+    await agenticRepository.upsertSession(persisted);
+    return persisted;
   }
 
   async runSession(sessionId: string) {
-    const session = this.sessions.get(sessionId);
+    const memorySession = this.sessions.get(sessionId);
+    const session = memorySession || await agenticRepository.getSession(sessionId);
     if (!session) {
       throw new Error(`Sessão agentic ${sessionId} não encontrada.`);
     }
@@ -63,6 +79,7 @@ export class MarketingOrchestrator {
       updatedAt: new Date().toISOString(),
     };
     this.sessions.set(sessionId, queuedSession);
+    await agenticRepository.upsertSession(queuedSession);
 
     const runningSession: AgenticSession = {
       ...queuedSession,
@@ -70,9 +87,11 @@ export class MarketingOrchestrator {
       updatedAt: new Date().toISOString(),
     };
     this.sessions.set(sessionId, runningSession);
+    await agenticRepository.upsertSession(runningSession);
 
     const result = await marketingAgent.runCampaign(runningSession);
     this.sessions.set(sessionId, result.session);
+    await agenticRepository.upsertSession(result.session);
     return result;
   }
 
@@ -86,47 +105,85 @@ export class MarketingOrchestrator {
     constraints?: string[];
     cta?: string;
   }) {
-    const session = this.createSession(input);
+    const session = await this.createSession(input);
     return this.runSession(session.id);
   }
 
-  getSession(sessionId: string) {
-    const session = this.sessions.get(sessionId);
+  async getSession(sessionId: string) {
+    const session = this.sessions.get(sessionId) || await agenticRepository.getSession(sessionId);
     if (!session) return null;
+
+    const memoryActions = agentAuditStore.listBySession(sessionId, 20);
+    const persistedActions = await agenticRepository.listActionsBySession(sessionId, 20);
+    const memoryRecords = vectorMemory.listBySession(sessionId, 10);
+    const persistedMemories = await agenticRepository.listMemoriesBySession(sessionId, 10);
+
     return {
       ...session,
-      actions: agentAuditStore.listBySession(sessionId, 20),
-      memories: vectorMemory.listBySession(sessionId, 10),
+      actions: mergeById<AgentActionAudit>(memoryActions, persistedActions, 20),
+      memories: mergeById<AgentMemoryRecord>(memoryRecords, persistedMemories, 10),
       checkpoints: agentCheckpointer.list(sessionId),
       queueJobs: agentRuntimeQueue.listBySession(sessionId, 10),
     };
   }
 
-  listSessions(limit = 10) {
-    return Array.from(this.sessions.values())
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-      .slice(0, limit);
+  async listSessions(limit = 10) {
+    const memorySessions = Array.from(this.sessions.values())
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    const persistedSessions = await agenticRepository.listSessions(limit);
+
+    return mergeById<AgenticSession>(memorySessions, persistedSessions, limit).sort(
+      (a, b) => b.createdAt.localeCompare(a.createdAt),
+    );
   }
 
-  getMonitor(limit = 5) {
+  async getMonitor(limit = 5) {
+    const sessions = await this.listSessions(limit);
+    const recentActions = mergeById<AgentActionAudit>(
+      agentAuditStore.listRecent(limit * 3),
+      await agenticRepository.listRecentActions(limit * 3),
+      limit * 3,
+    );
+    const recentMemories = mergeById<AgentMemoryRecord>(
+      vectorMemory.listRecent(limit * 3),
+      await agenticRepository.listRecentMemories(limit * 3),
+      limit * 3,
+    );
+
     return {
       graph: marketingWorkflowGraph,
       tools: listAgenticTools(),
       queue: agentRuntimeQueue.getStats(),
-      sessions: this.listSessions(limit),
-      recentActions: agentAuditStore.listRecent(limit * 3),
-      recentMemories: vectorMemory.listRecent(limit * 3),
+      sessions,
+      recentActions,
+      recentMemories,
       readiness: {
         judge: "llm-as-judge-ready",
         memory: "vector-memory-ready",
         audit: "action-audit-ready",
+        storage: process.env.DATABASE_URL ? "mysql-persistence-enabled" : "memory-fallback-mode",
         channels: ["instagram", "whatsapp"],
       },
     };
   }
 
-  searchMemories(query: string, sessionId?: string, limit = 5) {
-    return vectorMemory.search(sessionId, query, limit);
+  async searchMemories(query: string, sessionId?: string, limit = 5) {
+    const vectorResults = vectorMemory.search(sessionId, query, limit);
+    const persistedResults = await agenticRepository.searchMemories(query, sessionId, limit);
+
+    const merged = mergeById<AgentMemoryRecord & { similarity?: number }>(vectorResults, persistedResults, limit)
+      .map((item) => ({
+        ...item,
+        similarity: typeof item.similarity === "number" ? item.similarity : undefined,
+      }))
+      .sort((a, b) => {
+        const simA = typeof a.similarity === "number" ? a.similarity : -1;
+        const simB = typeof b.similarity === "number" ? b.similarity : -1;
+        if (simB === simA) return (b.importance || 0) - (a.importance || 0);
+        return simB - simA;
+      });
+
+    return merged.slice(0, limit);
   }
 }
 

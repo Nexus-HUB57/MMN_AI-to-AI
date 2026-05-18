@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { agenticRepository } from "./repository";
 import type { AgentActionAudit, AgenticActionStatus, AgenticJudgeVerdict } from "./types";
 
 export class AgentAuditStore {
@@ -24,6 +25,7 @@ export class AgentAuditStore {
     };
 
     this.actions.set(action.id, action);
+    void agenticRepository.upsertAction(action);
     return action;
   }
 
@@ -41,6 +43,7 @@ export class AgentAuditStore {
     };
 
     this.actions.set(actionId, next);
+    void agenticRepository.upsertAction(next);
     return next;
   }
 

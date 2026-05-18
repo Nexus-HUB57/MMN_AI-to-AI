@@ -5,19 +5,19 @@ import { marketingOrchestrator } from "../agentic/marketingOrchestrator";
 export const agenticRouter = router({
   getMonitor: publicProcedure
     .input(z.object({ limit: z.number().min(1).max(20).default(5) }).optional())
-    .query(({ input }) => {
+    .query(async ({ input }) => {
       return marketingOrchestrator.getMonitor(input?.limit || 5);
     }),
 
   listSessions: publicProcedure
     .input(z.object({ limit: z.number().min(1).max(50).default(10) }).optional())
-    .query(({ input }) => {
+    .query(async ({ input }) => {
       return marketingOrchestrator.listSessions(input?.limit || 10);
     }),
 
   getSession: publicProcedure
     .input(z.object({ sessionId: z.string() }))
-    .query(({ input }) => {
+    .query(async ({ input }) => {
       return marketingOrchestrator.getSession(input.sessionId);
     }),
 
@@ -29,7 +29,7 @@ export const agenticRouter = router({
         limit: z.number().min(1).max(20).default(5).optional(),
       }),
     )
-    .query(({ input }) => {
+    .query(async ({ input }) => {
       return marketingOrchestrator.searchMemories(input.query, input.sessionId, input.limit || 5);
     }),
 
@@ -46,7 +46,7 @@ export const agenticRouter = router({
         cta: z.string().optional(),
       }),
     )
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       return marketingOrchestrator.createSession({
         ...input,
         userId: input.userId || ctx.user?.id,

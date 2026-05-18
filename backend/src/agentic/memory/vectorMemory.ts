@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { agenticRepository } from "../repository";
 import type { AgentMemoryRecord } from "../types";
 
 const VECTOR_SIZE = 12;
@@ -59,6 +60,7 @@ export class VectorMemoryStore {
     };
 
     this.memories.set(memory.id, memory);
+    void agenticRepository.upsertMemory(memory);
     return memory;
   }
 

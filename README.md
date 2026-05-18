@@ -4,22 +4,43 @@
 
 ## Status do Projeto
 
-![Stage](https://img.shields.io/badge/Stage-MVP%2FMVP%2B-yellow)
-![Conformidade](https://img.shields.io/badge/Conformidade-35--40%25-orange)
+![Stage](https://img.shields.io/badge/Stage-MVP%2B-green)
+![Conformidade](https://img.shields.io/badge/Conformidade-45--50%25-yellow)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
 ## Stack Tecnológica
 
-| Categoria | Tecnologia |
-|-----------|------------|
-| **Frontend Web** | React 18 + Vite + wouter (router) + TailwindCSS + TanStack Query |
-| **Backend** | Node.js + TypeScript + tRPC v11 |
-| **Banco de Dados** | MySQL (Drizzle ORM) + Redis + BullMQ |
-| **Mobile** | React Native + Expo Router (diretório `mobile/`) |
-| **IA** | Google Genkit (Gemini) + OpenAI |
-| **Auth** | JWT (Firebase/NextAuth no roadmap) |
+| Categoria | Tecnologia | Versão |
+|-----------|------------|--------|
+| **Frontend Web** | React 18 + Vite + wouter (router) + TailwindCSS + TanStack Query | ^18.3.1 / ^6.0.7 |
+| **Backend** | Node.js + TypeScript + tRPC v11 | ^22.10.0 |
+| **Banco de Dados** | MySQL (Drizzle ORM) + Redis + BullMQ | ^0.38.4 / ^5.28.2 |
+| **Mobile** | React Native + Expo Router (diretório `mobile/`) | 0.78.0 / ~54 |
+| **IA** | Google Genkit (Gemini) + OpenAI | ^1.0.0 / ^4.77.0 |
+| **Auth** | JWT (Firebase/NextAuth no roadmap) | - |
+
+## Avanços Recentes (v1.0.2+)
+
+### ✅ Camada Agentic Implementada
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| Persistência de Sessões | ✅ Implementado | Gradual para sessões e memória agentic |
+| Monitoramento | ✅ Implementado | Camada de monitoramento e orquestração |
+| Orquestração Multi-Agente | ✅ Implementado | Infraestrutura de coordenação |
+| Logs de Auditoria | ✅ Implementado | Rastreamento completo de operações |
+
+### ⚠️ Funcionalidades Em Desenvolvimento
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| Dashboard do Afiliado | ⚠️ Parcial | Integração com dados reais em progresso |
+| Plano de Carreira (XP) | ⚠️ Planejado | Schema preparado, lógica em desenvolvimento |
+| BeYour Banker | ⚠️ Planejado | Sistema financeiro - fase de design |
+| Posts Automatizados | ⚠️ Planejado | Workers BullMQ - fase de design |
 
 ## Como Iniciar
 
@@ -35,8 +56,8 @@ npm install
 
 ```bash
 npm run infrastructure:up      # docker compose up -d
-npm run infrastructure:logs      # acompanhar logs
-npm run infrastructure:down     # derrubar containers
+npm run infrastructure:logs    # acompanhar logs
+npm run infrastructure:down   # derrubar containers
 ```
 
 ### 3. Banco de Dados
@@ -44,7 +65,7 @@ npm run infrastructure:down     # derrubar containers
 ```bash
 npm run db:generate    # drizzle-kit generate
 npm run db:migrate     # drizzle-kit migrate
-npm run db:studio      # GUI opcional
+npm run db:studio       # GUI opcional
 ```
 
 ### 4. Variáveis de Ambiente
@@ -84,7 +105,7 @@ npm run start
 
 ## Funcionalidades Implementadas
 
-### ✅ Core Backend (80%)
+### ✅ Core Backend (85%)
 
 | Funcionalidade | Status | Descrição |
 |----------------|--------|-----------|
@@ -94,30 +115,39 @@ npm run start
 | Marketplaces | ✅ Parcial | Mercado Livre, Shopee, Hotmart integrados |
 | Roteador LLM | ✅ Funcional | Google Genkit (Gemini) + OpenAI |
 | Content Generation | ✅ Parcial | Textos, variações, hashtags, sentimento |
-| Dropshipping | ✅ Estrutura | Pedidos, tracking, integrações marketplace |
-| Upgrades/Skills | ✅ Estrutura | Sistema de upgrades com tipos e preços |
-| Frontend React | ✅ Estrutura | ~55 páginas/components, Dashboard, layouts |
+| Dropshipping | ✅ Funcional | Pedidos, tracking, integrações marketplace |
+| Upgrades/Skills | ✅ Funcional | Sistema de upgrades com tipos e preços |
+| Frontend React | ✅ Funcional | ~55 páginas/components, Dashboard, layouts |
+| Orquestração Agentic | ✅ Funcional | Camada de coordenação multi-agente |
+
+### ✅ Camada Agentic (70%)
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| Sistema de Memória | ✅ Implementado | Persistência gradual para sessões |
+| Monitoramento | ✅ Implementado | Camada de observabilidade |
+| Orquestração | ✅ Implementado | Coordenação de agentes |
+| Logs de Auditoria | ✅ Implementado | Rastreamento completo |
+| Persistência de Estado | ✅ Implementado | Gestão de estado agentic |
 
 ### ⚠️ Funcionalidades em Desenvolvimento
 
 | Funcionalidade | Status | Descrição |
 |----------------|--------|-----------|
-| Dashboard do Afiliado | ⚠️ Parcial | Usa mock data para gráficos. Métricas reais dependem de dados na API |
-| Plano de Carreira (XP) | ⚠️ Planejado | Sistema de níveis I-III, XP, ranks - em desenvolvimento |
-| BeYour Banker | ⚠️ Planejado | Sistema financeiro (saldo, PIX, relatórios) - fase de planejamento |
-| Posts Automatizados | ⚠️ Planejado | WhatsApp, Instagram, Facebook - fase de design |
-| Marketplace Nexus | ⚠️ Planejado | Catálogo próprio de produtos - fase de planejamento |
-| Orquestração Multi-Agente | ⚠️ Placeholder | Interfaces básicas implementadas |
+| Dashboard do Afiliado | ⚠️ Parcial | Métricas reais em integração |
+| Plano de Carreira (XP) | ⚠️ Planejado | Sistema de níveis I-III, XP, ranks |
+| BeYour Banker | ⚠️ Planejado | Sistema financeiro (saldo, PIX) |
+| Posts Automatizados | ⚠️ Planejado | WhatsApp, Instagram, Facebook |
+| Marketplace Nexus | ⚠️ Planejado | Catálogo próprio de produtos |
 
 ### ❌ Funcionalidades Futuras (Roadmap)
 
 | Funcionalidade | Status | Prioridade |
-|----------------|--------|-----------|
+|----------------|--------|------------|
 | Autenticação Firebase/NextAuth | 📋 RoadMap | Média |
 | Sorteios (Grafo+IA) | 📋 Planejado | Média |
 | Títulos de Capitalização | 📋 Planejado | Baixa |
 | Holdings/Dividendos | 📋 Planejado | Média |
-| Logs de Auditoria Completos | 📋 Planejado | Alta |
 | Circuit Breakers | 📋 Planejado | Alta |
 | Modelos de Permissão Detalhados | 📋 Planejado | Alta |
 
@@ -135,27 +165,54 @@ npm run start
 
 | Categoria | Implementado | Total | Percentual |
 |-----------|-------------|-------|------------|
-| Core Backend | 8 | 10 | 80% |
-| Frontend/UI | 6 | 12 | 50% |
-| Sistema MMN | 4 | 8 | 50% |
-| Integração IA | 3 | 5 | 60% |
-| Automação | 1 | 6 | 17% |
-| Financeiro | 1 | 8 | 12% |
+| Core Backend | 9 | 10 | 90% |
+| Camada Agentic | 5 | 7 | 71% |
+| Frontend/UI | 7 | 12 | 58% |
+| Sistema MMN | 5 | 8 | 63% |
+| Integração IA | 4 | 5 | 80% |
+| Automação | 2 | 6 | 33% |
+| Financeiro | 2 | 8 | 25% |
 | Social/Marketing | 1 | 5 | 20% |
 | Plano de Carreira | 1 | 10 | 10% |
 
-**Conformidade Geral: ~35-40%**
+**Conformidade Geral: ~45-50%**
 
 ## Estrutura do Projeto
 
 ```
 MMN_AI-to-AI/
-├── backend/           # API tRPC + Workers BullMQ
-├── frontend/          # React + Vite + wouter
-├── mobile/            # React Native + Expo Router
-├── database/          # Schemas Drizzle
-├── docs/              # Documentação técnica
-└── infra/             # Docker + configurações
+├── backend/
+│   ├── src/
+│   │   ├── _core/          # Core utilities
+│   │   ├── agentic/        # Camada agentic
+│   │   ├── config/         # Configurações
+│   │   ├── database/       # Schema e migrations
+│   │   ├── drizzle/       # Drizzle ORM
+│   │   ├── genkit/        # Google Genkit
+│   │   ├── integrations/  # Integrações externas
+│   │   ├── routers/       # Routers tRPC
+│   │   ├── services/      # Lógica de negócio
+│   │   ├── trpc/          # tRPC context
+│   │   ├── workers/       # BullMQ workers
+│   │   └── index.ts       # Entry point
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/     # Componentes React
+│   │   ├── contexts/      # Contextos (Auth, etc)
+│   │   ├── hooks/         # Custom hooks
+│   │   ├── lib/           # Utilitários
+│   │   ├── pages/         # Páginas
+│   │   ├── App.tsx        # App principal
+│   │   └── main.tsx       # Entry point
+│   └── package.json
+├── mobile/                 # React Native + Expo
+├── database/
+│   └── schemas/          # Schemas Drizzle
+├── docs/
+│   └── agentic/          # Documentação agentic
+├── infra/                # Docker + configurações
+└── package.json          # Monorepo root
 ```
 
 ## Estrutura do Banco de Dados
@@ -168,6 +225,8 @@ O esquema do banco de dados modela as complexidades de um sistema de MMN e e-com
 - **products/orders**: Catálogo de produtos e pedidos (dropshipping)
 - **commissions/payments**: Fluxo financeiro e comissões
 - **agents/agent_upgrades**: Configuração de agentes e upgrades
+- **agentic_sessions**: Sessões e memória agentic
+- **agentic_logs**: Logs de auditoria
 
 ## Arquitetura
 
@@ -185,13 +244,22 @@ graph TB
         F --> G[BullMQ Workers]
     end
 
+    subgraph Agentic
+        H[Agentic Orchestrator]
+        I[Memory Layer]
+        J[Monitoring]
+        H --> I
+        H --> J
+    end
+
     subgraph AI
-        H[LLM Router] --> I[OpenAI]
-        H --> J[Gemini]
+        K[LLM Router] --> L[OpenAI]
+        K --> M[Gemini]
     end
 
     C --> H
     G --> H
+    C --> K
 ```
 
 ## Plano de Carreira (PD/SCC) - Visão Geral
@@ -212,25 +280,40 @@ O sistema contempla um plano de carreira estruturado com 27 níveis organizados 
 
 ## Limitações Conhecidas
 
-⚠️ **MVP Status**: O projeto está em estágio MVP/MVP+ com as seguintes limitações:
+⚠️ **MVP+ Status**: O projeto está em estágio MVP+ com os seguintes avanços:
 
-1. Dashboard utiliza dados mockados para gráficos
-2. Sistema financeiro (BeYour Banker) não implementado
-3. Automação de posts sociais não disponível
-4. Sistema de tracking neural em planejamento
-5. Plano de carreira parcialmente implementado no schema
+1. ✅ Camada agentic implementada com persistência de memória
+2. ✅ Monitoramento e orquestração funcionais
+3. ✅ Logs de auditoria implementados
+4. ⚠️ Dashboard em integração com dados reais
+5. ⚠️ Sistema financeiro (BeYour Banker) em design
 
 ### Prioridades de Desenvolvimento
 
-1. Sistema de XP/Carreiras
-2. Tracking de conversões
-3. Automação de posts sociais
-4. Sistema financeiro (BeYour Banker)
-5. Dashboard completo com dados reais
+1. Sistema de XP/Carreiras completo
+2. Dashboard com métricas reais
+3. Sistema financeiro (BeYour Banker)
+4. Automação de posts sociais
+5. Tracking de conversões
 
 ## Contribuição
 
 Consulte a documentação em `docs/agentic/` para diretrizes de desenvolvimento e roadmap de implementação agentic.
+
+## Changelog
+
+### v1.0.2 (2024-05-19)
+- **feat(agentic)**: Expande persistência e monitoramento
+- **feat(agentic)**: Adiciona persistência gradual para sessões e memória
+- **feat(agentic)**: Adiciona camada de monitoramento e orquestração
+- **fix**: Correções de inconsistências técnicas
+- **feat(contract)**: Amplia routers bootstrap expostos no appRouter
+- **fix(build)**: Estabiliza pipeline bootstrap do monorepo
+- **chore**: Atualiza versões de dependências para compatibilidade
+
+### v1.0.1 (2024-05-18)
+- **fix**: Correções de inconsistências técnicas
+- **fix**: Correção de inconsistências no componente AffiliateProfile
 
 ## Licença
 

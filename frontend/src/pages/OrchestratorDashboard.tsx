@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import AgentMonitor from "../components/AgentMonitor";
 import { trpc } from "../lib/trpc";
 
 export default function OrchestratorDashboard() {
@@ -200,6 +201,8 @@ export default function OrchestratorDashboard() {
           )}
         </article>
       </section>
+
+      <AgentMonitor />
 
       {/* Quick Stats */}
       <section className="grid">

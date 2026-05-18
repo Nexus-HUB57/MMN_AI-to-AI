@@ -1,4 +1,5 @@
 import { publicProcedure, router } from "./trpc/trpc";
+import { agenticRouter } from "./routers/agenticRouter";
 import { agentsRouter } from "./routers/agentsRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { contentGenerationRouter } from "./routers/contentGenerationRouter";
@@ -34,6 +35,7 @@ export const appRouter = router({
         "AI Content Hub",
         "MMN Engine",
         "Agent Management",
+        "Agentic Marketing Layer",
         "Marketplace Integration",
         "Commission Tracking",
         "Social Media Scheduling",
@@ -42,6 +44,7 @@ export const appRouter = router({
       ],
       notes: [
         "Core transacional preservado e camada agentic em evolução incremental.",
+        "Graph agentic com queue runtime, LLM-as-Judge, audit trail e vector memory já expostos via tRPC.",
         "Fila de orquestração e dashboards administrativos já disponíveis para expansão gradual.",
         "Autonomia plena depende de policy, observabilidade e validação operacional em produção.",
       ],
@@ -70,6 +73,7 @@ export const appRouter = router({
       backend: "express-trpc-ready",
       genkit: "configured",
       routers: {
+        agentic: true,
         agents: true,
         aiContentHub: true,
         content: true,
@@ -85,6 +89,9 @@ export const appRouter = router({
       },
     })),
   }),
+
+  // ============ AGENTIC ROUTER ============
+  agentic: agenticRouter,
 
   // ============ AGENTS ROUTER ============
   agents: router({

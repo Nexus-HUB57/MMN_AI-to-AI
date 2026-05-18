@@ -10,6 +10,7 @@ import {
 import { sql } from "drizzle-orm";
 
 export * from "../../../database/schemas/schema-final";
+export * from "../../../database/schemas/agentic";
 
 export const marketplaceAccounts = mysqlTable(
   "marketplace_accounts",

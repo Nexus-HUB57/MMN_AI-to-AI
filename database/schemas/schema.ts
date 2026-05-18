@@ -1,5 +1,6 @@
 import { decimal, int, json, mysqlEnum, mysqlTable, text, timestamp, varchar, index } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
+export * from "./agentic";
 
 /**
  * Core user table backing auth flow.

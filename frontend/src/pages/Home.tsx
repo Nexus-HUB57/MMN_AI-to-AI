@@ -64,6 +64,7 @@ export default function Home() {
               <div><dt>genkit</dt><dd>{bootstrapStatus.data.genkit}</dd></div>
               {bootstrapStatus.data.routers && (
                 <>
+                  <div><dt>agentic</dt><dd>{bootstrapStatus.data.routers.agentic ? "✓" : "✗"}</dd></div>
                   <div><dt>agents</dt><dd>{bootstrapStatus.data.routers.agents ? "✓" : "✗"}</dd></div>
                   <div><dt>aiContentHub</dt><dd>{bootstrapStatus.data.routers.aiContentHub ? "✓" : "✗"}</dd></div>
                   <div><dt>content</dt><dd>{bootstrapStatus.data.routers.content ? "✓" : "✗"}</dd></div>
@@ -88,6 +89,7 @@ export default function Home() {
           <h2>Funcionalidades Principais</h2>
           <ul className="feature-list">
             <li>🧠 Agentes IA autônomos com aprendizado contínuo</li>
+            <li>🛰️ Agent Monitor com graph agentic, audit trail e memory search</li>
             <li>📊 Engine MMN com comissões em cascata</li>
             <li>🤖 AI Content Hub para geração de conteúdo</li>
             <li>🎭 Sistema Orquestrador multi-agente</li>

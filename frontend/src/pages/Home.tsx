@@ -1,6 +1,24 @@
 import { Link } from "wouter";
 import { trpc } from "../lib/trpc";
 
+const benchmarkLinks = [
+  {
+    title: "Landing pública legado",
+    href: "https://demo.br20.net/marketing/",
+    description: "Referência comercial com apelo de aquisição, benefícios e CTA principal.",
+  },
+  {
+    title: "Espaço do cliente legado",
+    href: "https://demo.br20.net/marketing/painel/",
+    description: "Entrada do associado com login, cadastro e recuperação de senha.",
+  },
+  {
+    title: "Espaço do administrador legado",
+    href: "https://demo.br20.net/marketing/adm/",
+    description: "Backoffice administrativo denso com módulos operacionais e financeiros.",
+  },
+];
+
 export default function Home() {
   const systemInfo = trpc.system.info.useQuery();
   const bootstrapStatus = trpc.bootstrap.status.useQuery();
@@ -11,13 +29,13 @@ export default function Home() {
         <span className="pill">Sistema Ativo</span>
         <h1>MMN AI-to-AI</h1>
         <p className="lead">
-          Ecossistema de Marketing Multinível orquestrado por agentes de IA autônomos.
-          Backend Express + tRPC v11 com routers completos.
+          Ecossistema de marketing multinível com backoffice operacional, monitoramento agentic
+          e trilha de modernização orientada pelo legado Marketing 11.0.
         </p>
 
         <div className="cta-row">
           <Link href="/dashboard" className="btn btn-primary">
-            Abrir Dashboard
+            Abrir Backoffice
           </Link>
           <Link href="/content-hub" className="btn btn-secondary">
             AI Content Hub
@@ -25,12 +43,15 @@ export default function Home() {
           <Link href="/orchestrator" className="btn btn-secondary">
             Orquestrador
           </Link>
+          <Link href="/legacy-review" className="btn btn-secondary">
+            Revisão do legado
+          </Link>
         </div>
       </section>
 
       <section className="grid">
         <article className="panel">
-          <h2>Estado do Sistema</h2>
+          <h2>Estado do sistema</h2>
           {systemInfo.isLoading ? <p>Consultando system.info...</p> : null}
           {systemInfo.error ? <p className="error">{systemInfo.error.message}</p> : null}
           {systemInfo.data ? (
@@ -44,7 +65,9 @@ export default function Home() {
                   <dt>features</dt>
                   <dd>
                     <ul className="feature-list">
-                      {systemInfo.data.features.map((f: string) => <li key={f}>{f}</li>)}
+                      {systemInfo.data.features.map((feature: string) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
                     </ul>
                   </dd>
                 </div>
@@ -54,7 +77,7 @@ export default function Home() {
         </article>
 
         <article className="panel">
-          <h2>Routers Ativos</h2>
+          <h2>Routers ativos</h2>
           {bootstrapStatus.isLoading ? <p>Consultando bootstrap.status...</p> : null}
           {bootstrapStatus.error ? <p className="error">{bootstrapStatus.error.message}</p> : null}
           {bootstrapStatus.data ? (
@@ -67,15 +90,9 @@ export default function Home() {
                   <div><dt>agentic</dt><dd>{bootstrapStatus.data.routers.agentic ? "✓" : "✗"}</dd></div>
                   <div><dt>agents</dt><dd>{bootstrapStatus.data.routers.agents ? "✓" : "✗"}</dd></div>
                   <div><dt>aiContentHub</dt><dd>{bootstrapStatus.data.routers.aiContentHub ? "✓" : "✗"}</dd></div>
-                  <div><dt>content</dt><dd>{bootstrapStatus.data.routers.content ? "✓" : "✗"}</dd></div>
                   <div><dt>dashboard</dt><dd>{bootstrapStatus.data.routers.dashboard ? "✓" : "✗"}</dd></div>
-                  <div><dt>dropshipping</dt><dd>{bootstrapStatus.data.routers.dropshipping ? "✓" : "✗"}</dd></div>
-                  <div><dt>logs</dt><dd>{bootstrapStatus.data.routers.logs ? "✓" : "✗"}</dd></div>
-                  <div><dt>marketplaces</dt><dd>{bootstrapStatus.data.routers.marketplaces ? "✓" : "✗"}</dd></div>
-                  <div><dt>mmn</dt><dd>{bootstrapStatus.data.routers.mmn ? "✓" : "✗"}</dd></div>
                   <div><dt>orchestration</dt><dd>{bootstrapStatus.data.routers.orchestration ? "✓" : "✗"}</dd></div>
                   <div><dt>payments</dt><dd>{bootstrapStatus.data.routers.payments ? "✓" : "✗"}</dd></div>
-                  <div><dt>system</dt><dd>{bootstrapStatus.data.routers.system ? "✓" : "✗"}</dd></div>
                   <div><dt>upgrades</dt><dd>{bootstrapStatus.data.routers.upgrades ? "✓" : "✗"}</dd></div>
                 </>
               )}
@@ -85,18 +102,41 @@ export default function Home() {
       </section>
 
       <section className="grid">
+        <article className="panel full-width">
+          <h2>Arquitetura inspirada no legado</h2>
+          <div className="reference-grid three-col">
+            {benchmarkLinks.map((item) => (
+              <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className="reference-card">
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </a>
+            ))}
+          </div>
+        </article>
+      </section>
+
+      <section className="grid">
         <article className="panel">
-          <h2>Funcionalidades Principais</h2>
+          <h2>Funcionalidades principais</h2>
           <ul className="feature-list">
             <li>🧠 Agentes IA autônomos com aprendizado contínuo</li>
-            <li>🛰️ Agent Monitor com graph agentic, audit trail e memory search</li>
+            <li>🛰️ Agent Monitor com graph, audit trail, checkpoints e memory search</li>
             <li>📊 Engine MMN com comissões em cascata</li>
             <li>🤖 AI Content Hub para geração de conteúdo</li>
-            <li>🎭 Sistema Orquestrador multi-agente</li>
-            <li>🛒 Integração com marketplaces (Hotmart, Mercado Livre, Shopee)</li>
-            <li>📅 Agendamento de posts em múltiplas plataformas</li>
-            <li>💰 Sistema de pagamentos PIX via API PSP</li>
-            <li>📈 Dashboard analítico em tempo real</li>
+            <li>🎭 Sistema orquestrador multiagente</li>
+            <li>🛒 Integração com marketplaces</li>
+            <li>📅 Agendamento de posts e automações</li>
+            <li>💰 Pagamentos e trilha financeira operacional</li>
+          </ul>
+        </article>
+
+        <article className="panel">
+          <h2>Próximas frentes de ajuste</h2>
+          <ul className="feature-list">
+            <li>Modernizar as entradas de associado e administrador.</li>
+            <li>Expandir o backoffice para módulos inspirados no menu legado.</li>
+            <li>Conectar persistência agentic a MySQL e filas reais.</li>
+            <li>Adicionar observabilidade operacional para rede e pagamentos.</li>
           </ul>
         </article>
       </section>

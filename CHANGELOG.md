@@ -1,5 +1,50 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-19 — BeYour Banker + Posts Automatizados + Tracking Neural
+
+### `feat(banking)` — Sistema BeYour Banker implementado
+
+**Backend:**
+- **Novo schema**: `database/schemas/banking-schema.ts` com tabelas:
+  - `bank_accounts` — Contas bancárias com PIX
+  - `affiliate_balances` — Saldo disponível, pendente e bloqueado
+  - `withdrawal_requests` — Solicitações de saque com workflow completo
+  - `transaction_history` — Histórico completo de transações financeiras
+  - `monthly_reports` — Relatórios mensais de earnings
+  - `social_accounts` — Contas sociais vinculadas (WhatsApp, Instagram, Facebook)
+  - `content_calendar` — Calendário de posts automatizados
+  - `tracking_links` — Links de rastreamento com UTM
+  - `conversion_events` — Eventos de conversão por tracking
+  - `affiliate_performance` — Métricas de performance por afiliado
+- **Novo router**: `backend/src/routers/bankingRouter.ts` com endpoints:
+  - `listBankAccounts`, `addBankAccount`, `setPrimaryBankAccount`, `deleteBankAccount`
+  - `getBalance`, `requestWithdrawal`, `listWithdrawals`, `getWithdrawalDetails`
+  - `getTransactionHistory`, `getMonthlyReport`, `listMonthlyReports`
+  - Admin: `adminListPendingWithdrawals`, `adminApproveWithdrawal`, `adminRejectWithdrawal`, `adminProcessWithdrawal`
+- **Validação de CPF** implementada no backend
+- **Cálculo de taxa de 2%** em saques
+
+**Frontend:**
+- **Payments.tsx atualizado**: Interface completa do BeYour Banker com:
+  - Abas: Saldo, Contas, Sacar, Histórico
+  - Cards de saldo (disponível, pendente, total)
+  - Formulário de cadastro de conta bancária
+  - Solicitação de saque com cálculo de taxa em tempo real
+  - Lista de saques com badges de status
+  - Histórico de transações com ícones por tipo
+
+### `feat(social)` — Sistema de Posts Automatizados
+
+- **socialRouter.ts**: Router completo para automação social:
+  - `listSocialAccounts`, `addSocialAccount`, `updateSocialAccountStatus`, `removeSocialAccount`
+  - `listScheduledPosts`, `createScheduledPost`, `updateScheduledPost`, `cancelScheduledPost`
+  - `getPostStats`, `getPeakHours`
+- **Tracking Neural**:
+  - `createTrackingLink`, `listTrackingLinks`, `getLinkMetrics`
+  - `registerConversion` — Registra cliques, visualizações, cadastros e compras
+  - `getPerformance` — Métricas de performance do afiliado
+- Admin: `adminListAllPosts`, `adminGetGlobalStats`
+
 ## 2026-05-18 — Estabilização do build do monorepo
 
 ### `fix(build)` — build previsível sem estouro de memória no bootstrap atual

@@ -10,6 +10,8 @@ import { marketplacesRouter } from "./routers/marketplacesRouter";
 import { mmnRouter } from "./routers/mmnRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { paymentsRouter } from "./routers/paymentsRouter";
+import { bankingRouter } from "./routers/bankingRouter";
+import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
@@ -246,6 +248,12 @@ export const appRouter = router({
 
   // ============ PAYMENTS ROUTER ============
   payments: paymentsRouter,
+
+  // ============ BANKING ROUTER ============
+  banking: bankingRouter,
+
+  // ============ SOCIAL ROUTER ============
+  social: socialRouter,
 
   // ============ XP ROUTER ============
   xp: xpRouter,

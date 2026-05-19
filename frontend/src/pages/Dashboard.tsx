@@ -1,24 +1,6 @@
 import { Link } from "wouter";
+import { heavyLegacyAssets, legacyAdminGroups, retirementChecklist } from "../data/legacy-fusion-data";
 import { trpc } from "../lib/trpc";
-
-const legacyModules = [
-  {
-    title: "Rede e afiliados",
-    items: ["Novos cadastros", "Inadimplentes", "Indicação em rede", "Top indicador"],
-  },
-  {
-    title: "Comissões e receita",
-    items: ["Comissões e descontos", "Pagamentos gerados", "Saldo", "Saque e remuneração"],
-  },
-  {
-    title: "Conteúdo e materiais",
-    items: ["Newsletter", "Arquivos e ebooks", "Slides e banners", "Divulgação"],
-  },
-  {
-    title: "Configuração administrativa",
-    items: ["Níveis", "Planos", "Bônus", "Administradores"],
-  },
-];
 
 export default function Dashboard() {
   const health = trpc.system.health.useQuery();
@@ -97,7 +79,7 @@ export default function Dashboard() {
         <article className="panel full-width">
           <h2>Módulos inspirados no administrador legado</h2>
           <div className="reference-grid four-col">
-            {legacyModules.map((module) => (
+            {legacyAdminGroups.map((module) => (
               <div key={module.title} className="reference-card">
                 <strong>{module.title}</strong>
                 <div className="chip-wrap">
@@ -122,6 +104,32 @@ export default function Dashboard() {
             <li>Usar o agentic layer para monitorar campanhas, memória e qualidade de execução.</li>
             <li>Separar claramente experiência do associado e do administrador.</li>
           </ul>
+        </article>
+
+        <article className="panel">
+          <h2>Checklist para remover legacy/ do Git</h2>
+          <ul className="feature-list">
+            {retirementChecklist.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </article>
+      </section>
+
+      <section className="grid">
+        <article className="panel">
+          <h2>Ativos pesados já mapeados</h2>
+          <div className="goal-list">
+            {heavyLegacyAssets.map((asset) => (
+              <div key={asset.path} className="goal-card queued">
+                <div className="goal-header">
+                  <strong>{asset.path}</strong>
+                  <span className="status-badge queued">{asset.size}</span>
+                </div>
+                <p className="goal-description">{asset.reason}</p>
+              </div>
+            ))}
+          </div>
         </article>
 
         <article className="panel">

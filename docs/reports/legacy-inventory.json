@@ -1,0 +1,421 @@
+{
+  "generatedAt": "2026-05-19T00:02:59.463Z",
+  "legacyDir": "legacy",
+  "trackedFiles": 3153,
+  "totalBytes": 44358329,
+  "totalSize": "42.3 MB",
+  "topDirectories": [
+    {
+      "name": "inc123",
+      "files": 2296,
+      "sizeBytes": 28895734,
+      "size": "27.6 MB"
+    },
+    {
+      "name": "images123",
+      "files": 115,
+      "sizeBytes": 3624291,
+      "size": "3.5 MB"
+    },
+    {
+      "name": "adm",
+      "files": 363,
+      "sizeBytes": 3580095,
+      "size": "3.4 MB"
+    },
+    {
+      "name": "clientes",
+      "files": 222,
+      "sizeBytes": 3319065,
+      "size": "3.2 MB"
+    },
+    {
+      "name": "boletos123",
+      "files": 123,
+      "sizeBytes": 3307786,
+      "size": "3.2 MB"
+    },
+    {
+      "name": "arquivos123",
+      "files": 6,
+      "sizeBytes": 1563091,
+      "size": "1.5 MB"
+    },
+    {
+      "name": "[root]",
+      "files": 20,
+      "sizeBytes": 57521,
+      "size": "56.2 KB"
+    },
+    {
+      "name": "fatura",
+      "files": 3,
+      "sizeBytes": 5256,
+      "size": "5.1 KB"
+    },
+    {
+      "name": "scopbin",
+      "files": 1,
+      "sizeBytes": 4751,
+      "size": "4.6 KB"
+    },
+    {
+      "name": "anexos123",
+      "files": 4,
+      "sizeBytes": 739,
+      "size": "739 B"
+    }
+  ],
+  "largestFiles": [
+    {
+      "path": "legacy/images123/layout.zip",
+      "sizeBytes": 975448,
+      "size": "952.6 KB",
+      "extension": ".zip"
+    },
+    {
+      "path": "legacy/arquivos123/8stepstosuccess.pdf",
+      "sizeBytes": 781176,
+      "size": "762.9 KB",
+      "extension": ".pdf"
+    },
+    {
+      "path": "legacy/arquivos123/mistake.pdf",
+      "sizeBytes": 781176,
+      "size": "762.9 KB",
+      "extension": ".pdf"
+    },
+    {
+      "path": "legacy/inc123/extplorer/scripts/extjs3/ext-all.js",
+      "sizeBytes": 635114,
+      "size": "620.2 KB",
+      "extension": ".js"
+    },
+    {
+      "path": "legacy/inc123/area123_banco_de_dados.php",
+      "sizeBytes": 598021,
+      "size": "584.0 KB",
+      "extension": ".php"
+    },
+    {
+      "path": "legacy/inc123/js/prototype_variant.js",
+      "sizeBytes": 504288,
+      "size": "492.5 KB",
+      "extension": ".js"
+    },
+    {
+      "path": "legacy/inc123/extplorer/libraries/geshi/geshi.php",
+      "sizeBytes": 406149,
+      "size": "396.6 KB",
+      "extension": ".php"
+    },
+    {
+      "path": "legacy/images123/south-america.jpg",
+      "sizeBytes": 380467,
+      "size": "371.5 KB",
+      "extension": ".jpg"
+    },
+    {
+      "path": "legacy/inc123/tiny_mce/tiny_mce_src.js",
+      "sizeBytes": 362894,
+      "size": "354.4 KB",
+      "extension": ".js"
+    },
+    {
+      "path": "legacy/adm/pgto_config.php",
+      "sizeBytes": 341783,
+      "size": "333.8 KB",
+      "extension": ".php"
+    },
+    {
+      "path": "legacy/inc123/fonts/glyphicons-regular.svg",
+      "sizeBytes": 278837,
+      "size": "272.3 KB",
+      "extension": ".svg"
+    },
+    {
+      "path": "legacy/adm/area123_ftp.php",
+      "sizeBytes": 268313,
+      "size": "262.0 KB",
+      "extension": ".php"
+    },
+    {
+      "path": "legacy/inc123/extplorer/libraries/geshi/geshi/thinbasic.php",
+      "sizeBytes": 267779,
+      "size": "261.5 KB",
+      "extension": ".php"
+    },
+    {
+      "path": "legacy/images123/plano_1.png",
+      "sizeBytes": 254422,
+      "size": "248.5 KB",
+      "extension": ".png"
+    },
+    {
+      "path": "legacy/inc123/phpme/phpMyEdit.class.php",
+      "sizeBytes": 249625,
+      "size": "243.8 KB",
+      "extension": ".php"
+    }
+  ],
+  "extensions": [
+    {
+      "extension": ".php",
+      "files": 1470,
+      "sizeBytes": 25058387,
+      "size": "23.9 MB"
+    },
+    {
+      "extension": ".js",
+      "files": 427,
+      "sizeBytes": 6606856,
+      "size": "6.3 MB"
+    },
+    {
+      "extension": ".css",
+      "files": 143,
+      "sizeBytes": 3207152,
+      "size": "3.1 MB"
+    },
+    {
+      "extension": ".pdf",
+      "files": 2,
+      "sizeBytes": 1562352,
+      "size": "1.5 MB"
+    },
+    {
+      "extension": ".jpg",
+      "files": 48,
+      "sizeBytes": 1472211,
+      "size": "1.4 MB"
+    },
+    {
+      "extension": ".png",
+      "files": 215,
+      "sizeBytes": 1456267,
+      "size": "1.4 MB"
+    },
+    {
+      "extension": ".zip",
+      "files": 3,
+      "sizeBytes": 1197279,
+      "size": "1.1 MB"
+    },
+    {
+      "extension": ".svg",
+      "files": 5,
+      "sizeBytes": 512159,
+      "size": "500.2 KB"
+    },
+    {
+      "extension": ".gif",
+      "files": 476,
+      "sizeBytes": 402585,
+      "size": "393.1 KB"
+    },
+    {
+      "extension": ".ttf",
+      "files": 5,
+      "sizeBytes": 277312,
+      "size": "270.8 KB"
+    },
+    {
+      "extension": ".db",
+      "files": 8,
+      "sizeBytes": 274944,
+      "size": "268.5 KB"
+    },
+    {
+      "extension": ".htm",
+      "files": 41,
+      "sizeBytes": 248961,
+      "size": "243.1 KB"
+    },
+    {
+      "extension": ".map",
+      "files": 2,
+      "sizeBytes": 243861,
+      "size": "238.1 KB"
+    },
+    {
+      "extension": ".eot",
+      "files": 5,
+      "sizeBytes": 233056,
+      "size": "227.6 KB"
+    },
+    {
+      "extension": ".pem",
+      "files": 1,
+      "sizeBytes": 217615,
+      "size": "212.5 KB"
+    },
+    {
+      "extension": ".md",
+      "files": 13,
+      "sizeBytes": 197693,
+      "size": "193.1 KB"
+    },
+    {
+      "extension": ".woff",
+      "files": 5,
+      "sizeBytes": 169496,
+      "size": "165.5 KB"
+    },
+    {
+      "extension": ".html",
+      "files": 85,
+      "sizeBytes": 155481,
+      "size": "151.8 KB"
+    },
+    {
+      "extension": ".swf",
+      "files": 8,
+      "sizeBytes": 139506,
+      "size": "136.2 KB"
+    },
+    {
+      "extension": ".psd",
+      "files": 8,
+      "sizeBytes": 137891,
+      "size": "134.7 KB"
+    },
+    {
+      "extension": ".js__",
+      "files": 2,
+      "sizeBytes": 102651,
+      "size": "100.2 KB"
+    },
+    {
+      "extension": ".inc",
+      "files": 67,
+      "sizeBytes": 86493,
+      "size": "84.5 KB"
+    },
+    {
+      "extension": ".avi",
+      "files": 1,
+      "sizeBytes": 82944,
+      "size": "81.0 KB"
+    },
+    {
+      "extension": ".xml",
+      "files": 4,
+      "sizeBytes": 76353,
+      "size": "74.6 KB"
+    },
+    {
+      "extension": ".mov",
+      "files": 1,
+      "sizeBytes": 55622,
+      "size": "54.3 KB"
+    },
+    {
+      "extension": ".xap",
+      "files": 1,
+      "sizeBytes": 44013,
+      "size": "43.0 KB"
+    },
+    {
+      "extension": "[sem-ext]",
+      "files": 74,
+      "sizeBytes": 29172,
+      "size": "28.5 KB"
+    },
+    {
+      "extension": ".log",
+      "files": 5,
+      "sizeBytes": 22158,
+      "size": "21.6 KB"
+    },
+    {
+      "extension": ".rm",
+      "files": 1,
+      "sizeBytes": 17846,
+      "size": "17.4 KB"
+    },
+    {
+      "extension": ".php_",
+      "files": 1,
+      "sizeBytes": 17444,
+      "size": "17.0 KB"
+    },
+    {
+      "extension": ".json",
+      "files": 9,
+      "sizeBytes": 16185,
+      "size": "15.8 KB"
+    },
+    {
+      "extension": ".txt",
+      "files": 6,
+      "sizeBytes": 15107,
+      "size": "14.8 KB"
+    },
+    {
+      "extension": ".dcr",
+      "files": 1,
+      "sizeBytes": 6774,
+      "size": "6.6 KB"
+    },
+    {
+      "extension": ".js___",
+      "files": 1,
+      "sizeBytes": 3937,
+      "size": "3.8 KB"
+    },
+    {
+      "extension": ".crt",
+      "files": 1,
+      "sizeBytes": 2765,
+      "size": "2.7 KB"
+    },
+    {
+      "extension": ".jpg_",
+      "files": 1,
+      "sizeBytes": 2569,
+      "size": "2.5 KB"
+    },
+    {
+      "extension": ".php_original",
+      "files": 1,
+      "sizeBytes": 1495,
+      "size": "1.5 KB"
+    },
+    {
+      "extension": ".yml",
+      "files": 2,
+      "sizeBytes": 1159,
+      "size": "1.1 KB"
+    },
+    {
+      "extension": ".ico",
+      "files": 1,
+      "sizeBytes": 1150,
+      "size": "1.1 KB"
+    },
+    {
+      "extension": ".sql",
+      "files": 1,
+      "sizeBytes": 721,
+      "size": "721 B"
+    },
+    {
+      "extension": ".less",
+      "files": 1,
+      "sizeBytes": 664,
+      "size": "664 B"
+    },
+    {
+      "extension": ".ram",
+      "files": 1,
+      "sizeBytes": 43,
+      "size": "43 B"
+    }
+  ],
+  "deletionReadiness": [
+    "Migrar materiais pesados para storage externo ou AI Drive.",
+    "Preservar apenas manifestos leves e mapeamentos funcionais no repositório.",
+    "Confirmar que o app moderno não importa nem serve arquivos de legacy/.",
+    "Executar git rm --cached -r legacy após a cobertura funcional e o arquivamento externo."
+  ]
+}

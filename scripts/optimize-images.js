@@ -2,14 +2,25 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 
-const inputDir = "./legacy/images123"; // Ou o diretório de assets do frontend
-const outputDir = "./frontend/public/images"; // Onde as imagens otimizadas serão salvas
+const repoRoot = path.resolve(__dirname, "..");
+const inputDir = process.argv[2]
+  ? path.resolve(repoRoot, process.argv[2])
+  : path.resolve(repoRoot, "frontend/public/source-images");
+const outputDir = process.argv[3]
+  ? path.resolve(repoRoot, process.argv[3])
+  : path.resolve(repoRoot, "frontend/public/images");
+
+if (!fs.existsSync(inputDir)) {
+  console.error(`Diretório de origem não encontrado: ${inputDir}`);
+  console.error("Informe um diretório explícito: node scripts/optimize-images.js <origem> <destino>");
+  process.exit(1);
+}
 
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-fs.readdirSync(inputDir).forEach(file => {
+fs.readdirSync(inputDir).forEach((file) => {
   const inputFile = path.join(inputDir, file);
   const outputFile = path.join(outputDir, `${path.parse(file).name}.webp`);
 
@@ -18,10 +29,9 @@ fs.readdirSync(inputDir).forEach(file => {
       .webp({ quality: 80 })
       .toFile(outputFile)
       .then(() => console.log(`Converted ${file} to WebP`))
-      .catch(err => console.error(`Error converting ${file}:`, err));
+      .catch((err) => console.error(`Error converting ${file}:`, err));
   } else if (fs.statSync(inputFile).isFile() && /\.svg$/i.test(file)) {
-    // Para SVGs, usar SVGO ou otimização manual
-    fs.copyFileSync(inputFile, path.join(outputDir, file)); // Apenas copia por enquanto
+    fs.copyFileSync(inputFile, path.join(outputDir, file));
     console.log(`Copied SVG ${file}`);
   }
 });

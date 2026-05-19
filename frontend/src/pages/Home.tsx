@@ -1,23 +1,6 @@
 import { Link } from "wouter";
+import { benchmarkLinks, fusionTracks, legacyRetirementMetrics } from "../data/legacy-fusion-data";
 import { trpc } from "../lib/trpc";
-
-const benchmarkLinks = [
-  {
-    title: "Landing pública legado",
-    href: "https://demo.br20.net/marketing/",
-    description: "Referência comercial com apelo de aquisição, benefícios e CTA principal.",
-  },
-  {
-    title: "Espaço do cliente legado",
-    href: "https://demo.br20.net/marketing/painel/",
-    description: "Entrada do associado com login, cadastro e recuperação de senha.",
-  },
-  {
-    title: "Espaço do administrador legado",
-    href: "https://demo.br20.net/marketing/adm/",
-    description: "Backoffice administrativo denso com módulos operacionais e financeiros.",
-  },
-];
 
 export default function Home() {
   const systemInfo = trpc.system.info.useQuery();
@@ -110,6 +93,36 @@ export default function Home() {
                 <strong>{item.title}</strong>
                 <span>{item.description}</span>
               </a>
+            ))}
+          </div>
+        </article>
+      </section>
+
+      <section className="grid">
+        <article className="panel">
+          <h2>Prontidão para aposentadoria do legado</h2>
+          <div className="reference-grid two-col">
+            {legacyRetirementMetrics.map((item) => (
+              <div key={item.label} className="reference-card">
+                <strong>{item.label}</strong>
+                <span>{item.value}</span>
+                <span>{item.note}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="panel">
+          <h2>Trilhas da fusão em andamento</h2>
+          <div className="goal-list compact-list">
+            {fusionTracks.map((track) => (
+              <div key={track.title} className="goal-card queued">
+                <div className="goal-header">
+                  <strong>{track.title}</strong>
+                  <span className="status-badge queued">{track.status}</span>
+                </div>
+                <p className="goal-description">{track.summary}</p>
+              </div>
             ))}
           </div>
         </article>

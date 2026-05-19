@@ -5,11 +5,11 @@
 ## Status do Projeto
 
 ![Stage](https://img.shields.io/badge/Stage-MVP%2B-green)
-![Conformidade](https://img.shields.io/badge/Conformidade-70--75%25-green)
+![Conformidade](https://img.shields.io/badge/Conformidade-85--90%25-green)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 ![XP](https://img.shields.io/badge/XP%2FCarreiras-Implemented-blue)
-![v1.0.6](https://img.shields.io/badge/v1.0.6-2026--05--19-blue)
+![v1.0.7](https://img.shields.io/badge/v1.0.7-2026--05--19-blue)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
@@ -263,24 +263,24 @@ npm run start
 | Métricas por Afiliado | ✅ Implementado | Performance individual |
 | Estatísticas Globais | ✅ Implementado | Dashboard admin completo |
 
-### ⚠️ Funcionalidades em Desenvolvimento
+### ✅ Funcionalidades Implementadas
 
 | Funcionalidade | Status | Descrição |
 |----------------|--------|-----------|
 | Marketplace Nexus | ✅ Implementado | Catálogo próprio de produtos com carrinho, checkout e filtros |
+| Circuit Breakers | ✅ Implementado | Proteção contra falhas em cascata com retry inteligente |
+| Sistema de Permissões (RBAC) | ✅ Implementado | Roles, permissions e resource-based access granular |
+| Autenticação Firebase/NextAuth | ✅ Implementado | Login social, JWT refresh tokens, custom claims |
+| Sistema de Sorteios (Grafo+IA) | ✅ Implementado | Sorteios justos baseados na rede com verificação por IA |
+| Holdings/Dividendos | ✅ Implementado | Participação acionária e distribuição de dividendos |
+| Títulos de Capitalização | ✅ Implementado | Produtos financeiros com sorteios periódicos |
 | Integração PIX Real | ⚠️ Planejado | Integração com API bancária |
 | Automação WhatsApp API | ⚠️ Planejado | Envio automático via API oficial |
 
-### ❌ Funcionalidades Futuras (Roadmap)
+### ❌ Funcionalidades Remanescentes
 
 | Funcionalidade | Status | Prioridade |
 |----------------|--------|------------|
-| Autenticação Firebase/NextAuth | 📋 RoadMap | Média |
-| Sorteios (Grafo+IA) | 📋 Planejado | Média |
-| Títulos de Capitalização | 📋 Planejado | Baixa |
-| Holdings/Dividendos | 📋 Planejado | Média |
-| Circuit Breakers | 📋 Planejado | Alta |
-| Modelos de Permissão Detalhados | 📋 Planejado | Alta |
 
 ## Roadmap Agentic
 
@@ -304,13 +304,16 @@ npm run start
 | Sistema MMN | 5 | 8 | 63% |
 | Integração IA | 4 | 5 | 80% |
 | Automação Social | 5 | 6 | 83% |
-| Sistema Financeiro | 6 | 8 | 75% |
+| Sistema Financeiro | 9 | 10 | 90% |
+| Sistema de Permissões (RBAC) | 5 | 5 | 100% |
+| Sistema de Sorteios | 4 | 4 | 100% |
+| Circuit Breakers | 3 | 3 | 100% |
 | Tracking/Analytics | 4 | 5 | 80% |
 | Newsletter | 4 | 5 | 80% |
 | CMS Pages | 5 | 6 | 83% |
 | Billing/Faturas | 7 | 8 | 88% |
 
-**Conformidade Geral: ~70-75%**
+**Conformidade Geral: ~85-90%**
 
 ## Estrutura do Projeto
 
@@ -719,6 +722,40 @@ NODE_ENV=development
 
 ## Changelog
 
+### v1.0.7 (2026-05-19)
+- **feat(circuit-breaker)**: Sistema completo de Circuit Breakers
+  - `CircuitBreaker.ts`: Implementação do padrão com estados CLOSED/OPEN/HALF_OPEN
+  - `circuitBreakerMiddleware.ts`: Middleware tRPC para proteção de procedures
+  - Métricas de saúde e dashboard para monitoramento
+  - Pre-configurado para serviços críticos (Mercado Livre, Shopee, PIX, etc.)
+- **feat(rbac)**: Sistema de Permissões RBAC completo
+  - `rbacSchema.ts`: Schemas para roles, permissions, policies
+  - `rbacService.ts`: Lógica de verificação e decorators tRPC
+  - 8 roles padrão (super_admin, admin, manager, affiliate, etc)
+  - 45+ permissões granulares por recurso
+  - Custom permissions e resource policies por usuário
+- **feat(auth)**: Firebase Auth Integration
+  - `firebaseAuth.ts`: SDK Firebase Admin com autenticação
+  - Login social (Google, Facebook, Apple)
+  - JWT custom claims para roles
+  - Session management com refresh tokens
+- **feat(raffle)**: Sistema de Sorteios com Grafo+IA
+  - `raffleSchema.ts`: Schemas para raffles, tickets, winners
+  - Verificação de elegibilidade por nível de rede
+  - Algoritmo Fisher-Yates com seed para reprodutibilidade
+  - Relatórios de verificação com hash
+- **feat(holdings)**: Sistema de Holdings e Dividendos
+  - `holdingsSchema.ts`: Participações acionárias e dividendos
+  - Compra/venda de ações com cálculo de preço médio
+  - Distribuição automática de dividendos por período
+  - Portfólio consolidado do usuário
+- **feat(capitalization)**: Títulos de Capitalização
+  - `capitalizationSchema.ts`: Títulos, pagamentos, sorteios
+  - Compra de títulos com pagamentos mensais
+  - Cálculo de valor de resgate com multa
+  - Sorteios periódicos baseados em participação
+- **conformidade**: Atualizada para 85-90%
+
 ### v1.0.6 (2026-05-19)
 - **feat(marketplace)**: Implementação completa do Marketplace Nexus
   - Schema de banco: marketplaceProducts, productCategories, productVariations, marketplaceOrders, orderItems, productReviews, wishlists, wishlistItems, coupons, affiliateMarketplaceSettings
@@ -788,4 +825,4 @@ MIT
 
 **Autor:** MiniMax Agent
 **Última Atualização:** 2026-05-19
-**Versão:** 1.0.6
+**Versão:** 1.0.7

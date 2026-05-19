@@ -1,3 +1,0 @@
-Login to your Stripe account and go to the Developers » API keys page.
-Collect the API keys (Publishable key and Secret key) from the Live Data section.
-In the config.php file, specify the Live API keys (Publishable key and Secret key) in Stripe API constants (STRIPE_API_KEY and STRIPE_PUBLISHABLE_KEY).

@@ -20,6 +20,9 @@ import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
 import { adminRouter } from "./routers/adminRouter";
 import { billingRouter } from "./routers/billingRouter";
+import { usersRouter } from "./routers/usersRouter";
+import { materialsRouter } from "./routers/materialsRouter";
+import { networkRouter } from "./routers/networkRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -85,6 +88,10 @@ export const appRouter = router({
         newsletter: true,
         cms: true,
         billing: true,
+        admin: true,
+        users: true,
+        materials: true,
+        network: true,
       },
     })),
   }),
@@ -270,6 +277,15 @@ export const appRouter = router({
 
   // ============ ADMIN ROUTER ============
   admin: adminRouter,
+
+  // ============ USERS ROUTER ============
+  users: usersRouter,
+
+  // ============ MATERIALS ROUTER ============
+  materials: materialsRouter,
+
+  // ============ NETWORK ROUTER ============
+  network: networkRouter,
 });
 
 export type AppRouter = typeof appRouter;

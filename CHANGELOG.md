@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-20 — Routers Admin + BackOffice Integration
+
+### `feat(routers)` — Novos Routers para Backoffice Admin
+
+**Backend - Novos routers:**
+- `usersRouter.ts` - Gestão de usuários: list, getById, updateRole, updateStatus, getStats
+- `materialsRouter.ts` - Gestão de materiais: list, getById, create, update, delete, getCategories, getStats
+- `networkRouter.ts` - Gestão de rede MMN: getTree, getDirectReferrals, getStats, getByAffiliate, getTopSponsors, getUpline
+
+**appRouter.ts atualizado:**
+- Novos routers registrados: `users`, `materials`, `network`
+- Status bootstrap atualizado com novos routers
+
+**Endpoints tRPC para páginas admin:**
+- `trpc.users.list` → AdminUsers
+- `trpc.materials.list` → AdminMaterials
+- `trpc.network.getByAffiliate` → AdminNetwork
+- `trpc.network.getDirectReferrals` → AdminNetwork
+- `trpc.payments.list` → AdminPayments
+
+**Frontend pages admin:**
+- AdminUsers.tsx - Usa trpc.users.list e trpc.users.updateRole
+- AdminMaterials.tsx - Usa trpc.materials.list, create, updateStatus
+- AdminNetwork.tsx - Usa trpc.network.getByAffiliate e getDirectReferrals
+- AdminPayments.tsx - Usa trpc.payments.list e updateStatus
+
 ## 2026-05-20 — Admin Dashboard + BackOffice Module
 
 ### `feat(admin)` — BackOffice Admin Module Completo

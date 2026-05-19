@@ -437,9 +437,238 @@ O diretório `/legacy/` contém o sistema original PHP com 1470 arquivos que foi
 | Sistema MMN Core | ✅ Já existente |
 | Automação Cron | ⚠️ Em análise |
 
-## Contribuição
+## Referência de API tRPC
 
-Consulte a documentação em `docs/agentic/` para diretrizes de desenvolvimento e roadmap de implementação agentic.
+### Autenticação
+
+Todos os endpoints protegidos requerem token JWT no header `Authorization: Bearer <token>`.
+
+### Newsletter API
+
+```typescript
+// Inscrever email na newsletter
+newsletter.subscribe({ email: string, name?: string, source?: string })
+
+// Cancelar inscrição
+newsletter.unsubscribe({ email: string })
+
+// Listar inscritos (admin)
+newsletter.list({ onlyActive?: boolean, page?: number, limit?: number })
+
+// Buscar inscrito por email
+newsletter.getByEmail({ email: string })
+
+// Estatísticas de inscritos
+newsletter.count()
+```
+
+### CMS API
+
+```typescript
+// Buscar página pública por slug
+cms.getPage({ slug: string })
+
+// Listar páginas (admin)
+cms.list({ category?: string, status?: 'draft'|'published'|'archived', page?: number, limit?: number })
+
+// Criar página
+cms.create({ title: string, slug: string, content?: string, metaTitle?: string, metaDescription?: string, category?: string, status?: string, order?: number })
+
+// Atualizar página
+cms.update({ id: number, title?: string, slug?: string, content?: string, ... })
+
+// Deletar página
+cms.delete({ id: number })
+
+// Listar categorias
+cms.getCategories()
+```
+
+### Billing API
+
+```typescript
+// Buscar fatura por ID
+billing.getInvoice({ id: number })
+
+// Listar faturas
+billing.listInvoices({ status?: string, startDate?: Date, endDate?: Date, page?: number, limit?: number })
+
+// Criar fatura (admin)
+billing.createInvoice({ userId: number, amount: number, description: string, dueDate: Date, items?: array })
+
+// Atualizar status da fatura
+billing.updateInvoiceStatus({ id: number, status: string, paidAt?: Date })
+
+// Histórico de cobranças
+billing.getHistory({ invoiceId?: number, page?: number, limit?: number })
+
+// Estatísticas (admin)
+billing.getStats()
+
+// Confirmar pagamento (gateway callback)
+billing.confirmPayment({ invoiceId: number, paymentId: string, amount: number })
+```
+
+### XP/Carreiras API
+
+```typescript
+// XP do afiliado logado
+xp.getMyXP()
+
+// XP de afiliado específico
+xp.getAffiliateXP({ affiliateId: number })
+
+// Lista de níveis de carreira
+xp.getCareerLevels()
+
+// Leaderboard (top 10)
+xp.getLeaderboard()
+
+// Histórico de XP
+xp.getXPHistory({ page?: number, limit?: number })
+
+// Dashboard completo
+dashboard.getMyDashboard()
+```
+
+## Guias de Contribuição
+
+### Fluxo de Desenvolvimento
+
+1. **Fork** o repositório
+2. **Clone** seu fork: `git clone https://github.com/<seu-user>/MMN_AI-to-AI.git`
+3. **Crie uma branch** para sua feature: `git checkout -b feature/nova-funcionalidade`
+4. **Commit** suas mudanças: `git commit -m 'feat: adiciona nova funcionalidade'`
+5. **Push** para a branch: `git push origin feature/nova-funcionalidade`
+6. Abra um **Pull Request** no GitHub
+
+### Convenções de Commits
+
+| Tipo | Descrição |
+|------|-----------|
+| `feat` | Nova funcionalidade |
+| `fix` | Correção de bug |
+| `docs` | Alterações em documentação |
+| `style` | Formatação, falta de ponto e vírgula, etc |
+| `refactor` | Refatoração de código |
+| `test` | Adição ou correção de testes |
+| `chore` | Atualização de build, dependências, etc |
+
+### Estrutura de Branching
+
+| Branch | Propósito |
+|--------|----------|
+| `main` | Código em produção |
+| `develop` | Integração de features |
+| `feature/*` | Novas funcionalidades |
+| `fix/*` | Correções |
+| `hotfix/*` | Correções urgentes em produção |
+
+### Padrões de Código
+
+- **TypeScript**: Strict mode habilitado
+- **Naming**: camelCase para variáveis/funções, PascalCase para componentes/classes
+- **Imports**: Ordem: React → libs externas → componentes internos → utils
+- **tRPC**: Procedures públicas para leitura, protegidas para escrita com autenticação
+
+### Testes
+
+```bash
+# Backend
+npm run test --workspace=backend
+
+# Frontend
+npm run test --workspace=frontend
+```
+
+## Solução de Problemas
+
+### Erro de Conexão com Banco
+
+Verifique se o container MySQL está rodando:
+```bash
+docker ps | grep mysql
+```
+
+Se não estiver, inicie com:
+```bash
+npm run infrastructure:up
+```
+
+### Erro de Permissão em node_modules
+
+Remova e reinstale:
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Problemas com tRPC
+
+Se os endpoints não carregam, verifique:
+1. Backend está rodando na porta correta (default: 3000)
+2. Variáveis de ambiente em `.env`
+3. Conexão com banco de dados
+
+### Reset de Banco de Dados
+
+```bash
+# Para desenvolvimento, pode usar push:
+npm run db:push
+
+# Ou migre do zero:
+npm run db:migrate
+npm run db:seed  # se disponível
+```
+
+## Infraestrutura Técnica
+
+### Docker Services
+
+| Serviço | Porta | Descrição |
+|---------|-------|-----------|
+| MySQL | 3306 | Banco de dados principal |
+| Redis | 6379 | Cache e filas BullMQ |
+| API | 3000 | Backend tRPC |
+| Frontend | 5173 | Vite dev server |
+
+### Variáveis de Ambiente
+
+```env
+# Banco
+DATABASE_URL=mysql://root:password@localhost:3306/mmn_db
+MYSQL_ROOT_PASSWORD=secret
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# Auth
+JWT_SECRET=your-secret-key-min-32-chars
+
+# IA
+OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=...
+
+# Server
+PORT=3000
+NODE_ENV=development
+```
+
+### Monitoramento
+
+- **Logs**: `npm run infrastructure:logs`
+- **Health Check**: `GET http://localhost:3000/health`
+- **tRPC Inspector**: `http://localhost:3000/trpc`
+
+## Recursos Adicionais
+
+- [Guia do Administrador](docs/admin-guide.md)
+- [Guia do Afiliado](docs/affiliate-guide.md)
+- [Integração de Modelos IA](docs/Guia_Integracao_Modelos_IA_Proprietarios.md)
+- [Arquitetura Agentic](docs/agentic/ARQUITETURA_AGENTIC_ALVO.md)
+- [Roadmap Agentic](docs/agentic/ROADMAP_AGENTIC_EXECUCAO.md)
+- [Manual de Integração](docs/integration-manual.md)
+- [Referência API tRPC](docs/trpc-api.md)
 
 ## Changelog
 

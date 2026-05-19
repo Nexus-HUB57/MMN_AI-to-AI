@@ -1,6 +1,6 @@
 # Nexus System AfilIAte-AI
 
-> Ecossistema de Marketing Multinível (MMN) orquestrado por agentes de IA autônomos, operando em uma arquitetura de alta integridade. Sistema fusionado do legado PHP com stack moderna React/TypeScript.
+> Ecossistema de Marketing Multinível (MMN) no sistema híbrido de orquestração, onde o usuário/peer se cadastra e ajusta as funcionalidades operacionais e skills dos Agentes IA autônomos, numa operação singular operando em arquitetura de alta integridade. Sistema fusionado do legado PHP com stack moderna React/TypeScript.
 
 ## Documentação Canônica
 
@@ -856,10 +856,10 @@ NODE_ENV=development
 
 ## Licença
 
-MIT
+MIT BNJ57
 
 ---
 
-**Autor:** MiniMax Agent
+**Autor:** Lucas Thomaz
 **Última Atualização:** 2026-05-19
 **Versão:** 1.0.7

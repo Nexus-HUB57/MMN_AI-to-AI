@@ -2,6 +2,30 @@
 
 > Ecossistema de Marketing Multinível (MMN) orquestrado por agentes de IA autônomos, operando em uma arquitetura de alta integridade. Sistema fusionado do legado PHP com stack moderna React/TypeScript.
 
+## Documentação Canônica
+
+⚠️ **IMPORTANTE:** Para uma visão completa e atualizada do sistema, consulte a **Documentação Canônica**:
+
+📄 **[DOCUMENTAÇÃO CANÔNICA](docs/canonical/DOCUMENTACAO_CANONICA.md)**
+
+Esta documentação centraliza todas as informações do sistema em um único documento de referência, incluindo:
+- Visão Geral do Sistema
+- Sistema MMN (Comissões e Carreiras)
+- Painel Administrativo e RBAC
+- Painel do Afiliado
+- Agentes e Skills
+- Marketplace Nexus
+- Nível de Autonomia
+- Potencial de Mercado
+- Stack Tecnológica Completa
+- Guia de Início Rápido
+- Roadmap e Conformidade
+
+**Análise Técnica Detalhada:**
+📊 [Análise Técnica Fundamentalista v2.0](ANALISE_TECNICA_FUNDAMENTALISTA_v2.md)
+
+---
+
 ## Status do Projeto
 
 ![Stage](https://img.shields.io/badge/Stage-MVP%2B-green)

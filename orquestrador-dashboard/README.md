@@ -1,5 +1,9 @@
 # Orquestrador Dashboard
 
+> Status atual: **artefato paralelo / protótipo de interface**, não a aplicação principal oficial do monorepo.
+>
+> A convergência funcional do orquestrador deve ocorrer no frontend oficial em `frontend/`, especialmente pela página `frontend/src/pages/OrchestratorDashboard.tsx` e integração com backend tRPC.
+
 **Multi-Module AI Agent Management Interface for Nexus-HUB57 AI-to-AI Marketing Platform**
 
 Dashboard React para gerenciamento e monitoramento do sistema Orquestrador - uma arquitetura de agentes IA especializados que orquestram tarefas de marketing multinível (MMN) e operações P2P.

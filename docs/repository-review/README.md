@@ -6,6 +6,9 @@ Esta pasta consolida a revisão estrutural do repositório **MMN AI-to-AI**.
 
 - [Análise Técnica do Sistema Atual](./ANALISE_TECNICA_SISTEMA_ATUAL.md)
 - [Resumo Executivo do Sistema Atual](./RESUMO_EXECUTIVO_SISTEMA_ATUAL.md)
+- [Consolidação Documental — Fase 2](./CONSOLIDACAO_DOCUMENTAL_FASE2.md)
+- [Avaliação do orquestrador-dashboard](./ORQUESTRADOR_DASHBOARD_AVALIACAO.md)
+- [Mapa de rotas e unificação do frontend](./MAPA_ROTAS_E_UNIFICACAO_FRONTEND.md)
 
 ## Objetivo da reorganização
 

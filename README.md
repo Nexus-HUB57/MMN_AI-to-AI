@@ -43,7 +43,11 @@ A revisão técnica consolidada do estado atual do repositório está em:
 
 - [`docs/repository-review/ANALISE_TECNICA_SISTEMA_ATUAL.md`](docs/repository-review/ANALISE_TECNICA_SISTEMA_ATUAL.md)
 - [`docs/repository-review/RESUMO_EXECUTIVO_SISTEMA_ATUAL.md`](docs/repository-review/RESUMO_EXECUTIVO_SISTEMA_ATUAL.md)
+- [`docs/repository-review/CONSOLIDACAO_DOCUMENTAL_FASE2.md`](docs/repository-review/CONSOLIDACAO_DOCUMENTAL_FASE2.md)
+- [`docs/repository-review/ORQUESTRADOR_DASHBOARD_AVALIACAO.md`](docs/repository-review/ORQUESTRADOR_DASHBOARD_AVALIACAO.md)
+- [`docs/repository-review/MAPA_ROTAS_E_UNIFICACAO_FRONTEND.md`](docs/repository-review/MAPA_ROTAS_E_UNIFICACAO_FRONTEND.md)
 - [`docs/repository-review/README.md`](docs/repository-review/README.md)
+- [`docs/README.md`](docs/README.md)
 
 ## Stack Tecnológica
 

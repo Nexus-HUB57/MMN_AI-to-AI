@@ -25,7 +25,7 @@
 |-----------|----------|-----------|
 | **Canônica** | `canonical/DOCUMENTACAO_CANONICA.md` | Documento único de referência |
 | **Agentic** | `agentic/*.md` (5 arquivos) | Arquitetura e roadmap agentic |
-| **Admin Backoffice** | `admin-backoffice/*.md` (5 arquivos) | Plano de execução do admin |
+| **Admin Backoffice** | `admin-backoffice/*.md` (6 arquivos) | Plano de execução do admin |
 | **Repository Review** | `repository-review/*.md` (7 arquivos) | Análises e avaliações |
 
 ### 📊Guias e Manuais

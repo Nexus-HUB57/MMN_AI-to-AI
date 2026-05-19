@@ -18,6 +18,7 @@ import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
+import { adminRouter } from "./routers/adminRouter";
 import { billingRouter } from "./routers/billingRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
@@ -266,6 +267,9 @@ export const appRouter = router({
 
   // ============ BILLING ROUTER ============
   billing: billingRouter,
+
+  // ============ ADMIN ROUTER ============
+  admin: adminRouter,
 });
 
 export type AppRouter = typeof appRouter;

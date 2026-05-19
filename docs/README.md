@@ -1,38 +1,113 @@
-# Índice de Documentação
+# Índice de Documentação - MMN AI-to-AI
 
-Este índice aponta para as trilhas canônicas de leitura do repositório **MMN AI-to-AI**.
+> **Última Atualização:** 2026-05-20
+> **Versão:** 1.0.8
+> **Status:** Organizado e Atualizado
 
-## Comece por aqui
+---
 
-- [README do projeto](../README.md)
-- [Repository Review](./repository-review/README.md)
-- [Análise Técnica do Sistema Atual](./repository-review/ANALISE_TECNICA_SISTEMA_ATUAL.md)
-- [Resumo Executivo do Sistema Atual](./repository-review/RESUMO_EXECUTIVO_SISTEMA_ATUAL.md)
+## Comece por Aqui
 
-## Fusão e migração
+| Documento | Descrição |
+|-----------|-----------|
+| [README do Projeto](../README.md) | Visão geral completa do sistema |
+| [Documentação Canônica](./canonical/DOCUMENTACAO_CANONICA.md) | Referência única oficial |
+| [Análise Técnica v2](../ANALISE_TECNICA_FUNDAMENTALISTA_v2.md) | Análise fundamentalista |
+| [Changelog](../CHANGELOG.md) | Histórico de versões |
 
-- [Roadmap de fusão — canônico](./roadmap_fusao_mmn.md)
-- [Validação da Fase 1](./VALIDACAO_FUSAO_FASE1.md)
-- [Validação da Fase 2](./VALIDACAO_FUSAO_FASE2.md)
-- [Relatório de validação da fusão](./RELATORIO_VALIDACAO_FUSAO.md)
-- [Inventário do legado](./reports/legacy-inventory.md)
+---
 
-## Camada agentic
+## Estrutura de Documentação
 
-- [Arquitetura agentic alvo](./agentic/ARQUITETURA_AGENTIC_ALVO.md)
-- [Roadmap agentic de execução](./agentic/ROADMAP_AGENTIC_EXECUCAO.md)
-- [Operação, SRE e compliance](./agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md)
-- [Plano de sprints agentic](./agentic/PLANO_SPRINTS_AGENTIC.md)
+### 📋 Documentação Principal
 
-## Backoffice Admin
+| Categoria | Arquivos | Descrição |
+|-----------|----------|-----------|
+| **Canônica** | `canonical/DOCUMENTACAO_CANONICA.md` | Documento único de referência |
+| **Agentic** | `agentic/*.md` (5 arquivos) | Arquitetura e roadmap agentic |
+| **Admin Backoffice** | `admin-backoffice/*.md` (4 arquivos) | Plano de execução do admin |
+| **Repository Review** | `repository-review/*.md` (7 arquivos) | Análises e avaliações |
 
-- [README do Backoffice Admin](./admin-backoffice/README.md)
-- [Plano de execução em fases](./admin-backoffice/PLANO_EXECUCAO_EM_FASES.md)
-- [Backlog inicial](./admin-backoffice/BACKLOG_INICIAL.md)
-- [Inventário atual](./admin-backoffice/INVENTARIO_ATUAL.md)
+### 📊Guias e Manuais
 
-## Revisão estrutural do repositório
+| Arquivo | Descrição |
+|---------|-----------|
+| `admin-guide.md` | Guia do Administrador |
+| `affiliate-guide.md` | Guia do Afiliado |
+| `user-guide.md` | Guia do Usuário |
+| `integration-manual.md` | Manual de Integração |
+| `trpc-api.md` | Referência API tRPC |
 
-- [Consolidação documental — Fase 2](./repository-review/CONSOLIDACAO_DOCUMENTAL_FASE2.md)
-- [Avaliação do orquestrador-dashboard](./repository-review/ORQUESTRADOR_DASHBOARD_AVALIACAO.md)
-- [Mapa de rotas e unificação do frontend](./repository-review/MAPA_ROTAS_E_UNIFICACAO_FRONTEND.md)
+### 📈 Análises e Relatórios
+
+| Categoria | Arquivos |
+|-----------|----------|
+| **Análise e Otimização** | `analysis_and_optimization/*.md` (3 arquivos) |
+| **Roadmaps** | `roadmaps/*.md` (6 arquivos) |
+| **Reports** | `reports/*.md` (3 arquivos) |
+| **Milestone** | `milestone_6/*.md` (2 arquivos) |
+| **Phases** | `phases/*.md` (2 arquivos) |
+| **V16 Delivery** | `v16_delivery/*.md` (5 arquivos) |
+| **Planning** | `planning/*.md` (8 arquivos) |
+
+### 🔧 Infraestrutura e Técnicos
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `technical-documentation.md` | Documentação técnica |
+| `database-scalability-strategy.md` | Estratégia de banco de dados |
+| `roadmap_fusao_mmn.md` | Roadmap de fusão |
+| `operacao.md` | Manual de operação |
+
+---
+
+## Navegação por Objetivo
+
+### 🆕 Primeiro Acesso
+1. [README](../README.md) - Visão geral
+2. [Documentação Canônica](./canonical/DOCUMENTACAO_CANONICA.md) - Referência completa
+3. [Guia de Início Rápido](./canonical/DOCUMENTACAO_CANONICA.md#10-guia-de-início-rápido)
+
+### 👨‍💼 Administradores
+1. [Admin Guide](./admin-guide.md)
+2. [Sistema RBAC](./canonical/DOCUMENTACAO_CANONICA.md#32-sistema-rbac)
+3. [Admin Backoffice](./admin-backoffice/README.md)
+
+### 🤝 Afiliados
+1. [Affiliate Guide](./affiliate-guide.md)
+2. [Sistema XP/Carreiras](./canonical/DOCUMENTACAO_CANONICA.md#2-sistema-mmn)
+3. [Marketplace Nexus](./canonical/DOCUMENTACAO_CANONICA.md#6-marketplace-nexus)
+
+### 🔬 Desenvolvedores
+1. [Technical Documentation](./technical-documentation.md)
+2. [Stack Tecnológica](./canonical/DOCUMENTACAO_CANONICA.md#9-stack-tecnológica)
+3. [tRPC API Reference](./trpc-api.md)
+
+### 🤖 Camada Agentic
+1. [Arquitetura Agentic](./agentic/ARQUITETURA_AGENTIC_ALVO.md)
+2. [Roadmap Agentic](./agentic/ROADMAP_AGENTIC_EXECUCAO.md)
+3. [Operação e SRE](./agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md)
+
+---
+
+## Conformidade do Sistema
+
+| Categoria | Status |
+|-----------|--------|
+| **Stage** | MVP+ |
+| **Conformidade** | 85-90% |
+| **Versão** | v1.0.7 (2026-05-19) |
+| **Licença** | MIT |
+
+---
+
+## Links Rápidos
+
+- **Repositório:** https://github.com/Nexus-HUB57/MMN_AI-to-AI
+- **Análise Visual:** [Análise Visual do Mercado](./Análise%20Visual%20do%20Interesse%20do%20Mercado%20Brasileiro%20pelos%20Setores%20MMN,%20Afiliados%20e%20IA)
+- **Relatório de Desempenho:** [Relatório de Otimização](./Relatório%20de%20Análise%20e%20Otimização%20de%20Desempenho%20-%20Monorepo%20MMN_AI-to-AI)
+
+---
+
+**Autor:** MiniMax Agent
+**Última Atualização:** 2026-05-20

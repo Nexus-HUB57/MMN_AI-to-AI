@@ -1,5 +1,60 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-20 — Admin Dashboard + BackOffice Module
+
+### `feat(admin)` — BackOffice Admin Module Completo
+
+**Backend (`backend/src/routers/adminRouter.ts`):**
+- CRUD completo para gestão de usuários: `listUsers`, `getUser`, `updateUser`, `deleteUser`
+- Dashboard metrics: `getDashboardMetrics`, `getNetworkStats`, `getCommissionStats`, `getSalesStats`
+- Affiliate management: `toggleAffiliateStatus`
+- Platform settings: `getPlatformSettings`, `updatePlatformSettings`
+
+**Frontend:**
+- `AdminDashboard.tsx` - Dashboard com dados reais via tRPC
+- `AdminSettings.tsx` - Página de configurações da plataforma
+- `AdminDashboardLayout.tsx` - Layout com menu de navegação
+- Rotas atualizadas em `App.tsx` para `/admin/dashboard` e `/admin/settings`
+
+**UI Components (shadcn-style):**
+- 17 componentes criados: button, card, input, select, dialog, tabs, pagination, badge, skeleton, textarea, label, progress, avatar, dropdown-menu, table
+- Componentes de agentes placeholders: AgentConfiguration, AgentStatus, ContentGenerator, PostScheduler, etc.
+
+**Configurações:**
+- `@` alias adicionado ao `vite.config.ts`
+- `useAuth` hook exportado do AuthContext
+- Dependências instaladas: lucide-react, date-fns
+- `const.ts` e `lib/utils.ts` com utilities auxiliares
+
+### `feat(rbac)` — Sistema de Permissões RBAC Completo
+- Schemas para roles, permissions, policies
+- 8 roles padrão (super_admin, admin, manager, affiliate, etc)
+- 45+ permissões granulares por recurso
+- Custom permissions e resource policies por usuário
+
+### `feat(circuit-breaker)` — Sistema de Circuit Breakers
+- Implementação do padrão com estados CLOSED/OPEN/HALF_OPEN
+- Middleware tRPC para proteção de procedures
+- Pre-configurado para serviços críticos (Mercado Livre, Shopee, PIX)
+
+### `feat(firebase)` — Firebase Auth Integration
+- SDK Firebase Admin com autenticação
+- Login social (Google, Facebook, Apple)
+- JWT custom claims para roles
+
+### `feat(raffle)` — Sistema de Sorteios com Grafo+IA
+- Verificação de elegibilidade por nível de rede
+- Algoritmo Fisher-Yates com seed para reprodutibilidade
+
+### `feat(holdings)` — Sistema de Holdings e Dividendos
+- Participações acionárias e dividendos
+- Compra/venda de ações com cálculo de preço médio
+
+### `docs` — Documentação Organizada
+- `docs/README.md` atualizado com índice organizado
+- Navegação por objetivo (Primeiro Acesso, Admins, Afiliados, Devs, Agentic)
+- Conformidade atualizada para 85-90%
+
 ## 2026-05-19 — Workers BullMQ + Marketplace Nexus + PIX Middleware
 
 ### `feat(workers)` — Workers BullMQ para processamento de saques

@@ -33,7 +33,7 @@ Esta documentação centraliza todas as informações do sistema em um único do
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 ![XP](https://img.shields.io/badge/XP%2FCarreiras-Implemented-blue)
-![v1.0.7](https://img.shields.io/badge/v1.0.7-2026--05--19-blue)
+![v1.0.8](https://img.shields.io/badge/v1.0.8-2026--05--20-blue)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 

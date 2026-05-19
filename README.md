@@ -5,10 +5,11 @@
 ## Status do Projeto
 
 ![Stage](https://img.shields.io/badge/Stage-MVP%2B-green)
-![Conformidade](https://img.shields.io/badge/Conformidade-65--70%25-green)
+![Conformidade](https://img.shields.io/badge/Conformidade-70--75%25-green)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 ![XP](https://img.shields.io/badge/XP%2FCarreiras-Implemented-blue)
+![v1.0.5](https://img.shields.io/badge/v1.0.5-2026--05--19-blue)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
@@ -61,8 +62,17 @@
 ```bash
 git clone https://github.com/Nexus-HUB57/MMN_AI-to-AI.git
 cd MMN_AI-to-AI
+
+# Instalação do monorepo (raiz + workspaces)
 npm install
+
+# Se houver problemas com workspaces npm, instale manualmente:
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
+cd mobile && npm install && cd ..
 ```
+
+> **Nota**: Em alguns ambientes, o npm workspaces pode apresentar limitações. Se `npm install` não instalar as dependências dos workspaces, execute `npm install` diretamente em cada diretório (`backend/`, `frontend/`, `mobile/`).
 
 ### 2. Infraestrutura (Docker)
 
@@ -672,6 +682,14 @@ NODE_ENV=development
 
 ## Changelog
 
+### v1.0.5 (2026-05-19)
+- **fix(.gitignore)**: Corrigido rastreamento de package-lock.json em workspaces npm
+  - Removido package-lock.json do rastreamento em subdiretórios
+  - Mantido package-lock.json apenas na raiz para monorepo
+  - Garantido que workspaces npm funcionem corretamente
+- **docs**: Atualizada seção "Como Iniciar" com instruções de instalação manual para workspaces
+- **docs**: Adicionada nota sobre limitações de npm workspaces em alguns ambientes
+
 ### v1.0.4 (2026-05-19)
 - **feat(migration)**: Migração de funcionalidades do sistema Legacy PHP
   - `newsletterRouter.ts`: Sistema de newsletter com subscribe/unsubscribe
@@ -719,4 +737,4 @@ MIT
 
 **Autor:** MiniMax Agent
 **Última Atualização:** 2026-05-19
-**Versão:** 1.0.4
+**Versão:** 1.0.5

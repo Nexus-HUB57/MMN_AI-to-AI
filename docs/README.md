@@ -24,6 +24,13 @@ Este índice aponta para as trilhas canônicas de leitura do repositório **MMN 
 - [Operação, SRE e compliance](./agentic/OPERACAO_AGENTIC_SRE_COMPLIANCE.md)
 - [Plano de sprints agentic](./agentic/PLANO_SPRINTS_AGENTIC.md)
 
+## Backoffice Admin
+
+- [README do Backoffice Admin](./admin-backoffice/README.md)
+- [Plano de execução em fases](./admin-backoffice/PLANO_EXECUCAO_EM_FASES.md)
+- [Backlog inicial](./admin-backoffice/BACKLOG_INICIAL.md)
+- [Inventário atual](./admin-backoffice/INVENTARIO_ATUAL.md)
+
 ## Revisão estrutural do repositório
 
 - [Consolidação documental — Fase 2](./repository-review/CONSOLIDACAO_DOCUMENTAL_FASE2.md)

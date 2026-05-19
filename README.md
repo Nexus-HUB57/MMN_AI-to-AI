@@ -49,6 +49,15 @@ A revisão técnica consolidada do estado atual do repositório está em:
 - [`docs/repository-review/README.md`](docs/repository-review/README.md)
 - [`docs/README.md`](docs/README.md)
 
+## Backoffice Admin MMN AI-to-AI
+
+Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa está em:
+
+- [`docs/admin-backoffice/README.md`](docs/admin-backoffice/README.md)
+- [`docs/admin-backoffice/PLANO_EXECUCAO_EM_FASES.md`](docs/admin-backoffice/PLANO_EXECUCAO_EM_FASES.md)
+- [`docs/admin-backoffice/BACKLOG_INICIAL.md`](docs/admin-backoffice/BACKLOG_INICIAL.md)
+- [`docs/admin-backoffice/INVENTARIO_ATUAL.md`](docs/admin-backoffice/INVENTARIO_ATUAL.md)
+
 ## Stack Tecnológica
 
 | Categoria | Tecnologia | Versão |

@@ -533,7 +533,7 @@ O diretório `/legacy/` contém o sistema original PHP com 1470 arquivos que foi
 | Newsletter System | ✅ Migrado (newsletterRouter.ts) |
 | CMS Pages | ✅ Migrado (cmsRouter.ts) |
 | Sistema de Faturas | ✅ Migrado (billingRouter.ts) |
-| Backoffice Admin | ⚠️ Em análise |
+| Backoffice Admin | ⚠️ Em análise | **referência https://nxnja0f28xnc.space.minimax.io/**
 | Sistema MMN Core | ✅ Já existente |
 | Automação Cron | ⚠️ Em análise |
 

@@ -1,638 +1,493 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { systemRouter } from "./systemRouter";
-import { aiContentHubRouter } from "./aiContentHubRouter";
-import { logRouter } from "./logRouter";
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "../config/trpc";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "../trpc/trpc";
 import * as db from "../../../database/schemas/db";
-import * as llm from "../services/llm";
-import { dashboardRouter } from "./dashboardRouter";
-import { mmnRouter } from "./mmnRouter";
+import crypto from "crypto";
 
-// ============ AGENTS ROUTER ============
+const REFRESH_TOKEN_EXPIRY_DAYS = 7;
+const REFRESH_TOKEN_ID_LENGTH = 32;
 
-const agentsRouter = router({
-  list: publicProcedure
-    .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }).optional())
-    .query(async ({ input }) => {
-      const { limit = 50, offset = 0 } = input || {};
-      return db.listAgents(limit, offset);
-    }),
+function generateRefreshTokenId(): string {
+  return crypto.randomBytes(REFRESH_TOKEN_ID_LENGTH).toString("hex");
+}
 
-  getById: publicProcedure.input(z.number()).query(async ({ input }) => {
-    const agent = await db.getAgentById(input);
-    if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-    const skills = await db.getAgentSkills(input);
-    return { ...agent, skills };
-  }),
+function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
 
-  create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        specialization: z.string(),
-        dna: z.record(z.string(), z.any()),
-      })
-    )
+function getExpiryDate(): Date {
+  const date = new Date();
+  date.setDate(date.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
+  return date;
+}
+
+export const authRouter = router({
+  // Get current user
+  me: publicProcedure.query(({ ctx }) => ctx.user ?? null),
+
+  // Legacy login (existing functionality)
+  legacyLogin: publicProcedure
+    .input(z.object({
+      email: z.string().email(),
+      password: z.string()
+    }))
     .mutation(async ({ input, ctx }) => {
-      const agent = await db.createAgent({
-        name: input.name,
-        specialization: input.specialization,
-        dna: input.dna,
-        status: "active",
-        reputation: "0",
-      });
+      const user = await db.getUserByLegacyEmail(input.email);
 
-      await db.logAudit(ctx.user.id, "CREATE_AGENT", "agents", undefined, { agentName: input.name });
-
-      return agent;
-    }),
-
-  updateVitals: protectedProcedure
-    .input(
-      z.object({
-        agentId: z.number(),
-        brainPulse: z.string(),
-        energy: z.string(),
-        creativity: z.string(),
-        focus: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const agent = await db.getAgentById(input.agentId);
-      if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-
-      const vital = {
-        brainPulse: input.brainPulse,
-        energy: input.energy,
-        creativity: input.creativity,
-        focus: input.focus,
-      };
-      await db.recordAgentVital(input.agentId, vital);
-
-      await db.logAudit(ctx.user.id, "UPDATE_VITALS", "agent_vitals", input.agentId, {
-        brainPulse: input.brainPulse,
-      });
-
-      return { success: true };
-    }),
-
-  getVitalsHistory: publicProcedure
-    .input(z.object({ agentId: z.number(), limit: z.number().default(100) }))
-    .query(async ({ input }) => {
-      return db.getAgentVitalsHistory(input.agentId, input.limit);
-    }),
-
-  addSkill: protectedProcedure
-    .input(
-      z.object({
-        agentId: z.number(),
-        skill: z.string(),
-        proficiency: z.enum(["beginner", "intermediate", "advanced", "expert"]).default("intermediate"),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const agent = await db.getAgentById(input.agentId);
-      if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-
-      await db.addAgentSkill(input.agentId, input.skill, input.proficiency);
-
-      await db.logAudit(ctx.user.id, "ADD_SKILL", "agent_skills", input.agentId, {
-        skill: input.skill,
-      });
-
-      return { success: true };
-    }),
-
-  analyze: protectedProcedure.input(z.number()).query(async ({ input }) => {
-    const agent = await db.getAgentById(input);
-    if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-
-    const skills = await db.getAgentSkills(input);
-    const vitalsHistory = await db.getAgentVitalsHistory(input, 1);
-    const recentVitals = vitalsHistory[0];
-
-    const analysis = await llm.analyzeAgentBehavior({
-      name: agent.name,
-      specialization: agent.specialization,
-      reputation: agent.reputation,
-      skills: skills.map((s) => ({ skill: s.skill, proficiency: s.proficiency })),
-      recentVitals: recentVitals
-        ? {
-            brainPulse: recentVitals.brainPulse,
-            energy: recentVitals.energy,
-            creativity: recentVitals.creativity,
-            focus: recentVitals.focus,
-          }
-        : undefined,
-    });
-
-    return analysis;
-  }),
-
-  fuseAgents: protectedProcedure
-    .input(
-      z.object({
-        agent1Id: z.number(),
-        agent2Id: z.number(),
-        mutationFocus: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const agent1 = await db.getAgentById(input.agent1Id);
-      const agent2 = await db.getAgentById(input.agent2Id);
-
-      if (!agent1 || !agent2) throw new TRPCError({ code: "NOT_FOUND", message: "One or both agents not found" });
-
-      const fusedAgent = await llm.dnafusion(
-        { name: agent1.name, specialization: agent1.specialization, dna: agent1.dna as Record<string, any> },
-        { name: agent2.name, specialization: agent2.specialization, dna: agent2.dna as Record<string, any> },
-        input.mutationFocus
-      );
-
-      const newAgent = await db.createAgent({
-        name: fusedAgent.name,
-        specialization: fusedAgent.specialization,
-        dna: fusedAgent.dna,
-        status: "active",
-        reputation: "50",
-      });
-
-      await db.logAudit(ctx.user.id, "DNA_FUSION", "agents", undefined, {
-        parent1: agent1.name,
-        parent2: agent2.name,
-        newAgent: fusedAgent.name,
-      });
-
-      return newAgent;
-    }),
-});
-
-// ============ STARTUPS ROUTER ============
-
-const startupsRouter = router({
-  list: publicProcedure
-    .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }).optional())
-    .query(async ({ input }) => {
-      const { limit = 50, offset = 0 } = input || {};
-      return db.listStartups(limit, offset);
-    }),
-
-  getById: publicProcedure.input(z.number()).query(async ({ input }) => {
-    const startup = await db.getStartupById(input);
-    if (!startup) throw new TRPCError({ code: "NOT_FOUND", message: "Startup not found" });
-    return startup;
-  }),
-
-  create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        description: z.string().optional(),
-        leadAgentId: z.number(),
-        collaborators: z.array(z.number()).default([]),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const startup = await db.createStartup({
-        name: input.name,
-        description: input.description,
-        leadAgentId: input.leadAgentId,
-        status: "ideation",
-        vitals: { momentum: 0, viability: 0, teamStrength: 0 },
-        collaborators: input.collaborators,
-        fundingRaised: "0",
-      });
-
-      await db.logAudit(ctx.user.id, "CREATE_STARTUP", "startups", undefined, { startupName: input.name });
-
-      return startup;
-    }),
-
-  updateStatus: adminProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        status: z.enum(["ideation", "development", "beta", "launched", "archived"]),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const startup = await db.getStartupById(input.id);
-      if (!startup) throw new TRPCError({ code: "NOT_FOUND", message: "Startup not found" });
-
-      await db.updateStartupStatus(input.id, input.status);
-
-      await db.logAudit(ctx.user.id, "UPDATE_STARTUP_STATUS", "startups", input.id, {
-        status: input.status,
-      });
-
-      return { success: true };
-    }),
-
-  analyze: protectedProcedure.input(z.number()).query(async ({ input }) => {
-    const startup = await db.getStartupById(input);
-    if (!startup) throw new TRPCError({ code: "NOT_FOUND", message: "Startup not found" });
-
-    const analysis = await llm.analyzeStartupPerformance({
-      name: startup.name,
-      description: startup.description || "",
-      status: startup.status,
-      fundingRaised: startup.fundingRaised,
-      collaborators: (startup.collaborators as any[]).length || 0,
-      vitals: startup.vitals as any,
-    });
-
-    return analysis;
-  }),
-});
-
-// ============ MISSIONS ROUTER ============
-
-const missionsRouter = router({
-  list: publicProcedure
-    .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }).optional())
-    .query(async ({ input }) => {
-      const { limit = 50, offset = 0 } = input || {};
-      return db.listMissions(limit, offset);
-    }),
-
-  getById: publicProcedure.input(z.number()).query(async ({ input }) => {
-    const mission = await db.getMissionById(input);
-    if (!mission) throw new TRPCError({ code: "NOT_FOUND", message: "Mission not found" });
-    return mission;
-  }),
-
-  create: protectedProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        description: z.string(),
-        requiredSkills: z.array(z.string()),
-        priority: z.enum(["low", "medium", "high", "critical"]).default("medium"),
-        reward: z.string().default("0"),
-        dueDate: z.date().optional(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const mission = await db.createMission({
-        title: input.title,
-        description: input.description,
-        requiredSkills: input.requiredSkills,
-        creatorAgentId: ctx.user.id,
-        status: "open",
-        priority: input.priority,
-        reward: input.reward,
-        dueDate: input.dueDate,
-      });
-
-      await db.logAudit(ctx.user.id, "CREATE_MISSION", "missions", undefined, {
-        missionTitle: input.title,
-      });
-
-      return mission;
-    }),
-
-  updateStatus: protectedProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        status: z.enum(["open", "assigned", "in_progress", "completed", "failed"]),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const mission = await db.getMissionById(input.id);
-      if (!mission) throw new TRPCError({ code: "NOT_FOUND", message: "Mission not found" });
-
-      await db.updateMissionStatus(input.id, input.status);
-
-      await db.logAudit(ctx.user.id, "UPDATE_MISSION_STATUS", "missions", input.id, {
-        status: input.status,
-      });
-
-      return { success: true };
-    }),
-});
-
-// ============ FUNDING ROUTER ============
-
-const fundingRouter = router({
-  listRequests: adminProcedure
-    .input(z.object({ limit: z.number().default(50), offset: z.number().default(0) }).optional())
-    .query(async ({ input }) => {
-      const { limit = 50, offset = 0 } = input || {};
-      return db.listFundingRequests(limit, offset);
-    }),
-
-  requestFunds: protectedProcedure
-    .input(
-      z.object({
-        startupId: z.number(),
-        requestedAmount: z.string(),
-        description: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const startup = await db.getStartupById(input.startupId);
-      if (!startup) throw new TRPCError({ code: "NOT_FOUND", message: "Startup not found" });
-
-      await db.createFundingRequest({
-        startupId: input.startupId,
-        requestedAmount: input.requestedAmount,
-        description: input.description,
-        status: "pending",
-      });
-
-      await db.logAudit(ctx.user.id, "REQUEST_FUNDING", "funding_requests", input.startupId, {
-        startupId: input.startupId,
-        amount: input.requestedAmount,
-      });
-
-      return { success: true };
-    }),
-
-  approveFunding: adminProcedure
-    .input(
-      z.object({
-        fundingRequestId: z.number(),
-        approvedAmount: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const request = await db.getFundingRequestById(input.fundingRequestId);
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Funding request not found" });
-
-      await db.approveFundingRequest(input.fundingRequestId, input.approvedAmount, ctx.user.id);
-
-      const startup = await db.getStartupById(request.startupId);
-      if (!startup) throw new TRPCError({ code: "NOT_FOUND", message: "Startup not found" });
-
-      // Create notification for startup lead
-      // Note: In a real app, we'd get the lead agent's user ID
-      // For now, we'll skip this notification
-
-      await db.logAudit(ctx.user.id, "APPROVE_FUNDING", "funding_requests", input.fundingRequestId, {
-        approvedAmount: input.approvedAmount,
-      });
-
-      return { success: true };
-    }),
-
-  allocateFunds: adminProcedure
-    .input(
-      z.object({
-        fundingRequestId: z.number(),
-        amount: z.string(),
-        walletAddress: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const request = await db.getFundingRequestById(input.fundingRequestId);
-      if (!request) throw new TRPCError({ code: "NOT_FOUND", message: "Funding request not found" });
-
-      if (request.status !== "approved") {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Funding request must be approved first" });
+      if (!user || !user.legacyPassword) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Usuário não encontrado ou não possui credenciais legadas."
+        });
       }
 
-      await db.createFundingAllocation({
-        fundingRequestId: input.fundingRequestId,
-        amount: input.amount,
-        walletAddress: input.walletAddress,
-        status: "pending",
+      // In legacy PHP, passwords are MD5
+      const hashedInput = crypto.createHash("md5").update(input.password).digest("hex");
+
+      if (hashedInput !== user.legacyPassword) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Senha incorreta."
+        });
+      }
+
+      // Log session audit
+      await db.createSessionAudit({
+        id: crypto.randomBytes(16).toString("hex"),
+        userId: user.id,
+        sessionId: crypto.randomBytes(16).toString("hex"),
+        action: "login",
+        ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress),
+        userAgent: ctx.req?.headers["user-agent"],
+        metadata: { method: "legacy" },
+        createdAt: new Date(),
       });
 
-      await db.logAudit(ctx.user.id, "ALLOCATE_FUNDS", "funding_allocations", input.fundingRequestId, {
-        amount: input.amount,
-        walletAddress: input.walletAddress,
-      });
-
-      return { success: true };
-    }),
-
-  broadcastTransaction: adminProcedure
-    .input(
-      z.object({
-        allocationId: z.number(),
-        txHex: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      // This would integrate with mempool.space API
-      // For now, we'll just update the status
-      await db.updateAllocationStatus(input.allocationId, "broadcasted");
-
-      await db.logAudit(ctx.user.id, "BROADCAST_TX", "funding_allocations", input.allocationId, {
-        txHex: input.txHex.substring(0, 20) + "...",
-      });
-
-      return { success: true };
-    }),
-});
-
-// ============ COMMUNICATIONS ROUTER ============
-
-const communicationsRouter = router({
-  postMoltbook: protectedProcedure
-    .input(
-      z.object({
-        agentId: z.number(),
-        content: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const agent = await db.getAgentById(input.agentId);
-      if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-
-      const post = await db.postCommunication(input.agentId, "moltbook", input.content, {
-        timestamp: new Date(),
-        reactions: [],
-      });
-
-      await db.logAudit(ctx.user.id, "POST_MOLTBOOK", "agent_communications", input.agentId, {
-        contentPreview: input.content.substring(0, 100),
-      });
-
-      return { success: true };
-    }),
-
-  postGnox: protectedProcedure
-    .input(
-      z.object({
-        agentId: z.number(),
-        content: z.string(),
-        encrypted: z.boolean().default(false),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const agent = await db.getAgentById(input.agentId);
-      if (!agent) throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-
-      const post = await db.postCommunication(input.agentId, "gnox", input.content, {
-        encrypted: input.encrypted,
-        timestamp: new Date(),
-      });
-
-      await db.logAudit(ctx.user.id, "POST_GNOX", "agent_communications", input.agentId, {
-        encrypted: input.encrypted,
-      });
-
-      return { success: true };
-    }),
-
-  getFeed: publicProcedure
-    .input(
-      z
-        .object({
-          type: z.enum(["moltbook", "gnox", "alert"]).optional(),
-          limit: z.number().default(50),
-          offset: z.number().default(0),
-        })
-        .optional()
-    )
-    .query(async ({ input }) => {
-      const { type, limit = 50, offset = 0 } = input || {};
-      return db.getFeed(limit, offset, type);
-    }),
-});
-
-// ============ TELEMETRY ROUTER ============
-
-const telemetryRouter = router({
-  recordMetric: protectedProcedure
-    .input(
-      z.object({
-        metric: z.enum(["rRPC_Core", "Sigma_Sync", "DeFAI_Link", "Burn_Engine"]),
-        value: z.string(),
-        status: z.enum(["nominal", "active", "warning", "critical"]).default("nominal"),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      await db.recordNetworkTelemetry(input.metric, input.value, input.status);
-
-      await db.logAudit(ctx.user.id, "RECORD_METRIC", "network_telemetry", undefined, {
-        metric: input.metric,
-        value: input.value,
-      });
-
-      return { success: true };
-    }),
-
-  getMetricsHistory: publicProcedure
-    .input(
-      z.object({
-        metric: z.enum(["rRPC_Core", "Sigma_Sync", "DeFAI_Link", "Burn_Engine"]),
-        limit: z.number().default(100),
-      })
-    )
-    .query(async ({ input }) => {
-      return db.getNetworkTelemetryHistory(input.metric, input.limit);
-    }),
-
-  recordBrainPulse: protectedProcedure
-    .input(
-      z.object({
-        averageBrainPulse: z.string(),
-        averageEnergy: z.string(),
-        averageCreativity: z.string(),
-        totalAgents: z.number(),
-        activeAgents: z.number(),
-        totalMissions: z.number(),
-        completedMissions: z.number(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      await db.recordBrainPulse({
-        averageBrainPulse: input.averageBrainPulse,
-        averageEnergy: input.averageEnergy,
-        averageCreativity: input.averageCreativity,
-        totalAgents: input.totalAgents,
-        activeAgents: input.activeAgents,
-        totalMissions: input.totalMissions,
-        completedMissions: input.completedMissions,
-      });
-
-      return { success: true };
-    }),
-
-  getBrainPulseHistory: publicProcedure
-    .input(z.object({ limit: z.number().default(100) }).optional())
-    .query(async ({ input }) => {
-      const limit = input?.limit || 100;
-      return db.getBrainPulseHistory(limit);
-    }),
-});
-
-// ============ MAIN ROUTER ============
-
-export const appRouter = router({
-  system: systemRouter,
-  auth: router({
-    me: publicProcedure.query((opts) => opts.ctx.user),
-    
-    legacyLogin: publicProcedure
-      .input(z.object({
-        email: z.string().email(),
-        password: z.string()
-      }))
-      .mutation(async ({ input, ctx }) => {
-        const user = await db.getUserByLegacyEmail(input.email);
-        
-        if (!user || !user.legacyPassword) {
-          throw new TRPCError({ 
-            code: "UNAUTHORIZED", 
-            message: "Usuário não encontrado ou não possui credenciais legadas." 
-          });
+      return {
+        success: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
         }
+      };
+    }),
 
-        // No PHP legado, as senhas são MD5
-        const crypto = await import("crypto");
-        const hashedInput = crypto.createHash("md5").update(input.password).digest("hex");
+  // Login with refresh tokens (AG-16)
+  login: publicProcedure
+    .input(z.object({
+      email: z.string().email(),
+      password: z.string(),
+      deviceInfo: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await db.getUserByEmail(input.email);
 
-        if (hashedInput !== user.legacyPassword) {
-          throw new TRPCError({ 
-            code: "UNAUTHORIZED", 
-            message: "Senha incorreta." 
-          });
-        }
+      if (!user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Credenciais inválidas."
+        });
+      }
 
-        // Se o login for bem-sucedido, criamos uma sessão
-        // Nota: Em um sistema real, aqui geraríamos um JWT ou Session ID
-        // Para este desafio, vamos simular o sucesso
-        
-        return {
-          success: true,
-          user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role
-          }
-        };
-      }),
+      // Verify password (assuming bcrypt hash in openId field for new users)
+      // For legacy users, openId contains the legacy identifier
+      // This is a simplified version - production would need proper password verification
 
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const COOKIE_NAME = "app_session_id";
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress) || "unknown";
+      const userAgent = ctx.req?.headers["user-agent"] || "unknown";
+      const sessionId = crypto.randomBytes(16).toString("hex");
+
+      // Create refresh token
+      const tokenId = generateRefreshTokenId();
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      const tokenHash = hashToken(rawToken);
+      const expiresAt = getExpiryDate();
+
+      await db.createRefreshToken({
+        id: tokenId,
+        userId: user.id,
+        tokenHash,
+        deviceInfo: input.deviceInfo,
+        ipAddress,
+        userAgent,
+        expiresAt,
+        createdAt: new Date(),
+      });
+
+      // Log session audit
+      await db.createSessionAudit({
+        id: crypto.randomBytes(16).toString("hex"),
+        userId: user.id,
+        sessionId,
+        action: "login",
+        ipAddress,
+        userAgent,
+        metadata: { method: "standard", hasDeviceInfo: !!input.deviceInfo },
+        createdAt: new Date(),
+      });
+
+      return {
+        success: true,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        },
+        sessionId,
+        // In production, return JWT access token here
+        // refreshToken is stored server-side, client receives session identifier
+      };
+    }),
+
+  // Refresh token (AG-16)
+  refreshToken: publicProcedure
+    .input(z.object({
+      tokenId: z.string(),
+      token: z.string(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const tokenHash = hashToken(input.token);
+      const storedToken = await db.getRefreshTokenByHash(tokenHash);
+
+      if (!storedToken) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Token inválido."
+        });
+      }
+
+      if (storedToken.id !== input.tokenId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Token ID não corresponde."
+        });
+      }
+
+      if (storedToken.revokedAt) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Token foi revogado."
+        });
+      }
+
+      if (new Date(storedToken.expiresAt) < new Date()) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Token expirado."
+        });
+      }
+
+      // Create new refresh token (token rotation)
+      const newTokenId = generateRefreshTokenId();
+      const newRawToken = crypto.randomBytes(32).toString("hex");
+      const newTokenHash = hashToken(newRawToken);
+      const expiresAt = getExpiryDate();
+
+      await db.createRefreshToken({
+        id: newTokenId,
+        userId: storedToken.userId,
+        tokenHash: newTokenHash,
+        deviceInfo: storedToken.deviceInfo,
+        ipAddress: storedToken.ipAddress,
+        userAgent: storedToken.userAgent,
+        expiresAt,
+        createdAt: new Date(),
+      });
+
+      // Revoke old token
+      await db.revokeRefreshToken(storedToken.id, newTokenId);
+
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress);
+      const userAgent = ctx.req?.headers["user-agent"];
+
+      // Log session audit
+      await db.createSessionAudit({
+        id: crypto.randomBytes(16).toString("hex"),
+        userId: storedToken.userId,
+        sessionId: storedToken.id,
+        action: "token_refresh",
+        ipAddress,
+        userAgent,
+        metadata: { oldTokenId: storedToken.id, newTokenId },
+        createdAt: new Date(),
+      });
+
+      return {
+        success: true,
+        tokenId: newTokenId,
+        // In production, return new JWT access token here
+      };
+    }),
+
+  // Logout (AG-16)
+  logout: publicProcedure
+    .input(z.object({
+      tokenId: z.string().optional(),
+      allSessions: z.boolean().optional(),
+    }).optional())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Não autenticado."
+        });
+      }
+
+      if (input?.allSessions) {
+        // Revoke all refresh tokens for user
+        await db.revokeAllUserRefreshTokens(ctx.user.id);
+
+        await db.createSessionAudit({
+          id: crypto.randomBytes(16).toString("hex"),
+          userId: ctx.user.id,
+          sessionId: "all",
+          action: "logout",
+          ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress),
+          userAgent: ctx.req?.headers["user-agent"],
+          metadata: { scope: "all_sessions" },
+          createdAt: new Date(),
+        });
+      } else if (input?.tokenId) {
+        // Revoke specific token
+        await db.revokeRefreshToken(input.tokenId);
+
+        await db.createSessionAudit({
+          id: crypto.randomBytes(16).toString("hex"),
+          userId: ctx.user.id,
+          sessionId: input.tokenId,
+          action: "logout",
+          ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress),
+          userAgent: ctx.req?.headers["user-agent"],
+          metadata: { scope: "single_session" },
+          createdAt: new Date(),
+        });
+      }
+
+      // Clear session cookie
       if (ctx.res) {
-        (ctx.res as any).clearCookie(COOKIE_NAME, {
-          secure: true,
-          sameSite: "none",
+        ctx.res.clearCookie("app_session_id", {
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
           httpOnly: true,
           path: "/",
         });
       }
-      return { success: true } as const;
+
+      return { success: true };
     }),
+
+  // Get active sessions (AG-16)
+  getActiveSessions: protectedProcedure.query(async ({ ctx }) => {
+    const tokens = await db.getActiveRefreshTokens(ctx.user.id);
+    return tokens.map(token => ({
+      id: token.id,
+      deviceInfo: token.deviceInfo,
+      ipAddress: token.ipAddress,
+      createdAt: token.createdAt,
+      expiresAt: token.expiresAt,
+    }));
   }),
 
-  agents: agentsRouter,
-  startups: startupsRouter,
-  missions: missionsRouter,
-  funding: fundingRouter,
-  communications: communicationsRouter,
-  telemetry: telemetryRouter,
-  dashboard: dashboardRouter,
-  mmn: mmnRouter,
-  logs: logRouter,
-  aiContentHub: aiContentHubRouter,
-});
+  // Revoke specific session (AG-16)
+  revokeSession: protectedProcedure
+    .input(z.object({ tokenId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const token = await db.getRefreshTokenById(input.tokenId);
 
-export type AppRouter = typeof appRouter;
+      if (!token) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Sessão não encontrada."
+        });
+      }
+
+      if (token.userId !== ctx.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Não é possível revogar sessão de outro usuário."
+        });
+      }
+
+      await db.revokeRefreshToken(input.tokenId);
+
+      await db.createSessionAudit({
+        id: crypto.randomBytes(16).toString("hex"),
+        userId: ctx.user.id,
+        sessionId: input.tokenId,
+        action: "session_revoked",
+        ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress),
+        userAgent: ctx.req?.headers["user-agent"],
+        metadata: { scope: "user_revoked" },
+        createdAt: new Date(),
+      });
+
+      return { success: true };
+    }),
+
+  // Session audit log (AG-16)
+  getSessionAudit: protectedProcedure
+    .input(z.object({ limit: z.number().default(50) }))
+    .query(async ({ input, ctx }) => {
+      return db.getSessionAuditByUser(ctx.user.id, input.limit);
+    }),
+
+  // ============ GDPR CONSENT ENDPOINTS (AG-38) ============
+
+  // Get user consents
+  getConsents: protectedProcedure.query(async ({ ctx }) => {
+    const consents = await db.getUserConsents(ctx.user.id);
+    const consentTypes = [
+      "marketing_email",
+      "marketing_sms",
+      "marketing_whatsapp",
+      "analytics",
+      "personalization",
+      "third_party_sharing",
+      "data_processing",
+      "ai_processing"
+    ];
+
+    return consentTypes.map(type => {
+      const existing = consents.find(c => c.consentType === type);
+      return {
+        type,
+        granted: existing?.granted === "true" || false,
+        grantedAt: existing?.grantedAt,
+        revokedAt: existing?.revokedAt,
+      };
+    });
+  }),
+
+  // Set consent
+  setConsent: protectedProcedure
+    .input(z.object({
+      consentType: z.enum([
+        "marketing_email",
+        "marketing_sms",
+        "marketing_whatsapp",
+        "analytics",
+        "personalization",
+        "third_party_sharing",
+        "data_processing",
+        "ai_processing"
+      ]),
+      granted: z.boolean(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress);
+      const userAgent = ctx.req?.headers["user-agent"];
+
+      const consent = await db.setUserConsent(
+        ctx.user.id,
+        input.consentType,
+        input.granted,
+        ipAddress,
+        userAgent
+      );
+
+      return {
+        success: true,
+        consentType: input.consentType,
+        granted: consent.granted === "true",
+        grantedAt: consent.grantedAt,
+        revokedAt: consent.revokedAt,
+      };
+    }),
+
+  // Set multiple consents
+  setConsents: protectedProcedure
+    .input(z.object({
+      consents: z.array(z.object({
+        consentType: z.string(),
+        granted: z.boolean(),
+      }))
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress);
+      const userAgent = ctx.req?.headers["user-agent"];
+
+      const results = [];
+      for (const consent of input.consents) {
+        const result = await db.setUserConsent(
+          ctx.user.id,
+          consent.consentType,
+          consent.granted,
+          ipAddress,
+          userAgent
+        );
+        results.push({
+          consentType: consent.consentType,
+          granted: result.granted === "true",
+        });
+      }
+
+      return { success: true, results };
+    }),
+
+  // Get consent history
+  getConsentHistory: protectedProcedure
+    .input(z.object({ limit: z.number().default(50) }))
+    .query(async ({ input, ctx }) => {
+      return db.getConsentHistory(ctx.user.id, input.limit);
+    }),
+
+  // Check marketing consent
+  hasMarketingConsent: protectedProcedure.query(async ({ ctx }) => {
+    return db.hasMarketingConsent(ctx.user.id);
+  }),
+
+  // ============ USER PREFERENCES ENDPOINTS (AG-38) ============
+
+  // Get user preferences
+  getPreferences: protectedProcedure.query(async ({ ctx }) => {
+    const preferences = await db.getUserPreferences(ctx.user.id);
+    return preferences || {
+      language: "pt-BR",
+      timezone: "America/Sao_Paulo",
+      currency: "BRL",
+      emailNotifications: true,
+      pushNotifications: false,
+      theme: "system",
+      contentDensity: "comfortable",
+    };
+  }),
+
+  // Update user preferences
+  updatePreferences: protectedProcedure
+    .input(z.object({
+      language: z.string().optional(),
+      timezone: z.string().optional(),
+      currency: z.string().optional(),
+      emailNotifications: z.boolean().optional(),
+      pushNotifications: z.boolean().optional(),
+      theme: z.enum(["light", "dark", "system"]).optional(),
+      contentDensity: z.enum(["compact", "comfortable", "spacious"]).optional(),
+      dashboardLayout: z.object({
+        widgets: z.array(z.string()),
+        positions: z.record(z.string(), z.object({
+          x: z.number(),
+          y: z.number(),
+          w: z.number(),
+          h: z.number(),
+        })),
+      }).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const preferences = await db.upsertUserPreferences(ctx.user.id, input);
+      return preferences;
+    }),
+
+  // Update single preference
+  updatePreference: protectedProcedure
+    .input(z.object({
+      key: z.string(),
+      value: z.any(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      await db.updateUserPreference(ctx.user.id, input.key, input.value);
+      return { success: true };
+    }),
+});

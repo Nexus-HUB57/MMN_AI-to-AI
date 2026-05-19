@@ -454,3 +454,132 @@ export const dashboardMetrics = mysqlTable('dashboard_metrics', {
 
 export type DashboardMetric = typeof dashboardMetrics.$inferSelect;
 export type InsertDashboardMetric = typeof dashboardMetrics.$inferInsert;
+
+// =============================================================================
+// GDPR CONSENT & USER PREFERENCES (AG-38)
+// =============================================================================
+
+/**
+ * User Consents - Armazena consentimentos GDPR dos usuários
+ * Implementação para AG-38: Sistema de consentimento opt-in/opt-out
+ */
+export const userConsents = mysqlTable('user_consents', {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull(),
+  consentType: mysqlEnum("consentType", [
+    "marketing_email",      // Emails de marketing
+    "marketing_sms",         // SMS de marketing
+    "marketing_whatsapp",    // WhatsApp marketing
+    "analytics",             // Analytics e rastreamento
+    "personalization",       // Personalização de conteúdo
+    "third_party_sharing",   // Compartilhamento com terceiros
+    "data_processing",       // Processamento de dados gerais
+    "ai_processing"          // Processamento por IA/ML
+  ]).notNull(),
+  granted: mysqlEnum("granted", ["true", "false"]).notNull().default("false"),
+  grantedAt: timestamp("grantedAt"),
+  revokedAt: timestamp("revokedAt"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userConsentTypeIdx: index("user_consent_type_idx").on(table.userId, table.consentType),
+  consentTypeGrantedIdx: index("consent_type_granted_idx").on(table.consentType, table.granted),
+}));
+
+export type UserConsent = typeof userConsents.$inferSelect;
+export type InsertUserConsent = typeof userConsents.$inferInsert;
+
+/**
+ * Consent History - Histórico de alterações de consentimento
+ */
+export const consentHistory = mysqlTable('consent_history', {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull(),
+  consentType: varchar("consentType", { length: 50 }).notNull(),
+  action: mysqlEnum("action", ["granted", "revoked", "updated"]).notNull(),
+  previousValue: mysqlEnum("previousValue", ["true", "false", "null"]),
+  newValue: mysqlEnum("newValue", ["true", "false"]).notNull(),
+  reason: text("reason"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  userConsentHistoryIdx: index("consent_history_user_idx").on(table.userId),
+  consentHistoryDateIdx: index("consent_history_date_idx").on(table.createdAt),
+}));
+
+export type ConsentHistory = typeof consentHistory.$inferSelect;
+export type InsertConsentHistory = typeof consentHistory.$inferInsert;
+
+/**
+ * User Preferences - Preferências gerais do usuário
+ */
+export const userPreferences = mysqlTable('user_preferences', {
+  id: int("id").primaryKey().autoincrement(),
+  userId: int("userId").notNull().unique(),
+  language: varchar("language", { length: 10 }).default("pt-BR"),
+  timezone: varchar("timezone", { length: 50 }).default("America/Sao_Paulo"),
+  currency: varchar("currency", { length: 3 }).default("BRL"),
+  emailNotifications: mysqlEnum("emailNotifications", ["true", "false"]).default("true"),
+  pushNotifications: mysqlEnum("pushNotifications", ["true", "false"]).default("false"),
+  theme: mysqlEnum("theme", ["light", "dark", "system"]).default("system"),
+  contentDensity: mysqlEnum("contentDensity", ["compact", "comfortable", "spacious"]).default("comfortable"),
+  dashboardLayout: json("dashboardLayout").$type<{
+    widgets: string[];
+    positions: Record<string, { x: number; y: number; w: number; h: number }>;
+  }>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserPreference = typeof userPreferences.$inferSelect;
+export type InsertUserPreference = typeof userPreferences.$inferInsert;
+
+/**
+ * Refresh Tokens - Tokens de atualização para autenticação (AG-16)
+ */
+export const refreshTokens = mysqlTable('refresh_tokens', {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  userId: int("userId").notNull(),
+  tokenHash: varchar("tokenHash", { length: 128 }).notNull(),
+  deviceInfo: text("deviceInfo"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  expiresAt: timestamp("expiresAt").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  revokedAt: timestamp("revokedAt"),
+  replacedByTokenId: varchar("replacedByTokenId", { length: 64 }),
+}, (table) => ({
+  userIdIdx: index("refresh_token_user_idx").on(table.userId),
+  tokenHashIdx: index("refresh_token_hash_idx").on(table.tokenHash),
+  expiresAtIdx: index("refresh_token_expires_idx").on(table.expiresAt),
+}));
+
+export type RefreshToken = typeof refreshTokens.$inferSelect;
+export type InsertRefreshToken = typeof refreshTokens.$inferInsert;
+
+/**
+ * Session Audit - Auditoria de sessões de usuário
+ */
+export const sessionAudit = mysqlTable('session_audit', {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  userId: int("userId").notNull(),
+  sessionId: varchar("sessionId", { length: 64 }).notNull(),
+  action: mysqlEnum("action", [
+    "login", "logout", "token_refresh", "password_change",
+    "mfa_enabled", "mfa_disabled", "session_revoked", "suspicious_activity"
+  ]).notNull(),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  metadata: json("metadata").$type<Record<string, any>>(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  userSessionIdx: index("session_audit_user_idx").on(table.userId),
+  sessionActionIdx: index("session_audit_action_idx").on(table.action),
+  sessionDateIdx: index("session_audit_date_idx").on(table.createdAt),
+}));
+
+export type SessionAudit = typeof sessionAudit.$inferSelect;
+export type InsertSessionAudit = typeof sessionAudit.$inferInsert;

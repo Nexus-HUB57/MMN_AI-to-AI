@@ -1,6 +1,7 @@
 import { publicProcedure, router } from "./trpc/trpc";
 import { agenticRouter } from "./routers/agenticRouter";
 import { agentsRouter } from "./routers/agentsRouter";
+import { authRouter } from "./routers/authRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { contentGenerationRouter } from "./routers/contentGenerationRouter";
 import { dashboardRouter } from "./routers/dashboardRouter";
@@ -8,6 +9,7 @@ import { dropshippingRouter } from "./routers/dropshippingRouter";
 import { logRouter } from "./routers/logRouter";
 import { marketplacesRouter } from "./routers/marketplacesRouter";
 import { mmnRouter } from "./routers/mmnRouter";
+import { observabilityRouter } from "./routers/observabilityRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
 import { paymentsRouter } from "./routers/paymentsRouter";
 import { bankingRouter } from "./routers/bankingRouter";
@@ -57,21 +59,7 @@ export const appRouter = router({
     })),
   }),
 
-  auth: router({
-    me: publicProcedure.query(({ ctx }) => ctx.user ?? null),
-
-    logout: publicProcedure.mutation(({ ctx }) => {
-      if (ctx.res) {
-        ctx.res.clearCookie("app_session_id", {
-          secure: false,
-          sameSite: "lax",
-          httpOnly: true,
-          path: "/",
-        });
-      }
-      return { success: true } as const;
-    }),
-  }),
+  auth: authRouter,
 
   bootstrap: router({
     status: publicProcedure.query(() => ({
@@ -251,6 +239,9 @@ export const appRouter = router({
 
   // ============ ORCHESTRATION ROUTER ============
   orchestration: orchestrationRouter,
+
+  // ============ OBSERVABILITY ROUTER ============
+  observability: observabilityRouter,
 
   // ============ PAYMENTS ROUTER ============
   payments: paymentsRouter,

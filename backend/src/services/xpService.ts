@@ -3,8 +3,8 @@
  * Sistema PD/SCC com 27 níveis de carreira
  */
 
-import { db } from '../db';
-import { affiliateXP, xpTransactions, careerLevels, affiliates, commissions } from '../../database/schemas';
+import { getDb } from '../db';
+import { affiliateXP, xpTransactions, careerLevels, affiliates, commissions } from '../../../database/schemas';
 import { eq, and, gte, lte, desc } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
@@ -18,10 +18,19 @@ const XP_MULTIPLIERS = {
   penalty: -1, // Penalty multiplier (negative)
 };
 
+async function requireDb() {
+  const db = await getDb();
+  if (!db) {
+    throw new Error('Database not available');
+  }
+  return db;
+}
+
 /**
  * Get or create XP record for an affiliate
  */
 export async function getOrCreateAffiliateXP(affiliateId: number) {
+  const db = await requireDb();
   const [record] = await db
     .select()
     .from(affiliateXP)
@@ -52,6 +61,7 @@ export async function getOrCreateAffiliateXP(affiliateId: number) {
  * Calculate level from total XP
  */
 export async function calculateLevelFromXP(totalXp: number): Promise<number> {
+  const db = await requireDb();
   // Get all career levels ordered by XP requirement
   const levels = await db
     .select()
@@ -81,6 +91,7 @@ export async function addXP(
   description: string,
   sourceId?: string
 ): Promise<{ xpRecord: typeof affiliateXP.$inferSelect; transaction: typeof xpTransactions.$inferSelect }> {
+  const db = await requireDb();
   const currentXP = await getOrCreateAffiliateXP(affiliateId);
 
   // Calculate XP amount based on source
@@ -145,6 +156,7 @@ export async function addXP(
  * Get XP details for an affiliate
  */
 export async function getXPDetails(affiliateId: number) {
+  const db = await requireDb();
   const xpRecord = await getOrCreateAffiliateXP(affiliateId);
 
   // Get current level info
@@ -196,6 +208,7 @@ export async function getXPDetails(affiliateId: number) {
  * Get all career levels
  */
 export async function getAllCareerLevels() {
+  const db = await requireDb();
   return db.select().from(careerLevels).orderBy(careerLevels.level);
 }
 
@@ -203,6 +216,7 @@ export async function getAllCareerLevels() {
  * Seed career levels if not exists
  */
 export async function seedCareerLevels() {
+  const db = await requireDb();
   const existingLevels = await db.select().from(careerLevels).limit(1);
   if (existingLevels.length > 0) {
     return { message: 'Career levels already seeded' };
@@ -277,6 +291,7 @@ export async function processCommissionXP(affiliateId: number, commissionAmount:
  * Reset monthly XP (called by cron job)
  */
 export async function resetMonthlyXP() {
+  const db = await requireDb();
   const now = new Date();
 
   await db
@@ -293,6 +308,7 @@ export async function resetMonthlyXP() {
  * Get leaderboard
  */
 export async function getLeaderboard(limit: number = 10) {
+  const db = await requireDb();
   const topAffiliates = await db
     .select({
       affiliateId: affiliateXP.affiliateId,

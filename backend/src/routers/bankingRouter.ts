@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, adminProcedure, router } from "../config/trpc";
-import { getDb } from "../../database/schemas/db";
+import { createNotification, getDb } from "../../../database/schemas/db";
 import {
   bankAccounts,
   affiliateBalances,
@@ -12,10 +12,10 @@ import {
   InsertWithdrawalRequest,
   InsertTransactionHistory,
   InsertMonthlyReport,
-} from "../../database/schemas/banking-schema";
+} from "../../../database/schemas/banking-schema";
+import { affiliates } from "../../../database/schemas/schema-final";
 import { eq, and, desc, gte, lt, sum, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { createNotification } from "../../database/schemas/db";
 
 /**
  * Banking Router - Sistema BeYour Banker

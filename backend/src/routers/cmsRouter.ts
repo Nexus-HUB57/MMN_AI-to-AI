@@ -1,7 +1,7 @@
-import { router, protectedProcedure, publicProcedure } from '../trpc';
+import { router, protectedProcedure, publicProcedure } from '../config/trpc';
 import { z } from 'zod';
-import { eq, like, or } from 'drizzle-orm';
-import { cmsPages } from '../database/schema';
+import { and, eq } from 'drizzle-orm';
+import { cmsPages } from '../../../database/schemas/schema-legacy-migration';
 
 export const cmsRouter = router({
   // Get a page by slug (public)

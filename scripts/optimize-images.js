@@ -11,9 +11,9 @@ const outputDir = process.argv[3]
   : path.resolve(repoRoot, "frontend/public/images");
 
 if (!fs.existsSync(inputDir)) {
-  console.error(`Diretório de origem não encontrado: ${inputDir}`);
-  console.error("Informe um diretório explícito: node scripts/optimize-images.js <origem> <destino>");
-  process.exit(1);
+  console.log(`Diretório de origem não encontrado: ${inputDir}`);
+  console.log("Nenhuma otimização executada. Informe um diretório explícito para processar imagens.");
+  process.exit(0);
 }
 
 if (!fs.existsSync(outputDir)) {

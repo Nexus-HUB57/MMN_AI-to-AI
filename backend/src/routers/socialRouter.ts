@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, adminProcedure, router } from "../config/trpc";
-import { getDb } from "../../database/schemas/db";
+import { createNotification, getDb } from "../../../database/schemas/db";
 import {
   socialAccounts,
   contentCalendar,
@@ -11,10 +11,9 @@ import {
   InsertContentCalendar,
   InsertTrackingLink,
   InsertConversionEvent,
-} from "../../database/schemas/banking-schema";
+} from "../../../database/schemas/banking-schema";
 import { eq, and, desc, gte, lt, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { createNotification } from "../../database/schemas/db";
 
 /**
  * Social Router - Posts Automatizados e Redes Sociais

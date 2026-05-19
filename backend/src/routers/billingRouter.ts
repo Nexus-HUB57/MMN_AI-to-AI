@@ -1,7 +1,7 @@
-import { router, protectedProcedure, publicProcedure } from '../trpc';
+import { router, protectedProcedure, publicProcedure } from '../config/trpc';
 import { z } from 'zod';
 import { eq, and, gte, lte, desc } from 'drizzle-orm';
-import { invoices, invoiceItems, billingHistory } from '../database/schema';
+import { invoices, invoiceItems, billingHistory } from '../../../database/schemas/schema-legacy-migration';
 
 export const billingRouter = router({
   // Get invoice by ID

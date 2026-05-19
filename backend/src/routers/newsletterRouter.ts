@@ -1,7 +1,7 @@
-import { router, protectedProcedure, publicProcedure } from '../trpc';
+import { router, protectedProcedure, publicProcedure } from '../config/trpc';
 import { z } from 'zod';
-import { eq, and, or } from 'drizzle-orm';
-import { newsletters } from '../database/schema';
+import { eq } from 'drizzle-orm';
+import { newsletters } from '../../../database/schemas/schema-legacy-migration';
 
 export const newsletterRouter = router({
   // Subscribe to newsletter

@@ -13,6 +13,14 @@
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
+## Revisão Atual do Sistema
+
+A revisão técnica consolidada do estado atual do repositório está em:
+
+- [`docs/repository-review/ANALISE_TECNICA_SISTEMA_ATUAL.md`](docs/repository-review/ANALISE_TECNICA_SISTEMA_ATUAL.md)
+- [`docs/repository-review/RESUMO_EXECUTIVO_SISTEMA_ATUAL.md`](docs/repository-review/RESUMO_EXECUTIVO_SISTEMA_ATUAL.md)
+- [`docs/repository-review/README.md`](docs/repository-review/README.md)
+
 ## Stack Tecnológica
 
 | Categoria | Tecnologia | Versão |
@@ -58,6 +66,11 @@
 ## Como Iniciar
 
 ### 1. Preparação
+
+Pré-requisitos validados:
+- Node.js 20+
+- npm 10+
+- Docker Desktop ou Docker Engine (opcional, para MySQL/Redis locais)
 
 ```bash
 git clone https://github.com/Nexus-HUB57/MMN_AI-to-AI.git

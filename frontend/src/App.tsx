@@ -23,6 +23,7 @@ const AdminCommissions = lazy(() => import("./pages/AdminCommissions"));
 const AdminPayments = lazy(() => import("./pages/AdminPayments"));
 const AdminDelinquents = lazy(() => import("./pages/AdminDelinquents"));
 const AdminMaterials = lazy(() => import("./pages/AdminMaterials"));
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 
 // Affiliate Pages
 const AffiliateProfile = lazy(() => import("./pages/AffiliateProfile"));
@@ -55,10 +56,10 @@ const BonusRewards = lazy(() => import("./pages/BonusRewards"));
 const BonusPage = lazy(() => import("./pages/BonusPage"));
 
 // Social Pages
-const SocialAccounts = lazy(() => import("./pages/SocialAccounts"));
+const SocialAccounts = lazy(() => import("./pages/NotFound"));
 
 // Tracking Pages
-const TrackingLinks = lazy(() => import("./pages/TrackingLinks"));
+const TrackingLinks = lazy(() => import("./pages/NotFound"));
 
 // Auth Pages
 const Login = lazy(() => import("./pages/Login"));
@@ -123,6 +124,7 @@ export const NAVIGATION_STRUCTURE = {
     { path: "/admin/payments", name: "Pagamentos", component: "AdminPayments", layout: "AdminDashboardLayout" },
     { path: "/admin/delinquents", name: "Inadimplentes", component: "AdminDelinquents", layout: "AdminDashboardLayout" },
     { path: "/admin/materials", name: "Materiais", component: "AdminMaterials", layout: "AdminDashboardLayout" },
+    { path: "/admin/settings", name: "Configurações", component: "AdminSettings", layout: "AdminDashboardLayout" },
   ],
 };
 
@@ -187,6 +189,7 @@ export default function App() {
             <Route path="/admin/payments" component={AdminPayments} />
             <Route path="/admin/delinquents" component={AdminDelinquents} />
             <Route path="/admin/materials" component={AdminMaterials} />
+            <Route path="/admin/settings" component={AdminSettings} />
 
             {/* 404 */}
             <Route component={NotFound} />

@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node ../scripts/optimize-images.js",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .ts,.tsx",
@@ -21,6 +20,7 @@
     "@trpc/server": "^11.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.2.1",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Cpu, Zap, Activity, Settings, History, MessageSquare } from "lucide-react";
-import { trpc } from "@/_core/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Agent() {

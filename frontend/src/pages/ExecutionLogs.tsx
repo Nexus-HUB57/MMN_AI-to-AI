@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdminDashboardLayout from "./AdminDashboardLayout";
-import { trpc } from "@/utils/trpc";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

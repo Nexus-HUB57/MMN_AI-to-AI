@@ -1,4 +1,4 @@
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 
 interface DashboardLayoutProps {

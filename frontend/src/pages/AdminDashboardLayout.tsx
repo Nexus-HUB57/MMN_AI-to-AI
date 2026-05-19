@@ -1,4 +1,4 @@
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -12,6 +12,8 @@ import {
   LogOut,
   Menu,
   X,
+  Settings,
+  Clock,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -28,6 +30,7 @@ const MENU_ITEMS = [
   { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
+  { label: "Configurações", path: "/admin/settings", icon: Settings },
   { label: "Logs de Execução", path: "/admin/logs", icon: FileText },
   { label: "Agendamentos", path: "/admin/schedules", icon: Clock },
 ];

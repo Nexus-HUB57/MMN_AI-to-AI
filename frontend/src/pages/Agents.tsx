@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '@/_core/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { trpc } from '@/lib/trpc';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

@@ -1,4 +1,4 @@
-import AdminDashboardLayout from "@/components/AdminDashboardLayout";
+import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";

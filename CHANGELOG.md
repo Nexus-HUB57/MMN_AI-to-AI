@@ -1,5 +1,18 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-20 — Backoffice Admin para Agendamentos Cron
+
+### `feat(backoffice)` — Rota administrativa de agendamentos conectada ao domínio Cron
+
+**Frontend Admin:**
+- `AdminSchedules.tsx` evoluído de página descritiva para painel operacional ligado ao `trpc.cron.*`
+- adicionadas listagem de jobs, estatísticas, próximas execuções, histórico do job selecionado e ações de execução manual/pausa
+- reforçada a integração entre Backoffice, logs e automação recorrente
+
+**Documentação:**
+- adicionada a entrega `docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md`
+- índices administrativos e README sincronizados com a nova frente operacional de cron
+
 ## 2026-05-20 — Saneamento do Backend e Build do Monorepo
 
 ### `fix(backend)` — Observabilidade e imports estabilizados

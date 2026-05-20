@@ -13,6 +13,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Entrega — aprovações administrativas](./ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
 - [Entrega — comissões no namespace dedicado](./ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [Entrega — auditoria e consolidação financeira](./ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
+- [Entrega — agendamentos Cron no Backoffice Admin](./ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
 
 ## Status atual da trilha
 
@@ -22,6 +23,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - módulo de aprovações administrativas com fila, revisão detalhada, aprovação em lote e indicadores de SLA
 - módulo de comissões ligado ao namespace dedicado `trpc.commissions.*`
 - reforço de auditoria operacional e consolidação visual do domínio financeiro entre aprovações, comissões e pagamentos
+- integração administrativa do domínio Cron com listagem de jobs, próximas execuções, histórico e disparo manual
 
 ## Objetivo
 

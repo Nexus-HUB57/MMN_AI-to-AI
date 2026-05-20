@@ -63,6 +63,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md`](docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
 - [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
+- [`docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md`](docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
 
 ## Atualizações Recentes do Repositório (2026-05-20)
 
@@ -82,14 +83,16 @@ O Backoffice Admin avançou com uma trilha incremental já refletida no frontend
 
 ### ✅ Automação Cron e saneamento do backend
 
-O backend também recebeu duas evoluções relevantes na base atual:
+O backend também recebeu evoluções relevantes na base atual:
 
 - implantação do módulo de automação Cron com router, scheduler e estrutura de histórico/configuração
+- integração da rota administrativa `/admin/schedules` com o domínio real `trpc.cron.*`, incluindo listagem, próximas execuções, histórico e ações operacionais
 - saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
 
 **Referências úteis:**
 - [`backend/src/routers/cronRouter.ts`](backend/src/routers/cronRouter.ts)
 - [`backend/src/services/cronScheduler.ts`](backend/src/services/cronScheduler.ts)
+- [`frontend/src/pages/AdminSchedules.tsx`](frontend/src/pages/AdminSchedules.tsx)
 - [`database/schemas/schema-cron.ts`](database/schemas/schema-cron.ts)
 - [`CHANGELOG.md`](CHANGELOG.md)
 

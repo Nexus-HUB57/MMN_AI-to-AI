@@ -23,6 +23,9 @@ import { billingRouter } from "./routers/billingRouter";
 import { usersRouter } from "./routers/usersRouter";
 import { materialsRouter } from "./routers/materialsRouter";
 import { networkRouter } from "./routers/networkRouter";
+import { delinquentsRouter } from "./routers/delinquentsRouter";
+import { commissionsRouter } from "./routers/commissionsRouter";
+import { approvalsRouter } from "./routers/approvalsRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -92,6 +95,9 @@ export const appRouter = router({
         users: true,
         materials: true,
         network: true,
+        delinquents: true,
+        commissions: true,
+        approvals: true,
       },
     })),
   }),
@@ -286,6 +292,15 @@ export const appRouter = router({
 
   // ============ NETWORK ROUTER ============
   network: networkRouter,
+
+  // ============ DELINQUENTS ROUTER ============
+  delinquents: delinquentsRouter,
+
+  // ============ COMMISSIONS ROUTER ============
+  commissions: commissionsRouter,
+
+  // ============ APPROVALS ROUTER ============
+  approvals: approvalsRouter,
 });
 
 export type AppRouter = typeof appRouter;

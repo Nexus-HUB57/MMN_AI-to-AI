@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-20 — Expansão dos Routers Admin
+
+### `feat(routers)` — Routers Delinquents, Commissions e Approvals
+
+**Backend - Novos routers:**
+- `delinquentsRouter.ts` - Gestão de inadimplentes: list, getById, updateStatus, addContactAttempt, addNote, getStats, sendReminder
+- `commissionsRouter.ts` - Gestão de comissões: list, getById, updateStatus, approveBatch, getStats, getByAffiliate, calculatePending
+- `approvalsRouter.ts` - Gestão de aprovações: listPending, listProcessed, getById, approve, reject, requestInfo, getStats, approveBatch
+
+**appRouter.ts atualizado:**
+- Novos routers registrados: `delinquents`, `commissions`, `approvals`
+- Status bootstrap atualizado com 3 novos routers
+
+**Endpoints tRPC para páginas admin:**
+- `trpc.delinquents.list` → AdminDelinquents
+- `trpc.delinquents.updateStatus` → AdminDelinquents
+- `trpc.commissions.list` → AdminCommissions
+- `trpc.commissions.updateStatus` → AdminCommissions
+- `trpc.approvals.listPending` → AdminApprovals
+- `trpc.approvals.approve/reject` → AdminApprovals
+
+**Frontend pages admin integradas:**
+- AdminDelinquents.tsx - Gerenciamento de inadimplentes
+- AdminCommissions.tsx - Visualização e gestão de comissões
+- AdminApprovals.tsx - Fluxo de aprovações administrativas
+
 ## 2026-05-20 — Routers Admin + BackOffice Integration
 
 ### `feat(routers)` — Novos Routers para Backoffice Admin

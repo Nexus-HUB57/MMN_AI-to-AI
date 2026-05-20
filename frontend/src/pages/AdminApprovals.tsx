@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react";
-import { CheckCircle2, Clock3, FileSearch, RefreshCw, ShieldCheck, ShieldX } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock3,
+  FileSearch,
+  RefreshCw,
+  ShieldCheck,
+  ShieldX,
+  Users,
+} from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -38,7 +45,7 @@ type PendingApproval = {
 
 type ProcessedApproval = {
   id: number;
-  type: string;
+  type: ApprovalType | string;
   status: ProcessedStatus;
   userId: number;
   userName: string;
@@ -67,13 +74,31 @@ const processedMeta: Record<ProcessedStatus, { label: string; className: string 
   rejected: { label: "Rejeitada", className: "bg-red-100 text-red-800" },
 };
 
+const formatApprovalType = (type: string) => {
+  if (type in typeLabel) {
+    return typeLabel[type as ApprovalType];
+  }
+
+  return type.replaceAll("_", " ");
+};
+
+const getHoursSince = (submittedAt?: string | Date) => {
+  if (!submittedAt) return 0;
+  const submittedTime = new Date(submittedAt).getTime();
+  if (Number.isNaN(submittedTime)) return 0;
+
+  return Math.max(0, (Date.now() - submittedTime) / (1000 * 60 * 60));
+};
+
 export default function AdminApprovals() {
   const [activeTab, setActiveTab] = useState<"pending" | "processed">("pending");
   const [pendingTypeFilter, setPendingTypeFilter] = useState<"all" | ApprovalType>("all");
   const [priorityFilter, setPriorityFilter] = useState<"all" | ApprovalPriority>("all");
   const [processedStatusFilter, setProcessedStatusFilter] = useState<"all" | ProcessedStatus>("all");
   const [selectedApprovalId, setSelectedApprovalId] = useState<number | null>(null);
+  const [selectedPendingIds, setSelectedPendingIds] = useState<number[]>([]);
   const [approvalNotes, setApprovalNotes] = useState("");
+  const [batchApprovalNotes, setBatchApprovalNotes] = useState("");
   const [rejectReason, setRejectReason] = useState("");
   const [infoField, setInfoField] = useState("");
   const [infoQuestion, setInfoQuestion] = useState("");
@@ -108,28 +133,45 @@ export default function AdminApprovals() {
     { enabled: selectedApprovalId !== null }
   );
 
+  const refreshAll = () => {
+    pendingQuery.refetch();
+    processedQuery.refetch();
+    statsQuery.refetch();
+    if (selectedApprovalId) {
+      detailsQuery.refetch();
+    }
+  };
+
   const approveMutation = trpc.approvals.approve.useMutation({
     onSuccess: () => {
       toast.success("Solicitação aprovada com sucesso");
-      pendingQuery.refetch();
-      processedQuery.refetch();
-      statsQuery.refetch();
-      detailsQuery.refetch();
+      refreshAll();
       setApprovalNotes("");
+      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao aprovar solicitação");
     },
   });
 
+  const approveBatchMutation = trpc.approvals.approveBatch.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message || "Solicitações aprovadas com sucesso");
+      refreshAll();
+      setBatchApprovalNotes("");
+      setSelectedPendingIds([]);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao aprovar solicitações em lote");
+    },
+  });
+
   const rejectMutation = trpc.approvals.reject.useMutation({
     onSuccess: () => {
       toast.success("Solicitação rejeitada com sucesso");
-      pendingQuery.refetch();
-      processedQuery.refetch();
-      statsQuery.refetch();
-      detailsQuery.refetch();
+      refreshAll();
       setRejectReason("");
+      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao rejeitar solicitação");
@@ -168,9 +210,56 @@ export default function AdminApprovals() {
     };
   }, [activeTab, pendingApprovals, processedApprovals]);
 
+  const slaSummary = useMemo(() => {
+    const averageProcessingHours = Number(statsQuery.data?.averageProcessingTime || 0);
+    const items = pendingApprovals.map((approval) => getHoursSince(approval.submittedAt));
+
+    return {
+      within24h: items.filter((hours) => hours <= 24).length,
+      between24hAnd72h: items.filter((hours) => hours > 24 && hours <= 72).length,
+      over72h: items.filter((hours) => hours > 72).length,
+      overAverageSla: items.filter((hours) => averageProcessingHours > 0 && hours > averageProcessingHours).length,
+      longestWaitingHours: items.length ? Math.round(Math.max(...items)) : 0,
+      averageProcessingHours,
+    };
+  }, [pendingApprovals, statsQuery.data?.averageProcessingTime]);
+
+  const allVisiblePendingSelected = pendingApprovals.length > 0 && pendingApprovals.every((approval) => selectedPendingIds.includes(approval.id));
+
+  const togglePendingSelection = (approvalId: number, checked: boolean) => {
+    setSelectedPendingIds((current) => {
+      if (checked) {
+        return current.includes(approvalId) ? current : [...current, approvalId];
+      }
+
+      return current.filter((id) => id !== approvalId);
+    });
+  };
+
+  const handleSelectAllVisible = (checked: boolean) => {
+    if (checked) {
+      setSelectedPendingIds(pendingApprovals.map((approval) => approval.id));
+      return;
+    }
+
+    setSelectedPendingIds([]);
+  };
+
   const handleApprove = () => {
     if (!selectedApprovalId) return;
     approveMutation.mutate({ id: selectedApprovalId, notes: approvalNotes || undefined });
+  };
+
+  const handleApproveBatch = () => {
+    if (!selectedPendingIds.length) {
+      toast.error("Selecione ao menos uma solicitação pendente para aprovação em lote");
+      return;
+    }
+
+    approveBatchMutation.mutate({
+      ids: selectedPendingIds,
+      notes: batchApprovalNotes || undefined,
+    });
   };
 
   const handleReject = () => {
@@ -211,18 +300,7 @@ export default function AdminApprovals() {
               Fila operacional para revisão de novos afiliados, upgrades, atualizações de perfil e solicitações especiais.
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              pendingQuery.refetch();
-              processedQuery.refetch();
-              statsQuery.refetch();
-              if (selectedApprovalId) {
-                detailsQuery.refetch();
-              }
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={refreshAll}>
             <RefreshCw size={16} className="mr-2" />
             Atualizar dados
           </Button>
@@ -261,7 +339,41 @@ export default function AdminApprovals() {
           </Card>
         </section>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "pending" | "processed")}> 
+        <section className="grid gap-4 xl:grid-cols-4">
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-slate-600">
+              <Clock3 size={18} />
+              <span className="text-sm">SLA médio do backend</span>
+            </div>
+            <p className="mt-2 text-3xl font-semibold text-slate-900">{slaSummary.averageProcessingHours.toFixed(1)}h</p>
+          </Card>
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-emerald-700">
+              <ShieldCheck size={18} />
+              <span className="text-sm">Até 24h</span>
+            </div>
+            <p className="mt-2 text-3xl font-semibold text-emerald-700">{slaSummary.within24h}</p>
+          </Card>
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-amber-700">
+              <Clock3 size={18} />
+              <span className="text-sm">24h a 72h</span>
+            </div>
+            <p className="mt-2 text-3xl font-semibold text-amber-700">{slaSummary.between24hAnd72h}</p>
+          </Card>
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-rose-700">
+              <ShieldX size={18} />
+              <span className="text-sm">Acima de 72h</span>
+            </div>
+            <p className="mt-2 text-3xl font-semibold text-rose-700">{slaSummary.over72h}</p>
+            <p className="mt-2 text-xs text-slate-500">
+              {slaSummary.overAverageSla} acima do SLA médio · pico de {slaSummary.longestWaitingHours}h
+            </p>
+          </Card>
+        </section>
+
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "pending" | "processed") }>
           <TabsList>
             <TabsTrigger value="pending">Pendentes</TabsTrigger>
             <TabsTrigger value="processed">Processadas</TabsTrigger>
@@ -317,16 +429,58 @@ export default function AdminApprovals() {
               </div>
             </Card>
 
+            <Card className="border border-blue-200 bg-blue-50 p-5 shadow-sm">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                  <div className="flex items-center gap-2 text-blue-900">
+                    <Users size={18} />
+                    <h2 className="text-base font-semibold">Aprovação em lote</h2>
+                  </div>
+                  <p className="mt-2 text-sm text-blue-800">
+                    Selecione pendências visíveis para acelerar a triagem operacional com uma única decisão administrativa.
+                  </p>
+                </div>
+                <div className="grid w-full gap-3 lg:max-w-xl lg:grid-cols-[1fr_auto_auto] lg:items-end">
+                  <Textarea
+                    value={batchApprovalNotes}
+                    onChange={(e) => setBatchApprovalNotes(e.target.value)}
+                    placeholder="Observações da aprovação em lote"
+                    className="min-h-[88px] bg-white"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSelectAllVisible(!allVisiblePendingSelected)}
+                    disabled={!pendingApprovals.length}
+                  >
+                    {allVisiblePendingSelected ? "Limpar seleção" : "Selecionar visíveis"}
+                  </Button>
+                  <Button onClick={handleApproveBatch} disabled={approveBatchMutation.isPending || !selectedPendingIds.length}>
+                    {approveBatchMutation.isPending ? "Aprovando lote..." : `Aprovar ${selectedPendingIds.length || 0} item(ns)`}
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
             <Card className="overflow-x-auto bg-white p-6 shadow-sm">
-              <table className="w-full min-w-[980px]">
+              <table className="w-full min-w-[1030px]">
                 <thead>
                   <tr className="border-b border-slate-200 text-left">
+                    <th className="px-4 py-3 font-semibold text-slate-900">
+                      <input
+                        type="checkbox"
+                        checked={allVisiblePendingSelected}
+                        onChange={(e) => handleSelectAllVisible(e.target.checked)}
+                        aria-label="Selecionar todas as aprovações pendentes visíveis"
+                        className="h-4 w-4 rounded border-slate-300"
+                      />
+                    </th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Solicitante</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Tipo</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Prioridade</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Afiliado</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Patrocinador</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Envio</th>
+                    <th className="px-4 py-3 font-semibold text-slate-900">Fila</th>
                     <th className="px-4 py-3 font-semibold text-slate-900">Ações</th>
                   </tr>
                 </thead>
@@ -334,6 +488,7 @@ export default function AdminApprovals() {
                   {pendingQuery.isLoading ? (
                     Array.from({ length: 5 }).map((_, index) => (
                       <tr key={index} className="border-b border-slate-100">
+                        <td className="px-4 py-4"><Skeleton className="h-4 w-4" /></td>
                         <td className="px-4 py-4"><Skeleton className="h-4 w-44" /></td>
                         <td className="px-4 py-4"><Skeleton className="h-4 w-28" /></td>
                         <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
@@ -341,38 +496,54 @@ export default function AdminApprovals() {
                         <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                         <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                         <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
+                        <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
                       </tr>
                     ))
                   ) : pendingApprovals.length > 0 ? (
-                    pendingApprovals.map((approval) => (
-                      <tr key={approval.id} className="border-b border-slate-100 transition hover:bg-slate-50">
-                        <td className="px-4 py-4">
-                          <div>
-                            <p className="font-medium text-slate-900">{approval.userName}</p>
-                            <p className="text-sm text-slate-500">{approval.userEmail}</p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-slate-600">{typeLabel[approval.type]}</td>
-                        <td className="px-4 py-4">
-                          <span className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${priorityMeta[approval.priority].className}`}>
-                            {priorityMeta[approval.priority].label}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 text-sm text-slate-600">{approval.affiliateCode || "Sem código"}</td>
-                        <td className="px-4 py-4 text-sm text-slate-600">{approval.sponsorName || "N/A"}</td>
-                        <td className="px-4 py-4 text-sm text-slate-600">
-                          {approval.submittedAt ? new Date(approval.submittedAt).toLocaleDateString("pt-BR") : "N/A"}
-                        </td>
-                        <td className="px-4 py-4">
-                          <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
-                            Revisar
-                          </Button>
-                        </td>
-                      </tr>
-                    ))
+                    pendingApprovals.map((approval) => {
+                      const queueHours = Math.round(getHoursSince(approval.submittedAt));
+                      const isSelected = selectedPendingIds.includes(approval.id);
+
+                      return (
+                        <tr key={approval.id} className="border-b border-slate-100 transition hover:bg-slate-50">
+                          <td className="px-4 py-4">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={(e) => togglePendingSelection(approval.id, e.target.checked)}
+                              aria-label={`Selecionar aprovação ${approval.id}`}
+                              className="h-4 w-4 rounded border-slate-300"
+                            />
+                          </td>
+                          <td className="px-4 py-4">
+                            <div>
+                              <p className="font-medium text-slate-900">{approval.userName}</p>
+                              <p className="text-sm text-slate-500">{approval.userEmail}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 text-sm text-slate-600">{typeLabel[approval.type]}</td>
+                          <td className="px-4 py-4">
+                            <span className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${priorityMeta[approval.priority].className}`}>
+                              {priorityMeta[approval.priority].label}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-sm text-slate-600">{approval.affiliateCode || "Sem código"}</td>
+                          <td className="px-4 py-4 text-sm text-slate-600">{approval.sponsorName || "N/A"}</td>
+                          <td className="px-4 py-4 text-sm text-slate-600">
+                            {approval.submittedAt ? new Date(approval.submittedAt).toLocaleDateString("pt-BR") : "N/A"}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-slate-600">{queueHours}h</td>
+                          <td className="px-4 py-4">
+                            <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
+                              Revisar
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
-                      <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
+                      <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
                         Nenhuma aprovação pendente encontrada para os filtros atuais.
                       </td>
                     </tr>
@@ -448,7 +619,7 @@ export default function AdminApprovals() {
                             <p className="text-sm text-slate-500">{approval.userEmail}</p>
                           </div>
                         </td>
-                        <td className="px-4 py-4 text-sm text-slate-600">{approval.type}</td>
+                        <td className="px-4 py-4 text-sm text-slate-600">{formatApprovalType(approval.type)}</td>
                         <td className="px-4 py-4">
                           <span className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${processedMeta[approval.status].className}`}>
                             {processedMeta[approval.status].label}

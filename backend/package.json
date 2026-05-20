@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "node ../node_modules/esbuild/bin/esbuild src/index.ts --platform=node --bundle --format=cjs --packages=external --outfile=dist/index.js",
+    "build": "esbuild src/index.ts --platform=node --bundle --format=cjs --packages=external --outfile=dist/index.js",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",

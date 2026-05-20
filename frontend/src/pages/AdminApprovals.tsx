@@ -55,6 +55,17 @@ type ProcessedApproval = {
   notes?: string;
 };
 
+type AuditEvent = {
+  domain: string;
+  action: string;
+  performedBy: string;
+  targetId?: number;
+  targetIds?: number[];
+  notes?: string | null;
+  metadata?: Record<string, unknown> | null;
+  performedAt?: string | Date;
+};
+
 const typeLabel: Record<ApprovalType, string> = {
   new_affiliate: "Novo afiliado",
   profile_update: "Atualização de perfil",
@@ -102,6 +113,7 @@ export default function AdminApprovals() {
   const [rejectReason, setRejectReason] = useState("");
   const [infoField, setInfoField] = useState("");
   const [infoQuestion, setInfoQuestion] = useState("");
+  const [lastAuditEvent, setLastAuditEvent] = useState<AuditEvent | null>(null);
 
   const pendingQuery = trpc.approvals.listPending.useQuery(
     {
@@ -143,11 +155,12 @@ export default function AdminApprovals() {
   };
 
   const approveMutation = trpc.approvals.approve.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Solicitação aprovada com sucesso");
       refreshAll();
       setApprovalNotes("");
       setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao aprovar solicitação");
@@ -160,6 +173,7 @@ export default function AdminApprovals() {
       refreshAll();
       setBatchApprovalNotes("");
       setSelectedPendingIds([]);
+      setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao aprovar solicitações em lote");
@@ -167,11 +181,12 @@ export default function AdminApprovals() {
   });
 
   const rejectMutation = trpc.approvals.reject.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Solicitação rejeitada com sucesso");
       refreshAll();
       setRejectReason("");
       setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao rejeitar solicitação");
@@ -179,10 +194,11 @@ export default function AdminApprovals() {
   });
 
   const requestInfoMutation = trpc.approvals.requestInfo.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Solicitação de informações enviada");
       setInfoField("");
       setInfoQuestion("");
+      setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
       toast.error(error.message || "Erro ao solicitar mais informações");
@@ -191,8 +207,6 @@ export default function AdminApprovals() {
 
   const pendingApprovals = (pendingQuery.data?.approvals || []) as PendingApproval[];
   const processedApprovals = (processedQuery.data?.approvals || []) as ProcessedApproval[];
-
-  const currentRows = activeTab === "pending" ? pendingApprovals : processedApprovals;
 
   const visibleSummary = useMemo(() => {
     if (activeTab === "pending") {
@@ -338,6 +352,28 @@ export default function AdminApprovals() {
             </p>
           </Card>
         </section>
+
+        {lastAuditEvent ? (
+          <Card className="border border-violet-200 bg-violet-50 p-5 shadow-sm">
+            <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-wide text-violet-700">Último evento de auditoria</p>
+                <h2 className="mt-1 text-lg font-semibold text-violet-950">{lastAuditEvent.action.replaceAll("_", " ")}</h2>
+                <p className="mt-2 text-sm text-violet-800">
+                  Executado por <strong>{lastAuditEvent.performedBy}</strong>
+                  {lastAuditEvent.targetId ? ` · item #${lastAuditEvent.targetId}` : ""}
+                  {lastAuditEvent.targetIds?.length ? ` · lote com ${lastAuditEvent.targetIds.length} itens` : ""}
+                </p>
+              </div>
+              <div className="text-sm text-violet-700">
+                {lastAuditEvent.performedAt ? new Date(lastAuditEvent.performedAt).toLocaleString("pt-BR") : "Sem data"}
+              </div>
+            </div>
+            {lastAuditEvent.notes ? (
+              <p className="mt-3 rounded-lg bg-white/70 px-4 py-3 text-sm text-violet-900">{lastAuditEvent.notes}</p>
+            ) : null}
+          </Card>
+        ) : null}
 
         <section className="grid gap-4 xl:grid-cols-4">
           <Card className="bg-white p-5 shadow-sm">
@@ -667,7 +703,7 @@ export default function AdminApprovals() {
             </div>
           ) : detailsQuery.data ? (
             <div className="space-y-6">
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div className="grid gap-4 lg:grid-cols-3">
                 <div className="rounded-xl bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Solicitante</p>
                   <p className="mt-2 text-lg font-semibold text-slate-900">{detailsQuery.data.userName}</p>
@@ -683,6 +719,14 @@ export default function AdminApprovals() {
                     Enviado em: {detailsQuery.data.submittedAt ? new Date(detailsQuery.data.submittedAt).toLocaleString("pt-BR") : "N/A"}
                   </p>
                 </div>
+                <div className="rounded-xl bg-violet-50 p-4">
+                  <p className="text-xs uppercase tracking-wide text-violet-700">Resumo de auditoria</p>
+                  <p className="mt-2 text-sm text-violet-900">Status atual: {String((detailsQuery.data as any).auditSummary?.currentStatus || detailsQuery.data.status)}</p>
+                  <p className="text-sm text-violet-800">Responsável: {String((detailsQuery.data as any).auditSummary?.reviewedBy || "Em análise")}</p>
+                  <p className="text-sm text-violet-800">
+                    Última revisão: {(detailsQuery.data as any).auditSummary?.reviewedAt ? new Date((detailsQuery.data as any).auditSummary.reviewedAt).toLocaleString("pt-BR") : "Ainda não processada"}
+                  </p>
+                </div>
               </div>
 
               <div className="grid gap-4 lg:grid-cols-2">
@@ -693,12 +737,12 @@ export default function AdminApprovals() {
                   </pre>
                 </div>
                 <div className="rounded-xl border border-slate-200 p-4">
-                  <p className="mb-2 text-sm font-medium text-slate-700">Histórico</p>
+                  <p className="mb-2 text-sm font-medium text-slate-700">Histórico de auditoria</p>
                   {detailsQuery.data.history?.length ? (
                     <div className="space-y-3">
                       {detailsQuery.data.history.map((item: any, index: number) => (
                         <div key={`${item.action}-${index}`} className="rounded-lg bg-slate-50 p-3 text-sm">
-                          <p className="font-medium text-slate-900">{item.action}</p>
+                          <p className="font-medium capitalize text-slate-900">{String(item.action).replaceAll("_", " ")}</p>
                           <p className="text-slate-500">por {item.by}</p>
                           <p className="text-slate-500">{item.at ? new Date(item.at).toLocaleString("pt-BR") : "Sem data"}</p>
                           <p className="mt-1 text-slate-600">{item.notes}</p>

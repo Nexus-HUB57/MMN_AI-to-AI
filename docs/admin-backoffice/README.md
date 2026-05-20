@@ -14,9 +14,25 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Entrega — comissões no namespace dedicado](./ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [Entrega — auditoria e consolidação financeira](./ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 
+## Status atual da trilha
+
+No snapshot atual do repositório, a trilha do Backoffice Admin já conta com entregas incrementais publicadas para:
+
+- shell administrativo moderno e navegação consolidada
+- módulo de aprovações administrativas com fila, revisão detalhada, aprovação em lote e indicadores de SLA
+- módulo de comissões ligado ao namespace dedicado `trpc.commissions.*`
+- reforço de auditoria operacional e consolidação visual do domínio financeiro entre aprovações, comissões e pagamentos
+
 ## Objetivo
 
 Transformar a base administrativa já existente no frontend e no backend em um **Backoffice Admin unificado, navegável e orientado por domínio**, cobrindo rede, usuários, comissões, pagamentos, materiais, observabilidade e configuração operacional.
+
+## Próximos passos recomendados
+
+- persistir auditoria operacional em armazenamento dedicado
+- padronizar componentes compartilhados de filtros, tabelas e paginação do Backoffice
+- aprofundar a integração entre pagamentos, comissões, logs e rotinas cron
+- evoluir observabilidade administrativa com indicadores operacionais mais próximos da produção
 
 ## Escopo inicial
 

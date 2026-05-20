@@ -1,5 +1,37 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-20 — Saneamento do Backend e Build do Monorepo
+
+### `fix(backend)` — Observabilidade e imports estabilizados
+
+**Backend / Build:**
+- adicionados helpers esperados pela observabilidade em `database/schemas/db.ts` (`listAgents`, `getAgentById`, `getAgentActions`)
+- corrigidos imports relativos de schemas compartilhados em módulos de cron, upgrades e worker de saque
+- ajustado `database/schemas/schema-cron.ts` para eliminar erro de import inválido
+- build completo do monorepo revalidado com sucesso via `npm run build`
+
+**Impacto:**
+- remove fragilidades de compilação no backend
+- reduz inconsistências entre módulos administrativos, cron e observabilidade
+- garante uma trilha de build mais confiável para continuidade do desenvolvimento
+
+## 2026-05-20 — Auditoria e Consolidação Financeira do Backoffice
+
+### `feat(backoffice)` — Auditoria operacional visível entre aprovações, comissões e pagamentos
+
+**Backoffice Admin:**
+- `AdminApprovals.tsx` evoluído com rastreabilidade visível, histórico detalhado e resumo de auditoria
+- `AdminCommissions.tsx` ampliado com revisão detalhada, histórico operacional e resumo financeiro
+- `AdminPayments.tsx` reorganizado para evidenciar atenção operacional e fila financeira
+
+**Routers / contratos:**
+- `approvalsRouter.ts` reforçado com metadados de auditoria nas mutações principais
+- `commissionsRouter.ts` reforçado com eventos de auditoria, histórico operacional e resumo financeiro
+
+**Documentação:**
+- adicionada a entrega `docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`
+- índices e README sincronizados com a nova trilha do Backoffice Admin
+
 ## 2026-05-20 — Expansão dos Routers Admin
 
 ### `feat(routers)` — Routers Delinquents, Commissions e Approvals

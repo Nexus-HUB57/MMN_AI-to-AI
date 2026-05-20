@@ -64,6 +64,35 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 
+## Atualizações Recentes do Repositório (2026-05-20)
+
+### ✅ Backoffice Admin consolidado por domínio
+
+O Backoffice Admin avançou com uma trilha incremental já refletida no frontend, backend e documentação:
+
+- aprovações administrativas integradas ao painel com rota dedicada
+- aprovação em lote e indicadores de SLA na fila de aprovações
+- migração de comissões para o namespace dedicado `trpc.commissions.*`
+- reforço de auditoria e consolidação visual da fila financeira entre aprovações, comissões e pagamentos
+
+**Documentos de referência:**
+- [`docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md`](docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
+- [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
+- [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
+
+### ✅ Automação Cron e saneamento do backend
+
+O backend também recebeu duas evoluções relevantes na base atual:
+
+- implantação do módulo de automação Cron com router, scheduler e estrutura de histórico/configuração
+- saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
+
+**Referências úteis:**
+- [`backend/src/routers/cronRouter.ts`](backend/src/routers/cronRouter.ts)
+- [`backend/src/services/cronScheduler.ts`](backend/src/services/cronScheduler.ts)
+- [`database/schemas/schema-cron.ts`](database/schemas/schema-cron.ts)
+- [`CHANGELOG.md`](CHANGELOG.md)
+
 ## Stack Tecnológica
 
 | Categoria | Tecnologia | Versão |
@@ -75,7 +104,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 | **IA** | Google Genkit (Gemini) + OpenAI | ^1.0.0 / ^4.77.0 |
 | **Auth** | JWT (Firebase/NextAuth no roadmap) | - |
 
-## Avanços Recentes (v1.0.4)
+## Avanços Estruturais Consolidados
 
 ### ✅ Migração Legacy → Sistema Oficial
 

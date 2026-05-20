@@ -1,8 +1,8 @@
 # Índice de Documentação - MMN AI-to-AI
 
 > **Última Atualização:** 2026-05-20
-> **Versão:** 1.0.8
-> **Status:** Organizado e Atualizado
+> **Referência:** snapshot pós-cron, backoffice administrativo e saneamento de build
+> **Status:** Organizado, atualizado e sincronizado com as entregas recentes
 
 ---
 
@@ -25,7 +25,7 @@
 |-----------|----------|-----------|
 | **Canônica** | `canonical/DOCUMENTACAO_CANONICA.md` | Documento único de referência |
 | **Agentic** | `agentic/*.md` (5 arquivos) | Arquitetura e roadmap agentic |
-| **Admin Backoffice** | `admin-backoffice/*.md` (10 arquivos) | Plano de execução do admin |
+| **Admin Backoffice** | `admin-backoffice/*.md` (10 arquivos) | Plano de execução do admin com entregas incrementais de aprovações, comissões e auditoria |
 | **Repository Review** | `repository-review/*.md` (7 arquivos) | Análises e avaliações |
 
 ### 📊Guias e Manuais
@@ -44,11 +44,11 @@
 |-----------|----------|
 | **Análise e Otimização** | `analysis_and_optimization/*.md` (3 arquivos) |
 | **Roadmaps** | `roadmaps/*.md` (6 arquivos) |
-| **Reports** | `reports/*.md` (3 arquivos) |
+| **Reports** | `reports/*` (4 arquivos) |
 | **Milestone** | `milestone_6/*.md` (2 arquivos) |
 | **Phases** | `phases/*.md` (2 arquivos) |
 | **V16 Delivery** | `v16_delivery/*.md` (5 arquivos) |
-| **Planning** | `planning/*.md` (8 arquivos) |
+| **Planning** | `planning/*` (10 arquivos) |
 
 ### 🔧 Infraestrutura e Técnicos
 
@@ -60,6 +60,13 @@
 | `operacao.md` | Manual de operação |
 
 ---
+
+## Atualizações Recentes do Snapshot
+
+- Backoffice Admin evoluído com aprovações, aprovação em lote com SLA, comissões em namespace dedicado e auditoria financeira.
+- Automação Cron adicionada ao backend com router, scheduler e schema dedicado.
+- Build completo do monorepo saneado e validado com `npm run build`.
+- Consulte também o [`CHANGELOG.md`](../CHANGELOG.md) para o histórico consolidado.
 
 ## Navegação por Objetivo
 
@@ -96,7 +103,7 @@
 |-----------|--------|
 | **Stage** | MVP+ |
 | **Conformidade** | 85-90% |
-| **Versão** | v1.0.7 (2026-05-19) |
+| **Referência de snapshot** | 2026-05-20 |
 | **Licença** | MIT |
 
 ---

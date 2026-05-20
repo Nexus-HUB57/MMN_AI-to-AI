@@ -11,6 +11,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Fase 2 — núcleo operacional](./FASE_2_NUCLEO_OPERACIONAL.md)
 - [Fase 2 — complemento operacional](./FASE_2_COMPLEMENTO_OPERACIONAL.md)
 - [Entrega — aprovações administrativas](./ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
+- [Entrega — comissões no namespace dedicado](./ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 
 ## Objetivo
 

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { BadgeDollarSign, CheckCircle2, Clock3, RefreshCw, XCircle } from "lucide-react";
+import { BadgeDollarSign, CheckCircle2, Clock3, Layers3, RefreshCw, Users, XCircle } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -16,6 +17,22 @@ import { toast } from "sonner";
 
 const PAGE_SIZE = 20;
 type CommissionStatus = "pending" | "confirmed" | "paid" | "cancelled";
+
+type CommissionRow = {
+  id: number;
+  affiliateId: number;
+  affiliateName?: string;
+  affiliateCode?: string;
+  amount: number | string;
+  percentage?: number | string;
+  level: number;
+  status: CommissionStatus;
+  source: string;
+  sourceId?: string | number;
+  createdAt?: string | Date;
+  confirmedAt?: string | Date | null;
+  paidAt?: string | Date | null;
+};
 
 const statusMeta: Record<CommissionStatus, { label: string; badge: string }> = {
   pending: { label: "Pendente", badge: "bg-amber-100 text-amber-800" },
@@ -30,27 +47,36 @@ const formatCurrency = (value: number | string | null | undefined) =>
     maximumFractionDigits: 2,
   });
 
+const formatPercent = (value: number | string | null | undefined) => `${Number(value || 0).toFixed(0)}%`;
+
 export default function AdminCommissions() {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<"all" | CommissionStatus>("all");
+  const [selectedPendingIds, setSelectedPendingIds] = useState<number[]>([]);
+  const [batchNotes, setBatchNotes] = useState("");
   const [selectedCommission, setSelectedCommission] = useState<{
     id: number;
     status: CommissionStatus;
+    notes: string;
   } | null>(null);
 
-  const commissionsQuery = trpc.admin.listCommissions.useQuery({
+  const commissionsQuery = trpc.commissions.list.useQuery({
     page,
     limit: PAGE_SIZE,
     status: statusFilter === "all" ? undefined : statusFilter,
   });
 
-  const statsQuery = trpc.admin.getCommissionStats.useQuery();
+  const statsQuery = trpc.commissions.getStats.useQuery();
 
-  const updateMutation = trpc.admin.updateCommissionStatus.useMutation({
+  const refreshAll = () => {
+    commissionsQuery.refetch();
+    statsQuery.refetch();
+  };
+
+  const updateMutation = trpc.commissions.updateStatus.useMutation({
     onSuccess: () => {
       toast.success("Status da comissão atualizado com sucesso");
-      commissionsQuery.refetch();
-      statsQuery.refetch();
+      refreshAll();
       setSelectedCommission(null);
     },
     onError: (error) => {
@@ -58,7 +84,19 @@ export default function AdminCommissions() {
     },
   });
 
-  const commissions = commissionsQuery.data?.commissions || [];
+  const approveBatchMutation = trpc.commissions.approveBatch.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message || "Comissões aprovadas com sucesso");
+      refreshAll();
+      setSelectedPendingIds([]);
+      setBatchNotes("");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao aprovar comissões em lote");
+    },
+  });
+
+  const commissions = (commissionsQuery.data?.commissions || []) as CommissionRow[];
   const pagination = commissionsQuery.data?.pagination;
 
   const visibleTotals = useMemo(
@@ -71,12 +109,60 @@ export default function AdminCommissions() {
     [commissions]
   );
 
+  const levelHighlights = useMemo(() => {
+    const levels = statsQuery.data?.byLevel || {};
+    return Object.entries(levels)
+      .sort(([, left], [, right]) => Number(right) - Number(left))
+      .slice(0, 3);
+  }, [statsQuery.data?.byLevel]);
+
+  const sourceHighlights = useMemo(() => {
+    const sources = statsQuery.data?.bySource || {};
+    return Object.entries(sources)
+      .sort(([, left], [, right]) => Number(right) - Number(left))
+      .slice(0, 3);
+  }, [statsQuery.data?.bySource]);
+
+  const allVisiblePendingSelected = commissions.length > 0 && commissions.every((commission) => selectedPendingIds.includes(commission.id));
+
+  const togglePendingSelection = (commissionId: number, checked: boolean) => {
+    setSelectedPendingIds((current) => {
+      if (checked) {
+        return current.includes(commissionId) ? current : [...current, commissionId];
+      }
+
+      return current.filter((id) => id !== commissionId);
+    });
+  };
+
+  const handleSelectAllVisible = (checked: boolean) => {
+    if (checked) {
+      setSelectedPendingIds(commissions.map((commission) => commission.id));
+      return;
+    }
+
+    setSelectedPendingIds([]);
+  };
+
   const handleUpdateStatus = () => {
     if (!selectedCommission) return;
 
     updateMutation.mutate({
       id: selectedCommission.id,
       status: selectedCommission.status,
+      notes: selectedCommission.notes || undefined,
+    });
+  };
+
+  const handleBatchApprove = () => {
+    if (!selectedPendingIds.length) {
+      toast.error("Selecione ao menos uma comissão para aprovação em lote");
+      return;
+    }
+
+    approveBatchMutation.mutate({
+      ids: selectedPendingIds,
+      notes: batchNotes || undefined,
     });
   };
 
@@ -87,17 +173,10 @@ export default function AdminCommissions() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Comissões administrativas</h1>
             <p className="mt-2 text-slate-600">
-              Supervisão operacional das comissões conectada ao contrato oficial <code>trpc.admin.*</code>.
+              Supervisão operacional conectada ao namespace dedicado <code>trpc.commissions.*</code>, com leitura analítica e mutações específicas do domínio.
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              commissionsQuery.refetch();
-              statsQuery.refetch();
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={refreshAll}>
             <RefreshCw size={16} className="mr-2" />
             Atualizar dados
           </Button>
@@ -109,18 +188,15 @@ export default function AdminCommissions() {
               <BadgeDollarSign size={18} />
               <span className="text-sm">Total acumulado</span>
             </div>
-            <p className="mt-2 text-3xl font-semibold text-slate-900">
-              R$ {formatCurrency(statsQuery.data?.total)}
-            </p>
+            <p className="mt-2 text-3xl font-semibold text-slate-900">R$ {formatCurrency(statsQuery.data?.total)}</p>
+            <p className="mt-1 text-xs text-slate-500">Ticket médio R$ {formatCurrency(statsQuery.data?.averageCommission)}</p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 text-amber-700">
               <Clock3 size={18} />
               <span className="text-sm">Pendentes</span>
             </div>
-            <p className="mt-2 text-3xl font-semibold text-amber-700">
-              {statsQuery.data?.count.pending ?? 0}
-            </p>
+            <p className="mt-2 text-3xl font-semibold text-amber-700">{statsQuery.data?.count.pending ?? 0}</p>
             <p className="mt-1 text-xs text-slate-500">R$ {formatCurrency(statsQuery.data?.pending)}</p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
@@ -128,9 +204,7 @@ export default function AdminCommissions() {
               <CheckCircle2 size={18} />
               <span className="text-sm">Confirmadas</span>
             </div>
-            <p className="mt-2 text-3xl font-semibold text-blue-700">
-              {statsQuery.data?.count.confirmed ?? 0}
-            </p>
+            <p className="mt-2 text-3xl font-semibold text-blue-700">{statsQuery.data?.count.confirmed ?? 0}</p>
             <p className="mt-1 text-xs text-slate-500">R$ {formatCurrency(statsQuery.data?.confirmed)}</p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
@@ -138,10 +212,40 @@ export default function AdminCommissions() {
               <CheckCircle2 size={18} />
               <span className="text-sm">Pagas</span>
             </div>
-            <p className="mt-2 text-3xl font-semibold text-green-700">
-              {statsQuery.data?.count.paid ?? 0}
-            </p>
+            <p className="mt-2 text-3xl font-semibold text-green-700">{statsQuery.data?.count.paid ?? 0}</p>
             <p className="mt-1 text-xs text-slate-500">R$ {formatCurrency(statsQuery.data?.paid)}</p>
+          </Card>
+        </section>
+
+        <section className="grid gap-4 xl:grid-cols-2">
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-slate-700">
+              <Layers3 size={18} />
+              <h2 className="text-base font-semibold text-slate-900">Distribuição por nível</h2>
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {levelHighlights.map(([level, amount]) => (
+                <div key={level} className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">Nível {level}</p>
+                  <p className="mt-2 text-xl font-semibold text-slate-900">R$ {formatCurrency(amount)}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 text-slate-700">
+              <Users size={18} />
+              <h2 className="text-base font-semibold text-slate-900">Principais origens</h2>
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {sourceHighlights.map(([source, amount]) => (
+                <div key={source} className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">{source}</p>
+                  <p className="mt-2 text-xl font-semibold text-slate-900">R$ {formatCurrency(amount)}</p>
+                </div>
+              ))}
+            </div>
           </Card>
         </section>
 
@@ -154,6 +258,7 @@ export default function AdminCommissions() {
                 onValueChange={(value: "all" | CommissionStatus) => {
                   setPage(1);
                   setStatusFilter(value);
+                  setSelectedPendingIds([]);
                 }}
               >
                 <SelectTrigger>
@@ -190,6 +295,33 @@ export default function AdminCommissions() {
           </div>
         </Card>
 
+        {(statusFilter === "all" || statusFilter === "pending") && commissions.length > 0 ? (
+          <Card className="border border-blue-200 bg-blue-50 p-5 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-blue-900">Aprovação em lote</h2>
+                <p className="mt-2 text-sm text-blue-800">
+                  Aprove com rapidez as comissões pendentes visíveis e registre uma observação operacional para o lote.
+                </p>
+              </div>
+              <div className="grid w-full gap-3 lg:max-w-xl lg:grid-cols-[1fr_auto_auto] lg:items-end">
+                <Textarea
+                  value={batchNotes}
+                  onChange={(event) => setBatchNotes(event.target.value)}
+                  placeholder="Observações do lote"
+                  className="min-h-[88px] bg-white"
+                />
+                <Button variant="outline" onClick={() => handleSelectAllVisible(!allVisiblePendingSelected)}>
+                  {allVisiblePendingSelected ? "Limpar seleção" : "Selecionar visíveis"}
+                </Button>
+                <Button onClick={handleBatchApprove} disabled={approveBatchMutation.isPending || !selectedPendingIds.length}>
+                  {approveBatchMutation.isPending ? "Aprovando lote..." : `Aprovar ${selectedPendingIds.length || 0} item(ns)`}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ) : null}
+
         <Card className="overflow-x-auto bg-white p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold text-slate-900">Fila operacional de comissões</h2>
@@ -200,12 +332,22 @@ export default function AdminCommissions() {
             ) : null}
           </div>
 
-          <table className="w-full min-w-[820px]">
+          <table className="w-full min-w-[1080px]">
             <thead>
               <tr className="border-b border-slate-200 text-left">
+                <th className="px-4 py-3 font-semibold text-slate-900">
+                  <input
+                    type="checkbox"
+                    checked={allVisiblePendingSelected}
+                    onChange={(event) => handleSelectAllVisible(event.target.checked)}
+                    aria-label="Selecionar todas as comissões visíveis"
+                    className="h-4 w-4 rounded border-slate-300"
+                  />
+                </th>
                 <th className="px-4 py-3 font-semibold text-slate-900">ID</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Afiliado</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Nível</th>
+                <th className="px-4 py-3 font-semibold text-slate-900">Percentual</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Origem</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Valor</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Status</th>
@@ -217,9 +359,11 @@ export default function AdminCommissions() {
               {commissionsQuery.isLoading ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <tr key={index} className="border-b border-slate-100">
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-4" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-12" /></td>
-                    <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-40" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-12" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-16" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
@@ -230,18 +374,35 @@ export default function AdminCommissions() {
               ) : commissions.length > 0 ? (
                 commissions.map((commission) => {
                   const meta = statusMeta[commission.status as CommissionStatus];
+                  const isBatchSelectable = commission.status === "pending";
+                  const isSelected = selectedPendingIds.includes(commission.id);
+
                   return (
                     <tr key={commission.id} className="border-b border-slate-100 transition hover:bg-slate-50">
+                      <td className="px-4 py-4">
+                        <input
+                          type="checkbox"
+                          checked={isBatchSelectable && isSelected}
+                          disabled={!isBatchSelectable}
+                          onChange={(event) => togglePendingSelection(commission.id, event.target.checked)}
+                          aria-label={`Selecionar comissão ${commission.id}`}
+                          className="h-4 w-4 rounded border-slate-300"
+                        />
+                      </td>
                       <td className="px-4 py-4 font-medium text-slate-900">#{commission.id}</td>
-                      <td className="px-4 py-4 text-sm text-slate-600">#{commission.affiliateId}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600">
+                        <div>
+                          <p className="font-medium text-slate-900">{commission.affiliateName || `Afiliado #${commission.affiliateId}`}</p>
+                          <p className="text-xs text-slate-500">{commission.affiliateCode || `ID ${commission.affiliateId}`}</p>
+                        </div>
+                      </td>
                       <td className="px-4 py-4 text-sm text-slate-600">{commission.level}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600">{formatPercent(commission.percentage)}</td>
                       <td className="px-4 py-4 text-sm text-slate-600">
                         {commission.source}
-                        {commission.sourceId ? ` #${commission.sourceId}` : ""}
+                        {commission.sourceId ? ` · ${commission.sourceId}` : ""}
                       </td>
-                      <td className="px-4 py-4 font-semibold text-slate-900">
-                        R$ {formatCurrency(commission.amount)}
-                      </td>
+                      <td className="px-4 py-4 font-semibold text-slate-900">R$ {formatCurrency(commission.amount)}</td>
                       <td className="px-4 py-4">
                         <span className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${meta.badge}`}>
                           {meta.label}
@@ -257,7 +418,8 @@ export default function AdminCommissions() {
                           onClick={() =>
                             setSelectedCommission({
                               id: commission.id,
-                              status: commission.status as CommissionStatus,
+                              status: commission.status,
+                              notes: "",
                             })
                           }
                         >
@@ -269,7 +431,7 @@ export default function AdminCommissions() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
+                  <td colSpan={10} className="px-4 py-10 text-center text-slate-500">
                     Nenhuma comissão encontrada para o filtro atual.
                   </td>
                 </tr>
@@ -306,20 +468,16 @@ export default function AdminCommissions() {
           <Card className="bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <XCircle size={18} className="text-slate-700" />
-              <h2 className="text-lg font-semibold text-slate-900">
-                Atualizar comissão #{selectedCommission.id}
-              </h2>
+              <h2 className="text-lg font-semibold text-slate-900">Atualizar comissão #{selectedCommission.id}</h2>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[280px_auto] lg:items-end">
+            <div className="grid gap-4 lg:grid-cols-[280px_1fr] lg:items-end">
               <div>
                 <p className="mb-2 text-sm font-medium text-slate-700">Novo status</p>
                 <Select
                   value={selectedCommission.status}
                   onValueChange={(value: CommissionStatus) =>
-                    setSelectedCommission((current) =>
-                      current ? { ...current, status: value } : current
-                    )
+                    setSelectedCommission((current) => (current ? { ...current, status: value } : current))
                   }
                 >
                   <SelectTrigger>
@@ -334,14 +492,26 @@ export default function AdminCommissions() {
                 </Select>
               </div>
 
-              <div className="flex gap-3">
-                <Button onClick={handleUpdateStatus} disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? "Salvando..." : "Salvar alteração"}
-                </Button>
-                <Button variant="outline" onClick={() => setSelectedCommission(null)}>
-                  Cancelar
-                </Button>
+              <div>
+                <p className="mb-2 text-sm font-medium text-slate-700">Observação operacional</p>
+                <Textarea
+                  value={selectedCommission.notes}
+                  onChange={(event) =>
+                    setSelectedCommission((current) => (current ? { ...current, notes: event.target.value } : current))
+                  }
+                  placeholder="Contexto da atualização de status"
+                  className="min-h-[88px]"
+                />
               </div>
+            </div>
+
+            <div className="mt-4 flex gap-3">
+              <Button onClick={handleUpdateStatus} disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Salvando..." : "Salvar alteração"}
+              </Button>
+              <Button variant="outline" onClick={() => setSelectedCommission(null)}>
+                Cancelar
+              </Button>
             </div>
           </Card>
         ) : null}

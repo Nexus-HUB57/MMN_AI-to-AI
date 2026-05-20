@@ -61,6 +61,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/FASE_2_NUCLEO_OPERACIONAL.md`](docs/admin-backoffice/FASE_2_NUCLEO_OPERACIONAL.md)
 - [`docs/admin-backoffice/FASE_2_COMPLEMENTO_OPERACIONAL.md`](docs/admin-backoffice/FASE_2_COMPLEMENTO_OPERACIONAL.md)
 - [`docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md`](docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
+- [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 
 ## Stack Tecnológica
 

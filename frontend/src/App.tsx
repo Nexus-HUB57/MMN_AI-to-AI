@@ -17,6 +17,7 @@ const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminNetwork = lazy(() => import("./pages/AdminNetwork"));
 const AdminCommissions = lazy(() => import("./pages/AdminCommissions"));
 const AdminPayments = lazy(() => import("./pages/AdminPayments"));
+const AdminApprovals = lazy(() => import("./pages/AdminApprovals"));
 const AdminDelinquents = lazy(() => import("./pages/AdminDelinquents"));
 const AdminMaterials = lazy(() => import("./pages/AdminMaterials"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
@@ -105,6 +106,7 @@ export const NAVIGATION_STRUCTURE = {
     { path: "/admin/network", name: "Rede", component: "AdminNetwork", layout: "AdminDashboardLayout" },
     { path: "/admin/commissions", name: "Comissões", component: "AdminCommissions", layout: "AdminDashboardLayout" },
     { path: "/admin/payments", name: "Pagamentos", component: "AdminPayments", layout: "AdminDashboardLayout" },
+    { path: "/admin/approvals", name: "Aprovações", component: "AdminApprovals", layout: "AdminDashboardLayout" },
     { path: "/admin/delinquents", name: "Inadimplentes", component: "AdminDelinquents", layout: "AdminDashboardLayout" },
     { path: "/admin/materials", name: "Materiais", component: "AdminMaterials", layout: "AdminDashboardLayout" },
     { path: "/admin/logs", name: "Logs", component: "ExecutionLogs", layout: "AdminDashboardLayout" },
@@ -162,6 +164,7 @@ export default function App() {
             <Route path="/admin/network" component={AdminNetwork} />
             <Route path="/admin/commissions" component={AdminCommissions} />
             <Route path="/admin/payments" component={AdminPayments} />
+            <Route path="/admin/approvals" component={AdminApprovals} />
             <Route path="/admin/delinquents" component={AdminDelinquents} />
             <Route path="/admin/materials" component={AdminMaterials} />
             <Route path="/admin/logs" component={ExecutionLogs} />

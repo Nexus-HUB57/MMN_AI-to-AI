@@ -59,6 +59,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/INVENTARIO_ATUAL.md`](docs/admin-backoffice/INVENTARIO_ATUAL.md)
 - [`docs/admin-backoffice/FASE_1_ENTREGA_INICIAL.md`](docs/admin-backoffice/FASE_1_ENTREGA_INICIAL.md)
 - [`docs/admin-backoffice/FASE_2_NUCLEO_OPERACIONAL.md`](docs/admin-backoffice/FASE_2_NUCLEO_OPERACIONAL.md)
+- [`docs/admin-backoffice/FASE_2_COMPLEMENTO_OPERACIONAL.md`](docs/admin-backoffice/FASE_2_COMPLEMENTO_OPERACIONAL.md)
 
 ## Stack Tecnológica
 

@@ -9,6 +9,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Inventário atual do Backoffice Admin](./INVENTARIO_ATUAL.md)
 - [Fase 1 — entrega inicial](./FASE_1_ENTREGA_INICIAL.md)
 - [Fase 2 — núcleo operacional](./FASE_2_NUCLEO_OPERACIONAL.md)
+- [Fase 2 — complemento operacional](./FASE_2_COMPLEMENTO_OPERACIONAL.md)
 
 ## Objetivo
 

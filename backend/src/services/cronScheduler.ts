@@ -1,5 +1,5 @@
-import { getDb } from '../../database/schemas/db';
-import { cronJobs, cronJobHistory, type ICronJob, type ICronJobHistory } from '../../database/schemas/schema-cron';
+import { getDb } from '../../../database/schemas/db';
+import { cronJobs, cronJobHistory, type ICronJob, type ICronJobHistory } from '../../../database/schemas/schema-cron';
 import { eq, lte, sql, and, isNull } from 'drizzle-orm';
 import cron from 'node-cron';
 

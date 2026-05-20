@@ -1,8 +1,8 @@
 import { Worker, Job } from 'bullmq';
 import { withdrawalQueue, WithdrawalJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
-import { notifyOwner, createNotification } from '../../database/schemas/db';
-import { getDb } from '../../database/schemas/db';
+import { notifyOwner, createNotification } from '../../../database/schemas/db';
+import { getDb } from '../../../database/schemas/db';
 import { withdrawalRequests, affiliateBalances, bankAccounts, transactionHistory } from '../../../database/schemas/banking-schema';
 import { eq } from 'drizzle-orm';
 

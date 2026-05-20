@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure, adminProcedure } from '../trpc/trpc';
-import { getDb } from '../../database/schemas/db';
-import { cronJobs, cronJobHistory, cronSettings, type CRON_JOB_TYPES, type CronJobType } from '../../database/schemas/schema-cron';
+import { getDb } from '../../../database/schemas/db';
+import { cronJobs, cronJobHistory, cronSettings, type CRON_JOB_TYPES, type CronJobType } from '../../../database/schemas/schema-cron';
 import { eq, desc, and, sql, gte, lte } from 'drizzle-orm';
 import cron from 'node-cron';
 

@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, text, timestamp, int, boolean, enum } from 'drizzle-orm/mysql-core';
+import { mysqlTable, varchar, text, timestamp, int, boolean } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
 /**

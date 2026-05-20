@@ -137,6 +137,40 @@ export async function getAgentByUserId(userId: number): Promise<Agent | undefine
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function listAgents(limit: number = 50, offset: number = 0): Promise<Agent[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db
+    .select()
+    .from(agents)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(agents.updatedAt), desc(agents.id));
+}
+
+export async function getAgentById(agentId: number): Promise<Agent | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(agents).where(eq(agents.id, agentId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAgentActions(agentId: number, limit: number = 50) {
+  const agent = await getAgentById(agentId);
+  if (!agent) return [];
+
+  const audits = await getSessionAuditByUser(agent.userId, limit);
+  return audits.map((audit) => ({
+    id: audit.id,
+    sessionId: audit.sessionId,
+    action: audit.action,
+    status: "completed" as const,
+    metadata: audit.metadata || {},
+    createdAt: audit.createdAt,
+  }));
+}
+
 export async function createAgent(data: InsertAgent): Promise<Agent> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

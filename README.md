@@ -499,16 +499,17 @@ graph TB
 
 O sistema contempla um plano de carreira estruturado com 27 níveis organizados em 5 categorias:
 
-1. **Afiliado** (levels 1-3): Iniciante → Bronze → Prata
+1. **Afiliado** (levels 1-3): Iniciante Jr → Pl → Sr
 2. **Preditivo** (levels 4-6): Analista Jr → Pl → Sr
 3. **Generativo** (levels 7-9): Creator Jr → Pl → Sr
 4. **Orquestrador** (levels 10-12): Orquestrador Jr → Pl → Sr
-5. **IA Agêntica** (levels 13-27): Agente → Diretor → VP → Partner → Chairman
+5. **IA Agêntica** (levels 13-15): Diretor → VP → CEO
 
 ### XP e Progressão
 
 - **XP Sources**: Vendas (10x), Comissões (5x), Bônus (15x), Network (3x)
 - XP mensal resetado automaticamente
+- XP Nível mantido na margem inicial correspondente a posição
 - Progressão automática baseada em desempenho
 - Bônus de comissão por nível (até 90%)
 

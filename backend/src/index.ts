@@ -3,6 +3,7 @@ import express from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import type { Context } from "./trpc/context";
+import { startCronScheduler, initializeDefaultJobs, getSchedulerStatus } from "./services/cronScheduler";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -48,7 +49,7 @@ app.get("/", (_req, res) => {
   res.json({
     name: "MMN AI-to-AI",
     service: "backend",
-    mode: "bootstrap",
+    mode: "full",
     trpc: "/trpc",
     health: "/health",
   });
@@ -58,9 +59,13 @@ app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     service: "mmn-ai-to-ai-backend",
-    mode: "bootstrap",
+    mode: "full",
     timestamp: new Date().toISOString(),
   });
+});
+
+app.get("/cron/status", (_req, res) => {
+  res.json(getSchedulerStatus());
 });
 
 app.use(
@@ -71,6 +76,21 @@ app.use(
   })
 );
 
+// Inicializar Cron Scheduler
+async function initializeCron() {
+  try {
+    console.log('[CronScheduler] Inicializando...');
+    await initializeDefaultJobs();
+    await startCronScheduler();
+    console.log('[CronScheduler] Inicializado com sucesso');
+  } catch (error) {
+    console.error('[CronScheduler] Erro na inicialização:', error);
+  }
+}
+
+// Inicializar cron ao iniciar o servidor
+initializeCron();
+
 app.listen(PORT, () => {
-  console.log(`MMN AI-to-AI backend bootstrap ativo em http://localhost:${PORT}`);
+  console.log(`MMN AI-to-AI backend full ativo em http://localhost:${PORT}`);
 });

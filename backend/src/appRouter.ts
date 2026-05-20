@@ -26,6 +26,7 @@ import { networkRouter } from "./routers/networkRouter";
 import { delinquentsRouter } from "./routers/delinquentsRouter";
 import { commissionsRouter } from "./routers/commissionsRouter";
 import { approvalsRouter } from "./routers/approvalsRouter";
+import { cronRouter } from "./routers/cronRouter";
 import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -98,6 +99,7 @@ export const appRouter = router({
         delinquents: true,
         commissions: true,
         approvals: true,
+        cron: true,
       },
     })),
   }),
@@ -301,6 +303,9 @@ export const appRouter = router({
 
   // ============ APPROVALS ROUTER ============
   approvals: approvalsRouter,
+
+  // ============ CRON ROUTER ============
+  cron: cronRouter,
 });
 
 export type AppRouter = typeof appRouter;

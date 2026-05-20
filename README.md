@@ -331,6 +331,43 @@ npm run start
 | Títulos de Capitalização | ✅ Implementado | Produtos financeiros com sorteios periódicos |
 | Integração PIX Real | ⚠️ Planejado | Integração com API bancária |
 | Automação WhatsApp API | ⚠️ Planejado | Envio automático via API oficial |
+| Automação Cron | ✅ Implementado | Sistema completo de cron jobs para tarefas recorrentes |
+
+### ✅ Sistema de Automação Cron (Migrado do Legacy)
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| Schema de Banco | ✅ Implementado | Tabelas para cron_jobs, cron_job_history, cron_settings |
+| Router tRPC | ✅ Implementado | 11 endpoints para CRUD e gerenciamento de jobs |
+| Scheduler Service | ✅ Implementado | Execução automática baseada em frequência |
+| Jobs Padrão | ✅ Implementado | 8 jobs pré-configurados para o sistema MMN |
+| Histórico de Execução | ✅ Implementado | Rastreamento completo de todas as execuções |
+| Configurações Globais | ✅ Implementado | Gerenciamento de configurações do cron |
+
+**Endpoints tRPC:**
+- `cron.list` - Listar todos os cron jobs
+- `cron.getById` - Buscar cron job por ID
+- `cron.getHistory` - Histórico de execuções
+- `cron.create` - Criar novo cron job (admin)
+- `cron.update` - Atualizar cron job (admin)
+- `cron.delete` - Deletar cron job (admin)
+- `cron.runNow` - Executar manualmente (admin)
+- `cron.getStats` - Estatísticas de execução
+- `cron.getSettings` - Obter configurações
+- `cron.updateSettings` - Atualizar configurações (admin)
+- `cron.getUpcomingExecutions` - Próximas execuções
+- `cron.validateCronExpression` - Validar expressão cron
+
+**Tipos de Jobs Disponíveis:**
+- `invoice_overdue_check` - Verificação de faturas vencidas
+- `invoice_reminder` - Lembrete de faturas pendentes
+- `marketplace_sync` - Sincronização com marketplaces
+- `commission_calculation` - Cálculo de comissões
+- `leaderboard_update` - Atualização de rankings
+- `xp_recalculation` - Recalculação de XP
+- `career_progression` - Progressão de carreira
+- `social_post_publish` - Publicação de posts sociais
+- `database_cleanup` - Limpeza de banco de dados
 
 ### ❌ Funcionalidades Remanescentes
 
@@ -367,8 +404,9 @@ npm run start
 | Newsletter | 4 | 5 | 80% |
 | CMS Pages | 5 | 6 | 83% |
 | Billing/Faturas | 7 | 8 | 88% |
+| Automação Cron | 6 | 6 | 100% |
 
-**Conformidade Geral: ~85-90%**
+**Conformidade Geral: ~88-92%**
 
 ## Estrutura do Projeto
 

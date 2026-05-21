@@ -1,5 +1,37 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Sincronização BullMQ → `cron_job_history`
+
+### `feat(cron)` — Fechamento do ciclo de observabilidade Cron
+
+**Novo helper:**
+- `backend/src/services/cronHistorySync.ts` com `extractCronContext`, `markCronHistoryCompleted`, `markCronHistoryFailed`, `markCronHistoryActive`
+- idempotente: só atualiza histórico em estado não-final (`running`/`queued`)
+- no-op silencioso para jobs sem `__cron` no payload (não impacta jobs manuais)
+- duração real do BullMQ (`finishedOn - processedOn`), excluindo tempo em fila
+- tolerante a falha: erros de banco são logados mas não derrubam o worker
+
+**Integração nos 5 workers existentes:**
+- `commissionProcessingWorker.ts`
+- `contentGenerationWorker.ts`
+- `marketplaceSyncWorker.ts`
+- `orderProcessingWorker.ts`
+- `withdrawalProcessingWorker.ts`
+
+Cada worker recebeu duas linhas adicionais (uma em `completed`, uma em `failed`) que delegam ao helper.
+
+**Ciclo completo agora ativo:**
+1. `cron.runNow` → `cronScheduler.executeCronJob` → `cronDispatcher` → BullMQ
+2. Worker processa → listener `completed`/`failed` → `cronHistorySync` → `cron_job_history` + `cron_jobs` atualizados
+3. `AdminSchedules.tsx` revalida em 30s e exibe o desfecho real
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md`
+- README raiz, `docs/admin-backoffice/README.md` e índices sincronizados
+
+**Build:**
+- `npm --workspace backend run build` validado (499 KB)
+
 ## 2026-05-21 — Dispatcher Cron ↔ BullMQ e execução real do `runNow`
 
 ### `feat(backend)` — Conexão do domínio Cron à infraestrutura BullMQ

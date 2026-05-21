@@ -2,6 +2,7 @@ import { Worker, Job } from 'bullmq';
 import { orderProcessingQueue, OrderProcessingJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
 import { notifyOwner } from '../_core/notification';
+import { markCronHistoryCompleted, markCronHistoryFailed } from '../services/cronHistorySync';
 
 /**
  * OrderProcessingWorker
@@ -25,12 +26,14 @@ class OrderProcessingWorker {
   }
 
   private setupEventListeners() {
-    this.worker.on('completed', (job) => {
+    this.worker.on('completed', (job, result) => {
       console.log(`[OrderProcessingWorker] Job ${job.id} completed`);
+      void markCronHistoryCompleted(job, result);
     });
 
     this.worker.on('failed', (job, err) => {
       console.error(`[OrderProcessingWorker] Job ${job?.id} failed:`, err);
+      void markCronHistoryFailed(job, err);
     });
 
     this.worker.on('error', (err) => {

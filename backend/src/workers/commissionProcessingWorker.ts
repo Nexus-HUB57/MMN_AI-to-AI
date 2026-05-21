@@ -2,6 +2,7 @@ import { Worker, Job } from 'bullmq';
 import { commissionProcessingQueue, CommissionProcessingJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
 import { notifyOwner } from '../_core/notification';
+import { markCronHistoryCompleted, markCronHistoryFailed } from '../services/cronHistorySync';
 import {
   calculateCommissionsForPayment,
   confirmCommissions,
@@ -33,11 +34,13 @@ class CommissionProcessingWorker {
   }
 
   private setupEventListeners() {
-    this.worker.on('completed', (job) => {
+    this.worker.on('completed', (job, result) => {
       console.log(`[CommissionProcessingWorker] Job ${job.id} completed`);
+      void markCronHistoryCompleted(job, result);
     });
 
     this.worker.on('failed', (job, err) => {
+      void markCronHistoryFailed(job, err);
       console.error(`[CommissionProcessingWorker] Job ${job?.id} failed:`, err);
     });
 

@@ -2,6 +2,7 @@ import { Worker, Job } from 'bullmq';
 import { contentGenerationQueue, ContentGenerationJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
 import { notifyOwner } from '../_core/notification';
+import { markCronHistoryCompleted, markCronHistoryFailed } from '../services/cronHistorySync';
 
 /**
  * ContentGenerationWorker
@@ -25,12 +26,14 @@ class ContentGenerationWorker {
   }
 
   private setupEventListeners() {
-    this.worker.on('completed', (job) => {
+    this.worker.on('completed', (job, result) => {
       console.log(`[ContentGenerationWorker] Job ${job.id} completed`);
+      void markCronHistoryCompleted(job, result);
     });
 
     this.worker.on('failed', (job, err) => {
       console.error(`[ContentGenerationWorker] Job ${job?.id} failed:`, err);
+      void markCronHistoryFailed(job, err);
     });
 
     this.worker.on('error', (err) => {

@@ -1,6 +1,7 @@
 import { Worker, Job } from 'bullmq';
 import { withdrawalQueue, WithdrawalJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
+import { markCronHistoryCompleted, markCronHistoryFailed } from '../services/cronHistorySync';
 import { notifyOwner, createNotification } from '../../../database/schemas/db';
 import { getDb } from '../../../database/schemas/db';
 import { withdrawalRequests, affiliateBalances, bankAccounts, transactionHistory } from '../../../database/schemas/banking-schema';
@@ -28,12 +29,14 @@ class WithdrawalProcessingWorker {
   }
 
   private setupEventListeners() {
-    this.worker.on('completed', (job) => {
+    this.worker.on('completed', (job, result) => {
       console.log(`[WithdrawalProcessingWorker] Job ${job.id} completed`);
+      void markCronHistoryCompleted(job, result);
     });
 
     this.worker.on('failed', (job, err) => {
       console.error(`[WithdrawalProcessingWorker] Job ${job?.id} failed:`, err);
+      void markCronHistoryFailed(job, err);
     });
 
     this.worker.on('error', (err) => {

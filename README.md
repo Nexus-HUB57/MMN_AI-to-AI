@@ -65,6 +65,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 - [`docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md`](docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
 - [`docs/admin-backoffice/ENTREGA_CRON_DISPATCHER_BULLMQ.md`](docs/admin-backoffice/ENTREGA_CRON_DISPATCHER_BULLMQ.md)
+- [`docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md`](docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md)
 
 ## Atualizações Recentes do Repositório (2026-05-20)
 
@@ -92,6 +93,7 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 - painel lateral de configurações globais do domínio Cron (timezone, canal de alertas, janela de manutenção)
 - novo dispatcher Cron ↔ BullMQ (`backend/src/services/cronDispatcher.ts`) que conecta cada `jobType` à fila correta, com handlers inline para jobs curtos e fallback genérico
 - `cron.runNow` agora executa o job de verdade (não apenas registra) com status final, duração real e metadados de despacho persistidos em `cron_job_history`
+- sincronização automática do desfecho BullMQ de volta para `cron_job_history` via helper `cronHistorySync` integrado aos 5 workers (`commission`, `content`, `marketplace`, `order`, `withdrawal`)
 - saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
 
 **Referências úteis:**

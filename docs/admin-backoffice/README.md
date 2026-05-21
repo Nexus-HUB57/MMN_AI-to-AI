@@ -15,6 +15,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Entrega — auditoria e consolidação financeira](./ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 - [Entrega — agendamentos Cron no Backoffice Admin](./ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
 - [Entrega — dispatcher Cron ↔ BullMQ e execução real do `runNow`](./ENTREGA_CRON_DISPATCHER_BULLMQ.md)
+- [Entrega — sincronização BullMQ → `cron_job_history`](./ENTREGA_CRON_HISTORY_SYNC.md)
 
 ## Status atual da trilha
 
@@ -26,6 +27,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - reforço de auditoria operacional e consolidação visual do domínio financeiro entre aprovações, comissões e pagamentos
 - central administrativa completa do domínio Cron com CRUD de jobs, templates pré-definidos, configurações globais (timezone, alertas, manutenção), execução manual, histórico filtrado e revalidação automática
 - dispatcher Cron ↔ BullMQ conectando os jobs administrativos à infraestrutura real de filas, com execução efetiva via `cron.runNow`
+- sincronização automática BullMQ → `cron_job_history` nos 5 workers existentes, fechando o ciclo de observabilidade do domínio Cron
 
 ## Objetivo
 

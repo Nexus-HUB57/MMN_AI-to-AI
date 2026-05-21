@@ -68,6 +68,8 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md`](docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md)
 - [`docs/admin-backoffice/ENTREGA_SLA_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_SLA_CRON_BACKOFFICE.md)
 - [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_BACKOFFICE.md)
+- [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md)
+- [`docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md)
 
 ## Atualizações Recentes do Repositório (2026-05-21)
 
@@ -97,7 +99,8 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 - `cron.runNow` agora executa o job de verdade (não apenas registra) com status final, duração real e metadados de despacho persistidos em `cron_job_history`
 - sincronização automática do desfecho BullMQ de volta para `cron_job_history` via helper `cronHistorySync` integrado aos 5 workers (`commission`, `content`, `marketplace`, `order`, `withdrawal`)
 - camada de SLA do domínio Cron com snapshot backend (`cronSlaIndicators.ts`) e visualização no `AdminSchedules.tsx`, cobrindo sucesso 7d/30d, p95, falhas consecutivas e jobs travados
-- sistema de alertas operacionais (`cronAlerts.ts`) integrado ao scheduler, com reavaliação automática a cada 5 min, persistência dedicada em `cron_alerts`, dedup multi-instância por chave/cooldown, notificações para admins e painel de incidentes com reconhecimento manual no `AdminSchedules.tsx`
+- sistema de alertas operacionais (`cronAlerts.ts`) integrado ao scheduler, com reavaliação automática a cada 5 min, persistência dedicada em `cron_alerts`, dedup multi-instância por chave/cooldown, notificações para admins, histórico de incidentes e MTTA/MTTR no `AdminSchedules.tsx`
+- nova camada `cronAlertHistory.ts` com backlog paginado, filtros por estado/severidade/reconhecimento e snapshot executivo de incidentes resolvidos
 - saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
 
 **Referências úteis:**

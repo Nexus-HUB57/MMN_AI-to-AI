@@ -25,7 +25,7 @@
 |-----------|----------|-----------|
 | **Canônica** | `canonical/DOCUMENTACAO_CANONICA.md` | Documento único de referência |
 | **Agentic** | `agentic/*.md` (5 arquivos) | Arquitetura e roadmap agentic |
-| **Admin Backoffice** | `admin-backoffice/*.md` (12 arquivos) | Plano de execução do admin com entregas incrementais de aprovações, comissões, auditoria e cron administrativo |
+| **Admin Backoffice** | `admin-backoffice/*.md` (17 arquivos) | Plano de execução do admin com entregas incrementais de aprovações, comissões, auditoria e cron administrativo |
 | **Repository Review** | `repository-review/*.md` (7 arquivos) | Análises e avaliações |
 
 ### 📊Guias e Manuais
@@ -64,7 +64,7 @@
 ## Atualizações Recentes do Snapshot
 
 - Backoffice Admin evoluído com aprovações, aprovação em lote com SLA, comissões em namespace dedicado e auditoria financeira.
-- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos, configurações globais, indicadores de SLA por job e alertas operacionais automáticos persistidos em `cron_alerts` com reconhecimento manual em `/admin/schedules`.
+- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos, configurações globais, indicadores de SLA por job, alertas operacionais persistidos em `cron_alerts` e histórico paginado de incidentes com MTTA/MTTR em `/admin/schedules`.
 - Build completo do monorepo saneado e validado com `npm run build`.
 - Consulte também o [`CHANGELOG.md`](../CHANGELOG.md) para o histórico consolidado.
 

@@ -41,10 +41,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Pagination } from "@/components/ui/pagination";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
 const HISTORY_PAGE_SIZE = 6;
+const ALERT_HISTORY_PAGE_SIZE = 6;
 const SETTINGS_KEYS = {
   timezone: "cron_timezone",
   alertsChannel: "cron_alerts_channel",
@@ -215,6 +217,33 @@ type CronAlert = {
   metadata: Record<string, unknown>;
 };
 
+type AlertStateFilter = "all" | "active" | "resolved";
+type AlertAcknowledgementFilter = "all" | "acknowledged" | "unacknowledged";
+
+type CronAlertHistoryRow = CronAlert & {
+  active: boolean;
+  lastSeenAt: string;
+  notifiedAt?: string;
+  acknowledgedBy?: number | null;
+  resolvedAt?: string;
+  timeToAcknowledgeMs?: number | null;
+  timeToResolveMs?: number | null;
+  openDurationMs?: number | null;
+};
+
+type CronAlertInsights = {
+  windowDays: number;
+  totalTracked: number;
+  activeCount: number;
+  criticalActiveCount: number;
+  warningActiveCount: number;
+  activeUnacknowledgedCount: number;
+  resolvedCountWindow: number;
+  acknowledgedCountWindow: number;
+  avgTimeToAcknowledgeMs: number | null;
+  avgTimeToResolveMs: number | null;
+};
+
 const alertSeverityMeta: Record<CronAlertSeverity, { label: string; className: string; chipClassName: string }> = {
   critical: {
     label: "Crítico",
@@ -255,6 +284,10 @@ const quickLinks = [
 export default function AdminSchedules() {
   const [enabledFilter, setEnabledFilter] = useState<EnabledFilter>("all");
   const [historyStatusFilter, setHistoryStatusFilter] = useState<HistoryStatusFilter>("all");
+  const [alertStateFilter, setAlertStateFilter] = useState<AlertStateFilter>("all");
+  const [alertSeverityFilter, setAlertSeverityFilter] = useState<"all" | CronAlertSeverity>("all");
+  const [alertAcknowledgementFilter, setAlertAcknowledgementFilter] = useState<AlertAcknowledgementFilter>("all");
+  const [alertHistoryPage, setAlertHistoryPage] = useState(1);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false);
   const [jobDialogMode, setJobDialogMode] = useState<"create" | "edit">("create");
@@ -276,6 +309,17 @@ export default function AdminSchedules() {
   const templatesQuery = trpc.cron.getTemplates.useQuery();
   const slaQuery = trpc.cron.getSlaSnapshot.useQuery(undefined, { refetchInterval: 60000 });
   const alertsQuery = trpc.cron.getActiveAlerts.useQuery(undefined, { refetchInterval: 60000 });
+  const alertInsightsQuery = trpc.cron.getAlertInsights.useQuery({ days: 30 }, { refetchInterval: 60000 });
+  const alertHistoryQuery = trpc.cron.getAlertHistory.useQuery(
+    {
+      page: alertHistoryPage,
+      limit: ALERT_HISTORY_PAGE_SIZE,
+      state: alertStateFilter,
+      severity: alertSeverityFilter === "all" ? undefined : alertSeverityFilter,
+      acknowledgement: alertAcknowledgementFilter,
+    },
+    { refetchInterval: 60000 }
+  );
   const historyQuery = trpc.cron.getHistory.useQuery(
     {
       cronJobId: selectedJobId || 0,
@@ -298,6 +342,8 @@ export default function AdminSchedules() {
       templatesQuery.refetch(),
       slaQuery.refetch(),
       alertsQuery.refetch(),
+      alertInsightsQuery.refetch(),
+      alertHistoryQuery.refetch(),
       selectedJobId ? historyQuery.refetch() : Promise.resolve(),
     ]);
   };
@@ -310,7 +356,7 @@ export default function AdminSchedules() {
       } else {
         toast.success("Avaliação concluída — nenhum alerta novo");
       }
-      await alertsQuery.refetch();
+      await Promise.all([alertsQuery.refetch(), alertHistoryQuery.refetch(), alertInsightsQuery.refetch()]);
     },
     onError: (error) => {
       toast.error(error.message || "Não foi possível avaliar os alertas");
@@ -320,7 +366,7 @@ export default function AdminSchedules() {
   const acknowledgeAlertMutation = trpc.cron.acknowledgeAlert.useMutation({
     onSuccess: async () => {
       toast.success("Alerta reconhecido");
-      await alertsQuery.refetch();
+      await Promise.all([alertsQuery.refetch(), alertHistoryQuery.refetch(), alertInsightsQuery.refetch()]);
     },
     onError: (error) => {
       toast.error(error.message || "Não foi possível reconhecer o alerta");
@@ -398,6 +444,11 @@ export default function AdminSchedules() {
   const history = useMemo(() => (historyQuery.data?.history || []) as CronHistoryRow[], [historyQuery.data?.history]);
   const upcoming = useMemo(() => (upcomingQuery.data || []) as CronJobRow[], [upcomingQuery.data]);
   const templates = useMemo(() => (templatesQuery.data || []) as CronTemplate[], [templatesQuery.data]);
+  const alertHistory = useMemo(
+    () => (alertHistoryQuery.data?.alerts || []) as CronAlertHistoryRow[],
+    [alertHistoryQuery.data?.alerts]
+  );
+  const alertInsights = alertInsightsQuery.data as CronAlertInsights | undefined;
 
   const selectedJob = useMemo(() => jobs.find((job) => job.id === selectedJobId) || null, [jobs, selectedJobId]);
 
@@ -412,6 +463,10 @@ export default function AdminSchedules() {
       setSelectedJobId(jobs[0].id);
     }
   }, [jobs, selectedJobId]);
+
+  useEffect(() => {
+    setAlertHistoryPage(1);
+  }, [alertStateFilter, alertSeverityFilter, alertAcknowledgementFilter]);
 
   useEffect(() => {
     const data = settingsQuery.data;
@@ -782,6 +837,173 @@ export default function AdminSchedules() {
                   })}
               </div>
             )}
+          </Card>
+        </section>
+
+        <section>
+          <Card className="border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Clock3 size={20} className="text-violet-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Histórico de incidentes Cron</h2>
+                </div>
+                <p className="mt-1 text-sm text-slate-500">
+                  Linha do tempo dos alertas persistidos com visão de backlog ativo, resoluções recentes e tempos médios de reconhecimento e recuperação.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => Promise.all([alertInsightsQuery.refetch(), alertHistoryQuery.refetch()])}
+                disabled={alertInsightsQuery.isFetching || alertHistoryQuery.isFetching}
+              >
+                <RefreshCw size={16} className="mr-2" />
+                Atualizar histórico
+              </Button>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <ShieldAlert size={18} />
+                  <span className="text-sm">Ativos agora</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-slate-900">{alertInsights?.activeCount ?? 0}</p>
+                <p className="text-xs text-slate-500">{alertInsights?.activeUnacknowledgedCount ?? 0} sem reconhecimento</p>
+              </div>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+                <div className="flex items-center gap-2 text-red-800">
+                  <Flame size={18} />
+                  <span className="text-sm">Críticos ativos</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-red-800">{alertInsights?.criticalActiveCount ?? 0}</p>
+                <p className="text-xs text-slate-600">{alertInsights?.warningActiveCount ?? 0} alertas de atenção ativos</p>
+              </div>
+              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+                <div className="flex items-center gap-2 text-blue-800">
+                  <CheckCircle2 size={18} />
+                  <span className="text-sm">MTTA médio {alertInsights?.windowDays ?? 30}d</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-blue-800">{formatDuration(alertInsights?.avgTimeToAcknowledgeMs)}</p>
+                <p className="text-xs text-slate-600">{alertInsights?.acknowledgedCountWindow ?? 0} incidentes reconhecidos na janela</p>
+              </div>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                <div className="flex items-center gap-2 text-emerald-800">
+                  <TimerReset size={18} />
+                  <span className="text-sm">MTTR médio {alertInsights?.windowDays ?? 30}d</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-emerald-800">{formatDuration(alertInsights?.avgTimeToResolveMs)}</p>
+                <p className="text-xs text-slate-600">{alertInsights?.resolvedCountWindow ?? 0} incidentes resolvidos na janela</p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="min-w-[170px]">
+                <Select value={alertStateFilter} onValueChange={(value: AlertStateFilter) => setAlertStateFilter(value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Estado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os estados</SelectItem>
+                    <SelectItem value="active">Somente ativos</SelectItem>
+                    <SelectItem value="resolved">Somente resolvidos</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="min-w-[170px]">
+                <Select value={alertSeverityFilter} onValueChange={(value: "all" | CronAlertSeverity) => setAlertSeverityFilter(value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Severidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as severidades</SelectItem>
+                    <SelectItem value="critical">Crítico</SelectItem>
+                    <SelectItem value="warning">Atenção</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="min-w-[190px]">
+                <Select
+                  value={alertAcknowledgementFilter}
+                  onValueChange={(value: AlertAcknowledgementFilter) => setAlertAcknowledgementFilter(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Reconhecimento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="acknowledged">Reconhecidos</SelectItem>
+                    <SelectItem value="unacknowledged">Não reconhecidos</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {alertHistoryQuery.isLoading ? (
+                <p className="text-sm text-slate-500">Carregando histórico de incidentes...</p>
+              ) : !alertHistory.length ? (
+                <p className="text-sm text-slate-500">Nenhum incidente encontrado para os filtros atuais.</p>
+              ) : (
+                alertHistory.map((alert) => {
+                  const severityMeta = alertSeverityMeta[alert.severity];
+                  const stateLabel = alert.active ? "Ativo" : "Resolvido";
+                  const stateClassName = alert.active
+                    ? "bg-red-100 text-red-800 hover:bg-red-100"
+                    : "bg-emerald-100 text-emerald-800 hover:bg-emerald-100";
+
+                  return (
+                    <div key={`${alert.id}-${alert.detectedAt}`} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge className={severityMeta.chipClassName}>{severityMeta.label}</Badge>
+                            <Badge className={stateClassName}>{stateLabel}</Badge>
+                            <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">{alertTypeLabel[alert.alertType]}</Badge>
+                            {alert.acknowledgedAt ? (
+                              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Reconhecido</Badge>
+                            ) : null}
+                          </div>
+                          <p className="mt-3 font-medium text-slate-900">{alert.title}</p>
+                          <p className="text-sm text-slate-600">{alert.message}</p>
+                          <div className="mt-3 grid gap-2 text-xs text-slate-500 md:grid-cols-2 xl:grid-cols-4">
+                            <p>Detectado: {formatDateTime(alert.detectedAt)}</p>
+                            <p>Última observação: {formatDateTime(alert.lastSeenAt)}</p>
+                            <p>Reconhecimento: {alert.acknowledgedAt ? formatDateTime(alert.acknowledgedAt) : "—"}</p>
+                            <p>Resolução: {alert.resolvedAt ? formatDateTime(alert.resolvedAt) : "—"}</p>
+                          </div>
+                        </div>
+                        <div className="grid min-w-[240px] gap-3 md:grid-cols-3 xl:grid-cols-1">
+                          <div className="rounded-lg bg-white p-3">
+                            <p className="text-xs uppercase tracking-wide text-slate-500">MTTA</p>
+                            <p className="mt-1 text-sm font-medium text-slate-900">{formatDuration(alert.timeToAcknowledgeMs)}</p>
+                          </div>
+                          <div className="rounded-lg bg-white p-3">
+                            <p className="text-xs uppercase tracking-wide text-slate-500">MTTR</p>
+                            <p className="mt-1 text-sm font-medium text-slate-900">{formatDuration(alert.timeToResolveMs)}</p>
+                          </div>
+                          <div className="rounded-lg bg-white p-3">
+                            <p className="text-xs uppercase tracking-wide text-slate-500">Aberto há</p>
+                            <p className="mt-1 text-sm font-medium text-slate-900">{formatDuration(alert.openDurationMs)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {(alertHistoryQuery.data?.pagination.totalPages ?? 0) > 1 ? (
+              <div className="mt-6 flex justify-end">
+                <Pagination
+                  currentPage={alertHistoryPage}
+                  totalPages={alertHistoryQuery.data?.pagination.totalPages ?? 1}
+                  onPageChange={(page) => setAlertHistoryPage(page)}
+                />
+              </div>
+            ) : null}
           </Card>
         </section>
 

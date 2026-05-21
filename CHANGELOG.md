@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Histórico de alertas Cron com MTTA/MTTR no Backoffice
+
+### `feat(backoffice)` — Incidentes persistidos, backlog e tempos médios no `AdminSchedules`
+
+**Novo serviço:**
+- `backend/src/services/cronAlertHistory.ts` para leitura histórica da tabela `cron_alerts`
+- funções `listCronAlertHistory()` e `getCronAlertInsightSnapshot()`
+
+**Novas procedures:**
+- `trpc.cron.getAlertHistory` (admin) — histórico paginado por estado, severidade e reconhecimento
+- `trpc.cron.getAlertInsights` (admin) — snapshot executivo com backlog, MTTA e MTTR
+
+**Frontend:**
+- nova seção “Histórico de incidentes Cron” no `AdminSchedules.tsx`
+- cards com ativos agora, críticos ativos, MTTA médio e MTTR médio
+- filtros por estado, severidade e reconhecimento
+- timeline paginada de incidentes com timestamps de detecção, reconhecimento e resolução
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`
+- README raiz, `docs/README.md` e `docs/admin-backoffice/README.md` sincronizados
+
+**Validação:**
+- `npm --workspace backend run build` OK (534.7 KB)
+- `AdminSchedules.tsx` validado por bundle esbuild com aliases externos
+
 ## 2026-05-21 — Persistência dedicada para alertas do domínio Cron
 
 ### `feat(cron)` — `cron_alerts` + reconhecimento persistido + dedup multi-instância

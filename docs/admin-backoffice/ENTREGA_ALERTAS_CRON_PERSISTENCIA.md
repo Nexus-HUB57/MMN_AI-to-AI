@@ -74,10 +74,14 @@ Agora:
 - resolução e reabertura ficam explícitas no banco
 - base pronta para histórico de alertas resolvidos, MTTR e integrações externas
 
+## Evolução posterior
+
+Esta base foi posteriormente conectada a uma visualização histórica no Backoffice, com MTTA/MTTR e backlog paginado, documentada em `ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`.
+
 ## Próximos passos recomendados
 
-1. expor histórico de alertas resolvidos no Backoffice
-2. adicionar filtros por severidade, tipo e `jobType`
-3. calcular MTTA/MTTR a partir de `detectedAt`, `acknowledgedAt` e `resolvedAt`
-4. integrar alertas críticos com Slack/email/webhooks
-5. permitir thresholds por `jobType` via `cron_settings`
+1. adicionar filtros por tipo e `jobType` diretamente na UI
+2. integrar alertas críticos com Slack/email/webhooks
+3. cruzar incidentes com `cron_job_history` e logs administrativos
+4. permitir thresholds por `jobType` via `cron_settings`
+5. consolidar MTTA/MTTR por domínio operacional

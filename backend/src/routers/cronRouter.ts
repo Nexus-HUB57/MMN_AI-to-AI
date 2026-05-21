@@ -14,6 +14,7 @@ import { executeCronJob } from '../services/cronScheduler';
 import { listSupportedCronJobTypes } from '../services/cronDispatcher';
 import { computeCronSlaSnapshot } from '../services/cronSlaIndicators';
 import { acknowledgeCronAlert, evaluateCronAlerts, listActiveCronAlerts } from '../services/cronAlerts';
+import { getCronAlertInsightSnapshot, listCronAlertHistory } from '../services/cronAlertHistory';
 
 const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
 
@@ -264,6 +265,38 @@ export const cronRouter = router({
   getActiveAlerts: publicProcedure.query(async () => {
     return listActiveCronAlerts();
   }),
+
+  // Histórico de incidentes Cron com filtros operacionais e paginação
+  getAlertHistory: adminProcedure
+    .input(
+      z
+        .object({
+          page: z.number().int().min(1).default(1),
+          limit: z.number().int().min(1).max(50).default(8),
+          state: z.enum(['all', 'active', 'resolved']).optional(),
+          severity: z.enum(['warning', 'critical']).optional(),
+          alertType: z.enum(['cron_critical_failures', 'cron_stuck_job', 'cron_degraded_success_rate']).optional(),
+          jobType: z.string().min(1).optional(),
+          acknowledgement: z.enum(['all', 'acknowledged', 'unacknowledged']).optional(),
+        })
+        .optional()
+    )
+    .query(async ({ input }) => {
+      return listCronAlertHistory(input ?? {});
+    }),
+
+  // Snapshot executivo da operação de alertas (MTTA / MTTR / backlog)
+  getAlertInsights: adminProcedure
+    .input(
+      z
+        .object({
+          days: z.number().int().min(1).max(180).default(30),
+        })
+        .optional()
+    )
+    .query(async ({ input }) => {
+      return getCronAlertInsightSnapshot(input?.days ?? 30);
+    }),
 
   // Força reavaliação e dispara notificações para admins
   evaluateAlerts: adminProcedure

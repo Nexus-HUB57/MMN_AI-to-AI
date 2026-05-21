@@ -104,8 +104,9 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 - sincronização automática do desfecho BullMQ de volta para `cron_job_history` via helper `cronHistorySync` integrado aos 5 workers (`commission`, `content`, `marketplace`, `order`, `withdrawal`)
 - camada de SLA do domínio Cron com snapshot backend (`cronSlaIndicators.ts`) e visualização no `AdminSchedules.tsx`, cobrindo sucesso 7d/30d, p95, falhas consecutivas e jobs travados
 - sistema de alertas operacionais (`cronAlerts.ts`) integrado ao scheduler, com reavaliação automática a cada 5 min, persistência dedicada em `cron_alerts`, dedup multi-instância por chave/cooldown, notificações para admins, histórico de incidentes e MTTA/MTTR no `AdminSchedules.tsx`
-- nova camada `cronAlertHistory.ts` com backlog paginado, filtros por estado/severidade/reconhecimento e snapshot executivo de incidentes resolvidos
-- saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
+- nova camada `cronAlertHistory.ts` com backlog paginado, filtros por estado/severidade/reconhecimento/tipo/jobType e snapshot executivo de incidentes resolvidos
+- novo drilldown `cronAlertContext.ts` cruzando cada incidente com `cron_job_history`, jobs impactados e a central administrativa de logs, com navegação contextual entre `/admin/schedules` e `/admin/logs`
+- saneamento da camada compartilhada de tRPC no frontend (`useTRPC`) e evolução do `ExecutionLogs.tsx` para aceitar filtros contextuais por query string
 
 **Referências úteis:**
 - [`backend/src/routers/cronRouter.ts`](backend/src/routers/cronRouter.ts)

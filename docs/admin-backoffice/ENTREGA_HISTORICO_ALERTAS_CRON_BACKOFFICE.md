@@ -19,6 +19,7 @@ Funções exportadas:
 
 - `trpc.cron.getAlertHistory` — histórico paginado de incidentes Cron persistidos
 - `trpc.cron.getAlertInsights` — snapshot executivo com backlog e tempos médios
+- `trpc.cron.getAlertContext` — drilldown operacional do incidente com jobs impactados, execuções recentes e logs correlatos
 
 ### 3. Métricas executivas entregues
 
@@ -39,8 +40,9 @@ Na janela configurada (atualmente 30 dias), o snapshot expõe:
 A página administrativa ganhou uma nova seção dedicada ao histórico de incidentes Cron com:
 
 - cards-resumo para backlog, criticidade ativa, MTTA e MTTR
-- filtros por estado, severidade e reconhecimento
+- filtros por estado, severidade, reconhecimento, tipo de alerta e `jobType`
 - listagem histórica paginada
+- botão de contexto operacional por incidente, com correlação direta com `cron_job_history` e a central administrativa de logs
 - badges para severidade, estado e reconhecimento
 - timestamps de detecção, última observação, reconhecimento e resolução
 - visualização individual de MTTA, MTTR e tempo em aberto por incidente
@@ -57,12 +59,13 @@ Agora:
 
 - existe visão unificada de **alerta ativo + histórico + tempos médios**
 - o time administrativo consegue medir rapidez de reconhecimento e de recuperação
+- cada incidente pode ser expandido com contexto operacional real: jobs afetados, últimas execuções e logs administrativos relacionados
 - a tabela `cron_alerts` passa a servir tanto para incidente corrente quanto para retrospectiva operacional
 
 ## Próximos passos recomendados
 
-1. adicionar drilldown por `jobType` no histórico
-2. cruzar alertas com `cron_job_history` e logs administrativos
-3. destacar reincidência por job no Backoffice
-4. exportar incidentes resolvidos para CSV/relatórios executivos
-5. integrar MTTA/MTTR por domínio (financeiro, conteúdo, marketplace, comissões)
+1. destacar reincidência por `jobType`, fila e worker no Backoffice
+2. exportar incidentes resolvidos para CSV/relatórios executivos
+3. integrar MTTA/MTTR por domínio (financeiro, conteúdo, marketplace, comissões)
+4. adicionar pivôs por fila BullMQ e tipo de erro recorrente
+5. consolidar trilha completa incidente → execução → recuperação em dashboards executivos

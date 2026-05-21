@@ -218,6 +218,7 @@ type CronAlert = {
 };
 
 type AlertStateFilter = "all" | "active" | "resolved";
+type AlertTypeFilter = "all" | CronAlertType;
 type AlertAcknowledgementFilter = "all" | "acknowledged" | "unacknowledged";
 
 type CronAlertHistoryRow = CronAlert & {
@@ -244,6 +245,57 @@ type CronAlertInsights = {
   avgTimeToResolveMs: number | null;
 };
 
+type CronAlertContextJob = {
+  id: number;
+  name: string;
+  queueName: string;
+  enabled: boolean;
+  nextRunAt?: string;
+  lastRunAt?: string;
+  lastRunStatus?: string | null;
+};
+
+type CronAlertContextExecution = {
+  historyId: number;
+  cronJobId: number;
+  jobName: string;
+  queueName: string;
+  status: string;
+  startedAt: string;
+  completedAt?: string;
+  duration?: number | null;
+  errorMessage?: string | null;
+  dispatcherJobId?: string | null;
+};
+
+type CronAlertContextLog = {
+  id: string;
+  jobId: string;
+  queueName: string;
+  jobType: string;
+  status: string;
+  startedAt?: string;
+  completedAt?: string;
+  createdAt: string;
+  error?: string | null;
+};
+
+type CronAlertContext = {
+  alert: CronAlertHistoryRow;
+  impactedJobs: CronAlertContextJob[];
+  recentExecutions: CronAlertContextExecution[];
+  recentLogs: CronAlertContextLog[];
+  summary: {
+    impactedJobsCount: number;
+    recentExecutionsCount: number;
+    recentLogsCount: number;
+    failedExecutionsCount: number;
+    failedLogsCount: number;
+    lastExecutionAt?: string;
+    lastLogAt?: string;
+  };
+};
+
 const alertSeverityMeta: Record<CronAlertSeverity, { label: string; className: string; chipClassName: string }> = {
   critical: {
     label: "Crítico",
@@ -261,6 +313,13 @@ const alertTypeLabel: Record<CronAlertType, string> = {
   cron_critical_failures: "Falhas consecutivas",
   cron_stuck_job: "Job travado",
   cron_degraded_success_rate: "Sucesso degradado",
+};
+
+const logStatusMeta: Record<string, { label: string; className: string }> = {
+  pending: { label: "Pendente", className: "bg-slate-100 text-slate-700 hover:bg-slate-100" },
+  processing: { label: "Processando", className: "bg-blue-100 text-blue-800 hover:bg-blue-100" },
+  completed: { label: "Concluído", className: "bg-green-100 text-green-800 hover:bg-green-100" },
+  failed: { label: "Falhou", className: "bg-red-100 text-red-800 hover:bg-red-100" },
 };
 
 const quickLinks = [
@@ -286,8 +345,11 @@ export default function AdminSchedules() {
   const [historyStatusFilter, setHistoryStatusFilter] = useState<HistoryStatusFilter>("all");
   const [alertStateFilter, setAlertStateFilter] = useState<AlertStateFilter>("all");
   const [alertSeverityFilter, setAlertSeverityFilter] = useState<"all" | CronAlertSeverity>("all");
+  const [alertTypeFilter, setAlertTypeFilter] = useState<AlertTypeFilter>("all");
+  const [alertJobTypeFilter, setAlertJobTypeFilter] = useState<string>("all");
   const [alertAcknowledgementFilter, setAlertAcknowledgementFilter] = useState<AlertAcknowledgementFilter>("all");
   const [alertHistoryPage, setAlertHistoryPage] = useState(1);
+  const [selectedAlertContextId, setSelectedAlertContextId] = useState<string | null>(null);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false);
   const [jobDialogMode, setJobDialogMode] = useState<"create" | "edit">("create");
@@ -316,6 +378,8 @@ export default function AdminSchedules() {
       limit: ALERT_HISTORY_PAGE_SIZE,
       state: alertStateFilter,
       severity: alertSeverityFilter === "all" ? undefined : alertSeverityFilter,
+      alertType: alertTypeFilter === "all" ? undefined : alertTypeFilter,
+      jobType: alertJobTypeFilter === "all" ? undefined : alertJobTypeFilter,
       acknowledgement: alertAcknowledgementFilter,
     },
     { refetchInterval: 60000 }
@@ -332,6 +396,16 @@ export default function AdminSchedules() {
       refetchInterval: selectedJobId ? 30000 : false,
     }
   );
+  const alertContextQuery = trpc.cron.getAlertContext.useQuery(
+    {
+      alertId: selectedAlertContextId || "",
+      limit: 5,
+    },
+    {
+      enabled: !!selectedAlertContextId,
+      refetchInterval: selectedAlertContextId ? 60000 : false,
+    }
+  );
 
   const refreshAll = async () => {
     await Promise.all([
@@ -344,6 +418,7 @@ export default function AdminSchedules() {
       alertsQuery.refetch(),
       alertInsightsQuery.refetch(),
       alertHistoryQuery.refetch(),
+      selectedAlertContextId ? alertContextQuery.refetch() : Promise.resolve(),
       selectedJobId ? historyQuery.refetch() : Promise.resolve(),
     ]);
   };
@@ -356,7 +431,12 @@ export default function AdminSchedules() {
       } else {
         toast.success("Avaliação concluída — nenhum alerta novo");
       }
-      await Promise.all([alertsQuery.refetch(), alertHistoryQuery.refetch(), alertInsightsQuery.refetch()]);
+      await Promise.all([
+        alertsQuery.refetch(),
+        alertHistoryQuery.refetch(),
+        alertInsightsQuery.refetch(),
+        selectedAlertContextId ? alertContextQuery.refetch() : Promise.resolve(),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Não foi possível avaliar os alertas");
@@ -366,7 +446,12 @@ export default function AdminSchedules() {
   const acknowledgeAlertMutation = trpc.cron.acknowledgeAlert.useMutation({
     onSuccess: async () => {
       toast.success("Alerta reconhecido");
-      await Promise.all([alertsQuery.refetch(), alertHistoryQuery.refetch(), alertInsightsQuery.refetch()]);
+      await Promise.all([
+        alertsQuery.refetch(),
+        alertHistoryQuery.refetch(),
+        alertInsightsQuery.refetch(),
+        selectedAlertContextId ? alertContextQuery.refetch() : Promise.resolve(),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Não foi possível reconhecer o alerta");
@@ -449,6 +534,7 @@ export default function AdminSchedules() {
     [alertHistoryQuery.data?.alerts]
   );
   const alertInsights = alertInsightsQuery.data as CronAlertInsights | undefined;
+  const alertContext = alertContextQuery.data as CronAlertContext | undefined;
 
   const selectedJob = useMemo(() => jobs.find((job) => job.id === selectedJobId) || null, [jobs, selectedJobId]);
 
@@ -466,7 +552,8 @@ export default function AdminSchedules() {
 
   useEffect(() => {
     setAlertHistoryPage(1);
-  }, [alertStateFilter, alertSeverityFilter, alertAcknowledgementFilter]);
+    setSelectedAlertContextId(null);
+  }, [alertStateFilter, alertSeverityFilter, alertTypeFilter, alertJobTypeFilter, alertAcknowledgementFilter]);
 
   useEffect(() => {
     const data = settingsQuery.data;
@@ -923,6 +1010,34 @@ export default function AdminSchedules() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="min-w-[200px]">
+                <Select value={alertTypeFilter} onValueChange={(value: AlertTypeFilter) => setAlertTypeFilter(value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tipo do alerta" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="cron_critical_failures">Falhas consecutivas</SelectItem>
+                    <SelectItem value="cron_stuck_job">Job travado</SelectItem>
+                    <SelectItem value="cron_degraded_success_rate">Sucesso degradado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="min-w-[220px]">
+                <Select value={alertJobTypeFilter} onValueChange={(value: string) => setAlertJobTypeFilter(value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Job impactado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os job types</SelectItem>
+                    {(alertHistoryQuery.data?.availableJobTypes || []).map((jobType) => (
+                      <SelectItem key={jobType} value={jobType}>
+                        {jobType}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="min-w-[190px]">
                 <Select
                   value={alertAcknowledgementFilter}
@@ -953,6 +1068,10 @@ export default function AdminSchedules() {
                     ? "bg-red-100 text-red-800 hover:bg-red-100"
                     : "bg-emerald-100 text-emerald-800 hover:bg-emerald-100";
 
+                  const isContextOpen = selectedAlertContextId === alert.id;
+                  const contextMatches = isContextOpen && alertContext?.alert?.id === alert.id;
+                  const logsHref = `/admin/logs?jobType=${encodeURIComponent(alert.jobType)}`;
+
                   return (
                     <div key={`${alert.id}-${alert.detectedAt}`} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                       <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
@@ -961,6 +1080,7 @@ export default function AdminSchedules() {
                             <Badge className={severityMeta.chipClassName}>{severityMeta.label}</Badge>
                             <Badge className={stateClassName}>{stateLabel}</Badge>
                             <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">{alertTypeLabel[alert.alertType]}</Badge>
+                            <Badge className="bg-white text-slate-700 hover:bg-white">{alert.jobType}</Badge>
                             {alert.acknowledgedAt ? (
                               <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Reconhecido</Badge>
                             ) : null}
@@ -989,6 +1109,131 @@ export default function AdminSchedules() {
                           </div>
                         </div>
                       </div>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedAlertContextId((current) => (current === alert.id ? null : alert.id))}
+                        >
+                          <Activity size={16} className="mr-2" />
+                          {isContextOpen ? "Ocultar contexto" : "Ver contexto operacional"}
+                        </Button>
+                        <Link
+                          href={logsHref}
+                          className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
+                        >
+                          <ExternalLink size={16} className="mr-2" />
+                          Abrir logs do job type
+                        </Link>
+                      </div>
+
+                      {isContextOpen ? (
+                        <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
+                          {alertContextQuery.isLoading && !contextMatches ? (
+                            <p className="text-sm text-slate-500">Carregando contexto operacional...</p>
+                          ) : !contextMatches || !alertContext ? (
+                            <p className="text-sm text-slate-500">Não foi possível carregar o contexto deste incidente.</p>
+                          ) : (
+                            <div className="space-y-4">
+                              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                                <div className="rounded-lg bg-slate-50 p-3">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Jobs impactados</p>
+                                  <p className="mt-1 text-lg font-semibold text-slate-900">{alertContext.summary.impactedJobsCount}</p>
+                                </div>
+                                <div className="rounded-lg bg-slate-50 p-3">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Execuções recentes</p>
+                                  <p className="mt-1 text-lg font-semibold text-slate-900">{alertContext.summary.recentExecutionsCount}</p>
+                                  <p className="text-xs text-slate-500">{alertContext.summary.failedExecutionsCount} com falha</p>
+                                </div>
+                                <div className="rounded-lg bg-slate-50 p-3">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Logs correlatos</p>
+                                  <p className="mt-1 text-lg font-semibold text-slate-900">{alertContext.summary.recentLogsCount}</p>
+                                  <p className="text-xs text-slate-500">{alertContext.summary.failedLogsCount} falhos</p>
+                                </div>
+                                <div className="rounded-lg bg-slate-50 p-3">
+                                  <p className="text-xs uppercase tracking-wide text-slate-500">Último evento</p>
+                                  <p className="mt-1 text-sm font-medium text-slate-900">
+                                    {formatDateTime(alertContext.summary.lastExecutionAt || alertContext.summary.lastLogAt)}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {alertContext.impactedJobs.length ? (
+                                <div>
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Jobs relacionados</p>
+                                  <div className="mt-2 flex flex-wrap gap-2">
+                                    {alertContext.impactedJobs.map((job) => (
+                                      <Button key={job.id} variant="outline" size="sm" onClick={() => setSelectedJobId(job.id)}>
+                                        {job.name}
+                                      </Button>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null}
+
+                              <div className="grid gap-4 xl:grid-cols-2">
+                                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Cron job history</p>
+                                  <div className="mt-3 space-y-3">
+                                    {alertContext.recentExecutions.length ? (
+                                      alertContext.recentExecutions.map((execution) => {
+                                        const executionMeta = statusMeta[execution.status] || statusMeta.scheduled;
+                                        return (
+                                          <div key={`${execution.historyId}-${execution.startedAt}`} className="rounded-lg bg-white p-3">
+                                            <div className="flex items-center justify-between gap-2">
+                                              <div>
+                                                <p className="font-medium text-slate-900">{execution.jobName}</p>
+                                                <p className="text-xs text-slate-500">{execution.queueName}</p>
+                                              </div>
+                                              <Badge className={executionMeta.className}>{executionMeta.label}</Badge>
+                                            </div>
+                                            <p className="mt-2 text-xs text-slate-500">Início: {formatDateTime(execution.startedAt)}</p>
+                                            <p className="text-xs text-slate-500">Duração: {formatDuration(execution.duration)}</p>
+                                            {execution.errorMessage ? (
+                                              <div className="mt-2 rounded-md bg-red-50 p-2 text-xs text-red-800">{execution.errorMessage}</div>
+                                            ) : null}
+                                          </div>
+                                        );
+                                      })
+                                    ) : (
+                                      <p className="text-sm text-slate-500">Nenhuma execução recente encontrada.</p>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Central administrativa de logs</p>
+                                  <div className="mt-3 space-y-3">
+                                    {alertContext.recentLogs.length ? (
+                                      alertContext.recentLogs.map((log) => {
+                                        const logMeta = logStatusMeta[log.status] || statusMeta.scheduled;
+                                        return (
+                                          <div key={log.id} className="rounded-lg bg-white p-3">
+                                            <div className="flex items-center justify-between gap-2">
+                                              <div>
+                                                <p className="font-medium text-slate-900">{log.queueName}</p>
+                                                <p className="text-xs text-slate-500">{log.jobId}</p>
+                                              </div>
+                                              <Badge className={logMeta.className}>{logMeta.label}</Badge>
+                                            </div>
+                                            <p className="mt-2 text-xs text-slate-500">Criado em: {formatDateTime(log.createdAt)}</p>
+                                            {log.error ? (
+                                              <div className="mt-2 rounded-md bg-red-50 p-2 text-xs text-red-800">{log.error}</div>
+                                            ) : null}
+                                          </div>
+                                        );
+                                      })
+                                    ) : (
+                                      <p className="text-sm text-slate-500">Nenhum log correlato encontrado.</p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ) : null}
                     </div>
                   );
                 })
@@ -1305,7 +1550,7 @@ export default function AdminSchedules() {
                 <h2 className="text-lg font-semibold text-slate-900">Próximos passos da frente</h2>
               </div>
               <ol className="space-y-3 text-sm text-slate-600">
-                <li className="rounded-lg bg-slate-50 p-3">1. Integrar logs detalhados de execução com a central administrativa de logs.</li>
+                <li className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">1. Integração inicial concluída entre histórico de incidentes e central administrativa de logs.</li>
                 <li className="rounded-lg bg-slate-50 p-3">2. Relacionar cada rotina a filas, módulos financeiros e cadências editoriais.</li>
                 <li className="rounded-lg bg-slate-50 p-3">3. Expor indicadores de SLA e alertas operacionais por domínio.</li>
               </ol>

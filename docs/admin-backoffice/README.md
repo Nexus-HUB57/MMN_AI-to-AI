@@ -33,7 +33,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - dispatcher Cron ↔ BullMQ conectando os jobs administrativos à infraestrutura real de filas, com execução efetiva via `cron.runNow`
 - sincronização automática BullMQ → `cron_job_history` nos 5 workers existentes, fechando o ciclo de observabilidade do domínio Cron
 - indicadores de SLA por job com taxa de sucesso, p95 de duração, falhas consecutivas e detecção de jobs travados no `AdminSchedules`
-- alertas operacionais automáticos com reavaliação a cada 5 min, persistência dedicada em `cron_alerts`, dedup multi-instância por cooldown, notificações para admins, histórico paginado de incidentes e MTTA/MTTR no `AdminSchedules`
+- alertas operacionais automáticos com reavaliação a cada 5 min, persistência dedicada em `cron_alerts`, dedup multi-instância por cooldown, notificações para admins, histórico paginado de incidentes, MTTA/MTTR e drilldown contextual com `cron_job_history` + central administrativa de logs no `AdminSchedules`
 
 ## Objetivo
 
@@ -43,9 +43,9 @@ Transformar a base administrativa já existente no frontend e no backend em um *
 
 - persistir auditoria operacional em armazenamento dedicado
 - padronizar componentes compartilhados de filtros, tabelas e paginação do Backoffice
-- conectar o histórico de cron jobs aos workers BullMQ reais e à central de logs
+- aprofundar a ligação entre histórico de cron jobs, workers BullMQ reais e trilhas de erro por fila
 - evoluir observabilidade administrativa com indicadores de SLA por domínio (financeiro, conteúdo, marketplace, comissões)
-- cruzar histórico de alertas cron com `cron_job_history` e a central administrativa de logs
+- destacar reincidência de incidentes por `jobType`, fila e worker no Backoffice
 
 ## Escopo inicial
 

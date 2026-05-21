@@ -25,6 +25,27 @@
 - Ícones Lucide React: Trophy, TrendingUp, Star, Zap, Award, Target, BarChart3, History, Crown, Medal, Flame, Sparkles
 - Cores por categoria: Azul (Afiliado), Verde (Preditivo), Roxo (Generativo), Amarelo (Orquestrador), Rosa (IA Agêntica)
 
+## 2026-05-21 — Drilldown contextual de alertas Cron + filtros na central de logs
+
+### `feat(backoffice)` — Incidente → execução → log no fluxo administrativo
+
+**Novo serviço:**
+- `backend/src/services/cronAlertContext.ts` para correlacionar um alerta persistido com jobs impactados, execuções recentes e logs administrativos
+- função `getCronAlertContext(alertId, limit)` exposta no backend
+
+**Novas procedures / integrações:**
+- `trpc.cron.getAlertContext` (admin) — drilldown operacional por incidente
+- `AdminSchedules.tsx` agora oferece filtros por tipo de alerta e `jobType`, além de botão “Ver contexto operacional” por incidente
+- `ExecutionLogs.tsx` passou a aceitar contexto via query string (`jobType`, `queueName`, `status`, `search`) para navegação cruzada a partir do Backoffice Cron
+
+**Frontend / qualidade:**
+- exportação de `useTRPC()` restaurada em `frontend/src/components/trpc-provider.tsx`, compatibilizando páginas recém-adicionadas (`SocialAccounts.tsx` e `TrackingLinks.tsx`)
+- `backend/src/routers/logRouter.ts` corrigido para retornar total real paginado em vez do tamanho da página corrente
+
+**Validação:**
+- `npm --workspace backend run build` OK (539.0 KB)
+- `AdminSchedules.tsx`, `ExecutionLogs.tsx` e `trpc-provider.tsx` validados por bundle esbuild com aliases externos
+
 ## 2026-05-21 — Histórico de alertas Cron com MTTA/MTTR no Backoffice
 
 ### `feat(backoffice)` — Incidentes persistidos, backlog e tempos médios no `AdminSchedules`

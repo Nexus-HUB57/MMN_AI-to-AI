@@ -2,6 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { trpc, trpcClient } from "../lib/trpc";
 
+export function useTRPC() {
+  return trpc;
+}
+
 export function TRPCProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>

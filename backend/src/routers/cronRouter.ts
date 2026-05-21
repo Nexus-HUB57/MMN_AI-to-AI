@@ -14,6 +14,7 @@ import { executeCronJob } from '../services/cronScheduler';
 import { listSupportedCronJobTypes } from '../services/cronDispatcher';
 import { computeCronSlaSnapshot } from '../services/cronSlaIndicators';
 import { acknowledgeCronAlert, evaluateCronAlerts, listActiveCronAlerts } from '../services/cronAlerts';
+import { getCronAlertContext } from '../services/cronAlertContext';
 import { getCronAlertInsightSnapshot, listCronAlertHistory } from '../services/cronAlertHistory';
 
 const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
@@ -296,6 +297,18 @@ export const cronRouter = router({
     )
     .query(async ({ input }) => {
       return getCronAlertInsightSnapshot(input?.days ?? 30);
+    }),
+
+  // Contexto operacional do alerta: jobs impactados, execuções recentes e logs correlatos
+  getAlertContext: adminProcedure
+    .input(
+      z.object({
+        alertId: z.string().min(1),
+        limit: z.number().int().min(1).max(10).default(5).optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      return getCronAlertContext(input.alertId, input.limit ?? 5);
     }),
 
   // Força reavaliação e dispara notificações para admins

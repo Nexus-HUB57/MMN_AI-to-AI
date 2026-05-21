@@ -65,8 +65,17 @@ const modelRegistry: Record<ModelType, ModelConfig> = {
   },
 };
 
-// Cliente OpenAI
-const openaiClient = new OpenAI();
+// Cliente OpenAI (lazy initialization)
+let _openaiClient: OpenAI | null = null;
+function getOpenAIClient(): OpenAI {
+  if (!_openaiClient) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured. Please set it in your environment secrets.");
+    }
+    _openaiClient = new OpenAI();
+  }
+  return _openaiClient;
+}
 
 /**
  * Invoca um modelo de LLM com suporte a roteamento dinâmico
@@ -123,7 +132,7 @@ async function invokeOpenAI(
   model: string
 ): Promise<LLMResponse> {
   try {
-    const response = await openaiClient.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model,
       messages,
       response_format,

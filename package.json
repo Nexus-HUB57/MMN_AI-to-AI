@@ -5,8 +5,7 @@
   "description": "Nexus System AfilIAte-AI — Monorepo (frontend React+Vite, backend tRPC+Drizzle+MySQL, mobile Expo)",
   "workspaces": [
     "frontend",
-    "backend",
-    "mobile"
+    "backend"
   ],
   "scripts": {
     "dev": "concurrently -k -n frontend,backend -c blue,green \"npm --workspace frontend run dev\" \"npm --workspace backend run dev\"",

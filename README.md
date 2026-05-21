@@ -8,6 +8,8 @@
 
 📄 **[DOCUMENTAÇÃO CANÔNICA](docs/canonical/DOCUMENTACAO_CANONICA.md)**
 
+📑 **[ÍNDICE DE DOCUMENTAÇÃO](docs/INDEX.md)** - Navegação centralizada por todos os documentos do projeto
+
 Esta documentação centraliza todas as informações do sistema em um único documento de referência, incluindo:
 - Visão Geral do Sistema
 - Sistema MMN (Comissões e Carreiras)
@@ -23,6 +25,8 @@ Esta documentação centraliza todas as informações do sistema em um único do
 
 **Análise Técnica Detalhada:**
 📊 [Análise Técnica Fundamentalista v2.0](ANALISE_TECNICA_FUNDAMENTALISTA_v2.md)
+
+**Para navegar toda a documentação de forma organizada, consulte o [ÍNDICE DE DOCUMENTAÇÃO](docs/INDEX.md).**
 
 ---
 

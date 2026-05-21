@@ -45,8 +45,8 @@ const ImageGenerator = lazy(() => import("./pages/ImageGenerator"));
 const Commissions = lazy(() => import("./pages/Commissions"));
 const BonusRewards = lazy(() => import("./pages/BonusRewards"));
 
-const SocialAccounts = lazy(() => import("./pages/NotFound"));
-const TrackingLinks = lazy(() => import("./pages/NotFound"));
+const SocialAccounts = lazy(() => import("./pages/SocialAccounts"));
+const TrackingLinks = lazy(() => import("./pages/TrackingLinks"));
 
 const Login = lazy(() => import("./pages/Login"));
 const Logout = lazy(() => import("./pages/Logout"));

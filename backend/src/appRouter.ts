@@ -108,61 +108,7 @@ export const appRouter = router({
   agentic: agenticRouter,
 
   // ============ AGENTS ROUTER ============
-  agents: router({
-    initialize: publicProcedure.mutation(async () => {
-      return { success: true, message: "Agent initialization endpoint ready" };
-    }),
-
-    get: publicProcedure
-      .input(z.object({ userId: z.number().optional() }).optional())
-      .query(async ({ input }) => {
-        const userId = input?.userId;
-        if (!userId) return null;
-        const agent = await getAgentByUserId(userId);
-        return agent || null;
-      }),
-
-    configure: publicProcedure
-      .input(z.object({
-        userId: z.number(),
-        name: z.string().optional(),
-        status: z.enum(["learning", "active", "paused", "inactive"]).optional(),
-        contentStrategy: z.record(z.any()).optional(),
-        performanceScore: z.number().optional(),
-      }))
-      .mutation(async ({ input }) => {
-        return { success: true, message: "Agent configuration endpoint ready" };
-      }),
-
-    getState: publicProcedure
-      .input(z.object({ userId: z.number() }))
-      .query(async ({ input }) => {
-        const agent = await getAgentByUserId(input.userId);
-        if (!agent) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-        }
-        return {
-          id: agent.id,
-          userId: agent.userId,
-          name: agent.name,
-          status: agent.status,
-          performanceScore: agent.performanceScore,
-          contentStrategy: agent.contentStrategy ? JSON.parse(agent.contentStrategy) : null,
-          createdAt: agent.createdAt,
-          updatedAt: agent.updatedAt,
-        };
-      }),
-
-    updateState: publicProcedure
-      .input(z.object({
-        userId: z.number(),
-        performanceScore: z.number().optional(),
-        contentStrategy: z.record(z.any()).optional(),
-      }))
-      .mutation(async () => {
-        return { success: true };
-      }),
-  }),
+  agents: agentsRouter,
 
   // ============ MMN ROUTER ============
   mmn: router({

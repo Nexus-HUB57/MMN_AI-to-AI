@@ -1,7 +1,8 @@
 import { getDb } from '../../../database/schemas/db';
 import { cronJobs, cronJobHistory, type ICronJob, type ICronJobHistory } from '../../../database/schemas/schema-cron';
-import { eq, lte, sql, and, isNull } from 'drizzle-orm';
+import { eq, lte, sql, and } from 'drizzle-orm';
 import cron from 'node-cron';
+import { dispatchCronJob } from './cronDispatcher';
 
 /**
  * Cron Scheduler Service
@@ -185,8 +186,8 @@ export async function executeCronJob(jobId: number): Promise<ICronJobHistory | n
   try {
     console.log(`[CronScheduler] Executando job ${jobId} (${job.name})...`);
 
-    // Executar o job baseado no tipo
-    await executeJobByType(job);
+    // Despachar o job para BullMQ ou handler inline
+    const dispatchResult = await executeJobByType(job as unknown as ICronJob, historyEntry.id);
 
     const duration = Date.now() - startTime;
 
@@ -196,6 +197,12 @@ export async function executeCronJob(jobId: number): Promise<ICronJobHistory | n
         completedAt: new Date(),
         duration,
         status: 'completed',
+        jobId: dispatchResult.jobId,
+        metadata: JSON.stringify({
+          queueName: dispatchResult.queueName,
+          bullJobName: dispatchResult.bullJobName,
+          reason: dispatchResult.reason,
+        }),
       })
       .where(eq(cronJobHistory.id, historyEntry.id));
 
@@ -250,48 +257,42 @@ export async function executeCronJob(jobId: number): Promise<ICronJobHistory | n
 }
 
 /**
- * Executa o job baseado no seu tipo
+ * Executa o job baseado no seu tipo, delegando ao dispatcher central.
+ * O dispatcher decide entre BullMQ e handler inline e devolve metadados.
  */
-async function executeJobByType(job: ICronJob): Promise<void> {
-  const payload = job.jobPayload ? JSON.parse(job.jobPayload as string) : {};
+async function executeJobByType(
+  job: ICronJob,
+  historyId: number
+): Promise<{ queueName: string; bullJobName: string; jobId?: string; dispatched: boolean; reason?: string }> {
+  const payload = parsePayload(job.jobPayload);
 
-  switch (job.jobType) {
-    case 'invoice_overdue_check':
-      // Lógica para verificar faturas vencidas
-      console.log('[CronScheduler] Executando invoice_overdue_check');
-      // Aqui você chamaria o serviço apropriado
-      break;
+  const result = await dispatchCronJob({
+    jobType: job.jobType,
+    queueName: job.queueName,
+    payload,
+    cronJobId: job.id,
+    historyId,
+  });
 
-    case 'marketplace_sync':
-      // Sincronização de marketplace
-      console.log('[CronScheduler] Executando marketplace_sync');
-      break;
-
-    case 'commission_calculation':
-      // Cálculo de comissões
-      console.log('[CronScheduler] Executando commission_calculation');
-      break;
-
-    case 'database_cleanup':
-      // Limpeza de banco de dados
-      console.log('[CronScheduler] Executando database_cleanup');
-      break;
-
-    case 'leaderboard_update':
-      // Atualização de leaderboard
-      console.log('[CronScheduler] Executando leaderboard_update');
-      break;
-
-    case 'xp_recalculation':
-      // Recalculação de XP
-      console.log('[CronScheduler] Executando xp_recalculation');
-      break;
-
-    default:
-      // Para jobs genéricos, adicionar à fila correspondente
-      console.log(`[CronScheduler] Executando job genérico: ${job.jobType}`);
-      // Adicionar à fila BullMQ apropriada
+  if (!result.dispatched) {
+    throw new Error(`[CronScheduler] Job ${job.id} (${job.jobType}) não despachado: ${result.reason ?? 'motivo não informado'}`);
   }
+
+  return result;
+}
+
+function parsePayload(rawPayload: unknown): Record<string, unknown> {
+  if (!rawPayload) return {};
+  if (typeof rawPayload === 'object') return rawPayload as Record<string, unknown>;
+  if (typeof rawPayload === 'string') {
+    try {
+      const parsed = JSON.parse(rawPayload);
+      return typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {};
+    } catch {
+      return {};
+    }
+  }
+  return {};
 }
 
 /**

@@ -10,6 +10,8 @@ import {
 } from '../../../database/schemas/schema-cron';
 import { eq, desc, and, sql, gte, lte } from 'drizzle-orm';
 import cron from 'node-cron';
+import { executeCronJob } from '../services/cronScheduler';
+import { listSupportedCronJobTypes } from '../services/cronDispatcher';
 
 const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
 
@@ -219,14 +221,13 @@ export const cronRouter = router({
       const job = await db.select().from(cronJobs).where(eq(cronJobs.id, input.id)).limit(1);
       if (!job[0]) throw new Error('Cron job not found');
 
-      const [historyEntry] = await db
-        .insert(cronJobHistory)
-        .values({
-          cronJobId: input.id,
-          startedAt: new Date(),
-          status: 'running',
-        })
-        .returning();
+      // Execução real: o scheduler cria o histórico, despacha o job
+      // (BullMQ ou handler inline) e atualiza status, duração e metadata.
+      const historyEntry = await executeCronJob(input.id);
+
+      if (!historyEntry) {
+        throw new Error('Falha ao executar o cron job (cronScheduler retornou null)');
+      }
 
       return {
         success: true,
@@ -234,6 +235,11 @@ export const cronRouter = router({
         historyId: historyEntry.id,
       };
     }),
+
+  // Tipos de cron jobs suportados nativamente pelo dispatcher
+  getSupportedJobTypes: publicProcedure.query(async () => {
+    return listSupportedCronJobTypes().sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }),
 
   getStats: publicProcedure
     .input(

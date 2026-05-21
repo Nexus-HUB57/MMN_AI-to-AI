@@ -14,6 +14,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Entrega — comissões no namespace dedicado](./ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [Entrega — auditoria e consolidação financeira](./ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 - [Entrega — agendamentos Cron no Backoffice Admin](./ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
+- [Entrega — dispatcher Cron ↔ BullMQ e execução real do `runNow`](./ENTREGA_CRON_DISPATCHER_BULLMQ.md)
 
 ## Status atual da trilha
 
@@ -24,6 +25,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - módulo de comissões ligado ao namespace dedicado `trpc.commissions.*`
 - reforço de auditoria operacional e consolidação visual do domínio financeiro entre aprovações, comissões e pagamentos
 - central administrativa completa do domínio Cron com CRUD de jobs, templates pré-definidos, configurações globais (timezone, alertas, manutenção), execução manual, histórico filtrado e revalidação automática
+- dispatcher Cron ↔ BullMQ conectando os jobs administrativos à infraestrutura real de filas, com execução efetiva via `cron.runNow`
 
 ## Objetivo
 

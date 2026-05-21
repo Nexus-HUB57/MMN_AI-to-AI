@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Dispatcher Cron ↔ BullMQ e execução real do `runNow`
+
+### `feat(backend)` — Conexão do domínio Cron à infraestrutura BullMQ
+
+**Novo serviço:**
+- `backend/src/services/cronDispatcher.ts` com catálogo de bindings `jobType` → fila BullMQ + nome do job + transformação de payload
+- handlers inline para operações curtas (`invoice_overdue_check`, `database_cleanup`, `xp_recalculation`, etc.)
+- fallback genérico usando o `queueName` declarado pelo próprio cron job
+- propagação do contexto `__cron` (cronJobId, historyId) dentro do payload BullMQ
+
+**Refatorações:**
+- `cronScheduler.executeJobByType` agora delega ao dispatcher e lança erro real em caso de falha de despacho
+- `cron_job_history.jobId` e `cron_job_history.metadata` agora são populados com dados reais do BullMQ
+- `parsePayload` tolerante a payloads em string ou objeto, evitando exceções em `JSON.parse(null)`
+- `cron.runNow` migrado para chamar `executeCronJob`, executando o job de verdade em vez de criar registro órfão
+
+**Nova procedure:**
+- `trpc.cron.getSupportedJobTypes` expõe a lista de tipos suportados nativamente pelo dispatcher
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_CRON_DISPATCHER_BULLMQ.md`
+- README raiz, `docs/admin-backoffice/README.md` e índices sincronizados
+
+**Build:**
+- `npm run build` validado (backend 499 KB / frontend Vite OK)
+
 ## 2026-05-21 — CRUD e Configurações Globais do Domínio Cron no Backoffice
 
 ### `feat(backoffice)` — Central administrativa completa do domínio Cron

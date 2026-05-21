@@ -13,6 +13,7 @@ import cron from 'node-cron';
 import { executeCronJob } from '../services/cronScheduler';
 import { listSupportedCronJobTypes } from '../services/cronDispatcher';
 import { computeCronSlaSnapshot } from '../services/cronSlaIndicators';
+import { acknowledgeCronAlert, evaluateCronAlerts, listActiveCronAlerts } from '../services/cronAlerts';
 
 const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
 
@@ -257,6 +258,37 @@ export const cronRouter = router({
     )
     .query(async ({ input }) => {
       return computeCronSlaSnapshot(input ?? {});
+    }),
+
+  // Alertas operacionais ativos derivados do snapshot SLA
+  getActiveAlerts: publicProcedure.query(async () => {
+    return listActiveCronAlerts();
+  }),
+
+  // Força reavaliação e dispara notificações para admins
+  evaluateAlerts: adminProcedure
+    .input(
+      z
+        .object({
+          cooldownMinutes: z.number().int().min(1).max(720).optional(),
+          notifyAdmins: z.boolean().optional(),
+          successRateAlertThreshold: z.number().int().min(1).max(100).optional(),
+        })
+        .optional()
+    )
+    .mutation(async ({ input }) => {
+      return evaluateCronAlerts(input ?? {});
+    }),
+
+  // Reconhece manualmente um alerta ativo
+  acknowledgeAlert: adminProcedure
+    .input(z.object({ alertId: z.string().min(1) }))
+    .mutation(async ({ input }) => {
+      const acknowledged = acknowledgeCronAlert(input.alertId);
+      if (!acknowledged) {
+        throw new Error('Alerta não encontrado entre os ativos');
+      }
+      return acknowledged;
     }),
 
   getStats: publicProcedure

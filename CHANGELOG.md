@@ -1,5 +1,38 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Alertas operacionais automáticos para jobs Cron
+
+### `feat(cron)` — SLA monitor + alertas + reconhecimento manual
+
+**Novo serviço:**
+- `backend/src/services/cronAlerts.ts` com avaliação de SLA, dedup por cooldown e bucketize de métricas
+- três tipos de alerta: `cron_critical_failures`, `cron_stuck_job`, `cron_degraded_success_rate`
+- notificações persistidas via `createNotification` para todos os admins ativos
+- API: `evaluateCronAlerts`, `listActiveCronAlerts`, `acknowledgeCronAlert`, `clearAcknowledgement`, `resetCronAlertsState`
+
+**Scheduler:**
+- `cronScheduler.startCronScheduler` agora dispara `evaluateCronAlerts()` automaticamente a cada 5 minutos
+- registro centralizado em `schedulerIntervals` para shutdown gracioso (`stopCronScheduler` limpa todos os timers)
+
+**Novas procedures:**
+- `trpc.cron.getActiveAlerts` (public) — lista alertas ativos
+- `trpc.cron.evaluateAlerts` (admin) — força reavaliação e retorna `newAlerts`/`activeAlerts`/snapshot summary
+- `trpc.cron.acknowledgeAlert` (admin) — reconhece manualmente um alerta
+
+**Frontend:**
+- nova seção de alertas no `AdminSchedules.tsx` acima do painel de SLA
+- cards com severidade (crítico/atenção), tipo de alerta, mensagem detalhada e timestamps
+- botão "Avaliar agora" e "Reconhecer" por alerta
+- mensagem positiva quando não há alertas ativos
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_ALERTAS_CRON_BACKOFFICE.md`
+- README raiz, `docs/README.md` e `docs/admin-backoffice/README.md` sincronizados
+
+**Build:**
+- `npm --workspace backend run build` OK (516 KB)
+- `frontend/src/pages/AdminSchedules.tsx` validado via esbuild standalone (1.4 MB bundle)
+
 ## 2026-05-21 — Indicadores de SLA do domínio Cron no Backoffice
 
 ### `feat(backoffice)` — Snapshot operacional por job no AdminSchedules

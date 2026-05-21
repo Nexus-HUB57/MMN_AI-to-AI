@@ -3,6 +3,7 @@ import { cronJobs, cronJobHistory, type ICronJob, type ICronJobHistory } from '.
 import { eq, lte, sql, and } from 'drizzle-orm';
 import cron from 'node-cron';
 import { dispatchCronJob } from './cronDispatcher';
+import { evaluateCronAlerts } from './cronAlerts';
 
 /**
  * Cron Scheduler Service
@@ -16,6 +17,9 @@ interface ScheduledTask {
 
 // Armazém de tarefas agendadas
 const scheduledTasks = new Map<number, ScheduledTask>();
+
+// Intervalos globais do scheduler (poll de pendentes + reavaliação de alertas)
+const schedulerIntervals: NodeJS.Timeout[] = [];
 
 // Flag para controlar o scheduler
 let isRunning = false;
@@ -40,6 +44,23 @@ export async function startCronScheduler(): Promise<void> {
     await checkAndRunPendingJobs();
   }, 60000); // 1 minuto
 
+  // Reavaliar alertas operacionais a cada 5 minutos
+  const alertsIntervalId = setInterval(async () => {
+    try {
+      const result = await evaluateCronAlerts();
+      if (result.newAlerts.length > 0) {
+        console.warn(
+          `[CronScheduler] ${result.newAlerts.length} novo(s) alerta(s) cron emitidos (total ativo: ${result.totalAlerts})`
+        );
+      }
+    } catch (error) {
+      console.error('[CronScheduler] Falha ao avaliar alertas cron:', error);
+    }
+  }, 5 * 60 * 1000); // 5 minutos
+
+  // Mantém referências acessíveis para shutdown limpo
+  schedulerIntervals.push(intervalId, alertsIntervalId);
+
   console.log('[CronScheduler] Scheduler iniciado com sucesso');
 }
 
@@ -49,10 +70,16 @@ export async function startCronScheduler(): Promise<void> {
 export async function stopCronScheduler(): Promise<void> {
   console.log('[CronScheduler] Parando...');
 
-  // Limpar todos os timers
+  // Limpar todos os timers de jobs agendados
   for (const [jobId, task] of scheduledTasks.entries()) {
     clearInterval(task.task);
     scheduledTasks.delete(jobId);
+  }
+
+  // Limpar intervalos globais
+  while (schedulerIntervals.length > 0) {
+    const interval = schedulerIntervals.pop();
+    if (interval) clearInterval(interval);
   }
 
   isRunning = false;

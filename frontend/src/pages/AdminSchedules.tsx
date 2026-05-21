@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import {
   Activity,
   AlertTriangle,
+  BellRing,
   CalendarClock,
   CheckCircle2,
   Clock3,
@@ -23,6 +24,7 @@ import {
   Trash2,
   Workflow,
   XCircle,
+  ShieldAlert,
 } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
@@ -194,6 +196,44 @@ const formatPercentage = (value: number | null | undefined) => {
   return `${value.toFixed(1)}%`;
 };
 
+type CronAlertSeverity = "warning" | "critical";
+type CronAlertType =
+  | "cron_critical_failures"
+  | "cron_stuck_job"
+  | "cron_degraded_success_rate";
+
+type CronAlert = {
+  id: string;
+  jobType: string;
+  jobName?: string;
+  alertType: CronAlertType;
+  severity: CronAlertSeverity;
+  title: string;
+  message: string;
+  detectedAt: string;
+  acknowledgedAt?: string;
+  metadata: Record<string, unknown>;
+};
+
+const alertSeverityMeta: Record<CronAlertSeverity, { label: string; className: string; chipClassName: string }> = {
+  critical: {
+    label: "Crítico",
+    className: "border-red-200 bg-red-50",
+    chipClassName: "bg-red-100 text-red-800 hover:bg-red-100",
+  },
+  warning: {
+    label: "Atenção",
+    className: "border-amber-200 bg-amber-50",
+    chipClassName: "bg-amber-100 text-amber-900 hover:bg-amber-100",
+  },
+};
+
+const alertTypeLabel: Record<CronAlertType, string> = {
+  cron_critical_failures: "Falhas consecutivas",
+  cron_stuck_job: "Job travado",
+  cron_degraded_success_rate: "Sucesso degradado",
+};
+
 const quickLinks = [
   {
     title: "Orquestrador operacional",
@@ -235,6 +275,7 @@ export default function AdminSchedules() {
   const settingsQuery = trpc.cron.getSettings.useQuery(undefined, { refetchInterval: 30000 });
   const templatesQuery = trpc.cron.getTemplates.useQuery();
   const slaQuery = trpc.cron.getSlaSnapshot.useQuery(undefined, { refetchInterval: 60000 });
+  const alertsQuery = trpc.cron.getActiveAlerts.useQuery(undefined, { refetchInterval: 60000 });
   const historyQuery = trpc.cron.getHistory.useQuery(
     {
       cronJobId: selectedJobId || 0,
@@ -256,9 +297,35 @@ export default function AdminSchedules() {
       settingsQuery.refetch(),
       templatesQuery.refetch(),
       slaQuery.refetch(),
+      alertsQuery.refetch(),
       selectedJobId ? historyQuery.refetch() : Promise.resolve(),
     ]);
   };
+
+  const evaluateAlertsMutation = trpc.cron.evaluateAlerts.useMutation({
+    onSuccess: async (result) => {
+      const novos = result.newAlerts.length;
+      if (novos > 0) {
+        toast.warning(`${novos} novo(s) alerta(s) cron emitido(s)`);
+      } else {
+        toast.success("Avaliação concluída — nenhum alerta novo");
+      }
+      await alertsQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível avaliar os alertas");
+    },
+  });
+
+  const acknowledgeAlertMutation = trpc.cron.acknowledgeAlert.useMutation({
+    onSuccess: async () => {
+      toast.success("Alerta reconhecido");
+      await alertsQuery.refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível reconhecer o alerta");
+    },
+  });
 
   const runNowMutation = trpc.cron.runNow.useMutation({
     onSuccess: async () => {
@@ -626,6 +693,95 @@ export default function AdminSchedules() {
             </div>
             <p className="mt-2 text-3xl font-semibold text-blue-700">{formatDuration(statsQuery.data?.avgDurationMs)}</p>
             <p className="mt-1 text-xs text-slate-500">{visibleSummary.pausedCount} jobs pausados na listagem atual</p>
+          </Card>
+        </section>
+
+        <section>
+          <Card className="border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <ShieldAlert size={20} className="text-red-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Alertas operacionais ativos</h2>
+                </div>
+                <p className="mt-1 text-sm text-slate-500">
+                  Notificações para administradores são emitidas automaticamente a cada 5 minutos. Reconheça um alerta para silenciá-lo enquanto ele permanecer ativo.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => alertsQuery.refetch()}
+                  disabled={alertsQuery.isFetching}
+                >
+                  <RefreshCw size={16} className="mr-2" />
+                  Atualizar
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => evaluateAlertsMutation.mutate({})}
+                  disabled={evaluateAlertsMutation.isPending}
+                >
+                  <BellRing size={16} className="mr-2" />
+                  {evaluateAlertsMutation.isPending ? "Avaliando..." : "Avaliar agora"}
+                </Button>
+              </div>
+            </div>
+
+            {alertsQuery.isLoading ? (
+              <p className="text-sm text-slate-500">Carregando alertas...</p>
+            ) : !alertsQuery.data || alertsQuery.data.alerts.length === 0 ? (
+              <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+                Nenhum alerta crítico ou degradado no momento. Última avaliação:{" "}
+                {alertsQuery.data?.evaluatedAt ? formatDateTime(alertsQuery.data.evaluatedAt) : "—"}.
+              </div>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2">
+                {(alertsQuery.data.alerts as CronAlert[])
+                  .slice()
+                  .sort((a, b) => {
+                    if (a.severity !== b.severity) return a.severity === "critical" ? -1 : 1;
+                    return a.jobType.localeCompare(b.jobType);
+                  })
+                  .map((alert) => {
+                    const meta = alertSeverityMeta[alert.severity];
+                    const isAcknowledged = Boolean(alert.acknowledgedAt);
+                    return (
+                      <div key={alert.id} className={`rounded-xl border p-4 ${meta.className}`}>
+                        <div className="mb-2 flex items-start justify-between gap-3">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge className={meta.chipClassName}>{meta.label}</Badge>
+                              <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">{alertTypeLabel[alert.alertType]}</Badge>
+                              {isAcknowledged ? (
+                                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Reconhecido</Badge>
+                              ) : null}
+                            </div>
+                            <p className="mt-2 text-sm font-semibold text-slate-900">{alert.title}</p>
+                            <p className="text-sm text-slate-700">{alert.message}</p>
+                            <p className="mt-2 text-xs text-slate-500">
+                              Detectado em {formatDateTime(alert.detectedAt)}
+                              {alert.acknowledgedAt ? ` • reconhecido em ${formatDateTime(alert.acknowledgedAt)}` : null}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => acknowledgeAlertMutation.mutate({ alertId: alert.id })}
+                            disabled={isAcknowledged || acknowledgeAlertMutation.isPending}
+                          >
+                            <CheckCircle2 size={16} className="mr-2" />
+                            {isAcknowledged ? "Já reconhecido" : "Reconhecer"}
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </Card>
         </section>
 

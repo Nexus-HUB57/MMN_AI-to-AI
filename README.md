@@ -67,6 +67,7 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_CRON_DISPATCHER_BULLMQ.md`](docs/admin-backoffice/ENTREGA_CRON_DISPATCHER_BULLMQ.md)
 - [`docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md`](docs/admin-backoffice/ENTREGA_CRON_HISTORY_SYNC.md)
 - [`docs/admin-backoffice/ENTREGA_SLA_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_SLA_CRON_BACKOFFICE.md)
+- [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_BACKOFFICE.md)
 
 ## Atualizações Recentes do Repositório (2026-05-20)
 
@@ -96,6 +97,7 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 - `cron.runNow` agora executa o job de verdade (não apenas registra) com status final, duração real e metadados de despacho persistidos em `cron_job_history`
 - sincronização automática do desfecho BullMQ de volta para `cron_job_history` via helper `cronHistorySync` integrado aos 5 workers (`commission`, `content`, `marketplace`, `order`, `withdrawal`)
 - camada de SLA do domínio Cron com snapshot backend (`cronSlaIndicators.ts`) e visualização no `AdminSchedules.tsx`, cobrindo sucesso 7d/30d, p95, falhas consecutivas e jobs travados
+- sistema de alertas operacionais (`cronAlerts.ts`) integrado ao scheduler, com reavaliação automática a cada 5 min, dedup por cooldown, notificações persistidas para admins e painel de incidentes com reconhecimento manual no `AdminSchedules.tsx`
 - saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
 
 **Referências úteis:**

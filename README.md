@@ -81,12 +81,14 @@ O Backoffice Admin avançou com uma trilha incremental já refletida no frontend
 - [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
 
-### ✅ Automação Cron e saneamento do backend
+### ✅ Automação Cron, central administrativa e saneamento do backend
 
-O backend também recebeu evoluções relevantes na base atual:
+O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 
 - implantação do módulo de automação Cron com router, scheduler e estrutura de histórico/configuração
-- integração da rota administrativa `/admin/schedules` com o domínio real `trpc.cron.*`, incluindo listagem, próximas execuções, histórico e ações operacionais
+- central administrativa completa em `/admin/schedules` ligada ao `trpc.cron.*` com CRUD de jobs (criar, editar, remover, executar agora, pausar/ativar)
+- aplicação de templates pré-definidos via `cron.getTemplates` baseados em `CRON_JOB_CONFIGS`
+- painel lateral de configurações globais do domínio Cron (timezone, canal de alertas, janela de manutenção)
 - saneamento de imports e da camada de observabilidade para garantir build íntegro do monorepo com `npm run build`
 
 **Referências úteis:**

@@ -1,27 +1,63 @@
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure, adminProcedure } from '../trpc/trpc';
+import { router, publicProcedure, adminProcedure } from '../trpc/trpc';
 import { getDb } from '../../../database/schemas/db';
-import { cronJobs, cronJobHistory, cronSettings, type CRON_JOB_TYPES, type CronJobType } from '../../../database/schemas/schema-cron';
+import {
+  cronJobs,
+  cronJobHistory,
+  cronSettings,
+  CRON_JOB_CONFIGS,
+  type CronJobType,
+} from '../../../database/schemas/schema-cron';
 import { eq, desc, and, sql, gte, lte } from 'drizzle-orm';
 import cron from 'node-cron';
+
+const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
+
+const cronJobInputSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string().optional(),
+  jobType: z.string().min(1).max(100),
+  queueName: z.string().min(1).max(100),
+  jobPayload: z.record(z.unknown()).optional(),
+  frequency: cronFrequencySchema,
+  cronExpression: z.string().optional(),
+  enabled: z.boolean().default(true),
+});
+
+const cronSettingsSchema = z.record(z.string());
 
 /**
  * Cron Jobs Router
  * Gerenciamento de automação Cron para tarefas recorrentes
  */
-
 export const cronRouter = router({
-  // Listar todos os cron jobs
+  getTemplates: publicProcedure.query(async () => {
+    return Object.values(CRON_JOB_CONFIGS)
+      .map((config) => ({
+        name: config.name ?? '',
+        description: config.description ?? '',
+        jobType: config.jobType ?? '',
+        queueName: config.queueName ?? '',
+        frequency: config.frequency ?? 'daily',
+      }))
+      .filter((template) => template.jobType && template.queueName)
+      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  }),
+
   list: publicProcedure
-    .input(z.object({
-      enabled: z.boolean().optional(),
-      jobType: z.string().optional(),
-      page: z.number().min(1).default(1),
-      limit: z.number().min(1).max(100).default(20),
-    }).optional())
+    .input(
+      z
+        .object({
+          enabled: z.boolean().optional(),
+          jobType: z.string().optional(),
+          page: z.number().min(1).default(1),
+          limit: z.number().min(1).max(100).default(20),
+        })
+        .optional()
+    )
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const page = input?.page ?? 1;
       const limit = input?.limit ?? 20;
@@ -38,16 +74,12 @@ export const cronRouter = router({
       const where = conditions.length > 0 ? and(...conditions) : undefined;
 
       const [jobs, countResult] = await Promise.all([
-        db.select().from(cronJobs)
-          .where(where)
-          .orderBy(desc(cronJobs.updatedAt))
-          .limit(limit)
-          .offset(offset),
+        db.select().from(cronJobs).where(where).orderBy(desc(cronJobs.updatedAt)).limit(limit).offset(offset),
         db.select({ count: sql<number>`count(*)` }).from(cronJobs).where(where),
       ]);
 
       return {
-        jobs,
+        jobs: jobs.map(normalizeCronJob),
         pagination: {
           page,
           limit,
@@ -57,28 +89,28 @@ export const cronRouter = router({
       };
     }),
 
-  // Obter cron job por ID
   getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const job = await db.select().from(cronJobs).where(eq(cronJobs.id, input.id)).limit(1);
-      return job[0] ?? null;
+      return job[0] ? normalizeCronJob(job[0]) : null;
     }),
 
-  // Obter histórico de um cron job
   getHistory: publicProcedure
-    .input(z.object({
-      cronJobId: z.number(),
-      status: z.enum(['completed', 'failed', 'running']).optional(),
-      page: z.number().min(1).default(1),
-      limit: z.number().min(1).max(100).default(20),
-    }))
+    .input(
+      z.object({
+        cronJobId: z.number(),
+        status: z.enum(['completed', 'failed', 'running']).optional(),
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(20),
+      })
+    )
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const page = input.page;
       const limit = input.limit;
@@ -90,13 +122,8 @@ export const cronRouter = router({
       }
 
       const [history, countResult] = await Promise.all([
-        db.select().from(cronJobHistory)
-          .where(and(...conditions))
-          .orderBy(desc(cronJobHistory.startedAt))
-          .limit(limit)
-          .offset(offset),
-        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory)
-          .where(and(...conditions)),
+        db.select().from(cronJobHistory).where(and(...conditions)).orderBy(desc(cronJobHistory.startedAt)).limit(limit).offset(offset),
+        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory).where(and(...conditions)),
       ]);
 
       return {
@@ -110,74 +137,72 @@ export const cronRouter = router({
       };
     }),
 
-  // Criar novo cron job (admin)
-  create: adminProcedure
-    .input(z.object({
-      name: z.string().min(1).max(255),
-      description: z.string().optional(),
-      jobType: z.string().min(1).max(100),
-      queueName: z.string().min(1).max(100),
-      jobPayload: z.record(z.unknown()).optional(),
-      frequency: z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']),
-      cronExpression: z.string().optional(),
-      enabled: z.boolean().default(true),
-    }))
-    .mutation(async ({ input, ctx }) => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+  create: adminProcedure.input(cronJobInputSchema).mutation(async ({ input, ctx }) => {
+    const db = await getDb();
+    if (!db) throw new Error('Database not available');
 
-      const nextRunAt = calculateNextRun(input.frequency, input.cronExpression);
+    const nextRunAt = calculateNextRun(input.frequency, input.cronExpression);
 
-      const [created] = await db.insert(cronJobs).values({
+    const [created] = await db
+      .insert(cronJobs)
+      .values({
         ...input,
+        jobPayload: serializeJobPayload(input.jobPayload),
         nextRunAt,
         createdBy: ctx.user?.id,
-      }).returning();
+      })
+      .returning();
 
-      return created;
-    }),
+    return normalizeCronJob(created);
+  }),
 
-  // Atualizar cron job (admin)
   update: adminProcedure
-    .input(z.object({
-      id: z.number(),
-      name: z.string().min(1).max(255).optional(),
-      description: z.string().optional(),
-      jobType: z.string().min(1).max(100).optional(),
-      queueName: z.string().min(1).max(100).optional(),
-      jobPayload: z.record(z.unknown()).optional(),
-      frequency: z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']).optional(),
-      cronExpression: z.string().optional(),
-      enabled: z.boolean().optional(),
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1).max(255).optional(),
+        description: z.string().optional(),
+        jobType: z.string().min(1).max(100).optional(),
+        queueName: z.string().min(1).max(100).optional(),
+        jobPayload: z.record(z.unknown()).optional(),
+        frequency: cronFrequencySchema.optional(),
+        cronExpression: z.string().optional(),
+        enabled: z.boolean().optional(),
+      })
+    )
     .mutation(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const { id, ...updates } = input;
+      const existing = await db.select().from(cronJobs).where(eq(cronJobs.id, id)).limit(1);
+      if (!existing[0]) {
+        throw new Error('Cron job not found');
+      }
 
-      // Recalcular próxima execução se frequência ou expressão mudou
-      if (updates.frequency || updates.cronExpression) {
-        updates.nextRunAt = calculateNextRun(
-          updates.frequency ?? 'daily',
-          updates.cronExpression
+      const currentJob = existing[0];
+      const payloadUpdates: Record<string, unknown> = { ...updates };
+
+      if ('jobPayload' in updates) {
+        payloadUpdates.jobPayload = serializeJobPayload(updates.jobPayload);
+      }
+
+      if (updates.frequency !== undefined || updates.cronExpression !== undefined) {
+        payloadUpdates.nextRunAt = calculateNextRun(
+          updates.frequency ?? currentJob.frequency,
+          updates.cronExpression ?? currentJob.cronExpression ?? undefined
         );
       }
 
-      const [updated] = await db.update(cronJobs)
-        .set(updates)
-        .where(eq(cronJobs.id, id))
-        .returning();
-
-      return updated;
+      const [updated] = await db.update(cronJobs).set(payloadUpdates).where(eq(cronJobs.id, id)).returning();
+      return normalizeCronJob(updated);
     }),
 
-  // Deletar cron job (admin)
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       await db.delete(cronJobHistory).where(eq(cronJobHistory.cronJobId, input.id));
       await db.delete(cronJobs).where(eq(cronJobs.id, input.id));
@@ -185,22 +210,23 @@ export const cronRouter = router({
       return { success: true };
     }),
 
-  // Executar cron job manualmente (admin)
   runNow: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const job = await db.select().from(cronJobs).where(eq(cronJobs.id, input.id)).limit(1);
-      if (!job[0]) throw new Error("Cron job not found");
+      if (!job[0]) throw new Error('Cron job not found');
 
-      // Criar registro de execução
-      const [historyEntry] = await db.insert(cronJobHistory).values({
-        cronJobId: input.id,
-        startedAt: new Date(),
-        status: 'running',
-      }).returning();
+      const [historyEntry] = await db
+        .insert(cronJobHistory)
+        .values({
+          cronJobId: input.id,
+          startedAt: new Date(),
+          status: 'running',
+        })
+        .returning();
 
       return {
         success: true,
@@ -209,15 +235,18 @@ export const cronRouter = router({
       };
     }),
 
-  // Obter estatísticas de execução
   getStats: publicProcedure
-    .input(z.object({
-      startDate: z.date().optional(),
-      endDate: z.date().optional(),
-    }).optional())
+    .input(
+      z
+        .object({
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+        .optional()
+    )
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const conditions = [];
       if (input?.startDate) {
@@ -227,19 +256,18 @@ export const cronRouter = router({
         conditions.push(lte(cronJobHistory.startedAt, input.endDate));
       }
 
-      const where = conditions.length > 0 ? and(...conditions) : undefined;
-
       const [completedCount, failedCount, totalJobs] = await Promise.all([
-        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory)
-          .where(and(...conditions, eq(cronJobHistory.status, 'completed'))),
-        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory)
-          .where(and(...conditions, eq(cronJobHistory.status, 'failed'))),
+        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory).where(and(...conditions, eq(cronJobHistory.status, 'completed'))),
+        db.select({ count: sql<number>`count(*)` }).from(cronJobHistory).where(and(...conditions, eq(cronJobHistory.status, 'failed'))),
         db.select({ count: sql<number>`count(*)` }).from(cronJobs),
       ]);
 
-      const avgDuration = await db.select({
-        avgDuration: sql<number>`avg(duration)`,
-      }).from(cronJobHistory).where(and(...conditions, eq(cronJobHistory.status, 'completed')));
+      const avgDuration = await db
+        .select({
+          avgDuration: sql<number>`avg(duration)`,
+        })
+        .from(cronJobHistory)
+        .where(and(...conditions, eq(cronJobHistory.status, 'completed')));
 
       return {
         totalJobs: totalJobs[0]?.count ?? 0,
@@ -249,70 +277,75 @@ export const cronRouter = router({
       };
     }),
 
-  // Obter configurações globais
-  getSettings: publicProcedure
-    .query(async () => {
-      const db = await getDb();
-      if (!db) throw new Error("Database not available");
+  getSettings: publicProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new Error('Database not available');
 
-      const settings = await db.select().from(cronSettings);
-      return settings.reduce((acc, s) => {
-        (acc as Record<string, string>)[s.settingKey] = s.settingValue;
-        return acc;
-      }, {});
-    }),
+    const settings = await db.select().from(cronSettings).orderBy(cronSettings.settingKey);
+    return settings.reduce<Record<string, string>>((acc, setting) => {
+      acc[setting.settingKey] = setting.settingValue;
+      return acc;
+    }, {});
+  }),
 
-  // Atualizar configurações globais (admin)
   updateSettings: adminProcedure
-    .input(z.object({
-      settings: z.record(z.string()),
-    }))
+    .input(z.object({ settings: cronSettingsSchema }))
     .mutation(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
-      for (const [key, value] of Object.entries(input.settings)) {
-        await db.insert(cronSettings)
-          .values({
-            settingKey: key,
-            settingValue: value,
-          })
-          .onDuplicateKeyUpdate({
-            settingValue: value,
-          });
-      }
+      await Promise.all(
+        Object.entries(input.settings).map(([key, value]) =>
+          db
+            .insert(cronSettings)
+            .values({
+              settingKey: key,
+              settingValue: value,
+              updatedAt: new Date(),
+            })
+            .onDuplicateKeyUpdate({
+              set: {
+                settingValue: value,
+                updatedAt: new Date(),
+              },
+            })
+        )
+      );
 
       return { success: true };
     }),
 
-  // Obter próximas execuções
   getUpcomingExecutions: publicProcedure
-    .input(z.object({
-      limit: z.number().min(1).max(50).default(10),
-    }).optional())
+    .input(
+      z
+        .object({
+          limit: z.number().min(1).max(50).default(10),
+        })
+        .optional()
+    )
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) throw new Error("Database not available");
+      if (!db) throw new Error('Database not available');
 
       const limit = input?.limit ?? 10;
       const now = new Date();
 
-      const jobs = await db.select().from(cronJobs)
-        .where(and(
-          eq(cronJobs.enabled, true),
-          sql`${cronJobs.nextRunAt} > ${now}`
-        ))
+      const jobs = await db
+        .select()
+        .from(cronJobs)
+        .where(and(eq(cronJobs.enabled, true), sql`${cronJobs.nextRunAt} > ${now}`))
         .orderBy(cronJobs.nextRunAt)
         .limit(limit);
 
-      return jobs;
+      return jobs.map(normalizeCronJob);
     }),
 
-  // Verificar se expressão cron é válida
   validateCronExpression: publicProcedure
-    .input(z.object({
-      expression: z.string(),
-    }))
+    .input(
+      z.object({
+        expression: z.string(),
+      })
+    )
     .query(async ({ input }) => {
       try {
         cron.validate(input.expression);
@@ -323,19 +356,13 @@ export const cronRouter = router({
     }),
 });
 
-/**
- * Calcula a próxima data de execução baseada na frequência
- */
 function calculateNextRun(frequency: string, cronExpression?: string): Date {
   const now = new Date();
 
   if (cronExpression && cron.validate(cronExpression)) {
-    // Se tem expressão cron, calcular próxima execução
-    const nextDates = cron.sendAt(cronExpression);
-    return nextDates;
+    return cron.sendAt(cronExpression);
   }
 
-  // Calcular baseado na frequência
   const next = new Date(now);
 
   switch (frequency) {
@@ -363,5 +390,28 @@ function calculateNextRun(frequency: string, cronExpression?: string): Date {
   return next;
 }
 
-// Exportar tipos
+function serializeJobPayload(payload?: Record<string, unknown>) {
+  if (!payload || Object.keys(payload).length === 0) return undefined;
+  return JSON.stringify(payload);
+}
+
+function normalizeCronJob<T extends { jobPayload?: unknown }>(job: T) {
+  if (!job) return job;
+
+  const rawPayload = typeof job.jobPayload === 'string' ? job.jobPayload : undefined;
+  return {
+    ...job,
+    jobPayload: rawPayload ? safeParseJson<Record<string, unknown>>(rawPayload) : job.jobPayload,
+  };
+}
+
+function safeParseJson<T>(value: string): T | undefined {
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return undefined;
+  }
+}
+
 export type CronRouter = typeof cronRouter;
+export type CronTemplate = (typeof CRON_JOB_CONFIGS)[keyof typeof CRON_JOB_CONFIGS] & { jobType?: CronJobType };

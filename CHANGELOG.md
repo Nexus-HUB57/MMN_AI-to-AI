@@ -1,5 +1,30 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — CRUD e Configurações Globais do Domínio Cron no Backoffice
+
+### `feat(backoffice)` — Central administrativa completa do domínio Cron
+
+**Frontend Admin:**
+- `AdminSchedules.tsx` agora oferece CRUD completo de jobs cron (criar, editar, executar agora, pausar/ativar, remover)
+- aplicação de templates pré-definidos via `cron.getTemplates`, hidratando nome, tipo, fila e frequência
+- novo painel lateral de configurações globais (timezone, canal de alertas, janela de manutenção) com persistência via `cron.updateSettings`
+- editor de payload JSON com validação local antes do envio ao backend
+- visualização do payload e do último erro registrado no detalhamento do job selecionado
+
+**Backend / contratos:**
+- `cronRouter.ts` consolidado com nova procedure `getTemplates` derivada de `CRON_JOB_CONFIGS`
+- normalização do retorno via `normalizeCronJob`, garantindo payload tipado para o frontend
+- serialização robusta do `jobPayload` (string ↔ objeto JSON) em criação e atualização
+- recálculo automático de `nextRunAt` quando frequência ou expressão cron mudam, lendo o estado atual do job
+- `updateSettings` migrado para `onDuplicateKeyUpdate({ set: ... })` alinhado ao Drizzle ORM
+
+**Documentação:**
+- `docs/admin-backoffice/ENTREGA_AGENDAMENTOS_CRON_ADMIN.md` atualizado com CRUD, templates e configurações globais
+- `README.md`, `docs/README.md` e `docs/admin-backoffice/README.md` sincronizados com a nova frente
+
+**Build:**
+- monorepo revalidado com sucesso via `npm run build` (frontend Vite + backend esbuild)
+
 ## 2026-05-20 — Backoffice Admin para Agendamentos Cron
 
 ### `feat(backoffice)` — Rota administrativa de agendamentos conectada ao domínio Cron

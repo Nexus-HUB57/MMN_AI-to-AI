@@ -7,11 +7,16 @@ import {
   ExternalLink,
   ListTodo,
   PlayCircle,
+  PlusCircle,
   RefreshCw,
+  Save,
+  Settings2,
   ShieldCheck,
+  SquarePen,
   TimerReset,
   ToggleLeft,
   ToggleRight,
+  Trash2,
   Workflow,
   XCircle,
 } from "lucide-react";
@@ -26,13 +31,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
 const HISTORY_PAGE_SIZE = 6;
+const SETTINGS_KEYS = {
+  timezone: "cron_timezone",
+  alertsChannel: "cron_alerts_channel",
+  maintenanceWindow: "cron_maintenance_window",
+} as const;
+const CUSTOM_TEMPLATE_KEY = "__custom__";
 
 type EnabledFilter = "all" | "enabled" | "disabled";
 type HistoryStatusFilter = "all" | "completed" | "failed" | "running";
+type CronFrequency = "minute" | "hourly" | "daily" | "weekly" | "monthly";
 
 type CronJobRow = {
   id: number;
@@ -40,7 +56,7 @@ type CronJobRow = {
   description?: string | null;
   jobType: string;
   queueName: string;
-  frequency: string;
+  frequency: CronFrequency | string;
   cronExpression?: string | null;
   enabled: boolean;
   nextRunAt?: string | Date | null;
@@ -51,6 +67,7 @@ type CronJobRow = {
   runCount?: number;
   successCount?: number;
   failureCount?: number;
+  jobPayload?: Record<string, unknown> | null;
 };
 
 type CronHistoryRow = {
@@ -61,6 +78,57 @@ type CronHistoryRow = {
   status: "running" | "completed" | "failed" | string;
   errorMessage?: string | null;
 };
+
+type CronTemplate = {
+  name: string;
+  description?: string;
+  jobType: string;
+  queueName: string;
+  frequency: CronFrequency;
+};
+
+type JobFormState = {
+  id?: number;
+  name: string;
+  description: string;
+  jobType: string;
+  queueName: string;
+  frequency: CronFrequency;
+  cronExpression: string;
+  enabled: boolean;
+  jobPayload: string;
+};
+
+type SettingsFormState = {
+  timezone: string;
+  alertsChannel: string;
+  maintenanceWindow: string;
+};
+
+const defaultJobForm: JobFormState = {
+  name: "",
+  description: "",
+  jobType: "",
+  queueName: "",
+  frequency: "daily",
+  cronExpression: "",
+  enabled: true,
+  jobPayload: "{}",
+};
+
+const defaultSettingsForm: SettingsFormState = {
+  timezone: "America/Sao_Paulo",
+  alertsChannel: "ops-admin",
+  maintenanceWindow: "Domingo 02:00-04:00",
+};
+
+const frequencyOptions: Array<{ value: CronFrequency; label: string }> = [
+  { value: "minute", label: "A cada minuto" },
+  { value: "hourly", label: "A cada hora" },
+  { value: "daily", label: "Diariamente" },
+  { value: "weekly", label: "Semanalmente" },
+  { value: "monthly", label: "Mensalmente" },
+];
 
 const formatDateTime = (value?: string | Date | null) => {
   if (!value) return "—";
@@ -108,26 +176,24 @@ export default function AdminSchedules() {
   const [enabledFilter, setEnabledFilter] = useState<EnabledFilter>("all");
   const [historyStatusFilter, setHistoryStatusFilter] = useState<HistoryStatusFilter>("all");
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const [isJobDialogOpen, setIsJobDialogOpen] = useState(false);
+  const [jobDialogMode, setJobDialogMode] = useState<"create" | "edit">("create");
+  const [jobForm, setJobForm] = useState<JobFormState>(defaultJobForm);
+  const [templateKey, setTemplateKey] = useState(CUSTOM_TEMPLATE_KEY);
+  const [settingsForm, setSettingsForm] = useState<SettingsFormState>(defaultSettingsForm);
 
   const jobsQuery = trpc.cron.list.useQuery(
     {
       page: 1,
       limit: 12,
-      enabled:
-        enabledFilter === "all" ? undefined : enabledFilter === "enabled",
+      enabled: enabledFilter === "all" ? undefined : enabledFilter === "enabled",
     },
     { refetchInterval: 30000 }
   );
-
-  const statsQuery = trpc.cron.getStats.useQuery(undefined, {
-    refetchInterval: 30000,
-  });
-
-  const upcomingQuery = trpc.cron.getUpcomingExecutions.useQuery(
-    { limit: 6 },
-    { refetchInterval: 30000 }
-  );
-
+  const statsQuery = trpc.cron.getStats.useQuery(undefined, { refetchInterval: 30000 });
+  const upcomingQuery = trpc.cron.getUpcomingExecutions.useQuery({ limit: 6 }, { refetchInterval: 30000 });
+  const settingsQuery = trpc.cron.getSettings.useQuery(undefined, { refetchInterval: 30000 });
+  const templatesQuery = trpc.cron.getTemplates.useQuery();
   const historyQuery = trpc.cron.getHistory.useQuery(
     {
       cronJobId: selectedJobId || 0,
@@ -140,6 +206,17 @@ export default function AdminSchedules() {
       refetchInterval: selectedJobId ? 30000 : false,
     }
   );
+
+  const refreshAll = async () => {
+    await Promise.all([
+      jobsQuery.refetch(),
+      statsQuery.refetch(),
+      upcomingQuery.refetch(),
+      settingsQuery.refetch(),
+      templatesQuery.refetch(),
+      selectedJobId ? historyQuery.refetch() : Promise.resolve(),
+    ]);
+  };
 
   const runNowMutation = trpc.cron.runNow.useMutation({
     onSuccess: async () => {
@@ -161,14 +238,59 @@ export default function AdminSchedules() {
     },
   });
 
+  const createJobMutation = trpc.cron.create.useMutation({
+    onSuccess: async (created) => {
+      toast.success("Job cron criado com sucesso");
+      setIsJobDialogOpen(false);
+      setSelectedJobId(created.id);
+      await refreshAll();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível criar o job");
+    },
+  });
+
+  const updateJobMutation = trpc.cron.update.useMutation({
+    onSuccess: async (updated) => {
+      toast.success("Job cron atualizado com sucesso");
+      setIsJobDialogOpen(false);
+      if (updated?.id) {
+        setSelectedJobId(updated.id);
+      }
+      await refreshAll();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível atualizar o job");
+    },
+  });
+
+  const deleteJobMutation = trpc.cron.delete.useMutation({
+    onSuccess: async () => {
+      toast.success("Job removido com sucesso");
+      setSelectedJobId(null);
+      await refreshAll();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível remover o job");
+    },
+  });
+
+  const updateSettingsMutation = trpc.cron.updateSettings.useMutation({
+    onSuccess: async () => {
+      toast.success("Configurações cron atualizadas");
+      await refreshAll();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Não foi possível salvar as configurações");
+    },
+  });
+
   const jobs = useMemo(() => (jobsQuery.data?.jobs || []) as CronJobRow[], [jobsQuery.data?.jobs]);
   const history = useMemo(() => (historyQuery.data?.history || []) as CronHistoryRow[], [historyQuery.data?.history]);
   const upcoming = useMemo(() => (upcomingQuery.data || []) as CronJobRow[], [upcomingQuery.data]);
+  const templates = useMemo(() => (templatesQuery.data || []) as CronTemplate[], [templatesQuery.data]);
 
-  const selectedJob = useMemo(
-    () => jobs.find((job) => job.id === selectedJobId) || null,
-    [jobs, selectedJobId]
-  );
+  const selectedJob = useMemo(() => jobs.find((job) => job.id === selectedJobId) || null, [jobs, selectedJobId]);
 
   useEffect(() => {
     if (!jobs.length) {
@@ -182,14 +304,16 @@ export default function AdminSchedules() {
     }
   }, [jobs, selectedJobId]);
 
-  const refreshAll = async () => {
-    await Promise.all([
-      jobsQuery.refetch(),
-      statsQuery.refetch(),
-      upcomingQuery.refetch(),
-      selectedJobId ? historyQuery.refetch() : Promise.resolve(),
-    ]);
-  };
+  useEffect(() => {
+    const data = settingsQuery.data;
+    if (!data) return;
+
+    setSettingsForm({
+      timezone: data[SETTINGS_KEYS.timezone] || defaultSettingsForm.timezone,
+      alertsChannel: data[SETTINGS_KEYS.alertsChannel] || defaultSettingsForm.alertsChannel,
+      maintenanceWindow: data[SETTINGS_KEYS.maintenanceWindow] || defaultSettingsForm.maintenanceWindow,
+    });
+  }, [settingsQuery.data]);
 
   const visibleSummary = useMemo(() => {
     const enabledCount = jobs.filter((job) => job.enabled).length;
@@ -201,6 +325,120 @@ export default function AdminSchedules() {
       failedCount,
     };
   }, [jobs]);
+
+  const openCreateDialog = () => {
+    setJobDialogMode("create");
+    setTemplateKey(CUSTOM_TEMPLATE_KEY);
+    setJobForm(defaultJobForm);
+    setIsJobDialogOpen(true);
+  };
+
+  const openEditDialog = (job: CronJobRow) => {
+    setJobDialogMode("edit");
+    setTemplateKey(CUSTOM_TEMPLATE_KEY);
+    setJobForm({
+      id: job.id,
+      name: job.name,
+      description: job.description || "",
+      jobType: job.jobType,
+      queueName: job.queueName,
+      frequency: (job.frequency as CronFrequency) || "daily",
+      cronExpression: job.cronExpression || "",
+      enabled: job.enabled,
+      jobPayload: job.jobPayload ? JSON.stringify(job.jobPayload, null, 2) : "{}",
+    });
+    setIsJobDialogOpen(true);
+  };
+
+  const applyTemplate = (value: string) => {
+    setTemplateKey(value);
+    if (value === CUSTOM_TEMPLATE_KEY) return;
+
+    const template = templates.find((item) => item.jobType === value);
+    if (!template) return;
+
+    setJobForm((current) => ({
+      ...current,
+      name: current.name || template.name,
+      description: current.description || template.description || "",
+      jobType: template.jobType,
+      queueName: template.queueName,
+      frequency: template.frequency,
+    }));
+  };
+
+  const parseJobPayload = () => {
+    const rawValue = jobForm.jobPayload.trim();
+    if (!rawValue) return undefined;
+
+    try {
+      const parsed = JSON.parse(rawValue);
+      if (typeof parsed !== "object" || Array.isArray(parsed) || parsed === null) {
+        throw new Error("Payload precisa ser um objeto JSON");
+      }
+      return parsed as Record<string, unknown>;
+    } catch {
+      throw new Error("Payload precisa ser um JSON válido em formato de objeto");
+    }
+  };
+
+  const handleSaveJob = () => {
+    if (!jobForm.name.trim() || !jobForm.jobType.trim() || !jobForm.queueName.trim()) {
+      toast.error("Preencha nome, tipo do job e fila antes de salvar");
+      return;
+    }
+
+    let parsedPayload: Record<string, unknown> | undefined;
+    try {
+      parsedPayload = parseJobPayload();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Payload inválido");
+      return;
+    }
+
+    const payload = {
+      name: jobForm.name.trim(),
+      description: jobForm.description.trim() || undefined,
+      jobType: jobForm.jobType.trim(),
+      queueName: jobForm.queueName.trim(),
+      frequency: jobForm.frequency,
+      cronExpression: jobForm.cronExpression.trim() || undefined,
+      enabled: jobForm.enabled,
+      jobPayload: parsedPayload,
+    };
+
+    if (jobDialogMode === "create") {
+      createJobMutation.mutate(payload);
+      return;
+    }
+
+    if (!jobForm.id) {
+      toast.error("Job inválido para edição");
+      return;
+    }
+
+    updateJobMutation.mutate({ id: jobForm.id, ...payload });
+  };
+
+  const handleDeleteJob = (job: CronJobRow) => {
+    if (!window.confirm(`Remover o job "${job.name}" e todo o histórico relacionado?`)) {
+      return;
+    }
+
+    deleteJobMutation.mutate({ id: job.id });
+  };
+
+  const handleSaveSettings = () => {
+    updateSettingsMutation.mutate({
+      settings: {
+        [SETTINGS_KEYS.timezone]: settingsForm.timezone.trim(),
+        [SETTINGS_KEYS.alertsChannel]: settingsForm.alertsChannel.trim(),
+        [SETTINGS_KEYS.maintenanceWindow]: settingsForm.maintenanceWindow.trim(),
+      },
+    });
+  };
+
+  const isSavingJob = createJobMutation.isPending || updateJobMutation.isPending;
 
   return (
     <AdminDashboardLayout>
@@ -214,8 +452,8 @@ export default function AdminSchedules() {
                   <h1 className="text-2xl font-bold text-slate-900">Agendamentos e automação Cron</h1>
                 </div>
                 <p className="max-w-2xl text-sm text-slate-600">
-                  Entrada administrativa para supervisionar rotinas recorrentes, próximas execuções, histórico operacional
-                  e disparos manuais do domínio Cron já integrado ao backend.
+                  Entrada administrativa para supervisionar rotinas recorrentes, próximas execuções, histórico operacional,
+                  criação e edição de jobs do domínio Cron já integrado ao backend.
                 </p>
               </div>
               <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Backoffice + Cron</Badge>
@@ -246,30 +484,72 @@ export default function AdminSchedules() {
                   <span className="font-medium">Uso administrativo</span>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Permite inspecionar jobs, pausar ou reativar rotinas e registrar execuções manuais quando necessário.
+                  Permite cadastrar novas rotinas, pausar ou reativar jobs e registrar execuções manuais quando necessário.
                 </p>
               </div>
             </div>
           </Card>
 
-          <Card className="border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-slate-900">Atalhos relacionados</h2>
-            <div className="space-y-3">
-              {quickLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="block rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-blue-300 hover:bg-blue-50"
-                >
-                  <div className="mb-1 flex items-center justify-between gap-3">
-                    <span className="font-medium text-slate-900">{item.title}</span>
-                    <ExternalLink size={16} className="text-slate-500" />
-                  </div>
-                  <p className="text-sm text-slate-600">{item.description}</p>
-                </Link>
-              ))}
-            </div>
-          </Card>
+          <div className="space-y-6">
+            <Card className="border-slate-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-semibold text-slate-900">Atalhos relacionados</h2>
+              <div className="space-y-3">
+                {quickLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="block rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:border-blue-300 hover:bg-blue-50"
+                  >
+                    <div className="mb-1 flex items-center justify-between gap-3">
+                      <span className="font-medium text-slate-900">{item.title}</span>
+                      <ExternalLink size={16} className="text-slate-500" />
+                    </div>
+                    <p className="text-sm text-slate-600">{item.description}</p>
+                  </Link>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="border-slate-200 bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-2">
+                <Settings2 size={18} className="text-slate-700" />
+                <h2 className="text-lg font-semibold text-slate-900">Configurações operacionais</h2>
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cron-timezone">Timezone</Label>
+                  <Input
+                    id="cron-timezone"
+                    value={settingsForm.timezone}
+                    onChange={(event) => setSettingsForm((current) => ({ ...current, timezone: event.target.value }))}
+                    placeholder="America/Sao_Paulo"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cron-alerts">Canal de alertas</Label>
+                  <Input
+                    id="cron-alerts"
+                    value={settingsForm.alertsChannel}
+                    onChange={(event) => setSettingsForm((current) => ({ ...current, alertsChannel: event.target.value }))}
+                    placeholder="ops-admin"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cron-maintenance">Janela de manutenção</Label>
+                  <Input
+                    id="cron-maintenance"
+                    value={settingsForm.maintenanceWindow}
+                    onChange={(event) => setSettingsForm((current) => ({ ...current, maintenanceWindow: event.target.value }))}
+                    placeholder="Domingo 02:00-04:00"
+                  />
+                </div>
+                <Button className="w-full" onClick={handleSaveSettings} disabled={updateSettingsMutation.isPending}>
+                  <Save size={16} className="mr-2" />
+                  {updateSettingsMutation.isPending ? "Salvando..." : "Salvar configurações"}
+                </Button>
+              </div>
+            </Card>
+          </div>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -312,9 +592,9 @@ export default function AdminSchedules() {
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">Rotinas cadastradas</h2>
-                <p className="text-sm text-slate-500">Controle rápido para ativação, pausa e execução manual.</p>
+                <p className="text-sm text-slate-500">Controle rápido para criação, ativação, pausa e execução manual.</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="min-w-[190px]">
                   <Select value={enabledFilter} onValueChange={(value: EnabledFilter) => setEnabledFilter(value)}>
                     <SelectTrigger>
@@ -331,6 +611,10 @@ export default function AdminSchedules() {
                   <RefreshCw size={16} className="mr-2" />
                   Atualizar
                 </Button>
+                <Button size="sm" onClick={openCreateDialog}>
+                  <PlusCircle size={16} className="mr-2" />
+                  Novo job
+                </Button>
               </div>
             </div>
 
@@ -338,7 +622,7 @@ export default function AdminSchedules() {
               <p className="text-sm text-slate-500">Carregando rotinas Cron...</p>
             ) : jobs.length ? (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[980px]">
+                <table className="w-full min-w-[1120px]">
                   <thead>
                     <tr className="border-b border-slate-200 text-left">
                       <th className="px-4 py-3 font-semibold text-slate-900">Job</th>
@@ -356,6 +640,7 @@ export default function AdminSchedules() {
                       const executionBadge = statusMeta[job.lastRunStatus || "scheduled"] || statusMeta.scheduled;
                       const isRunning = runNowMutation.isPending && runNowMutation.variables?.id === job.id;
                       const isToggling = toggleJobMutation.isPending && toggleJobMutation.variables?.id === job.id;
+                      const isDeleting = deleteJobMutation.isPending && deleteJobMutation.variables?.id === job.id;
 
                       return (
                         <tr
@@ -389,11 +674,11 @@ export default function AdminSchedules() {
                               <Button variant="outline" size="sm" onClick={() => setSelectedJobId(job.id)}>
                                 Histórico
                               </Button>
-                              <Button
-                                size="sm"
-                                onClick={() => runNowMutation.mutate({ id: job.id })}
-                                disabled={isRunning}
-                              >
+                              <Button variant="outline" size="sm" onClick={() => openEditDialog(job)}>
+                                <SquarePen size={16} className="mr-2" />
+                                Editar
+                              </Button>
+                              <Button size="sm" onClick={() => runNowMutation.mutate({ id: job.id })} disabled={isRunning}>
                                 <PlayCircle size={16} className="mr-2" />
                                 {isRunning ? "Executando..." : "Executar agora"}
                               </Button>
@@ -409,6 +694,10 @@ export default function AdminSchedules() {
                                   <ToggleRight size={16} className="mr-2 text-green-600" />
                                 )}
                                 {job.enabled ? "Pausar" : "Ativar"}
+                              </Button>
+                              <Button variant="outline" size="sm" onClick={() => handleDeleteJob(job)} disabled={isDeleting}>
+                                <Trash2 size={16} className="mr-2 text-red-600" />
+                                Remover
                               </Button>
                             </div>
                           </td>
@@ -457,9 +746,9 @@ export default function AdminSchedules() {
                 <h2 className="text-lg font-semibold text-slate-900">Próximos passos da frente</h2>
               </div>
               <ol className="space-y-3 text-sm text-slate-600">
-                <li className="rounded-lg bg-slate-50 p-3">1. Adicionar criação e edição de cron jobs diretamente no Backoffice.</li>
-                <li className="rounded-lg bg-slate-50 p-3">2. Integrar logs detalhados de execução com a central administrativa de logs.</li>
-                <li className="rounded-lg bg-slate-50 p-3">3. Relacionar cada rotina a filas, módulos financeiros e cadências editoriais.</li>
+                <li className="rounded-lg bg-slate-50 p-3">1. Integrar logs detalhados de execução com a central administrativa de logs.</li>
+                <li className="rounded-lg bg-slate-50 p-3">2. Relacionar cada rotina a filas, módulos financeiros e cadências editoriais.</li>
+                <li className="rounded-lg bg-slate-50 p-3">3. Expor indicadores de SLA e alertas operacionais por domínio.</li>
               </ol>
             </Card>
           </div>
@@ -528,6 +817,12 @@ export default function AdminSchedules() {
                         <p className="text-xs text-slate-500">{selectedJob.cronExpression || "sem expressão customizada"}</p>
                       </div>
                     </div>
+                    <div className="rounded-xl bg-white p-4">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Payload</p>
+                      <pre className="mt-2 overflow-x-auto whitespace-pre-wrap text-xs text-slate-600">
+                        {selectedJob.jobPayload ? JSON.stringify(selectedJob.jobPayload, null, 2) : "{}"}
+                      </pre>
+                    </div>
                     <div className="grid gap-3 md:grid-cols-3">
                       <div className="rounded-xl bg-white p-4">
                         <p className="text-xs uppercase tracking-wide text-slate-500">Execuções</p>
@@ -541,6 +836,22 @@ export default function AdminSchedules() {
                         <p className="text-xs uppercase tracking-wide text-slate-500">Falhas</p>
                         <p className="mt-1 text-xl font-semibold text-red-700">{selectedJob.failureCount ?? 0}</p>
                       </div>
+                    </div>
+                    {selectedJob.lastRunError ? (
+                      <div className="rounded-xl bg-red-50 p-4 text-red-800">
+                        <p className="text-xs uppercase tracking-wide">Último erro registrado</p>
+                        <p className="mt-1 text-sm">{selectedJob.lastRunError}</p>
+                      </div>
+                    ) : null}
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      <Button variant="outline" size="sm" onClick={() => openEditDialog(selectedJob)}>
+                        <SquarePen size={16} className="mr-2" />
+                        Editar job
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => handleDeleteJob(selectedJob)}>
+                        <Trash2 size={16} className="mr-2 text-red-600" />
+                        Remover job
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -564,13 +875,13 @@ export default function AdminSchedules() {
                                 <p className="text-sm text-slate-600">Conclusão: {formatDateTime(entry.completedAt)}</p>
                               </div>
                               <div className="text-sm text-slate-600">
-                                <p>Duração: <span className="font-medium text-slate-900">{formatDuration(entry.duration)}</span></p>
+                                <p>
+                                  Duração: <span className="font-medium text-slate-900">{formatDuration(entry.duration)}</span>
+                                </p>
                               </div>
                             </div>
                             {entry.errorMessage ? (
-                              <div className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">
-                                {entry.errorMessage}
-                              </div>
+                              <div className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">{entry.errorMessage}</div>
                             ) : null}
                           </div>
                         );
@@ -585,6 +896,137 @@ export default function AdminSchedules() {
           </Card>
         </section>
       </div>
+
+      <Dialog open={isJobDialogOpen} onOpenChange={setIsJobDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{jobDialogMode === "create" ? "Novo job cron" : "Editar job cron"}</DialogTitle>
+            <DialogDescription>
+              Cadastre ou ajuste rotinas recorrentes com tipo, fila, frequência, payload e expressão cron opcional.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="job-template">Template operacional</Label>
+              <Select value={templateKey} onValueChange={applyTemplate}>
+                <SelectTrigger id="job-template">
+                  <SelectValue placeholder="Selecionar template" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={CUSTOM_TEMPLATE_KEY}>Personalizado</SelectItem>
+                  {templates.map((template) => (
+                    <SelectItem key={template.jobType} value={template.jobType}>
+                      {template.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="job-name">Nome</Label>
+              <Input
+                id="job-name"
+                value={jobForm.name}
+                onChange={(event) => setJobForm((current) => ({ ...current, name: event.target.value }))}
+                placeholder="Ex.: Processamento de pagamentos"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="job-type">Tipo do job</Label>
+              <Input
+                id="job-type"
+                value={jobForm.jobType}
+                onChange={(event) => setJobForm((current) => ({ ...current, jobType: event.target.value }))}
+                placeholder="payment_processing"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="job-description">Descrição</Label>
+              <Textarea
+                id="job-description"
+                value={jobForm.description}
+                onChange={(event) => setJobForm((current) => ({ ...current, description: event.target.value }))}
+                placeholder="Contexto operacional do job"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="job-queue">Fila</Label>
+              <Input
+                id="job-queue"
+                value={jobForm.queueName}
+                onChange={(event) => setJobForm((current) => ({ ...current, queueName: event.target.value }))}
+                placeholder="payments_queue"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="job-frequency">Frequência</Label>
+              <Select
+                value={jobForm.frequency}
+                onValueChange={(value: CronFrequency) => setJobForm((current) => ({ ...current, frequency: value }))}
+              >
+                <SelectTrigger id="job-frequency">
+                  <SelectValue placeholder="Frequência" />
+                </SelectTrigger>
+                <SelectContent>
+                  {frequencyOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="job-cron-expression">Expressão cron personalizada</Label>
+              <Input
+                id="job-cron-expression"
+                value={jobForm.cronExpression}
+                onChange={(event) => setJobForm((current) => ({ ...current, cronExpression: event.target.value }))}
+                placeholder="0 */4 * * *"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="job-payload">Payload JSON</Label>
+              <Textarea
+                id="job-payload"
+                className="min-h-[180px] font-mono"
+                value={jobForm.jobPayload}
+                onChange={(event) => setJobForm((current) => ({ ...current, jobPayload: event.target.value }))}
+                placeholder='{"force": true}'
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="job-enabled">Status inicial</Label>
+              <Select
+                value={jobForm.enabled ? "enabled" : "disabled"}
+                onValueChange={(value: "enabled" | "disabled") =>
+                  setJobForm((current) => ({ ...current, enabled: value === "enabled" }))
+                }
+              >
+                <SelectTrigger id="job-enabled">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="enabled">Ativo</SelectItem>
+                  <SelectItem value="disabled">Pausado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="mt-6 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsJobDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveJob} disabled={isSavingJob}>
+              <Save size={16} className="mr-2" />
+              {isSavingJob ? "Salvando..." : jobDialogMode === "create" ? "Criar job" : "Salvar alterações"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </AdminDashboardLayout>
   );
 }

@@ -23,7 +23,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - módulo de aprovações administrativas com fila, revisão detalhada, aprovação em lote e indicadores de SLA
 - módulo de comissões ligado ao namespace dedicado `trpc.commissions.*`
 - reforço de auditoria operacional e consolidação visual do domínio financeiro entre aprovações, comissões e pagamentos
-- integração administrativa do domínio Cron com listagem de jobs, próximas execuções, histórico e disparo manual
+- central administrativa completa do domínio Cron com CRUD de jobs, templates pré-definidos, configurações globais (timezone, alertas, manutenção), execução manual, histórico filtrado e revalidação automática
 
 ## Objetivo
 
@@ -33,8 +33,9 @@ Transformar a base administrativa já existente no frontend e no backend em um *
 
 - persistir auditoria operacional em armazenamento dedicado
 - padronizar componentes compartilhados de filtros, tabelas e paginação do Backoffice
-- aprofundar a integração entre pagamentos, comissões, logs e rotinas cron
-- evoluir observabilidade administrativa com indicadores operacionais mais próximos da produção
+- conectar o histórico de cron jobs aos workers BullMQ reais e à central de logs
+- evoluir observabilidade administrativa com indicadores de SLA por domínio (financeiro, conteúdo, marketplace, comissões)
+- expor alertas automáticos quando jobs cron ultrapassarem thresholds de falhas consecutivas
 
 ## Escopo inicial
 

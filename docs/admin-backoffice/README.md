@@ -16,6 +16,7 @@ Esta pasta reúne o plano inicial de execução para iniciar o **Backoffice Admi
 - [Entrega — agendamentos Cron no Backoffice Admin](./ENTREGA_AGENDAMENTOS_CRON_ADMIN.md)
 - [Entrega — dispatcher Cron ↔ BullMQ e execução real do `runNow`](./ENTREGA_CRON_DISPATCHER_BULLMQ.md)
 - [Entrega — sincronização BullMQ → `cron_job_history`](./ENTREGA_CRON_HISTORY_SYNC.md)
+- [Entrega — indicadores de SLA do domínio Cron no Backoffice](./ENTREGA_SLA_CRON_BACKOFFICE.md)
 
 ## Status atual da trilha
 
@@ -28,6 +29,7 @@ No snapshot atual do repositório, a trilha do Backoffice Admin já conta com en
 - central administrativa completa do domínio Cron com CRUD de jobs, templates pré-definidos, configurações globais (timezone, alertas, manutenção), execução manual, histórico filtrado e revalidação automática
 - dispatcher Cron ↔ BullMQ conectando os jobs administrativos à infraestrutura real de filas, com execução efetiva via `cron.runNow`
 - sincronização automática BullMQ → `cron_job_history` nos 5 workers existentes, fechando o ciclo de observabilidade do domínio Cron
+- indicadores de SLA por job com taxa de sucesso, p95 de duração, falhas consecutivas e detecção de jobs travados no `AdminSchedules`
 
 ## Objetivo
 

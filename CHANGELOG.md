@@ -1,5 +1,28 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Indicadores de SLA do domínio Cron no Backoffice
+
+### `feat(backoffice)` — Snapshot operacional por job no AdminSchedules
+
+**Backend:**
+- novo serviço `backend/src/services/cronSlaIndicators.ts` para calcular snapshot de SLA por job a partir de `cron_jobs` e `cron_job_history`
+- métricas por job: sucesso 7d/30d, falhas 7d/30d, p95 7d/30d, média 30d, falhas consecutivas, jobs travados, classificação de saúde e motivo
+- novo resumo global: total de jobs, jobs ativos, degradados, críticos, travados, volume de execuções 30d e taxa média de sucesso
+- nova procedure `trpc.cron.getSlaSnapshot`
+
+**Frontend:**
+- `AdminSchedules.tsx` ampliado com cards globais de SLA
+- nova tabela ordenada por severidade operacional (`critical`, `degraded`, `healthy`, `idle`)
+- badge de saúde por job, explicação textual, sucesso 7d/30d, falhas, p95, falhas consecutivas e sinalização de jobs travados
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_SLA_CRON_BACKOFFICE.md`
+- README raiz, `docs/README.md` e `docs/admin-backoffice/README.md` sincronizados
+
+**Validação:**
+- backend build validado com sucesso
+- frontend build local impactado por limitação de memória do sandbox (OOM), sem evidência de erro semântico no código alterado
+
 ## 2026-05-21 — Sincronização BullMQ → `cron_job_history`
 
 ### `feat(cron)` — Fechamento do ciclo de observabilidade Cron

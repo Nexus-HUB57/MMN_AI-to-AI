@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import {
+  Activity,
+  AlertTriangle,
   CalendarClock,
   CheckCircle2,
   Clock3,
   ExternalLink,
+  Flame,
+  Gauge,
   ListTodo,
   PlayCircle,
   PlusCircle,
@@ -154,6 +158,42 @@ const enabledMeta = {
   false: { label: "Pausado", className: "bg-amber-100 text-amber-800 hover:bg-amber-100" },
 };
 
+type JobHealthStatus = "healthy" | "degraded" | "critical" | "idle";
+
+const healthMeta: Record<JobHealthStatus, { label: string; className: string }> = {
+  healthy: { label: "Saudável", className: "bg-green-100 text-green-800 hover:bg-green-100" },
+  degraded: { label: "Degradado", className: "bg-amber-100 text-amber-900 hover:bg-amber-100" },
+  critical: { label: "Crítico", className: "bg-red-100 text-red-800 hover:bg-red-100" },
+  idle: { label: "Sem execuções", className: "bg-slate-100 text-slate-700 hover:bg-slate-100" },
+};
+
+type JobSlaIndicator = {
+  jobType: string;
+  jobName?: string;
+  queueName?: string;
+  enabled: boolean;
+  lastRunStatus?: string | null;
+  totalRuns7d: number;
+  totalRuns30d: number;
+  successRate7d: number;
+  successRate30d: number;
+  failureCount7d: number;
+  failureCount30d: number;
+  p95DurationMs7d: number | null;
+  p95DurationMs30d: number | null;
+  avgDurationMs30d: number | null;
+  consecutiveFailures: number;
+  isStuck: boolean;
+  stuckSinceMinutes?: number;
+  healthStatus: JobHealthStatus;
+  healthReason?: string;
+};
+
+const formatPercentage = (value: number | null | undefined) => {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return `${value.toFixed(1)}%`;
+};
+
 const quickLinks = [
   {
     title: "Orquestrador operacional",
@@ -194,6 +234,7 @@ export default function AdminSchedules() {
   const upcomingQuery = trpc.cron.getUpcomingExecutions.useQuery({ limit: 6 }, { refetchInterval: 30000 });
   const settingsQuery = trpc.cron.getSettings.useQuery(undefined, { refetchInterval: 30000 });
   const templatesQuery = trpc.cron.getTemplates.useQuery();
+  const slaQuery = trpc.cron.getSlaSnapshot.useQuery(undefined, { refetchInterval: 60000 });
   const historyQuery = trpc.cron.getHistory.useQuery(
     {
       cronJobId: selectedJobId || 0,
@@ -214,6 +255,7 @@ export default function AdminSchedules() {
       upcomingQuery.refetch(),
       settingsQuery.refetch(),
       templatesQuery.refetch(),
+      slaQuery.refetch(),
       selectedJobId ? historyQuery.refetch() : Promise.resolve(),
     ]);
   };
@@ -584,6 +626,145 @@ export default function AdminSchedules() {
             </div>
             <p className="mt-2 text-3xl font-semibold text-blue-700">{formatDuration(statsQuery.data?.avgDurationMs)}</p>
             <p className="mt-1 text-xs text-slate-500">{visibleSummary.pausedCount} jobs pausados na listagem atual</p>
+          </Card>
+        </section>
+
+        <section className="space-y-4">
+          <Card className="border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Gauge size={20} className="text-blue-600" />
+                  <h2 className="text-lg font-semibold text-slate-900">Indicadores de SLA por job</h2>
+                </div>
+                <p className="mt-1 text-sm text-slate-500">
+                  Taxa de sucesso, p95 de duração, falhas consecutivas e jobs travados — janelas de 7 e 30 dias.
+                </p>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => slaQuery.refetch()} disabled={slaQuery.isFetching}>
+                <RefreshCw size={16} className="mr-2" />
+                {slaQuery.isFetching ? "Atualizando..." : "Atualizar SLA"}
+              </Button>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center gap-2 text-slate-700">
+                  <Activity size={18} />
+                  <span className="text-sm">Execuções 30d</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-slate-900">{slaQuery.data?.global.totalRuns30d ?? 0}</p>
+                <p className="text-xs text-slate-500">{slaQuery.data?.global.enabledJobs ?? 0} jobs ativos</p>
+              </div>
+              <div className="rounded-xl border border-green-200 bg-green-50 p-4">
+                <div className="flex items-center gap-2 text-green-800">
+                  <CheckCircle2 size={18} />
+                  <span className="text-sm">Taxa média de sucesso 30d</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-green-800">{formatPercentage(slaQuery.data?.global.avgSuccessRate30d)}</p>
+                <p className="text-xs text-slate-600">{slaQuery.data?.global.healthyJobs ?? 0} jobs saudáveis</p>
+              </div>
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <div className="flex items-center gap-2 text-amber-900">
+                  <AlertTriangle size={18} />
+                  <span className="text-sm">Jobs degradados</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-amber-900">{slaQuery.data?.global.degradedJobs ?? 0}</p>
+                <p className="text-xs text-slate-600">Sucesso 7d &lt; 80% ou falhas isoladas</p>
+              </div>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+                <div className="flex items-center gap-2 text-red-800">
+                  <Flame size={18} />
+                  <span className="text-sm">Jobs críticos</span>
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-red-800">{slaQuery.data?.global.criticalJobs ?? 0}</p>
+                <p className="text-xs text-slate-600">{slaQuery.data?.global.stuckJobs ?? 0} jobs travados em execução</p>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              {slaQuery.isLoading ? (
+                <p className="text-sm text-slate-500">Calculando indicadores de SLA...</p>
+              ) : !slaQuery.data || slaQuery.data.jobs.length === 0 ? (
+                <p className="text-sm text-slate-500">Nenhum job cadastrado para análise de SLA.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[1080px]">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
+                        <th className="px-3 py-2">Job</th>
+                        <th className="px-3 py-2">Saúde</th>
+                        <th className="px-3 py-2">Sucesso 7d / 30d</th>
+                        <th className="px-3 py-2">Falhas 7d / 30d</th>
+                        <th className="px-3 py-2">p95 7d / 30d</th>
+                        <th className="px-3 py-2">Consecutivas</th>
+                        <th className="px-3 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(slaQuery.data.jobs as JobSlaIndicator[])
+                        .slice()
+                        .sort((a, b) => {
+                          const priority: Record<JobHealthStatus, number> = {
+                            critical: 0,
+                            degraded: 1,
+                            healthy: 2,
+                            idle: 3,
+                          };
+                          return priority[a.healthStatus] - priority[b.healthStatus];
+                        })
+                        .map((indicator) => {
+                          const meta = healthMeta[indicator.healthStatus];
+                          return (
+                            <tr key={indicator.jobType} className="border-b border-slate-100 transition hover:bg-slate-50">
+                              <td className="px-3 py-3 align-top">
+                                <p className="font-medium text-slate-900">{indicator.jobName || indicator.jobType}</p>
+                                <p className="text-xs text-slate-500">{indicator.jobType}</p>
+                              </td>
+                              <td className="px-3 py-3 align-top">
+                                <Badge className={meta.className}>{meta.label}</Badge>
+                                {indicator.healthReason ? (
+                                  <p className="mt-1 text-xs text-slate-500">{indicator.healthReason}</p>
+                                ) : null}
+                              </td>
+                              <td className="px-3 py-3 align-top text-sm text-slate-700">
+                                <p className="font-medium">{formatPercentage(indicator.successRate7d)}</p>
+                                <p className="text-xs text-slate-500">{formatPercentage(indicator.successRate30d)} (30d)</p>
+                              </td>
+                              <td className="px-3 py-3 align-top text-sm text-slate-700">
+                                <p className="font-medium">{indicator.failureCount7d}</p>
+                                <p className="text-xs text-slate-500">{indicator.failureCount30d} (30d)</p>
+                              </td>
+                              <td className="px-3 py-3 align-top text-sm text-slate-700">
+                                <p className="font-medium">{formatDuration(indicator.p95DurationMs7d)}</p>
+                                <p className="text-xs text-slate-500">{formatDuration(indicator.p95DurationMs30d)} (30d)</p>
+                              </td>
+                              <td className="px-3 py-3 align-top text-sm text-slate-700">
+                                <p
+                                  className={
+                                    indicator.consecutiveFailures > 0
+                                      ? "font-semibold text-red-700"
+                                      : "font-medium text-slate-700"
+                                  }
+                                >
+                                  {indicator.consecutiveFailures}
+                                </p>
+                                <p className="text-xs text-slate-500">desde o último sucesso</p>
+                              </td>
+                              <td className="px-3 py-3 align-top text-sm text-slate-700">
+                                <p>{indicator.enabled ? "Ativo" : "Pausado"}</p>
+                                <p className="text-xs text-slate-500">
+                                  {indicator.isStuck ? `Travado há ${indicator.stuckSinceMinutes ?? "?"} min` : "—"}
+                                </p>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </Card>
         </section>
 

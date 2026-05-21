@@ -64,7 +64,7 @@
 ## Atualizações Recentes do Snapshot
 
 - Backoffice Admin evoluído com aprovações, aprovação em lote com SLA, comissões em namespace dedicado e auditoria financeira.
-- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos e configurações globais (timezone, alertas, janela de manutenção) em `/admin/schedules`.
+- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos, configurações globais e indicadores de SLA por job em `/admin/schedules`.
 - Build completo do monorepo saneado e validado com `npm run build`.
 - Consulte também o [`CHANGELOG.md`](../CHANGELOG.md) para o histórico consolidado.
 

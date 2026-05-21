@@ -12,6 +12,7 @@ import { eq, desc, and, sql, gte, lte } from 'drizzle-orm';
 import cron from 'node-cron';
 import { executeCronJob } from '../services/cronScheduler';
 import { listSupportedCronJobTypes } from '../services/cronDispatcher';
+import { computeCronSlaSnapshot } from '../services/cronSlaIndicators';
 
 const cronFrequencySchema = z.enum(['minute', 'hourly', 'daily', 'weekly', 'monthly']);
 
@@ -240,6 +241,23 @@ export const cronRouter = router({
   getSupportedJobTypes: publicProcedure.query(async () => {
     return listSupportedCronJobTypes().sort((a, b) => a.localeCompare(b, 'pt-BR'));
   }),
+
+  // Snapshot de SLA por jobType + indicadores globais
+  getSlaSnapshot: publicProcedure
+    .input(
+      z
+        .object({
+          stuckThresholdMinutes: z.number().int().min(1).max(360).optional(),
+          consecutiveFailuresAlertThreshold: z.number().int().min(1).max(50).optional(),
+          windowDaysShort: z.number().int().min(1).max(30).optional(),
+          windowDaysLong: z.number().int().min(1).max(180).optional(),
+          perJobLimit: z.number().int().min(50).max(5000).optional(),
+        })
+        .optional()
+    )
+    .query(async ({ input }) => {
+      return computeCronSlaSnapshot(input ?? {});
+    }),
 
   getStats: publicProcedure
     .input(

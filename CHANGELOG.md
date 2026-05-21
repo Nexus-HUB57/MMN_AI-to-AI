@@ -1,5 +1,30 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Página de Progressão de Carreira e XP
+
+### `feat(career)` — Nova página CareerProgress com gamificação completa
+
+**Nova página frontend:**
+- `frontend/src/pages/CareerProgress.tsx` com sistema de progressão visual de carreira
+- Exibição do nível atual do afiliado com barra de progresso animada
+- Detalhamento dos 27 níveis de carreira organizados em 5 categorias (Afiliado, Preditivo, Generativo, Orquestrador, IA Agêntica)
+- Visualização de todos os níveis desbloqueados e próximos
+- Multiplicadores de XP: Vendas (10x), Comissões (5x), Bônus (15x), Network (3x)
+
+**Funcionalidades da página:**
+- Tab "Visão Geral": Nível atual, progress bar, stats (XP total, mensal, ranking, bônus comissão)
+- Tab "Ranking": Leaderboard dos top afiliados com medals para top 3
+- Tab "Histórico": Estrutura para histórico de transações XP
+
+**Integração com roteamento:**
+- Nova rota `/career` adicionada em `App.tsx`
+- NAVIGATION_STRUCTURE atualizado com categoria UTILITY
+- Componente carregado via lazy import para performance
+
+**Ícones e design:**
+- Ícones Lucide React: Trophy, TrendingUp, Star, Zap, Award, Target, BarChart3, History, Crown, Medal, Flame, Sparkles
+- Cores por categoria: Azul (Afiliado), Verde (Preditivo), Roxo (Generativo), Amarelo (Orquestrador), Rosa (IA Agêntica)
+
 ## 2026-05-21 — Histórico de alertas Cron com MTTA/MTTR no Backoffice
 
 ### `feat(backoffice)` — Incidentes persistidos, backlog e tempos médios no `AdminSchedules`

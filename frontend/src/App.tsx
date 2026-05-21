@@ -51,6 +51,7 @@ const TrackingLinks = lazy(() => import("./pages/TrackingLinks"));
 const Login = lazy(() => import("./pages/Login"));
 const Logout = lazy(() => import("./pages/Logout"));
 
+const CareerProgress = lazy(() => import("./pages/CareerProgress"));
 const ExecutionLogs = lazy(() => import("./pages/ExecutionLogs"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -98,6 +99,7 @@ export const NAVIGATION_STRUCTURE = {
   UTILITY: [
     { path: "/logs", name: "Logs de Execução", component: "ExecutionLogs", layout: "DashboardLayout" },
     { path: "/orchestrator", name: "Orquestrador", component: "OrchestratorDashboard", layout: "DashboardLayout" },
+    { path: "/career", name: "Carreira", component: "CareerProgress", layout: "DashboardLayout" },
   ],
   ADMIN: [
     { path: "/admin", name: "Dashboard Admin", component: "AdminDashboard", layout: "AdminDashboardLayout" },
@@ -157,6 +159,7 @@ export default function App() {
 
             <Route path="/logs" component={ExecutionLogs} />
             <Route path="/orchestrator" component={OrchestratorDashboard} />
+            <Route path="/career" component={CareerProgress} />
 
             <Route path="/admin" component={AdminDashboard} />
             <Route path="/admin/dashboard" component={AdminDashboard} />

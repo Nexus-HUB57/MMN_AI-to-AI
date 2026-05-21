@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, text, timestamp, int, boolean } from 'drizzle-orm/mysql-core';
+import { mysqlTable, varchar, text, timestamp, int, boolean, uniqueIndex, index } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
 /**
@@ -51,6 +51,37 @@ export const cronJobHistory = mysqlTable('cron_job_history', {
   metadata: text('metadata'), // JSON com metadados adicionais
 });
 
+// Alertas operacionais persistidos para o domínio Cron
+// Idempotente por chave (jobType, alertType, bucket) e durador em deploy
+// multi-instância. Acknowledgement é expresso por `acknowledgedAt`.
+export const cronAlerts = mysqlTable(
+  'cron_alerts',
+  {
+    id: int('id').primaryKey().autoincrement(),
+    alertKey: varchar('alert_key', { length: 255 }).notNull(),
+    alertType: varchar('alert_type', { length: 64 }).notNull(),
+    severity: varchar('severity', { length: 20 }).notNull(), // warning | critical
+    jobType: varchar('job_type', { length: 100 }).notNull(),
+    jobName: varchar('job_name', { length: 255 }),
+    bucket: varchar('bucket', { length: 32 }).notNull(),
+    title: varchar('title', { length: 256 }).notNull(),
+    message: text('message').notNull(),
+    metadata: text('metadata'), // JSON serializado
+    detectedAt: timestamp('detected_at').notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at').notNull().defaultNow().onUpdateNow(),
+    notifiedAt: timestamp('notified_at'),
+    acknowledgedAt: timestamp('acknowledged_at'),
+    acknowledgedBy: int('acknowledged_by'),
+    resolvedAt: timestamp('resolved_at'),
+    active: boolean('active').notNull().default(true),
+  },
+  (table) => ({
+    alertKeyUniq: uniqueIndex('cron_alerts_alert_key_uniq').on(table.alertKey),
+    activeIdx: index('cron_alerts_active_idx').on(table.active, table.severity),
+    jobTypeIdx: index('cron_alerts_job_type_idx').on(table.jobType, table.alertType),
+  })
+);
+
 // Configurações globais de cron
 export const cronSettings = mysqlTable('cron_settings', {
   id: int('id').primaryKey().autoincrement(),
@@ -59,6 +90,10 @@ export const cronSettings = mysqlTable('cron_settings', {
   description: text('description'),
   updatedAt: timestamp('updated_at').notNull().defaultNow().onUpdateNow(),
 });
+
+// Tipos derivados
+export type ICronAlertRow = typeof cronAlerts.$inferSelect;
+export type ICronAlertInsert = typeof cronAlerts.$inferInsert;
 
 // Relações
 export const cronJobsRelations = relations(cronJobs, ({ one, many }) => ({

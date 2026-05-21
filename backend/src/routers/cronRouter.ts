@@ -283,8 +283,8 @@ export const cronRouter = router({
   // Reconhece manualmente um alerta ativo
   acknowledgeAlert: adminProcedure
     .input(z.object({ alertId: z.string().min(1) }))
-    .mutation(async ({ input }) => {
-      const acknowledged = acknowledgeCronAlert(input.alertId);
+    .mutation(async ({ input, ctx }) => {
+      const acknowledged = await acknowledgeCronAlert(input.alertId, ctx.user?.id);
       if (!acknowledged) {
         throw new Error('Alerta não encontrado entre os ativos');
       }

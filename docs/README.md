@@ -1,7 +1,7 @@
 # Índice de Documentação - MMN AI-to-AI
 
-> **Última Atualização:** 2026-05-20
-> **Referência:** snapshot pós-cron, backoffice administrativo e saneamento de build
+> **Última Atualização:** 2026-05-21
+> **Referência:** snapshot pós-cron, SLA, alertas persistidos e backoffice administrativo
 > **Status:** Organizado, atualizado e sincronizado com as entregas recentes
 
 ---
@@ -25,7 +25,7 @@
 |-----------|----------|-----------|
 | **Canônica** | `canonical/DOCUMENTACAO_CANONICA.md` | Documento único de referência |
 | **Agentic** | `agentic/*.md` (5 arquivos) | Arquitetura e roadmap agentic |
-| **Admin Backoffice** | `admin-backoffice/*.md` (11 arquivos) | Plano de execução do admin com entregas incrementais de aprovações, comissões, auditoria e cron administrativo |
+| **Admin Backoffice** | `admin-backoffice/*.md` (12 arquivos) | Plano de execução do admin com entregas incrementais de aprovações, comissões, auditoria e cron administrativo |
 | **Repository Review** | `repository-review/*.md` (7 arquivos) | Análises e avaliações |
 
 ### 📊Guias e Manuais
@@ -64,7 +64,7 @@
 ## Atualizações Recentes do Snapshot
 
 - Backoffice Admin evoluído com aprovações, aprovação em lote com SLA, comissões em namespace dedicado e auditoria financeira.
-- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos, configurações globais, indicadores de SLA por job e alertas operacionais automáticos com reconhecimento manual em `/admin/schedules`.
+- Domínio Cron consolidado no Backoffice Admin com CRUD completo de jobs, templates pré-definidos, configurações globais, indicadores de SLA por job e alertas operacionais automáticos persistidos em `cron_alerts` com reconhecimento manual em `/admin/schedules`.
 - Build completo do monorepo saneado e validado com `npm run build`.
 - Consulte também o [`CHANGELOG.md`](../CHANGELOG.md) para o histórico consolidado.
 
@@ -103,7 +103,7 @@
 |-----------|--------|
 | **Stage** | MVP+ |
 | **Conformidade** | 85-90% |
-| **Referência de snapshot** | 2026-05-20 |
+| **Referência de snapshot** | 2026-05-21 |
 | **Licença** | MIT |
 
 ---

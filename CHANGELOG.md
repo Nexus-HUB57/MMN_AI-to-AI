@@ -1,5 +1,33 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-21 — Persistência dedicada para alertas do domínio Cron
+
+### `feat(cron)` — `cron_alerts` + reconhecimento persistido + dedup multi-instância
+
+**Banco / schema:**
+- nova tabela `cron_alerts` em `database/schemas/schema-cron.ts`
+- campos para `alert_key`, `alert_type`, `severity`, `job_type`, `bucket`, `metadata`, `notified_at`, `acknowledged_at`, `acknowledged_by`, `resolved_at` e `active`
+- índices para busca por estado ativo/severidade e unicidade por `alert_key`
+
+**Backend:**
+- `backend/src/services/cronAlerts.ts` refatorado para usar persistência dedicada em vez de estado volátil em memória
+- `evaluateCronAlerts()` agora reabre incidentes resolvidos, atualiza `lastSeenAt`, resolve alertas que deixaram de existir e respeita cooldown por `notifiedAt`
+- `listActiveCronAlerts()` passa a ler diretamente da tabela persistida
+- `acknowledgeCronAlert()` grava `acknowledgedAt` e `acknowledgedBy`, preservando reconhecimento entre deploys/restarts
+
+**Impacto operacional:**
+- dedup e reconhecimento deixam de se perder em recycle/restart do processo
+- comportamento consistente em cenários multi-instância do scheduler/backoffice
+- base pronta para histórico de incidentes resolvidos e MTTR
+
+**Documentação:**
+- nova entrega `docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`
+- README raiz, `docs/README.md` e `docs/admin-backoffice/README.md` sincronizados
+
+**Validação:**
+- `npm --workspace backend run build` OK (528.9 KB)
+
+
 ## 2026-05-21 — Alertas operacionais automáticos para jobs Cron
 
 ### `feat(cron)` — SLA monitor + alertas + reconhecimento manual

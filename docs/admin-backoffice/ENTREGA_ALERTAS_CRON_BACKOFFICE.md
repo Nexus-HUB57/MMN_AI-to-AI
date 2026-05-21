@@ -29,7 +29,7 @@ Garantias:
 - **Idempotência** por chave `{alertType, jobType, bucket}`
 - **Notificações persistidas** via `createNotification` para todos os admins ativos (até 50)
 - **Tolerância a falha** — erros de banco são logados, nunca derrubam o caller
-- **Limpeza automática** de acknowledgements quando o alerta deixa de estar ativo
+- **Esta entrega foi posteriormente evoluída** para persistência dedicada em `cron_alerts`, detalhada em `ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`
 
 ### 2. Reavaliação automática integrada ao scheduler
 
@@ -78,8 +78,8 @@ cronScheduler (a cada 5 min)
 
 ## Próximos passos recomendados
 
-1. persistir alertas reconhecidos em tabela dedicada (atualmente em memória)
-2. integração com webhooks (Slack, Discord, email) para alertas `critical`
-3. página de histórico de alertas resolvidos
-4. configuração de thresholds por `jobType` no `cron_settings`
-5. métricas de MTTR (mean time to recovery) por tipo de alerta
+1. integração com webhooks (Slack, Discord, email) para alertas `critical`
+2. página de histórico de alertas resolvidos
+3. configuração de thresholds por `jobType` no `cron_settings`
+4. métricas de MTTR (mean time to recovery) por tipo de alerta
+5. correlação entre alertas Cron e central administrativa de logs

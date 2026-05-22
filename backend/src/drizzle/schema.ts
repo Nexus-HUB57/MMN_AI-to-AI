@@ -1,101 +1,79 @@
-import {
-  int,
-  mysqlEnum,
-  mysqlTable,
-  text,
-  timestamp,
-  varchar,
-  index,
-} from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm";
+import { pgTable, serial, integer, varchar, text, timestamp, index } from "drizzle-orm/pg-core";
 
 export * from "../../../database/schemas/schema-final";
 export * from "../../../database/schemas/agentic";
 
-export const marketplaceAccounts = mysqlTable(
+export const marketplaceAccounts = pgTable(
   "marketplace_accounts",
   {
-    id: int("id").autoincrement().primaryKey(),
-    userId: int("userId").notNull(),
-    marketplace: mysqlEnum("marketplace", ["mercado_libre", "shopee", "hotmart"]).notNull(),
+    id: serial("id").primaryKey(),
+    userId: integer("userId").notNull(),
+    marketplace: varchar("marketplace", { length: 30 }).notNull(),
     accountName: varchar("accountName", { length: 128 }).notNull(),
     accessToken: text("accessToken").notNull(),
     refreshToken: text("refreshToken"),
     apiKey: text("apiKey"),
     apiSecret: text("apiSecret"),
-    isActive: int("isActive").notNull().default(1),
-    syncStatus: mysqlEnum("syncStatus", ["pending", "syncing", "completed", "failed"])
-      .notNull()
-      .default("pending"),
+    isActive: integer("isActive").notNull().default(1),
+    syncStatus: varchar("syncStatus", { length: 20 }).notNull().default("pending"),
     lastSyncAt: timestamp("lastSyncAt"),
-    createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
-    updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    userMarketplaceIdx: index("marketplace_accounts_user_marketplace_idx").on(
-      table.userId,
-      table.marketplace
-    ),
+    userMarketplaceIdx: index("marketplace_accounts_user_marketplace_idx").on(table.userId, table.marketplace),
   })
 );
 
-export const marketplaceProducts = mysqlTable(
-  "marketplace_products",
+export const marketplaceProductsExt = pgTable(
+  "marketplace_products_ext",
   {
-    id: int("id").autoincrement().primaryKey(),
-    marketplaceAccountId: int("marketplaceAccountId").notNull(),
+    id: serial("id").primaryKey(),
+    marketplaceAccountId: integer("marketplaceAccountId").notNull(),
     externalProductId: varchar("externalProductId", { length: 255 }).notNull(),
-    marketplace: mysqlEnum("marketplace", ["mercado_libre", "shopee", "hotmart"]).notNull(),
+    marketplace: varchar("marketplace", { length: 30 }).notNull(),
     productName: varchar("productName", { length: 255 }).notNull(),
     productUrl: text("productUrl"),
     category: varchar("category", { length: 128 }),
-    price: int("price").notNull(),
-    originalPrice: int("originalPrice"),
-    discount: int("discount").notNull().default(0),
-    rating: int("rating").notNull().default(0),
-    reviews: int("reviews").notNull().default(0),
-    sales: int("sales").notNull().default(0),
+    price: integer("price").notNull(),
+    originalPrice: integer("originalPrice"),
+    discount: integer("discount").notNull().default(0),
+    rating: integer("rating").notNull().default(0),
+    reviews: integer("reviews").notNull().default(0),
+    sales: integer("sales").notNull().default(0),
     description: text("description"),
     imageUrl: text("imageUrl"),
     seller: varchar("seller", { length: 255 }),
-    commissionPercentage: int("commissionPercentage").notNull().default(0),
-    isActive: int("isActive").notNull().default(1),
-    syncedAt: timestamp("syncedAt").notNull().default(sql`(now())`),
-    createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
-    updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+    commissionPercentage: integer("commissionPercentage").notNull().default(0),
+    isActive: integer("isActive").notNull().default(1),
+    syncedAt: timestamp("syncedAt").notNull().defaultNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
     accountIdx: index("marketplace_products_account_idx").on(table.marketplaceAccountId),
-    externalProductIdx: index("marketplace_products_external_idx").on(
-      table.externalProductId,
-      table.marketplace
-    ),
-    marketplaceSalesIdx: index("marketplace_products_marketplace_sales_idx").on(
-      table.marketplace,
-      table.sales
-    ),
+    externalProductIdx: index("marketplace_products_external_idx").on(table.externalProductId, table.marketplace),
+    marketplaceSalesIdx: index("marketplace_products_marketplace_sales_idx").on(table.marketplace, table.sales),
   })
 );
 
-export const productTrends = mysqlTable(
+export const productTrends = pgTable(
   "product_trends",
   {
-    id: int("id").autoincrement().primaryKey(),
-    marketplaceProductId: int("marketplaceProductId").notNull(),
-    trendingScore: int("trendingScore").notNull().default(0),
-    viewsChange: int("viewsChange"),
-    salesChange: int("salesChange"),
-    priceChange: int("priceChange"),
+    id: serial("id").primaryKey(),
+    marketplaceProductId: integer("marketplaceProductId").notNull(),
+    trendingScore: integer("trendingScore").notNull().default(0),
+    viewsChange: integer("viewsChange"),
+    salesChange: integer("salesChange"),
+    priceChange: integer("priceChange"),
     seasonality: varchar("seasonality", { length: 64 }),
     demandLevel: varchar("demandLevel", { length: 64 }),
     competitionLevel: varchar("competitionLevel", { length: 64 }),
-    profitabilityScore: int("profitabilityScore"),
-    recommendation: mysqlEnum("recommendation", ["buy", "hold", "sell", "avoid"])
-      .notNull()
-      .default("hold"),
-    analyzedAt: timestamp("analyzedAt").notNull().default(sql`(now())`),
-    createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
-    updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+    profitabilityScore: integer("profitabilityScore"),
+    recommendation: varchar("recommendation", { length: 10 }).notNull().default("hold"),
+    analyzedAt: timestamp("analyzedAt").notNull().defaultNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
     productIdx: index("product_trends_product_idx").on(table.marketplaceProductId),
@@ -104,22 +82,22 @@ export const productTrends = mysqlTable(
   })
 );
 
-export const affiliateMargins = mysqlTable(
+export const affiliateMargins = pgTable(
   "affiliate_margins",
   {
-    id: int("id").autoincrement().primaryKey(),
-    affiliateId: int("affiliateId").notNull(),
-    marketplaceProductId: int("marketplaceProductId").notNull(),
-    baseCommission: int("baseCommission").notNull().default(0),
-    bonusCommission: int("bonusCommission").notNull().default(0),
-    totalCommission: int("totalCommission").notNull().default(0),
-    estimatedMonthlyEarnings: int("estimatedMonthlyEarnings").notNull().default(0),
-    totalEarnings: int("totalEarnings").notNull().default(0),
-    totalSales: int("totalSales").notNull().default(0),
-    conversionRate: int("conversionRate").notNull().default(0),
-    lastCalculatedAt: timestamp("lastCalculatedAt").notNull().default(sql`(now())`),
-    createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
-    updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+    id: serial("id").primaryKey(),
+    affiliateId: integer("affiliateId").notNull(),
+    marketplaceProductId: integer("marketplaceProductId").notNull(),
+    baseCommission: integer("baseCommission").notNull().default(0),
+    bonusCommission: integer("bonusCommission").notNull().default(0),
+    totalCommission: integer("totalCommission").notNull().default(0),
+    estimatedMonthlyEarnings: integer("estimatedMonthlyEarnings").notNull().default(0),
+    totalEarnings: integer("totalEarnings").notNull().default(0),
+    totalSales: integer("totalSales").notNull().default(0),
+    conversionRate: integer("conversionRate").notNull().default(0),
+    lastCalculatedAt: timestamp("lastCalculatedAt").notNull().defaultNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
     affiliateIdx: index("affiliate_margins_affiliate_idx").on(table.affiliateId),
@@ -127,22 +105,20 @@ export const affiliateMargins = mysqlTable(
   })
 );
 
-export const marketplaceSyncHistory = mysqlTable(
+export const marketplaceSyncHistory = pgTable(
   "marketplace_sync_history",
   {
-    id: int("id").autoincrement().primaryKey(),
-    marketplaceAccountId: int("marketplaceAccountId").notNull(),
-    syncType: mysqlEnum("syncType", ["products", "orders", "full"]).notNull().default("products"),
-    status: mysqlEnum("status", ["pending", "in_progress", "completed", "failed"])
-      .notNull()
-      .default("pending"),
-    productsAdded: int("productsAdded").notNull().default(0),
-    productsUpdated: int("productsUpdated").notNull().default(0),
-    productsFailed: int("productsFailed").notNull().default(0),
+    id: serial("id").primaryKey(),
+    marketplaceAccountId: integer("marketplaceAccountId").notNull(),
+    syncType: varchar("syncType", { length: 20 }).notNull().default("products"),
+    status: varchar("status", { length: 20 }).notNull().default("pending"),
+    productsAdded: integer("productsAdded").notNull().default(0),
+    productsUpdated: integer("productsUpdated").notNull().default(0),
+    productsFailed: integer("productsFailed").notNull().default(0),
     errorMessage: text("errorMessage"),
     completedAt: timestamp("completedAt"),
-    createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
-    updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
     accountIdx: index("marketplace_sync_history_account_idx").on(table.marketplaceAccountId),
@@ -152,8 +128,8 @@ export const marketplaceSyncHistory = mysqlTable(
 
 export type MarketplaceAccount = typeof marketplaceAccounts.$inferSelect;
 export type InsertMarketplaceAccount = typeof marketplaceAccounts.$inferInsert;
-export type MarketplaceProduct = typeof marketplaceProducts.$inferSelect;
-export type InsertMarketplaceProduct = typeof marketplaceProducts.$inferInsert;
+export type MarketplaceProductExt = typeof marketplaceProductsExt.$inferSelect;
+export type InsertMarketplaceProductExt = typeof marketplaceProductsExt.$inferInsert;
 export type ProductTrend = typeof productTrends.$inferSelect;
 export type InsertProductTrend = typeof productTrends.$inferInsert;
 export type AffiliateMargin = typeof affiliateMargins.$inferSelect;

@@ -29,10 +29,10 @@ function mapSession(row: typeof agentSessions.$inferSelect): AgenticSession {
     goal: row.goal,
     audience: row.audience,
     offer: row.offer,
-    channel: row.channel,
-    status: row.status,
+    channel: row.channel as AgenticSession["channel"],
+    status: row.status as AgenticSession["status"],
     plan: row.plan || [],
-    latestDraft: (row.latestDraft as AgenticSession["latestDraft"]) || undefined,
+    latestDraft: (row.latestDraft as unknown as AgenticSession["latestDraft"]) || undefined,
     summary: row.summary || undefined,
     qualityScore: row.qualityScore || 0,
     lastActionId: row.lastActionId || undefined,
@@ -50,8 +50,8 @@ function mapAction(row: typeof agentActionsAudit.$inferSelect): AgentActionAudit
     sessionId: row.sessionId,
     actionKey: row.actionKey,
     toolName: row.toolName,
-    status: row.status,
-    judgeVerdict: row.judgeVerdict || undefined,
+    status: row.status as AgentActionAudit["status"],
+    judgeVerdict: (row.judgeVerdict || undefined) as AgentActionAudit["judgeVerdict"],
     score: row.score || undefined,
     inputSummary: row.inputSummary,
     outputSummary: row.outputSummary || undefined,
@@ -66,7 +66,7 @@ function mapMemory(row: typeof agentMemories.$inferSelect): AgentMemoryRecord {
   return {
     id: row.id,
     sessionId: row.sessionId,
-    memoryType: row.memoryType,
+    memoryType: row.memoryType as AgentMemoryRecord["memoryType"],
     content: row.content,
     tags: row.tags || [],
     vector: row.vector || [],
@@ -90,8 +90,8 @@ function mapQueueJob(row: typeof agentQueueJobs.$inferSelect): AgentQueueJob {
   return {
     id: row.id,
     sessionId: row.sessionId,
-    type: row.type,
-    status: row.status,
+    type: row.type as AgentQueueJob["type"],
+    status: row.status as AgentQueueJob["status"],
     payload: (row.payload as Record<string, unknown>) || {},
     result: (row.result as Record<string, unknown>) || undefined,
     error: row.error || undefined,
@@ -106,8 +106,8 @@ export class AgenticRepository {
 
   getStorageMode() {
     if (!process.env.DATABASE_URL) return "memory-fallback-mode";
-    if (Date.now() < this.unavailableUntil) return "mysql-unreachable-fallback-mode";
-    return "mysql-persistence-enabled";
+    if (Date.now() < this.unavailableUntil) return "pg-unreachable-fallback-mode";
+    return "pg-persistence-enabled";
   }
 
   private async getDbOrNull() {
@@ -117,7 +117,7 @@ export class AgenticRepository {
     try {
       return await getDb();
     } catch (error) {
-      this.handleError("falha ao inicializar conexão com MySQL", error);
+      this.handleError("falha ao inicializar conexão com PostgreSQL", error);
       return null;
     }
   }
@@ -130,7 +130,7 @@ export class AgenticRepository {
       const signature = `${action}:${message}`;
       if (this.lastWarning.signature !== signature || Date.now() - this.lastWarning.at > 30_000) {
         this.lastWarning = { signature, at: Date.now() };
-        console.warn(`[AgenticRepository] ${action}: MySQL indisponível, fallback em memória por 30s (${message})`);
+        console.warn(`[AgenticRepository] ${action}: PostgreSQL indisponível, fallback em memória por 30s (${message})`);
       }
       return;
     }
@@ -164,16 +164,17 @@ export class AgenticRepository {
         channel: session.channel,
         status: session.status,
         plan: session.plan,
-        latestDraft: session.latestDraft || null,
+        latestDraft: (session.latestDraft || null) as any,
         summary: session.summary || null,
         qualityScore: session.qualityScore,
         lastActionId: session.lastActionId || null,
         checkpointCount: session.checkpoints,
-        metadata: session.metadata || null,
+        metadata: (session.metadata || null) as any,
         createdAt: new Date(session.createdAt),
         updatedAt: new Date(session.updatedAt),
         completedAt: session.completedAt ? new Date(session.completedAt) : null,
-      }).onDuplicateKeyUpdate({
+      }).onConflictDoUpdate({
+        target: agentSessions.id,
         set: {
           userId: session.userId,
           goal: session.goal,
@@ -182,12 +183,12 @@ export class AgenticRepository {
           channel: session.channel,
           status: session.status,
           plan: session.plan,
-          latestDraft: session.latestDraft || null,
+          latestDraft: (session.latestDraft || null) as any,
           summary: session.summary || null,
           qualityScore: session.qualityScore,
           lastActionId: session.lastActionId || null,
           checkpointCount: session.checkpoints,
-          metadata: session.metadata || null,
+          metadata: (session.metadata || null) as any,
           updatedAt: new Date(session.updatedAt),
           completedAt: session.completedAt ? new Date(session.completedAt) : null,
         },
@@ -216,7 +217,8 @@ export class AgenticRepository {
         latencyMs: action.latencyMs || null,
         createdAt: new Date(action.createdAt),
         updatedAt: new Date(action.updatedAt),
-      }).onDuplicateKeyUpdate({
+      }).onConflictDoUpdate({
+        target: agentActionsAudit.id,
         set: {
           status: action.status,
           judgeVerdict: action.judgeVerdict || null,
@@ -247,7 +249,8 @@ export class AgenticRepository {
         importance: memory.importance,
         createdAt: new Date(memory.createdAt),
         updatedAt: new Date(memory.updatedAt),
-      }).onDuplicateKeyUpdate({
+      }).onConflictDoUpdate({
+        target: agentMemories.id,
         set: {
           content: memory.content,
           tags: memory.tags,
@@ -272,7 +275,8 @@ export class AgenticRepository {
         reason: checkpoint.reason,
         snapshot: checkpoint.snapshot,
         createdAt: new Date(checkpoint.createdAt),
-      }).onDuplicateKeyUpdate({
+      }).onConflictDoUpdate({
+        target: agentCheckpoints.id,
         set: {
           reason: checkpoint.reason,
           snapshot: checkpoint.snapshot,
@@ -294,15 +298,16 @@ export class AgenticRepository {
         type: job.type,
         status: job.status,
         payload: job.payload,
-        result: job.result || null,
+        result: (job.result || null) as any,
         error: job.error || null,
         createdAt: new Date(job.createdAt),
         updatedAt: new Date(job.updatedAt),
-      }).onDuplicateKeyUpdate({
+      }).onConflictDoUpdate({
+        target: agentQueueJobs.id,
         set: {
           status: job.status,
           payload: job.payload,
-          result: job.result || null,
+          result: (job.result || null) as any,
           error: job.error || null,
           updatedAt: new Date(job.updatedAt),
         },

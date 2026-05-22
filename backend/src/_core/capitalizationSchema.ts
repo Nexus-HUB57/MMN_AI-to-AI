@@ -1,113 +1,88 @@
 /**
  * Sistema de Títulos de Capitalização
- *
- * Produtos financeiros de longo prazo com sorteios periódicos.
  */
 
-import { mysqlTable, varchar, boolean, timestamp, text, int, decimal, json } from 'drizzle-orm/mysql-core';
+import { pgTable, varchar, boolean, timestamp, text, integer, numeric } from 'drizzle-orm/pg-core';
 
-// ============================================
-// SCHEMA DO BANCO DE DADOS
-// ============================================
-
-/**
- * Títulos de Capitalização (Capitalization Titles)
- */
-export const capitalizationTitles = mysqlTable('capitalization_titles', {
+export const capitalizationTitles = pgTable('capitalization_titles', {
   id: varchar('id', { length: 36 }).primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description'),
-  type: varchar('type', { length: 50 }).notNull(),  // traditional, incentive, monthly
-  faceValue: decimal('face_value', { precision: 15, scale: 2 }).notNull(),  // Valor de face
-  monthlyContribution: decimal('monthly_contribution', { precision: 15, scale: 2 }).notNull(),
-  termMonths: int('term_months').notNull(),  // Prazo em meses
-  gracePeriodMonths: int('grace_period_months').default(0),  // Período de carência
-  minPurchaseAmount: decimal('min_purchase_amount', { precision: 15, scale: 2 }),
-  maxPurchaseAmount: decimal('max_purchase_amount', { precision: 15, scale: 2 }),
+  type: varchar('type', { length: 50 }).notNull(),
+  faceValue: numeric('face_value', { precision: 15, scale: 2 }).notNull(),
+  monthlyContribution: numeric('monthly_contribution', { precision: 15, scale: 2 }).notNull(),
+  termMonths: integer('term_months').notNull(),
+  gracePeriodMonths: integer('grace_period_months').default(0),
+  minPurchaseAmount: numeric('min_purchase_amount', { precision: 15, scale: 2 }),
+  maxPurchaseAmount: numeric('max_purchase_amount', { precision: 15, scale: 2 }),
   validityStart: timestamp('validity_start').notNull(),
   validityEnd: timestamp('validity_end').notNull(),
-  status: varchar('status', { length: 20 }).default('active'),  // active, paused, closed
-  solvent: varchar('solvent_id', { length: 36 }),  // Empresa emissora
-  cvmCode: varchar('cvm_code', { length: 50 }),  // Código CVM
+  status: varchar('status', { length: 20 }).default('active'),
+  solvent: varchar('solvent_id', { length: 36 }),
+  cvmCode: varchar('cvm_code', { length: 50 }),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow().onUpdateNow()
+  updatedAt: timestamp('updated_at').defaultNow()
 });
 
-/**
- * Títulos Comprados (Purchased Titles)
- */
-export const purchasedTitles = mysqlTable('purchased_titles', {
+export const purchasedTitles = pgTable('purchased_titles', {
   id: varchar('id', { length: 36 }).primaryKey(),
   titleId: varchar('title_id', { length: 36 }).notNull().references(() => capitalizationTitles.id),
-  userId: varchar('user_id', { length: 36 }).notNull().references(() => capitalizationTitles.id),
+  userId: varchar('user_id', { length: 36 }).notNull(),
   serialNumber: varchar('serial_number', { length: 50 }).notNull().unique(),
   purchaseDate: timestamp('purchase_date').defaultNow(),
   activationDate: timestamp('activation_date'),
   maturityDate: timestamp('maturity_date').notNull(),
-  status: varchar('status', { length: 20 }).default('pending'),  // pending, active, matured, cancelled, redeemed
-  totalPaidAmount: decimal('total_paid_amount', { precision: 15, scale: 2 }).notNull().default(0),
+  status: varchar('status', { length: 20 }).default('pending'),
+  totalPaidAmount: numeric('total_paid_amount', { precision: 15, scale: 2 }).notNull().default('0'),
   lastPaymentDate: timestamp('last_payment_date'),
   nextPaymentDate: timestamp('next_payment_date'),
-  paymentCount: int('payment_count').default(0),
-  redemptionValue: decimal('redemption_value', { precision: 15, scale: 2 }),  // Valor de resgate
+  paymentCount: integer('payment_count').default(0),
+  redemptionValue: numeric('redemption_value', { precision: 15, scale: 2 }),
   redeemedAt: timestamp('redeemed_at'),
   notes: text('notes'),
   createdAt: timestamp('created_at').defaultNow()
 });
 
-/**
- * Pagamentos de Títulos
- */
-export const titlePayments = mysqlTable('title_payments', {
+export const titlePayments = pgTable('title_payments', {
   id: varchar('id', { length: 36 }).primaryKey(),
   purchasedTitleId: varchar('purchased_title_id', { length: 36 }).notNull().references(() => purchasedTitles.id),
-  userId: varchar('user_id', { length: 36 }).notNull().references(() => purchasedTitles.id),
-  amount: decimal('amount', { precision: 15, scale: 2 }).notNull(),
-  paymentMethod: varchar('payment_method', { length: 30 }).notNull(),  // pix, credit_card, bank_transfer
-  paymentStatus: varchar('payment_status', { length: 20 }).default('pending'),  // pending, completed, failed, refunded
+  userId: varchar('user_id', { length: 36 }).notNull(),
+  amount: numeric('amount', { precision: 15, scale: 2 }).notNull(),
+  paymentMethod: varchar('payment_method', { length: 30 }).notNull(),
+  paymentStatus: varchar('payment_status', { length: 20 }).default('pending'),
   dueDate: timestamp('due_date').notNull(),
   paidAt: timestamp('paid_at'),
   transactionRef: varchar('transaction_ref', { length: 100 }),
   createdAt: timestamp('created_at').defaultNow()
 });
 
-/**
- * Sorteios de Títulos
- */
-export const titleDraws = mysqlTable('title_draws', {
+export const titleDraws = pgTable('title_draws', {
   id: varchar('id', { length: 36 }).primaryKey(),
   titleId: varchar('title_id', { length: 36 }).notNull().references(() => capitalizationTitles.id),
-  drawNumber: int('draw_number').notNull(),
+  drawNumber: integer('draw_number').notNull(),
   drawDate: timestamp('draw_date').notNull(),
   prizeDescription: text('prize_description').notNull(),
-  prizeValue: decimal('prize_value', { precision: 15, scale: 2 }).notNull(),
-  totalParticipants: int('total_participants').notNull(),
-  status: varchar('status', { length: 20 }).default('pending'),  // pending, completed, cancelled
+  prizeValue: numeric('prize_value', { precision: 15, scale: 2 }).notNull(),
+  totalParticipants: integer('total_participants').notNull(),
+  status: varchar('status', { length: 20 }).default('pending'),
   resultPublishedAt: timestamp('result_published_at'),
   createdAt: timestamp('created_at').defaultNow()
 });
 
-/**
- * Ganhadores de Sorteio de Títulos
- */
-export const titleDrawWinners = mysqlTable('title_draw_winners', {
+export const titleDrawWinners = pgTable('title_draw_winners', {
   id: varchar('id', { length: 36 }).primaryKey(),
   drawId: varchar('draw_id', { length: 36 }).notNull().references(() => titleDraws.id),
   purchasedTitleId: varchar('purchased_title_id', { length: 36 }).notNull().references(() => purchasedTitles.id),
-  userId: varchar('user_id', { length: 36 }).notNull().references(() => purchasedTitles.id),
-  position: int('position').notNull(),
+  userId: varchar('user_id', { length: 36 }).notNull(),
+  position: integer('position').notNull(),
   prizeWon: text('prize_won').notNull(),
-  prizeValue: decimal('prize_value', { precision: 15, scale: 2 }).notNull(),
+  prizeValue: numeric('prize_value', { precision: 15, scale: 2 }).notNull(),
   verificationHash: varchar('verification_hash', { length: 64 }).notNull(),
   notifiedAt: timestamp('notified_at'),
   confirmedAt: timestamp('confirmed_at'),
   deliveredAt: timestamp('delivered_at'),
   createdAt: timestamp('created_at').defaultNow()
 });
-
-// ============================================
-// TIPOS E INTERFACES
-// ============================================
 
 export type TitleType = 'traditional' | 'incentive' | 'monthly';
 export type TitleStatus = 'pending' | 'active' | 'matured' | 'cancelled' | 'redeemed';
@@ -147,7 +122,6 @@ export interface PurchasedTitle {
   paymentCount: number;
   redemptionValue?: number;
   redeemedAt?: Date;
-  // Campos calculados
   title?: CapitalizationTitle;
   isPaidOff?: boolean;
   daysToMaturity?: number;
@@ -190,10 +164,6 @@ export interface TitleDrawWinner {
   confirmedAt?: Date;
 }
 
-// ============================================
-// CONSTANTES
-// ============================================
-
 export const TITLE_TYPES = {
   TRADITIONAL: 'traditional',
   INCENTIVE: 'incentive',
@@ -214,29 +184,13 @@ export const PAYMENT_METHODS = {
   BANK_TRANSFER: 'bank_transfer'
 } as const;
 
-// ============================================
-// SERVICE
-// ============================================
-
 export class CapitalizationTitleService {
-  /**
-   * Compra um título
-   */
   static async purchase(
     titleId: string,
     userId: string,
     paymentMethod: 'pix' | 'credit_card' | 'bank_transfer'
-  ): Promise<{
-    purchasedTitle: PurchasedTitle;
-    firstPayment: TitlePayment;
-  }> {
-    // TODO: Validar título
-    // TODO: Criar purchasedTitle
-    // TODO: Criar primeiro pagamento
-    // TODO: Processar pagamento inicial
-
+  ): Promise<{ purchasedTitle: PurchasedTitle; firstPayment: TitlePayment }> {
     const serialNumber = `CT${Date.now()}${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
-
     return {
       purchasedTitle: {
         id: `pt_${Date.now()}`,
@@ -244,7 +198,7 @@ export class CapitalizationTitleService {
         userId,
         serialNumber,
         purchaseDate: new Date(),
-        maturityDate: new Date(Date.now() + 24 * 30 * 24 * 60 * 60 * 1000), // Placeholder
+        maturityDate: new Date(Date.now() + 24 * 30 * 24 * 60 * 60 * 1000),
         status: 'pending',
         totalPaidAmount: 0,
         paymentCount: 0
@@ -253,7 +207,7 @@ export class CapitalizationTitleService {
         id: `pmt_${Date.now()}`,
         purchasedTitleId: '',
         userId,
-        amount: 0, // Placeholder
+        amount: 0,
         paymentMethod,
         paymentStatus: 'pending',
         dueDate: new Date()
@@ -261,18 +215,10 @@ export class CapitalizationTitleService {
     };
   }
 
-  /**
-   * Processa pagamento mensal
-   */
   static async processPayment(
     purchasedTitleId: string,
     paymentMethod: 'pix' | 'credit_card' | 'bank_transfer'
   ): Promise<{ success: boolean; payment: TitlePayment }> {
-    // TODO: Verificar título
-    // TODO: Verificar data de pagamento
-    // TODO: Processar pagamento
-    // TODO: Atualizar purchasedTitle
-
     return {
       success: true,
       payment: {
@@ -288,70 +234,37 @@ export class CapitalizationTitleService {
     };
   }
 
-  /**
-   * Calcula valor de resgate
-   */
   static calculateRedemptionValue(
     purchasedTitle: PurchasedTitle,
     currentTitle: CapitalizationTitle
-  ): {
-    totalPaid: number;
-    redemptionPercentage: number;
-    redemptionValue: number;
-    penalty: number;
-    netValue: number;
-  } {
+  ): { totalPaid: number; redemptionPercentage: number; redemptionValue: number; penalty: number; netValue: number } {
     const totalPaid = purchasedTitle.totalPaidAmount;
-
-    // Determinar percentual baseado no tempo decorrido
     const monthsElapsed = Math.floor(
       (Date.now() - (purchasedTitle.activationDate?.getTime() || purchasedTitle.purchaseDate.getTime())) /
       (30 * 24 * 60 * 60 * 1000)
     );
-
     let redemptionPercentage = 0;
-
     if (currentTitle.type === 'traditional') {
-      // Título tradicional: percentuais legais
       if (monthsElapsed < 3) redemptionPercentage = 0;
       else if (monthsElapsed < 6) redemptionPercentage = 0.5;
       else if (monthsElapsed < 12) redemptionPercentage = 0.75;
       else redemptionPercentage = 1.0;
     } else {
-      // Título mensal/incentivo: regras próprias
       redemptionPercentage = Math.min(monthsElapsed / currentTitle.termMonths, 1);
     }
-
     const redemptionValue = totalPaid * redemptionPercentage;
-    const penalty = redemptionPercentage < 1 ? redemptionValue * 0.1 : 0; // 10% multa
+    const penalty = redemptionPercentage < 1 ? redemptionValue * 0.1 : 0;
     const netValue = redemptionValue - penalty;
-
-    return {
-      totalPaid,
-      redemptionPercentage: redemptionPercentage * 100,
-      redemptionValue,
-      penalty,
-      netValue
-    };
+    return { totalPaid, redemptionPercentage: redemptionPercentage * 100, redemptionValue, penalty, netValue };
   }
 
-  /**
-   * Realiza sorteio de título
-   */
   static async performDraw(
     titleId: string,
     drawNumber: number,
     prizeValue: number,
     prizeDescription: string,
-    winnerCount: number = 1
-  ): Promise<{
-    draw: TitleDraw;
-    winners: TitleDrawWinner[];
-  }> {
-    // TODO: Obter todos os títulos elegíveis
-    // TODO: Executar sorteio
-    // TODO: Registrar ganadores
-
+    _winnerCount: number = 1
+  ): Promise<{ draw: TitleDraw; winners: TitleDrawWinner[] }> {
     return {
       draw: {
         id: `d_${Date.now()}`,
@@ -368,23 +281,8 @@ export class CapitalizationTitleService {
     };
   }
 
-  /**
-   * Verifica elegibilidade para sorteio
-   */
   static isEligibleForDraw(purchasedTitle: PurchasedTitle): boolean {
-    if (purchasedTitle.status !== 'active') {
-      return false;
-    }
-
-    // Deve ter pelo menos 1 pagamento confirmado
-    if (purchasedTitle.paymentCount < 1) {
-      return false;
-    }
-
-    // Não pode estar em período de carência para novos sorteios
-    // (regra específica do título)
-
-    return true;
+    return purchasedTitle.status === 'active' && purchasedTitle.paymentCount >= 1;
   }
 }
 

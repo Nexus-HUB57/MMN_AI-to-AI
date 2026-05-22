@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "..",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
@@ -15,11 +15,8 @@
     "skipDefaultLibCheck": true
   },
   "include": [
-    "src/index.ts",
-    "src/appRouter.ts",
-    "src/genkit/index.ts",
-    "src/trpc/context.ts",
-    "src/trpc/trpc.ts"
+    "src/**/*",
+    "../database/**/*"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", "../node_modules", "../frontend", "../mobile"]
 }

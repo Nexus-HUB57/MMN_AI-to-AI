@@ -1,107 +1,88 @@
-import { mysqlTable, varchar, text, timestamp, int, boolean, uniqueIndex, index } from 'drizzle-orm/mysql-core';
-import { relations } from 'drizzle-orm';
+import { pgTable, varchar, text, timestamp, integer, boolean, uniqueIndex, index, serial } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
-/**
- * Cron Jobs Schema
- * Sistema de automação Cron para tarefas recorrentes
- */
-
-// Enum para status do cron job
-export const cronJobStatusEnum = ['scheduled', 'running', 'completed', 'failed', 'cancelled'] as const;
+export const cronJobStatusEnum = ["scheduled", "running", "completed", "failed", "cancelled"] as const;
 export type CronJobStatus = typeof cronJobStatusEnum[number];
 
-// Enum para frequência do cron
-export const cronFrequencyEnum = ['minute', 'hourly', 'daily', 'weekly', 'monthly'] as const;
+export const cronFrequencyEnum = ["minute", "hourly", "daily", "weekly", "monthly"] as const;
 export type CronFrequency = typeof cronFrequencyEnum[number];
 
-// Tabela principal de cron jobs
-export const cronJobs = mysqlTable('cron_jobs', {
-  id: int('id').primaryKey().autoincrement(),
-  name: varchar('name', { length: 255 }).notNull(),
-  description: text('description'),
-  jobType: varchar('job_type', { length: 100 }).notNull(), // Tipo do job (invoice_overdue, marketplace_sync, etc)
-  queueName: varchar('queue_name', { length: 100 }).notNull(), // Nome da fila BullMQ
-  jobPayload: text('job_payload'), // Payload JSON para o job
-  frequency: varchar('frequency', { length: 20 }).notNull().default('daily'), // Frequência
-  cronExpression: varchar('cron_expression', { length: 100 }), // Expressão cron (opcional, sobrescreve frequency)
-  enabled: boolean('enabled').notNull().default(true),
-  lastRunAt: timestamp('last_run_at'),
-  lastRunDuration: int('last_run_duration'), // Duração em ms
-  lastRunStatus: varchar('last_run_status', { length: 20 }), // completed, failed
-  lastRunError: text('last_run_error'),
-  nextRunAt: timestamp('next_run_at'),
-  runCount: int('run_count').notNull().default(0),
-  successCount: int('success_count').notNull().default(0),
-  failureCount: int('failure_count').notNull().default(0),
-  createdBy: int('created_by'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow().onUpdateNow(),
+export const cronJobs = pgTable("cron_jobs", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  jobType: varchar("job_type", { length: 100 }).notNull(),
+  queueName: varchar("queue_name", { length: 100 }).notNull(),
+  jobPayload: text("job_payload"),
+  frequency: varchar("frequency", { length: 20 }).notNull().default("daily"),
+  cronExpression: varchar("cron_expression", { length: 100 }),
+  enabled: boolean("enabled").notNull().default(true),
+  lastRunAt: timestamp("last_run_at"),
+  lastRunDuration: integer("last_run_duration"),
+  lastRunStatus: varchar("last_run_status", { length: 20 }),
+  lastRunError: text("last_run_error"),
+  nextRunAt: timestamp("next_run_at"),
+  runCount: integer("run_count").notNull().default(0),
+  successCount: integer("success_count").notNull().default(0),
+  failureCount: integer("failure_count").notNull().default(0),
+  createdBy: integer("created_by"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// Histórico de execuções de cron jobs
-export const cronJobHistory = mysqlTable('cron_job_history', {
-  id: int('id').primaryKey().autoincrement(),
-  cronJobId: int('cron_job_id').notNull().references(() => cronJobs.id),
-  startedAt: timestamp('started_at').notNull(),
-  completedAt: timestamp('completed_at'),
-  duration: int('duration'), // Duração em ms
-  status: varchar('status', { length: 20 }).notNull(), // running, completed, failed
-  errorMessage: text('error_message'),
-  jobId: varchar('job_id', { length: 100 }), // ID do job na fila
-  metadata: text('metadata'), // JSON com metadados adicionais
+export const cronJobHistory = pgTable("cron_job_history", {
+  id: serial("id").primaryKey(),
+  cronJobId: integer("cron_job_id").notNull().references(() => cronJobs.id),
+  startedAt: timestamp("started_at").notNull(),
+  completedAt: timestamp("completed_at"),
+  duration: integer("duration"),
+  status: varchar("status", { length: 20 }).notNull(),
+  errorMessage: text("error_message"),
+  jobId: varchar("job_id", { length: 100 }),
+  metadata: text("metadata"),
 });
 
-// Alertas operacionais persistidos para o domínio Cron
-// Idempotente por chave (jobType, alertType, bucket) e durador em deploy
-// multi-instância. Acknowledgement é expresso por `acknowledgedAt`.
-export const cronAlerts = mysqlTable(
-  'cron_alerts',
+export const cronAlerts = pgTable(
+  "cron_alerts",
   {
-    id: int('id').primaryKey().autoincrement(),
-    alertKey: varchar('alert_key', { length: 255 }).notNull(),
-    alertType: varchar('alert_type', { length: 64 }).notNull(),
-    severity: varchar('severity', { length: 20 }).notNull(), // warning | critical
-    jobType: varchar('job_type', { length: 100 }).notNull(),
-    jobName: varchar('job_name', { length: 255 }),
-    bucket: varchar('bucket', { length: 32 }).notNull(),
-    title: varchar('title', { length: 256 }).notNull(),
-    message: text('message').notNull(),
-    metadata: text('metadata'), // JSON serializado
-    detectedAt: timestamp('detected_at').notNull().defaultNow(),
-    lastSeenAt: timestamp('last_seen_at').notNull().defaultNow().onUpdateNow(),
-    notifiedAt: timestamp('notified_at'),
-    acknowledgedAt: timestamp('acknowledged_at'),
-    acknowledgedBy: int('acknowledged_by'),
-    resolvedAt: timestamp('resolved_at'),
-    active: boolean('active').notNull().default(true),
+    id: serial("id").primaryKey(),
+    alertKey: varchar("alert_key", { length: 255 }).notNull(),
+    alertType: varchar("alert_type", { length: 64 }).notNull(),
+    severity: varchar("severity", { length: 20 }).notNull(),
+    jobType: varchar("job_type", { length: 100 }).notNull(),
+    jobName: varchar("job_name", { length: 255 }),
+    bucket: varchar("bucket", { length: 32 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
+    message: text("message").notNull(),
+    metadata: text("metadata"),
+    detectedAt: timestamp("detected_at").notNull().defaultNow(),
+    lastSeenAt: timestamp("last_seen_at").notNull().defaultNow(),
+    notifiedAt: timestamp("notified_at"),
+    acknowledgedAt: timestamp("acknowledged_at"),
+    acknowledgedBy: integer("acknowledged_by"),
+    resolvedAt: timestamp("resolved_at"),
+    active: boolean("active").notNull().default(true),
   },
   (table) => ({
-    alertKeyUniq: uniqueIndex('cron_alerts_alert_key_uniq').on(table.alertKey),
-    activeIdx: index('cron_alerts_active_idx').on(table.active, table.severity),
-    jobTypeIdx: index('cron_alerts_job_type_idx').on(table.jobType, table.alertType),
+    alertKeyUniq: uniqueIndex("cron_alerts_alert_key_uniq").on(table.alertKey),
+    activeIdx: index("cron_alerts_active_idx").on(table.active, table.severity),
+    jobTypeIdx: index("cron_alerts_job_type_idx").on(table.jobType, table.alertType),
   })
 );
 
-// Configurações globais de cron
-export const cronSettings = mysqlTable('cron_settings', {
-  id: int('id').primaryKey().autoincrement(),
-  settingKey: varchar('setting_key', { length: 100 }).notNull().unique(),
-  settingValue: text('setting_value').notNull(),
-  description: text('description'),
-  updatedAt: timestamp('updated_at').notNull().defaultNow().onUpdateNow(),
+export const cronSettings = pgTable("cron_settings", {
+  id: serial("id").primaryKey(),
+  settingKey: varchar("setting_key", { length: 100 }).notNull().unique(),
+  settingValue: text("setting_value").notNull(),
+  description: text("description"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// Tipos derivados
 export type ICronAlertRow = typeof cronAlerts.$inferSelect;
 export type ICronAlertInsert = typeof cronAlerts.$inferInsert;
 
-// Relações
-export const cronJobsRelations = relations(cronJobs, ({ one, many }) => ({
+export const cronJobsRelations = relations(cronJobs, ({ many }) => ({
   history: many(cronJobHistory),
-  creator: one(users, {
-    fields: [cronJobs.createdBy],
-    references: [users.id],
-  }),
 }));
 
 export const cronJobHistoryRelations = relations(cronJobHistory, ({ one }) => ({
@@ -111,14 +92,6 @@ export const cronJobHistoryRelations = relations(cronJobHistory, ({ one }) => ({
   }),
 }));
 
-// Referência para users (simplificada)
-export const users = mysqlTable('users', {
-  id: int('id').primaryKey().autoincrement(),
-  email: varchar('email', { length: 255 }),
-  name: varchar('name', { length: 255 }),
-});
-
-// Tipos para uso interno
 export interface ICronJob {
   id: number;
   name: string;
@@ -148,183 +121,54 @@ export interface ICronJobHistory {
   startedAt: Date;
   completedAt?: Date;
   duration?: number;
-  status: 'running' | 'completed' | 'failed';
+  status: "running" | "completed" | "failed";
   errorMessage?: string;
   jobId?: string;
   metadata?: Record<string, unknown>;
 }
 
-// Tipos pré-definidos de cron jobs
 export const CRON_JOB_TYPES = {
-  // Billing/Financeiro
-  INVOICE_OVERDUE_CHECK: 'invoice_overdue_check',
-  INVOICE_REMINDER: 'invoice_reminder',
-  PAYMENT_PROCESSING: 'payment_processing',
-
-  // Marketplace
-  MARKETPLACE_SYNC: 'marketplace_sync',
-  MARKETPLACE_PRICE_UPDATE: 'marketplace_price_update',
-  MARKETPLACE_INVENTORY_SYNC: 'marketplace_inventory_sync',
-
-  // Comissões
-  COMMISSION_CALCULATION: 'commission_calculation',
-  COMMISSION_DISTRIBUTION: 'commission_distribution',
-
-  // Rede/Afiliados
-  NETWORK_HEALTH_CHECK: 'network_health_check',
-  AFFILIATE_ACTIVATION: 'affiliate_activation',
-
-  //Conteúdo
-  CONTENT_SCHEDULING: 'content_scheduling',
-  SOCIAL_POST_PUBLISH: 'social_post_publish',
-
-  // Sistema
-  DATABASE_CLEANUP: 'database_cleanup',
-  CACHE_WARMING: 'cache_warming',
-  REPORT_GENERATION: 'report_generation',
-  SESSION_CLEANUP: 'session_cleanup',
-
-  // XP/Carreiras
-  XP_RECALCULATION: 'xp_recalculation',
-  CAREER_PROGRESSION: 'career_progression',
-  LEADERBOARD_UPDATE: 'leaderboard_update',
+  INVOICE_OVERDUE_CHECK: "invoice_overdue_check",
+  INVOICE_REMINDER: "invoice_reminder",
+  PAYMENT_PROCESSING: "payment_processing",
+  MARKETPLACE_SYNC: "marketplace_sync",
+  MARKETPLACE_PRICE_UPDATE: "marketplace_price_update",
+  MARKETPLACE_INVENTORY_SYNC: "marketplace_inventory_sync",
+  COMMISSION_CALCULATION: "commission_calculation",
+  COMMISSION_DISTRIBUTION: "commission_distribution",
+  NETWORK_HEALTH_CHECK: "network_health_check",
+  AFFILIATE_ACTIVATION: "affiliate_activation",
+  CONTENT_SCHEDULING: "content_scheduling",
+  SOCIAL_POST_PUBLISH: "social_post_publish",
+  DATABASE_CLEANUP: "database_cleanup",
+  CACHE_WARMING: "cache_warming",
+  REPORT_GENERATION: "report_generation",
+  SESSION_CLEANUP: "session_cleanup",
+  XP_RECALCULATION: "xp_recalculation",
+  CAREER_PROGRESSION: "career_progression",
+  LEADERBOARD_UPDATE: "leaderboard_update",
 } as const;
 
 export type CronJobType = typeof CRON_JOB_TYPES[keyof typeof CRON_JOB_TYPES];
 
-// Configurações padrão para cada tipo de job
 export const CRON_JOB_CONFIGS: Record<CronJobType, Partial<ICronJob>> = {
-  [CRON_JOB_TYPES.INVOICE_OVERDUE_CHECK]: {
-    name: 'Verificação de Faturas Vencidas',
-    description: 'Verifica e atualiza status de faturas vencidas',
-    jobType: CRON_JOB_TYPES.INVOICE_OVERDUE_CHECK,
-    queueName: 'billing_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.INVOICE_REMINDER]: {
-    name: 'Lembrete de Faturas',
-    description: 'Envia lembretes de faturas pendentes',
-    jobType: CRON_JOB_TYPES.INVOICE_REMINDER,
-    queueName: 'notifications_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.PAYMENT_PROCESSING]: {
-    name: 'Processamento de Pagamentos',
-    description: 'Processa pagamentos pendentes',
-    jobType: CRON_JOB_TYPES.PAYMENT_PROCESSING,
-    queueName: 'payments_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.MARKETPLACE_SYNC]: {
-    name: 'Sincronização de Marketplace',
-    description: 'Sincroniza produtos com marketplaces externos',
-    jobType: CRON_JOB_TYPES.MARKETPLACE_SYNC,
-    queueName: 'marketplace_sync_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.MARKETPLACE_PRICE_UPDATE]: {
-    name: 'Atualização de Preços',
-    description: 'Atualiza preços de produtos nos marketplaces',
-    jobType: CRON_JOB_TYPES.MARKETPLACE_PRICE_UPDATE,
-    queueName: 'marketplace_sync_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.MARKETPLACE_INVENTORY_SYNC]: {
-    name: 'Sincronização de Inventário',
-    description: 'Sincroniza níveis de estoque',
-    jobType: CRON_JOB_TYPES.MARKETPLACE_INVENTORY_SYNC,
-    queueName: 'marketplace_sync_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.COMMISSION_CALCULATION]: {
-    name: 'Cálculo de Comissões',
-    description: 'Calcula comissões para a rede',
-    jobType: CRON_JOB_TYPES.COMMISSION_CALCULATION,
-    queueName: 'commission_processing_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.COMMISSION_DISTRIBUTION]: {
-    name: 'Distribuição de Comissões',
-    description: 'Distribui comissões calculadas',
-    jobType: CRON_JOB_TYPES.COMMISSION_DISTRIBUTION,
-    queueName: 'commission_processing_queue',
-    frequency: 'weekly',
-  },
-  [CRON_JOB_TYPES.NETWORK_HEALTH_CHECK]: {
-    name: 'Verificação de Saúde da Rede',
-    description: 'Verifica consistência da rede MMN',
-    jobType: CRON_JOB_TYPES.NETWORK_HEALTH_CHECK,
-    queueName: 'maintenance_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.AFFILIATE_ACTIVATION]: {
-    name: 'Ativação de Afiliados',
-    description: 'Processa ativação de afiliados pendentes',
-    jobType: CRON_JOB_TYPES.AFFILIATE_ACTIVATION,
-    queueName: 'affiliates_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.CONTENT_SCHEDULING]: {
-    name: 'Agendamento de Conteúdo',
-    description: 'Agenda conteúdo para publicação',
-    jobType: CRON_JOB_TYPES.CONTENT_SCHEDULING,
-    queueName: 'content_generation_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.SOCIAL_POST_PUBLISH]: {
-    name: 'Publicação de Posts Sociais',
-    description: 'Publica posts agendados nas redes sociais',
-    jobType: CRON_JOB_TYPES.SOCIAL_POST_PUBLISH,
-    queueName: 'social_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.DATABASE_CLEANUP]: {
-    name: 'Limpeza de Banco de Dados',
-    description: 'Remove dados temporários e logs antigos',
-    jobType: CRON_JOB_TYPES.DATABASE_CLEANUP,
-    queueName: 'maintenance_queue',
-    frequency: 'weekly',
-  },
-  [CRON_JOB_TYPES.CACHE_WARMING]: {
-    name: 'Preparação de Cache',
-    description: 'Prepara cache para dados frequentemente acessados',
-    jobType: CRON_JOB_TYPES.CACHE_WARMING,
-    queueName: 'cache_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.REPORT_GENERATION]: {
-    name: 'Geração de Relatórios',
-    description: 'Gera relatórios periódicos',
-    jobType: CRON_JOB_TYPES.REPORT_GENERATION,
-    queueName: 'reports_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.SESSION_CLEANUP]: {
-    name: 'Limpeza de Sessões',
-    description: 'Remove sessões expiradas',
-    jobType: CRON_JOB_TYPES.SESSION_CLEANUP,
-    queueName: 'maintenance_queue',
-    frequency: 'hourly',
-  },
-  [CRON_JOB_TYPES.XP_RECALCULATION]: {
-    name: 'Recalculação de XP',
-    description: 'Recalcula XP dos afiliados',
-    jobType: CRON_JOB_TYPES.XP_RECALCULATION,
-    queueName: 'xp_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.CAREER_PROGRESSION]: {
-    name: 'Progressão de Carreira',
-    description: 'Atualiza níveis de carreira',
-    jobType: CRON_JOB_TYPES.CAREER_PROGRESSION,
-    queueName: 'xp_queue',
-    frequency: 'daily',
-  },
-  [CRON_JOB_TYPES.LEADERBOARD_UPDATE]: {
-    name: 'Atualização de Leaderboard',
-    description: 'Atualiza rankings do leaderboard',
-    jobType: CRON_JOB_TYPES.LEADERBOARD_UPDATE,
-    queueName: 'xp_queue',
-    frequency: 'hourly',
-  },
+  [CRON_JOB_TYPES.INVOICE_OVERDUE_CHECK]: { name: "Verificação de Faturas Vencidas", jobType: CRON_JOB_TYPES.INVOICE_OVERDUE_CHECK, queueName: "billing_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.INVOICE_REMINDER]: { name: "Lembrete de Faturas", jobType: CRON_JOB_TYPES.INVOICE_REMINDER, queueName: "notifications_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.PAYMENT_PROCESSING]: { name: "Processamento de Pagamentos", jobType: CRON_JOB_TYPES.PAYMENT_PROCESSING, queueName: "payments_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.MARKETPLACE_SYNC]: { name: "Sincronização de Marketplace", jobType: CRON_JOB_TYPES.MARKETPLACE_SYNC, queueName: "marketplace_sync_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.MARKETPLACE_PRICE_UPDATE]: { name: "Atualização de Preços", jobType: CRON_JOB_TYPES.MARKETPLACE_PRICE_UPDATE, queueName: "marketplace_sync_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.MARKETPLACE_INVENTORY_SYNC]: { name: "Sincronização de Inventário", jobType: CRON_JOB_TYPES.MARKETPLACE_INVENTORY_SYNC, queueName: "marketplace_sync_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.COMMISSION_CALCULATION]: { name: "Cálculo de Comissões", jobType: CRON_JOB_TYPES.COMMISSION_CALCULATION, queueName: "commission_processing_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.COMMISSION_DISTRIBUTION]: { name: "Distribuição de Comissões", jobType: CRON_JOB_TYPES.COMMISSION_DISTRIBUTION, queueName: "commission_processing_queue", frequency: "weekly" },
+  [CRON_JOB_TYPES.NETWORK_HEALTH_CHECK]: { name: "Verificação de Saúde da Rede", jobType: CRON_JOB_TYPES.NETWORK_HEALTH_CHECK, queueName: "maintenance_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.AFFILIATE_ACTIVATION]: { name: "Ativação de Afiliados", jobType: CRON_JOB_TYPES.AFFILIATE_ACTIVATION, queueName: "affiliates_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.CONTENT_SCHEDULING]: { name: "Agendamento de Conteúdo", jobType: CRON_JOB_TYPES.CONTENT_SCHEDULING, queueName: "content_generation_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.SOCIAL_POST_PUBLISH]: { name: "Publicação de Posts Sociais", jobType: CRON_JOB_TYPES.SOCIAL_POST_PUBLISH, queueName: "social_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.DATABASE_CLEANUP]: { name: "Limpeza de Banco de Dados", jobType: CRON_JOB_TYPES.DATABASE_CLEANUP, queueName: "maintenance_queue", frequency: "weekly" },
+  [CRON_JOB_TYPES.CACHE_WARMING]: { name: "Preparação de Cache", jobType: CRON_JOB_TYPES.CACHE_WARMING, queueName: "cache_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.REPORT_GENERATION]: { name: "Geração de Relatórios", jobType: CRON_JOB_TYPES.REPORT_GENERATION, queueName: "reports_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.SESSION_CLEANUP]: { name: "Limpeza de Sessões", jobType: CRON_JOB_TYPES.SESSION_CLEANUP, queueName: "maintenance_queue", frequency: "hourly" },
+  [CRON_JOB_TYPES.XP_RECALCULATION]: { name: "Recalculação de XP", jobType: CRON_JOB_TYPES.XP_RECALCULATION, queueName: "xp_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.CAREER_PROGRESSION]: { name: "Progressão de Carreira", jobType: CRON_JOB_TYPES.CAREER_PROGRESSION, queueName: "xp_queue", frequency: "daily" },
+  [CRON_JOB_TYPES.LEADERBOARD_UPDATE]: { name: "Atualização de Leaderboard", jobType: CRON_JOB_TYPES.LEADERBOARD_UPDATE, queueName: "xp_queue", frequency: "hourly" },
 };

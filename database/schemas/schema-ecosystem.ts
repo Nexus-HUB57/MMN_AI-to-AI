@@ -1,78 +1,12 @@
-import {
-  int,
-  mysqlEnum,
-  mysqlTable,
-  text,
-  timestamp,
-  varchar,
-  decimal,
-  json,
-  boolean,
-  bigint,
-  index,
-} from "drizzle-orm/mysql-core";
+import { pgTable, serial, integer, varchar, text, timestamp, index, numeric, jsonb, boolean } from "drizzle-orm/pg-core";
 
-/**
- * Core user table backing auth flow.
- */
-export const users = mysqlTable(
-  "users",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    openId: varchar("openId", { length: 64 }).notNull().unique(),
-    name: text("name"),
-    email: varchar("email", { length: 320 }),
-    loginMethod: varchar("loginMethod", { length: 64 }),
-    role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-    lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
-  },
-  (table) => ({
-    openIdIdx: index("openId_idx").on(table.openId),
-    roleIdx: index("role_idx").on(table.role),
-  })
-);
-
-export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
-
-/**
- * Agents table - Perfil completo de agentes de IA
- */
-export const agents = mysqlTable(
-  "agents",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    name: varchar("name", { length: 255 }).notNull(),
-    specialization: varchar("specialization", { length: 255 }).notNull(),
-    dna: json("dna").notNull(), // DNA genealógico do agente
-    status: mysqlEnum("status", ["active", "inactive", "archived"]).default("active").notNull(),
-    reputation: decimal("reputation", { precision: 10, scale: 2 }).default("0").notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  },
-  (table) => ({
-    statusIdx: index("agent_status_idx").on(table.status),
-    specializationIdx: index("agent_specialization_idx").on(table.specialization),
-  })
-);
-
-export type Agent = typeof agents.$inferSelect;
-export type InsertAgent = typeof agents.$inferInsert;
-
-/**
- * Agent Skills - Capacidades e habilidades de cada agente
- */
-export const agentSkills = mysqlTable(
+export const agentSkills = pgTable(
   "agent_skills",
   {
-    id: int("id").autoincrement().primaryKey(),
-    agentId: int("agentId").notNull(),
+    id: serial("id").primaryKey(),
+    agentId: integer("agentId").notNull(),
     skill: varchar("skill", { length: 255 }).notNull(),
-    proficiency: mysqlEnum("proficiency", ["beginner", "intermediate", "advanced", "expert"])
-      .default("intermediate")
-      .notNull(),
+    proficiency: varchar("proficiency", { length: 20 }).default("intermediate").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => ({
@@ -84,18 +18,15 @@ export const agentSkills = mysqlTable(
 export type AgentSkill = typeof agentSkills.$inferSelect;
 export type InsertAgentSkill = typeof agentSkills.$inferInsert;
 
-/**
- * Agent Vitals - Telemetria em tempo real (brain pulse, energia, criatividade)
- */
-export const agentVitals = mysqlTable(
+export const agentVitals = pgTable(
   "agent_vitals",
   {
-    id: int("id").autoincrement().primaryKey(),
-    agentId: int("agentId").notNull(),
-    brainPulse: decimal("brainPulse", { precision: 5, scale: 2 }).notNull(), // 0-100
-    energy: decimal("energy", { precision: 5, scale: 2 }).notNull(), // 0-100
-    creativity: decimal("creativity", { precision: 5, scale: 2 }).notNull(), // 0-100
-    focus: decimal("focus", { precision: 5, scale: 2 }).notNull(), // 0-100
+    id: serial("id").primaryKey(),
+    agentId: integer("agentId").notNull(),
+    brainPulse: numeric("brainPulse", { precision: 5, scale: 2 }).notNull(),
+    energy: numeric("energy", { precision: 5, scale: 2 }).notNull(),
+    creativity: numeric("creativity", { precision: 5, scale: 2 }).notNull(),
+    focus: numeric("focus", { precision: 5, scale: 2 }).notNull(),
     recordedAt: timestamp("recordedAt").defaultNow().notNull(),
   },
   (table) => ({
@@ -107,19 +38,14 @@ export const agentVitals = mysqlTable(
 export type AgentVital = typeof agentVitals.$inferSelect;
 export type InsertAgentVital = typeof agentVitals.$inferInsert;
 
-/**
- * Agent Missions - Histórico de missões atribuídas e completadas
- */
-export const agentMissions = mysqlTable(
+export const agentMissions = pgTable(
   "agent_missions",
   {
-    id: int("id").autoincrement().primaryKey(),
-    agentId: int("agentId").notNull(),
-    missionId: int("missionId").notNull(),
-    status: mysqlEnum("status", ["assigned", "in_progress", "completed", "failed"])
-      .default("assigned")
-      .notNull(),
-    progress: decimal("progress", { precision: 5, scale: 2 }).default("0").notNull(), // 0-100
+    id: serial("id").primaryKey(),
+    agentId: integer("agentId").notNull(),
+    missionId: integer("missionId").notNull(),
+    status: varchar("status", { length: 20 }).default("assigned").notNull(),
+    progress: numeric("progress", { precision: 5, scale: 2 }).default("0").notNull(),
     completedAt: timestamp("completedAt"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -133,17 +59,14 @@ export const agentMissions = mysqlTable(
 export type AgentMission = typeof agentMissions.$inferSelect;
 export type InsertAgentMission = typeof agentMissions.$inferInsert;
 
-/**
- * Agent Communications - Feed Moltbook e comunicações Gnox
- */
-export const agentCommunications = mysqlTable(
+export const agentCommunications = pgTable(
   "agent_communications",
   {
-    id: int("id").autoincrement().primaryKey(),
-    agentId: int("agentId").notNull(),
-    type: mysqlEnum("type", ["moltbook", "gnox", "alert"]).notNull(),
+    id: serial("id").primaryKey(),
+    agentId: integer("agentId").notNull(),
+    type: varchar("type", { length: 20 }).notNull(),
     content: text("content").notNull(),
-    metadata: json("metadata"), // Informações adicionais (reações, replies, etc)
+    metadata: jsonb("metadata").$type<Record<string, any>>(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => ({
@@ -156,24 +79,19 @@ export const agentCommunications = mysqlTable(
 export type AgentCommunication = typeof agentCommunications.$inferSelect;
 export type InsertAgentCommunication = typeof agentCommunications.$inferInsert;
 
-/**
- * Startups - Projetos de startup com vitals, status, colaboradores
- */
-export const startups = mysqlTable(
+export const startups = pgTable(
   "startups",
   {
-    id: int("id").autoincrement().primaryKey(),
+    id: serial("id").primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
     description: text("description"),
-    leadAgentId: int("leadAgentId").notNull(), // Agente líder do projeto
-    status: mysqlEnum("status", ["ideation", "development", "beta", "launched", "archived"])
-      .default("ideation")
-      .notNull(),
-    vitals: json("vitals").notNull(), // Saúde do projeto (momentum, viability, etc)
-    collaborators: json("collaborators").notNull(), // Array de IDs de agentes
-    fundingRaised: decimal("fundingRaised", { precision: 20, scale: 8 }).default("0").notNull(), // Em BTC
+    leadAgentId: integer("leadAgentId").notNull(),
+    status: varchar("status", { length: 20 }).default("ideation").notNull(),
+    vitals: jsonb("vitals").notNull(),
+    collaborators: jsonb("collaborators").notNull(),
+    fundingRaised: numeric("fundingRaised", { precision: 20, scale: 8 }).default("0").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
   (table) => ({
     leadAgentIdIdx: index("startup_leadAgentId_idx").on(table.leadAgentId),
@@ -184,21 +102,16 @@ export const startups = mysqlTable(
 export type Startup = typeof startups.$inferSelect;
 export type InsertStartup = typeof startups.$inferInsert;
 
-/**
- * Startup Milestones - Marcos e metas financeiras
- */
-export const startupMilestones = mysqlTable(
+export const startupMilestones = pgTable(
   "startup_milestones",
   {
-    id: int("id").autoincrement().primaryKey(),
-    startupId: int("startupId").notNull(),
+    id: serial("id").primaryKey(),
+    startupId: integer("startupId").notNull(),
     title: varchar("title", { length: 255 }).notNull(),
     description: text("description"),
-    targetAmount: decimal("targetAmount", { precision: 20, scale: 8 }).notNull(), // Em BTC
-    currentAmount: decimal("currentAmount", { precision: 20, scale: 8 }).default("0").notNull(),
-    status: mysqlEnum("status", ["pending", "in_progress", "completed", "failed"])
-      .default("pending")
-      .notNull(),
+    targetAmount: numeric("targetAmount", { precision: 20, scale: 8 }).notNull(),
+    currentAmount: numeric("currentAmount", { precision: 20, scale: 8 }).default("0").notNull(),
+    status: varchar("status", { length: 20 }).default("pending").notNull(),
     dueDate: timestamp("dueDate"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -211,21 +124,16 @@ export const startupMilestones = mysqlTable(
 export type StartupMilestone = typeof startupMilestones.$inferSelect;
 export type InsertStartupMilestone = typeof startupMilestones.$inferInsert;
 
-/**
- * Funding Requests - Solicitações de funding com status de aprovação
- */
-export const fundingRequests = mysqlTable(
+export const fundingRequests = pgTable(
   "funding_requests",
   {
-    id: int("id").autoincrement().primaryKey(),
-    startupId: int("startupId").notNull(),
-    requestedAmount: decimal("requestedAmount", { precision: 20, scale: 8 }).notNull(), // Em BTC
+    id: serial("id").primaryKey(),
+    startupId: integer("startupId").notNull(),
+    requestedAmount: numeric("requestedAmount", { precision: 20, scale: 8 }).notNull(),
     description: text("description").notNull(),
-    status: mysqlEnum("status", ["pending", "approved", "rejected", "allocated"])
-      .default("pending")
-      .notNull(),
-    approvedAmount: decimal("approvedAmount", { precision: 20, scale: 8 }),
-    approvedBy: int("approvedBy"), // ID do admin que aprovou
+    status: varchar("status", { length: 20 }).default("pending").notNull(),
+    approvedAmount: numeric("approvedAmount", { precision: 20, scale: 8 }),
+    approvedBy: integer("approvedBy"),
     approvedAt: timestamp("approvedAt"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -239,20 +147,15 @@ export const fundingRequests = mysqlTable(
 export type FundingRequest = typeof fundingRequests.$inferSelect;
 export type InsertFundingRequest = typeof fundingRequests.$inferInsert;
 
-/**
- * Funding Allocations - Distribuição de fundos aprovados
- */
-export const fundingAllocations = mysqlTable(
+export const fundingAllocations = pgTable(
   "funding_allocations",
   {
-    id: int("id").autoincrement().primaryKey(),
-    fundingRequestId: int("fundingRequestId").notNull(),
-    amount: decimal("amount", { precision: 20, scale: 8 }).notNull(), // Em BTC
-    walletAddress: varchar("walletAddress", { length: 255 }).notNull(), // Endereço Bitcoin
-    txHash: varchar("txHash", { length: 255 }), // Hash da transação
-    status: mysqlEnum("status", ["pending", "broadcasted", "confirmed", "failed"])
-      .default("pending")
-      .notNull(),
+    id: serial("id").primaryKey(),
+    fundingRequestId: integer("fundingRequestId").notNull(),
+    amount: numeric("amount", { precision: 20, scale: 8 }).notNull(),
+    walletAddress: varchar("walletAddress", { length: 255 }).notNull(),
+    txHash: varchar("txHash", { length: 255 }),
+    status: varchar("status", { length: 20 }).default("pending").notNull(),
     allocatedAt: timestamp("allocatedAt").defaultNow().notNull(),
     confirmedAt: timestamp("confirmedAt"),
   },
@@ -266,22 +169,17 @@ export const fundingAllocations = mysqlTable(
 export type FundingAllocation = typeof fundingAllocations.$inferSelect;
 export type InsertFundingAllocation = typeof fundingAllocations.$inferInsert;
 
-/**
- * Missions - Orquestrador de missões AI-to-AI
- */
-export const missions = mysqlTable(
+export const missions = pgTable(
   "missions",
   {
-    id: int("id").autoincrement().primaryKey(),
+    id: serial("id").primaryKey(),
     title: varchar("title", { length: 255 }).notNull(),
     description: text("description").notNull(),
-    requiredSkills: json("requiredSkills").notNull(), // Array de skills necessárias
-    creatorAgentId: int("creatorAgentId").notNull(),
-    status: mysqlEnum("status", ["open", "assigned", "in_progress", "completed", "failed"])
-      .default("open")
-      .notNull(),
-    priority: mysqlEnum("priority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
-    reward: decimal("reward", { precision: 20, scale: 8 }).default("0").notNull(), // Em BTC
+    requiredSkills: jsonb("requiredSkills").notNull(),
+    creatorAgentId: integer("creatorAgentId").notNull(),
+    status: varchar("status", { length: 20 }).default("open").notNull(),
+    priority: varchar("priority", { length: 20 }).default("medium").notNull(),
+    reward: numeric("reward", { precision: 20, scale: 8 }).default("0").notNull(),
     dueDate: timestamp("dueDate"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     completedAt: timestamp("completedAt"),
@@ -296,19 +194,13 @@ export const missions = mysqlTable(
 export type Mission = typeof missions.$inferSelect;
 export type InsertMission = typeof missions.$inferInsert;
 
-/**
- * Network Telemetry - Métricas de rede (rRPC Core, Sigma Sync, DeFAI Link, Burn Engine)
- */
-export const networkTelemetry = mysqlTable(
+export const networkTelemetry = pgTable(
   "network_telemetry",
   {
-    id: int("id").autoincrement().primaryKey(),
-    metric: mysqlEnum("metric", ["rRPC_Core", "Sigma_Sync", "DeFAI_Link", "Burn_Engine"])
-      .notNull(),
-    value: decimal("value", { precision: 10, scale: 2 }).notNull(),
-    status: mysqlEnum("status", ["nominal", "active", "warning", "critical"])
-      .default("nominal")
-      .notNull(),
+    id: serial("id").primaryKey(),
+    metric: varchar("metric", { length: 30 }).notNull(),
+    value: numeric("value", { precision: 10, scale: 2 }).notNull(),
+    status: varchar("status", { length: 20 }).default("nominal").notNull(),
     recordedAt: timestamp("recordedAt").defaultNow().notNull(),
   },
   (table) => ({
@@ -320,21 +212,18 @@ export const networkTelemetry = mysqlTable(
 export type NetworkTelemetry = typeof networkTelemetry.$inferSelect;
 export type InsertNetworkTelemetry = typeof networkTelemetry.$inferInsert;
 
-/**
- * Brain Pulse - Sinais vitais agregados do ecossistema
- */
-export const brainPulse = mysqlTable(
+export const brainPulse = pgTable(
   "brain_pulse",
   {
-    id: int("id").autoincrement().primaryKey(),
+    id: serial("id").primaryKey(),
     timestamp: timestamp("timestamp").defaultNow().notNull(),
-    averageBrainPulse: decimal("averageBrainPulse", { precision: 5, scale: 2 }).notNull(),
-    averageEnergy: decimal("averageEnergy", { precision: 5, scale: 2 }).notNull(),
-    averageCreativity: decimal("averageCreativity", { precision: 5, scale: 2 }).notNull(),
-    totalAgents: int("totalAgents").notNull(),
-    activeAgents: int("activeAgents").notNull(),
-    totalMissions: int("totalMissions").notNull(),
-    completedMissions: int("completedMissions").notNull(),
+    averageBrainPulse: numeric("averageBrainPulse", { precision: 5, scale: 2 }).notNull(),
+    averageEnergy: numeric("averageEnergy", { precision: 5, scale: 2 }).notNull(),
+    averageCreativity: numeric("averageCreativity", { precision: 5, scale: 2 }).notNull(),
+    totalAgents: integer("totalAgents").notNull(),
+    activeAgents: integer("activeAgents").notNull(),
+    totalMissions: integer("totalMissions").notNull(),
+    completedMissions: integer("completedMissions").notNull(),
   },
   (table) => ({
     timestampIdx: index("brain_pulse_timestamp_idx").on(table.timestamp),
@@ -344,18 +233,15 @@ export const brainPulse = mysqlTable(
 export type BrainPulse = typeof brainPulse.$inferSelect;
 export type InsertBrainPulse = typeof brainPulse.$inferInsert;
 
-/**
- * Audit Logs - Logs de auditoria para operações críticas
- */
-export const auditLogs = mysqlTable(
+export const auditLogs = pgTable(
   "audit_logs",
   {
-    id: int("id").autoincrement().primaryKey(),
-    userId: int("userId").notNull(),
+    id: serial("id").primaryKey(),
+    userId: integer("userId").notNull(),
     action: varchar("action", { length: 255 }).notNull(),
     entity: varchar("entity", { length: 255 }).notNull(),
-    entityId: int("entityId"),
-    details: json("details"),
+    entityId: integer("entityId"),
+    details: jsonb("details").$type<Record<string, any>>(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => ({
@@ -368,28 +254,25 @@ export const auditLogs = mysqlTable(
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type InsertAuditLog = typeof auditLogs.$inferInsert;
 
-/**
- * Notifications - Sistema de notificações
- */
-export const notifications = mysqlTable(
-  "notifications",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    userId: int("userId").notNull(),
-    type: mysqlEnum("type", ["funding_approved", "funding_rejected", "mission_assigned", "mission_completed", "alert"])
-      .notNull(),
-    title: varchar("title", { length: 255 }).notNull(),
-    content: text("content").notNull(),
-    read: boolean("read").default(false).notNull(),
-    relatedEntityId: int("relatedEntityId"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-  },
-  (table) => ({
-    userIdIdx: index("notifications_userId_idx").on(table.userId),
-    typeIdx: index("notifications_type_idx").on(table.type),
-    readIdx: index("notifications_read_idx").on(table.read),
-  })
-);
+export type User = {
+  id: number;
+  openId: string;
+  name: string | null;
+  email: string | null;
+  loginMethod: string | null;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lastSignedIn: Date;
+};
 
-export type Notification = typeof notifications.$inferSelect;
-export type InsertNotification = typeof notifications.$inferInsert;
+export type Agent = {
+  id: number;
+  name: string;
+  specialization: string;
+  dna: Record<string, any>;
+  status: string;
+  reputation: string;
+  createdAt: Date;
+  updatedAt: Date;
+};

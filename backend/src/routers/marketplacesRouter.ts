@@ -2,7 +2,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
-import { marketplaceAccounts, marketplaceProducts } from "../drizzle/schema";
+import { marketplaceAccounts, marketplaceProductsExt as marketplaceProducts } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import * as marketplaceHelpers from "./marketplace-helpers";
 import * as mercadoLibre from "./integrations/mercadoLibre";

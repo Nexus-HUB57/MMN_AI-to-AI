@@ -405,7 +405,8 @@ export const cronRouter = router({
               settingValue: value,
               updatedAt: new Date(),
             })
-            .onDuplicateKeyUpdate({
+            .onConflictDoUpdate({
+              target: cronSettings.settingKey,
               set: {
                 settingValue: value,
                 updatedAt: new Date(),

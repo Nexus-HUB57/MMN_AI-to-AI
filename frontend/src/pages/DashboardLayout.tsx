@@ -9,13 +9,28 @@ import {
 import { trpc } from "@/lib/trpc";
 import {
   BarChart3,
+  BookOpen,
+  Box,
+  Briefcase,
+  Calendar,
+  ChevronDown,
   Cpu,
+  Globe,
+  Image,
+  LineChart,
+  Link2,
   LogOut,
+  Megaphone,
   Menu,
+  MessageSquare,
   Network,
+  Package,
   Settings,
   ShoppingCart,
+  Star,
   TrendingUp,
+  Trophy,
+  Users,
   Wallet,
   X,
   Zap,
@@ -36,48 +51,134 @@ interface NavItem {
   badge?: string;
 }
 
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, loading, logout } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation();
 
-  const navItems: NavItem[] = [
+  const navGroups: NavGroup[] = [
     {
-      label: "Dashboard",
-      href: "/",
-      icon: <BarChart3 className="w-5 h-5" />,
+      title: "Geral",
+      items: [
+        {
+          label: "Dashboard",
+          href: "/dashboard",
+          icon: <BarChart3 className="w-5 h-5" />,
+        },
+        {
+          label: "Rede MMN",
+          href: "/network",
+          icon: <Network className="w-5 h-5" />,
+        },
+        {
+          label: "Comissões",
+          href: "/commissions",
+          icon: <TrendingUp className="w-5 h-5" />,
+        },
+        {
+          label: "Carreira / XP",
+          href: "/career",
+          icon: <Trophy className="w-5 h-5" />,
+        },
+        {
+          label: "Pagamentos",
+          href: "/payments",
+          icon: <Wallet className="w-5 h-5" />,
+        },
+        {
+          label: "Bônus & Recompensas",
+          href: "/bonus",
+          icon: <Star className="w-5 h-5" />,
+        },
+      ],
     },
     {
-      label: "Rede",
-      href: "/network",
-      icon: <Network className="w-5 h-5" />,
+      title: "Agente IA",
+      items: [
+        {
+          label: "Painel do Agente",
+          href: "/agents",
+          icon: <Cpu className="w-5 h-5" />,
+          badge: "Beta",
+        },
+        {
+          label: "Orquestrador",
+          href: "/orchestrator",
+          icon: <Globe className="w-5 h-5" />,
+        },
+        {
+          label: "Pacotes / Skills",
+          href: "/packs",
+          icon: <Package className="w-5 h-5" />,
+          badge: "Novo",
+        },
+        {
+          label: "Upgrades",
+          href: "/upgrades",
+          icon: <Zap className="w-5 h-5" />,
+        },
+      ],
     },
     {
-      label: "Comissoes",
-      href: "/commissions",
-      icon: <TrendingUp className="w-5 h-5" />,
+      title: "Marketing",
+      items: [
+        {
+          label: "Hub de Conteúdo",
+          href: "/content-hub",
+          icon: <BookOpen className="w-5 h-5" />,
+        },
+        {
+          label: "Calendário Social",
+          href: "/content/calendar",
+          icon: <Calendar className="w-5 h-5" />,
+        },
+        {
+          label: "Materiais",
+          href: "/marketing/materials",
+          icon: <Image className="w-5 h-5" />,
+        },
+        {
+          label: "Contas Sociais",
+          href: "/social/accounts",
+          icon: <MessageSquare className="w-5 h-5" />,
+        },
+        {
+          label: "Rastreamento de Links",
+          href: "/tracking/links",
+          icon: <Link2 className="w-5 h-5" />,
+        },
+        {
+          label: "Mini-site",
+          href: "/minisite",
+          icon: <Globe className="w-5 h-5" />,
+        },
+      ],
     },
     {
-      label: "Agente IA",
-      href: "/agent",
-      icon: <Cpu className="w-5 h-5" />,
-      badge: "Beta",
-    },
-    {
-      label: "Marketplaces",
-      href: "/marketplaces",
-      icon: <ShoppingCart className="w-5 h-5" />,
-    },
-    {
-      label: "Upgrades",
-      href: "/upgrades",
-      icon: <Zap className="w-5 h-5" />,
-    },
-    {
-      label: "Pagamentos",
-      href: "/payments",
-      icon: <Wallet className="w-5 h-5" />,
+      title: "Loja & Operações",
+      items: [
+        {
+          label: "Marketplaces",
+          href: "/marketplaces",
+          icon: <ShoppingCart className="w-5 h-5" />,
+        },
+        {
+          label: "Dropshipping",
+          href: "/dropshipping/orders",
+          icon: <Box className="w-5 h-5" />,
+        },
+        {
+          label: "Analytics",
+          href: "/utilities",
+          icon: <LineChart className="w-5 h-5" />,
+        },
+      ],
     },
   ];
 
@@ -85,13 +186,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     setLocation("/logout");
   };
 
-  const getAgentStatus = (): "ativo" | "inativo" | "configurando" => {
-    // TODO: Integrar com API para obter status real do agente
-    // Por enquanto, retorna "configurando" como estado padrao
-    return "configurando";
+  const isActive = (href: string) => {
+    if (href === "/dashboard") return location === "/" || location === "/dashboard";
+    return location.startsWith(href);
   };
 
-  const agentStatus = getAgentStatus();
+  const agentStatus: "ativo" | "inativo" | "configurando" = "configurando";
   const statusColors = {
     ativo: "bg-accent-green/20 text-accent-green",
     inativo: "bg-red-500/20 text-red-400",
@@ -108,10 +208,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Faca login para continuar
+              Faça login para continuar
             </h1>
             <p className="text-sm text-text-secondary text-center max-w-sm">
-              Acesso a este painel requer autenticacao. Clique abaixo para iniciar o fluxo de login.
+              Acesso a este painel requer autenticação. Clique abaixo para iniciar o fluxo de login.
             </p>
           </div>
           <Button
@@ -142,14 +242,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Menu className="w-5 h-5" />
               )}
             </button>
-            <div className="flex items-center gap-2">
+            <button
+              onClick={() => setLocation("/dashboard")}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
                 <Zap className="w-4 h-4 text-background" />
               </div>
               <span className="text-lg font-bold gradient-text hidden sm:inline">
                 MMNAI
               </span>
-            </div>
+            </button>
           </div>
 
           {/* User Menu */}
@@ -165,12 +268,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   </div>
                   <div className="hidden sm:block text-left">
                     <p className="text-sm font-medium text-foreground">
-                      {user?.name || "Usuario"}
+                      {user?.name || "Usuário"}
                     </p>
                     <p className="text-xs text-text-secondary">
                       {user?.role === "admin" ? "Administrador" : "Afiliado"}
                     </p>
                   </div>
+                  <ChevronDown className="w-4 h-4 text-text-secondary hidden sm:block" />
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -179,7 +283,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="px-4 py-3 border-b border-border space-y-3">
                 <div>
                   <p className="text-sm font-semibold text-foreground">
-                    {user?.name || "Usuario"}
+                    {user?.name || "Usuário"}
                   </p>
                   <p className="text-xs text-text-secondary">{user?.email}</p>
                   <p className="text-xs text-text-muted mt-1">
@@ -192,32 +296,45 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                       Status do Agente IA:
                     </span>
                     <span
-                      className={`text-xs px-2 py-1 rounded-full font-medium ${
-                        statusColors[agentStatus]
-                      }`}
+                      className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[agentStatus]}`}
                     >
                       {agentStatus.charAt(0).toUpperCase() + agentStatus.slice(1)}
                     </span>
                   </div>
                   <p className="text-xs text-text-muted mt-2">
                     {agentStatus === "ativo"
-                      ? "Seu agente esta operacional"
+                      ? "Seu agente está operacional"
                       : agentStatus === "inativo"
                       ? "Agente inativo. Clique para ativar"
-                      : "Agente em configuracao. Finalize a instalacao"}
+                      : "Agente em configuração. Finalize a instalação"}
                   </p>
                 </div>
               </div>
 
               {/* Menu Items */}
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted">
+              <DropdownMenuItem
+                className="cursor-pointer hover:bg-muted"
+                onClick={() => setLocation("/profile")}
+              >
                 <Settings className="w-4 h-4 mr-2" />
-                <span>Configuracoes da Conta</span>
+                <span>Configurações da Conta</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer hover:bg-muted">
+              <DropdownMenuItem
+                className="cursor-pointer hover:bg-muted"
+                onClick={() => setLocation("/agents")}
+              >
                 <Cpu className="w-4 h-4 mr-2" />
                 <span>Gerenciar Agente IA</span>
               </DropdownMenuItem>
+              {user?.role === "admin" && (
+                <DropdownMenuItem
+                  className="cursor-pointer hover:bg-muted"
+                  onClick={() => setLocation("/admin")}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  <span>Painel Admin</span>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
 
@@ -240,23 +357,46 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <nav className="h-full overflow-y-auto p-4 space-y-2">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-4 py-3 rounded-lg text-text-secondary hover:text-foreground hover:bg-muted transition-all duration-200 group"
-            >
-              <span className="text-text-secondary group-hover:text-accent-cyan transition-colors">
-                {item.icon}
-              </span>
-              <span className="flex-1 text-sm font-medium">{item.label}</span>
-              {item.badge && (
-                <span className="text-xs px-2 py-1 rounded-full bg-accent-cyan/20 text-accent-cyan">
-                  {item.badge}
-                </span>
-              )}
-            </a>
+        <nav className="h-full overflow-y-auto p-4 space-y-6">
+          {navGroups.map((group) => (
+            <div key={group.title}>
+              <p className="text-xs font-semibold text-text-muted uppercase tracking-wider px-2 mb-2">
+                {group.title}
+              </p>
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const active = isActive(item.href);
+                  return (
+                    <button
+                      key={item.href}
+                      onClick={() => {
+                        setLocation(item.href);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group ${
+                        active
+                          ? "bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20"
+                          : "text-text-secondary hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <span
+                        className={`transition-colors ${
+                          active ? "text-accent-cyan" : "text-text-secondary group-hover:text-accent-cyan"
+                        }`}
+                      >
+                        {item.icon}
+                      </span>
+                      <span className="flex-1 text-left">{item.label}</span>
+                      {item.badge && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-accent-cyan/20 text-accent-cyan">
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           ))}
         </nav>
       </aside>
@@ -271,7 +411,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div
           className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
-        ></div>
+        />
       )}
     </div>
   );

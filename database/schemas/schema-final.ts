@@ -143,6 +143,33 @@ export const agentUpgrades = mysqlTable("agent_upgrades", {
   expiresAt: timestamp("expiresAt"),
 });
 
+export const packs = mysqlTable("packs", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 128 }).notNull(),
+  slug: varchar("slug", { length: 128 }).notNull().unique(),
+  description: text("description"),
+  shortDescription: varchar("shortDescription", { length: 256 }),
+  price: int("price").notNull(),
+  originalPrice: int("originalPrice"),
+  category: varchar("category", { length: 64 }).notNull(),
+  features: text("features"),
+  badge: varchar("badge", { length: 64 }),
+  iconEmoji: varchar("iconEmoji", { length: 8 }),
+  status: mysqlEnum("status", ["active", "inactive", "coming_soon"]).notNull().default("active"),
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").notNull().default(sql`(now())`),
+  updatedAt: timestamp("updatedAt").notNull().default(sql`(now())`).onUpdateNow(),
+});
+
+export const agentPacks = mysqlTable("agent_packs", {
+  id: int("id").primaryKey().autoincrement(),
+  agentId: int("agentId").notNull(),
+  packId: int("packId").notNull(),
+  status: mysqlEnum("status", ["active", "inactive", "expired"]).notNull().default("active"),
+  activatedAt: timestamp("activatedAt").notNull().default(sql`(now())`),
+  expiresAt: timestamp("expiresAt"),
+});
+
 export const bonuses = mysqlTable("bonuses", {
   id: int("id").primaryKey().autoincrement(),
   affiliateId: int("affiliateId").notNull(),
@@ -182,7 +209,13 @@ export type InsertPayment = typeof payments.$inferInsert;
 export type Agent = typeof agents.$inferSelect;
 export type InsertAgent = typeof agents.$inferInsert;
 export type Upgrade = typeof upgrades.$inferSelect;
+export type InsertUpgrade = typeof upgrades.$inferInsert;
 export type AgentUpgrade = typeof agentUpgrades.$inferSelect;
+export type InsertAgentUpgrade = typeof agentUpgrades.$inferInsert;
+export type Pack = typeof packs.$inferSelect;
+export type InsertPack = typeof packs.$inferInsert;
+export type AgentPack = typeof agentPacks.$inferSelect;
+export type InsertAgentPack = typeof agentPacks.$inferInsert;
 export type Bonus = typeof bonuses.$inferSelect;
 export type InsertBonus = typeof bonuses.$inferInsert;
 export type Material = typeof materials.$inferSelect;
@@ -248,9 +281,9 @@ export const performanceMetrics = mysqlTable('performance_metrics', {
   successfulJobs: int('successfulJobs').default(0).notNull(),
   failedJobs: int('failedJobs').default(0).notNull(),
   averageExecutionTime: int('averageExecutionTime').default(0).notNull(),
-	  successRate: varchar('successRate', { length: 10 }).default('0%').notNull(),
-	  timestamp: timestamp('timestamp').defaultNow().notNull(),
-	});
+          successRate: varchar('successRate', { length: 10 }).default('0%').notNull(),
+          timestamp: timestamp('timestamp').defaultNow().notNull(),
+        });
 
 export type PerformanceMetric = typeof performanceMetrics.$inferSelect;
 export type InsertPerformanceMetric = typeof performanceMetrics.$inferInsert;

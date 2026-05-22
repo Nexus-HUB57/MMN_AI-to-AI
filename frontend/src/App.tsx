@@ -33,6 +33,7 @@ const AgentStatus = lazy(() => import("./pages/AgentStatus"));
 const AgentConfiguration = lazy(() => import("./pages/AgentConfiguration"));
 
 const Marketplaces = lazy(() => import("./pages/Marketplaces"));
+const PacksMarketplace = lazy(() => import("./pages/PacksMarketplace"));
 const DropshippingOrders = lazy(() => import("./pages/DropshippingOrders"));
 
 const MarketingMaterials = lazy(() => import("./pages/MarketingMaterials"));
@@ -84,6 +85,7 @@ export const NAVIGATION_STRUCTURE = {
   ],
   MARKETPLACE: [
     { path: "/marketplaces", name: "Marketplaces", component: "Marketplaces", layout: "DashboardLayout" },
+    { path: "/packs", name: "Pacotes & Upgrades", component: "PacksMarketplace", layout: "DashboardLayout" },
     { path: "/dropshipping/orders", name: "Pedidos Dropshipping", component: "DropshippingOrders", layout: "DashboardLayout" },
   ],
   MARKETING: [
@@ -150,6 +152,7 @@ export default function App() {
             <Route path="/content/calendar" component={ContentCalendar} />
 
             <Route path="/marketplaces" component={Marketplaces} />
+            <Route path="/packs" component={PacksMarketplace} />
             <Route path="/dropshipping/orders" component={DropshippingOrders} />
 
             <Route path="/marketing/materials" component={MarketingMaterials} />

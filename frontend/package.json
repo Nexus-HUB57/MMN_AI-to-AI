@@ -27,7 +27,7 @@
     "recharts": "^2.15.0",
     "sonner": "^1.7.1",
     "superjson": "^2.2.2",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^2.6.1",
     "tailwindcss-animate": "^1.0.7",
     "wouter": "^3.3.5",
     "zod": "^3.24.1"

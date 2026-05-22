@@ -16,6 +16,7 @@ import { bankingRouter } from "./routers/bankingRouter";
 import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
+import { packsRouter } from "./routers/packsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
 import { adminRouter } from "./routers/adminRouter";
@@ -219,6 +220,9 @@ export const appRouter = router({
 
   // ============ UPGRADES ROUTER ============
   upgrades: upgradesRouter,
+
+  // ============ PACKS ROUTER ============
+  packs: packsRouter,
 
   // ============ NEWSLETTER ROUTER ============
   newsletter: newsletterRouter,

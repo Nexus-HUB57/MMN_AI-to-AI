@@ -37,7 +37,7 @@ Esta documentação centraliza todas as informações do sistema em um único do
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 ![XP](https://img.shields.io/badge/XP%2FCarreiras-Implemented-blue)
-![v1.0.8](https://img.shields.io/badge/v1.0.8-2026--05--20-blue)
+![v1.0.9](https://img.shields.io/badge/v1.0.9-2026--05--22-blue)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
@@ -75,7 +75,45 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md)
 - [`docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md)
 
-## Atualizações Recentes do Repositório (2026-05-21)
+## Atualizações Recentes do Repositório (2026-05-22)
+
+### ✅ Packs / Marketplace de Skills do Agente IA
+
+Nova seção completa para aquisição de pacotes de skills para agentes IA autônomos:
+
+- schema `packs` e `agent_packs` adicionados ao banco de dados principal
+- router tRPC `packs.*` com 5 endpoints (listAvailable, listMine, purchasePack, cancelPack, getPackDetails)
+- página `/packs` com design dark premium, 8 packs pré-configurados, filtros por categoria e badges visuais
+- link "Pacotes / Skills" integrado à sidebar do DashboardLayout
+
+**Referências:**
+- [`backend/src/routers/packsRouter.ts`](backend/src/routers/packsRouter.ts)
+- [`frontend/src/pages/PacksMarketplace.tsx`](frontend/src/pages/PacksMarketplace.tsx)
+
+### ✅ DashboardLayout — Navegação Completa e Corrigida
+
+Refatoração completa da sidebar do painel do afiliado:
+
+- links corrigidos: `/dashboard` (era `/`) e `/agents` (era `/agent`)
+- 20+ links organizados em 4 grupos: Geral, Agente IA, Marketing, Loja & Operações
+- navegação com destaque do item ativo (estado real baseado em `useLocation`)
+- uso de `setLocation` (wouter) no lugar de `<a href>` para evitar reloads
+- dropdown do usuário com links funcionais para Perfil, Agente IA e Painel Admin (condicional)
+
+### ✅ Comissões — Página com Dados Reais
+
+Substituição do placeholder "Seção em Desenvolvimento" por UI funcional:
+
+- cards de KPI: Total Gerado, Pendentes, Confirmadas, Pagas via `trpc.commissions.getStats`
+- tabela paginada via `trpc.commissions.list` com filtro por status
+- distribuição por nível MMN (byLevel)
+- estados de loading, erro e vazio tratados corretamente
+
+**Referências:**
+- [`frontend/src/pages/DashboardLayout.tsx`](frontend/src/pages/DashboardLayout.tsx)
+- [`frontend/src/pages/Commissions.tsx`](frontend/src/pages/Commissions.tsx)
+
+---
 
 ### ✅ Backoffice Admin consolidado por domínio
 
@@ -370,11 +408,38 @@ npm run start
 | Métricas por Afiliado | ✅ Implementado | Performance individual |
 | Estatísticas Globais | ✅ Implementado | Dashboard admin completo |
 
+### ✅ Packs / Marketplace de Skills (100%)
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| Schema do Banco | ✅ Implementado | Tabelas `packs` e `agent_packs` no schema principal |
+| Router tRPC | ✅ Implementado | 5 endpoints: listAvailable, listMine, purchasePack, cancelPack, getPackDetails |
+| Marketplace UI | ✅ Implementado | Página `/packs` com design dark premium, 8 packs, filtros por categoria |
+| Badges Visuais | ✅ Implementado | Mais Vendido, Novo, Premium, Oferta, Em breve |
+| Meus Pacotes | ✅ Implementado | Seção de pacotes ativos com data de expiração |
+| Integração Sidebar | ✅ Implementado | Link "Pacotes / Skills" na navegação do DashboardLayout |
+
+**Endpoints tRPC:**
+- `packs.listAvailable` - Listar packs disponíveis (público)
+- `packs.listMine` - Listar packs ativos do agente do usuário
+- `packs.purchasePack` - Ativar pack para o agente (30 dias)
+- `packs.cancelPack` - Desativar pack
+- `packs.getPackDetails` - Detalhes de um pack específico
+
+**Categorias de Packs:**
+- Anúncios (Facebook Ads, etc.)
+- Redes Sociais (Conteúdo Viral, Instagram, Moda)
+- E-commerce (Dropshipping, Conversão)
+- B2B (Negociação Corporativa)
+- Analytics (Relatórios de Performance)
+- MMN Rede (Expansão de Rede Afiliados)
+
 ### ✅ Funcionalidades Implementadas
 
 | Funcionalidade | Status | Descrição |
 |----------------|--------|-----------|
 | Marketplace Nexus | ✅ Implementado | Catálogo próprio de produtos com carrinho, checkout e filtros |
+| Packs / Skills Marketplace | ✅ Implementado | 8 packs de skills para agentes IA com sistema de ativação |
 | Circuit Breakers | ✅ Implementado | Proteção contra falhas em cascata com retry inteligente |
 | Sistema de Permissões (RBAC) | ✅ Implementado | Roles, permissions e resource-based access granular |
 | Autenticação Firebase/NextAuth | ✅ Implementado | Login social, JWT refresh tokens, custom claims |
@@ -457,8 +522,10 @@ npm run start
 | CMS Pages | 5 | 6 | 83% |
 | Billing/Faturas | 7 | 8 | 88% |
 | Automação Cron | 6 | 6 | 100% |
+| Packs / Skills Marketplace | 6 | 6 | 100% |
+| Navegação Frontend | 4 | 4 | 100% |
 
-**Conformidade Geral: ~88-92%**
+**Conformidade Geral: ~90-93%**
 
 ## Estrutura do Projeto
 

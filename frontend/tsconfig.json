@@ -22,17 +22,8 @@
     "types": ["vite/client", "node"]
   },
   "include": [
-    "src/vite-env.d.ts",
-    "src/contexts/AuthContext.tsx",
-    "src/lib/trpc.ts",
-    "src/pages/Home.tsx",
-    "src/pages/Dashboard.tsx",
-    "src/pages/ContentHub.tsx",
-    "src/pages/NotFound.tsx",
-    "src/pages/DashboardLayout.tsx",
-    "src/pages/AffiliateProfile.tsx",
-    "src/pages/BonusPage.tsx",
-    "src/pages/TopSponsors.tsx"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": ["node_modules", "dist"]
 }

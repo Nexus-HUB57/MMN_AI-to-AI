@@ -222,15 +222,15 @@
 
 ## Fase 14: Frontend - Sistema de Bônus e Materiais
 
-- [ ] Criar página de bônus e prêmios
+- [x] Criar página de bônus e prêmios (BonusPage conectada a `trpc.mmn.*` e `trpc.dashboard.getMetrics`)
 
-- [ ] Implementar visualização de top patrocinadores
+- [x] Implementar visualização de top patrocinadores (TopSponsors via `trpc.network.getTopSponsors`)
 
-- [ ] Criar gerenciador de banners
+- [x] Criar gerenciador de banners (BannerManager via `trpc.materials.listBanners`)
 
-- [ ] Implementar gerenciador de e-books
+- [x] Implementar gerenciador de e-books (EbookManager via `trpc.materials.listEbooks`)
 
-- [ ] Criar visualização de materiais de divulgação
+- [x] Criar visualização de materiais de divulgação (MarketingMaterials via `trpc.materials.list`)
 
 ## Fase 15: Testes e Qualidade
 
@@ -261,4 +261,3 @@
 - [ ] Preparar manual de integração
 
 - [ ] Gerar relatório final do projeto
-

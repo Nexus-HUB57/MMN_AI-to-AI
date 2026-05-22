@@ -20,8 +20,8 @@
 
 import { getDb } from "./db";
 import { eq, and, desc, gte, lte, isNull, sql } from "drizzle-orm";
-import { agents } from "../../database/schemas/schema";
-import { skills, agentSkills } from "../../database/schemas/schema-skills";
+import { agents } from "../../../database/schemas/schema-final";
+import { skills, agentSkills } from "../../../database/schemas/schema-skills";
 
 // =============================================================================
 // TYPE DEFINITIONS
@@ -105,56 +105,214 @@ export interface SyncOptions {
 // Configuração de modelos por categoria de skill
 const MODEL_RECOMMENDATIONS: Record<string, ModelConfiguration[]> = {
   copywriting: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "copywriting"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o-mini", modelName: "GPT-4o Mini", provider: "openai", capabilities: ["text_generation", "copywriting"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "copywriting"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o-mini",
+      modelName: "GPT-4o Mini",
+      provider: "openai",
+      capabilities: ["text_generation", "copywriting"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   social_media: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "image_generation"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o-mini", modelName: "GPT-4o Mini", provider: "openai", capabilities: ["text_generation"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "image_generation"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o-mini",
+      modelName: "GPT-4o Mini",
+      provider: "openai",
+      capabilities: ["text_generation"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   analytics: [
-    { modelId: "gemini-pro", modelName: "Gemini Pro", provider: "gemini", capabilities: ["analytics", "data_processing"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o", modelName: "GPT-4o", provider: "openai", capabilities: ["analytics", "reasoning"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-pro",
+      modelName: "Gemini Pro",
+      provider: "gemini",
+      capabilities: ["analytics", "data_processing"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o",
+      modelName: "GPT-4o",
+      provider: "openai",
+      capabilities: ["analytics", "reasoning"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   ads: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "optimization"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o", modelName: "GPT-4o", provider: "openai", capabilities: ["text_generation", "strategy"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "optimization"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o",
+      modelName: "GPT-4o",
+      provider: "openai",
+      capabilities: ["text_generation", "strategy"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   ecommerce: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "product_description"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o-mini", modelName: "GPT-4o Mini", provider: "openai", capabilities: ["text_generation"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "product_description"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o-mini",
+      modelName: "GPT-4o Mini",
+      provider: "openai",
+      capabilities: ["text_generation"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   automation: [
-    { modelId: "gemini-pro", modelName: "Gemini Pro", provider: "gemini", capabilities: ["automation", "workflow"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o", modelName: "GPT-4o", provider: "openai", capabilities: ["automation", "reasoning"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-pro",
+      modelName: "Gemini Pro",
+      provider: "gemini",
+      capabilities: ["automation", "workflow"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o",
+      modelName: "GPT-4o",
+      provider: "openai",
+      capabilities: ["automation", "reasoning"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   sales: [
-    { modelId: "gemini-pro", modelName: "Gemini Pro", provider: "gemini", capabilities: ["text_generation", "conversation"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o", modelName: "GPT-4o", provider: "openai", capabilities: ["text_generation", "sales"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-pro",
+      modelName: "Gemini Pro",
+      provider: "gemini",
+      capabilities: ["text_generation", "conversation"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o",
+      modelName: "GPT-4o",
+      provider: "openai",
+      capabilities: ["text_generation", "sales"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   seo: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "seo_optimization"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o-mini", modelName: "GPT-4o Mini", provider: "openai", capabilities: ["text_generation"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "seo_optimization"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o-mini",
+      modelName: "GPT-4o Mini",
+      provider: "openai",
+      capabilities: ["text_generation"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   crm: [
-    { modelId: "gemini-2.0-flash", modelName: "Gemini 2.0 Flash", provider: "gemini", capabilities: ["text_generation", "crm_integration"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o-mini", modelName: "GPT-4o Mini", provider: "openai", capabilities: ["text_generation"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-2.0-flash",
+      modelName: "Gemini 2.0 Flash",
+      provider: "gemini",
+      capabilities: ["text_generation", "crm_integration"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o-mini",
+      modelName: "GPT-4o Mini",
+      provider: "openai",
+      capabilities: ["text_generation"],
+      isActive: true,
+      priority: 2,
+    },
   ],
   mmn: [
-    { modelId: "gemini-pro", modelName: "Gemini Pro", provider: "gemini", capabilities: ["text_generation", "network_analysis"], isActive: true, priority: 1 },
-    { modelId: "gpt-4o", modelName: "GPT-4o", provider: "openai", capabilities: ["text_generation", "network"], isActive: true, priority: 2 },
+    {
+      modelId: "gemini-pro",
+      modelName: "Gemini Pro",
+      provider: "gemini",
+      capabilities: ["text_generation", "network_analysis"],
+      isActive: true,
+      priority: 1,
+    },
+    {
+      modelId: "gpt-4o",
+      modelName: "GPT-4o",
+      provider: "openai",
+      capabilities: ["text_generation", "network"],
+      isActive: true,
+      priority: 2,
+    },
   ],
 };
 
 // Mapeamento de capabilities por nível de skill
 const LEVEL_CAPABILITIES: Record<string, string[]> = {
   basic: ["text_generation", "basic_analytics", "scheduling"],
-  intermediate: ["text_generation", "image_generation", "analytics", "automation", "scheduling"],
-  advanced: ["text_generation", "image_generation", "video_generation", "analytics", "automation", "scheduling", "advanced_seo", "multi_channel"],
+  intermediate: [
+    "text_generation",
+    "image_generation",
+    "analytics",
+    "automation",
+    "scheduling",
+  ],
+  advanced: [
+    "text_generation",
+    "image_generation",
+    "video_generation",
+    "analytics",
+    "automation",
+    "scheduling",
+    "advanced_seo",
+    "multi_channel",
+  ],
 };
 
 // Cache de sincronização (em memória para performance)
-const syncCache = new Map<number, { data: AgentSyncProfile | null; timestamp: number }>();
+const syncCache = new Map<
+  number,
+  { data: AgentSyncProfile | null; timestamp: number }
+>();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
 
 // =============================================================================
@@ -165,12 +323,17 @@ export class AgentSyncService {
   /**
    * Sincroniza as skills de um agente com base nas suas necessidades
    */
-  async syncAgentSkills(agentId: number, options?: SyncOptions): Promise<AgentSyncResult> {
+  async syncAgentSkills(
+    agentId: number,
+    options?: SyncOptions,
+  ): Promise<AgentSyncResult> {
     const startTime = Date.now();
     const db = await getDb();
 
     if (!db) {
-      return this.createErrorResult(agentId, startTime, ["Database not available"]);
+      return this.createErrorResult(agentId, startTime, [
+        "Database not available",
+      ]);
     }
 
     const errors: string[] = [];
@@ -200,8 +363,8 @@ export class AgentSyncService {
         .where(
           and(
             eq(agentSkills.agentId, agentId),
-            eq(agentSkills.status, "active")
-          )
+            eq(agentSkills.status, "active"),
+          ),
         );
 
       // Validação de expiration
@@ -226,10 +389,12 @@ export class AgentSyncService {
 
         if (skill && skill.length > 0) {
           const category = skill[0].category;
-          const models = MODEL_RECOMMENDATIONS[category] || MODEL_RECOMMENDATIONS.copywriting;
+          const models =
+            MODEL_RECOMMENDATIONS[category] ||
+            MODEL_RECOMMENDATIONS.copywriting;
 
           // Configurar modelos para a skill
-          modelsConfigured += models.filter(m => m.isActive).length;
+          modelsConfigured += models.filter((m) => m.isActive).length;
           skillsSynced++;
 
           // Aqui você pode adicionar lógica para atualizar a configuração do agente
@@ -253,7 +418,10 @@ export class AgentSyncService {
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       errors.push(message);
-      console.error(`[AgentSyncService] Sync failed for agent ${agentId}:`, error);
+      console.error(
+        `[AgentSyncService] Sync failed for agent ${agentId}:`,
+        error,
+      );
       return this.createErrorResult(agentId, startTime, errors);
     }
   }
@@ -261,7 +429,10 @@ export class AgentSyncService {
   /**
    * Obtém o perfil de sincronização de um agente (com cache)
    */
-  async getAgentSyncProfile(agentId: number, skipCache = false): Promise<AgentSyncProfile | null> {
+  async getAgentSyncProfile(
+    agentId: number,
+    skipCache = false,
+  ): Promise<AgentSyncProfile | null> {
     // Verifica cache primeiro
     if (!skipCache) {
       const cached = syncCache.get(agentId);
@@ -295,8 +466,8 @@ export class AgentSyncService {
         .where(
           and(
             eq(agentSkills.agentId, agentId),
-            eq(agentSkills.status, "active")
-          )
+            eq(agentSkills.status, "active"),
+          ),
         );
 
       const currentSkills: SkillConfig[] = agentActiveSkills.map((as) => ({
@@ -304,10 +475,14 @@ export class AgentSyncService {
         skillName: as.skills.name,
         level: as.skills.level as "basic" | "intermediate" | "advanced",
         category: as.skills.category,
-        recommendedModels: (MODEL_RECOMMENDATIONS[as.skills.category] || MODEL_RECOMMENDATIONS.copywriting)
-          .filter(m => m.isActive)
-          .map(m => m.modelId),
-        capabilities: LEVEL_CAPABILITIES[as.skills.level] || LEVEL_CAPABILITIES.basic,
+        recommendedModels: (
+          MODEL_RECOMMENDATIONS[as.skills.category] ||
+          MODEL_RECOMMENDATIONS.copywriting
+        )
+          .filter((m) => m.isActive)
+          .map((m) => m.modelId),
+        capabilities:
+          LEVEL_CAPABILITIES[as.skills.level] || LEVEL_CAPABILITIES.basic,
         isActive: true,
         expiresAt: as.agentSkills.expiresAt || undefined,
       }));
@@ -390,7 +565,9 @@ export class AgentSyncService {
     const advancedSkills = skills.filter((s) => s.level === "advanced");
 
     if (basicSkills.length >= 3) {
-      actions.push("Considere upgrade para skills intermediárias para aumentar sua eficácia");
+      actions.push(
+        "Considere upgrade para skills intermediárias para aumentar sua eficácia",
+      );
     }
 
     if (intermediateSkills.length >= 3 && advancedSkills.length === 0) {
@@ -398,22 +575,31 @@ export class AgentSyncService {
     }
 
     if (advancedSkills.length >= 5) {
-      actions.push("Você é um especialista! Considere mentorar outros usuários");
+      actions.push(
+        "Você é um especialista! Considere mentorar outros usuários",
+      );
     }
 
     // Verificar skills próximas da expiração
     const soonToExpire = skills.filter((s) => {
       if (!s.expiresAt) return false;
-      const daysUntilExpiry = Math.ceil((s.expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      const daysUntilExpiry = Math.ceil(
+        (s.expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+      );
       return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
     });
 
     if (soonToExpire.length > 0) {
-      actions.push(`${soonToExpire.length} skill(s) expiram em breve. Considere renovar.`);
+      actions.push(
+        `${soonToExpire.length} skill(s) expiram em breve. Considere renovar.`,
+      );
     }
 
     // Análise de gaps
-    if (!categories.has("analytics") && (categories.has("ads") || categories.has("ecommerce"))) {
+    if (
+      !categories.has("analytics") &&
+      (categories.has("ads") || categories.has("ecommerce"))
+    ) {
       actions.push("Adicione Analytics para medir melhor seus resultados");
     }
 
@@ -428,7 +614,9 @@ export class AgentSyncService {
   /**
    * Sincroniza todos os agentes ativos (para uso em cron jobs)
    */
-  async syncAllAgents(options?: SyncOptions): Promise<{ synced: number; errors: number; total: number }> {
+  async syncAllAgents(
+    options?: SyncOptions,
+  ): Promise<{ synced: number; errors: number; total: number }> {
     const db = await getDb();
     if (!db) return { synced: 0, errors: 0, total: 0 };
 
@@ -447,7 +635,10 @@ export class AgentSyncService {
           synced++;
         } else {
           errors++;
-          console.warn(`[AgentSyncService] Sync failed for agent ${agent.id}:`, result.errors);
+          console.warn(
+            `[AgentSyncService] Sync failed for agent ${agent.id}:`,
+            result.errors,
+          );
         }
       }
 
@@ -502,13 +693,13 @@ export class AgentSyncService {
    */
   getRecommendedModels(categories?: string[]): ModelConfiguration[] {
     if (categories) {
-      return categories.flatMap(cat => MODEL_RECOMMENDATIONS[cat] || []);
+      return categories.flatMap((cat) => MODEL_RECOMMENDATIONS[cat] || []);
     }
 
     // Retorna todos os modelos únicos
     const allModels = new Map<string, ModelConfiguration>();
-    Object.values(MODEL_RECOMMENDATIONS).forEach(models => {
-      models.forEach(model => {
+    Object.values(MODEL_RECOMMENDATIONS).forEach((models) => {
+      models.forEach((model) => {
         if (!allModels.has(model.modelId)) {
           allModels.set(model.modelId, model);
         }
@@ -552,7 +743,11 @@ export class AgentSyncService {
   /**
    * Cria resultado de erro padronizado
    */
-  private createErrorResult(agentId: number, startTime: number, errors: string[]): AgentSyncResult {
+  private createErrorResult(
+    agentId: number,
+    startTime: number,
+    errors: string[],
+  ): AgentSyncResult {
     return {
       success: false,
       agentId,

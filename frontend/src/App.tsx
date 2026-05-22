@@ -8,7 +8,9 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ContentHub = lazy(() => import("./pages/ContentHub"));
 const ContentGeneration = lazy(() => import("./pages/ContentGeneration"));
 const ContentCalendar = lazy(() => import("./pages/ContentCalendar"));
-const OrchestratorDashboard = lazy(() => import("./pages/OrchestratorDashboard"));
+const OrchestratorDashboard = lazy(
+  () => import("./pages/OrchestratorDashboard"),
+);
 const LegacyReview = lazy(() => import("./pages/LegacyReview"));
 
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -45,6 +47,7 @@ const ContentGenerator = lazy(() => import("./pages/ContentGenerator"));
 const ImageGenerator = lazy(() => import("./pages/ImageGenerator"));
 
 const Commissions = lazy(() => import("./pages/Commissions"));
+const BonusPage = lazy(() => import("./pages/BonusPage"));
 const BonusRewards = lazy(() => import("./pages/BonusRewards"));
 
 const SocialAccounts = lazy(() => import("./pages/SocialAccounts"));
@@ -64,63 +67,268 @@ export const NAVIGATION_STRUCTURE = {
     { path: "/login", name: "Login", component: "Login" },
   ],
   AFFILIATE: [
-    { path: "/dashboard", name: "Dashboard", component: "Dashboard", layout: "DashboardLayout" },
-    { path: "/profile", name: "Perfil", component: "AffiliateProfile", layout: "DashboardLayout" },
-    { path: "/payments", name: "Pagamentos", component: "AffiliatePayments", layout: "DashboardLayout" },
-    { path: "/commissions", name: "Comissões", component: "Commissions", layout: "DashboardLayout" },
-    { path: "/bonus", name: "Bônus", component: "BonusRewards", layout: "DashboardLayout" },
-    { path: "/minisite", name: "MiniSite", component: "AffiliateMiniSite", layout: "DashboardLayout" },
+    {
+      path: "/dashboard",
+      name: "Dashboard",
+      component: "Dashboard",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/profile",
+      name: "Perfil",
+      component: "AffiliateProfile",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/payments",
+      name: "Pagamentos",
+      component: "AffiliatePayments",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/commissions",
+      name: "Comissões",
+      component: "Commissions",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/bonus",
+      name: "Bônus",
+      component: "BonusPage",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/minisite",
+      name: "MiniSite",
+      component: "AffiliateMiniSite",
+      layout: "DashboardLayout",
+    },
   ],
   AGENTS: [
-    { path: "/agents", name: "Agentes", component: "Agents", layout: "DashboardLayout" },
-    { path: "/agents/dashboard", name: "Dashboard Agentes", component: "AgentDashboard", layout: "DashboardLayout" },
-    { path: "/agents/config", name: "Configurar Agente", component: "AgentConfiguration", layout: "DashboardLayout" },
-    { path: "/agents/status", name: "Status", component: "AgentStatus", layout: "DashboardLayout" },
-    { path: "/agents/sync", name: "Sincronizar IA", component: "AISyncDashboard", layout: "DashboardLayout" },
+    {
+      path: "/agents",
+      name: "Agentes",
+      component: "Agents",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/agents/dashboard",
+      name: "Dashboard Agentes",
+      component: "AgentDashboard",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/agents/config",
+      name: "Configurar Agente",
+      component: "AgentConfiguration",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/agents/status",
+      name: "Status",
+      component: "AgentStatus",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/agents/sync",
+      name: "Sincronizar IA",
+      component: "AISyncDashboard",
+      layout: "DashboardLayout",
+    },
   ],
   CONTENT: [
-    { path: "/content-hub", name: "Hub de Conteúdo", component: "ContentHub", layout: "DashboardLayout" },
-    { path: "/content/generate", name: "Gerar Conteúdo", component: "ContentGeneration", layout: "DashboardLayout" },
-    { path: "/content/generator", name: "Gerador IA", component: "ContentGenerator", layout: "DashboardLayout" },
-    { path: "/content/image", name: "Gerar Imagem", component: "ImageGenerator", layout: "DashboardLayout" },
-    { path: "/content/calendar", name: "Calendário", component: "ContentCalendar", layout: "DashboardLayout" },
+    {
+      path: "/content-hub",
+      name: "Hub de Conteúdo",
+      component: "ContentHub",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/content/generate",
+      name: "Gerar Conteúdo",
+      component: "ContentGeneration",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/content/generator",
+      name: "Gerador IA",
+      component: "ContentGenerator",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/content/image",
+      name: "Gerar Imagem",
+      component: "ImageGenerator",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/content/calendar",
+      name: "Calendário",
+      component: "ContentCalendar",
+      layout: "DashboardLayout",
+    },
   ],
   MARKETPLACE: [
-    { path: "/marketplaces", name: "Marketplaces", component: "Marketplaces", layout: "DashboardLayout" },
-    { path: "/packs", name: "Pacotes & Upgrades", component: "PacksMarketplace", layout: "DashboardLayout" },
-    { path: "/dropshipping/orders", name: "Pedidos Dropshipping", component: "DropshippingOrders", layout: "DashboardLayout" },
+    {
+      path: "/marketplaces",
+      name: "Marketplaces",
+      component: "Marketplaces",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/packs",
+      name: "Pacotes & Upgrades",
+      component: "PacksMarketplace",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/dropshipping/orders",
+      name: "Pedidos Dropshipping",
+      component: "DropshippingOrders",
+      layout: "DashboardLayout",
+    },
   ],
   MARKETING: [
-    { path: "/marketing/materials", name: "Materiais", component: "MarketingMaterials", layout: "DashboardLayout" },
-    { path: "/marketing/banners", name: "Banners", component: "BannerManager", layout: "DashboardLayout" },
-    { path: "/marketing/ebooks", name: "E-books", component: "EbookManager", layout: "DashboardLayout" },
+    {
+      path: "/marketing/materials",
+      name: "Materiais",
+      component: "MarketingMaterials",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/marketing/banners",
+      name: "Banners",
+      component: "BannerManager",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/marketing/ebooks",
+      name: "E-books",
+      component: "EbookManager",
+      layout: "DashboardLayout",
+    },
   ],
   SOCIAL: [
-    { path: "/social/accounts", name: "Contas Sociais", component: "SocialAccounts", layout: "DashboardLayout" },
+    {
+      path: "/social/accounts",
+      name: "Contas Sociais",
+      component: "SocialAccounts",
+      layout: "DashboardLayout",
+    },
   ],
   TRACKING: [
-    { path: "/tracking/links", name: "Links de Rastreamento", component: "TrackingLinks", layout: "DashboardLayout" },
+    {
+      path: "/tracking/links",
+      name: "Links de Rastreamento",
+      component: "TrackingLinks",
+      layout: "DashboardLayout",
+    },
   ],
   UTILITY: [
-    { path: "/logs", name: "Logs de Execução", component: "ExecutionLogs", layout: "DashboardLayout" },
-    { path: "/orchestrator", name: "Orquestrador", component: "OrchestratorDashboard", layout: "DashboardLayout" },
-    { path: "/career", name: "Carreira", component: "CareerProgress", layout: "DashboardLayout" },
-    { path: "/utilities", name: "Utilidades", component: "Utilities", layout: "DashboardLayout" },
+    {
+      path: "/logs",
+      name: "Logs de Execução",
+      component: "ExecutionLogs",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/orchestrator",
+      name: "Orquestrador",
+      component: "OrchestratorDashboard",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/career",
+      name: "Carreira",
+      component: "CareerProgress",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/utilities",
+      name: "Utilidades",
+      component: "Utilities",
+      layout: "DashboardLayout",
+    },
   ],
   ADMIN: [
-    { path: "/admin", name: "Dashboard Admin", component: "AdminDashboard", layout: "AdminDashboardLayout" },
-    { path: "/admin/dashboard", name: "Dashboard Admin", component: "AdminDashboard", layout: "AdminDashboardLayout" },
-    { path: "/admin/users", name: "Usuários", component: "AdminUsers", layout: "AdminDashboardLayout" },
-    { path: "/admin/network", name: "Rede", component: "AdminNetwork", layout: "AdminDashboardLayout" },
-    { path: "/admin/commissions", name: "Comissões", component: "AdminCommissions", layout: "AdminDashboardLayout" },
-    { path: "/admin/payments", name: "Pagamentos", component: "AdminPayments", layout: "AdminDashboardLayout" },
-    { path: "/admin/approvals", name: "Aprovações", component: "AdminApprovals", layout: "AdminDashboardLayout" },
-    { path: "/admin/delinquents", name: "Inadimplentes", component: "AdminDelinquents", layout: "AdminDashboardLayout" },
-    { path: "/admin/materials", name: "Materiais", component: "AdminMaterials", layout: "AdminDashboardLayout" },
-    { path: "/admin/logs", name: "Logs", component: "ExecutionLogs", layout: "AdminDashboardLayout" },
-    { path: "/admin/schedules", name: "Agendamentos", component: "AdminSchedules", layout: "AdminDashboardLayout" },
-    { path: "/admin/settings", name: "Configurações", component: "AdminSettings", layout: "AdminDashboardLayout" },
-    { path: "/admin/legacy", name: "Painel legado admin", component: "AdminPanel", layout: "AdminDashboardLayout" },
+    {
+      path: "/admin",
+      name: "Dashboard Admin",
+      component: "AdminDashboard",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/dashboard",
+      name: "Dashboard Admin",
+      component: "AdminDashboard",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/users",
+      name: "Usuários",
+      component: "AdminUsers",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/network",
+      name: "Rede",
+      component: "AdminNetwork",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/commissions",
+      name: "Comissões",
+      component: "AdminCommissions",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/payments",
+      name: "Pagamentos",
+      component: "AdminPayments",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/approvals",
+      name: "Aprovações",
+      component: "AdminApprovals",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/delinquents",
+      name: "Inadimplentes",
+      component: "AdminDelinquents",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/materials",
+      name: "Materiais",
+      component: "AdminMaterials",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/logs",
+      name: "Logs",
+      component: "ExecutionLogs",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/schedules",
+      name: "Agendamentos",
+      component: "AdminSchedules",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/settings",
+      name: "Configurações",
+      component: "AdminSettings",
+      layout: "AdminDashboardLayout",
+    },
+    {
+      path: "/admin/legacy",
+      name: "Painel legado admin",
+      component: "AdminPanel",
+      layout: "AdminDashboardLayout",
+    },
   ],
 };
 
@@ -128,7 +336,13 @@ export default function App() {
   return (
     <TRPCProvider>
       <AuthProvider>
-        <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Carregando...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex min-h-screen items-center justify-center">
+              Carregando...
+            </div>
+          }
+        >
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/login" component={Login} />
@@ -139,7 +353,7 @@ export default function App() {
             <Route path="/profile" component={AffiliateProfile} />
             <Route path="/payments" component={AffiliatePayments} />
             <Route path="/commissions" component={Commissions} />
-            <Route path="/bonus" component={BonusRewards} />
+            <Route path="/bonus" component={BonusPage} />
             <Route path="/minisite" component={AffiliateMiniSite} />
 
             <Route path="/agents" component={Agents} />

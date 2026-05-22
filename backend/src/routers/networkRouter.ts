@@ -1,7 +1,16 @@
-import { adminProcedure, protectedProcedure, publicProcedure, router } from "../config/trpc";
+import {
+  adminProcedure,
+  protectedProcedure,
+  publicProcedure,
+  router,
+} from "../config/trpc";
 import { z } from "zod";
 import { eq, count, sql, desc } from "drizzle-orm";
-import { affiliates, users, network } from "../../../database/schemas/schema-final";
+import {
+  affiliates,
+  users,
+  network,
+} from "../../../database/schemas/schema-final";
 import { TRPCError } from "@trpc/server";
 
 /**
@@ -14,46 +23,75 @@ export const networkRouter = router({
    * Obter árvore de rede de um afiliado
    */
   getTree: protectedProcedure
-    .input(z.object({
-      affiliateId: z.number().optional(),
-      userId: z.number().optional(),
-      maxDepth: z.number().default(3),
-    }))
+    .input(
+      z.object({
+        affiliateId: z.number().optional(),
+        userId: z.number().optional(),
+        maxDepth: z.number().default(3),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       // Determinar o affiliateId
       let targetAffiliateId = input.affiliateId;
 
       if (!targetAffiliateId && input.userId) {
-        const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, input.userId));
+        const [affiliate] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, input.userId));
         targetAffiliateId = affiliate?.id;
       }
 
       if (!targetAffiliateId) {
         // Se não passou nenhum ID, usar o próprio usuário
-        const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, ctx.user.id));
+        const [affiliate] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, ctx.user.id));
         targetAffiliateId = affiliate?.id;
       }
 
       if (!targetAffiliateId) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Afiliado não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Afiliado não encontrado",
+        });
       }
 
       // Buscar sponsor (upline)
-      const [sponsor] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, targetAffiliateId));
+      const [sponsor] = await ctx.db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.id, targetAffiliateId));
       const [sponsorUser] = sponsor?.sponsorId
-        ? await ctx.db.select().from(affiliates).where(eq(affiliates.id, sponsor.sponsorId))
+        ? await ctx.db
+            .select()
+            .from(affiliates)
+            .where(eq(affiliates.id, sponsor.sponsorId))
         : [];
 
       // Construir árvore recursiva
-      const buildTree = async (affiliateId: number, depth: number): Promise<any[]> => {
+      const buildTree = async (
+        affiliateId: number,
+        depth: number,
+      ): Promise<any[]> => {
         if (depth > (input.maxDepth || 3)) return [];
 
-        const downlines = await ctx.db.select().from(network).where(eq(network.sponsorId, affiliateId));
+        const downlines = await ctx.db
+          .select()
+          .from(network)
+          .where(eq(network.sponsorId, affiliateId));
         const tree = [];
 
         for (const downline of downlines) {
-          const [user] = await ctx.db.select().from(users).where(eq(users.id, downline.userId));
-          const [aff] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, downline.userId));
+          const [user] = await ctx.db
+            .select()
+            .from(users)
+            .where(eq(users.id, downline.userId));
+          const [aff] = await ctx.db
+            .select()
+            .from(affiliates)
+            .where(eq(affiliates.userId, downline.userId));
 
           tree.push({
             id: aff?.id,
@@ -78,41 +116,67 @@ export const networkRouter = router({
    * Obter downlines diretos (referências diretas)
    */
   getDirectReferrals: protectedProcedure
-    .input(z.object({
-      affiliateId: z.number().optional(),
-      userId: z.number().optional(),
-    }))
+    .input(
+      z.object({
+        affiliateId: z.number().optional(),
+        userId: z.number().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       // Determinar o affiliateId
       let targetAffiliateId = input.affiliateId;
 
       if (!targetAffiliateId && input.userId) {
-        const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, input.userId));
+        const [affiliate] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, input.userId));
         targetAffiliateId = affiliate?.id;
       }
 
       if (!targetAffiliateId && ctx.user) {
-        const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, ctx.user.id));
+        const [affiliate] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, ctx.user.id));
         targetAffiliateId = affiliate?.id;
       }
 
       if (!targetAffiliateId) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Afiliado não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Afiliado não encontrado",
+        });
       }
 
       // Buscar sponsor do usuário atual
-      const [currentAffiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, targetAffiliateId));
+      const [currentAffiliate] = await ctx.db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.id, targetAffiliateId));
       if (!currentAffiliate) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Afiliado não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Afiliado não encontrado",
+        });
       }
 
       // Buscar downlines diretos (nível 1)
-      const directDownlines = await ctx.db.select().from(network).where(eq(network.sponsorId, targetAffiliateId));
+      const directDownlines = await ctx.db
+        .select()
+        .from(network)
+        .where(eq(network.sponsorId, targetAffiliateId));
 
       const referrals = [];
       for (const downline of directDownlines) {
-        const [user] = await ctx.db.select().from(users).where(eq(users.id, downline.userId));
-        const [aff] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, downline.userId));
+        const [user] = await ctx.db
+          .select()
+          .from(users)
+          .where(eq(users.id, downline.userId));
+        const [aff] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, downline.userId));
 
         referrals.push({
           id: aff?.id,
@@ -128,7 +192,11 @@ export const networkRouter = router({
       }
 
       // Ordenar por data de cadastro
-      referrals.sort((a, b) => new Date(b.joinedAt || 0).getTime() - new Date(a.joinedAt || 0).getTime());
+      referrals.sort(
+        (a, b) =>
+          new Date(b.joinedAt || 0).getTime() -
+          new Date(a.joinedAt || 0).getTime(),
+      );
 
       return referrals;
     }),
@@ -139,20 +207,24 @@ export const networkRouter = router({
   getStats: adminProcedure.query(async ({ ctx }) => {
     const [[totalAffiliates], [activeAffiliates]] = await Promise.all([
       ctx.db.select({ count: count() }).from(affiliates),
-      ctx.db.select({ count: count() }).from(affiliates).where(eq(affiliates.status, "active")),
+      ctx.db
+        .select({ count: count() })
+        .from(affiliates)
+        .where(eq(affiliates.status, "active")),
     ]);
 
     const allNetwork = await ctx.db.select().from(network);
-    const uniqueSponsors = new Set(allNetwork.map(n => n.sponsorId));
+    const uniqueSponsors = new Set(allNetwork.map((n) => n.sponsorId));
 
     return {
       totalAffiliates: Number(totalAffiliates.count),
       activeAffiliates: Number(activeAffiliates.count),
       totalConnections: allNetwork.length,
       uniqueSponsors: uniqueSponsors.size,
-      averageDepth: allNetwork.length > 0
-        ? allNetwork.reduce((sum, n) => sum + n.level, 0) / allNetwork.length
-        : 0,
+      averageDepth:
+        allNetwork.length > 0
+          ? allNetwork.reduce((sum, n) => sum + n.level, 0) / allNetwork.length
+          : 0,
     };
   }),
 
@@ -160,18 +232,29 @@ export const networkRouter = router({
    * Obter rede por afiliado (admin)
    */
   getByAffiliate: adminProcedure
-    .input(z.object({
-      affiliateId: z.number(),
-      maxDepth: z.number().default(3),
-    }))
+    .input(
+      z.object({
+        affiliateId: z.number(),
+        maxDepth: z.number().default(3),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, input.affiliateId));
+      const [affiliate] = await ctx.db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.id, input.affiliateId));
 
       if (!affiliate) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Afiliado não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Afiliado não encontrado",
+        });
       }
 
-      const [user] = await ctx.db.select().from(users).where(eq(users.id, affiliate.userId));
+      const [user] = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.id, affiliate.userId));
 
       return {
         affiliate: {
@@ -183,7 +266,12 @@ export const networkRouter = router({
           status: affiliate.status,
           createdAt: affiliate.createdAt,
         },
-        tree: await networkRouter.createCaller(ctx).getTree({ affiliateId: input.affiliateId, maxDepth: input.maxDepth }),
+        tree: await networkRouter
+          .createCaller(ctx)
+          .getTree({
+            affiliateId: input.affiliateId,
+            maxDepth: input.maxDepth,
+          }),
       };
     }),
 
@@ -191,17 +279,22 @@ export const networkRouter = router({
    * Listar top afiliados por volume de rede
    */
   getTopSponsors: protectedProcedure
-    .input(z.object({
-      limit: z.number().default(10),
-    }))
+    .input(
+      z.object({
+        limit: z.number().default(10),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const allNetwork = await ctx.db.select().from(network);
 
       // Agrupar por sponsor e contar downlines
-      const sponsorCounts = allNetwork.reduce((acc, n) => {
-        acc[n.sponsorId] = (acc[n.sponsorId] || 0) + 1;
-        return acc;
-      }, {} as Record<number, number>);
+      const sponsorCounts = allNetwork.reduce(
+        (acc, n) => {
+          acc[n.sponsorId] = (acc[n.sponsorId] || 0) + 1;
+          return acc;
+        },
+        {} as Record<number, number>,
+      );
 
       // Ordenar por volume
       const sorted = Object.entries(sponsorCounts)
@@ -210,15 +303,25 @@ export const networkRouter = router({
 
       const topSponsors = [];
       for (const [sponsorId, count] of sorted) {
-        const [aff] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, Number(sponsorId)));
+        const [aff] = await ctx.db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.id, Number(sponsorId)));
         if (aff) {
-          const [user] = await ctx.db.select().from(users).where(eq(users.id, aff.userId));
+          const [user] = await ctx.db
+            .select()
+            .from(users)
+            .where(eq(users.id, aff.userId));
           topSponsors.push({
             id: aff.id,
             name: user?.name || "Desconhecido",
             email: user?.email,
             affiliateCode: aff.affiliateCode,
             downlineCount: count,
+            totalCommissions: Number(aff.totalCommissions ?? 0),
+            status: aff.status,
+            joinedDate: aff.createdAt,
+            points: Number(aff.points ?? 0),
           });
         }
       }
@@ -230,27 +333,41 @@ export const networkRouter = router({
    * Buscar upline (patrocinador) de um afiliado
    */
   getUpline: protectedProcedure
-    .input(z.object({
-      affiliateId: z.number(),
-    }))
+    .input(
+      z.object({
+        affiliateId: z.number(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, input.affiliateId));
+      const [affiliate] = await ctx.db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.id, input.affiliateId));
 
       if (!affiliate) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Afiliado não encontrado" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Afiliado não encontrado",
+        });
       }
 
       if (!affiliate.sponsorId) {
         return null; // Sem upline (raiz da rede)
       }
 
-      const [sponsor] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, affiliate.sponsorId));
+      const [sponsor] = await ctx.db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.id, affiliate.sponsorId));
 
       if (!sponsor) {
         return null;
       }
 
-      const [user] = await ctx.db.select().from(users).where(eq(users.id, sponsor.userId));
+      const [user] = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.id, sponsor.userId));
 
       return {
         id: sponsor.id,

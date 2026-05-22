@@ -108,6 +108,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           badge: "Beta",
         },
         {
+          label: "Sincronizar IA",
+          href: "/agents/sync",
+          icon: <Globe className="w-5 h-5" />,
+          badge: "Novo",
+        },
+        {
           label: "Orquestrador",
           href: "/orchestrator",
           icon: <Globe className="w-5 h-5" />,

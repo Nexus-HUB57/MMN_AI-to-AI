@@ -1,5 +1,44 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-23 — AI Sync System & Agent Synchronization
+
+### `feat(ai-sync)` — Sistema de Sincronização AI-to-AI Completo
+
+**Backend:**
+
+- `backend/src/services/agentSyncService.ts` - Novo serviço de sincronização de agentes IA
+  - `syncAgentSkills()` - Sincroniza skills de um agente com modelos recomendados
+  - `getAgentSyncProfile()` - Retorna perfil completo de sincronização
+  - `syncAllAgents()` - Sincronização em lote para todos os agentes ativos
+  - `checkExpiredSkills()` - Verifica e expira skills vencidas
+- `backend/src/routers/aiSyncRouter.ts` - Novo router tRPC para sincronização AI
+  - Endpoints protegidos: `syncMyAgent`, `getMySyncProfile`
+  - Endpoints admin: `syncAgent`, `getAgentSyncProfile`, `syncAllAgents`, `checkExpiredSkills`
+  - Endpoints públicos: `getRecommendedModels`, `getLevelCapabilities`
+- `backend/src/appRouter.ts` - Integrado novo router `aiSync`
+
+**Features Implementadas:**
+
+- Mapeamento de modelos AI por categoria de skill (copywriting, analytics, ads, etc.)
+- Capabilities por nível de skill (basic, intermediate, advanced)
+- Recomendações de ações baseadas nas skills atuais do agente
+- Integração com seedSkills existente para 30 skills
+
+**Documentação:**
+
+- `docs/AI_SYNC_SYSTEM.md` - Guia técnico completo do sistema de sincronização
+
+### `docs(ai-sync)` — Documentação Técnica
+
+- Arquitetura do sistema de sincronização AI
+- Endpoints da API com exemplos de uso
+- Tabelas de recomendações de modelos
+- Catálogo completo de 30 skills
+- Categorias e cores visuais
+- Integração com cron jobs
+
+---
+
 ## 2026-05-22 — Estabilização transversal: Husky, CI, MMN Router e typecheck frontend
 
 ### `fix(monorepo)` — Continuidade das frentes 1, 2, 3 e 4

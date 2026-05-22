@@ -28,6 +28,7 @@ import { networkRouter } from "./routers/networkRouter";
 import { delinquentsRouter } from "./routers/delinquentsRouter";
 import { commissionsRouter } from "./routers/commissionsRouter";
 import { approvalsRouter } from "./routers/approvalsRouter";
+import { aiSyncRouter } from "./routers/aiSyncRouter";
 import { cronRouter } from "./routers/cronRouter";
 
 export const appRouter = router({
@@ -102,12 +103,14 @@ export const appRouter = router({
         commissions: true,
         approvals: true,
         cron: true,
+        aiSync: true,
       },
     })),
   }),
 
   agentic: agenticRouter,
   agents: agentsRouter,
+  aiSync: aiSyncRouter,
   mmn: mmnRouter,
   aiContentHub: aiContentHubRouter,
   content: contentGenerationRouter,

@@ -1,12 +1,23 @@
-import { ScrollView, Text, View, TouchableOpacity, Switch, ActivityIndicator } from "react-native";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Switch,
+  ActivityIndicator,
+} from "react-native";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/hooks/use-auth";
 import { useState } from "react";
 import { ScreenContainer } from "@/components/screen-container";
 
 export default function ProfileScreen() {
-  const { user, logout, isLoading: isLoadingAuth } = useAuth();
-  const { data: affiliateProfile, isLoading: isLoadingAffiliate, refetch: refetchAffiliate } = trpc.mmn.getProfile.useQuery();
+  const { user, logout, loading: isLoadingAuth } = useAuth();
+  const {
+    data: affiliateProfile,
+    isLoading: isLoadingAffiliate,
+    refetch: refetchAffiliate,
+  } = trpc.mmn.getProfile.useQuery();
 
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
@@ -33,7 +44,9 @@ export default function ProfileScreen() {
           {/* Header */}
           <View className="gap-2">
             <Text className="text-3xl font-bold text-foreground">Perfil</Text>
-            <Text className="text-sm text-muted">Gerencie suas informações</Text>
+            <Text className="text-sm text-muted">
+              Gerencie suas informações
+            </Text>
           </View>
 
           {/* Informações do Usuário */}
@@ -47,43 +60,59 @@ export default function ProfileScreen() {
               {isLoading ? (
                 <ActivityIndicator size="small" />
               ) : (
-                <Text className="text-xl font-bold text-foreground">{user?.name || "Usuário"}</Text>
+                <Text className="text-xl font-bold text-foreground">
+                  {user?.name || "Usuário"}
+                </Text>
               )}
             </View>
 
             <View className="gap-3 border-t border-border pt-4">
               <View>
-                <Text className="text-xs font-medium text-muted mb-1">Email</Text>
+                <Text className="text-xs font-medium text-muted mb-1">
+                  Email
+                </Text>
                 {isLoading ? (
                   <ActivityIndicator size="small" />
                 ) : (
-                  <Text className="text-sm text-foreground">{user?.email || "N/A"}</Text>
+                  <Text className="text-sm text-foreground">
+                    {user?.email || "N/A"}
+                  </Text>
                 )}
               </View>
               <View>
-                <Text className="text-xs font-medium text-muted mb-1">Código de Afiliado</Text>
+                <Text className="text-xs font-medium text-muted mb-1">
+                  Código de Afiliado
+                </Text>
                 {isLoading ? (
                   <ActivityIndicator size="small" />
                 ) : (
-                  <Text className="text-sm text-foreground font-mono">{affiliateProfile?.affiliateCode || "N/A"}</Text>
+                  <Text className="text-sm text-foreground font-mono">
+                    {affiliateProfile?.affiliateCode || "N/A"}
+                  </Text>
                 )}
               </View>
             </View>
 
             <TouchableOpacity className="bg-primary rounded-lg py-3 px-4 active:opacity-80">
-              <Text className="text-white font-semibold text-center">Editar Perfil</Text>
+              <Text className="text-white font-semibold text-center">
+                Editar Perfil
+              </Text>
             </TouchableOpacity>
           </View>
 
           {/* Link de Indicação */}
           <View className="bg-surface rounded-2xl p-4 border border-border gap-3">
-            <Text className="text-sm font-medium text-muted">Link de Indicação</Text>
+            <Text className="text-sm font-medium text-muted">
+              Link de Indicação
+            </Text>
             <View className="bg-background rounded-lg p-3 border border-border">
               {isLoading ? (
                 <ActivityIndicator size="small" />
               ) : (
                 <Text className="text-xs text-foreground font-mono break-words">
-                  {affiliateProfile?.affiliateCode ? `https://mmn.ai/ref/${affiliateProfile.affiliateCode}` : "N/A"}
+                  {affiliateProfile?.affiliateCode
+                    ? `https://mmn.ai/ref/${affiliateProfile.affiliateCode}`
+                    : "N/A"}
                 </Text>
               )}
             </View>
@@ -91,19 +120,27 @@ export default function ProfileScreen() {
               onPress={handleCopyLink}
               className="bg-primary/10 rounded-lg py-2 px-4 active:opacity-70"
             >
-              <Text className="text-primary font-semibold text-center text-sm">Copiar Link</Text>
+              <Text className="text-primary font-semibold text-center text-sm">
+                Copiar Link
+              </Text>
             </TouchableOpacity>
           </View>
 
           {/* Preferências */}
           <View className="gap-3">
-            <Text className="text-lg font-semibold text-foreground">Preferências</Text>
+            <Text className="text-lg font-semibold text-foreground">
+              Preferências
+            </Text>
 
             {/* Notificações */}
             <View className="bg-surface rounded-lg p-4 border border-border flex-row justify-between items-center">
               <View className="flex-1">
-                <Text className="text-sm font-medium text-foreground">Notificações</Text>
-                <Text className="text-xs text-muted mt-1">Receber alertas de comissões</Text>
+                <Text className="text-sm font-medium text-foreground">
+                  Notificações
+                </Text>
+                <Text className="text-xs text-muted mt-1">
+                  Receber alertas de comissões
+                </Text>
               </View>
               <Switch
                 value={notifications}
@@ -115,8 +152,12 @@ export default function ProfileScreen() {
             {/* Tema Escuro */}
             <View className="bg-surface rounded-lg p-4 border border-border flex-row justify-between items-center">
               <View className="flex-1">
-                <Text className="text-sm font-medium text-foreground">Tema Escuro</Text>
-                <Text className="text-xs text-muted mt-1">Alternar entre claro e escuro</Text>
+                <Text className="text-sm font-medium text-foreground">
+                  Tema Escuro
+                </Text>
+                <Text className="text-xs text-muted mt-1">
+                  Alternar entre claro e escuro
+                </Text>
               </View>
               <Switch
                 value={darkMode}
@@ -129,18 +170,24 @@ export default function ProfileScreen() {
           {/* Ações */}
           <View className="gap-3">
             <TouchableOpacity className="bg-surface rounded-lg py-3 px-4 border border-border active:opacity-70">
-              <Text className="text-foreground font-semibold text-center">Sobre o App</Text>
+              <Text className="text-foreground font-semibold text-center">
+                Sobre o App
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity className="bg-surface rounded-lg py-3 px-4 border border-border active:opacity-70">
-              <Text className="text-foreground font-semibold text-center">Termos de Uso</Text>
+              <Text className="text-foreground font-semibold text-center">
+                Termos de Uso
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleLogout}
               className="bg-error/10 rounded-lg py-3 px-4 active:opacity-70"
             >
-              <Text className="text-error font-semibold text-center">Fazer Logout</Text>
+              <Text className="text-error font-semibold text-center">
+                Fazer Logout
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

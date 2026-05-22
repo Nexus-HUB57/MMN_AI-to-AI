@@ -31,6 +31,7 @@ const Agents = lazy(() => import("./pages/Agents"));
 const AgentDashboard = lazy(() => import("./pages/AgentDashboard"));
 const AgentStatus = lazy(() => import("./pages/AgentStatus"));
 const AgentConfiguration = lazy(() => import("./pages/AgentConfiguration"));
+const AISyncDashboard = lazy(() => import("./pages/AISyncDashboard"));
 
 const Marketplaces = lazy(() => import("./pages/Marketplaces"));
 const PacksMarketplace = lazy(() => import("./pages/PacksMarketplace"));
@@ -75,6 +76,7 @@ export const NAVIGATION_STRUCTURE = {
     { path: "/agents/dashboard", name: "Dashboard Agentes", component: "AgentDashboard", layout: "DashboardLayout" },
     { path: "/agents/config", name: "Configurar Agente", component: "AgentConfiguration", layout: "DashboardLayout" },
     { path: "/agents/status", name: "Status", component: "AgentStatus", layout: "DashboardLayout" },
+    { path: "/agents/sync", name: "Sincronizar IA", component: "AISyncDashboard", layout: "DashboardLayout" },
   ],
   CONTENT: [
     { path: "/content-hub", name: "Hub de Conteúdo", component: "ContentHub", layout: "DashboardLayout" },
@@ -144,6 +146,7 @@ export default function App() {
             <Route path="/agents/dashboard" component={AgentDashboard} />
             <Route path="/agents/config" component={AgentConfiguration} />
             <Route path="/agents/status" component={AgentStatus} />
+            <Route path="/agents/sync" component={AISyncDashboard} />
 
             <Route path="/content-hub" component={ContentHub} />
             <Route path="/content/generate" component={ContentGeneration} />

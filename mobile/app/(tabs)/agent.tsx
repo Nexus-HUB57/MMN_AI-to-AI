@@ -1,10 +1,4 @@
-import {
-  ScrollView,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { trpc } from "@/lib/trpc";
 import { useColors } from "@/hooks/use-colors";
 import { useState } from "react";
@@ -14,16 +8,11 @@ export default function AgentScreen() {
   const colors = useColors();
   const [strategy, setStrategy] = useState("balanced");
   const [isUpdatingStrategy, setIsUpdatingStrategy] = useState(false);
-  const [agentActiveOverride, setAgentActive] = useState<boolean | null>(null);
 
-  const {
-    data: agentData,
-    isLoading: isLoadingAgent,
-    refetch: refetchAgent,
-  } = trpc.mmn.getAgent.useQuery();
+  const { data: agentData, isLoading: isLoadingAgent, refetch: refetchAgent } = trpc.mmn.getAgent.useQuery();
   const updateStrategyMutation = trpc.mmn.updateAgentStrategy.useMutation();
 
-  const agentActive = agentActiveOverride ?? agentData?.status === "active";
+  const agentActive = agentData?.status === "active";
   const metrics = {
     energy: agentData?.vitals?.energy || 85,
     health: agentData?.vitals?.health || 92,
@@ -46,12 +35,7 @@ export default function AgentScreen() {
           agentId: agentData.id,
           contentStrategy: {
             platforms: ["whatsapp", "instagram", "facebook"],
-            postingFrequency:
-              newStrategy === "aggressive"
-                ? "hourly"
-                : newStrategy === "balanced"
-                  ? "daily"
-                  : "weekly",
+            postingFrequency: newStrategy === "aggressive" ? "hourly" : newStrategy === "balanced" ? "daily" : "weekly",
             tone: "professional",
           },
         });
@@ -69,28 +53,20 @@ export default function AgentScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="gap-6 pb-6">
           <View className="gap-2">
-            <Text className="text-3xl font-bold text-foreground">
-              Agente IA
-            </Text>
-            <Text className="text-sm text-muted">
-              Gerencie seu assistente inteligente
-            </Text>
+            <Text className="text-3xl font-bold text-foreground">Agente IA</Text>
+            <Text className="text-sm text-muted">Gerencie seu assistente inteligente</Text>
           </View>
 
           {/* Status */}
           <View className="bg-surface rounded-2xl p-6 border border-border gap-4">
             <View className="flex-row justify-between items-center">
-              <Text className="text-lg font-semibold text-foreground">
-                Status
-              </Text>
+              <Text className="text-lg font-semibold text-foreground">Status</Text>
               <View
                 className={`rounded-full px-3 py-1 ${
                   agentActive ? "bg-success/20" : "bg-error/20"
                 }`}
               >
-                <Text
-                  className={`font-medium text-xs ${agentActive ? "text-success" : "text-error"}`}
-                >
+                <Text className={`font-medium text-xs ${agentActive ? "text-success" : "text-error"}`}>
                   {agentActive ? "Ativo" : "Inativo"}
                 </Text>
               </View>
@@ -100,9 +76,7 @@ export default function AgentScreen() {
               <TouchableOpacity
                 onPress={() => setAgentActive(true)}
                 className={`flex-1 rounded-lg py-2 px-3 active:opacity-70 ${
-                  agentActive
-                    ? "bg-success/20"
-                    : "bg-surface border border-border"
+                  agentActive ? "bg-success/20" : "bg-surface border border-border"
                 }`}
               >
                 <Text
@@ -116,9 +90,7 @@ export default function AgentScreen() {
               <TouchableOpacity
                 onPress={() => setAgentActive(false)}
                 className={`flex-1 rounded-lg py-2 px-3 active:opacity-70 ${
-                  !agentActive
-                    ? "bg-error/20"
-                    : "bg-surface border border-border"
+                  !agentActive ? "bg-error/20" : "bg-surface border border-border"
                 }`}
               >
                 <Text
@@ -134,9 +106,7 @@ export default function AgentScreen() {
 
           {/* Métricas */}
           <View className="gap-3">
-            <Text className="text-lg font-semibold text-foreground">
-              Métricas
-            </Text>
+            <Text className="text-lg font-semibold text-foreground">Métricas</Text>
 
             {Object.entries(metrics).map(([key, value]) => (
               <View key={key} className="gap-2">
@@ -147,9 +117,7 @@ export default function AgentScreen() {
                     {key === "creativity" && "Criatividade"}
                     {key === "reputation" && "Reputação"}
                   </Text>
-                  <Text className="text-sm font-bold text-primary">
-                    {value}%
-                  </Text>
+                  <Text className="text-sm font-bold text-primary">{value}%</Text>
                 </View>
                 <View className="h-2 bg-border rounded-full overflow-hidden">
                   <View
@@ -163,9 +131,7 @@ export default function AgentScreen() {
 
           {/* Estratégia */}
           <View className="bg-surface rounded-2xl p-4 border border-border gap-3">
-            <Text className="text-sm font-medium text-muted">
-              Estratégia de Conteúdo
-            </Text>
+            <Text className="text-sm font-medium text-muted">Estratégia de Conteúdo</Text>
             <View className="gap-2">
               {[
                 { id: "aggressive", label: "Agressiva" },
@@ -175,7 +141,7 @@ export default function AgentScreen() {
                 <TouchableOpacity
                   key={opt.id}
                   onPress={() => handleStrategyChange(opt.id)}
-                  disabled={isUpdatingStrategy}
+                disabled={isUpdatingStrategy}
                   className={`rounded-lg p-3 border ${
                     strategy === opt.id
                       ? "bg-primary/10 border-primary"
@@ -196,18 +162,14 @@ export default function AgentScreen() {
 
           {/* Últimas Ações */}
           <View className="gap-3">
-            <Text className="text-lg font-semibold text-foreground">
-              Últimas Ações
-            </Text>
+            <Text className="text-lg font-semibold text-foreground">Últimas Ações</Text>
             {recentActions.map((action) => (
               <View
                 key={action.id}
                 className="bg-surface rounded-lg p-4 border border-border flex-row justify-between items-center"
               >
                 <View className="flex-1">
-                  <Text className="text-sm font-semibold text-foreground">
-                    {action.action}
-                  </Text>
+                  <Text className="text-sm font-semibold text-foreground">{action.action}</Text>
                   <Text className="text-xs text-muted mt-1">{action.time}</Text>
                 </View>
               </View>
@@ -216,9 +178,7 @@ export default function AgentScreen() {
 
           {/* Configurar */}
           <TouchableOpacity className="bg-primary rounded-lg py-3 px-4 active:opacity-80">
-            <Text className="text-white font-semibold text-center">
-              Configurar Agente
-            </Text>
+            <Text className="text-white font-semibold text-center">Configurar Agente</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

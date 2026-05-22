@@ -1,7 +1,21 @@
-import { pgTable, serial, integer, varchar, text, timestamp, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  integer,
+  varchar,
+  text,
+  timestamp,
+  index,
+} from "drizzle-orm/pg-core";
+import {
+  activationPacks,
+  packActivations,
+  type InsertPackActivation,
+} from "../../../database/schemas/schema-packs";
 
 export * from "../../../database/schemas/schema-final";
 export * from "../../../database/schemas/agentic";
+export * from "../../../database/schemas/schema-packs";
 
 export const marketplaceAccounts = pgTable(
   "marketplace_accounts",
@@ -15,14 +29,19 @@ export const marketplaceAccounts = pgTable(
     apiKey: text("apiKey"),
     apiSecret: text("apiSecret"),
     isActive: integer("isActive").notNull().default(1),
-    syncStatus: varchar("syncStatus", { length: 20 }).notNull().default("pending"),
+    syncStatus: varchar("syncStatus", { length: 20 })
+      .notNull()
+      .default("pending"),
     lastSyncAt: timestamp("lastSyncAt"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    userMarketplaceIdx: index("marketplace_accounts_user_marketplace_idx").on(table.userId, table.marketplace),
-  })
+    userMarketplaceIdx: index("marketplace_accounts_user_marketplace_idx").on(
+      table.userId,
+      table.marketplace,
+    ),
+  }),
 );
 
 export const marketplaceProductsExt = pgTable(
@@ -51,10 +70,18 @@ export const marketplaceProductsExt = pgTable(
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    accountIdx: index("marketplace_products_account_idx").on(table.marketplaceAccountId),
-    externalProductIdx: index("marketplace_products_external_idx").on(table.externalProductId, table.marketplace),
-    marketplaceSalesIdx: index("marketplace_products_marketplace_sales_idx").on(table.marketplace, table.sales),
-  })
+    accountIdx: index("marketplace_products_account_idx").on(
+      table.marketplaceAccountId,
+    ),
+    externalProductIdx: index("marketplace_products_external_idx").on(
+      table.externalProductId,
+      table.marketplace,
+    ),
+    marketplaceSalesIdx: index("marketplace_products_marketplace_sales_idx").on(
+      table.marketplace,
+      table.sales,
+    ),
+  }),
 );
 
 export const productTrends = pgTable(
@@ -70,16 +97,22 @@ export const productTrends = pgTable(
     demandLevel: varchar("demandLevel", { length: 64 }),
     competitionLevel: varchar("competitionLevel", { length: 64 }),
     profitabilityScore: integer("profitabilityScore"),
-    recommendation: varchar("recommendation", { length: 10 }).notNull().default("hold"),
+    recommendation: varchar("recommendation", { length: 10 })
+      .notNull()
+      .default("hold"),
     analyzedAt: timestamp("analyzedAt").notNull().defaultNow(),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    productIdx: index("product_trends_product_idx").on(table.marketplaceProductId),
+    productIdx: index("product_trends_product_idx").on(
+      table.marketplaceProductId,
+    ),
     scoreIdx: index("product_trends_score_idx").on(table.trendingScore),
-    recommendationIdx: index("product_trends_recommendation_idx").on(table.recommendation),
-  })
+    recommendationIdx: index("product_trends_recommendation_idx").on(
+      table.recommendation,
+    ),
+  }),
 );
 
 export const affiliateMargins = pgTable(
@@ -91,7 +124,9 @@ export const affiliateMargins = pgTable(
     baseCommission: integer("baseCommission").notNull().default(0),
     bonusCommission: integer("bonusCommission").notNull().default(0),
     totalCommission: integer("totalCommission").notNull().default(0),
-    estimatedMonthlyEarnings: integer("estimatedMonthlyEarnings").notNull().default(0),
+    estimatedMonthlyEarnings: integer("estimatedMonthlyEarnings")
+      .notNull()
+      .default(0),
     totalEarnings: integer("totalEarnings").notNull().default(0),
     totalSales: integer("totalSales").notNull().default(0),
     conversionRate: integer("conversionRate").notNull().default(0),
@@ -100,9 +135,13 @@ export const affiliateMargins = pgTable(
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    affiliateIdx: index("affiliate_margins_affiliate_idx").on(table.affiliateId),
-    productIdx: index("affiliate_margins_product_idx").on(table.marketplaceProductId),
-  })
+    affiliateIdx: index("affiliate_margins_affiliate_idx").on(
+      table.affiliateId,
+    ),
+    productIdx: index("affiliate_margins_product_idx").on(
+      table.marketplaceProductId,
+    ),
+  }),
 );
 
 export const marketplaceSyncHistory = pgTable(
@@ -121,18 +160,27 @@ export const marketplaceSyncHistory = pgTable(
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },
   (table) => ({
-    accountIdx: index("marketplace_sync_history_account_idx").on(table.marketplaceAccountId),
+    accountIdx: index("marketplace_sync_history_account_idx").on(
+      table.marketplaceAccountId,
+    ),
     statusIdx: index("marketplace_sync_history_status_idx").on(table.status),
-  })
+  }),
 );
+
+export const marketplaceProducts = marketplaceProductsExt;
+export const packs = activationPacks;
+export const agentPacks = packActivations;
 
 export type MarketplaceAccount = typeof marketplaceAccounts.$inferSelect;
 export type InsertMarketplaceAccount = typeof marketplaceAccounts.$inferInsert;
 export type MarketplaceProductExt = typeof marketplaceProductsExt.$inferSelect;
-export type InsertMarketplaceProductExt = typeof marketplaceProductsExt.$inferInsert;
+export type InsertMarketplaceProductExt =
+  typeof marketplaceProductsExt.$inferInsert;
 export type ProductTrend = typeof productTrends.$inferSelect;
 export type InsertProductTrend = typeof productTrends.$inferInsert;
 export type AffiliateMargin = typeof affiliateMargins.$inferSelect;
 export type InsertAffiliateMargin = typeof affiliateMargins.$inferInsert;
 export type MarketplaceSyncHistory = typeof marketplaceSyncHistory.$inferSelect;
-export type InsertMarketplaceSyncHistory = typeof marketplaceSyncHistory.$inferInsert;
+export type InsertMarketplaceSyncHistory =
+  typeof marketplaceSyncHistory.$inferInsert;
+export type InsertAgentPack = InsertPackActivation;

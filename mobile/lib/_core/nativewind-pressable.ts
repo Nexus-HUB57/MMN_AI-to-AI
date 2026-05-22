@@ -1,5 +1,6 @@
-// NativeWind + Pressable: className can swallow onPress. Disable className mapping globally.
+// NativeWind + Pressable: className pode engolir onPress em alguns cenários.
+// O cast evita conflito de tipagem entre as definições de React/NativeWind.
 import { Pressable } from "react-native";
 import { remapProps } from "nativewind";
 
-remapProps(Pressable, { className: false });
+remapProps(Pressable as any, { className: false });

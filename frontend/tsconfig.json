@@ -14,17 +14,25 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["vite/client", "node"]
   },
   "include": [
-    "src/main.tsx",
     "src/vite-env.d.ts",
-    "src/App.tsx",
     "src/contexts/AuthContext.tsx",
+    "src/lib/trpc.ts",
     "src/pages/Home.tsx",
     "src/pages/Dashboard.tsx",
     "src/pages/ContentHub.tsx",
-    "src/pages/NotFound.tsx"
+    "src/pages/NotFound.tsx",
+    "src/pages/DashboardLayout.tsx",
+    "src/pages/AffiliateProfile.tsx",
+    "src/pages/BonusPage.tsx",
+    "src/pages/TopSponsors.tsx"
   ],
   "exclude": ["node_modules", "dist"]
 }

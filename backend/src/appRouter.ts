@@ -1,4 +1,4 @@
-import { publicProcedure, router } from "./trpc/trpc";
+import { publicProcedure, router } from "./config/trpc";
 import { agenticRouter } from "./routers/agenticRouter";
 import { agentsRouter } from "./routers/agentsRouter";
 import { authRouter } from "./routers/authRouter";
@@ -29,9 +29,6 @@ import { delinquentsRouter } from "./routers/delinquentsRouter";
 import { commissionsRouter } from "./routers/commissionsRouter";
 import { approvalsRouter } from "./routers/approvalsRouter";
 import { cronRouter } from "./routers/cronRouter";
-import { getAffiliateByUserId, getAgentByUserId, getDirectReferrals, getNetworkTree, getTotalCommissions, getPendingCommissions, getOrdersByAffiliate, getTrendingProducts, getActiveUpgrades, getAffiliateByCode } from "../../database/schemas/db";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 export const appRouter = router({
   system: router({
@@ -59,6 +56,7 @@ export const appRouter = router({
         "Social Media Scheduling",
         "Analytics Dashboard",
         "Orchestrator System",
+        "Pack Marketplace Sync",
       ],
       notes: [
         "Core transacional preservado e camada agentic em evolução incremental.",
@@ -91,6 +89,8 @@ export const appRouter = router({
         xp: true,
         system: true,
         upgrades: true,
+        packs: true,
+        skills: true,
         newsletter: true,
         cms: true,
         billing: true,
@@ -106,159 +106,34 @@ export const appRouter = router({
     })),
   }),
 
-  // ============ AGENTIC ROUTER ============
   agentic: agenticRouter,
-
-  // ============ AGENTS ROUTER ============
   agents: agentsRouter,
-
-  // ============ MMN ROUTER ============
-  mmn: router({
-    getProfile: publicProcedure
-      .input(z.object({ userId: z.number() }).optional())
-      .query(async ({ input }) => {
-        if (!input?.userId) return null;
-        const affiliate = await getAffiliateByUserId(input.userId);
-        return affiliate || null;
-      }),
-
-    getAffiliateByCode: publicProcedure
-      .input(z.object({ code: z.string() }))
-      .query(async ({ input }) => {
-        const affiliate = await getAffiliateByCode(input.code);
-        if (!affiliate) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Affiliate not found" });
-        }
-        return affiliate;
-      }),
-
-    getAgent: publicProcedure
-      .input(z.object({ userId: z.number() }))
-      .query(async ({ input }) => {
-        const agent = await getAgentByUserId(input.userId);
-        if (!agent) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Agent not found" });
-        }
-        return agent;
-      }),
-
-    getDirectReferrals: publicProcedure
-      .input(z.object({ userId: z.number() }))
-      .query(async ({ input }) => {
-        return getDirectReferrals(input.userId);
-      }),
-
-    getNetworkTree: publicProcedure
-      .input(z.object({ userId: z.number(), maxDepth: z.number().optional() }))
-      .query(async ({ input }) => {
-        return getNetworkTree(input.userId, input.maxDepth || 3);
-      }),
-
-    getStats: publicProcedure
-      .input(z.object({ affiliateId: z.number() }))
-      .query(async ({ input }) => {
-        const [total, pending] = await Promise.all([
-          getTotalCommissions(input.affiliateId),
-          getPendingCommissions(input.affiliateId),
-        ]);
-        return { total, pending };
-      }),
-
-    getRecentOrders: publicProcedure
-      .input(z.object({ affiliateId: z.number(), limit: z.number().optional() }))
-      .query(async ({ input }) => {
-        return getOrdersByAffiliate(input.affiliateId, input.limit || 10);
-      }),
-
-    getTrendingProducts: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
-      .query(async ({ input }) => {
-        return getTrendingProducts(input.limit || 10);
-      }),
-
-    getUpgrades: publicProcedure
-      .input(z.object({ agentId: z.number() }))
-      .query(async ({ input }) => {
-        return getActiveUpgrades(input.agentId);
-      }),
-  }),
-
-  // ============ AI CONTENT HUB ROUTER ============
+  mmn: mmnRouter,
   aiContentHub: aiContentHubRouter,
-
-  // ============ CONTENT GENERATION ROUTER ============
   content: contentGenerationRouter,
-
-  // ============ DASHBOARD ROUTER ============
   dashboard: dashboardRouter,
-
-  // ============ DROPSHIPPING ROUTER ============
   dropshipping: dropshippingRouter,
-
-  // ============ LOG ROUTER ============
   logs: logRouter,
-
-  // ============ MARKETPLACES ROUTER ============
   marketplaces: marketplacesRouter,
-
-  // ============ ORCHESTRATION ROUTER ============
   orchestration: orchestrationRouter,
-
-  // ============ OBSERVABILITY ROUTER ============
   observability: observabilityRouter,
-
-  // ============ PAYMENTS ROUTER ============
   payments: paymentsRouter,
-
-  // ============ BANKING ROUTER ============
   banking: bankingRouter,
-
-  // ============ SOCIAL ROUTER ============
   social: socialRouter,
-
-  // ============ XP ROUTER ============
   xp: xpRouter,
-
-  // ============ UPGRADES ROUTER ============
   upgrades: upgradesRouter,
-
-  // ============ PACKS ROUTER ============
   packs: packsRouter,
-
-  // ============ SKILLS ROUTER ============
   skills: skillsRouter,
-
-  // ============ NEWSLETTER ROUTER ============
   newsletter: newsletterRouter,
-
-  // ============ CMS ROUTER ============
   cms: cmsRouter,
-
-  // ============ BILLING ROUTER ============
   billing: billingRouter,
-
-  // ============ ADMIN ROUTER ============
   admin: adminRouter,
-
-  // ============ USERS ROUTER ============
   users: usersRouter,
-
-  // ============ MATERIALS ROUTER ============
   materials: materialsRouter,
-
-  // ============ NETWORK ROUTER ============
   network: networkRouter,
-
-  // ============ DELINQUENTS ROUTER ============
   delinquents: delinquentsRouter,
-
-  // ============ COMMISSIONS ROUTER ============
   commissions: commissionsRouter,
-
-  // ============ APPROVALS ROUTER ============
   approvals: approvalsRouter,
-
-  // ============ CRON ROUTER ============
   cron: cronRouter,
 });
 

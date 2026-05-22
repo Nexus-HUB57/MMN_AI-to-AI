@@ -187,11 +187,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const isActive = (href: string) => {
-    if (href === "/dashboard") return location === "/" || location === "/dashboard";
+    if (href === "/dashboard")
+      return location === "/" || location === "/dashboard";
     return location.startsWith(href);
   };
 
-  const agentStatus: "ativo" | "inativo" | "configurando" = "configurando";
+  const agentStatus = "configurando" as "ativo" | "inativo" | "configurando";
   const statusColors = {
     ativo: "bg-accent-green/20 text-accent-green",
     inativo: "bg-red-500/20 text-red-400",
@@ -211,7 +212,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               Faça login para continuar
             </h1>
             <p className="text-sm text-text-secondary text-center max-w-sm">
-              Acesso a este painel requer autenticação. Clique abaixo para iniciar o fluxo de login.
+              Acesso a este painel requer autenticação. Clique abaixo para
+              iniciar o fluxo de login.
             </p>
           </div>
           <Button
@@ -287,7 +289,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   </p>
                   <p className="text-xs text-text-secondary">{user?.email}</p>
                   <p className="text-xs text-text-muted mt-1">
-                    Papel: {user?.role === "admin" ? "Administrador" : "Afiliado"}
+                    Papel:{" "}
+                    {user?.role === "admin" ? "Administrador" : "Afiliado"}
                   </p>
                 </div>
                 <div className="pt-2 border-t border-border/50">
@@ -298,15 +301,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     <span
                       className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[agentStatus]}`}
                     >
-                      {agentStatus.charAt(0).toUpperCase() + agentStatus.slice(1)}
+                      {agentStatus.charAt(0).toUpperCase() +
+                        agentStatus.slice(1)}
                     </span>
                   </div>
                   <p className="text-xs text-text-muted mt-2">
                     {agentStatus === "ativo"
                       ? "Seu agente está operacional"
                       : agentStatus === "inativo"
-                      ? "Agente inativo. Clique para ativar"
-                      : "Agente em configuração. Finalize a instalação"}
+                        ? "Agente inativo. Clique para ativar"
+                        : "Agente em configuração. Finalize a instalação"}
                   </p>
                 </div>
               </div>
@@ -381,7 +385,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     >
                       <span
                         className={`transition-colors ${
-                          active ? "text-accent-cyan" : "text-text-secondary group-hover:text-accent-cyan"
+                          active
+                            ? "text-accent-cyan"
+                            : "text-text-secondary group-hover:text-accent-cyan"
                         }`}
                       >
                         {item.icon}

@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Gift, Star, Award, TrendingUp, Zap, Target, Crown } from "lucide-react";
+import {
+  Trophy,
+  Gift,
+  Star,
+  Award,
+  TrendingUp,
+  Zap,
+  Crown,
+  Cpu,
+} from "lucide-react";
 import TopSponsors from "./TopSponsors";
+import { trpc } from "@/lib/trpc";
 
 interface BonusGoal {
   id: string;
@@ -21,119 +31,191 @@ interface BonusGoal {
   status: "active" | "completed" | "expired";
 }
 
-interface CommissionStats {
+interface BonusStats {
   totalCommissions: number;
   pendingCommissions: number;
-  confirmedCommissions: number;
-  paidCommissions: number;
-  monthlyAverage: number;
+  availableCommissions: number;
+  recentSalesVolume: number;
+  averageTicket: number;
 }
 
+const orderDate = (value: unknown) => {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const shouldFormatProgressAsCurrency = (bonus: BonusGoal) =>
+  bonus.maxProgress >= 1000;
+
 export default function BonusPage() {
-  const [bonuses, setBonuses] = useState<BonusGoal[]>([]);
-  const [stats, setStats] = useState<CommissionStats | null>(null);
-  const [loading, setLoading] = useState(true);
   const [selectedBonus, setSelectedBonus] = useState<BonusGoal | null>(null);
 
-  // Dados mockados para demonstração (serão substituídos por chamadas tRPC)
-  const mockBonuses: BonusGoal[] = [
+  const { data: profile, isLoading: isLoadingProfile } =
+    trpc.mmn.getProfile.useQuery();
+  const { data: statsData, isLoading: isLoadingStats } =
+    trpc.mmn.getStats.useQuery(undefined, {
+      enabled: !!profile,
+    });
+  const { data: directReferrals = [], isLoading: isLoadingReferrals } =
+    trpc.mmn.getDirectReferrals.useQuery(undefined, {
+      enabled: !!profile,
+    });
+  const { data: recentOrders = [], isLoading: isLoadingOrders } =
+    trpc.mmn.getRecentOrders.useQuery(undefined, {
+      enabled: !!profile,
+    });
+  const { data: dashboardMetrics } = trpc.dashboard.getMetrics.useQuery(
+    undefined,
     {
-      id: "bonus-1",
-      title: "Bônus de Início Rápido",
-      description: "Atinja 5 novos afiliados diretos em 30 dias.",
-      progress: 3,
-      maxProgress: 5,
-      reward: "R$ 500,00",
-      rewardType: "cash",
-      icon: <TrendingUp className="text-neon-cyan" />,
-      category: "network",
-      deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-      status: "active",
+      enabled: !!profile,
     },
-    {
-      id: "bonus-2",
-      title: "Prêmio Esmeralda",
-      description: "Alcance o volume de vendas de R$ 50.000,00 com sua rede.",
-      progress: 17500,
-      maxProgress: 50000,
-      reward: "Viagem para Resort",
-      rewardType: "prize",
-      icon: <Award className="text-neon-pink" />,
-      category: "sales",
-      deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
-      status: "active",
-    },
-    {
-      id: "bonus-3",
-      title: "Bônus de Liderança",
-      description: "Ajude 3 diretos a alcançarem o nível Rubi.",
-      progress: 0,
-      maxProgress: 3,
-      reward: "Participação nos Lucros (2%)",
-      rewardType: "percentage",
-      icon: <Trophy className="text-yellow-500" />,
-      category: "leadership",
-      status: "active",
-    },
-    {
-      id: "bonus-4",
-      title: "Bônus de Profundidade",
-      description: "Atinja 50 pessoas na sua rede total.",
-      progress: 28,
-      maxProgress: 50,
-      reward: "R$ 1.000,00",
-      rewardType: "cash",
-      icon: <Crown className="text-purple-500" />,
-      category: "network",
-      deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-      status: "active",
-    },
-    {
-      id: "bonus-5",
-      title: "Bônus de Consistência",
-      description: "Mantenha vendas acima de R$ 5.000/mês por 3 meses consecutivos.",
-      progress: 2,
-      maxProgress: 3,
-      reward: "R$ 2.000,00",
-      rewardType: "cash",
-      icon: <Zap className="text-yellow-400" />,
-      category: "sales",
-      status: "active",
-    },
-  ];
+  );
 
-  const mockStats: CommissionStats = {
-    totalCommissions: 12500,
-    pendingCommissions: 2300,
-    confirmedCommissions: 5200,
-    paidCommissions: 5000,
-    monthlyAverage: 2100,
-  };
+  const loading =
+    isLoadingProfile || isLoadingStats || isLoadingReferrals || isLoadingOrders;
 
-  useEffect(() => {
-    // Simular carregamento de dados do backend
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        // TODO: Substituir por chamadas tRPC reais
-        // const response = await trpc.mmn.getBonusGoals.query();
-        // const statsResponse = await trpc.mmn.getCommissionStats.query();
-        
-        // Por enquanto, usar dados mockados
-        setBonuses(mockBonuses);
-        setStats(mockStats);
-      } catch (error) {
-        console.error("Erro ao carregar dados de bônus:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const paidLikeOrders = useMemo(
+    () =>
+      recentOrders.filter((order: any) =>
+        ["confirmed", "shipped", "delivered"].includes(String(order.status)),
+      ),
+    [recentOrders],
+  );
 
-    loadData();
-  }, []);
+  const salesVolume = useMemo(
+    () =>
+      paidLikeOrders.reduce(
+        (sum: number, order: any) => sum + Number(order.amount ?? 0),
+        0,
+      ),
+    [paidLikeOrders],
+  );
+
+  const averageTicket =
+    paidLikeOrders.length > 0 ? salesVolume / paidLikeOrders.length : 0;
+  const totalCommissions = Number(
+    statsData?.total ?? profile?.totalCommissions ?? 0,
+  );
+  const pendingCommissions = Number(
+    statsData?.pending ?? profile?.pendingCommissions ?? 0,
+  );
+  const availableCommissions = Math.max(
+    totalCommissions - pendingCommissions,
+    0,
+  );
+  const agentIsActive = dashboardMetrics?.agent?.status === "active";
+
+  const stats = useMemo<BonusStats>(
+    () => ({
+      totalCommissions,
+      pendingCommissions,
+      availableCommissions,
+      recentSalesVolume: salesVolume,
+      averageTicket,
+    }),
+    [
+      averageTicket,
+      availableCommissions,
+      pendingCommissions,
+      salesVolume,
+      totalCommissions,
+    ],
+  );
+
+  const bonuses = useMemo<BonusGoal[]>(() => {
+    const fastStartStatus =
+      directReferrals.length >= 5 ? "completed" : "active";
+    const salesStatus = salesVolume >= 50000 ? "completed" : "active";
+    const consistencyProgress = Math.min(paidLikeOrders.length, 10);
+    const consistencyStatus =
+      consistencyProgress >= 10 ? "completed" : "active";
+    const walletStatus = availableCommissions >= 10000 ? "completed" : "active";
+    const agentStatus = agentIsActive ? "completed" : "active";
+
+    return [
+      {
+        id: "bonus-fast-start",
+        title: "Bônus de Início Rápido",
+        description:
+          "Atinja 5 novos afiliados diretos para acelerar a expansão da rede.",
+        progress: directReferrals.length,
+        maxProgress: 5,
+        reward: "R$ 500,00",
+        rewardType: "cash",
+        icon: <TrendingUp className="text-neon-cyan" />,
+        category: "network",
+        deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+        status: fastStartStatus,
+      },
+      {
+        id: "bonus-sales-volume",
+        title: "Prêmio Esmeralda",
+        description:
+          "Consolide volume recente de vendas para capturar campanhas de maior escala.",
+        progress: salesVolume,
+        maxProgress: 50000,
+        reward: "Viagem para Resort",
+        rewardType: "prize",
+        icon: <Award className="text-neon-pink" />,
+        category: "sales",
+        deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
+        status: salesStatus,
+      },
+      {
+        id: "bonus-consistency",
+        title: "Bônus de Consistência",
+        description:
+          "Mantenha um bloco sólido de pedidos confirmados para aumentar previsibilidade operacional.",
+        progress: consistencyProgress,
+        maxProgress: 10,
+        reward: "R$ 2.000,00",
+        rewardType: "cash",
+        icon: <Zap className="text-yellow-400" />,
+        category: "sales",
+        status: consistencyStatus,
+      },
+      {
+        id: "bonus-wallet",
+        title: "Meta de Caixa Operacional",
+        description:
+          "Alcance saldo disponível robusto para reinvestimento, tráfego e escala da operação.",
+        progress: availableCommissions,
+        maxProgress: 10000,
+        reward: "Participação estratégica",
+        rewardType: "percentage",
+        icon: <Crown className="text-purple-500" />,
+        category: "achievement",
+        deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        status: walletStatus,
+      },
+      {
+        id: "bonus-agent",
+        title: "Ativação do Agente IA",
+        description:
+          "Coloque o agente em modo ativo para iniciar ciclos reais de produtividade assistida.",
+        progress: agentIsActive ? 1 : 0,
+        maxProgress: 1,
+        reward: "Boost operacional",
+        rewardType: "prize",
+        icon: <Cpu className="text-green-400" />,
+        category: "leadership",
+        status: agentStatus,
+      },
+    ];
+  }, [
+    agentIsActive,
+    availableCommissions,
+    directReferrals.length,
+    paidLikeOrders.length,
+    salesVolume,
+  ]);
 
   const getProgressPercentage = (bonus: BonusGoal): number => {
-    return Math.min(100, Math.round((bonus.progress / bonus.maxProgress) * 100));
+    return Math.min(
+      100,
+      Math.round((bonus.progress / bonus.maxProgress) * 100),
+    );
   };
 
   const getProgressColor = (percentage: number): string => {
@@ -153,10 +235,18 @@ export default function BonusPage() {
 
   const getDaysRemaining = (deadline?: Date): number | null => {
     if (!deadline) return null;
-    const now = new Date();
-    const diff = deadline.getTime() - now.getTime();
+    const diff = deadline.getTime() - Date.now();
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
   };
+
+  const latestOrderDate = useMemo(() => {
+    const dates = recentOrders
+      .map((order: any) => orderDate(order.createdAt))
+      .filter(Boolean) as Date[];
+    return dates.length > 0
+      ? dates.sort((a, b) => b.getTime() - a.getTime())[0]
+      : null;
+  }, [recentOrders]);
 
   const activeBonuses = bonuses.filter((b) => b.status === "active");
   const completedBonuses = bonuses.filter((b) => b.status === "completed");
@@ -166,7 +256,9 @@ export default function BonusPage() {
       <div className="p-8 flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-cyan mx-auto mb-4"></div>
-          <p className="text-neon-cyan font-space-mono">Carregando dados de bônus...</p>
+          <p className="text-neon-cyan font-space-mono">
+            Carregando metas operacionais...
+          </p>
         </div>
       </div>
     );
@@ -174,91 +266,78 @@ export default function BonusPage() {
 
   return (
     <div className="p-8 space-y-8">
-      {/* Header */}
       <div className="flex flex-col gap-2">
         <h1 className="text-4xl font-orbitron font-bold text-glow-pink">
           Bônus e Prêmios
         </h1>
         <p className="text-neon-cyan font-space-mono">
-          Acompanhe suas metas e conquistas no ecossistema Nexus.
+          Metas agora conectadas ao estado real da carteira, rede, pedidos
+          recentes e status do agente.
         </p>
       </div>
 
-      {/* Commission Stats */}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <Card className="hud-frame bg-black/40 border-neon-cyan/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                  Total de Comissões
-                </p>
-                <p className="text-2xl font-bold text-neon-cyan font-orbitron">
-                  {formatCurrency(stats.totalCommissions)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Card className="hud-frame bg-black/40 border-neon-cyan/30">
+          <CardContent className="pt-6 text-center">
+            <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
+              Total de Comissões
+            </p>
+            <p className="text-2xl font-bold text-neon-cyan font-orbitron">
+              {formatCurrency(stats.totalCommissions)}
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card className="hud-frame bg-black/40 border-neon-pink/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                  Pendentes
-                </p>
-                <p className="text-2xl font-bold text-neon-pink font-orbitron">
-                  {formatCurrency(stats.pendingCommissions)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="hud-frame bg-black/40 border-neon-pink/30">
+          <CardContent className="pt-6 text-center">
+            <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
+              Pendentes
+            </p>
+            <p className="text-2xl font-bold text-neon-pink font-orbitron">
+              {formatCurrency(stats.pendingCommissions)}
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card className="hud-frame bg-black/40 border-yellow-500/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                  Confirmadas
-                </p>
-                <p className="text-2xl font-bold text-yellow-500 font-orbitron">
-                  {formatCurrency(stats.confirmedCommissions)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="hud-frame bg-black/40 border-green-500/30">
+          <CardContent className="pt-6 text-center">
+            <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
+              Disponíveis
+            </p>
+            <p className="text-2xl font-bold text-green-500 font-orbitron">
+              {formatCurrency(stats.availableCommissions)}
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card className="hud-frame bg-black/40 border-green-500/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                  Pagas
-                </p>
-                <p className="text-2xl font-bold text-green-500 font-orbitron">
-                  {formatCurrency(stats.paidCommissions)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="hud-frame bg-black/40 border-yellow-500/30">
+          <CardContent className="pt-6 text-center">
+            <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
+              Volume Recente
+            </p>
+            <p className="text-2xl font-bold text-yellow-500 font-orbitron">
+              {formatCurrency(stats.recentSalesVolume)}
+            </p>
+          </CardContent>
+        </Card>
 
-          <Card className="hud-frame bg-black/40 border-purple-500/30">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                  Média Mensal
-                </p>
-                <p className="text-2xl font-bold text-purple-500 font-orbitron">
-                  {formatCurrency(stats.monthlyAverage)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+        <Card className="hud-frame bg-black/40 border-purple-500/30">
+          <CardContent className="pt-6 text-center">
+            <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
+              Ticket Médio
+            </p>
+            <p className="text-2xl font-bold text-purple-500 font-orbitron">
+              {formatCurrency(stats.averageTicket)}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-2xl font-orbitron text-white flex items-center gap-2">
-            <Gift className="text-neon-pink" /> Metas Ativas ({activeBonuses.length})
+            <Gift className="text-neon-pink" /> Metas Ativas (
+            {activeBonuses.length})
           </h2>
 
           {activeBonuses.length > 0 ? (
@@ -313,7 +392,9 @@ export default function BonusPage() {
                           className={`h-2 bg-black/60 ${getProgressColor(percentage)}`}
                         />
                         <p className="text-xs text-text-secondary font-space-mono">
-                          {bonus.progress} de {bonus.maxProgress}
+                          {shouldFormatProgressAsCurrency(bonus)
+                            ? `${formatCurrency(bonus.progress)} de ${formatCurrency(bonus.maxProgress)}`
+                            : `${bonus.progress} de ${bonus.maxProgress}`}
                         </p>
                       </div>
 
@@ -344,15 +425,18 @@ export default function BonusPage() {
             </Card>
           )}
 
-          {/* Completed Bonuses */}
           {completedBonuses.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-xl font-orbitron text-green-500 flex items-center gap-2">
-                <Trophy className="text-green-500" /> Metas Completadas ({completedBonuses.length})
+                <Trophy className="text-green-500" /> Metas Completadas (
+                {completedBonuses.length})
               </h3>
               <div className="grid gap-4">
                 {completedBonuses.map((bonus) => (
-                  <Card key={bonus.id} className="hud-frame bg-black/40 border-green-500/30">
+                  <Card
+                    key={bonus.id}
+                    className="hud-frame bg-black/40 border-green-500/30"
+                  >
                     <CardContent className="pt-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -360,7 +444,9 @@ export default function BonusPage() {
                             {bonus.icon}
                           </div>
                           <div>
-                            <p className="font-orbitron text-green-500">{bonus.title}</p>
+                            <p className="font-orbitron text-green-500">
+                              {bonus.title}
+                            </p>
                             <p className="text-sm text-text-secondary font-space-mono">
                               Prêmio: {bonus.reward}
                             </p>
@@ -380,16 +466,46 @@ export default function BonusPage() {
           )}
         </div>
 
-        {/* Sidebar - Top Sponsors */}
         <div className="space-y-6">
           <h2 className="text-2xl font-orbitron text-white flex items-center gap-2">
             <Star className="text-yellow-500" /> Top Patrocinadores
           </h2>
           <TopSponsors />
+
+          <Card className="hud-frame bg-black/40 border-neon-cyan/30">
+            <CardHeader>
+              <CardTitle className="text-lg font-orbitron text-white">
+                Leituras Operacionais
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm font-space-mono text-text-secondary">
+              <p>
+                Indicados diretos rastreados:{" "}
+                <span className="text-white">{directReferrals.length}</span>
+              </p>
+              <p>
+                Pedidos recentes considerados:{" "}
+                <span className="text-white">{recentOrders.length}</span>
+              </p>
+              <p>
+                Status do agente:{" "}
+                <span className="text-white">
+                  {agentIsActive ? "ativo" : "configurando"}
+                </span>
+              </p>
+              <p>
+                Último pedido:{" "}
+                <span className="text-white">
+                  {latestOrderDate
+                    ? latestOrderDate.toLocaleDateString("pt-BR")
+                    : "sem registros"}
+                </span>
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
-      {/* Bonus Details Modal */}
       {selectedBonus && (
         <Card className="fixed inset-0 z-50 m-4 max-w-2xl mx-auto my-auto hud-frame bg-black/95 border-neon-cyan/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -427,12 +543,12 @@ export default function BonusPage() {
               </div>
               <Progress
                 value={getProgressPercentage(selectedBonus)}
-                className={`h-3 bg-black/60 ${getProgressColor(
-                  getProgressPercentage(selectedBonus)
-                )}`}
+                className={`h-3 bg-black/60 ${getProgressColor(getProgressPercentage(selectedBonus))}`}
               />
               <p className="text-xs text-text-secondary font-space-mono">
-                {selectedBonus.progress} de {selectedBonus.maxProgress}
+                {shouldFormatProgressAsCurrency(selectedBonus)
+                  ? `${formatCurrency(selectedBonus.progress)} de ${formatCurrency(selectedBonus.maxProgress)}`
+                  : `${selectedBonus.progress} de ${selectedBonus.maxProgress}`}
               </p>
             </div>
 

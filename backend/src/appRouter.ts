@@ -17,6 +17,7 @@ import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./routers/xpRouter";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { packsRouter } from "./routers/packsRouter";
+import { skillsRouter } from "./routers/skillsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
 import { adminRouter } from "./routers/adminRouter";
@@ -223,6 +224,9 @@ export const appRouter = router({
 
   // ============ PACKS ROUTER ============
   packs: packsRouter,
+
+  // ============ SKILLS ROUTER ============
+  skills: skillsRouter,
 
   // ============ NEWSLETTER ROUTER ============
   newsletter: newsletterRouter,

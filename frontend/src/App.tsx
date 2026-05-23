@@ -55,6 +55,8 @@ const TrackingLinks = lazy(() => import("./pages/TrackingLinks"));
 
 const Login = lazy(() => import("./pages/Login"));
 const Logout = lazy(() => import("./pages/Logout"));
+const Cadastro = lazy(() => import("./pages/Cadastro"));
+const EspacoAberto = lazy(() => import("./pages/EspacoAberto"));
 
 const CareerProgress = lazy(() => import("./pages/CareerProgress"));
 const ExecutionLogs = lazy(() => import("./pages/ExecutionLogs"));
@@ -65,6 +67,8 @@ export const NAVIGATION_STRUCTURE = {
   PUBLIC: [
     { path: "/", name: "Home", component: "Home" },
     { path: "/login", name: "Login", component: "Login" },
+    { path: "/cadastro", name: "Cadastro", component: "Cadastro" },
+    { path: "/espaco-aberto", name: "Espaço Aberto", component: "EspacoAberto" },
   ],
   AFFILIATE: [
     {
@@ -347,6 +351,8 @@ export default function App() {
             <Route path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
+            <Route path="/cadastro" component={Cadastro} />
+            <Route path="/espaco-aberto" component={EspacoAberto} />
             <Route path="/legacy-review" component={LegacyReview} />
 
             <Route path="/dashboard" component={Dashboard} />

@@ -9,7 +9,7 @@
     "dev:metro": "cross-env EXPO_USE_METRO_WORKSPACE_ROOT=1 NODE_PATH=./node_modules npx expo start --web --port ${EXPO_PORT:-8081}",
     "build": "cross-env NODE_PATH=./node_modules npx expo export --platform web",
     "start": "cross-env NODE_PATH=./node_modules npx expo start --web",
-    "check": "tsc --noEmit",
+    "check": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit",
     "lint": "cross-env NODE_PATH=./node_modules expo lint",
     "format": "prettier --write .",
     "test": "vitest run",

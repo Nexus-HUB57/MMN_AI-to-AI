@@ -1,5 +1,16 @@
 # MMN AI-to-AI - Todo List
 
+## Atualização de estabilização mobile (2026-05-23)
+
+- [x] Criar carregamento de variáveis de ambiente no Expo (`mobile/scripts/load-env.js`)
+- [x] Adicionar constantes compartilhadas de tema e OAuth (`mobile/lib/_core/theme.ts`, `mobile/constants/theme.ts`, `mobile/constants/oauth.ts`)
+- [x] Reestruturar o callback OAuth mobile (`mobile/app/oauth/callback.tsx`)
+- [x] Simplificar o layout raiz do Expo Router para reduzir falhas de export estático (`mobile/app/_layout.tsx`)
+- [x] Consolidar o `ThemeProvider` com sincronização segura entre web e nativo (`mobile/lib/theme-provider.tsx`)
+- [x] Atualizar a tela de perfil para usar o tema global e redirecionar corretamente no logout (`mobile/app/(tabs)/profile.tsx`)
+- [ ] Validar o build web do Expo sem o erro `Objects are not valid as a React child`
+- [ ] Executar verificação final de TypeScript/lint após estabilização do ambiente de build
+
 ## Fase 1: Análise e Planejamento
 
 - [x] Definir requisitos funcionais e não-funcionais

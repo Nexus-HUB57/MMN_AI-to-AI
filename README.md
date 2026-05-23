@@ -11,6 +11,7 @@
 📑 **[ÍNDICE DE DOCUMENTAÇÃO](docs/INDEX.md)** - Navegação centralizada por todos os documentos do projeto
 
 Esta documentação centraliza todas as informações do sistema em um único documento de referência, incluindo:
+
 - Visão Geral do Sistema
 - Sistema MMN (Comissões e Carreiras)
 - Painel Administrativo e RBAC
@@ -75,6 +76,21 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md)
 - [`docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md)
 
+## Atualizações Recentes do Repositório (2026-05-23)
+
+### ✅ Mobile Expo — trilha de estabilização em andamento
+
+O workspace `mobile/` avançou na estabilização do fluxo de autenticação e tema para suportar a entrega MVP+:
+
+- carregamento de variáveis de ambiente no Expo via `mobile/scripts/load-env.js`
+- adição das constantes compartilhadas de OAuth e tema (`mobile/constants/oauth.ts`, `mobile/constants/theme.ts`, `mobile/lib/_core/theme.ts`)
+- reescrita do callback OAuth em `mobile/app/oauth/callback.tsx`
+- simplificação do layout raiz do Expo Router em `mobile/app/_layout.tsx` para reduzir a superfície do erro de export estático
+- consolidação do provider global de tema em `mobile/lib/theme-provider.tsx`
+- integração do toggle real de tema e redirecionamento de logout em `mobile/app/(tabs)/profile.tsx`
+
+**Bloqueio atual:** ainda falta validar o build web do Expo após as correções, porque a trilha anterior falhava com o erro `Objects are not valid as a React child` durante a exportação estática da rota de login.
+
 ## Atualizações Recentes do Repositório (2026-05-22)
 
 ### ✅ Packs / Marketplace de Skills do Agente IA
@@ -87,6 +103,7 @@ Nova seção completa para aquisição de pacotes de skills para agentes IA aut�
 - link "Pacotes / Skills" integrado à sidebar do DashboardLayout
 
 **Referências:**
+
 - [`backend/src/routers/packsRouter.ts`](backend/src/routers/packsRouter.ts)
 - [`frontend/src/pages/PacksMarketplace.tsx`](frontend/src/pages/PacksMarketplace.tsx)
 
@@ -110,6 +127,7 @@ Substituição do placeholder "Seção em Desenvolvimento" por UI funcional:
 - estados de loading, erro e vazio tratados corretamente
 
 **Referências:**
+
 - [`frontend/src/pages/DashboardLayout.tsx`](frontend/src/pages/DashboardLayout.tsx)
 - [`frontend/src/pages/Commissions.tsx`](frontend/src/pages/Commissions.tsx)
 
@@ -125,6 +143,7 @@ O Backoffice Admin avançou com uma trilha incremental já refletida no frontend
 - reforço de auditoria e consolidação visual da fila financeira entre aprovações, comissões e pagamentos
 
 **Documentos de referência:**
+
 - [`docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md`](docs/admin-backoffice/ENTREGA_APROVACOES_ADMINISTRATIVAS.md)
 - [`docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md`](docs/admin-backoffice/ENTREGA_COMISSOES_NAMESPACE_DEDICADO.md)
 - [`docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md`](docs/admin-backoffice/ENTREGA_AUDITORIA_E_CONSOLIDACAO_FINANCEIRA.md)
@@ -147,6 +166,7 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 - saneamento da camada compartilhada de tRPC no frontend (`useTRPC`) e evolução do `ExecutionLogs.tsx` para aceitar filtros contextuais por query string
 
 **Referências úteis:**
+
 - [`backend/src/routers/cronRouter.ts`](backend/src/routers/cronRouter.ts)
 - [`backend/src/services/cronScheduler.ts`](backend/src/services/cronScheduler.ts)
 - [`frontend/src/pages/AdminSchedules.tsx`](frontend/src/pages/AdminSchedules.tsx)
@@ -155,51 +175,52 @@ O backend e o Backoffice Admin avançaram juntos sobre o domínio Cron:
 
 ## Stack Tecnológica
 
-| Categoria | Tecnologia | Versão |
-|-----------|------------|--------|
-| **Frontend Web** | React 18 + Vite + wouter (router) + TailwindCSS + TanStack Query | ^18.3.1 / ^6.0.7 |
-| **Backend** | Node.js + TypeScript + tRPC v11 | ^22.10.0 |
-| **Banco de Dados** | MySQL (Drizzle ORM) + Redis + BullMQ | ^0.38.4 / ^5.28.2 |
-| **Mobile** | React Native + Expo Router (diretório `mobile/`) | 0.78.0 / ~54 |
-| **IA** | Google Genkit (Gemini) + OpenAI | ^1.0.0 / ^4.77.0 |
-| **Auth** | JWT (Firebase/NextAuth no roadmap) | - |
+| Categoria          | Tecnologia                                                       | Versão            |
+| ------------------ | ---------------------------------------------------------------- | ----------------- |
+| **Frontend Web**   | React 18 + Vite + wouter (router) + TailwindCSS + TanStack Query | ^18.3.1 / ^6.0.7  |
+| **Backend**        | Node.js + TypeScript + tRPC v11                                  | ^22.10.0          |
+| **Banco de Dados** | MySQL (Drizzle ORM) + Redis + BullMQ                             | ^0.38.4 / ^5.28.2 |
+| **Mobile**         | React Native + Expo Router (diretório `mobile/`)                 | 0.81.5 / ~54      |
+| **IA**             | Google Genkit (Gemini) + OpenAI                                  | ^1.0.0 / ^4.77.0  |
+| **Auth**           | JWT (Firebase/NextAuth no roadmap)                               | -                 |
 
 ## Avanços Estruturais Consolidados
 
 ### ✅ Migração Legacy → Sistema Oficial
 
-| Funcionalidade | Status | Descrição |
-|---------------|--------|-----------|
+| Funcionalidade    | Status     | Descrição                                     |
+| ----------------- | ---------- | --------------------------------------------- |
 | Newsletter System | ✅ Migrado | Subscribe/Unsubscribe/List com endpoints tRPC |
-| CMS Pages | ✅ Migrado | CRUD de páginas dinâmicas com meta tags |
-| Billing System | ✅ Migrado | Faturas, itens e histórico de cobrança |
-| Database Schemas | ✅ Criados | Tabelas para newsletters, cms_pages, invoices |
+| CMS Pages         | ✅ Migrado | CRUD de páginas dinâmicas com meta tags       |
+| Billing System    | ✅ Migrado | Faturas, itens e histórico de cobrança        |
+| Database Schemas  | ✅ Criados | Tabelas para newsletters, cms_pages, invoices |
 
 ### ✅ Sistema de XP/Carreiras Implementado
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Schema de Carreiras | ✅ Implementado | 27 níveis organizados em 5 categorias |
-| Cálculo de XP | ✅ Implementado | XP por vendas, comissões e bônus |
-| Progressão Automática | ✅ Implementado | Cálculo de nível baseado em XP total |
-| Leaderboard | ✅ Implementado | Top 10 afiliados por XP |
-| Histórico de XP | ✅ Implementado | Transações detalhadas |
-| Dashboard com Métricas Reais | ✅ Implementado | Dados reais do banco de dados |
+| Componente                   | Status          | Descrição                             |
+| ---------------------------- | --------------- | ------------------------------------- |
+| Schema de Carreiras          | ✅ Implementado | 27 níveis organizados em 5 categorias |
+| Cálculo de XP                | ✅ Implementado | XP por vendas, comissões e bônus      |
+| Progressão Automática        | ✅ Implementado | Cálculo de nível baseado em XP total  |
+| Leaderboard                  | ✅ Implementado | Top 10 afiliados por XP               |
+| Histórico de XP              | ✅ Implementado | Transações detalhadas                 |
+| Dashboard com Métricas Reais | ✅ Implementado | Dados reais do banco de dados         |
 
 ### ✅ Camada Agentic Implementada
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Persistência de Sessões | ✅ Implementado | Gradual para sessões e memória agentic |
-| Monitoramento | ✅ Implementado | Camada de monitoramento e orquestração |
-| Orquestração Multi-Agente | ✅ Implementado | Infraestrutura de coordenação |
-| Logs de Auditoria | ✅ Implementado | Rastreamento completo de operações |
+| Componente                | Status          | Descrição                              |
+| ------------------------- | --------------- | -------------------------------------- |
+| Persistência de Sessões   | ✅ Implementado | Gradual para sessões e memória agentic |
+| Monitoramento             | ✅ Implementado | Camada de monitoramento e orquestração |
+| Orquestração Multi-Agente | ✅ Implementado | Infraestrutura de coordenação          |
+| Logs de Auditoria         | ✅ Implementado | Rastreamento completo de operações     |
 
 ## Como Iniciar
 
 ### 1. Preparação
 
 Pré-requisitos validados:
+
 - Node.js 20+
 - npm 10+
 - Docker Desktop ou Docker Engine (opcional, para MySQL/Redis locais)
@@ -238,6 +259,7 @@ npm run db:push        # drizzle-kit push (para desenvolvimento)
 ### 4. Variáveis de Ambiente
 
 Copie `.env.example` para `.env` e preencha:
+
 - `DATABASE_URL` → string MySQL
 - `REDIS_URL` → redis://localhost:6379
 - `OPENAI_API_KEY`, `JWT_SECRET`, `MYSQL_ROOT_PASSWORD`, `PORT`
@@ -274,29 +296,30 @@ npm run start
 
 ### ✅ Funcionalidades Core
 
-| Funcionalidade | Status | Descrição |
-|----------------|--------|-----------|
-| Stack Tecnológica | ✅ Completo | React + Vite + tRPC + TailwindCSS + Drizzle + MySQL + Redis + BullMQ |
-| Autenticação JWT | ✅ Funcional | Contexto tRPC com JWT implementado |
-| Sistema MMN Básico | ✅ Funcional | Comissões em cascata até 15 níveis, compressão dinâmica |
-| Marketplaces | ✅ Parcial | Mercado Livre, Shopee, Hotmart integrados |
-| Roteador LLM | ✅ Funcional | Google Genkit (Gemini) + OpenAI |
-| Content Generation | ✅ Parcial | Textos, variações, hashtags, sentimento |
-| Dropshipping | ✅ Funcional | Pedidos, tracking, integrações marketplace |
-| Upgrades/Skills | ✅ Funcional | Sistema de upgrades com tipos e preços |
-| Frontend React | ✅ Funcional | ~55 páginas/components, Dashboard, layouts |
-| Orquestração Agentic | ✅ Funcional | Camada de coordenação multi-agente |
+| Funcionalidade       | Status       | Descrição                                                            |
+| -------------------- | ------------ | -------------------------------------------------------------------- |
+| Stack Tecnológica    | ✅ Completo  | React + Vite + tRPC + TailwindCSS + Drizzle + MySQL + Redis + BullMQ |
+| Autenticação JWT     | ✅ Funcional | Contexto tRPC com JWT implementado                                   |
+| Sistema MMN Básico   | ✅ Funcional | Comissões em cascata até 15 níveis, compressão dinâmica              |
+| Marketplaces         | ✅ Parcial   | Mercado Livre, Shopee, Hotmart integrados                            |
+| Roteador LLM         | ✅ Funcional | Google Genkit (Gemini) + OpenAI                                      |
+| Content Generation   | ✅ Parcial   | Textos, variações, hashtags, sentimento                              |
+| Dropshipping         | ✅ Funcional | Pedidos, tracking, integrações marketplace                           |
+| Upgrades/Skills      | ✅ Funcional | Sistema de upgrades com tipos e preços                               |
+| Frontend React       | ✅ Funcional | ~55 páginas/components, Dashboard, layouts                           |
+| Orquestração Agentic | ✅ Funcional | Camada de coordenação multi-agente                                   |
 
 ### ✅ Sistema de Newsletter (Migrado do Legacy)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Inscrição | ✅ Implementado | Formulário de cadastro com email/nome |
-| Cancelamento | ✅ Implementado | Endpoint para unsubscribe |
-| Listagem Admin | ✅ Implementado | Listar inscritos com filtros |
-| Estatísticas | ✅ Implementado | Contador de inscritos ativos/total |
+| Componente     | Status          | Descrição                             |
+| -------------- | --------------- | ------------------------------------- |
+| Inscrição      | ✅ Implementado | Formulário de cadastro com email/nome |
+| Cancelamento   | ✅ Implementado | Endpoint para unsubscribe             |
+| Listagem Admin | ✅ Implementado | Listar inscritos com filtros          |
+| Estatísticas   | ✅ Implementado | Contador de inscritos ativos/total    |
 
 **Endpoints tRPC:**
+
 - `newsletter.subscribe` - Inscrever email
 - `newsletter.unsubscribe` - Cancelar inscrição
 - `newsletter.list` - Listar inscritos (admin)
@@ -305,15 +328,16 @@ npm run start
 
 ### ✅ Sistema de CMS Pages (Migrado do Legacy)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
+| Componente      | Status          | Descrição                      |
+| --------------- | --------------- | ------------------------------ |
 | CRUD de Páginas | ✅ Implementado | Criar, editar, deletar páginas |
-| Slugs Únicos | ✅ Implementado | URLs amigáveis por página |
-| Meta Tags | ✅ Implementado | Title e description SEO |
-| Categorias | ✅ Implementado | Organização por categoria |
-| Status | ✅ Implementado | draft/published/archived |
+| Slugs Únicos    | ✅ Implementado | URLs amigáveis por página      |
+| Meta Tags       | ✅ Implementado | Title e description SEO        |
+| Categorias      | ✅ Implementado | Organização por categoria      |
+| Status          | ✅ Implementado | draft/published/archived       |
 
 **Endpoints tRPC:**
+
 - `cms.getPage` - Buscar página pública (slug)
 - `cms.list` - Listar páginas (admin)
 - `cms.create` - Criar página
@@ -323,16 +347,17 @@ npm run start
 
 ### ✅ Sistema de Billing/Faturas (Migrado do Legacy)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Faturas | ✅ Implementado | Criação e gestão de faturas |
-| Itens de Fatura | ✅ Implementado | Múltiplos itens por fatura |
-| Status Workflow | ✅ Implementado | pending/paid/overdue/cancelled |
-| Histórico | ✅ Implementado | Log de todas as ações |
-| Estatísticas Admin | ✅ Implementado | Totais por status |
-| Callback Pagamento | ✅ Implementado | Confirmação de gateway |
+| Componente         | Status          | Descrição                      |
+| ------------------ | --------------- | ------------------------------ |
+| Faturas            | ✅ Implementado | Criação e gestão de faturas    |
+| Itens de Fatura    | ✅ Implementado | Múltiplos itens por fatura     |
+| Status Workflow    | ✅ Implementado | pending/paid/overdue/cancelled |
+| Histórico          | ✅ Implementado | Log de todas as ações          |
+| Estatísticas Admin | ✅ Implementado | Totais por status              |
+| Callback Pagamento | ✅ Implementado | Confirmação de gateway         |
 
 **Endpoints tRPC:**
+
 - `billing.getInvoice` - Buscar fatura por ID
 - `billing.listInvoices` - Listar faturas do usuário
 - `billing.createInvoice` - Criar fatura (admin)
@@ -343,16 +368,17 @@ npm run start
 
 ### ✅ Marketplace Nexus (100%)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Schema do Banco | ✅ Implementado | Tabelas para produtos, pedidos, cupons, wishlists |
-| Router tRPC | ✅ Implementado | 15+ endpoints para CRUD de produtos, pedidos, cupons |
-| Catálogo | ✅ Implementado | Grid de produtos com filtros, busca e paginação |
-| Carrinho | ✅ Implementado | Gerenciamento de itens, cupons, cálculos |
-| Detalhe do Produto | ✅ Implementado | Galeria de imagens, variações, avaliações |
-| Checkout | ✅ Implementado | Fluxo completo com endereço, envio e pagamento |
+| Componente         | Status          | Descrição                                            |
+| ------------------ | --------------- | ---------------------------------------------------- |
+| Schema do Banco    | ✅ Implementado | Tabelas para produtos, pedidos, cupons, wishlists    |
+| Router tRPC        | ✅ Implementado | 15+ endpoints para CRUD de produtos, pedidos, cupons |
+| Catálogo           | ✅ Implementado | Grid de produtos com filtros, busca e paginação      |
+| Carrinho           | ✅ Implementado | Gerenciamento de itens, cupons, cálculos             |
+| Detalhe do Produto | ✅ Implementado | Galeria de imagens, variações, avaliações            |
+| Checkout           | ✅ Implementado | Fluxo completo com endereço, envio e pagamento       |
 
 **Endpoints tRPC:**
+
 - `marketplace.listProducts` - Listar produtos com filtros
 - `marketplace.getProduct` - Buscar produto por slug
 - `marketplace.createProduct` - Criar produto (admin)
@@ -372,6 +398,7 @@ npm run start
 - `marketplace.getDashboardStats` - Estatísticas (admin)
 
 **Componentes Frontend:**
+
 - `MarketplaceProductCard.tsx` - Card de produto com hover, galeria, wishlist
 - `MarketplaceCatalog.tsx` - Catálogo com filtros, busca, ordenação, paginação
 - `MarketplaceCart.tsx` - Carrinho com gerenciamento de itens e cupons
@@ -380,46 +407,47 @@ npm run start
 
 ### ✅ Sistema BeYour Banker (100%)
 
-| Componente | Status | Descrição |
-|-----------|--------|-----------|
-| Saldo do Afiliado | ✅ Implementado | Saldo disponível, pendente e bloqueado |
-| Contas Bancárias | ✅ Implementado | CADASTRO de contas com PIX |
-| Solicitações de Saque | ✅ Implementado | Workflow completo (pendente → aprovado → processado) |
-| Histórico de Transações | ✅ Implementado | Log completo de todas operações |
-| Relatórios Mensais | ✅ Implementado | Relatórios consolidados |
-| Admin Panel | ✅ Implementado | Aprovação e processamento de saques |
+| Componente              | Status          | Descrição                                            |
+| ----------------------- | --------------- | ---------------------------------------------------- |
+| Saldo do Afiliado       | ✅ Implementado | Saldo disponível, pendente e bloqueado               |
+| Contas Bancárias        | ✅ Implementado | CADASTRO de contas com PIX                           |
+| Solicitações de Saque   | ✅ Implementado | Workflow completo (pendente → aprovado → processado) |
+| Histórico de Transações | ✅ Implementado | Log completo de todas operações                      |
+| Relatórios Mensais      | ✅ Implementado | Relatórios consolidados                              |
+| Admin Panel             | ✅ Implementado | Aprovação e processamento de saques                  |
 
 ### ✅ Sistema de Posts Automatizados (100%)
 
-| Componente | Status | Descrição |
-|-----------|--------|-----------|
-| Contas Sociais | ✅ Implementado | Vinculação WhatsApp, Instagram, Facebook |
-| Calendário de Posts | ✅ Implementado | Agendamento e gerenciamento |
-| Horários de Pico | ✅ Implementado | Recomendações de horários |
-| Tracking de Links | ✅ Implementado | UTM e rastreamento de cliques |
-| Métricas de Performance | ✅ Implementado | Análise por canal e campanha |
+| Componente              | Status          | Descrição                                |
+| ----------------------- | --------------- | ---------------------------------------- |
+| Contas Sociais          | ✅ Implementado | Vinculação WhatsApp, Instagram, Facebook |
+| Calendário de Posts     | ✅ Implementado | Agendamento e gerenciamento              |
+| Horários de Pico        | ✅ Implementado | Recomendações de horários                |
+| Tracking de Links       | ✅ Implementado | UTM e rastreamento de cliques            |
+| Métricas de Performance | ✅ Implementado | Análise por canal e campanha             |
 
 ### ✅ Sistema de Tracking Neural (100%)
 
-| Componente | Status | Descrição |
-|-----------|--------|-----------|
-| Links de Rastreamento | ✅ Implementado | Short codes únicos por afiliado |
-| Eventos de Conversão | ✅ Implementado | Cliques, visualizações, cadastros, compras |
-| Métricas por Afiliado | ✅ Implementado | Performance individual |
-| Estatísticas Globais | ✅ Implementado | Dashboard admin completo |
+| Componente            | Status          | Descrição                                  |
+| --------------------- | --------------- | ------------------------------------------ |
+| Links de Rastreamento | ✅ Implementado | Short codes únicos por afiliado            |
+| Eventos de Conversão  | ✅ Implementado | Cliques, visualizações, cadastros, compras |
+| Métricas por Afiliado | ✅ Implementado | Performance individual                     |
+| Estatísticas Globais  | ✅ Implementado | Dashboard admin completo                   |
 
 ### ✅ Packs / Marketplace de Skills (100%)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Schema do Banco | ✅ Implementado | Tabelas `packs` e `agent_packs` no schema principal |
-| Router tRPC | ✅ Implementado | 5 endpoints: listAvailable, listMine, purchasePack, cancelPack, getPackDetails |
-| Marketplace UI | ✅ Implementado | Página `/packs` com design dark premium, 8 packs, filtros por categoria |
-| Badges Visuais | ✅ Implementado | Mais Vendido, Novo, Premium, Oferta, Em breve |
-| Meus Pacotes | ✅ Implementado | Seção de pacotes ativos com data de expiração |
-| Integração Sidebar | ✅ Implementado | Link "Pacotes / Skills" na navegação do DashboardLayout |
+| Componente         | Status          | Descrição                                                                      |
+| ------------------ | --------------- | ------------------------------------------------------------------------------ |
+| Schema do Banco    | ✅ Implementado | Tabelas `packs` e `agent_packs` no schema principal                            |
+| Router tRPC        | ✅ Implementado | 5 endpoints: listAvailable, listMine, purchasePack, cancelPack, getPackDetails |
+| Marketplace UI     | ✅ Implementado | Página `/packs` com design dark premium, 8 packs, filtros por categoria        |
+| Badges Visuais     | ✅ Implementado | Mais Vendido, Novo, Premium, Oferta, Em breve                                  |
+| Meus Pacotes       | ✅ Implementado | Seção de pacotes ativos com data de expiração                                  |
+| Integração Sidebar | ✅ Implementado | Link "Pacotes / Skills" na navegação do DashboardLayout                        |
 
 **Endpoints tRPC:**
+
 - `packs.listAvailable` - Listar packs disponíveis (público)
 - `packs.listMine` - Listar packs ativos do agente do usuário
 - `packs.purchasePack` - Ativar pack para o agente (30 dias)
@@ -427,6 +455,7 @@ npm run start
 - `packs.getPackDetails` - Detalhes de um pack específico
 
 **Categorias de Packs:**
+
 - Anúncios (Facebook Ads, etc.)
 - Redes Sociais (Conteúdo Viral, Instagram, Moda)
 - E-commerce (Dropshipping, Conversão)
@@ -436,32 +465,33 @@ npm run start
 
 ### ✅ Funcionalidades Implementadas
 
-| Funcionalidade | Status | Descrição |
-|----------------|--------|-----------|
-| Marketplace Nexus | ✅ Implementado | Catálogo próprio de produtos com carrinho, checkout e filtros |
-| Packs / Skills Marketplace | ✅ Implementado | 8 packs de skills para agentes IA com sistema de ativação |
-| Circuit Breakers | ✅ Implementado | Proteção contra falhas em cascata com retry inteligente |
-| Sistema de Permissões (RBAC) | ✅ Implementado | Roles, permissions e resource-based access granular |
-| Autenticação Firebase/NextAuth | ✅ Implementado | Login social, JWT refresh tokens, custom claims |
-| Sistema de Sorteios (Grafo+IA) | ✅ Implementado | Sorteios justos baseados na rede com verificação por IA |
-| Holdings/Dividendos | ✅ Implementado | Participação acionária e distribuição de dividendos |
-| Títulos de Capitalização | ✅ Implementado | Produtos financeiros com sorteios periódicos |
-| Integração PIX Real | ⚠️ Planejado | Integração com API bancária |
-| Automação WhatsApp API | ⚠️ Planejado | Envio automático via API oficial |
-| Automação Cron | ✅ Implementado | Sistema completo de cron jobs para tarefas recorrentes |
+| Funcionalidade                 | Status          | Descrição                                                     |
+| ------------------------------ | --------------- | ------------------------------------------------------------- |
+| Marketplace Nexus              | ✅ Implementado | Catálogo próprio de produtos com carrinho, checkout e filtros |
+| Packs / Skills Marketplace     | ✅ Implementado | 8 packs de skills para agentes IA com sistema de ativação     |
+| Circuit Breakers               | ✅ Implementado | Proteção contra falhas em cascata com retry inteligente       |
+| Sistema de Permissões (RBAC)   | ✅ Implementado | Roles, permissions e resource-based access granular           |
+| Autenticação Firebase/NextAuth | ✅ Implementado | Login social, JWT refresh tokens, custom claims               |
+| Sistema de Sorteios (Grafo+IA) | ✅ Implementado | Sorteios justos baseados na rede com verificação por IA       |
+| Holdings/Dividendos            | ✅ Implementado | Participação acionária e distribuição de dividendos           |
+| Títulos de Capitalização       | ✅ Implementado | Produtos financeiros com sorteios periódicos                  |
+| Integração PIX Real            | ⚠️ Planejado    | Integração com API bancária                                   |
+| Automação WhatsApp API         | ⚠️ Planejado    | Envio automático via API oficial                              |
+| Automação Cron                 | ✅ Implementado | Sistema completo de cron jobs para tarefas recorrentes        |
 
 ### ✅ Sistema de Automação Cron (Migrado do Legacy)
 
-| Componente | Status | Descrição |
-|------------|--------|-----------|
-| Schema de Banco | ✅ Implementado | Tabelas para cron_jobs, cron_job_history, cron_settings |
-| Router tRPC | ✅ Implementado | 11 endpoints para CRUD e gerenciamento de jobs |
-| Scheduler Service | ✅ Implementado | Execução automática baseada em frequência |
-| Jobs Padrão | ✅ Implementado | 8 jobs pré-configurados para o sistema MMN |
-| Histórico de Execução | ✅ Implementado | Rastreamento completo de todas as execuções |
-| Configurações Globais | ✅ Implementado | Gerenciamento de configurações do cron |
+| Componente            | Status          | Descrição                                               |
+| --------------------- | --------------- | ------------------------------------------------------- |
+| Schema de Banco       | ✅ Implementado | Tabelas para cron_jobs, cron_job_history, cron_settings |
+| Router tRPC           | ✅ Implementado | 11 endpoints para CRUD e gerenciamento de jobs          |
+| Scheduler Service     | ✅ Implementado | Execução automática baseada em frequência               |
+| Jobs Padrão           | ✅ Implementado | 8 jobs pré-configurados para o sistema MMN              |
+| Histórico de Execução | ✅ Implementado | Rastreamento completo de todas as execuções             |
+| Configurações Globais | ✅ Implementado | Gerenciamento de configurações do cron                  |
 
 **Endpoints tRPC:**
+
 - `cron.list` - Listar todos os cron jobs
 - `cron.getById` - Buscar cron job por ID
 - `cron.getHistory` - Histórico de execuções
@@ -476,6 +506,7 @@ npm run start
 - `cron.validateCronExpression` - Validar expressão cron
 
 **Tipos de Jobs Disponíveis:**
+
 - `invoice_overdue_check` - Verificação de faturas vencidas
 - `invoice_reminder` - Lembrete de faturas pendentes
 - `marketplace_sync` - Sincronização com marketplaces
@@ -489,7 +520,7 @@ npm run start
 ### ❌ Funcionalidades Remanescentes
 
 | Funcionalidade | Status | Prioridade |
-|----------------|--------|------------|
+| -------------- | ------ | ---------- |
 
 ## Roadmap Agentic
 
@@ -503,27 +534,27 @@ npm run start
 
 ## Métricas de Conformidade
 
-| Categoria | Implementado | Total | Percentual |
-|-----------|-------------|-------|------------|
-| Core Backend | 9 | 10 | 90% |
-| Camada Agentic | 5 | 7 | 71% |
-| Sistema XP/Carreiras | 6 | 10 | 60% |
-| Dashboard | 1 | 1 | 100% |
-| Frontend/UI | 7 | 12 | 58% |
-| Sistema MMN | 5 | 8 | 63% |
-| Integração IA | 4 | 5 | 80% |
-| Automação Social | 5 | 6 | 83% |
-| Sistema Financeiro | 9 | 10 | 90% |
-| Sistema de Permissões (RBAC) | 5 | 5 | 100% |
-| Sistema de Sorteios | 4 | 4 | 100% |
-| Circuit Breakers | 3 | 3 | 100% |
-| Tracking/Analytics | 4 | 5 | 80% |
-| Newsletter | 4 | 5 | 80% |
-| CMS Pages | 5 | 6 | 83% |
-| Billing/Faturas | 7 | 8 | 88% |
-| Automação Cron | 6 | 6 | 100% |
-| Packs / Skills Marketplace | 6 | 6 | 100% |
-| Navegação Frontend | 4 | 4 | 100% |
+| Categoria                    | Implementado | Total | Percentual |
+| ---------------------------- | ------------ | ----- | ---------- |
+| Core Backend                 | 9            | 10    | 90%        |
+| Camada Agentic               | 5            | 7     | 71%        |
+| Sistema XP/Carreiras         | 6            | 10    | 60%        |
+| Dashboard                    | 1            | 1     | 100%       |
+| Frontend/UI                  | 7            | 12    | 58%        |
+| Sistema MMN                  | 5            | 8     | 63%        |
+| Integração IA                | 4            | 5     | 80%        |
+| Automação Social             | 5            | 6     | 83%        |
+| Sistema Financeiro           | 9            | 10    | 90%        |
+| Sistema de Permissões (RBAC) | 5            | 5     | 100%       |
+| Sistema de Sorteios          | 4            | 4     | 100%       |
+| Circuit Breakers             | 3            | 3     | 100%       |
+| Tracking/Analytics           | 4            | 5     | 80%        |
+| Newsletter                   | 4            | 5     | 80%        |
+| CMS Pages                    | 5            | 6     | 83%        |
+| Billing/Faturas              | 7            | 8     | 88%        |
+| Automação Cron               | 6            | 6     | 100%       |
+| Packs / Skills Marketplace   | 6            | 6     | 100%       |
+| Navegação Frontend           | 4            | 4     | 100%       |
 
 **Conformidade Geral: ~90-93%**
 
@@ -579,6 +610,7 @@ MMN_AI-to-AI/
 O esquema do banco de dados modela as complexidades de um sistema de MMN e e-commerce:
 
 ### Tabelas Core
+
 - **users**: Informações básicas dos usuários e autenticação
 - **affiliates**: Perfil de afiliado, código, percentual de comissão
 - **network**: Árvore da rede multinível
@@ -587,6 +619,7 @@ O esquema do banco de dados modela as complexidades de um sistema de MMN e e-com
 - **agents/agent_upgrades**: Configuração de agentes e upgrades
 
 ### Tabelas de Sistema (Migradas do Legacy)
+
 - **newsletters**: Cadastro de emails para newsletter
 - **cms_pages**: Páginas de conteúdo dinâmico
 - **invoices**: Faturas e cobranças
@@ -594,6 +627,7 @@ O esquema do banco de dados modela as complexidades de um sistema de MMN e e-com
 - **billing_history**: Histórico de ações no billing
 
 ### Tabelas de Carreira
+
 - **career_levels**: 27 níveis de carreira (XP/Carreiras)
 - **affiliate_xp**: Pontos de experiência por afiliado
 - **xp_transactions**: Histórico de transações de XP
@@ -672,33 +706,33 @@ O sistema contempla um plano de carreira estruturado com 27 níveis organizados 
 
 ### Endpoints tRPC Disponíveis
 
-| Endpoint | Descrição |
-|----------|----------|
-| `xp.getMyXP` | Detalhes de XP do afiliado logado |
-| `xp.getAffiliateXP` | XP de afiliado específico |
-| `xp.getCareerLevels` | Lista de 27 níveis de carreira |
-| `xp.getLeaderboard` | Top 10 afiliados por XP |
-| `xp.getXPHistory` | Histórico de transações |
+| Endpoint                   | Descrição                             |
+| -------------------------- | ------------------------------------- |
+| `xp.getMyXP`               | Detalhes de XP do afiliado logado     |
+| `xp.getAffiliateXP`        | XP de afiliado específico             |
+| `xp.getCareerLevels`       | Lista de 27 níveis de carreira        |
+| `xp.getLeaderboard`        | Top 10 afiliados por XP               |
+| `xp.getXPHistory`          | Histórico de transações               |
 | `dashboard.getMyDashboard` | Dashboard completo com métricas reais |
-| `newsletter.subscribe` | Inscrever email na newsletter |
-| `newsletter.unsubscribe` | Cancelar inscrição |
-| `cms.getPage` | Buscar página CMS por slug |
-| `cms.list` | Listar páginas (admin) |
-| `billing.getInvoice` | Buscar fatura |
-| `billing.listInvoices` | Listar faturas |
+| `newsletter.subscribe`     | Inscrever email na newsletter         |
+| `newsletter.unsubscribe`   | Cancelar inscrição                    |
+| `cms.getPage`              | Buscar página CMS por slug            |
+| `cms.list`                 | Listar páginas (admin)                |
+| `billing.getInvoice`       | Buscar fatura                         |
+| `billing.listInvoices`     | Listar faturas                        |
 
 ## Sistema Legacy - Referência
 
 O diretório `/legacy/` contém o sistema original PHP com 1470 arquivos que foi analisado e parcialmente migrado:
 
-| Componente Legacy | Status Migração |
-|-------------------|-----------------|
-| Newsletter System | ✅ Migrado (newsletterRouter.ts) |
-| CMS Pages | ✅ Migrado (cmsRouter.ts) |
-| Sistema de Faturas | ✅ Migrado (billingRouter.ts) |
-| Backoffice Admin | ⚠️ Em análise | **referência https://nxnja0f28xnc.space.minimax.io/**
-| Sistema MMN Core | ✅ Já existente |
-| Automação Cron | ⚠️ Em análise |
+| Componente Legacy  | Status Migração                  |
+| ------------------ | -------------------------------- | ----------------------------------------------------- |
+| Newsletter System  | ✅ Migrado (newsletterRouter.ts) |
+| CMS Pages          | ✅ Migrado (cmsRouter.ts)        |
+| Sistema de Faturas | ✅ Migrado (billingRouter.ts)    |
+| Backoffice Admin   | ⚠️ Em análise                    | **referência https://nxnja0f28xnc.space.minimax.io/** |
+| Sistema MMN Core   | ✅ Já existente                  |
+| Automação Cron     | ⚠️ Em análise                    |
 
 ## Referência de API tRPC
 
@@ -807,25 +841,25 @@ dashboard.getMyDashboard()
 
 ### Convenções de Commits
 
-| Tipo | Descrição |
-|------|-----------|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
-| `docs` | Alterações em documentação |
-| `style` | Formatação, falta de ponto e vírgula, etc |
-| `refactor` | Refatoração de código |
-| `test` | Adição ou correção de testes |
-| `chore` | Atualização de build, dependências, etc |
+| Tipo       | Descrição                                 |
+| ---------- | ----------------------------------------- |
+| `feat`     | Nova funcionalidade                       |
+| `fix`      | Correção de bug                           |
+| `docs`     | Alterações em documentação                |
+| `style`    | Formatação, falta de ponto e vírgula, etc |
+| `refactor` | Refatoração de código                     |
+| `test`     | Adição ou correção de testes              |
+| `chore`    | Atualização de build, dependências, etc   |
 
 ### Estrutura de Branching
 
-| Branch | Propósito |
-|--------|----------|
-| `main` | Código em produção |
-| `develop` | Integração de features |
-| `feature/*` | Novas funcionalidades |
-| `fix/*` | Correções |
-| `hotfix/*` | Correções urgentes em produção |
+| Branch      | Propósito                      |
+| ----------- | ------------------------------ |
+| `main`      | Código em produção             |
+| `develop`   | Integração de features         |
+| `feature/*` | Novas funcionalidades          |
+| `fix/*`     | Correções                      |
+| `hotfix/*`  | Correções urgentes em produção |
 
 ### Padrões de Código
 
@@ -849,11 +883,13 @@ npm run test --workspace=frontend
 ### Erro de Conexão com Banco
 
 Verifique se o container MySQL está rodando:
+
 ```bash
 docker ps | grep mysql
 ```
 
 Se não estiver, inicie com:
+
 ```bash
 npm run infrastructure:up
 ```
@@ -861,6 +897,7 @@ npm run infrastructure:up
 ### Erro de Permissão em node_modules
 
 Remova e reinstale:
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -869,6 +906,7 @@ npm install
 ### Problemas com tRPC
 
 Se os endpoints não carregam, verifique:
+
 1. Backend está rodando na porta correta (default: 3000)
 2. Variáveis de ambiente em `.env`
 3. Conexão com banco de dados
@@ -888,12 +926,12 @@ npm run db:seed  # se disponível
 
 ### Docker Services
 
-| Serviço | Porta | Descrição |
-|---------|-------|-----------|
-| MySQL | 3306 | Banco de dados principal |
-| Redis | 6379 | Cache e filas BullMQ |
-| API | 3000 | Backend tRPC |
-| Frontend | 5173 | Vite dev server |
+| Serviço  | Porta | Descrição                |
+| -------- | ----- | ------------------------ |
+| MySQL    | 3306  | Banco de dados principal |
+| Redis    | 6379  | Cache e filas BullMQ     |
+| API      | 3000  | Backend tRPC             |
+| Frontend | 5173  | Vite dev server          |
 
 ### Variáveis de Ambiente
 
@@ -936,6 +974,7 @@ NODE_ENV=development
 ## Changelog
 
 ### v1.0.7 (2026-05-19)
+
 - **feat(circuit-breaker)**: Sistema completo de Circuit Breakers
   - `CircuitBreaker.ts`: Implementação do padrão com estados CLOSED/OPEN/HALF_OPEN
   - `circuitBreakerMiddleware.ts`: Middleware tRPC para proteção de procedures
@@ -970,6 +1009,7 @@ NODE_ENV=development
 - **conformidade**: Atualizada para 85-90%
 
 ### v1.0.6 (2026-05-19)
+
 - **feat(marketplace)**: Implementação completa do Marketplace Nexus
   - Schema de banco: marketplaceProducts, productCategories, productVariations, marketplaceOrders, orderItems, productReviews, wishlists, wishlistItems, coupons, affiliateMarketplaceSettings
   - Router tRPC: 17 endpoints para CRUD completo de produtos, pedidos, cupons e avaliações
@@ -984,6 +1024,7 @@ NODE_ENV=development
 - **conformidade**: Atualizada para 75-80%
 
 ### v1.0.5 (2026-05-19)
+
 - **fix(.gitignore)**: Corrigido rastreamento de package-lock.json em workspaces npm
   - Removido package-lock.json do rastreamento em subdiretórios
   - Mantido package-lock.json apenas na raiz para monorepo
@@ -992,6 +1033,7 @@ NODE_ENV=development
 - **docs**: Adicionada nota sobre limitações de npm workspaces em alguns ambientes
 
 ### v1.0.4 (2026-05-19)
+
 - **feat(migration)**: Migração de funcionalidades do sistema Legacy PHP
   - `newsletterRouter.ts`: Sistema de newsletter com subscribe/unsubscribe
   - `cmsRouter.ts`: Sistema de páginas CMS dinâmicas
@@ -1005,6 +1047,7 @@ NODE_ENV=development
 - **conformidade**: Atualizada para 65-70%
 
 ### v1.0.3 (2026-05-19)
+
 - **feat(xp)**: Sistema de XP/Carreiras implementado
   - Schema: career_levels, affiliate_xp, xp_transactions, dashboard_metrics
   - 27 níveis de carreira organizados em 5 categorias
@@ -1018,6 +1061,7 @@ NODE_ENV=development
 - **docs**: Conformidade atualizada para 55-60%
 
 ### v1.0.2 (2026-05-19)
+
 - **feat(agentic)**: Expande persistência e monitoramento
 - **feat(agentic)**: Adiciona persistência gradual para sessões e memória
 - **feat(agentic)**: Adiciona camada de monitoramento e orquestração
@@ -1027,6 +1071,7 @@ NODE_ENV=development
 - **chore**: Atualiza versões de dependências para compatibilidade
 
 ### v1.0.1 (2026-05-18)
+
 - **fix**: Correções de inconsistências técnicas
 - **fix**: Correção de inconsistências no componente AffiliateProfile
 

@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { ScreenContainer } from "@/components/screen-container";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
@@ -14,39 +23,41 @@ export default function LoginScreen() {
       alert("Por favor, preencha todos os campos.");
       return;
     }
-    
+
     setLoading(true);
-    // Simular login
     setTimeout(() => {
       setLoading(false);
       router.replace("/(tabs)");
-    }, 1500);
+    }, 800);
   };
 
   return (
-    <ScreenContainer>
+    <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={styles.flex}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 24 }}>
-          <View className="items-center mb-10">
-            <View className="w-20 h-20 bg-primary rounded-2xl items-center justify-center mb-4">
-              <Text className="text-white text-4xl font-bold">M</Text>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.logoWrapper}>
+            <View style={styles.logoBox}>
+              <Text style={styles.logoText}>M</Text>
             </View>
-            <Text className="text-2xl font-bold text-foreground">MMN AI-to-AI</Text>
-            <Text className="text-muted mt-2 text-center">
+            <Text style={styles.title}>MMN AI-to-AI</Text>
+            <Text style={styles.subtitle}>
               Entre para gerenciar sua rede e seu agente IA
             </Text>
           </View>
 
-          <View className="gap-4">
-            <View className="gap-2">
-              <Text className="text-sm font-medium text-foreground">Email</Text>
+          <View style={styles.form}>
+            <View style={styles.field}>
+              <Text style={styles.label}>Email</Text>
               <TextInput
-                className="bg-surface border border-border rounded-xl p-4 text-foreground"
+                style={styles.input}
                 placeholder="seu@email.com"
-                placeholderTextColor="#999"
+                placeholderTextColor="#687076"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
@@ -54,41 +65,148 @@ export default function LoginScreen() {
               />
             </View>
 
-            <View className="gap-2">
-              <Text className="text-sm font-medium text-foreground">Senha</Text>
+            <View style={styles.field}>
+              <Text style={styles.label}>Senha</Text>
               <TextInput
-                className="bg-surface border border-border rounded-xl p-4 text-foreground"
+                style={styles.input}
                 placeholder="••••••••"
-                placeholderTextColor="#999"
+                placeholderTextColor="#687076"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
               />
             </View>
 
-            <TouchableOpacity className="items-end">
-              <Text className="text-primary text-sm font-medium">Esqueceu a senha?</Text>
+            <TouchableOpacity style={styles.forgotPassword}>
+              <Text style={styles.link}>Esqueceu a senha?</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleLogin}
               disabled={loading}
-              className={`bg-primary rounded-xl p-4 mt-2 items-center ${loading ? "opacity-70" : "active:opacity-80"}`}
+              style={[
+                styles.submitButton,
+                loading && styles.submitButtonDisabled,
+              ]}
             >
-              <Text className="text-white font-bold text-lg">
+              <Text style={styles.submitText}>
                 {loading ? "Entrando..." : "Entrar"}
               </Text>
             </TouchableOpacity>
 
-            <View className="flex-row justify-center mt-4 gap-1">
-              <Text className="text-muted">Não tem uma conta?</Text>
+            <View style={styles.signupRow}>
+              <Text style={styles.mutedText}>Não tem uma conta?</Text>
               <TouchableOpacity>
-                <Text className="text-primary font-bold">Cadastre-se</Text>
+                <Text style={[styles.link, styles.signupLink]}>
+                  Cadastre-se
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ScreenContainer>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+  logoWrapper: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  logoBox: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    backgroundColor: "#0a7ea4",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  logoText: {
+    color: "#ffffff",
+    fontSize: 42,
+    fontWeight: "700",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#11181c",
+  },
+  subtitle: {
+    marginTop: 8,
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+    color: "#687076",
+  },
+  form: {
+    gap: 16,
+  },
+  field: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#11181c",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: "#11181c",
+    backgroundColor: "#f5f5f5",
+  },
+  forgotPassword: {
+    alignItems: "flex-end",
+  },
+  link: {
+    color: "#0a7ea4",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  submitButton: {
+    marginTop: 8,
+    borderRadius: 16,
+    paddingVertical: 15,
+    alignItems: "center",
+    backgroundColor: "#0a7ea4",
+  },
+  submitButtonDisabled: {
+    opacity: 0.7,
+  },
+  submitText: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  signupRow: {
+    marginTop: 16,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 6,
+  },
+  mutedText: {
+    color: "#687076",
+    fontSize: 14,
+  },
+  signupLink: {
+    fontWeight: "700",
+  },
+});

@@ -1,5 +1,44 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-23 — README v1.1.0 & Agent Runtime
+
+### `docs(readme)` — Atualização do README para v1.1.0
+
+**Alterações Realizadas:**
+
+- Badge de versão atualizado para `v1.1.0 (2026-05-23)`
+- Nova seção "Funcionalidades Core" expandida com:
+  - Runtime Agente IA (Pipeline agente + skills + LLM com auditoria)
+  - Packs Marketplace (8 packs de skills pré-configurados)
+  - Cron Automation (Sistema completo de automação com BullMQ)
+  - Mobile Expo (App React Native com autenticação OAuth)
+- Nova seção "Badges Visuais de Features" adicionada
+- Nova seção "Quick Stats" com métricas do projeto
+- Métricas de Conformidade atualizadas com Runtime Agente IA (100%)
+- Conformidade geral ajustada para ~92-95%
+
+### `feat(agents)` — Runtime Router com integração agente + skills + LLM
+
+**Backend:**
+
+- `backend/src/routers/agentRuntimeRouter.ts` - Novo router unificado
+  - `getProfile` - Retorna perfil do agente com upgrades
+  - `generate` - Gera conteúdo respeitando contentStrategy
+  - `generateBatch` - Geração em lote
+  - `bumpPerformance` - Incrementa métricas de performance
+  - `registerAction` - Registra ações para auditoria
+- Persistência de auditoria em `session_audit`
+- Registro em `appRouter.bootstrap.status.routers.agentRuntime`
+
+**Mobile:**
+
+- `mobile/app/(tabs)/agent.tsx` reescrito para consumir `trpc.agentRuntime.getProfile`
+- Alternância de estratégia via `trpc.agents.configure`
+- Toggle de status do agente (ativo/inativo)
+- Geração de conteúdo em tempo real com `trpc.agentRuntime.generate`
+
+---
+
 ## 2026-05-23 — AI Sync System & Agent Synchronization
 
 ### `feat(ai-sync)` — Sistema de Sincronização AI-to-AI Completo

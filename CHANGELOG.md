@@ -1,5 +1,90 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-24 — v1.2.0 Agentic AI Resilience & Persistence
+
+### `feat(agentic)` — Sistema de Resiliência Agentic AI
+
+**New Components:**
+
+- `backend/src/agentic/resilience/index.ts` - Sistema completo de resiliência
+  - `RetryManager` - Retry com exponential backoff e jitter
+  - `CircuitBreaker` - Proteção contra falhas em cascata (CLOSED/OPEN/HALF_OPEN)
+  - `DeadLetterQueue` - Gerenciamento de jobs falhados
+  - `HealthMonitor` - Monitoramento de saúde de serviços
+  - Decorators para wrapping automático de funções
+
+**Features:**
+- Retry automático com backoff exponencial
+- Circuit breakers pré-configurados para OpenAI, Gemini, Database, Redis, External API
+- Dead letter queue com retry automático
+- Health checks para serviços críticos
+- Métricas de resiliência coletáveis
+
+### `feat(agentic)` — Camada de Persistência Agentic
+
+**New Schema:**
+- `backend/src/database/schemas/schema-agentic-persistence.ts`
+  - `agentic_memories` - Memórias persistentes com embeddings vetoriais
+  - `agentic_sessions` - Sessões agentic completas
+  - `agentic_actions` - Auditoria de ações
+  - `agentic_checkpoints` - Snapshots de recuperação
+  - `agentic_queue_jobs` - Jobs da fila persistidos
+
+**New Service:**
+- `backend/src/agentic/persistence/index.ts`
+  - `MemoryService` - Persistência e busca de memórias
+  - `SessionService` - Gerenciamento de sessões
+  - `ActionService` - Registro de ações
+  - `CheckpointService` - Criação de checkpoints
+  - `QueueJobService` - Persistência de jobs
+  - `persistentAgenticRepository` - Adaptador para camada agentic
+
+**Features:**
+- Persistência de memórias em MySQL
+- Busca por similaridade (cosine similarity)
+- TTL management para memórias temporárias
+- Integração com schema existente
+
+### `feat(dashboard)` — Agentic Metrics Dashboard
+
+**New Component:**
+- `frontend/src/pages/AgenticMetricsDashboard.tsx`
+  - Monitoramento em tempo real de operações agentic
+  - Stats de sessões (total, ativas, completadas, falhadas)
+  - Queue status com métricas de throughput
+  - Circuit breakers indicators
+  - Health status de serviços
+  - Dead letter queue alert
+
+**Features:**
+- Auto-refresh a cada 30 segundos
+- Integração com `trpc.agentic.getMonitor`
+- Visualização de sessões recentes
+- Indicadores de saúde coloridos
+
+### `docs(agentic)` — Documentação Técnica Atualizada
+
+**New Documents:**
+
+- `docs/repository-review/ANALISE_TECNICA_CONSOLIDADA_v1.2.md`
+  - Análise técnica completa do sistema
+  - Métricas de conformidade
+  - Roadmap de evolução
+
+- `docs/agentic/ROADMAP_AGENTIC_v1.2.0.md`
+  - Roadmap de 4 fases para evolução agentic
+  - Multi-agent architecture
+  - Self-healing capabilities
+  - Enterprise features
+
+**Fases do Roadmap:**
+1. **Resiliência (v1.2.0)** - ✅ Implementado
+2. **Multi-Agent (v1.3.0)** - Q3 2026
+3. **Advanced Autonomy (v1.4.0)** - Q4 2026
+4. **Enterprise (v2.0.0)** - Q4 2026
+
+---
+
 ## 2026-05-23 — README v1.1.0 & Agent Runtime
 
 ### `docs(readme)` — Atualização do README para v1.1.0

@@ -32,6 +32,7 @@ import { approvalsRouter } from "./routers/approvalsRouter";
 import { aiSyncRouter } from "./routers/aiSyncRouter";
 import { cronRouter } from "./routers/cronRouter";
 import { performanceRouter } from "./routers/performanceRouter";
+import { healthRouter } from "./routers/healthRouter";
 
 export const appRouter = router({
   system: router({
@@ -173,6 +174,7 @@ export const appRouter = router({
   approvals: approvalsRouter,
   cron: cronRouter,
   performance: performanceRouter,
+  health: healthRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -38,7 +38,7 @@ Esta documentação centraliza todas as informações do sistema em um único do
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Agentic](https://img.shields.io/badge/Agentic-Layer-7C3AED)
 ![XP](https://img.shields.io/badge/XP%2FCarreiras-Implemented-blue)
-![v1.0.9](https://img.shields.io/badge/v1.0.9-2026--05--22-blue)
+![v1.1.0](https://img.shields.io/badge/v1.1.0-2026--05--23-blue)
 
 **Aviso**: Este projeto está em desenvolvimento ativo. Algumas funcionalidades descritas neste documento estão em implementação ou planejadas para fases futuras.
 
@@ -325,6 +325,23 @@ npm run start
 | Upgrades/Skills      | ✅ Funcional | Sistema de upgrades com tipos e preços                               |
 | Frontend React       | ✅ Funcional | ~55 páginas/components, Dashboard, layouts                           |
 | Orquestração Agentic | ✅ Funcional | Camada de coordenação multi-agente                                   |
+| Runtime Agente IA    | ✅ Novo      | Pipeline agente + skills + LLM com auditoria                          |
+| Packs Marketplace    | ✅ Novo      | 8 packs de skills pré-configurados                                   |
+| Cron Automation      | ✅ Novo      | Sistema completo de automação com BullMQ                             |
+| Mobile Expo          | ⚠️ Em Dev    | App React Native com autenticação OAuth                              |
+
+### Badges Visuais de Features
+
+| Badge       | Descrição                           | Status   |
+| ------------ | ----------------------------------- | -------- |
+| 🔄 Realtime  | Agentes IA com geração de conteúdo  | ✅       |
+| 🛒 Marketplace| Catálogo completo com checkout      | ✅       |
+| 📊 Analytics | Dashboard com métricas em tempo real| ✅       |
+| 🔐 Security  | RBAC e permissões granulares        | ✅       |
+| 🤖 Agentic   | Orquestração multi-agente           | ✅       |
+| 📱 Mobile    | App Expo com OAuth                  | ⚠️       |
+| 💰 Finance   | Comissões, pagamentos, billing      | ✅       |
+| 📅 Scheduler | Automação Cron com BullMQ          | ✅       |
 
 ### ✅ Sistema de Newsletter (Migrado do Legacy)
 
@@ -572,8 +589,19 @@ npm run start
 | Automação Cron               | 6            | 6     | 100%       |
 | Packs / Skills Marketplace   | 6            | 6     | 100%       |
 | Navegação Frontend           | 4            | 4     | 100%       |
+| Runtime Agente IA            | 5            | 5     | 100%       |
 
-**Conformidade Geral: ~90-93%**
+**Conformidade Geral: ~92-95%**
+
+### Quick Stats
+
+| Métrica                      | Valor        |
+| ---------------------------- | ------------ |
+| Total de Endpoints tRPC      | 150+         |
+| Total de Componentes Frontend| 55+          |
+| Total de Schemas de Banco    | 30+          |
+| Linhas de Código (aprox.)    | 50,000+      |
+| Cobertura de Testes           | Em progresso |
 
 ## Estrutura do Projeto
 

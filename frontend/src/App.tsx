@@ -61,6 +61,7 @@ const EspacoAberto = lazy(() => import("./pages/EspacoAberto"));
 const CareerProgress = lazy(() => import("./pages/CareerProgress"));
 const ExecutionLogs = lazy(() => import("./pages/ExecutionLogs"));
 const Utilities = lazy(() => import("./pages/Utilities"));
+const SystemStatus = lazy(() => import("./pages/SystemStatus"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export const NAVIGATION_STRUCTURE = {
@@ -328,6 +329,12 @@ export const NAVIGATION_STRUCTURE = {
       layout: "AdminDashboardLayout",
     },
     {
+      path: "/admin/status",
+      name: "Status Sistema",
+      component: "SystemStatus",
+      layout: "AdminDashboardLayout",
+    },
+    {
       path: "/admin/legacy",
       name: "Painel legado admin",
       component: "AdminPanel",
@@ -402,6 +409,7 @@ export default function App() {
             <Route path="/admin/logs" component={ExecutionLogs} />
             <Route path="/admin/schedules" component={AdminSchedules} />
             <Route path="/admin/settings" component={AdminSettings} />
+            <Route path="/admin/status" component={SystemStatus} />
             <Route path="/admin/legacy" component={AdminPanel} />
 
             <Route component={NotFound} />

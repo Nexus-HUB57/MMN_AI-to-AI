@@ -1,13 +1,17 @@
 import {
   ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useMemo, useState } from "react";
+
 import { ScreenContainer } from "@/components/screen-container";
+import { trpc } from "@/lib/trpc";
 
 const STRATEGIES = [
   { id: "aggressive", label: "Agressiva" },
@@ -17,32 +21,119 @@ const STRATEGIES = [
 
 type StrategyId = (typeof STRATEGIES)[number]["id"];
 
+type Platform = "instagram" | "whatsapp" | "facebook";
+
+const PLATFORMS: { id: Platform; label: string }[] = [
+  { id: "instagram", label: "Instagram" },
+  { id: "whatsapp", label: "WhatsApp" },
+  { id: "facebook", label: "Facebook" },
+];
+
+const STRATEGY_TO_FREQUENCY: Record<StrategyId, string> = {
+  aggressive: "hourly",
+  balanced: "daily",
+  conservative: "weekly",
+};
+
 export default function AgentScreen() {
   const [strategy, setStrategy] = useState<StrategyId>("balanced");
-  const [agentActive, setAgentActive] = useState(true);
-  const [isUpdatingStrategy, setIsUpdatingStrategy] = useState(false);
+  const [topic, setTopic] = useState("");
+  const [platform, setPlatform] = useState<Platform>("instagram");
+  const [generated, setGenerated] = useState<string | null>(null);
+
+  const profileQuery = trpc.agentRuntime.getProfile.useQuery(undefined, {
+    retry: 0,
+  });
+  const configureMutation = trpc.agents.configure.useMutation({
+    onSuccess: () => profileQuery.refetch(),
+  });
+  const generateMutation = trpc.agentRuntime.generate.useMutation();
+
+  const isAgentReady = !!profileQuery.data?.agent;
+  const status = profileQuery.data?.agent?.status ?? "learning";
+  const performanceScore = profileQuery.data?.agent?.performanceScore ?? 0;
+  const skillsCount = profileQuery.data?.skillsCount ?? 0;
+  const agentActive = status === "active";
 
   const metrics = useMemo(
     () => ({
-      energy: 85,
-      health: 92,
-      creativity: 78,
-      reputation: 88,
+      performance: performanceScore,
+      skills: Math.min(100, skillsCount * 20),
+      energy: agentActive ? 90 : 30,
+      health: agentActive ? 95 : 60,
     }),
-    [],
+    [agentActive, performanceScore, skillsCount],
   );
 
-  const recentActions = [
-    { id: 1, action: "Conteúdo gerado", time: "Há 2 horas" },
-    { id: 2, action: "Rede atualizada", time: "Há 4 horas" },
-    { id: 3, action: "Comissão processada", time: "Há 1 dia" },
-  ];
-
-  const handleStrategyChange = async (newStrategy: StrategyId) => {
-    setIsUpdatingStrategy(true);
-    setStrategy(newStrategy);
-    setTimeout(() => setIsUpdatingStrategy(false), 300);
+  const handleStrategyChange = async (next: StrategyId) => {
+    setStrategy(next);
+    try {
+      await configureMutation.mutateAsync({
+        contentStrategy: {
+          platforms: ["instagram", "facebook", "whatsapp"],
+          postingFrequency: STRATEGY_TO_FREQUENCY[next],
+          tone: next === "aggressive" ? "persuasive" : "professional",
+          targetAudience: "general",
+        },
+      });
+    } catch (err: any) {
+      Alert.alert("Erro", err?.message ?? "Falha ao salvar estratégia.");
+    }
   };
+
+  const handleSetStatus = async (nextActive: boolean) => {
+    try {
+      await configureMutation.mutateAsync({
+        status: nextActive ? "active" : "paused",
+      });
+    } catch (err: any) {
+      Alert.alert("Erro", err?.message ?? "Falha ao atualizar status.");
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (topic.trim().length < 3) {
+      Alert.alert(
+        "Tópico curto",
+        "Descreva o assunto do post (mínimo 3 letras).",
+      );
+      return;
+    }
+    try {
+      const res = await generateMutation.mutateAsync({
+        topic: topic.trim(),
+        platform,
+        includeHashtags: platform === "instagram",
+      });
+      setGenerated(res.content);
+    } catch (err: any) {
+      Alert.alert("Erro", err?.message ?? "Falha ao gerar conteúdo.");
+    }
+  };
+
+  if (profileQuery.isLoading) {
+    return (
+      <ScreenContainer>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color="#0a7ea4" />
+          <Text style={styles.subtitle}>Carregando seu agente IA...</Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  if (profileQuery.isError || !isAgentReady) {
+    return (
+      <ScreenContainer>
+        <View style={styles.centered}>
+          <Text style={styles.title}>Agente IA</Text>
+          <Text style={styles.subtitle}>
+            Ainda não inicializamos seu agente. Faça login e tente novamente.
+          </Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
 
   return (
     <ScreenContainer>
@@ -50,7 +141,7 @@ export default function AgentScreen() {
         <View style={styles.sectionHeader}>
           <Text style={styles.title}>Agente IA</Text>
           <Text style={styles.subtitle}>
-            Gerencie seu assistente inteligente
+            Gerencie seu assistente inteligente conectado ao backend
           </Text>
         </View>
 
@@ -69,14 +160,19 @@ export default function AgentScreen() {
                   agentActive ? styles.successText : styles.errorText,
                 ]}
               >
-                {agentActive ? "Ativo" : "Inativo"}
+                {agentActive
+                  ? "Ativo"
+                  : status === "learning"
+                    ? "Aprendendo"
+                    : "Inativo"}
               </Text>
             </View>
           </View>
 
           <View style={styles.buttonRow}>
             <TouchableOpacity
-              onPress={() => setAgentActive(true)}
+              onPress={() => handleSetStatus(true)}
+              disabled={configureMutation.isPending}
               style={[
                 styles.secondaryButton,
                 agentActive && styles.successSoft,
@@ -92,7 +188,8 @@ export default function AgentScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setAgentActive(false)}
+              onPress={() => handleSetStatus(false)}
+              disabled={configureMutation.isPending}
               style={[styles.secondaryButton, !agentActive && styles.errorSoft]}
             >
               <Text
@@ -113,12 +210,12 @@ export default function AgentScreen() {
             <View key={key} style={styles.metricGroup}>
               <View style={styles.rowBetween}>
                 <Text style={styles.metricLabel}>
+                  {key === "performance" && "Performance"}
+                  {key === "skills" && `Skills (${skillsCount} ativas)`}
                   {key === "energy" && "Energia"}
                   {key === "health" && "Saúde"}
-                  {key === "creativity" && "Criatividade"}
-                  {key === "reputation" && "Reputação"}
                 </Text>
-                <Text style={styles.metricValue}>{value}%</Text>
+                <Text style={styles.metricValue}>{Math.round(value)}%</Text>
               </View>
               <View style={styles.metricTrack}>
                 <View style={[styles.metricFill, { width: `${value}%` }]} />
@@ -134,7 +231,7 @@ export default function AgentScreen() {
               <TouchableOpacity
                 key={opt.id}
                 onPress={() => handleStrategyChange(opt.id)}
-                disabled={isUpdatingStrategy}
+                disabled={configureMutation.isPending}
                 style={[
                   styles.strategyButton,
                   strategy === opt.id && styles.strategyButtonActive,
@@ -153,32 +250,74 @@ export default function AgentScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.cardTitle}>Últimas Ações</Text>
-          {recentActions.map((action) => (
-            <View key={action.id} style={styles.listCard}>
-              <Text style={styles.listTitle}>{action.action}</Text>
-              <Text style={styles.listSubtitle}>{action.time}</Text>
-            </View>
-          ))}
-        </View>
-
-        <TouchableOpacity style={styles.primaryButton}>
-          <Text style={styles.primaryButtonText}>Configurar Agente</Text>
-        </TouchableOpacity>
-
-        {isUpdatingStrategy && (
-          <View style={styles.loadingRow}>
-            <ActivityIndicator size="small" color="#0a7ea4" />
-            <Text style={styles.listSubtitle}>Atualizando preferências...</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Gerar conteúdo agora</Text>
+          <Text style={styles.mutedLabel}>Plataforma</Text>
+          <View style={styles.buttonRow}>
+            {PLATFORMS.map((opt) => (
+              <TouchableOpacity
+                key={opt.id}
+                onPress={() => setPlatform(opt.id)}
+                style={[
+                  styles.secondaryButton,
+                  platform === opt.id && styles.successSoft,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.secondaryButtonText,
+                    platform === opt.id && styles.successText,
+                  ]}
+                >
+                  {opt.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        )}
+
+          <TextInput
+            placeholder="Ex.: lançamento do nosso curso de afiliados"
+            placeholderTextColor="#94a3b8"
+            value={topic}
+            onChangeText={setTopic}
+            style={styles.input}
+          />
+
+          <TouchableOpacity
+            style={[
+              styles.primaryButton,
+              generateMutation.isPending && styles.disabledButton,
+            ]}
+            onPress={handleGenerate}
+            disabled={generateMutation.isPending}
+          >
+            {generateMutation.isPending ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text style={styles.primaryButtonText}>Gerar com IA</Text>
+            )}
+          </TouchableOpacity>
+
+          {generated && (
+            <View style={styles.resultBox}>
+              <Text style={styles.listSubtitle}>Resultado:</Text>
+              <Text style={styles.resultText}>{generated}</Text>
+            </View>
+          )}
+        </View>
       </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    gap: 12,
+  },
   content: {
     flexGrow: 1,
     padding: 16,
@@ -195,6 +334,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: "#687076",
+    textAlign: "center",
   },
   section: {
     gap: 12,
@@ -316,22 +456,15 @@ const styles = StyleSheet.create({
   strategyButtonTextActive: {
     color: "#0a7ea4",
   },
-  listCard: {
-    backgroundColor: "#f5f5f5",
-    borderRadius: 16,
+  input: {
     borderWidth: 1,
     borderColor: "#e5e7eb",
-    padding: 14,
-    gap: 4,
-  },
-  listTitle: {
-    fontSize: 14,
-    fontWeight: "700",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    backgroundColor: "#ffffff",
     color: "#11181c",
-  },
-  listSubtitle: {
-    fontSize: 13,
-    color: "#687076",
+    fontSize: 15,
   },
   primaryButton: {
     borderRadius: 14,
@@ -339,14 +472,30 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
   },
+  disabledButton: {
+    opacity: 0.6,
+  },
   primaryButtonText: {
     fontSize: 15,
     fontWeight: "700",
     color: "#ffffff",
   },
-  loadingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  resultBox: {
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    padding: 12,
+    gap: 6,
+  },
+  resultText: {
+    color: "#11181c",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  listSubtitle: {
+    fontSize: 12,
+    color: "#687076",
+    fontWeight: "600",
   },
 });

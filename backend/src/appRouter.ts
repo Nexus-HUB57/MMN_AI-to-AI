@@ -1,6 +1,7 @@
 import { publicProcedure, router } from "./config/trpc";
 import { agenticRouter } from "./routers/agenticRouter";
 import { agentsRouter } from "./routers/agentsRouter";
+import { agentRuntimeRouter } from "./routers/agentRuntimeRouter";
 import { authRouter } from "./routers/authRouter";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { contentGenerationRouter } from "./routers/contentGenerationRouter";
@@ -107,6 +108,7 @@ export const appRouter = router({
       routers: {
         agentic: true,
         agents: true,
+        agentRuntime: true,
         aiContentHub: true,
         content: true,
         dashboard: true,
@@ -139,6 +141,7 @@ export const appRouter = router({
 
   agentic: agenticRouter,
   agents: agentsRouter,
+  agentRuntime: agentRuntimeRouter,
   aiSync: aiSyncRouter,
   mmn: mmnRouter,
   aiContentHub: aiContentHubRouter,

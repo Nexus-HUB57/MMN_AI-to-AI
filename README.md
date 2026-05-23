@@ -78,6 +78,23 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 
 ## Atualizações Recentes do Repositório (2026-05-23)
 
+### ✅ Fase 6 — Agentes IA conectados ao runtime de LLM
+
+A camada de **Agentes IA** ganhou um router unificado (`trpc.agentRuntime.*`) que integra agente + upgrades/skills + LLM em um único pipeline com auditoria:
+
+- novo `backend/src/routers/agentRuntimeRouter.ts` expondo `getProfile`, `generate`, `generateBatch`, `bumpPerformance` e `registerAction`
+- `generate` respeita a `contentStrategy` do usuário (plataforma, tom e público) e persiste auditoria em `session_audit` para a aba "Últimas ações"
+- exporta `InsertUpgrade` e `InsertAgentUpgrade` em `database/schemas/schema-final.ts` para alinhar tipagem dos routers de upgrades
+- registrado em `appRouter.bootstrap.status.routers.agentRuntime` para verificação de presença
+
+**Mobile conectado ao backend:** `mobile/app/(tabs)/agent.tsx` foi reescrito para consumir `trpc.agentRuntime.getProfile`, alternar estratégia via `trpc.agents.configure`, ativar/desativar status do agente e gerar conteúdo em tempo real via `trpc.agentRuntime.generate` (com seleção de plataforma, tópico e exibição do resultado da IA).
+
+**Referências:**
+
+- [`backend/src/routers/agentRuntimeRouter.ts`](backend/src/routers/agentRuntimeRouter.ts)
+- [`backend/src/appRouter.ts`](backend/src/appRouter.ts)
+- [`mobile/app/(tabs)/agent.tsx`](<mobile/app/(tabs)/agent.tsx>)
+
 ### ✅ Mobile Expo — trilha de estabilização em andamento
 
 O workspace `mobile/` avançou na estabilização do fluxo de autenticação e tema para suportar a entrega MVP+:

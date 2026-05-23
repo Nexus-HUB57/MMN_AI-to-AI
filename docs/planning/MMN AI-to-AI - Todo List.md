@@ -105,21 +105,25 @@
 
 ## Fase 6: Backend - Agentes IA e Upgrades
 
-- [ ] Criar estrutura de dados para agentes
+- [x] Criar estrutura de dados para agentes (`schema-final.agents`, `upgrades`, `agent_upgrades`)
 
-- [ ] Implementar inicialização de agente por usuário
+- [x] Implementar inicialização de agente por usuário (`trpc.agents.initialize`)
 
-- [ ] Criar procedures para configurar agente
+- [x] Criar procedures para configurar agente (`trpc.agents.configure`, `trpc.agents.updateState`)
 
-- [ ] Implementar sistema de upgrades/plugins
+- [x] Implementar sistema de upgrades/plugins (`trpc.upgrades.*`, packs/skills via `trpc.packs.*`)
 
-- [ ] Criar procedure para ativar/desativar upgrades
+- [x] Criar procedure para ativar/desativar upgrades (`trpc.upgrades.activateUpgrade`, `trpc.upgrades.deactivateUpgrade`)
 
-- [ ] Implementar armazenamento de estado do agente
+- [x] Implementar armazenamento de estado do agente (`agents.contentStrategy`, `performanceScore`, auditoria em `session_audit`)
 
-- [ ] Integração com LLM para geração de conteúdo
+- [x] Integração com LLM para geração de conteúdo (`trpc.agentRuntime.generate`, `trpc.agentRuntime.generateBatch`, `trpc.content.*` via `llm-v2`)
 
-- [ ] Testes de agentes IA
+- [x] Router de runtime unificado conectando agente + skills/upgrades + LLM (`backend/src/routers/agentRuntimeRouter.ts`)
+
+- [x] Integração mobile: tela `/agent` consome `trpc.agentRuntime.getProfile` + `generate` e `trpc.agents.configure`
+
+- [ ] Testes de agentes IA (bloqueado por dependência `pg` faltante no ambiente de testes)
 
 ## Fase 7: Backend - Integração com Marketplaces
 

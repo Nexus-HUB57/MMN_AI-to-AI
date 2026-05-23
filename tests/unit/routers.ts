@@ -1,1 +1,1 @@
-export { appRouter } from "../../backend/src/routers/authRouter";
+export { appRouter } from "../../backend/src/appRouter";

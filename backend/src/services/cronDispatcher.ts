@@ -6,14 +6,14 @@
  * aguarda a confirmação de enfileiramento e devolve metadados (jobId,
  * queueName) para serem persistidos no histórico de execução.
  */
-import { Queue } from 'bullmq';
+import { Queue } from "bullmq";
 import {
   contentGenerationQueue,
   marketplaceSyncQueue,
   orderProcessingQueue,
   commissionProcessingQueue,
   withdrawalQueue,
-} from '../config/queue';
+} from "../config/queue";
 
 export interface CronDispatchInput {
   jobType: string;
@@ -41,7 +41,8 @@ const queueRegistry: Record<string, Queue> = {
   withdrawal_processing_queue: withdrawalQueue,
 };
 
-const defaultQueueResolver: QueueResolver = (queueName) => queueRegistry[queueName] ?? null;
+const defaultQueueResolver: QueueResolver = (queueName) =>
+  queueRegistry[queueName] ?? null;
 
 interface CronJobTypeBinding {
   bullJobName: string;
@@ -57,80 +58,80 @@ interface CronJobTypeBinding {
 const cronJobBindings: Record<string, CronJobTypeBinding> = {
   // Marketplace
   marketplace_sync: {
-    bullJobName: 'marketplace-sync',
-    queueName: 'marketplace_sync_queue',
+    bullJobName: "marketplace-sync",
+    queueName: "marketplace_sync_queue",
     buildPayload: (payload) => ({
-      marketplace: (payload.marketplace as string) ?? 'mercadolibre',
-      syncType: (payload.syncType as string) ?? 'incremental',
+      marketplace: (payload.marketplace as string) ?? "mercado_libre",
+      syncType: (payload.syncType as string) ?? "incremental",
       ...payload,
     }),
   },
   marketplace_price_update: {
-    bullJobName: 'marketplace-sync',
-    queueName: 'marketplace_sync_queue',
+    bullJobName: "marketplace-sync",
+    queueName: "marketplace_sync_queue",
     buildPayload: (payload) => ({
-      marketplace: (payload.marketplace as string) ?? 'mercadolibre',
-      syncType: 'price_update',
+      marketplace: (payload.marketplace as string) ?? "mercado_libre",
+      syncType: "price_update",
       ...payload,
     }),
   },
   marketplace_inventory_sync: {
-    bullJobName: 'marketplace-sync',
-    queueName: 'marketplace_sync_queue',
+    bullJobName: "marketplace-sync",
+    queueName: "marketplace_sync_queue",
     buildPayload: (payload) => ({
-      marketplace: (payload.marketplace as string) ?? 'mercadolibre',
-      syncType: 'inventory',
+      marketplace: (payload.marketplace as string) ?? "mercado_libre",
+      syncType: "inventory",
       ...payload,
     }),
   },
 
   // Conteúdo
   content_scheduling: {
-    bullJobName: 'content-generation',
-    queueName: 'content_generation_queue',
+    bullJobName: "content-generation",
+    queueName: "content_generation_queue",
     buildPayload: (payload) => ({
-      type: 'generateText',
+      type: "generateText",
       ...payload,
     }),
   },
   social_post_publish: {
-    bullJobName: 'content-generation',
-    queueName: 'content_generation_queue',
+    bullJobName: "content-generation",
+    queueName: "content_generation_queue",
     buildPayload: (payload) => ({
-      type: 'generateText',
-      platform: (payload.platform as string) ?? 'social',
+      type: "generateText",
+      platform: (payload.platform as string) ?? "social",
       ...payload,
     }),
   },
 
   // Comissões
   commission_calculation: {
-    bullJobName: 'commission-processing',
-    queueName: 'commission_processing_queue',
+    bullJobName: "commission-processing",
+    queueName: "commission_processing_queue",
     buildPayload: (payload) => ({
-      commissionType: 'network',
+      commissionType: "network",
       ...payload,
     }),
   },
   commission_distribution: {
-    bullJobName: 'commission-processing',
-    queueName: 'commission_processing_queue',
+    bullJobName: "commission-processing",
+    queueName: "commission_processing_queue",
     buildPayload: (payload) => ({
-      commissionType: 'payment',
+      commissionType: "payment",
       ...payload,
     }),
   },
 
   // Pedidos
   order_processing: {
-    bullJobName: 'order-processing',
-    queueName: 'order_processing_queue',
+    bullJobName: "order-processing",
+    queueName: "order_processing_queue",
   },
 
   // Pagamentos / Saques
   payment_processing: {
-    bullJobName: 'withdrawal-processing',
-    queueName: 'withdrawal_processing_queue',
+    bullJobName: "withdrawal-processing",
+    queueName: "withdrawal_processing_queue",
   },
 };
 
@@ -138,40 +139,43 @@ const cronJobBindings: Record<string, CronJobTypeBinding> = {
  * Tarefas executadas inline (não usam fila BullMQ), porque o trabalho real
  * é uma operação curta de banco/cache. Cada handler deve ser idempotente.
  */
-const inlineHandlers: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
+const inlineHandlers: Record<
+  string,
+  (payload: Record<string, unknown>) => Promise<void>
+> = {
   invoice_overdue_check: async () => {
     // Marcador de execução — a lógica concreta será incorporada ao billing.
-    console.log('[CronDispatcher] invoice_overdue_check executado (inline)');
+    console.log("[CronDispatcher] invoice_overdue_check executado (inline)");
   },
   invoice_reminder: async () => {
-    console.log('[CronDispatcher] invoice_reminder executado (inline)');
+    console.log("[CronDispatcher] invoice_reminder executado (inline)");
   },
   database_cleanup: async () => {
-    console.log('[CronDispatcher] database_cleanup executado (inline)');
+    console.log("[CronDispatcher] database_cleanup executado (inline)");
   },
   cache_warming: async () => {
-    console.log('[CronDispatcher] cache_warming executado (inline)');
+    console.log("[CronDispatcher] cache_warming executado (inline)");
   },
   session_cleanup: async () => {
-    console.log('[CronDispatcher] session_cleanup executado (inline)');
+    console.log("[CronDispatcher] session_cleanup executado (inline)");
   },
   xp_recalculation: async () => {
-    console.log('[CronDispatcher] xp_recalculation executado (inline)');
+    console.log("[CronDispatcher] xp_recalculation executado (inline)");
   },
   career_progression: async () => {
-    console.log('[CronDispatcher] career_progression executado (inline)');
+    console.log("[CronDispatcher] career_progression executado (inline)");
   },
   leaderboard_update: async () => {
-    console.log('[CronDispatcher] leaderboard_update executado (inline)');
+    console.log("[CronDispatcher] leaderboard_update executado (inline)");
   },
   network_health_check: async () => {
-    console.log('[CronDispatcher] network_health_check executado (inline)');
+    console.log("[CronDispatcher] network_health_check executado (inline)");
   },
   affiliate_activation: async () => {
-    console.log('[CronDispatcher] affiliate_activation executado (inline)');
+    console.log("[CronDispatcher] affiliate_activation executado (inline)");
   },
   report_generation: async () => {
-    console.log('[CronDispatcher] report_generation executado (inline)');
+    console.log("[CronDispatcher] report_generation executado (inline)");
   },
 };
 
@@ -181,7 +185,7 @@ const inlineHandlers: Record<string, (payload: Record<string, unknown>) => Promi
  */
 export async function dispatchCronJob(
   input: CronDispatchInput,
-  options: { resolveQueue?: QueueResolver } = {}
+  options: { resolveQueue?: QueueResolver } = {},
 ): Promise<CronDispatchOutput> {
   const binding = cronJobBindings[input.jobType];
   const inlineHandler = inlineHandlers[input.jobType];
@@ -189,7 +193,8 @@ export async function dispatchCronJob(
 
   // Caso 1: tipo mapeado para fila BullMQ
   if (binding) {
-    const queue = resolveQueue(binding.queueName) ?? resolveQueue(input.queueName);
+    const queue =
+      resolveQueue(binding.queueName) ?? resolveQueue(input.queueName);
     if (!queue) {
       return {
         queueName: binding.queueName,
@@ -214,10 +219,10 @@ export async function dispatchCronJob(
       },
       {
         attempts: 3,
-        backoff: { type: 'exponential', delay: 2000 },
+        backoff: { type: "exponential", delay: 2000 },
         removeOnComplete: true,
         removeOnFail: false,
-      }
+      },
     );
 
     return {
@@ -235,7 +240,7 @@ export async function dispatchCronJob(
       queueName: input.queueName,
       bullJobName: input.jobType,
       dispatched: true,
-      reason: 'executado inline (handler dedicado)',
+      reason: "executado inline (handler dedicado)",
     };
   }
 
@@ -253,10 +258,10 @@ export async function dispatchCronJob(
       },
       {
         attempts: 3,
-        backoff: { type: 'exponential', delay: 2000 },
+        backoff: { type: "exponential", delay: 2000 },
         removeOnComplete: true,
         removeOnFail: false,
-      }
+      },
     );
 
     return {
@@ -264,7 +269,7 @@ export async function dispatchCronJob(
       jobId: bullJob.id?.toString(),
       bullJobName: input.jobType,
       dispatched: true,
-      reason: 'dispatch genérico via queueName do job',
+      reason: "dispatch genérico via queueName do job",
     };
   }
 
@@ -287,8 +292,5 @@ export function listRegisteredCronQueues(): string[] {
  * Lista os tipos de cron job suportados nativamente pelo dispatcher.
  */
 export function listSupportedCronJobTypes(): string[] {
-  return [
-    ...Object.keys(cronJobBindings),
-    ...Object.keys(inlineHandlers),
-  ];
+  return [...Object.keys(cronJobBindings), ...Object.keys(inlineHandlers)];
 }

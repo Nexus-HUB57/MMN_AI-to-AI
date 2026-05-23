@@ -95,6 +95,18 @@ A camada de **Agentes IA** ganhou um router unificado (`trpc.agentRuntime.*`) qu
 - [`backend/src/appRouter.ts`](backend/src/appRouter.ts)
 - [`mobile/app/(tabs)/agent.tsx`](<mobile/app/(tabs)/agent.tsx>)
 
+### ✅ Fase 7 — Marketplace com fila de sync, tendências e testes
+
+A trilha de **Marketplaces** foi consolidada com execução real de sincronização via fila e cobertura de testes isolados:
+
+- `backend/src/services/syncMarketplaceProducts.ts` agora suporta sync global, por marketplace ou por conta, persiste histórico, atualiza tendências (`product_trends`) e margens (`affiliate_margins`)
+- `backend/src/workers/marketplaceSyncWorker.ts` deixou de retornar mocks fixos e passou a executar o serviço real de sincronização
+- `backend/src/routers/marketplacesRouter.ts` agora enfileira sync manual com `jobId`, marketplace e `accountId`, em vez de apenas marcar status
+- padronização do identificador `mercado_libre` entre router, fila, scheduler e cron dispatcher para evitar divergências entre execução manual e automática
+- `tests/unit/marketplaces.test.ts` foi reescrito com mocks estáveis de DB/helpers/queue e agora valida conexão de contas, sync manual, produtos recomendados, analytics e margens agregadas
+
+**Validação local:** `npm --workspace backend run build` ✅ e `npx vitest run tests/unit/marketplaces.test.ts` ✅.
+
 ### ✅ Mobile Expo — trilha de estabilização em andamento
 
 O workspace `mobile/` avançou na estabilização do fluxo de autenticação e tema para suportar a entrega MVP+:

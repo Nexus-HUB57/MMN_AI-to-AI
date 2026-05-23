@@ -2,8 +2,12 @@ import { z } from "zod";
 import { protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
-import { marketplaceAccounts, marketplaceProductsExt as marketplaceProducts } from "../drizzle/schema";
+import {
+  marketplaceAccounts,
+  marketplaceProductsExt as marketplaceProducts,
+} from "../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { addMarketplaceSyncJob } from "../config/queue";
 import * as marketplaceHelpers from "./marketplace-helpers";
 import * as mercadoLibre from "./integrations/mercadoLibre";
 import * as shopee from "./integrations/shopee";
@@ -27,11 +31,15 @@ export const marketplacesRouter = router({
         refreshToken: z.string().optional(),
         apiKey: z.string().optional(),
         apiSecret: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      if (!db)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
 
       try {
         const result = await db.insert(marketplaceAccounts).values({
@@ -53,7 +61,10 @@ export const marketplacesRouter = router({
           accountName: input.accountName,
         };
       } catch (error) {
-        console.error("[marketplacesRouter] Error connecting marketplace:", error);
+        console.error(
+          "[marketplacesRouter] Error connecting marketplace:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to connect marketplace account",
@@ -68,7 +79,11 @@ export const marketplacesRouter = router({
     .input(z.object({ accountId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      if (!db)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
 
       try {
         const account = await db
@@ -78,14 +93,23 @@ export const marketplacesRouter = router({
           .limit(1);
 
         if (account.length === 0 || account[0].userId !== ctx.user.id) {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Account not found" });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Account not found",
+          });
         }
 
-        await db.update(marketplaceAccounts).set({ isActive: 0 }).where(eq(marketplaceAccounts.id, input.accountId));
+        await db
+          .update(marketplaceAccounts)
+          .set({ isActive: 0 })
+          .where(eq(marketplaceAccounts.id, input.accountId));
 
         return { success: true };
       } catch (error) {
-        console.error("[marketplacesRouter] Error disconnecting marketplace:", error);
+        console.error(
+          "[marketplacesRouter] Error disconnecting marketplace:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to disconnect marketplace account",
@@ -98,7 +122,11 @@ export const marketplacesRouter = router({
    */
   getMarketplaceAccounts: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
-    if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+    if (!db)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      });
 
     try {
       const accounts = await db
@@ -116,7 +144,10 @@ export const marketplacesRouter = router({
         createdAt: account.createdAt,
       }));
     } catch (error) {
-      console.error("[marketplacesRouter] Error getting marketplace accounts:", error);
+      console.error(
+        "[marketplacesRouter] Error getting marketplace accounts:",
+        error,
+      );
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get marketplace accounts",
@@ -131,7 +162,11 @@ export const marketplacesRouter = router({
     .input(z.object({ accountId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
-      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      if (!db)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
 
       try {
         const account = await db
@@ -141,7 +176,10 @@ export const marketplacesRouter = router({
           .limit(1);
 
         if (account.length === 0 || account[0].userId !== ctx.user.id) {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Account not found" });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Account not found",
+          });
         }
 
         // Atualizar status para sincronizando
@@ -150,10 +188,22 @@ export const marketplacesRouter = router({
           .set({ syncStatus: "syncing" })
           .where(eq(marketplaceAccounts.id, input.accountId));
 
+        const syncJob = await addMarketplaceSyncJob({
+          marketplace: account[0].marketplace as
+            | "mercado_libre"
+            | "shopee"
+            | "hotmart",
+          syncType: "incremental",
+          accountId: input.accountId,
+          requestedByUserId: ctx.user.id,
+        });
+
         return {
           success: true,
-          message: "Synchronization started",
+          message: "Synchronization queued",
           accountId: input.accountId,
+          jobId: String(syncJob.id),
+          marketplace: account[0].marketplace,
         };
       } catch (error) {
         console.error("[marketplacesRouter] Error syncing products:", error);
@@ -172,11 +222,14 @@ export const marketplacesRouter = router({
       z.object({
         days: z.number().default(7),
         limit: z.number().default(20),
-      })
+      }),
     )
     .query(async ({ input }) => {
       try {
-        const products = await marketplaceHelpers.getTrendingProducts(input.days, input.limit);
+        const products = await marketplaceHelpers.getTrendingProducts(
+          input.days,
+          input.limit,
+        );
 
         return products.map((product) => ({
           id: product.id,
@@ -189,7 +242,10 @@ export const marketplacesRouter = router({
           commissionPercentage: product.commissionPercentage,
         }));
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting trending products:", error);
+        console.error(
+          "[marketplacesRouter] Error getting trending products:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get trending products",
@@ -205,11 +261,14 @@ export const marketplacesRouter = router({
       z.object({
         limit: z.number().default(20),
         minTrendingScore: z.number().default(60),
-      })
+      }),
     )
     .query(async ({ input }) => {
       try {
-        const products = await marketplaceHelpers.getRecommendedProducts(input.limit, input.minTrendingScore);
+        const products = await marketplaceHelpers.getRecommendedProducts(
+          input.limit,
+          input.minTrendingScore,
+        );
 
         return products.map((product) => ({
           id: product.id,
@@ -223,7 +282,10 @@ export const marketplacesRouter = router({
           productUrl: product.productUrl,
         }));
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting recommended products:", error);
+        console.error(
+          "[marketplacesRouter] Error getting recommended products:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get recommended products",
@@ -239,11 +301,14 @@ export const marketplacesRouter = router({
       z.object({
         category: z.string(),
         limit: z.number().default(50),
-      })
+      }),
     )
     .query(async ({ input }) => {
       try {
-        const products = await marketplaceHelpers.getProductsByCategory(input.category, input.limit);
+        const products = await marketplaceHelpers.getProductsByCategory(
+          input.category,
+          input.limit,
+        );
 
         return products.map((product) => ({
           id: product.id,
@@ -257,7 +322,10 @@ export const marketplacesRouter = router({
           commissionPercentage: product.commissionPercentage,
         }));
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting products by category:", error);
+        console.error(
+          "[marketplacesRouter] Error getting products by category:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get products by category",
@@ -273,11 +341,14 @@ export const marketplacesRouter = router({
       z.object({
         marketplace: z.enum(["mercado_libre", "shopee", "hotmart"]),
         limit: z.number().default(50),
-      })
+      }),
     )
     .query(async ({ input }) => {
       try {
-        const products = await marketplaceHelpers.getProductsByMarketplace(input.marketplace, input.limit);
+        const products = await marketplaceHelpers.getProductsByMarketplace(
+          input.marketplace,
+          input.limit,
+        );
 
         return products.map((product) => ({
           id: product.id,
@@ -290,7 +361,10 @@ export const marketplacesRouter = router({
           commissionPercentage: product.commissionPercentage,
         }));
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting products by marketplace:", error);
+        console.error(
+          "[marketplacesRouter] Error getting products by marketplace:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get products by marketplace",
@@ -303,7 +377,9 @@ export const marketplacesRouter = router({
    */
   getAffiliateMargins: protectedProcedure.query(async ({ ctx }) => {
     try {
-      const earnings = await marketplaceHelpers.calculateAffiliateEarnings(ctx.user.id);
+      const earnings = await marketplaceHelpers.calculateAffiliateEarnings(
+        ctx.user.id,
+      );
 
       return {
         totalEarnings: earnings.totalEarnings,
@@ -312,7 +388,10 @@ export const marketplacesRouter = router({
         averageCommission: earnings.averageCommission,
       };
     } catch (error) {
-      console.error("[marketplacesRouter] Error getting affiliate margins:", error);
+      console.error(
+        "[marketplacesRouter] Error getting affiliate margins:",
+        error,
+      );
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to get affiliate margins",
@@ -327,10 +406,15 @@ export const marketplacesRouter = router({
     .input(z.object({ productId: z.number() }))
     .query(async ({ input }) => {
       try {
-        const trends = await marketplaceHelpers.analyzeProductTrends(input.productId);
+        const trends = await marketplaceHelpers.analyzeProductTrends(
+          input.productId,
+        );
 
         if (!trends) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Product trends not found" });
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Product trends not found",
+          });
         }
 
         return {
@@ -342,7 +426,10 @@ export const marketplacesRouter = router({
           analyzedAt: trends.analyzedAt,
         };
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting product analytics:", error);
+        console.error(
+          "[marketplacesRouter] Error getting product analytics:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get product analytics",
@@ -358,13 +445,13 @@ export const marketplacesRouter = router({
       z.object({
         recommendation: z.enum(["buy", "hold", "sell", "avoid"]),
         limit: z.number().default(20),
-      })
+      }),
     )
     .query(async ({ input }) => {
       try {
         const products = await marketplaceHelpers.getProductsByRecommendation(
           input.recommendation,
-          input.limit
+          input.limit,
         );
 
         return products.map((product) => ({
@@ -378,7 +465,10 @@ export const marketplacesRouter = router({
           commissionPercentage: product.commissionPercentage,
         }));
       } catch (error) {
-        console.error("[marketplacesRouter] Error getting products by recommendation:", error);
+        console.error(
+          "[marketplacesRouter] Error getting products by recommendation:",
+          error,
+        );
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get products by recommendation",

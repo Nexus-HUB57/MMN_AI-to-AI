@@ -127,21 +127,21 @@
 
 ## Fase 7: Backend - Integração com Marketplaces
 
-- [ ] Implementar integração com API do Mercado Livre
+- [x] Implementar integração com API do Mercado Livre
 
-- [ ] Implementar integração com API do Shopee
+- [x] Implementar integração com API do Shopee
 
-- [ ] Implementar integração com API do Hotmart
+- [x] Implementar integração com API do Hotmart
 
-- [ ] Criar job para sincronizar produtos diariamente
+- [x] Criar job para sincronizar produtos diariamente
 
-- [ ] Implementar análise de tendências
+- [x] Implementar análise de tendências
 
-- [ ] Criar procedure para listar produtos recomendados
+- [x] Criar procedure para listar produtos recomendados
 
-- [ ] Implementar cálculo de margem de afiliado
+- [x] Implementar cálculo de margem de afiliado
 
-- [ ] Testes de integração com marketplaces
+- [x] Testes de integração com marketplaces
 
 ## Fase 8: Backend - Dropshipping Automatizado
 

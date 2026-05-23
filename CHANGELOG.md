@@ -1,5 +1,30 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-24 — v1.2.1 PHD Review & Documentation Enhancement
+
+### `docs` — Revisão Técnica Completa
+
+**New Documentation:**
+
+- `docs/repository-review/REVISAO_TECNICA_PHD_2026-05-24.md`
+  - Análise quantitativa do repositório (42 routers, 125+ componentes)
+  - Avaliação da arquitetura Agentic AI
+  - Identificação de oportunidades de melhoria
+  - Roadmap técnico recomendado
+  - Recomendações de código e segurança
+
+- `docs/agentic/README.md`
+  - Documentação completa da camada Agentic AI
+  - Arquitetura de componentes detalhada
+  - API tRPC exposta
+  - Pipeline de execução
+  - Sistema de resiliência
+  - Roadmap Agentic
+
+### `chore` — Atualização do Índice de Documentação
+
+- Links atualizados para nova documentação Agentic
+
 ## 2026-05-24 — v1.2.0 Agentic AI Resilience & Persistence
 
 ### `feat(agentic)` — Sistema de Resiliência Agentic AI

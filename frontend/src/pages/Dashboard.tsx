@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import { heavyLegacyAssets, legacyAdminGroups, retirementChecklist } from "../data/legacy-fusion-data";
 import { trpc } from "../lib/trpc";
 
 export default function Dashboard() {
@@ -14,15 +13,12 @@ export default function Dashboard() {
           <span className="pill">Backoffice</span>
           <h1>Dashboard operacional</h1>
           <p className="lead compact">
-            Vista moderna do backoffice com foco em saúde do sistema, módulos de operação e trilha de migração do legado.
+            Vista do backoffice com foco em saúde do sistema e módulos de operação.
           </p>
         </div>
         <div className="cta-row compact-actions">
           <Link href="/" className="btn btn-secondary">
             Início
-          </Link>
-          <Link href="/legacy-review" className="btn btn-secondary">
-            Benchmark legado
           </Link>
           <Link href="/orchestrator" className="btn btn-primary">
             Agent Monitor
@@ -70,81 +66,32 @@ export default function Dashboard() {
               <p className="stat-caption">Contexto carregado com tRPC</p>
             </>
           ) : (
-            !currentUser.isLoading && <p className="stat-caption">Nenhum usuário autenticado no bootstrap atual.</p>
+            !currentUser.isLoading && <p className="stat-caption">Nenhum usuário autenticado.</p>
           )}
         </article>
       </section>
 
       <section className="grid">
-        <article className="panel full-width">
-          <h2>Módulos inspirados no administrador legado</h2>
-          <div className="reference-grid four-col">
-            {legacyAdminGroups.map((module) => (
-              <div key={module.title} className="reference-card">
-                <strong>{module.title}</strong>
-                <div className="chip-wrap">
-                  {module.items.map((item) => (
-                    <span key={item} className="module-chip">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+        <article className="panel">
+          <h2>Módulos operacionais</h2>
+          <div className="quick-actions">
+            <Link href="/agents" className="btn btn-secondary">Agentes IA</Link>
+            <Link href="/content-hub" className="btn btn-secondary">Content Hub</Link>
+            <Link href="/commissions" className="btn btn-secondary">Comissões</Link>
+            <Link href="/marketplaces" className="btn btn-secondary">Marketplaces</Link>
+            <Link href="/packs" className="btn btn-secondary">Pacotes</Link>
+            <Link href="/logs" className="btn btn-secondary">Logs</Link>
           </div>
         </article>
-      </section>
 
-      <section className="grid">
         <article className="panel">
           <h2>Prioridades de evolução</h2>
           <ul className="feature-list">
-            <li>Transformar o menu extenso do legado em hubs operacionais mais curtos.</li>
-            <li>Expor módulos de rede, pagamentos, materiais e configurações com navegação previsível.</li>
-            <li>Usar o agentic layer para monitorar campanhas, memória e qualidade de execução.</li>
-            <li>Separar claramente experiência do associado e do administrador.</li>
+            <li>Expor módulos de rede, pagamentos e materiais com navegação previsível.</li>
+            <li>Usar o agentic layer para monitorar campanhas e qualidade de execução.</li>
+            <li>Separar claramente a experiência do associado e do administrador.</li>
+            <li>Adicionar observabilidade operacional em tempo real.</li>
           </ul>
-        </article>
-
-        <article className="panel">
-          <h2>Checklist para remover legacy/ do Git</h2>
-          <ul className="feature-list">
-            {retirementChecklist.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </article>
-      </section>
-
-      <section className="grid">
-        <article className="panel">
-          <h2>Ativos pesados já mapeados</h2>
-          <div className="goal-list">
-            {heavyLegacyAssets.map((asset) => (
-              <div key={asset.path} className="goal-card queued">
-                <div className="goal-header">
-                  <strong>{asset.path}</strong>
-                  <span className="status-badge queued">{asset.size}</span>
-                </div>
-                <p className="goal-description">{asset.reason}</p>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="panel">
-          <h2>Links de trabalho</h2>
-          <div className="quick-actions">
-            <a href="https://demo.br20.net/marketing/" target="_blank" rel="noreferrer" className="btn btn-secondary">
-              Ver landing legado
-            </a>
-            <a href="https://demo.br20.net/marketing/painel/" target="_blank" rel="noreferrer" className="btn btn-secondary">
-              Ver portal do cliente legado
-            </a>
-            <a href="https://demo.br20.net/marketing/adm/" target="_blank" rel="noreferrer" className="btn btn-secondary">
-              Ver portal admin legado
-            </a>
-          </div>
         </article>
       </section>
     </main>

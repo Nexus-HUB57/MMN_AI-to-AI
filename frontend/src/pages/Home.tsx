@@ -1,5 +1,4 @@
 import { Link } from "wouter";
-import { benchmarkLinks, fusionTracks, legacyRetirementMetrics } from "../data/legacy-fusion-data";
 import { trpc } from "../lib/trpc";
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
         <h1>MMN AI-to-AI</h1>
         <p className="lead">
           Ecossistema de marketing multinível com backoffice operacional, monitoramento agentic
-          e trilha de modernização orientada pelo legado Marketing 11.0.
+          e orquestração de agentes de IA autônomos.
         </p>
 
         <div className="cta-row">
@@ -25,9 +24,6 @@ export default function Home() {
           </Link>
           <Link href="/orchestrator" className="btn btn-secondary">
             Orquestrador
-          </Link>
-          <Link href="/legacy-review" className="btn btn-secondary">
-            Revisão do legado
           </Link>
         </div>
       </section>
@@ -85,50 +81,6 @@ export default function Home() {
       </section>
 
       <section className="grid">
-        <article className="panel full-width">
-          <h2>Arquitetura inspirada no legado</h2>
-          <div className="reference-grid three-col">
-            {benchmarkLinks.map((item) => (
-              <a key={item.href} href={item.href} target="_blank" rel="noreferrer" className="reference-card">
-                <strong>{item.title}</strong>
-                <span>{item.description}</span>
-              </a>
-            ))}
-          </div>
-        </article>
-      </section>
-
-      <section className="grid">
-        <article className="panel">
-          <h2>Prontidão para aposentadoria do legado</h2>
-          <div className="reference-grid two-col">
-            {legacyRetirementMetrics.map((item) => (
-              <div key={item.label} className="reference-card">
-                <strong>{item.label}</strong>
-                <span>{item.value}</span>
-                <span>{item.note}</span>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="panel">
-          <h2>Trilhas da fusão em andamento</h2>
-          <div className="goal-list compact-list">
-            {fusionTracks.map((track) => (
-              <div key={track.title} className="goal-card queued">
-                <div className="goal-header">
-                  <strong>{track.title}</strong>
-                  <span className="status-badge queued">{track.status}</span>
-                </div>
-                <p className="goal-description">{track.summary}</p>
-              </div>
-            ))}
-          </div>
-        </article>
-      </section>
-
-      <section className="grid">
         <article className="panel">
           <h2>Funcionalidades principais</h2>
           <ul className="feature-list">
@@ -144,11 +96,11 @@ export default function Home() {
         </article>
 
         <article className="panel">
-          <h2>Próximas frentes de ajuste</h2>
+          <h2>Próximas frentes</h2>
           <ul className="feature-list">
             <li>Modernizar as entradas de associado e administrador.</li>
-            <li>Expandir o backoffice para módulos inspirados no menu legado.</li>
-            <li>Conectar persistência agentic a MySQL e filas reais.</li>
+            <li>Expandir o backoffice com novos módulos operacionais.</li>
+            <li>Conectar persistência agentic a filas reais.</li>
             <li>Adicionar observabilidade operacional para rede e pagamentos.</li>
           </ul>
         </article>

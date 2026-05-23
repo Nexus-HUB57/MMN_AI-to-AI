@@ -18,6 +18,9 @@ interface ScheduledTask {
 // Armazém de tarefas agendadas
 const scheduledTasks = new Map<number, ScheduledTask>();
 
+// Guard de concorrência: evita execuções simultâneas do mesmo job
+const runningJobs = new Set<number>();
+
 // Intervalos globais do scheduler (poll de pendentes + reavaliação de alertas)
 const schedulerIntervals: NodeJS.Timeout[] = [];
 
@@ -181,6 +184,11 @@ async function checkAndRunPendingJobs(): Promise<void> {
  * Executa um cron job específico
  */
 export async function executeCronJob(jobId: number): Promise<ICronJobHistory | null> {
+  if (runningJobs.has(jobId)) {
+    console.log(`[CronScheduler] Job ${jobId} já está em execução, ignorando chamada duplicada`);
+    return null;
+  }
+
   const db = await getDb();
   if (!db) {
     console.error(`[CronScheduler] Banco de dados não disponível para executar job ${jobId}`);
@@ -200,6 +208,8 @@ export async function executeCronJob(jobId: number): Promise<ICronJobHistory | n
     console.log(`[CronScheduler] Job ${jobId} está desabilitado`);
     return null;
   }
+
+  runningJobs.add(jobId);
 
   const startTime = Date.now();
 
@@ -280,6 +290,8 @@ export async function executeCronJob(jobId: number): Promise<ICronJobHistory | n
       .where(eq(cronJobs.id, jobId));
 
     return historyEntry;
+  } finally {
+    runningJobs.delete(jobId);
   }
 }
 
@@ -322,18 +334,23 @@ function parsePayload(rawPayload: unknown): Record<string, unknown> {
   return {};
 }
 
+// Limite máximo seguro para setInterval (2^31 - 1 ms ≈ 24.8 dias)
+const MAX_INTERVAL_MS = 2147483647;
+
 /**
- * Calcula o intervalo em milissegundos baseado na frequência
+ * Calcula o intervalo em milissegundos baseado na frequência.
+ * Limitado ao máximo seguro do setInterval do JavaScript.
  */
 function getIntervalMs(frequency: string): number {
-  switch (frequency) {
-    case 'minute': return 60 * 1000;        // 1 minuto
-    case 'hourly': return 60 * 60 * 1000;   // 1 hora
-    case 'daily': return 24 * 60 * 60 * 1000; // 1 dia
-    case 'weekly': return 7 * 24 * 60 * 60 * 1000; // 1 semana
-    case 'monthly': return 30 * 24 * 60 * 60 * 1000; // ~1 mês
-    default: return 24 * 60 * 60 * 1000; // Padrão: 1 dia
-  }
+  const intervals: Record<string, number> = {
+    minute: 60 * 1000,
+    hourly: 60 * 60 * 1000,
+    daily: 24 * 60 * 60 * 1000,
+    weekly: 7 * 24 * 60 * 60 * 1000,
+    monthly: 7 * 24 * 60 * 60 * 1000, // poll semanal; checkAndRunPendingJobs cuida do disparo real
+  };
+  const ms = intervals[frequency] ?? 24 * 60 * 60 * 1000;
+  return Math.min(ms, MAX_INTERVAL_MS);
 }
 
 /**

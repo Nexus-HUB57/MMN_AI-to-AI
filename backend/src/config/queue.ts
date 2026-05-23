@@ -1,102 +1,101 @@
-import { Queue, Worker, QueueEvents } from "bullmq";
+import { Queue, QueueEvents } from "bullmq";
 import IORedis from "ioredis";
 
-// Criar cliente Redis
-export const redisClient = new IORedis({
-  host: process.env.REDIS_HOST || "localhost",
-  port: parseInt(process.env.REDIS_PORT || "6379"),
-  password: process.env.REDIS_PASSWORD || undefined,
-  maxRetriesPerRequest: null,
-});
+const redisAvailable = !!(process.env.REDIS_URL || process.env.REDIS_HOST);
 
-redisClient.on("error", (err) => {
-  console.error("[Redis] Connection error:", err);
-});
+export let redisClient: IORedis | null = null;
 
-redisClient.on("connect", () => {
-  console.log("[Redis] Connected successfully");
-});
+if (redisAvailable) {
+  redisClient = new IORedis(
+    process.env.REDIS_URL || {
+      host: process.env.REDIS_HOST || "localhost",
+      port: parseInt(process.env.REDIS_PORT || "6379"),
+      password: process.env.REDIS_PASSWORD || undefined,
+      maxRetriesPerRequest: null,
+      lazyConnect: true,
+      enableOfflineQueue: false,
+    } as any,
+  );
 
-// Conectar ao Redis
+  redisClient.on("error", (err) => {
+    console.warn("[Redis] Connection error (filas desabilitadas):", err.message);
+  });
+
+  redisClient.on("connect", () => {
+    console.log("[Redis] Conectado com sucesso");
+  });
+}
+
 export async function connectRedis() {
+  if (!redisClient) {
+    console.warn("[Redis] Redis não configurado — filas desabilitadas");
+    return;
+  }
   try {
     if (redisClient.status === "wait") {
       await redisClient.connect();
     }
-    console.log("[Redis] Connection established");
+    console.log("[Redis] Conexão estabelecida");
   } catch (error) {
-    console.error("[Redis] Failed to connect:", error);
-    throw error;
+    console.warn("[Redis] Falha ao conectar — filas desabilitadas:", (error as Error).message);
   }
 }
 
-// Desconectar do Redis
 export async function disconnectRedis() {
+  if (!redisClient) return;
   try {
     if (redisClient.status !== "end") {
       await redisClient.quit();
     }
-    console.log("[Redis] Disconnected");
+    console.log("[Redis] Desconectado");
   } catch (error) {
-    console.error("[Redis] Failed to disconnect:", error);
+    console.warn("[Redis] Falha ao desconectar:", (error as Error).message);
   }
 }
 
-// Configuração padrão para filas
-const defaultQueueConfig = {
-  connection: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: parseInt(process.env.REDIS_PORT || "6379"),
-    password: process.env.REDIS_PASSWORD || undefined,
-    maxRetriesPerRequest: null,
-  },
-};
+const defaultQueueConfig = redisAvailable
+  ? {
+      connection: {
+        host: process.env.REDIS_HOST || "localhost",
+        port: parseInt(process.env.REDIS_PORT || "6379"),
+        password: process.env.REDIS_PASSWORD || undefined,
+        maxRetriesPerRequest: null,
+        lazyConnect: true,
+        enableOfflineQueue: false,
+      },
+    }
+  : null;
 
-// Criar filas
-export const contentGenerationQueue = new Queue(
-  "content_generation_queue",
-  defaultQueueConfig,
-);
-export const marketplaceSyncQueue = new Queue(
-  "marketplace_sync_queue",
-  defaultQueueConfig,
-);
-export const orderProcessingQueue = new Queue(
-  "order_processing_queue",
-  defaultQueueConfig,
-);
-export const commissionProcessingQueue = new Queue(
-  "commission_processing_queue",
-  defaultQueueConfig,
-);
-export const withdrawalQueue = new Queue(
-  "withdrawal_processing_queue",
-  defaultQueueConfig,
-);
+function makeQueue(name: string) {
+  if (!defaultQueueConfig) return null;
+  try {
+    return new Queue(name, defaultQueueConfig);
+  } catch {
+    return null;
+  }
+}
 
-// Criar eventos de fila para monitoramento
-export const contentGenerationQueueEvents = new QueueEvents(
-  "content_generation_queue",
-  defaultQueueConfig,
-);
-export const marketplaceSyncQueueEvents = new QueueEvents(
-  "marketplace_sync_queue",
-  defaultQueueConfig,
-);
-export const orderProcessingQueueEvents = new QueueEvents(
-  "order_processing_queue",
-  defaultQueueConfig,
-);
-export const commissionProcessingQueueEvents = new QueueEvents(
-  "commission_processing_queue",
-  defaultQueueConfig,
-);
-export const withdrawalQueueEvents = new QueueEvents(
-  "withdrawal_processing_queue",
-  defaultQueueConfig,
-);
+function makeQueueEvents(name: string) {
+  if (!defaultQueueConfig) return null;
+  try {
+    return new QueueEvents(name, defaultQueueConfig);
+  } catch {
+    return null;
+  }
+}
 
-// Tipos de jobs
+export const contentGenerationQueue = makeQueue("content_generation_queue");
+export const marketplaceSyncQueue = makeQueue("marketplace_sync_queue");
+export const orderProcessingQueue = makeQueue("order_processing_queue");
+export const commissionProcessingQueue = makeQueue("commission_processing_queue");
+export const withdrawalQueue = makeQueue("withdrawal_processing_queue");
+
+export const contentGenerationQueueEvents = makeQueueEvents("content_generation_queue");
+export const marketplaceSyncQueueEvents = makeQueueEvents("marketplace_sync_queue");
+export const orderProcessingQueueEvents = makeQueueEvents("order_processing_queue");
+export const commissionProcessingQueueEvents = makeQueueEvents("commission_processing_queue");
+export const withdrawalQueueEvents = makeQueueEvents("withdrawal_processing_queue");
+
 export interface ContentGenerationJob {
   type:
     | "generateText"
@@ -143,83 +142,36 @@ export interface WithdrawalJob {
   holderName: string;
 }
 
-// Função para adicionar job à fila
-export async function addContentGenerationJob(
-  job: ContentGenerationJob,
-  options?: Record<string, unknown>,
-) {
-  return contentGenerationQueue.add("content-generation", job, {
+async function safeAdd(queue: Queue | null, jobName: string, job: unknown, options?: Record<string, unknown>) {
+  if (!queue) {
+    console.warn(`[Queue] Fila não disponível (Redis ausente) — job ${jobName} ignorado`);
+    return null;
+  }
+  return queue.add(jobName, job, {
     attempts: 3,
-    backoff: {
-      type: "exponential",
-      delay: 2000,
-    },
+    backoff: { type: "exponential", delay: 2000 },
     removeOnComplete: true,
     removeOnFail: false,
     ...options,
   });
 }
 
-export async function addMarketplaceSyncJob(
-  job: MarketplaceSyncJob,
-  options?: Record<string, unknown>,
-) {
-  return marketplaceSyncQueue.add("marketplace-sync", job, {
-    attempts: 3,
-    backoff: {
-      type: "exponential",
-      delay: 2000,
-    },
-    removeOnComplete: true,
-    removeOnFail: false,
-    ...options,
-  });
+export async function addContentGenerationJob(job: ContentGenerationJob, options?: Record<string, unknown>) {
+  return safeAdd(contentGenerationQueue, "content-generation", job, options);
 }
 
-export async function addOrderProcessingJob(
-  job: OrderProcessingJob,
-  options?: Record<string, unknown>,
-) {
-  return orderProcessingQueue.add("order-processing", job, {
-    attempts: 3,
-    backoff: {
-      type: "exponential",
-      delay: 2000,
-    },
-    removeOnComplete: true,
-    removeOnFail: false,
-    ...options,
-  });
+export async function addMarketplaceSyncJob(job: MarketplaceSyncJob, options?: Record<string, unknown>) {
+  return safeAdd(marketplaceSyncQueue, "marketplace-sync", job, options);
 }
 
-export async function addCommissionProcessingJob(
-  job: CommissionProcessingJob,
-  options?: Record<string, unknown>,
-) {
-  return commissionProcessingQueue.add("commission-processing", job, {
-    attempts: 3,
-    backoff: {
-      type: "exponential",
-      delay: 2000,
-    },
-    removeOnComplete: true,
-    removeOnFail: false,
-    ...options,
-  });
+export async function addOrderProcessingJob(job: OrderProcessingJob, options?: Record<string, unknown>) {
+  return safeAdd(orderProcessingQueue, "order-processing", job, options);
 }
 
-export async function addWithdrawalJob(
-  job: WithdrawalJob,
-  options?: Record<string, unknown>,
-) {
-  return withdrawalQueue.add("withdrawal-processing", job, {
-    attempts: 3,
-    backoff: {
-      type: "exponential",
-      delay: 2000,
-    },
-    removeOnComplete: true,
-    removeOnFail: false,
-    ...options,
-  });
+export async function addCommissionProcessingJob(job: CommissionProcessingJob, options?: Record<string, unknown>) {
+  return safeAdd(commissionProcessingQueue, "commission-processing", job, options);
+}
+
+export async function addWithdrawalJob(job: WithdrawalJob, options?: Record<string, unknown>) {
+  return safeAdd(withdrawalQueue, "withdrawal-processing", job, options);
 }

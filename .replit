@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "bash", "python-3.12", "web"]
+modules = ["nodejs-20", "bash", "python-3.12", "web", "postgresql-16"]
 [agent]
 expertMode = true
 stack = "BEST_EFFORT_FALLBACK"
@@ -46,21 +46,17 @@ outputType = "webview"
 name = "Backend API"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && ../node_modules/.bin/tsx src/index.ts"
-waitForPort = 3000
-
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && node_modules/.bin/tsx src/index.ts"
+waitForPort = 3000
 
 [[ports]]
 localPort = 3000
 externalPort = 3000
-
-[[ports]]
-localPort = 5000
-externalPort = 80
 
 [deployment]
 deploymentTarget = "autoscale"

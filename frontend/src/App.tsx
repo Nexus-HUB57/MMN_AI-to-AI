@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Switch } from "wouter";
+import { Router, Route, Switch } from "wouter";
 import { TRPCProvider } from "./components/trpc-provider";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -11,9 +11,6 @@ const ContentCalendar = lazy(() => import("./pages/ContentCalendar"));
 const OrchestratorDashboard = lazy(
   () => import("./pages/OrchestratorDashboard"),
 );
-const LegacyReview = lazy(() => import("./pages/LegacyReview"));
-
-const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminNetwork = lazy(() => import("./pages/AdminNetwork"));
@@ -334,12 +331,6 @@ export const NAVIGATION_STRUCTURE = {
       component: "SystemStatus",
       layout: "AdminDashboardLayout",
     },
-    {
-      path: "/admin/legacy",
-      name: "Painel legado admin",
-      component: "AdminPanel",
-      layout: "AdminDashboardLayout",
-    },
   ],
 };
 
@@ -354,14 +345,13 @@ export default function App() {
             </div>
           }
         >
+        <Router>
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/cadastro" component={Cadastro} />
             <Route path="/espaco-aberto" component={EspacoAberto} />
-            <Route path="/legacy-review" component={LegacyReview} />
-
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/profile" component={AffiliateProfile} />
             <Route path="/payments" component={AffiliatePayments} />
@@ -410,10 +400,9 @@ export default function App() {
             <Route path="/admin/schedules" component={AdminSchedules} />
             <Route path="/admin/settings" component={AdminSettings} />
             <Route path="/admin/status" component={SystemStatus} />
-            <Route path="/admin/legacy" component={AdminPanel} />
-
             <Route component={NotFound} />
           </Switch>
+        </Router>
         </Suspense>
       </AuthProvider>
     </TRPCProvider>

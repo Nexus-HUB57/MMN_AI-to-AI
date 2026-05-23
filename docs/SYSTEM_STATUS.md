@@ -72,6 +72,7 @@ O dashboard atualiza os dados automaticamente a cada 30 segundos.
 
 ---
 
-**Versão:** 1.0.0
+**Versão:** 1.0.1
 **Data:** 2026-05-23
+**Última Revisão:** 2026-05-23 - Sincronização de documentação v1.1.0
 **Autor:** MiniMax Agent (PHD Engineering)

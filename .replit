@@ -51,7 +51,7 @@ outputType = "console"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd backend && node_modules/.bin/tsx src/index.ts"
+args = "cd backend && ../node_modules/.bin/tsx src/index.ts"
 waitForPort = 3000
 
 [[ports]]

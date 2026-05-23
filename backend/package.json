@@ -33,6 +33,7 @@
     "bullmq": "^5.28.2",
     "cookie": "^1.0.2",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.45.2",
     "express": "^4.21.2",
     "formdata-node": "^4.4.1",
     "genkit": "^1.28.0",

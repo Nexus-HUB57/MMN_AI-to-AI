@@ -4,6 +4,7 @@
     "strict": false,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "types": ["nativewind/types"],
     "paths": {
       "@/*": ["./*"]

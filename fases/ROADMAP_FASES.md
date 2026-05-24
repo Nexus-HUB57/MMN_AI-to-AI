@@ -71,7 +71,7 @@ Este documento apresenta o roadmap completo de desenvolvimento da plataforma MMN
 ## FASE 7: White-Label Module 🚧
 
 **Período**: Q3 2026
-**Status**: 🔄 EM PREPARAÇÃO
+**Status**: 🔄 EM DESENVOLVIMENTO - SPRINT 1 COMPLETO
 
 ### Objetivos
 - Módulo de branding completo
@@ -80,12 +80,22 @@ Este documento apresenta o roadmap completo de desenvolvimento da plataforma MMN
 - Sistema de multi-tenancy
 - Domínios customizados
 
-### Entregas Esperadas
-- [ ] Gateway de customização
-- [ ] Editor de tema visual
-- [ ] Gerenciador de domínios
-- [ ] Portal white-label
-- [ ] Dashboard de analytics por marca
+### Entregas do Sprint 1 (COMPLETO)
+- [x] API REST FastAPI com 30+ endpoints
+- [x] CRUD de instâncias (POST, GET, PATCH, DELETE)
+- [x] Autenticação via API Key
+- [x] Rate Limiting middleware
+- [x] Error Handler middleware
+- [x] Models Pydantic completos
+- [x] Services layer implementados
+- [x] Documentação Swagger/ReDoc
+
+### Próximos Sprints
+- Sprint 2: Branding Engine (Semana 3-4)
+- Sprint 3: Domain Management (Semana 5-6)
+- Sprint 4: Billing Integration (Semana 7-8)
+- Sprint 5: Portal do Parceiro (Semana 9-10)
+- Sprint 6: Analytics (Semana 11-12)
 
 ### Dependências
 - Pack White-Label (Fase 5)

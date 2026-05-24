@@ -12,6 +12,7 @@
 - segundo domínio com extração de service: `backend/src/domains/affiliate/{types,service}.ts`, com o `mmnRouter` agora delegando o registro de afiliado a `registerAffiliate` do domínio (com erros tipados `AffiliateAlreadyExistsError`, `SponsorNotFoundError`, `AffiliateCreationFailedError`)
 - terceiro domínio com extração de camada interna: `backend/src/domains/marketplace/{types,repository,service}.ts`, com o `marketplacesRouter` delegando conexão/desconexão/listagem/sync e normalização de catálogo ao domínio
 - quarto domínio com extração de camada interna: `backend/src/domains/agent-runtime/{types,repository,service}.ts`, com o `agentRuntimeRouter` delegando perfil, geração, batch, bump de performance e auditoria ao domínio
+- quinto domínio com extração de camada interna: `backend/src/domains/billing/{types,repository,service}.ts`, com o `billingRouter` delegando leitura, listagem, criação, atualização de status, histórico, estatísticas e confirmação de pagamento ao domínio
 
 ### `feat(events)` — Wiring do Event Bus em fluxos operacionais
 
@@ -19,6 +20,7 @@
 - `commissions.updateStatus` e `commissions.approveBatch` agora publicam eventos de comissão (`approved`, `paid`, `rejected`)
 - `marketplaceSyncWorker` agora publica `MarketplaceSyncCompleted`
 - `agentRuntime.generate` e `agentRuntime.generateBatch` agora publicam `AgentSessionStarted`, `AgentSessionCompleted`, `AgentSessionFailed` e `AgentContentGenerated`
+- `billing.updateInvoiceStatus` e `billing.confirmPayment` agora publicam `InvoicePaid`, `InvoiceOverdue` e `PaymentProcessed`
 - adicionados subscribers padrão de auditoria em `backend/src/_core/events/auditSubscribers.ts`, registrados no bootstrap do backend
 
 ### `test(beta)` — Cobertura adicional de saúde e event-driven core
@@ -26,6 +28,7 @@
 - novo `tests/unit/eventBus.test.ts`
 - novo `tests/unit/healthRouter.test.ts`
 - novo `tests/unit/agentRuntimeDomainService.test.ts`
+- novo `tests/unit/billingDomainService.test.ts`
 
 ### `docs(beta)` — Consolidação da continuação da Fase Beta
 

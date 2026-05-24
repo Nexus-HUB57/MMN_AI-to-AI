@@ -33,6 +33,9 @@ const requiredFiles = [
   'backend/src/domains/agent-runtime/service.ts',
   'backend/src/domains/billing/router.ts',
   'backend/src/domains/billing/events.ts',
+  'backend/src/domains/billing/types.ts',
+  'backend/src/domains/billing/repository.ts',
+  'backend/src/domains/billing/service.ts',
   'backend/src/domains/cron/router.ts',
   'backend/src/domains/cron/events.ts',
   'backend/src/domains/xp/router.ts',
@@ -45,6 +48,7 @@ const requiredFiles = [
   'tests/unit/affiliateDomainService.test.ts',
   'tests/unit/marketplaceDomainService.test.ts',
   'tests/unit/agentRuntimeDomainService.test.ts',
+  'tests/unit/billingDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -125,6 +129,28 @@ const contentChecks = [
       'recordAgentRuntimeAudit',
     ],
     label: 'service de agent runtime publica eventos e persiste auditoria',
+  },
+  {
+    file: 'backend/src/routers/billingRouter.ts',
+    includes: [
+      '../domains/billing/service',
+      '../domains/billing/repository',
+      'getInvoiceDetails',
+      'updateInvoiceStatus',
+      'confirmInvoicePayment',
+      'getBillingStats',
+    ],
+    label: 'billing router usa service e repository do domínio',
+  },
+  {
+    file: 'backend/src/domains/billing/service.ts',
+    includes: [
+      'publishInvoicePaid',
+      'publishInvoiceOverdue',
+      'publishPaymentProcessed',
+      'InvoiceNotFoundError',
+    ],
+    label: 'service de billing publica eventos financeiros tipados',
   },
   {
     file: 'backend/src/workers/marketplaceSyncWorker.ts',

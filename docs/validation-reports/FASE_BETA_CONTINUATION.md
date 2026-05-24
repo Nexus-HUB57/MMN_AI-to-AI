@@ -66,6 +66,15 @@ Na continuação seguinte, o domínio `agent-runtime` passou a contar com:
 
 O `agentRuntimeRouter` deixou de concentrar o parsing de strategy, a resolução de plataforma, o bump de performance, a auditoria e a publicação de eventos do runtime. Essas responsabilidades agora ficam no domínio, enquanto o router atua como camada de transporte e adaptação de erro (`AgentNotFoundError` → `TRPCError`).
 
+### 1.5 Extração do domínio `billing`
+Na continuação seguinte, o domínio `billing` passou a contar com:
+
+- `backend/src/domains/billing/types.ts`
+- `backend/src/domains/billing/repository.ts`
+- `backend/src/domains/billing/service.ts`
+
+O `billingRouter` deixou de concentrar a leitura de faturas, paginação, criação com itens, atualização de status, histórico, estatísticas agregadas e confirmação de pagamento. Essas responsabilidades agora ficam no domínio, enquanto o router atua como camada de transporte e adaptação de erro (`InvoiceNotFoundError` → `TRPCError`).
+
 ### 2. `appRouter` parcialmente migrado para a nova camada
 O `backend/src/appRouter.ts` passou a consumir a camada `domains/` para os domínios priorizados nesta fase Beta:
 
@@ -115,6 +124,15 @@ Nos fluxos `agentRuntime.generate` e `agentRuntime.generateBatch` agora são pub
 
 Isso melhora a trilha operacional do runtime agentic sem alterar o contrato público do router e garante observabilidade explícita quando o LLM falha.
 
+#### Billing
+Nos fluxos `billing.updateInvoiceStatus` e `billing.confirmPayment` agora são publicados:
+
+- `InvoicePaid`
+- `InvoiceOverdue`
+- `PaymentProcessed`
+
+Isso aproxima o domínio financeiro do mesmo padrão event-driven já adotado nos demais domínios priorizados da Fase Beta.
+
 ### 4. Subscribers de auditoria adicionados ao bootstrap do backend
 Foi criado `backend/src/_core/events/auditSubscribers.ts` e o backend passou a registrar subscribers padrão no startup (`backend/src/index.ts`).
 
@@ -132,6 +150,7 @@ Foram adicionados testes unitários para os pontos mais importantes desta contin
 - `tests/unit/affiliateDomainService.test.ts`
 - `tests/unit/marketplaceDomainService.test.ts`
 - `tests/unit/agentRuntimeDomainService.test.ts`
+- `tests/unit/billingDomainService.test.ts`
 
 Coberturas incluídas:
 
@@ -165,6 +184,7 @@ O verificador cobre:
 - presença do extrato de service do domínio `affiliate` (`types.ts`, `service.ts`) e delegação do `mmnRouter` ao service;
 - presença do extrato de domínio `marketplace` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `marketplacesRouter` ao domínio;
 - presença do extrato de domínio `agent-runtime` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `agentRuntimeRouter` ao domínio;
+- presença do extrato de domínio `billing` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `billingRouter` ao domínio;
 - uso da camada `domains/` no `appRouter`;
 - registro dos `auditSubscribers` no bootstrap do backend;
 - wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;

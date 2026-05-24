@@ -1,0 +1,119 @@
+# Critérios de Idade - MMN_AI-to-AI Platform
+
+## Visão Geral
+
+Este documento define os critérios etários e requisitos de elegibilidade para participação na plataforma MMN_AI-to-AI, tanto como usuário final quanto como parceiro de negócios (distribuidor/afiliado).
+
+## Requisitos de Idade por Região
+
+### Brasil
+| Categoria | Idade Mínima | Requisito Legal |
+|------------|--------------|------------------|
+| Usuário Padrão | 18 anos | Maioridade civil |
+| Parceiro de Negócios | 18 anos | Capacidade plena |
+| Administrador de Rede | 21 anos | Responsabilidade expandida |
+
+### Portugal
+| Categoria | Idade Mínima | Requisito Legal |
+|------------|--------------|------------------|
+| Utilizador Padrão | 18 anos | Maioridade |
+| Parceiro de Negócios | 18 anos | Maioridade |
+
+### México
+| Categoria | Idade Mínima | Requisito Legal |
+|------------|--------------|------------------|
+| Usuario Estándar | 18 años | Mayoría de edad |
+| Socio de Negocios | 18 años | Mayoría de edad |
+
+### España
+| Categoria | Edad Mínima | Requisito Legal |
+|------------|-------------|-----------------|
+| Usuario Estándar | 18 años | Mayoría de edad |
+| Socio de Negocios | 18 años | Mayoría de edad |
+
+## Verificação de Idade
+
+### Métodos de Verificação
+
+1. **Documento de Identidade**
+   - RG / CPF (Brasil)
+   - DNI / NIE (Espanha/Portugal)
+   - INE (México)
+
+2. **Verificação Online**
+   - Integração com serviços de verificação de idade
+   - Validação via documento oficial
+
+3. **Declaração Juramentada**
+   - Para regiões sem infraestrutura de verificação digital
+   - Compromisso legal via aceite de termos
+
+## Restrições por Faixa Etária
+
+### 16-17 anos (Menor Assistido)
+- ✓ Acesso a conteúdo educacional
+- ✓ Participação em programas de treino
+- ✗ Não elegível para Partnership
+- ✗ Não elegível para comissões
+- ✗ Não elegível para White-Label
+
+### 18+ anos (Maior)
+- ✓ Acesso completo à plataforma
+- ✓ Elegível para Partnership
+- ✓ Elegível para comissões
+- ✗ White-Label conforme critério empresarial
+
+### 21+ anos (Maior com Responsabilidade)
+- ✓ Todos os privilégios de Maior
+- ✓ Elegível como Administrador de Rede
+- ✓ Elegível para programas White-Label
+- ✓ Capacidade para sub-licenciar
+
+## Considerações Legais
+
+### LGPD (Brasil)
+- Coleta de dados de menores com consentimento parental
+- Armazenamento diferenciado para dados de menores de 18 anos
+
+### GDPR (União Europeia)
+- Consentimento parental para menores de 16 anos
+- Direito ao esquecimento aplicável
+
+### Legislação Local
+- Cada país/jurisdição pode ter requisitos adicionais
+- Consultoria legal recomendada antes de implementação
+
+## Implementação Técnica
+
+```javascript
+// Verificação de elegibilidade por idade
+function verificarElegibilidade(usuario, regiao, tipoConta) {
+    const idade = calcularIdade(usuario.dataNascimento);
+    const regras = REGRAS_POR_REGIAO[regiao];
+
+    if (idade < regras.minima) {
+        return { elegivel: false, motivo: 'IDADE_INSUFICIENTE' };
+    }
+
+    if (tipoConta === 'WHITE_LABEL' && idade < 21) {
+        return { elegivel: false, motivo: 'WHITE_LABEL_REQUER_21_ANOS' };
+    }
+
+    return { elegivel: true, nivel: determinarNivel(idade) };
+}
+```
+
+## Checklist de Implementação
+
+- [ ] Sistema de verificação de idade integrado
+- [ ] Fluxo de consentimento parental para menores
+- [ ] Armazenamento seguro de documentos de verificação
+- [ ] Dashboard de compliance por região
+- [ ] Relatórios de auditoria etária
+- [ ] Integração com sistemas governamentais (quando disponível)
+
+---
+
+**Versão**: 1.0
+**Última Atualização**: 2026-05-24
+**Responsável**: Nexus-HUB57 Compliance Team

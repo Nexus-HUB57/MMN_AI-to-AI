@@ -1,0 +1,74 @@
+{
+  "name": "mmn-ai-to-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nexus System AfilIAte-AI — Monorepo (frontend React+Vite, backend tRPC+Drizzle+MySQL, mobile Expo)",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "mobile"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n frontend,backend -c blue,green \"npm --workspace frontend run dev\" \"npm --workspace backend run dev\"",
+    "dev:frontend": "npm --workspace frontend run dev",
+    "dev:backend": "npm --workspace backend run dev",
+    "dev:mobile": "npm --workspace mobile run dev",
+    "install:workspaces": "npm install --workspace backend --workspace frontend --workspace mobile",
+    "doctor:workspaces": "npm ls --workspaces --depth=0 || true",
+    "build": "npm --workspace frontend run build && npm --workspace backend run build",
+    "build:frontend": "npm --workspace frontend run build",
+    "build:backend": "npm --workspace backend run build",
+    "build:mobile": "npm --workspace mobile run build",
+    "start": "npm --workspace backend run start",
+    "infrastructure:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infrastructure:down": "docker compose -f infra/docker-compose.yml down",
+    "infrastructure:logs": "docker compose -f infra/docker-compose.yml logs -f",
+    "db:generate": "drizzle-kit generate --config=infra/drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=infra/drizzle.config.ts",
+    "db:push": "drizzle-kit push --config=infra/drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config=infra/drizzle.config.ts",
+    "genkit:dev": "npm --workspace backend run genkit:dev",
+    "lint": "npm --workspace frontend run lint && npm --workspace backend run lint",
+    "lint:mobile": "npm --workspace mobile run lint",
+    "lint:fix": "npm --workspace frontend run format && npm --workspace backend run format && npm --workspace mobile run format",
+    "typecheck": "NODE_OPTIONS=--max-old-space-size=4096 npm --workspace frontend run check",
+    "test": "vitest run",
+    "test:phase8": "vitest run tests/unit/dropshipping.test.ts",
+    "test:watch": "vitest",
+    "verify": "npm run doctor:workspaces && npm run typecheck && npm run lint && npm run build && npm run test:phase8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "concurrently": "^9.1.0",
+    "drizzle-kit": "^0.30.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx,js,jsx}": [
+      "npm exec --workspace frontend -- eslint --fix",
+      "npm exec --workspace frontend -- prettier --write"
+    ],
+    "backend/**/*.ts": [
+      "npm exec --workspace backend -- eslint --fix",
+      "npm exec --workspace backend -- prettier --write"
+    ],
+    "mobile/**/*.{ts,tsx,js,jsx}": [
+      "npm exec --workspace mobile -- eslint --fix",
+      "npm exec --workspace mobile -- prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "npm exec -- prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
+}

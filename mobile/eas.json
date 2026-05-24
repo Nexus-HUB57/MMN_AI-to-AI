@@ -1,0 +1,72 @@
+{
+  "cli": {
+    "version": ">= 13.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "debug",
+        "gradleBuildType": "debug"
+      },
+      "env": {
+        "EXPO_USE_DEV_CLIENT": "1"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": false,
+        "enterpriseProvisioning": "automatic"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleBuildType": "release"
+      },
+      "channel": "preview"
+    },
+    "production": {
+      "distribution": "store",
+      "ios": {
+        "simulator": false,
+        "enterpriseProvisioning": "manual"
+      },
+      "android": {
+        "buildType": "app-bundle",
+        "gradleBuildType": "release"
+      },
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "${APPLE_ID}",
+        "ascAppId": "${ASC_APP_ID}"
+      },
+      "android": {
+        "track": "production",
+        "serviceAccountKeyPath": "${ANDROID_SERVICE_ACCOUNT_KEY_PATH}"
+      }
+    },
+    "preview": {
+      "ios": {
+        "appleId": "${APPLE_ID}",
+        "ascAppId": "${ASC_APP_ID}"
+      },
+      "android": {
+        "track": "beta",
+        "serviceAccountKeyPath": "${ANDROID_SERVICE_ACCOUNT_KEY_PATH}"
+      }
+    }
+  },
+  "channels": {
+    "production": ["production"],
+    "preview": ["preview"],
+    "development": ["development"]
+  }
+}

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  FORCE_COLOR: "1"
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  validate-monorepo:
+    name: Validar monorepo
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Diagnosticar workspaces
+        run: npm run doctor:workspaces
+
+      - name: Executar typecheck
+        run: npm run typecheck
+
+      - name: Executar lint completo
+        run: npm run lint
+
+      - name: Executar testes
+        run: npm run test
+        env:
+          NODE_ENV: test
+
+      - name: Executar build completo
+        run: npm run build
+
+      - name: Resumo do CI
+        if: always()
+        run: |
+          echo "CI finalizado para o monorepo MMN AI-to-AI"
+          echo "Fluxos executados: doctor:workspaces, typecheck, lint, test, build"

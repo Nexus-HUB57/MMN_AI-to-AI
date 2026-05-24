@@ -29,17 +29,18 @@ Este roadmap orienta a fusão entre o **sistema legado PHP** e o **MMN AI-to-AI*
 - Resultado documentado em `docs/VALIDACAO_FUSAO_FASE1.md`.
 
 ## Fase 2 — Reintrodução controlada dos módulos
-- **Parcialmente executada**: o frontend bootstrap já consome o backend via tRPC com tipagem compartilhada do `appRouter` bootstrap.
+- **Avanço real na Fase Beta:** foi criada a camada `backend/src/domains/` como anti-corruption layer para os domínios priorizados, e o `appRouter` já passou a consumir essa nova camada em parte dos fluxos críticos.
+- O frontend bootstrap já consome o backend via tRPC com tipagem compartilhada do `appRouter` bootstrap.
 - Reativar routers reais de forma incremental (`system`, `mmn`, `dashboard`, `payments`).
 - Normalizar middlewares de autenticação e contexto.
 - Expandir a tipagem compartilhada além do router bootstrap.
 - Criar testes de contrato para namespaces tRPC reintroduzidos.
 
 ## Fase 3 — Compatibilidade de dados
-- **Preparação iniciada** com saneamento do grafo de imports dos routers principais e criação de shims de compatibilidade para caminhos herdados do backend.
+- **Preparação ampliada** com saneamento do grafo de imports dos routers principais, criação de shims de compatibilidade e introdução de publishers por domínio para `affiliate`, `commissions`, `marketplace`, `agent-runtime`, `billing`, `cron`, `xp` e `auth`.
 - Criar tabela de equivalência entre IDs do legado e IDs do sistema novo.
 - Migrar e reconciliar usuários, afiliados, patrocinadores, pedidos e comissões.
-- Implementar jobs BullMQ para sincronização e auditoria.
+- Implementar jobs BullMQ para sincronização, auditoria e replay operacional via Event Bus.
 
 ## Fase 4 — Validação operacional
 - Homologar runtime ponta a ponta.

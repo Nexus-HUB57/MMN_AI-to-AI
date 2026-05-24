@@ -85,6 +85,25 @@ Para iniciar o desenvolvimento do Backoffice Admin, a trilha oficial desta etapa
 - [`docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md`](docs/admin-backoffice/ENTREGA_ALERTAS_CRON_PERSISTENCIA.md)
 - [`docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md`](docs/admin-backoffice/ENTREGA_HISTORICO_ALERTAS_CRON_BACKOFFICE.md)
 
+## Atualizações Recentes do Repositório (2026-05-24)
+
+### ✅ Continuação da Fase Beta — Domains, Event Bus e trilha de auditoria
+
+A continuidade da **Fase Beta — Transição MMN** avançou do endurecimento de infraestrutura para uma base mais modular e orientada a domínio:
+
+- criada a camada `backend/src/domains/` como **anti-corruption layer** para os domínios `affiliate`, `commissions`, `marketplace`, `agent-runtime`, `billing`, `cron`, `xp` e `auth`
+- o `backend/src/appRouter.ts` passou a consumir a nova camada em domínios priorizados da transição, reduzindo o acoplamento direto aos routers legados
+- o `Event Bus` foi ligado a fluxos reais do runtime (`mmn.registerAffiliate`, `commissions.updateStatus`, `commissions.approveBatch`, `marketplaceSyncWorker`, `agentRuntime.generate` e `agentRuntime.generateBatch`)
+- adicionado `backend/src/_core/events/auditSubscribers.ts` e registro automático no bootstrap do backend para gerar trilha estruturada mínima de auditoria de eventos
+- adicionados testes unitários para `EventBus` e `healthRouter`
+- documentação consolidada em `docs/validation-reports/FASE_BETA_CONTINUATION.md`
+
+**Referências:**
+
+- [`backend/src/domains/README.md`](backend/src/domains/README.md)
+- [`backend/src/_core/events/auditSubscribers.ts`](backend/src/_core/events/auditSubscribers.ts)
+- [`docs/validation-reports/FASE_BETA_CONTINUATION.md`](docs/validation-reports/FASE_BETA_CONTINUATION.md)
+
 ## Atualizações Recentes do Repositório (2026-05-23)
 
 ### ✅ Fase 6 — Agentes IA conectados ao runtime de LLM

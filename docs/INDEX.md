@@ -33,7 +33,8 @@ Arquitetura e implementação da inteligência artificial:
 
 ### 5. Arquivos e Relatórios Históricos
 Documentação consolidada para fins de histórico e auditoria:
-- **[Relatórios de Validação](validation-reports/)** - Validações de fusão das fases 1, 2 e 3.
+- **[Relatórios de Validação](validation-reports/)** - Validações de fusão das fases 1, 2, 3 e continuação da Fase Beta.
+- **[Continuação da Fase Beta](validation-reports/FASE_BETA_CONTINUATION.md)** - Consolidação da camada `domains/`, wiring do Event Bus, trilha de auditoria e reforço do CI.
 - **[Guias e Manuais Antigos](guides-archive/)** - Manuais de integração, guias de admin/afiliado e referências de API legadas.
 - **[Relatórios de Legado](legacy-reports/)** - Inventários e análises de impacto da migração.
 
@@ -45,4 +46,4 @@ O repositório mantém ferramentas de suporte e experimentos isolados em:
 - `/auxiliary/extract/`
 
 ---
-**Última atualização:** 2026-05-21 - *Higiene de Repositório Concluída*
+**Última atualização:** 2026-05-24 - *Continuação da Fase Beta consolidada*

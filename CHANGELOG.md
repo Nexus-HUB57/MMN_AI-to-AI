@@ -1,5 +1,32 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-24 — v1.2.2 Fase Beta Continuation (Domains + Event Bus + CI Hardening)
+
+### `feat(domains)` — Camada anti-corruption por domínio
+
+- criada a estrutura `backend/src/domains/` com os domínios `affiliate`, `commissions`, `marketplace`, `agent-runtime`, `billing`, `cron`, `xp`, `auth` e `shared`
+- introduzido `domains/shared/eventFactory.ts` para padronizar a criação de `DomainEvent`
+- `backend/src/appRouter.ts` passou a consumir a nova camada para os domínios priorizados da Fase Beta
+- adicionada documentação interna em `backend/src/domains/README.md`
+
+### `feat(events)` — Wiring do Event Bus em fluxos operacionais
+
+- `mmn.registerAffiliate` agora publica `AffiliateRegistered` e `AffiliateActivated`
+- `commissions.updateStatus` e `commissions.approveBatch` agora publicam eventos de comissão (`approved`, `paid`, `rejected`)
+- `marketplaceSyncWorker` agora publica `MarketplaceSyncCompleted`
+- `agentRuntime.generate` e `agentRuntime.generateBatch` agora publicam `AgentSessionStarted`, `AgentSessionCompleted` e `AgentContentGenerated`
+- adicionados subscribers padrão de auditoria em `backend/src/_core/events/auditSubscribers.ts`, registrados no bootstrap do backend
+
+### `test(beta)` — Cobertura adicional de saúde e event-driven core
+
+- novo `tests/unit/eventBus.test.ts`
+- novo `tests/unit/healthRouter.test.ts`
+
+### `docs(beta)` — Consolidação da continuação da Fase Beta
+
+- novo relatório `docs/validation-reports/FASE_BETA_CONTINUATION.md`
+- roadmap de fusão e índice documental atualizados
+
 ## 2026-05-24 — v1.2.1 PHD Review & Documentation Enhancement
 
 ### `docs` — Revisão Técnica Completa

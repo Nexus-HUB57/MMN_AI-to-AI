@@ -31,6 +31,15 @@ Cada domínio recebeu, no mínimo:
 
 Também foi criado `backend/src/domains/shared/eventFactory.ts` para padronizar a criação de eventos.
 
+### 1.1 Evolução incremental do domínio `commissions`
+Na continuação seguinte da Fase Beta, o domínio `commissions` passou a ser o primeiro a receber extração explícita de lógica interna para dentro da pasta de domínio, com:
+
+- `backend/src/domains/commissions/types.ts`
+- `backend/src/domains/commissions/repository.ts`
+- `backend/src/domains/commissions/service.ts`
+
+Com isso, o `backend/src/routers/commissionsRouter.ts` deixou de concentrar mocks, histórico, auditoria e snapshot estatístico inline, passando a atuar mais claramente como camada de transporte/orquestração.
+
 ### 2. `appRouter` parcialmente migrado para a nova camada
 O `backend/src/appRouter.ts` passou a consumir a camada `domains/` para os domínios priorizados nesta fase Beta:
 
@@ -92,6 +101,7 @@ Foram adicionados testes unitários para os pontos mais importantes desta contin
 
 - `tests/unit/eventBus.test.ts`
 - `tests/unit/healthRouter.test.ts`
+- `tests/unit/commissionsDomainService.test.ts`
 
 Coberturas incluídas:
 
@@ -121,10 +131,11 @@ Foi introduzido o script `scripts/validate-beta-structure.mjs`, exposto via `npm
 O verificador cobre:
 
 - presença da camada `backend/src/domains/` e dos arquivos mínimos por domínio;
+- presença do primeiro extrato completo de domínio em `commissions` (`types.ts`, `repository.ts`, `service.ts`);
 - uso da camada `domains/` no `appRouter`;
 - registro dos `auditSubscribers` no bootstrap do backend;
 - wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;
-- existência dos testes de `eventBus` e `healthRouter`;
+- existência dos testes de `eventBus`, `healthRouter` e `commissionsDomainService`;
 - existência do relatório `FASE_BETA_CONTINUATION.md`.
 
 Isso cria um checkpoint de hardening estrutural útil para sandbox, revisão manual e troubleshooting de CI.

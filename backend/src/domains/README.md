@@ -11,7 +11,10 @@ para uma arquitetura de domínios independentes (Prioridade 2 do roadmap Beta).
 
 Atualmente cada subdiretório **reexporta** o router já implementado em
 `backend/src/routers/` mais um arquivo `events.ts` que centraliza os
-`DomainEvent` publicados/consumidos por aquele domínio. Isso permite:
+`DomainEvent` publicados/consumidos por aquele domínio. Nesta continuação,
+o domínio `commissions` passou também a contar com `types.ts`, `repository.ts`
+e `service.ts`, inaugurando a trilha de extração progressiva da lógica de
+negócio para dentro da pasta de domínio. Isso permite:
 
 - migração incremental sem quebrar contratos do `appRouter`;
 - ownership explícito por domínio (router + events + types + tests);
@@ -38,3 +41,4 @@ Atualmente cada subdiretório **reexporta** o router já implementado em
 2. Adicionar `domains/<x>/repository.ts` para isolar acesso ao Drizzle.
 3. Mover testes de `tests/unit/<x>.test.ts` para `domains/<x>/tests/`.
 4. Substituir, no `appRouter`, os imports de `routers/` por `domains/`.
+5. Replicar o padrão de `commissions` (`types.ts` + `repository.ts` + `service.ts`) nos demais domínios priorizados.

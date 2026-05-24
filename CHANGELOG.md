@@ -8,6 +8,7 @@
 - introduzido `domains/shared/eventFactory.ts` para padronizar a criação de `DomainEvent`
 - `backend/src/appRouter.ts` passou a consumir a nova camada para os domínios priorizados da Fase Beta
 - adicionada documentação interna em `backend/src/domains/README.md`
+- iniciado o primeiro extrato real de domínio no backend com `backend/src/domains/commissions/{types,repository,service}.ts`
 
 ### `feat(events)` — Wiring do Event Bus em fluxos operacionais
 

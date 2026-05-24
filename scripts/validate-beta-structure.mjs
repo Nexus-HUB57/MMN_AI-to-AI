@@ -16,6 +16,9 @@ const requiredFiles = [
   'backend/src/domains/affiliate/events.ts',
   'backend/src/domains/commissions/router.ts',
   'backend/src/domains/commissions/events.ts',
+  'backend/src/domains/commissions/types.ts',
+  'backend/src/domains/commissions/repository.ts',
+  'backend/src/domains/commissions/service.ts',
   'backend/src/domains/marketplace/router.ts',
   'backend/src/domains/marketplace/events.ts',
   'backend/src/domains/agent-runtime/router.ts',
@@ -30,6 +33,7 @@ const requiredFiles = [
   'backend/src/domains/auth/events.ts',
   'tests/unit/eventBus.test.ts',
   'tests/unit/healthRouter.test.ts',
+  'tests/unit/commissionsDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -60,8 +64,15 @@ const contentChecks = [
   },
   {
     file: 'backend/src/routers/commissionsRouter.ts',
-    includes: ['publishCommissionApproved', 'publishCommissionPaid', 'publishCommissionRejected'],
-    label: 'router de comissões publica eventos',
+    includes: [
+      'publishCommissionApproved',
+      'publishCommissionPaid',
+      'publishCommissionRejected',
+      '../domains/commissions/service',
+      'createUpdateStatusAudit',
+      'getCommissionStats',
+    ],
+    label: 'router de comissões usa service do domínio e publica eventos',
   },
   {
     file: 'backend/src/routers/agentRuntimeRouter.ts',

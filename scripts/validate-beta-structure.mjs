@@ -14,6 +14,8 @@ const requiredFiles = [
   'backend/src/domains/shared/eventFactory.ts',
   'backend/src/domains/affiliate/router.ts',
   'backend/src/domains/affiliate/events.ts',
+  'backend/src/domains/affiliate/types.ts',
+  'backend/src/domains/affiliate/service.ts',
   'backend/src/domains/commissions/router.ts',
   'backend/src/domains/commissions/events.ts',
   'backend/src/domains/commissions/types.ts',
@@ -34,6 +36,7 @@ const requiredFiles = [
   'tests/unit/eventBus.test.ts',
   'tests/unit/healthRouter.test.ts',
   'tests/unit/commissionsDomainService.test.ts',
+  'tests/unit/affiliateDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -59,8 +62,14 @@ const contentChecks = [
   },
   {
     file: 'backend/src/routers/mmnRouter.ts',
-    includes: ['publishAffiliateRegistered', 'publishAffiliateActivated'],
-    label: 'router MMN publica eventos de affiliate',
+    includes: [
+      '../domains/affiliate/service',
+      'registerAffiliateService',
+      'AffiliateAlreadyExistsError',
+      'SponsorNotFoundError',
+      'AffiliateCreationFailedError',
+    ],
+    label: 'router MMN delega registro de afiliado ao service do domínio',
   },
   {
     file: 'backend/src/routers/commissionsRouter.ts',

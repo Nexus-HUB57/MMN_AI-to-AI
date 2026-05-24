@@ -9,6 +9,7 @@
 - `backend/src/appRouter.ts` passou a consumir a nova camada para os domínios priorizados da Fase Beta
 - adicionada documentação interna em `backend/src/domains/README.md`
 - iniciado o primeiro extrato real de domínio no backend com `backend/src/domains/commissions/{types,repository,service}.ts`
+- segundo domínio com extração de service: `backend/src/domains/affiliate/{types,service}.ts`, com o `mmnRouter` agora delegando o registro de afiliado a `registerAffiliate` do domínio (com erros tipados `AffiliateAlreadyExistsError`, `SponsorNotFoundError`, `AffiliateCreationFailedError`)
 
 ### `feat(events)` — Wiring do Event Bus em fluxos operacionais
 

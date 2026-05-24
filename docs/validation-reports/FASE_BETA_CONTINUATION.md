@@ -40,6 +40,14 @@ Na continuação seguinte da Fase Beta, o domínio `commissions` passou a ser o 
 
 Com isso, o `backend/src/routers/commissionsRouter.ts` deixou de concentrar mocks, histórico, auditoria e snapshot estatístico inline, passando a atuar mais claramente como camada de transporte/orquestração.
 
+### 1.2 Extração do domínio `affiliate`
+Logo em seguida, o domínio `affiliate` recebeu o mesmo padrão:
+
+- `backend/src/domains/affiliate/types.ts`
+- `backend/src/domains/affiliate/service.ts`
+
+O `mmnRouter` foi reduzido para uma camada de transporte que apenas injeta as dependências de banco e adapta erros do domínio (`AffiliateAlreadyExistsError`, `SponsorNotFoundError`, `AffiliateCreationFailedError`) em `TRPCError`. Toda a regra de negócio do registro de afiliado e a publicação dos eventos `AffiliateRegistered` / `AffiliateActivated` agora vivem na pasta do domínio.
+
 ### 2. `appRouter` parcialmente migrado para a nova camada
 O `backend/src/appRouter.ts` passou a consumir a camada `domains/` para os domínios priorizados nesta fase Beta:
 
@@ -102,6 +110,7 @@ Foram adicionados testes unitários para os pontos mais importantes desta contin
 - `tests/unit/eventBus.test.ts`
 - `tests/unit/healthRouter.test.ts`
 - `tests/unit/commissionsDomainService.test.ts`
+- `tests/unit/affiliateDomainService.test.ts`
 
 Coberturas incluídas:
 
@@ -132,6 +141,7 @@ O verificador cobre:
 
 - presença da camada `backend/src/domains/` e dos arquivos mínimos por domínio;
 - presença do primeiro extrato completo de domínio em `commissions` (`types.ts`, `repository.ts`, `service.ts`);
+- presença do extrato de service do domínio `affiliate` (`types.ts`, `service.ts`) e delegação do `mmnRouter` ao service;
 - uso da camada `domains/` no `appRouter`;
 - registro dos `auditSubscribers` no bootstrap do backend;
 - wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;

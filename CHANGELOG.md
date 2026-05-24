@@ -11,19 +11,21 @@
 - iniciado o primeiro extrato real de domínio no backend com `backend/src/domains/commissions/{types,repository,service}.ts`
 - segundo domínio com extração de service: `backend/src/domains/affiliate/{types,service}.ts`, com o `mmnRouter` agora delegando o registro de afiliado a `registerAffiliate` do domínio (com erros tipados `AffiliateAlreadyExistsError`, `SponsorNotFoundError`, `AffiliateCreationFailedError`)
 - terceiro domínio com extração de camada interna: `backend/src/domains/marketplace/{types,repository,service}.ts`, com o `marketplacesRouter` delegando conexão/desconexão/listagem/sync e normalização de catálogo ao domínio
+- quarto domínio com extração de camada interna: `backend/src/domains/agent-runtime/{types,repository,service}.ts`, com o `agentRuntimeRouter` delegando perfil, geração, batch, bump de performance e auditoria ao domínio
 
 ### `feat(events)` — Wiring do Event Bus em fluxos operacionais
 
 - `mmn.registerAffiliate` agora publica `AffiliateRegistered` e `AffiliateActivated`
 - `commissions.updateStatus` e `commissions.approveBatch` agora publicam eventos de comissão (`approved`, `paid`, `rejected`)
 - `marketplaceSyncWorker` agora publica `MarketplaceSyncCompleted`
-- `agentRuntime.generate` e `agentRuntime.generateBatch` agora publicam `AgentSessionStarted`, `AgentSessionCompleted` e `AgentContentGenerated`
+- `agentRuntime.generate` e `agentRuntime.generateBatch` agora publicam `AgentSessionStarted`, `AgentSessionCompleted`, `AgentSessionFailed` e `AgentContentGenerated`
 - adicionados subscribers padrão de auditoria em `backend/src/_core/events/auditSubscribers.ts`, registrados no bootstrap do backend
 
 ### `test(beta)` — Cobertura adicional de saúde e event-driven core
 
 - novo `tests/unit/eventBus.test.ts`
 - novo `tests/unit/healthRouter.test.ts`
+- novo `tests/unit/agentRuntimeDomainService.test.ts`
 
 ### `docs(beta)` — Consolidação da continuação da Fase Beta
 

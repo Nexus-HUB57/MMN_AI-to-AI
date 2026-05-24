@@ -28,6 +28,9 @@ const requiredFiles = [
   'backend/src/domains/marketplace/service.ts',
   'backend/src/domains/agent-runtime/router.ts',
   'backend/src/domains/agent-runtime/events.ts',
+  'backend/src/domains/agent-runtime/types.ts',
+  'backend/src/domains/agent-runtime/repository.ts',
+  'backend/src/domains/agent-runtime/service.ts',
   'backend/src/domains/billing/router.ts',
   'backend/src/domains/billing/events.ts',
   'backend/src/domains/cron/router.ts',
@@ -41,6 +44,7 @@ const requiredFiles = [
   'tests/unit/commissionsDomainService.test.ts',
   'tests/unit/affiliateDomainService.test.ts',
   'tests/unit/marketplaceDomainService.test.ts',
+  'tests/unit/agentRuntimeDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -101,8 +105,26 @@ const contentChecks = [
   },
   {
     file: 'backend/src/routers/agentRuntimeRouter.ts',
-    includes: ['publishAgentSessionStarted', 'publishAgentSessionCompleted', 'publishAgentContentGenerated'],
-    label: 'agent runtime publica eventos',
+    includes: [
+      '../domains/agent-runtime/service',
+      '../domains/agent-runtime/repository',
+      'getAgentRuntimeProfile',
+      'generateAgentContent',
+      'generateAgentContentBatch',
+      'registerAgentRuntimeAction',
+    ],
+    label: 'agent runtime router usa service e repository do domínio',
+  },
+  {
+    file: 'backend/src/domains/agent-runtime/service.ts',
+    includes: [
+      'publishAgentSessionStarted',
+      'publishAgentSessionCompleted',
+      'publishAgentSessionFailed',
+      'publishAgentContentGenerated',
+      'recordAgentRuntimeAudit',
+    ],
+    label: 'service de agent runtime publica eventos e persiste auditoria',
   },
   {
     file: 'backend/src/workers/marketplaceSyncWorker.ts',

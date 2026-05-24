@@ -2,16 +2,17 @@
 Rotas de Branding
 
 Autor: Nexus-HUB57
-Versão: 1.0.0
+Versão: 1.1.0 - Sprint 2 Branding Engine
 """
 
-from fastapi import APIRouter, Request, HTTPException, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Request, HTTPException, UploadFile, File, Query
+from fastapi.responses import JSONResponse, HTMLResponse
 
 from ..models.branding import (
-    BrandingConfig, BrandingUpdateRequest, AssetUploadResponse
+    BrandingConfig, BrandingUpdateRequest, AssetUploadResponse,
+    ThemePreset, ThemePresetInfo
 )
-from ..services.branding_service import BrandingService
+from ..services.branding_service import BrandingService, THEME_PRESET_INFO
 from ..middleware.rate_limit import rate_limit, RateLimits
 
 router = APIRouter(prefix="/branding", tags=["Branding"])
@@ -19,6 +20,40 @@ router = APIRouter(prefix="/branding", tags=["Branding"])
 def get_branding_service(request: Request) -> BrandingService:
     """Dependency para obter branding service"""
     return request.app.state.branding_service
+
+
+@router.get("/presets", response_model=list[ThemePresetInfo])
+async def list_presets(request: Request):
+    """Lista todos os presets de tema disponíveis"""
+    service = get_branding_service(request)
+    return service.get_all_presets()
+
+
+@router.get("/presets/{preset_id}", response_model=ThemePresetInfo)
+async def get_preset(
+    request: Request,
+    preset_id: ThemePreset
+):
+    """Obtém detalhes de um preset específico"""
+    service = get_branding_service(request)
+    preset = service.get_preset_info(preset_id)
+    if not preset:
+        raise HTTPException(status_code=404, detail="Preset não encontrado")
+    return preset
+
+
+@router.post("/{instance_id}/apply-preset/{preset_id}")
+async def apply_preset(
+    request: Request,
+    instance_id: str,
+    preset_id: ThemePreset
+):
+    """Aplica um preset de tema à instância"""
+    service = get_branding_service(request)
+    config = service.apply_preset(instance_id, preset_id)
+    if not config:
+        raise HTTPException(status_code=500, detail="Erro ao aplicar preset")
+    return config
 
 
 @router.get("/{instance_id}")
@@ -67,18 +102,18 @@ async def upload_asset(
     """Faz upload de asset (logo, favicon, etc)"""
     service = get_branding_service(request)
 
-    # Valida tipo de arquivo
-    allowed_types = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"]
-    if file.content_type not in allowed_types:
-        raise HTTPException(status_code=415, detail="Tipo de arquivo não permitido")
-
     # Lê conteúdo do arquivo
     content = await file.read()
 
-    # Limita tamanho (5MB)
-    if len(content) > 5 * 1024 * 1024:
-        raise HTTPException(status_code=413, detail="Arquivo muito grande")
+    # Valida asset
+    validation = service.validate_asset(content, file.content_type, file.filename)
+    if not validation.valid:
+        raise HTTPException(
+            status_code=400,
+            detail={"errors": validation.errors, "warnings": validation.warnings}
+        )
 
+    # Faz upload se válido
     response = service.upload_asset(
         instance_id=instance_id,
         file_data=content,
@@ -86,7 +121,25 @@ async def upload_asset(
         filename=file.filename
     )
 
-    return response
+    return {
+        **response.dict(),
+        "warnings": validation.warnings if validation.warnings else None
+    }
+
+
+@router.post("/{instance_id}/validate-asset")
+async def validate_asset(
+    request: Request,
+    instance_id: str,
+    file: UploadFile = File(...)
+):
+    """Valida um asset sem fazer upload"""
+    service = get_branding_service(request)
+
+    content = await file.read()
+    validation = service.validate_asset(content, file.content_type, file.filename)
+
+    return validation
 
 
 @router.get("/{instance_id}/preview")
@@ -94,7 +147,7 @@ async def get_brand_preview(
     request: Request,
     instance_id: str
 ):
-    """Gera preview do branding"""
+    """Gera preview do branding (JSON)"""
     service = get_branding_service(request)
 
     preview = service.get_brand_preview(instance_id)
@@ -102,6 +155,21 @@ async def get_brand_preview(
         raise HTTPException(status_code=404, detail="Branding não encontrado")
 
     return preview
+
+
+@router.get("/{instance_id}/preview/html", response_class=HTMLResponse)
+async def get_brand_preview_html(
+    request: Request,
+    instance_id: str
+):
+    """Gera preview do branding em HTML completo"""
+    service = get_branding_service(request)
+
+    html = service.get_preview_html(instance_id)
+    if not html:
+        raise HTTPException(status_code=404, detail="Branding não encontrado")
+
+    return HTMLResponse(content=html)
 
 
 @router.get("/{instance_id}/css")

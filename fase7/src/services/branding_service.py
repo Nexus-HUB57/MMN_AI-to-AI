@@ -2,18 +2,74 @@
 Serviço de Gerenciamento de Branding
 
 Autor: Nexus-HUB57
-Versão: 1.0.0
+Versão: 1.1.0 - Sprint 2 Branding Engine
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 import logging
+import uuid
 
 from ..models.branding import (
     BrandingConfig, BrandingColors, BrandingFonts,
-    BrandingLogo, BrandingUpdateRequest, AssetUploadResponse
+    BrandingLogo, BrandingUpdateRequest, AssetUploadResponse,
+    ThemePreset, THEME_PRESETS, ThemeCustomization,
+    AssetValidationResult, ThemePresetInfo, ThemePresetColors
 )
 
 logger = logging.getLogger(__name__)
+
+
+THEME_PRESET_INFO: Dict[ThemePreset, ThemePresetInfo] = {
+    ThemePreset.MODERN_BLUE: ThemePresetInfo(
+        id=ThemePreset.MODERN_BLUE,
+        name="Azul Moderno",
+        description="Tema profissional com tons de azul vibrante",
+        colors=THEME_PRESETS[ThemePreset.MODERN_BLUE]
+    ),
+    ThemePreset.CORPORATE_GRAY: ThemePresetInfo(
+        id=ThemePreset.CORPORATE_GRAY,
+        name="Cinza Corporativo",
+        description="Visual minimalista e profissional",
+        colors=THEME_PRESETS[ThemePreset.CORPORATE_GRAY]
+    ),
+    ThemePreset.VIBRANT_PURPLE: ThemePresetInfo(
+        id=ThemePreset.VIBRANT_PURPLE,
+        name="Roxo Vibrante",
+        description="Cores criativas e modernas",
+        colors=THEME_PRESETS[ThemePreset.VIBRANT_PURPLE]
+    ),
+    ThemePreset.NATURE_GREEN: ThemePresetInfo(
+        id=ThemePreset.NATURE_GREEN,
+        name="Verde Natureza",
+        description="Visual fresco e sustentável",
+        colors=THEME_PRESETS[ThemePreset.NATURE_GREEN]
+    ),
+    ThemePreset.ELEGANT_BLACK: ThemePresetInfo(
+        id=ThemePreset.ELEGANT_BLACK,
+        name="Preto Elegante",
+        description="Visual luxuoso e sofisticado",
+        colors=THEME_PRESETS[ThemePreset.ELEGANT_BLACK]
+    ),
+    ThemePreset.SUNSET_ORANGE: ThemePresetInfo(
+        id=ThemePreset.SUNSET_ORANGE,
+        name="Laranja Entardecer",
+        description="Energia e vitalidade",
+        colors=THEME_PRESETS[ThemePreset.SUNSET_ORANGE]
+    ),
+    ThemePreset.ROYAL_GOLD: ThemePresetInfo(
+        id=ThemePreset.ROYAL_GOLD,
+        name="Ouro Real",
+        description="Premium e exclusivo",
+        colors=THEME_PRESETS[ThemePreset.ROYAL_GOLD]
+    ),
+    ThemePreset.MINIMAL_WHITE: ThemePresetInfo(
+        id=ThemePreset.MINIMAL_WHITE,
+        name="Branco Minimalista",
+        description="Clean e essencial",
+        colors=THEME_PRESETS[ThemePreset.MINIMAL_WHITE]
+    ),
+}
+
 
 class BrandingService:
     """Serviço para gerenciamento de branding"""
@@ -37,17 +93,52 @@ class BrandingService:
         self._configs[instance_id] = config
         return config
 
+    def create_from_preset(
+        self, instance_id: str, preset: ThemePreset
+    ) -> BrandingConfig:
+        """Cria configuração de branding a partir de preset"""
+        preset_colors = THEME_PRESETS.get(preset)
+        if not preset_colors:
+            raise ValueError(f"Preset não encontrado: {preset}")
+
+        colors = BrandingColors(
+            primary=preset_colors.primary,
+            secondary=preset_colors.secondary,
+            accent=preset_colors.accent,
+            background=preset_colors.background,
+            text=preset_colors.text
+        )
+
+        config = BrandingConfig(
+            instance_id=instance_id,
+            theme_preset=preset,
+            colors=colors,
+            fonts=BrandingFonts(),
+            logo=BrandingLogo(),
+            social_links={}
+        )
+        self._configs[instance_id] = config
+        logger.info(f"Branding criado do preset {preset.value} para instância: {instance_id}")
+        return config
+
     def update_branding(
         self, instance_id: str, data: BrandingUpdateRequest
     ) -> Optional[BrandingConfig]:
         """Atualiza configuração de branding"""
         config = self._configs.get(instance_id)
-        if not config:
+
+        # Se tem preset, aplica preset primeiro
+        if data.theme_preset:
+            config = self.create_from_preset(instance_id, data.theme_preset)
+        elif not config:
             config = self.create_branding(instance_id)
 
-        update_data = data.dict(exclude_unset=True)
+        # Atualiza campos específicos
+        update_dict = data.dict(exclude_unset=True, exclude_none=True)
 
-        for key, value in update_data.items():
+        for key, value in update_dict.items():
+            if key == 'theme_preset' and value is None:
+                continue
             if value is not None:
                 setattr(config, key, value)
 
@@ -139,3 +230,70 @@ class BrandingService:
                 "headings": config.fonts.headings
             }
         }
+
+    def get_preview_html(self, instance_id: str) -> Optional[str]:
+        """Gera HTML completo de preview"""
+        config = self._configs.get(instance_id)
+        if not config:
+            return None
+
+        return config.to_preview_html()
+
+    def get_all_presets(self) -> List[ThemePresetInfo]:
+        """Retorna lista de todos os presets disponíveis"""
+        return list(THEME_PRESET_INFO.values())
+
+    def validate_asset(
+        self, file_data: bytes, content_type: str, filename: str
+    ) -> AssetValidationResult:
+        """Valida asset antes do upload"""
+        errors: List[str] = []
+        warnings: List[str] = []
+        metadata: Dict[str, Any] = {}
+
+        # Valida tipo de conteúdo
+        allowed_types = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"]
+        if content_type not in allowed_types:
+            errors.append(f"Tipo de arquivo não permitido: {content_type}")
+            return AssetValidationResult(valid=False, errors=errors)
+
+        # Valida tamanho (5MB max)
+        max_size = 5 * 1024 * 1024
+        if len(file_data) > max_size:
+            errors.append(f"Arquivo muito grande: {len(file_data)} bytes (max: {max_size})")
+            return AssetValidationResult(valid=False, errors=errors)
+
+        # Valida tamanho mínimo
+        if len(file_data) < 100:
+            errors.append("Arquivo muito pequeno ou corrompido")
+            return AssetValidationResult(valid=False, errors=errors)
+
+        # Warnings para formatos específicos
+        if content_type == "image/svg+xml":
+            warnings.append("SVGs devem ser sanitizados para evitar XSS")
+
+        if len(file_data) > 3 * 1024 * 1024:
+            warnings.append(f"Arquivo grande ({len(file_data) // (1024*1024)}MB). Considere otimizar.")
+
+        metadata = {
+            "size_bytes": len(file_data),
+            "content_type": content_type,
+            "filename": filename
+        }
+
+        return AssetValidationResult(
+            valid=len(errors) == 0,
+            errors=errors,
+            warnings=warnings,
+            metadata=metadata
+        )
+
+    def apply_preset(
+        self, instance_id: str, preset: ThemePreset
+    ) -> Optional[BrandingConfig]:
+        """Aplica preset de tema a uma instância"""
+        return self.create_from_preset(instance_id, preset)
+
+    def get_preset_info(self, preset: ThemePreset) -> Optional[ThemePresetInfo]:
+        """Retorna informações de um preset específico"""
+        return THEME_PRESET_INFO.get(preset)

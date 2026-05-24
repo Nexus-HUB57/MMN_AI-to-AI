@@ -52,6 +52,8 @@ const config: ExpoConfig = {
     bundleIdentifier: env.iosBundleId,
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      NSFaceIDUsageDescription: "Use o reconhecimento facial para autenticar de forma segura",
+      UIBackgroundModes: ["remote-notification"],
     },
   },
   android: {
@@ -64,7 +66,7 @@ const config: ExpoConfig = {
     edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     package: env.androidPackage,
-    permissions: ["POST_NOTIFICATIONS"],
+    permissions: ["POST_NOTIFICATIONS", "USE_BIOMETRIC", "USE_FINGERPRINT"],
     intentFilters: [
       {
         action: "VIEW",
@@ -73,6 +75,11 @@ const config: ExpoConfig = {
           {
             scheme: env.scheme,
             host: "*",
+          },
+          {
+            scheme: "https",
+            host: "mmn.ai",
+            pathPrefix: "/",
           },
         ],
         category: ["BROWSABLE", "DEFAULT"],

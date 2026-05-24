@@ -26,7 +26,10 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   useEffect(() => {
-    initManusRuntime();
+    // Initialize Manus runtime on mount
+    initManusRuntime().catch((err) => {
+      console.warn('[RootLayout] Failed to init Manus runtime:', err);
+    });
   }, []);
 
   const providerInitialMetrics = useMemo(
@@ -46,7 +49,25 @@ export default function RootLayout() {
       }),
   );
 
-  const [trpcClient] = useState(() => createTRPCClient());
+  const [trpcClient] = useState(() => {
+    try {
+      return createTRPCClient();
+    } catch (err) {
+      console.warn('[RootLayout] Failed to create TRPC client:', err);
+      return null;
+    }
+  });
+
+  // Early return pattern to ensure children are valid
+  if (!trpcClient) {
+    return (
+      <SafeAreaProvider initialMetrics={providerInitialMetrics}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="auto" />
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <ThemeProvider>

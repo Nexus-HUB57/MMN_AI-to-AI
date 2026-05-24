@@ -115,6 +115,20 @@ Também foram previstos:
 - `permissions` mínimas;
 - instalação compatível com o estado atual do monorepo/workspaces.
 
+### 7. Validação estrutural sem dependências adicionada
+Foi introduzido o script `scripts/validate-beta-structure.mjs`, exposto via `npm run verify:beta-structure`, para validar rapidamente os artefatos críticos da continuação Beta mesmo em ambientes com bloqueio de `npm install`.
+
+O verificador cobre:
+
+- presença da camada `backend/src/domains/` e dos arquivos mínimos por domínio;
+- uso da camada `domains/` no `appRouter`;
+- registro dos `auditSubscribers` no bootstrap do backend;
+- wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;
+- existência dos testes de `eventBus` e `healthRouter`;
+- existência do relatório `FASE_BETA_CONTINUATION.md`.
+
+Isso cria um checkpoint de hardening estrutural útil para sandbox, revisão manual e troubleshooting de CI.
+
 ---
 
 ## Resultado técnico da continuação da Fase Beta

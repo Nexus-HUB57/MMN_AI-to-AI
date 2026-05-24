@@ -25,6 +25,7 @@
 ### `docs(beta)` — Consolidação da continuação da Fase Beta
 
 - novo relatório `docs/validation-reports/FASE_BETA_CONTINUATION.md`
+- adicionado `scripts/validate-beta-structure.mjs` e atalho `npm run verify:beta-structure` para validação estrutural sem dependências
 - roadmap de fusão e índice documental atualizados
 
 ## 2026-05-24 — v1.2.1 PHD Review & Documentation Enhancement

@@ -98,6 +98,7 @@ A continuidade da **Fase Beta — Transição MMN** avançou do endurecimento de
 - adicionados testes unitários para `EventBus` e `healthRouter`
 - o domínio `commissions` passou a extrair `types.ts`, `repository.ts` e `service.ts`, iniciando a migração real da lógica de negócio para dentro de `backend/src/domains/`
 - o domínio `affiliate` recebeu `types.ts` e `service.ts` com `registerAffiliate` e erros tipados; o `mmnRouter` foi reduzido a uma camada de transporte que injeta dependências do banco no service
+- o domínio `marketplace` recebeu `types.ts`, `repository.ts` e `service.ts`; o `marketplacesRouter` agora delega conexão, desconexão, listagem, enfileiramento de sync e normalização das respostas de catálogo ao domínio
 - adicionado `scripts/validate-beta-structure.mjs` com atalho `npm run verify:beta-structure` para checagem estrutural rápida da Fase Beta
 - documentação consolidada em `docs/validation-reports/FASE_BETA_CONTINUATION.md`
 

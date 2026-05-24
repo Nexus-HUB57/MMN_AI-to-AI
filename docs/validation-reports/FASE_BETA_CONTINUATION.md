@@ -48,6 +48,15 @@ Logo em seguida, o domínio `affiliate` recebeu o mesmo padrão:
 
 O `mmnRouter` foi reduzido para uma camada de transporte que apenas injeta as dependências de banco e adapta erros do domínio (`AffiliateAlreadyExistsError`, `SponsorNotFoundError`, `AffiliateCreationFailedError`) em `TRPCError`. Toda a regra de negócio do registro de afiliado e a publicação dos eventos `AffiliateRegistered` / `AffiliateActivated` agora vivem na pasta do domínio.
 
+### 1.3 Extração do domínio `marketplace`
+Na etapa seguinte, o domínio `marketplace` passou a contar com:
+
+- `backend/src/domains/marketplace/types.ts`
+- `backend/src/domains/marketplace/repository.ts`
+- `backend/src/domains/marketplace/service.ts`
+
+O `marketplacesRouter` deixou de concentrar as regras de ownership da conta, o enfileiramento do sync, a normalização da listagem de contas e a montagem das respostas de catálogo/analytics. Essas responsabilidades agora ficam no domínio, enquanto o router apenas adapta erros tipados (`MarketplaceAccountAccessError`, `MarketplaceProductAnalyticsNotFoundError`) para `TRPCError`.
+
 ### 2. `appRouter` parcialmente migrado para a nova camada
 O `backend/src/appRouter.ts` passou a consumir a camada `domains/` para os domínios priorizados nesta fase Beta:
 
@@ -111,6 +120,7 @@ Foram adicionados testes unitários para os pontos mais importantes desta contin
 - `tests/unit/healthRouter.test.ts`
 - `tests/unit/commissionsDomainService.test.ts`
 - `tests/unit/affiliateDomainService.test.ts`
+- `tests/unit/marketplaceDomainService.test.ts`
 
 Coberturas incluídas:
 
@@ -142,6 +152,7 @@ O verificador cobre:
 - presença da camada `backend/src/domains/` e dos arquivos mínimos por domínio;
 - presença do primeiro extrato completo de domínio em `commissions` (`types.ts`, `repository.ts`, `service.ts`);
 - presença do extrato de service do domínio `affiliate` (`types.ts`, `service.ts`) e delegação do `mmnRouter` ao service;
+- presença do extrato de domínio `marketplace` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `marketplacesRouter` ao domínio;
 - uso da camada `domains/` no `appRouter`;
 - registro dos `auditSubscribers` no bootstrap do backend;
 - wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;

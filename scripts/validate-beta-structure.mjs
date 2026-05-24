@@ -23,6 +23,9 @@ const requiredFiles = [
   'backend/src/domains/commissions/service.ts',
   'backend/src/domains/marketplace/router.ts',
   'backend/src/domains/marketplace/events.ts',
+  'backend/src/domains/marketplace/types.ts',
+  'backend/src/domains/marketplace/repository.ts',
+  'backend/src/domains/marketplace/service.ts',
   'backend/src/domains/agent-runtime/router.ts',
   'backend/src/domains/agent-runtime/events.ts',
   'backend/src/domains/billing/router.ts',
@@ -37,6 +40,7 @@ const requiredFiles = [
   'tests/unit/healthRouter.test.ts',
   'tests/unit/commissionsDomainService.test.ts',
   'tests/unit/affiliateDomainService.test.ts',
+  'tests/unit/marketplaceDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -82,6 +86,18 @@ const contentChecks = [
       'getCommissionStats',
     ],
     label: 'router de comissões usa service do domínio e publica eventos',
+  },
+  {
+    file: 'backend/src/routers/marketplacesRouter.ts',
+    includes: [
+      '../domains/marketplace/service',
+      '../domains/marketplace/repository',
+      'connectMarketplaceAccount',
+      'queueMarketplaceSync',
+      'buildAffiliateMarginsResponse',
+      'buildProductAnalyticsResponse',
+    ],
+    label: 'router de marketplace usa service e repository do domínio',
   },
   {
     file: 'backend/src/routers/agentRuntimeRouter.ts',

@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 
 import { protectedProcedure, publicProcedure, router } from "../config/trpc";
 import {
@@ -17,12 +18,12 @@ import {
   getTrendingProducts,
 } from "../../../database/schemas/db";
 import { affiliates, network, users } from "../../../database/schemas/schema-final";
-import { nanoid } from "nanoid";
-import { eq } from "drizzle-orm";
 import {
-  publishAffiliateActivated,
-  publishAffiliateRegistered,
-} from "../domains/affiliate/events";
+  AffiliateAlreadyExistsError,
+  AffiliateCreationFailedError,
+  SponsorNotFoundError,
+  registerAffiliate as registerAffiliateService,
+} from "../domains/affiliate/service";
 
 const registerAffiliateInput = z.object({
   sponsorCode: z.string().trim().min(3).max(32),
@@ -63,13 +64,6 @@ async function resolveAgentOrThrow(userId: number) {
   return agent;
 }
 
-const defaultContentStrategy = {
-  platforms: ["instagram", "facebook", "whatsapp"],
-  postingFrequency: "daily",
-  tone: "professional",
-  targetAudience: "general",
-};
-
 export const mmnRouter = router({
   getProfile: protectedProcedure.query(async ({ ctx }) => {
     return resolveAffiliateOrThrow(ctx.user.id);
@@ -95,19 +89,6 @@ export const mmnRouter = router({
   registerAffiliate: protectedProcedure
     .input(registerAffiliateInput)
     .mutation(async ({ ctx, input }) => {
-      const existingAffiliate = await getAffiliateByUserId(ctx.user.id);
-      if (existingAffiliate) {
-        return existingAffiliate;
-      }
-
-      const sponsor = await getAffiliateByCode(input.sponsorCode);
-      if (!sponsor) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Sponsor affiliate not found",
-        });
-      }
-
       const db = await getDb();
       if (!db) {
         throw new TRPCError({
@@ -116,72 +97,81 @@ export const mmnRouter = router({
         });
       }
 
-      const affiliateCode = nanoid(12).toUpperCase();
+      try {
+        const { affiliate } = await registerAffiliateService(
+          {
+            userId: ctx.user.id,
+            userName: ctx.user.name ?? null,
+            userEmail: (ctx.user as any).email ?? null,
+            sponsorCode: input.sponsorCode,
+            commissionPercentage: input.commissionPercentage,
+          },
+          {
+            getAffiliateByUserId,
+            getAffiliateByCode,
+            getAgentByUserId,
+            insertAffiliate: async (params) => {
+              await db.insert(affiliates).values({
+                userId: params.userId,
+                affiliateCode: params.affiliateCode,
+                sponsorId: params.sponsorId,
+                commissionPercentage: params.commissionPercentage,
+                status: "active",
+                totalCommissions: 0,
+                pendingCommissions: 0,
+              });
+            },
+            insertNetworkLink: async (params) => {
+              await db.insert(network).values({
+                userId: params.userId,
+                sponsorId: params.sponsorUserId,
+                level: params.level,
+              });
+            },
+            createAgent: async (params) => {
+              await createAgent({
+                userId: params.userId,
+                name: params.name,
+                status: "learning",
+                contentStrategy: params.contentStrategy,
+                performanceScore: 0,
+              });
+            },
+            getUserById: async (userId) => {
+              const [user] = await db
+                .select()
+                .from(users)
+                .where(eq(users.id, userId))
+                .limit(1);
+              if (!user) return null;
+              return {
+                id: user.id,
+                email: user.email ?? null,
+                name: user.name ?? null,
+              };
+            },
+          },
+        );
 
-      await db.insert(affiliates).values({
-        userId: ctx.user.id,
-        affiliateCode,
-        sponsorId: sponsor.id,
-        commissionPercentage: input.commissionPercentage,
-        status: "active",
-        totalCommissions: 0,
-        pendingCommissions: 0,
-      });
-
-      await db.insert(network).values({
-        userId: ctx.user.id,
-        sponsorId: sponsor.userId,
-        level: 1,
-      });
-
-      const existingAgent = await getAgentByUserId(ctx.user.id);
-      if (!existingAgent) {
-        await createAgent({
-          userId: ctx.user.id,
-          name: `Agente ${ctx.user.name ?? ctx.user.id}`,
-          status: "learning",
-          contentStrategy: JSON.stringify(defaultContentStrategy),
-          performanceScore: 0,
-        });
+        return affiliate;
+      } catch (error) {
+        if (error instanceof AffiliateAlreadyExistsError) {
+          return error.existing;
+        }
+        if (error instanceof SponsorNotFoundError) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Sponsor affiliate not found",
+          });
+        }
+        if (error instanceof AffiliateCreationFailedError) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to create affiliate profile",
+          });
+        }
+        throw error;
       }
-
-      const createdAffiliate = await getAffiliateByUserId(ctx.user.id);
-      if (!createdAffiliate) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create affiliate profile",
-        });
-      }
-
-      const [user] = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, ctx.user.id))
-        .limit(1);
-
-      await publishAffiliateRegistered(
-        {
-          affiliateId: String(createdAffiliate.id),
-          sponsorId: sponsor.id ? String(sponsor.id) : undefined,
-          email: user?.email ?? "",
-          name: user?.name ?? createdAffiliate.affiliateCode,
-          plan: "affiliate",
-          rank: createdAffiliate.status,
-        },
-        {
-          source: "mmn.registerAffiliate",
-          userId: ctx.user.id,
-          sponsorCode: input.sponsorCode,
-          commissionPercentage: input.commissionPercentage,
-        },
-      );
-
-      await publishAffiliateActivated(String(createdAffiliate.id), {
-        source: "mmn.registerAffiliate",
-        userId: ctx.user.id,
-      });
-
-      return createdAffiliate;
     }),
 
   getDirectReferrals: protectedProcedure.query(async ({ ctx }) => {

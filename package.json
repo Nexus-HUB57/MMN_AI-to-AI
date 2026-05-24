@@ -35,7 +35,8 @@
     "test": "vitest run",
     "test:phase8": "vitest run tests/unit/dropshipping.test.ts",
     "test:watch": "vitest",
-    "verify": "npm run doctor:workspaces && npm run typecheck && npm run lint && npm run build && npm run test:phase8"
+    "verify:beta-structure": "node scripts/validate-beta-structure.mjs",
+    "verify": "npm run doctor:workspaces && npm run verify:beta-structure && npm run typecheck && npm run lint && npm run build && npm run test:phase8"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

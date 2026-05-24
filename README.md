@@ -96,6 +96,7 @@ A continuidade da **Fase Beta — Transição MMN** avançou do endurecimento de
 - o `Event Bus` foi ligado a fluxos reais do runtime (`mmn.registerAffiliate`, `commissions.updateStatus`, `commissions.approveBatch`, `marketplaceSyncWorker`, `agentRuntime.generate` e `agentRuntime.generateBatch`)
 - adicionado `backend/src/_core/events/auditSubscribers.ts` e registro automático no bootstrap do backend para gerar trilha estruturada mínima de auditoria de eventos
 - adicionados testes unitários para `EventBus` e `healthRouter`
+- adicionado `scripts/validate-beta-structure.mjs` com atalho `npm run verify:beta-structure` para checagem estrutural rápida da Fase Beta
 - documentação consolidada em `docs/validation-reports/FASE_BETA_CONTINUATION.md`
 
 **Referências:**

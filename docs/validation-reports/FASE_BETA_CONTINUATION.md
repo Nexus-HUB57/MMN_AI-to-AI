@@ -75,6 +75,15 @@ Na continuação seguinte, o domínio `billing` passou a contar com:
 
 O `billingRouter` deixou de concentrar a leitura de faturas, paginação, criação com itens, atualização de status, histórico, estatísticas agregadas e confirmação de pagamento. Essas responsabilidades agora ficam no domínio, enquanto o router atua como camada de transporte e adaptação de erro (`InvoiceNotFoundError` → `TRPCError`).
 
+### 1.6 Extração do domínio `cron`
+Na continuação seguinte, o domínio `cron` passou a contar com:
+
+- `backend/src/domains/cron/types.ts`
+- `backend/src/domains/cron/repository.ts`
+- `backend/src/domains/cron/service.ts`
+
+O `cronRouter` deixou de concentrar a listagem paginada de jobs, o CRUD completo (`create`, `update`, `delete`), a leitura de histórico, o cálculo de estatísticas, as configurações globais, a listagem de próximas execuções e a validação de expressão `cron`. Essas responsabilidades agora ficam no domínio, junto da normalização de `jobPayload` (`JSON` opcional) e do cálculo de `nextRunAt` por frequência/expressão, enquanto o router atua como camada de transporte e adaptação de erro (`CronJobNotFoundError` → `TRPCError`). Endpoints de SLA/alertas continuam apoiados pelos serviços legados de `services/cron*`, refletindo o ponto atual da migração.
+
 ### 2. `appRouter` parcialmente migrado para a nova camada
 O `backend/src/appRouter.ts` passou a consumir a camada `domains/` para os domínios priorizados nesta fase Beta:
 
@@ -151,6 +160,7 @@ Foram adicionados testes unitários para os pontos mais importantes desta contin
 - `tests/unit/marketplaceDomainService.test.ts`
 - `tests/unit/agentRuntimeDomainService.test.ts`
 - `tests/unit/billingDomainService.test.ts`
+- `tests/unit/cronDomainService.test.ts`
 
 Coberturas incluídas:
 
@@ -185,6 +195,7 @@ O verificador cobre:
 - presença do extrato de domínio `marketplace` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `marketplacesRouter` ao domínio;
 - presença do extrato de domínio `agent-runtime` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `agentRuntimeRouter` ao domínio;
 - presença do extrato de domínio `billing` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `billingRouter` ao domínio;
+- presença do extrato de domínio `cron` (`types.ts`, `repository.ts`, `service.ts`) e delegação do `cronRouter` ao domínio;
 - uso da camada `domains/` no `appRouter`;
 - registro dos `auditSubscribers` no bootstrap do backend;
 - wiring de eventos em `mmnRouter`, `commissionsRouter`, `agentRuntimeRouter` e `marketplaceSyncWorker`;

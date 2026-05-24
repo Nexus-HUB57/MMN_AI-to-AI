@@ -101,6 +101,7 @@ A continuidade da **Fase Beta — Transição MMN** avançou do endurecimento de
 - o domínio `marketplace` recebeu `types.ts`, `repository.ts` e `service.ts`; o `marketplacesRouter` agora delega conexão, desconexão, listagem, enfileiramento de sync e normalização das respostas de catálogo ao domínio
 - o domínio `agent-runtime` recebeu `types.ts`, `repository.ts` e `service.ts`; o `agentRuntimeRouter` agora delega perfil, geração, batch, bump de performance e auditoria ao domínio, incluindo publicação explícita de `AgentSessionFailed` em falhas de geração
 - o domínio `billing` recebeu `types.ts`, `repository.ts` e `service.ts`; o `billingRouter` agora delega leitura, listagem, criação, atualização de status, histórico, estatísticas e confirmação de pagamento ao domínio, com publicação de `InvoicePaid`, `InvoiceOverdue` e `PaymentProcessed`
+- o domínio `cron` recebeu `types.ts`, `repository.ts` e `service.ts`; o `cronRouter` agora delega listagem, CRUD, histórico, estatísticas, configurações, próximas execuções e validação de expressão cron ao domínio, com erros tipados `CronJobNotFoundError`
 - adicionado `scripts/validate-beta-structure.mjs` com atalho `npm run verify:beta-structure` para checagem estrutural rápida da Fase Beta
 - documentação consolidada em `docs/validation-reports/FASE_BETA_CONTINUATION.md`
 

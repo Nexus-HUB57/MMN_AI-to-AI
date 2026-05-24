@@ -38,6 +38,9 @@ const requiredFiles = [
   'backend/src/domains/billing/service.ts',
   'backend/src/domains/cron/router.ts',
   'backend/src/domains/cron/events.ts',
+  'backend/src/domains/cron/types.ts',
+  'backend/src/domains/cron/repository.ts',
+  'backend/src/domains/cron/service.ts',
   'backend/src/domains/xp/router.ts',
   'backend/src/domains/xp/events.ts',
   'backend/src/domains/auth/router.ts',
@@ -49,6 +52,7 @@ const requiredFiles = [
   'tests/unit/marketplaceDomainService.test.ts',
   'tests/unit/agentRuntimeDomainService.test.ts',
   'tests/unit/billingDomainService.test.ts',
+  'tests/unit/cronDomainService.test.ts',
   'docs/validation-reports/FASE_BETA_CONTINUATION.md',
 ];
 
@@ -151,6 +155,30 @@ const contentChecks = [
       'InvoiceNotFoundError',
     ],
     label: 'service de billing publica eventos financeiros tipados',
+  },
+  {
+    file: 'backend/src/routers/cronRouter.ts',
+    includes: [
+      '../domains/cron/service',
+      '../domains/cron/repository',
+      'listCronJobs',
+      'createCronJob',
+      'updateCronJob',
+      'deleteCronJob',
+      'validateCronExpression',
+    ],
+    label: 'cron router usa service e repository do domínio',
+  },
+  {
+    file: 'backend/src/domains/cron/service.ts',
+    includes: [
+      'CronJobNotFoundError',
+      'listCronTemplates',
+      'calculateNextRun',
+      'serializeJobPayload',
+      'normalizeCronJob',
+    ],
+    label: 'service de cron expõe templates, normalização e cálculo de execução',
   },
   {
     file: 'backend/src/workers/marketplaceSyncWorker.ts',

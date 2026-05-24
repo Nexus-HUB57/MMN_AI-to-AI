@@ -13,6 +13,7 @@
 - terceiro domínio com extração de camada interna: `backend/src/domains/marketplace/{types,repository,service}.ts`, com o `marketplacesRouter` delegando conexão/desconexão/listagem/sync e normalização de catálogo ao domínio
 - quarto domínio com extração de camada interna: `backend/src/domains/agent-runtime/{types,repository,service}.ts`, com o `agentRuntimeRouter` delegando perfil, geração, batch, bump de performance e auditoria ao domínio
 - quinto domínio com extração de camada interna: `backend/src/domains/billing/{types,repository,service}.ts`, com o `billingRouter` delegando leitura, listagem, criação, atualização de status, histórico, estatísticas e confirmação de pagamento ao domínio
+- sexto domínio com extração de camada interna: `backend/src/domains/cron/{types,repository,service}.ts`, com o `cronRouter` delegando listagem, CRUD, histórico, estatísticas, configurações, próximas execuções e validação de expressão cron ao domínio
 
 ### `feat(events)` — Wiring do Event Bus em fluxos operacionais
 
@@ -29,6 +30,7 @@
 - novo `tests/unit/healthRouter.test.ts`
 - novo `tests/unit/agentRuntimeDomainService.test.ts`
 - novo `tests/unit/billingDomainService.test.ts`
+- novo `tests/unit/cronDomainService.test.ts`
 
 ### `docs(beta)` — Consolidação da continuação da Fase Beta
 

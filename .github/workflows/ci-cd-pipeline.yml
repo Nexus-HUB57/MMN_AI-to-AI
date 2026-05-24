@@ -5,16 +5,26 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 env:
-  NODE_VERSION: '20'
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  NODE_VERSION: "20"
+  CI: "true"
+  FORCE_COLOR: "1"
+  NODE_OPTIONS: --max-old-space-size=4096
 
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,18 +33,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Run lint
         run: npm run lint
 
   typecheck:
-    name: TypeScript Check
+    name: Typecheck
     runs-on: ubuntu-latest
-    needs: lint
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,18 +53,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Diagnose workspaces
+        run: npm run doctor:workspaces
 
       - name: Run typecheck
-        run: npm run check
+        run: npm run typecheck
 
   test:
     name: Tests
     runs-on: ubuntu-latest
-    needs: typecheck
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -63,18 +76,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
-      - name: Run tests
+      - name: Run test suite
         run: npm run test
+        env:
+          NODE_ENV: test
 
   build-backend:
     name: Build Backend
     runs-on: ubuntu-latest
-    needs: test
+    timeout-minutes: 30
+    needs: [lint, typecheck, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,15 +99,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Build backend
-        run: npm run build --workspace=@mmn/backend
+        run: npm run build:backend
 
-      - name: Upload build artifacts
+      - name: Upload backend artifacts
         uses: actions/upload-artifact@v4
         with:
           name: backend-build
@@ -101,7 +117,8 @@ jobs:
   build-frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
-    needs: test
+    timeout-minutes: 30
+    needs: [lint, typecheck, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -110,15 +127,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Build frontend
-        run: npm run build --workspace=@mmn/frontend
+        run: npm run build:frontend
 
-      - name: Upload build artifacts
+      - name: Upload frontend artifacts
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
@@ -128,8 +145,9 @@ jobs:
   deploy-staging:
     name: Deploy Staging
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: [build-backend, build-frontend]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment: staging
     steps:
       - name: Checkout
@@ -150,11 +168,12 @@ jobs:
       - name: Deploy to staging
         run: |
           echo "Deploying to staging environment..."
-          # Add deployment commands here
+          # TODO: adicionar comandos reais de deploy
 
   deploy-production:
     name: Deploy Production
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: [build-backend, build-frontend]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
@@ -177,4 +196,4 @@ jobs:
       - name: Deploy to production
         run: |
           echo "Deploying to production environment..."
-          # Add deployment commands here
+          # TODO: adicionar comandos reais de deploy

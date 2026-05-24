@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Implementação da **Fase 7** com **Sprint 1** (Core API) e **Sprint 2** (Branding Engine) completos.
+Implementação da **Fase 7** com **Sprint 1** (Core API), **Sprint 2** (Branding Engine) e **Sprint 3** (Domain Management) completos.
 
 ## Stack Tecnológica
 
@@ -96,16 +96,32 @@ Implementação da **Fase 7** com **Sprint 1** (Core API) e **Sprint 2** (Brandi
 | `/whitelabel/branding/{instance_id}/assets` | POST | Upload de asset |
 | `/whitelabel/branding/{instance_id}/validate-asset` | POST | Validar asset (sem upload) |
 
-### Domains
+### Sprint 3 - Domain Management ✅
 
 | Endpoint | Método | Descrição |
 |----------|--------|-----------|
-| `/whitelabel/instances/{id}/domains` | GET | Listar |
-| `/whitelabel/instances/{id}/domains` | POST | Adicionar |
-| `/whitelabel/instances/{id}/domains/{domain_id}` | DELETE | Remover |
-| `/whitelabel/instances/{id}/domains/{domain_id}/verify` | GET | Verificar |
-| `/whitelabel/instances/{id}/domains/{domain_id}/instructions` | GET | Instruções |
-| `/whitelabel/instances/{id}/domains/{domain_id}/ssl` | GET | Status SSL |
+| `/whitelabel/domains/{instance_id}` | GET | Listar domínios da instância |
+| `/whitelabel/domains/{instance_id}` | POST | Adicionar domínio |
+| `/whitelabel/domains/{instance_id}/{domain_id}` | DELETE | Remover domínio |
+| `/whitelabel/domains/{instance_id}/{domain_id}/verify` | GET | Iniciar verificação DNS |
+| `/whitelabel/domains/{instance_id}/{domain_id}/confirm-verification` | POST | Confirmar verificação |
+| `/whitelabel/domains/{instance_id}/{domain_id}/dns-check` | GET | Verificar propagação DNS |
+| `/whitelabel/domains/{instance_id}/{domain_id}/instructions` | GET | Instruções detalhadas |
+| `/whitelabel/domains/{instance_id}/{domain_id}/ssl` | GET | Status do certificado SSL |
+| `/whitelabel/domains/{instance_id}/{domain_id}/renew-ssl` | POST | Renovar certificado SSL |
+| `/whitelabel/domains/{instance_id}/{domain_id}/config` | GET | Configuração completa |
+| `/whitelabel/domains/{instance_id}/{domain_id}/preview` | GET | Preview do domínio |
+
+#### Features Implementadas
+
+| Feature | Status | Descrição |
+|---------|--------|-----------|
+| **Custom Domains** | ✅ | Gerenciamento de domínios customizados |
+| **DNS Verification** | ✅ | Verificação automática de registros DNS |
+| **SSL Provisioning** | ✅ | Provisionamento automático Let's Encrypt |
+| **Reverse Proxy** | ✅ | Configuração de proxy reverso |
+| **DNS Propagation** | ✅ | Verificação de propagação DNS |
+| **Preview Generation** | ✅ | Geração de preview da configuração |
 
 ### Plans
 
@@ -206,6 +222,51 @@ Implementação da **Fase 7** com **Sprint 1** (Core API) e **Sprint 2** (Brandi
 }
 ```
 
+### DomainConfig (Sprint 3)
+
+```python
+{
+    "id": "dom_uuid123",
+    "instance_id": "inst_abc123",
+    "domain": "plataforma.empresa.com",
+    "domain_type": "alias",  # primary ou alias
+    "ssl_enabled": true,
+    "verification_status": "verified",  # pending, verifying, verified, failed
+    "dns_records": {
+        "cname": "abc12345.cname.mmn-ai-to-ai.com",
+        "txt": "txt-verification-abc12345"
+    },
+    "verified_at": "2026-05-24T23:55:00Z"
+}
+```
+
+### SSLStatus (Sprint 3)
+
+```python
+{
+    "domain": "plataforma.empresa.com",
+    "ssl_enabled": true,
+    "certificate_status": "valid",  # pending, valid, expired, error, disabled
+    "issuer": "Let's Encrypt",
+    "expires_at": "2026-09-24T23:55:00Z",
+    "auto_renew": true
+}
+```
+
+### ReverseProxyConfig (Sprint 3)
+
+```python
+{
+    "enabled": true,
+    "ssl_enabled": true,
+    "ssl_provider": "lets_encrypt",
+    "ssl_auto_renew": true,
+    "redirect_https": true,
+    "cache_enabled": false,
+    "cdn_enabled": false
+}
+```
+
 ## Middlewares
 
 - [x] `AuthMiddleware` - Autenticação via API Key
@@ -235,15 +296,15 @@ Implementação da **Fase 7** com **Sprint 1** (Core API) e **Sprint 2** (Brandi
 | RATE_LIMIT_EXCEEDED | 429 | Limite excedido |
 | INTERNAL_ERROR | 500 | Erro interno |
 
-## Status: Sprint 1 e Sprint 2 Completos ✅
+## Status: Sprint 1, Sprint 2 e Sprint 3 Completos ✅
 
 | Sprint | Status | Entregas |
 |--------|--------|----------|
 | Sprint 1: Core API | ✅ Completo | CRUD instâncias, billing, webhooks, métricas |
 | Sprint 2: Branding Engine | ✅ Completo | Temas, presets, preview HTML, validação assets |
-| Sprint 3: Domain Management | 📋 Planejado | DNS, SSL, proxy reverso |
+| Sprint 3: Domain Management | ✅ Completo | DNS, SSL, proxy reverso, propagação, preview |
 | Sprint 4: Billing Integration | 📋 Planejado | Stripe/Pagarme, upgrade/downgrade |
 
-**Versão**: 1.2.0
-**Data**: 2026-05-24 23:45
+**Versão**: 1.3.0
+**Data**: 2026-05-24 23:55
 **Autor**: Nexus-HUB57 / MiniMax Agent

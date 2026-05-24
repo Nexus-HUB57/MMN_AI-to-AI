@@ -2,14 +2,14 @@
 Modelos de Domínios Customizados
 
 Autor: Nexus-HUB57
-Versão: 1.0.0
+Versão: 1.1.0 - Sprint 3 Domain Management
 """
 
+import uuid
 from datetime import datetime
-from typing import Optional, Dict, Any
-from pydantic import BaseModel, Field, validator, HttpUrl
+from typing import Optional, Dict, Any, List
+from pydantic import BaseModel, Field, validator
 from enum import Enum
-from .base import UUIDModel
 
 class DomainType(str, Enum):
     """Tipo de domínio"""
@@ -91,8 +91,51 @@ class DomainVerifyResponse(BaseModel):
 
 class DomainListResponse(BaseModel):
     """Response com lista de domínios"""
-    data: list
+    data: List[DomainAlias]
     pagination: Optional[Dict[str, int]] = None
 
-# Import uuid
-import uuid
+
+class SSLStatus(BaseModel):
+    """Status do certificado SSL"""
+    domain: str
+    ssl_enabled: bool
+    certificate_status: str = Field(..., description="pending, valid, expired, error")
+    issuer: Optional[str] = Field(None, description="Let's Encrypt, etc")
+    expires_at: Optional[datetime] = None
+    auto_renew: bool = True
+
+
+class DNSRecord(BaseModel):
+    """Registro DNS para verificação"""
+    type: str = Field(..., description="A, CNAME, TXT, etc")
+    name: str = Field(..., description="Nome do host")
+    value: str = Field(..., description="Valor do registro")
+    ttl: Optional[int] = Field(3600, description="Time to live em segundos")
+
+
+class DNSPropagationStatus(BaseModel):
+    """Status de propagação DNS"""
+    domain: str
+    records: List[DNSRecord]
+    propagated: bool
+    checked_at: datetime = Field(default_factory=datetime.utcnow)
+    propagation_time: Optional[str] = None  # "propagated", "pending", "delayed"
+
+
+class DomainConfigResponse(BaseModel):
+    """Configuração completa do domínio"""
+    domain: DomainAlias
+    ssl: SSLStatus
+    dns_records: List[DNSRecord]
+    proxy_config: Optional[Dict[str, Any]] = None
+
+
+class ReverseProxyConfig(BaseModel):
+    """Configuração de proxy reverso"""
+    enabled: bool = True
+    ssl_enabled: bool = True
+    ssl_provider: str = Field("lets_encrypt", description="lets_encrypt, cloudflare, custom")
+    ssl_auto_renew: bool = True
+    redirect_https: bool = True
+    cache_enabled: bool = False
+    cdn_enabled: bool = False

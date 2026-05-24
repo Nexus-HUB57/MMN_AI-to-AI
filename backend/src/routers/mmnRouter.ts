@@ -16,8 +16,13 @@ import {
   getTotalCommissions,
   getTrendingProducts,
 } from "../../../database/schemas/db";
-import { affiliates, network } from "../../../database/schemas/schema-final";
+import { affiliates, network, users } from "../../../database/schemas/schema-final";
 import { nanoid } from "nanoid";
+import { eq } from "drizzle-orm";
+import {
+  publishAffiliateActivated,
+  publishAffiliateRegistered,
+} from "../domains/affiliate/events";
 
 const registerAffiliateInput = z.object({
   sponsorCode: z.string().trim().min(3).max(32),
@@ -147,6 +152,34 @@ export const mmnRouter = router({
           message: "Failed to create affiliate profile",
         });
       }
+
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, ctx.user.id))
+        .limit(1);
+
+      await publishAffiliateRegistered(
+        {
+          affiliateId: String(createdAffiliate.id),
+          sponsorId: sponsor.id ? String(sponsor.id) : undefined,
+          email: user?.email ?? "",
+          name: user?.name ?? createdAffiliate.affiliateCode,
+          plan: "affiliate",
+          rank: createdAffiliate.status,
+        },
+        {
+          source: "mmn.registerAffiliate",
+          userId: ctx.user.id,
+          sponsorCode: input.sponsorCode,
+          commissionPercentage: input.commissionPercentage,
+        },
+      );
+
+      await publishAffiliateActivated(String(createdAffiliate.id), {
+        source: "mmn.registerAffiliate",
+        userId: ctx.user.id,
+      });
 
       return createdAffiliate;
     }),

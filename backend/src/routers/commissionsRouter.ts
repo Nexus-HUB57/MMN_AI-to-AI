@@ -1,5 +1,10 @@
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../config/trpc";
 import { z } from "zod";
+import {
+  publishCommissionApproved,
+  publishCommissionPaid,
+  publishCommissionRejected,
+} from "../domains/commissions/events";
 
 type CommissionStatus = "pending" | "confirmed" | "paid" | "cancelled";
 
@@ -216,6 +221,28 @@ export const commissionsRouter = router({
         metadata: { status: input.status },
       });
 
+      if (input.status === "confirmed") {
+        await publishCommissionApproved(String(input.id), String(ctx.user.id), {
+          source: "commissions.updateStatus",
+          notes: input.notes,
+        });
+      } else if (input.status === "paid") {
+        const commission = mockCommissions.find((item) => item.id === input.id);
+        await publishCommissionPaid(
+          String(input.id),
+          `manual-${input.id}`,
+          commission?.amount ?? 0,
+          {
+            source: "commissions.updateStatus",
+            notes: input.notes,
+          },
+        );
+      } else if (input.status === "cancelled") {
+        await publishCommissionRejected(String(input.id), input.notes || "cancelled", {
+          source: "commissions.updateStatus",
+        });
+      }
+
       return {
         success: true,
         message: `Status da comissão atualizado para ${input.status}`,
@@ -238,6 +265,15 @@ export const commissionsRouter = router({
         targetIds: input.ids,
         notes: input.notes || null,
       });
+
+      await Promise.all(
+        input.ids.map((id) =>
+          publishCommissionApproved(String(id), String(ctx.user.id), {
+            source: "commissions.approveBatch",
+            notes: input.notes,
+          }),
+        ),
+      );
 
       return {
         success: true,

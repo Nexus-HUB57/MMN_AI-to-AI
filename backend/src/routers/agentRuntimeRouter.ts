@@ -10,6 +10,11 @@ import {
   createSessionAudit,
 } from "../../../database/schemas/db";
 import { invokeLLM } from "../services/llm-v2";
+import {
+  publishAgentContentGenerated,
+  publishAgentSessionCompleted,
+  publishAgentSessionStarted,
+} from "../domains/agent-runtime/events";
 
 /**
  * Agent Runtime Router
@@ -156,6 +161,22 @@ export const agentRuntimeRouter = router({
       const maxLength = input.maxLength ?? 480;
       const guideline =
         PLATFORM_GUIDELINES[targetPlatform] || PLATFORM_GUIDELINES.instagram;
+      const sessionId = randomUUID();
+
+      await publishAgentSessionStarted(
+        {
+          sessionId,
+          agentId: String(agent.id),
+          userId: String(ctx.user.id),
+          channel: targetPlatform === "whatsapp" ? "whatsapp" : "instagram",
+          status: "started",
+        },
+        {
+          source: "agentRuntime.generate",
+          topic: input.topic,
+          tone,
+        },
+      );
 
       const systemPrompt = [
         `Você é o agente IA do afiliado ${agent.name}.`,
@@ -189,6 +210,33 @@ export const agentRuntimeRouter = router({
         modelUsed: response.modelUsed,
         tokensUsed: response.tokensUsed,
       });
+
+      await publishAgentSessionCompleted(
+        {
+          sessionId,
+          agentId: String(agent.id),
+          userId: String(ctx.user.id),
+          channel: targetPlatform === "whatsapp" ? "whatsapp" : "instagram",
+          status: "completed",
+          qualityScore: agent.performanceScore ?? undefined,
+        },
+        {
+          source: "agentRuntime.generate",
+          topic: input.topic,
+          modelUsed: response.modelUsed,
+          tokensUsed: response.tokensUsed,
+        },
+      );
+
+      await publishAgentContentGenerated(
+        String(agent.id),
+        sessionId,
+        targetPlatform,
+        {
+          source: "agentRuntime.generate",
+          topic: input.topic,
+        },
+      );
 
       return {
         success: true,
@@ -229,6 +277,22 @@ export const agentRuntimeRouter = router({
         "casual",
         "humorous",
       ];
+      const sessionId = randomUUID();
+
+      await publishAgentSessionStarted(
+        {
+          sessionId,
+          agentId: String(agent.id),
+          userId: String(ctx.user.id),
+          channel: targetPlatform === "whatsapp" ? "whatsapp" : "instagram",
+          status: "started",
+        },
+        {
+          source: "agentRuntime.generateBatch",
+          topic: input.topic,
+          count: input.count,
+        },
+      );
 
       const variations: Array<{
         index: number;
@@ -265,6 +329,33 @@ export const agentRuntimeRouter = router({
         platform: targetPlatform,
         count: input.count,
       });
+
+      await publishAgentSessionCompleted(
+        {
+          sessionId,
+          agentId: String(agent.id),
+          userId: String(ctx.user.id),
+          channel: targetPlatform === "whatsapp" ? "whatsapp" : "instagram",
+          status: "completed",
+          qualityScore: agent.performanceScore ?? undefined,
+        },
+        {
+          source: "agentRuntime.generateBatch",
+          topic: input.topic,
+          count: input.count,
+        },
+      );
+
+      await publishAgentContentGenerated(
+        String(agent.id),
+        sessionId,
+        targetPlatform,
+        {
+          source: "agentRuntime.generateBatch",
+          topic: input.topic,
+          count: input.count,
+        },
+      );
 
       return {
         success: true,

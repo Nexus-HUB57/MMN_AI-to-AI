@@ -11,6 +11,7 @@ import {
   logJobStart,
 } from "../services/jobLogger";
 import { syncMarketplaceProducts } from "../services/syncMarketplaceProducts";
+import { publishMarketplaceSyncCompleted } from "../domains/marketplace/events";
 
 /**
  * MarketplaceSyncWorker
@@ -82,6 +83,23 @@ class MarketplaceSyncWorker {
         productsFailed: result.totalProductsFailed,
         timestamp: new Date().toISOString(),
       };
+
+      await publishMarketplaceSyncCompleted(
+        {
+          marketplace: job.data.marketplace,
+          accountId: job.data.accountId,
+          itemsSynced: result.totalProductsAdded + result.totalProductsUpdated,
+          durationMs: 0,
+          jobId: String(job.id ?? "unknown"),
+        },
+        {
+          source: "marketplaceSyncWorker.processJob",
+          syncType: job.data.syncType,
+          requestedByUserId: job.data.requestedByUserId,
+          processedAccounts: result.processedAccounts,
+          productsFailed: result.totalProductsFailed,
+        },
+      );
 
       await logJobComplete(logId, job.id || "unknown", response);
       return response;

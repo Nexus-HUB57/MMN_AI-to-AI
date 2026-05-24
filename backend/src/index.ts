@@ -4,6 +4,7 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import type { Context } from "./trpc/context";
 import { startCronScheduler, initializeDefaultJobs, getSchedulerStatus } from "./services/cronScheduler";
+import { registerAuditSubscribers } from "./_core/events/auditSubscribers";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -87,6 +88,9 @@ async function initializeCron() {
     console.error('[CronScheduler] Erro na inicialização:', error);
   }
 }
+
+// Registrar subscribers de auditoria do eventBus antes de qualquer publish
+registerAuditSubscribers();
 
 // Inicializar cron ao iniciar o servidor
 initializeCron();

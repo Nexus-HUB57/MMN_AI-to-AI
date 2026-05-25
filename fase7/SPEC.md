@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Implementação da **Fase 7** com **Sprint 1** (Core API), **Sprint 2** (Branding Engine) e **Sprint 3** (Domain Management) completos.
+Implementação da **Fase 7** com **Sprint 1** (Core API), **Sprint 2** (Branding Engine), **Sprint 3** (Domain Management) e **Sprint 4** (Billing Integration) completos.
 
 ## Stack Tecnológica
 
@@ -129,6 +129,71 @@ Implementação da **Fase 7** com **Sprint 1** (Core API), **Sprint 2** (Brandin
 |----------|--------|-----------|
 | `/whitelabel/plans` | GET | Listar planos |
 | `/whitelabel/plans/{id}` | GET | Detalhes do plano |
+
+### Sprint 4 - Billing Integration ✅
+
+#### Subscriptions
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/subscriptions` | POST | Criar assinatura |
+| `/whitelabel/billing/subscriptions` | GET | Listar assinaturas |
+| `/whitelabel/billing/subscriptions/{id}` | GET | Detalhes da assinatura |
+| `/whitelabel/billing/subscriptions/instance/{instance_id}` | GET | Assinatura da instância |
+| `/whitelabel/billing/subscriptions/{id}` | PATCH | Atualizar assinatura |
+| `/whitelabel/billing/subscriptions/{id}/cancel` | POST | Cancelar assinatura |
+| `/whitelabel/billing/subscriptions/{id}/reactivate` | POST | Reativar assinatura |
+| `/whitelabel/instances/{id}/change-plan` | POST | Upgrade/Downgrade |
+
+#### Payments
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/payments` | POST | Criar pagamento |
+| `/whitelabel/billing/payments/{id}` | GET | Detalhes do pagamento |
+| `/whitelabel/billing/payments/{id}/process` | POST | Processar pagamento |
+| `/whitelabel/billing/payments/{id}/refund` | POST | Estornar pagamento |
+| `/whitelabel/instances/{id}/payments` | GET | Listar pagamentos |
+
+#### Invoices
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/invoices` | POST | Criar fatura |
+| `/whitelabel/billing/invoices/{id}` | GET | Detalhes da fatura |
+| `/whitelabel/instances/{id}/invoices` | GET | Listar faturas |
+| `/whitelabel/billing/invoices/{id}/mark-paid` | POST | Marcar como paga |
+
+#### Coupons
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/coupons` | POST | Criar cupom |
+| `/whitelabel/billing/coupons/validate/{code}` | GET | Validar cupom |
+| `/whitelabel/billing/coupons/apply` | POST | Aplicar cupom |
+
+#### Pricing & Summary
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/pricing/{plan}/{cycle}` | GET | Preço do plano |
+| `/whitelabel/billing/pricing/preview` | POST | Preview de preço |
+| `/whitelabel/instances/{id}/summary` | GET | Resumo de billing |
+| `/whitelabel/instances/{id}/usage` | GET | Métricas de uso |
+
+#### Payment Methods
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/instances/{id}/payment-methods` | GET | Listar métodos |
+| `/whitelabel/instances/{id}/payment-methods` | POST | Adicionar método |
+| `/whitelabel/instances/{id}/payment-methods/{method_id}` | DELETE | Remover método |
+
+#### Webhook
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/whitelabel/billing/webhook/{provider}` | POST | Webhook (Stripe/Pagarme) |
 
 ### Webhooks
 
@@ -303,8 +368,8 @@ Implementação da **Fase 7** com **Sprint 1** (Core API), **Sprint 2** (Brandin
 | Sprint 1: Core API | ✅ Completo | CRUD instâncias, billing, webhooks, métricas |
 | Sprint 2: Branding Engine | ✅ Completo | Temas, presets, preview HTML, validação assets |
 | Sprint 3: Domain Management | ✅ Completo | DNS, SSL, proxy reverso, propagação, preview |
-| Sprint 4: Billing Integration | 📋 Planejado | Stripe/Pagarme, upgrade/downgrade |
+| Sprint 4: Billing Integration | ✅ Completo | Stripe/Pagarme, upgrade/downgrade, faturas |
 
-**Versão**: 1.3.0
-**Data**: 2026-05-24 23:55
+**Versão**: 1.4.0
+**Data**: 2026-05-25 00:25
 **Autor**: Nexus-HUB57 / MiniMax Agent

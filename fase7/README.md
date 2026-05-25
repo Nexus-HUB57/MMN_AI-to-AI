@@ -7,7 +7,8 @@ API REST completa para gerenciamento de instâncias White-Label da plataforma MM
 - **CRUD de Instâncias**: Criar, listar, atualizar, suspender e ativar instâncias
 - **Branding Customizável**: Cores, fontes, logos, templates de email
 - **Domínios Customizados**: Gerenciamento de domínios com verificação DNS
-- **Sistema de Billing**: Planos Starter, Professional e Enterprise
+- **Sistema de Billing**: Revisar - MMN_AI-to-AI/docs/planning
+/Age.txt
 - **Webhooks**: Eventos em tempo real para integrações
 - **Métricas e Analytics**: Dashboard de métricas por instância
 - **Autenticação via API Key**: Segurança com Bearer tokens
@@ -120,9 +121,8 @@ fase7/
 
 | Plano | Preço Mensal | Usuários | Domínios | Commission |
 |-------|--------------|----------|----------|------------|
-| Starter | R$ 2.997 | 1.000 | 1 | 5% |
-| Professional | R$ 7.997 | 10.000 | 3 | 10% |
-| Enterprise | Sob consulta | Ilimitado | Ilimitado | 15% |
+(MMN_AI-to-AI/docs/planning
+/Age.txt)
 
 ## API Key
 

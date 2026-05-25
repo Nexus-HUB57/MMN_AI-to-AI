@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowRight, Shield, User, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
+import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
 
 const ADMIN_EMAIL = "lucasmpthomaz@gmail.com";
 
@@ -19,15 +20,20 @@ export default function Login() {
   const [name, setName] = useState(initialMode === "admin" ? "Lucas Thomaz" : "");
   const [mode, setMode] = useState<"admin" | "affiliate">(initialMode);
 
+  const getAffiliateEntryPath = () => {
+    const profile = loadMarketplaceProfile();
+    return profile.activePackSlugs.length === 0 ? "/marketplaces" : "/dashboard";
+  };
+
   const getReturnPath = () => {
     const from = searchParams.get("from");
     if (from) return from;
-    return mode === "admin" ? "/admin/dashboard" : "/dashboard";
+    return mode === "admin" ? "/admin/dashboard" : getAffiliateEntryPath();
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      const fallbackPath = user?.role === "admin" ? "/admin/dashboard" : "/dashboard";
+      const fallbackPath = user?.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath();
       setLocation(searchParams.get("from") || fallbackPath);
     }
   }, [isAuthenticated, searchParams, setLocation, user]);
@@ -39,7 +45,7 @@ export default function Login() {
         ? { name: "Lucas Thomaz", email: ADMIN_EMAIL }
         : undefined,
     );
-    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : "/dashboard"));
+    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath()));
   };
 
   const handleCredentialAccess = async () => {
@@ -48,7 +54,7 @@ export default function Login() {
       name,
       role: mode,
     });
-    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : "/dashboard"));
+    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath()));
   };
 
   return (
@@ -104,7 +110,7 @@ export default function Login() {
               <div className="space-y-3">
                 {[
                   "Homepage com atalhos para login e revisão dos painéis",
-                  "Cadastro agora redireciona para o backoffice do usuário",
+                  "Cadastro agora redireciona para o Marketplace Nexus",
                   "Login comuta entre perfil afiliado e administrador",
                   "Backoffice admin validado para Lucas Thomaz",
                 ].map((item) => (

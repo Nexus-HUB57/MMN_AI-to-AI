@@ -1,361 +1,313 @@
-import { useState, useCallback } from 'react';
+import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import {
-  MarketplaceProductCard,
-  MarketplaceCatalog,
-  MarketplaceCart,
-  MarketplaceProductDetail,
-  MarketplaceCheckout
-} from '@/components/Marketplace';
+  NEXUS_PACKS,
+  formatCurrency,
+  getLevelLabel,
+  getLevelSubtitle,
+  getPackAccess,
+  getProgressSnapshot,
+  getUnlockedEbookBundles,
+  getUnlockedSkillBundles,
+} from "@/lib/nexus-marketplace";
+import {
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  Lock,
+  Package,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
+  Trophy,
+  Users,
+  Zap,
+} from "lucide-react";
 
-// Mock data for products
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Kit Completo de Templates para Redes Sociais',
-    slug: 'kit-templates-redes-sociais',
-    price: 9700,
-    compareAtPrice: 14900,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop',
-    images: [
-      'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=600&fit=crop'
-    ],
-    shortDescription: 'Mais de 200 templates editáveis para Instagram, Facebook e LinkedIn.',
-    stockQuantity: 100,
-    status: 'active' as const,
-    productType: 'digital' as const,
-    rating: 4.8,
-    reviewCount: 124,
-    salesCount: 1850,
-    isFeatured: true,
-    tags: ['templates', 'redes-sociais', 'marketing']
-  },
-  {
-    id: '2',
-    name: 'E-book: Guia Completo de Marketing Digital',
-    slug: 'ebook-marketing-digital',
-    price: 4700,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop',
-    shortDescription: 'Aprenda estratégias comprovadas para vender mais online.',
-    stockQuantity: 50,
-    status: 'active' as const,
-    productType: 'digital' as const,
-    rating: 4.9,
-    reviewCount: 89,
-    salesCount: 2100,
-    isFeatured: true,
-    tags: ['ebook', 'marketing', 'vendas']
-  },
-  {
-    id: '3',
-    name: 'Consultoria Estratégica de 2 Horas',
-    slug: 'consultoria-estrategica',
-    price: 49700,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop',
-    shortDescription: 'Sessão individual para revisar sua estratégia de marketing.',
-    stockQuantity: 10,
-    status: 'active' as const,
-    productType: 'service' as const,
-    rating: 5.0,
-    reviewCount: 45,
-    salesCount: 320,
-    tags: ['consultoria', 'estrategia']
-  },
-  {
-    id: '4',
-    name: 'Assinatura Mensal - Acesso VIP',
-    slug: 'assinatura-vip-mensal',
-    price: 99700,
-    compareAtPrice: 14900,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&h=300&fit=crop',
-    shortDescription: 'Acesso ilimitado a todos os produtos e novos lançamentos.',
-    stockQuantity: 999,
-    status: 'active' as const,
-    productType: 'subscription' as const,
-    rating: 4.7,
-    reviewCount: 203,
-    salesCount: 4500,
-    isFeatured: true,
-    tags: ['assinatura', 'vip', 'acesso']
-  },
-  {
-    id: '5',
-    name: 'Curso de Tráfego Pago do Zero',
-    slug: 'curso-trafego-pago',
-    price: 99700,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=400&h=300&fit=crop',
-    shortDescription: 'Aprenda Facebook Ads, Google Ads e LinkedIn Ads.',
-    stockQuantity: 5,
-    status: 'active' as const,
-    productType: 'digital' as const,
-    rating: 4.9,
-    reviewCount: 567,
-    salesCount: 8900,
-    tags: ['curso', 'trafego', 'ads']
-  },
-  {
-    id: '6',
-    name: 'Camiseta Premium - Nexus Hub',
-    slug: 'camiseta-nexus-hub',
-    price: 8900,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1521572163474-6866f9c0e5c8?w=400&h=300&fit=crop',
-    shortDescription: 'Camiseta 100% algodão com estampa exclusiva.',
-    stockQuantity: 0,
-    status: 'out_of_stock' as const,
-    productType: 'physical' as const,
-    rating: 4.5,
-    reviewCount: 28,
-    salesCount: 156,
-    tags: ['camiseta', 'merchandise', 'fisico']
-  }
-];
-
-const mockCategories = [
-  { id: 'cat-1', name: 'Templates', slug: 'templates' },
-  { id: 'cat-2', name: 'E-books', slug: 'ebooks' },
-  { id: 'cat-3', name: 'Cursos', slug: 'cursos' },
-  { id: 'cat-4', name: 'Consultoria', slug: 'consultoria' },
-  { id: 'cat-5', name: 'Assinaturas', slug: 'assinaturas' },
-  { id: 'cat-6', name: 'Produtos Físicos', slug: 'fisicos' }
-];
-
-const mockReviews = [
-  {
-    id: 'rev-1',
-    userId: 'user-1',
-    userName: 'Maria Silva',
-    rating: 5,
-    comment: 'Excelente produto! Superou minhas expectativas. Recomendo a todos.',
-    createdAt: '2024-01-15T10:30:00Z',
-    verified: true
-  },
-  {
-    id: 'rev-2',
-    userId: 'user-2',
-    userName: 'João Santos',
-    rating: 4,
-    comment: 'Muito bom, mas poderia ter mais opções de cores.',
-    createdAt: '2024-01-10T14:20:00Z',
-    verified: true
-  }
-];
-
-type ViewMode = 'catalog' | 'cart' | 'detail' | 'checkout';
-type SortMode = 'grid' | 'list';
-
-interface CartItem {
-  id: string;
-  productId: string;
-  name: string;
-  price: number;
-  thumbnailUrl?: string;
-  quantity: number;
-  maxQuantity: number;
-  productType: 'digital' | 'physical' | 'service' | 'subscription';
+function ProgressBar({ value, tone = "cyan" }: { value: number; tone?: "cyan" | "lime" }) {
+  return (
+    <div className="h-2 overflow-hidden rounded-full bg-white/8">
+      <div
+        className={`h-full rounded-full ${tone === "lime" ? "bg-quantum-lime" : "bg-quantum-cyan"}`}
+        style={{ width: `${Math.max(4, value)}%` }}
+      />
+    </div>
+  );
 }
 
 export default function Marketplaces() {
-  const [currentView, setCurrentView] = useState<ViewMode>('catalog');
-  const [selectedProduct, setSelectedProduct] = useState<typeof mockProducts[0] | null>(null);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [viewMode, setViewMode] = useState<SortMode>('grid');
-  const [couponCode, setCouponCode] = useState<string>('');
-  const [discount, setDiscount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const { profile, activate } = useMarketplaceProfile();
+  const progress = getProgressSnapshot(profile);
+  const ebookBundles = getUnlockedEbookBundles(profile);
+  const skillBundles = getUnlockedSkillBundles(profile);
+  const hasOnboardingFlag = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
 
-  // Cart calculations
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const discountAmount = discount > 0 ? Math.round(subtotal * (discount / 100)) : 0;
-  const shipping = 0; // Free shipping
-  const total = subtotal - discountAmount;
+  const packStates = NEXUS_PACKS.map((pack) => ({
+    ...pack,
+    access: getPackAccess(profile, pack),
+  }));
 
-  const handleProductClick = useCallback((product: typeof mockProducts[0]) => {
-    setSelectedProduct(product);
-    setCurrentView('detail');
-  }, []);
-
-  const handleAddToCart = useCallback((product: typeof mockProducts[0], quantity: number = 1, _variations?: Record<string, string>) => {
-    setCartItems(prev => {
-      const existingItem = prev.find(item => item.productId === product.id);
-      if (existingItem) {
-        return prev.map(item =>
-          item.productId === product.id
-            ? { ...item, quantity: Math.min(item.quantity + quantity, product.stockQuantity) }
-            : item
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: `cart-${Date.now()}`,
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          thumbnailUrl: product.thumbnailUrl,
-          quantity: quantity,
-          maxQuantity: product.stockQuantity,
-          productType: product.productType
-        }
-      ];
-    });
-  }, []);
-
-  const handleUpdateQuantity = useCallback((itemId: string, quantity: number) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === itemId ? { ...item, quantity: Math.min(quantity, item.maxQuantity) } : item
-      )
-    );
-  }, []);
-
-  const handleRemoveItem = useCallback((itemId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== itemId));
-  }, []);
-
-  const handleClearCart = useCallback(() => {
-    setCartItems([]);
-    setCouponCode('');
-    setDiscount(0);
-  }, []);
-
-  const handleApplyCoupon = useCallback((code: string) => {
-    if (code.toUpperCase() === 'DESCONTO10') {
-      setCouponCode(code);
-      setDiscount(10);
-    } else if (code.toUpperCase() === 'PROMO20') {
-      setCouponCode(code);
-      setDiscount(20);
-    } else {
-      alert('Cupom inválido');
-    }
-  }, []);
-
-  const handleRemoveCoupon = useCallback(() => {
-    setCouponCode('');
-    setDiscount(0);
-  }, []);
-
-  const handleCheckout = useCallback(() => {
-    setCurrentView('checkout');
-  }, []);
-
-  const handleBack = useCallback(() => {
-    if (currentView === 'detail') {
-      setCurrentView('catalog');
-      setSelectedProduct(null);
-    } else if (currentView === 'checkout') {
-      setCurrentView('cart');
-    }
-  }, [currentView]);
-
-  const handlePlaceOrder = useCallback((_data: any) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setCartItems([]);
-      setCouponCode('');
-      setDiscount(0);
-      setCurrentView('catalog');
-      alert('Pedido realizado com sucesso!');
-    }, 2000);
-  }, []);
-
-  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const availableNow = packStates.filter((pack) => pack.access.status === "available");
+  const lockedCount = packStates.filter((pack) => pack.access.status === "locked").length;
+  const activeCount = packStates.filter((pack) => pack.access.status === "active").length;
+  const activeEbooks = ebookBundles.filter((bundle) => bundle.status === "active").length;
+  const activeSkills = skillBundles.filter((bundle) => bundle.status === "active").length;
 
   return (
     <DashboardLayout>
-      <div className="min-h-screen">
-        {/* Header */}
-        <div className="bg-surface-secondary border-b border-border-color sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Marketplace Nexus</h1>
-              <p className="text-sm text-text-secondary">Plataforma de Afiliados</p>
+      <div className="space-y-8">
+        <section className="rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.82),rgba(2,6,23,0.94))] p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl space-y-4">
+              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                Marketplace Nexus sincronizado com Age.txt
+              </Badge>
+              <div className="space-y-3">
+                <h1 className="text-3xl font-bold text-white md:text-4xl">Marketplace Nexus reconfigurado por nível, XP e plano</h1>
+                <p className="max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
+                  O fluxo inicial agora respeita o plano de carreira do Nexus: após o cadastro, o usuário entra no Marketplace com apenas o Pack Agente Afiliado A² liberado. Todos os demais packs, bibliotecas, skills e upgrades ficam bloqueados até a conclusão integral dos critérios de nível / XP.
+                </p>
+              </div>
+              {hasOnboardingFlag && (
+                <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
+                  Cadastro concluído. Seu onboarding começou no Marketplace e o Pack A² foi liberado como primeira ativação.
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Cart Button */}
-              <button
-                onClick={() => setCurrentView('cart')}
-                className="relative flex items-center gap-2 px-4 py-2 bg-surface-tertiary rounded-lg hover:bg-accent-cyan/20 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 4M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <span className="text-sm font-medium">Carrinho</span>
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-cyan rounded-full text-xs flex items-center justify-center text-white font-bold">
-                    {cartItemCount}
-                  </span>
-                )}
-              </button>
-            </div>
+            <Card className="w-full max-w-md border-white/10 bg-white/5 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <ShieldCheck className="h-5 w-5 text-quantum-cyan" />
+                  Status do afiliado
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  Regras atuais de acesso do seu ecossistema Nexus.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm">
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-quantum-cyan">carreira atual</p>
+                  <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
+                  <p className="mt-1 text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-wider text-slate-400">XP atual</p>
+                    <p className="mt-2 text-2xl font-bold text-white">{profile.currentXp.toLocaleString("pt-BR")}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs uppercase tracking-wider text-slate-400">Diretos qualificados</p>
+                    <p className="mt-2 text-2xl font-bold text-white">{profile.directReferrals}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </section>
 
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto">
-          {currentView === 'catalog' && (
-            <MarketplaceCatalog
-              products={mockProducts}
-              categories={mockCategories}
-              isLoading={isLoading}
-              onProductClick={handleProductClick}
-              onAddToCart={handleAddToCart}
-              viewMode={viewMode}
-              onViewModeChange={(mode) => setViewMode(mode as SortMode)}
-            />
-          )}
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            { label: "Packs ativos", value: activeCount, icon: Package, tone: "text-quantum-cyan" },
+            { label: "Packs bloqueados", value: lockedCount, icon: Lock, tone: "text-amber-300" },
+            { label: "Bibliotecas liberadas", value: activeEbooks, icon: BookOpen, tone: "text-quantum-lime" },
+            { label: "Skills liberadas", value: activeSkills, icon: Sparkles, tone: "text-quantum-purple" },
+          ].map((item) => (
+            <Card key={item.label} className="border-white/10 bg-white/5 backdrop-blur">
+              <CardContent className="flex items-center justify-between p-5">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{item.label}</p>
+                  <p className="mt-3 text-3xl font-bold text-white">{item.value}</p>
+                </div>
+                <item.icon className={`h-7 w-7 ${item.tone}`} />
+              </CardContent>
+            </Card>
+          ))}
+        </section>
 
-          {currentView === 'detail' && selectedProduct && (
-            <MarketplaceProductDetail
-              product={selectedProduct}
-              reviews={mockReviews}
-              onAddToCart={(product, quantity, variations) => {
-                handleAddToCart(product, quantity, variations);
-                setCurrentView('cart');
-              }}
-              onAddToWishlist={() => console.log('Added to wishlist')}
-              onBack={() => handleBack()}
-            />
-          )}
+        <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Trophy className="h-5 w-5 text-quantum-cyan" />
+                Critérios para o próximo upgrade
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                O próximo plano só é liberado quando nível, XP e rede qualificada forem concluídos integralmente.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.3em] text-slate-500">próxima etapa</p>
+                    <p className="mt-2 text-lg font-semibold text-white">{progress.nextPack?.name ?? "Todos os packs concluídos"}</p>
+                  </div>
+                  {progress.nextPack ? (
+                    <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                      {progress.nextPack.shortName}
+                    </Badge>
+                  ) : (
+                    <Badge className="border border-green-500/30 bg-green-500/10 text-green-400">Concluído</Badge>
+                  )}
+                </div>
+              </div>
 
-          {currentView === 'cart' && (
-            <MarketplaceCart
-              items={cartItems.map(item => ({
-                ...item,
-                isDigital: item.productType === 'digital'
-              }))}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-              onClearCart={handleClearCart}
-              onCheckout={handleCheckout}
-              onContinueShopping={() => setCurrentView('catalog')}
-              couponCode={couponCode}
-              onApplyCoupon={handleApplyCoupon}
-              onRemoveCoupon={handleRemoveCoupon}
-              discount={discount}
-            />
-          )}
+              <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between text-sm text-slate-300">
+                  <span className="inline-flex items-center gap-2"><Zap className="h-4 w-4 text-quantum-cyan" /> XP acumulado</span>
+                  <span>{progress.xpCurrent.toLocaleString("pt-BR")} / {progress.xpTarget.toLocaleString("pt-BR")}</span>
+                </div>
+                <ProgressBar value={progress.xpProgress} />
+              </div>
 
-          {currentView === 'checkout' && (
-            <MarketplaceCheckout
-              items={cartItems}
-              subtotal={subtotal}
-              discount={discountAmount}
-              shipping={shipping}
-              total={total}
-              couponCode={couponCode}
-              onApplyCoupon={handleApplyCoupon}
-              onPlaceOrder={handlePlaceOrder}
-              onBack={() => handleBack()}
-              onContinueShopping={() => setCurrentView('catalog')}
-              isProcessing={isLoading}
-            />
-          )}
-        </div>
+              <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between text-sm text-slate-300">
+                  <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-quantum-lime" /> Diretos qualificados</span>
+                  <span>{progress.directCurrent} / {progress.directTarget}</span>
+                </div>
+                <ProgressBar value={progress.directProgress} tone="lime" />
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                <Link href="/packs">
+                  <Button className="w-full gradient-btn">Ver packs</Button>
+                </Link>
+                <Link href="/skills">
+                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver skills</Button>
+                </Link>
+                <Link href="/upgrades">
+                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver upgrades</Button>
+                </Link>
+                <Link href="/marketplaces/ebooks">
+                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver e-books</Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
+                Liberado agora no pós-cadastro
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Apenas ofertas realmente acessíveis neste momento.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {availableNow.map((pack) => (
+                <div key={pack.slug} className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-lg font-semibold text-white">{pack.name}</p>
+                      <p className="mt-1 text-sm leading-6 text-slate-300">{pack.description}</p>
+                    </div>
+                    <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                      {pack.badge ?? "Disponível"}
+                    </Badge>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {pack.highlights.slice(0, 3).map((highlight) => (
+                      <span key={highlight} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+                        {highlight}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-5 flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.3em] text-slate-500">investimento</p>
+                      <p className="mt-1 text-2xl font-bold text-white">{formatCurrency(pack.priceCents)}</p>
+                    </div>
+                    <Button className="gradient-btn" onClick={() => activate(pack.slug)}>
+                      Ativar agora
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              {availableNow.length === 0 && (
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
+                  Nenhum novo pack está disponível neste instante. Complete os critérios de carreira para avançar ao próximo upgrade.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-2">
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <BookOpen className="h-5 w-5 text-quantum-cyan" />
+                Bibliotecas de e-books vinculadas aos packs
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Os e-books são liberados pela hierarquia de packs e permanecem sincronizados com o plano ativo.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {ebookBundles.map((bundle) => (
+                <div key={bundle.slug} className={`rounded-2xl border p-4 ${bundle.status === "active" ? "border-green-500/30 bg-green-500/10" : "border-white/10 bg-black/20"}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-base font-semibold text-white">{bundle.name}</p>
+                      <p className="mt-1 text-sm text-slate-300">{bundle.description}</p>
+                    </div>
+                    {bundle.status === "active" ? (
+                      <Badge className="border border-green-500/30 bg-green-500/10 text-green-400">Liberado</Badge>
+                    ) : (
+                      <Badge className="border border-amber-500/30 bg-amber-500/10 text-amber-300">Bloqueado</Badge>
+                    )}
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{bundle.ebookCount} e-books</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Revenda {bundle.resalePriceLabel}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Vinculado ao {bundle.unlockPack?.shortName}</span>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Sparkles className="h-5 w-5 text-quantum-purple" />
+                Skills liberadas por plano
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Cada bundle de skills acompanha o upgrade do agente e só aparece quando o pack correspondente for concluído.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {skillBundles.map((bundle) => (
+                <div key={bundle.slug} className={`rounded-2xl border p-4 ${bundle.status === "active" ? "border-purple-500/30 bg-purple-500/10" : "border-white/10 bg-black/20"}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-base font-semibold text-white">{bundle.name}</p>
+                      <p className="mt-1 text-sm text-slate-300">{bundle.description}</p>
+                    </div>
+                    {bundle.status === "active" ? (
+                      <CheckCircle2 className="h-5 w-5 text-green-400" />
+                    ) : (
+                      <Lock className="h-5 w-5 text-amber-300" />
+                    )}
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">{bundle.skillSummary}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">Pack {bundle.unlockPack?.shortName}</span>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </section>
       </div>
     </DashboardLayout>
   );

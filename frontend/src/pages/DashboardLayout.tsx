@@ -28,6 +28,7 @@ import {
   Settings,
   ShoppingCart,
   Star,
+  Sparkles,
   TrendingUp,
   Trophy,
   Users,
@@ -119,10 +120,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           icon: <Globe className="w-5 h-5" />,
         },
         {
-          label: "Pacotes / Skills",
+          label: "Packs Nexus",
           href: "/packs",
           icon: <Package className="w-5 h-5" />,
           badge: "Novo",
+        },
+        {
+          label: "Skills Nexus",
+          href: "/skills",
+          icon: <Sparkles className="w-5 h-5" />,
+          badge: "Plano",
         },
         {
           label: "Upgrades",
@@ -170,9 +177,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       title: "Loja & Operações",
       items: [
         {
-          label: "Marketplaces",
+          label: "Marketplace Nexus",
           href: "/marketplaces",
           icon: <ShoppingCart className="w-5 h-5" />,
+          badge: "XP",
+        },
+        {
+          label: "E-books (Revenda)",
+          href: "/marketplaces/ebooks",
+          icon: <BookOpen className="w-5 h-5" />,
+          badge: "R$ 0,50",
         },
         {
           label: "Dropshipping",

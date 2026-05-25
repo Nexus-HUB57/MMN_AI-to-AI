@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useMemo, useState, ReactNode } from "react";
+import { ensureAffiliateMarketplaceProfile } from "@/lib/nexus-marketplace";
 
 type UserRole = "admin" | "affiliate" | "user";
 
@@ -88,6 +89,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const nextUser = buildReviewUser(role, overrides);
     setUser(nextUser);
     persistUser(nextUser);
+    if (nextUser.role === "affiliate") {
+      ensureAffiliateMarketplaceProfile({
+        id: nextUser.id,
+        name: nextUser.name,
+        email: nextUser.email,
+      });
+    }
     return nextUser;
   };
 
@@ -106,6 +114,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     setUser(nextUser);
     persistUser(nextUser);
+    if (nextUser.role === "affiliate") {
+      ensureAffiliateMarketplaceProfile({
+        id: nextUser.id,
+        name: nextUser.name,
+        email: nextUser.email,
+      });
+    }
     return nextUser;
   };
 

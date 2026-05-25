@@ -36,6 +36,8 @@ const AISyncDashboard = lazy(() => import("./pages/AISyncDashboard"));
 
 const Marketplaces = lazy(() => import("./pages/Marketplaces"));
 const PacksMarketplace = lazy(() => import("./pages/PacksMarketplace"));
+const SkillsMarketplace = lazy(() => import("./pages/SkillsMarketplace"));
+const MarketplaceEbooks = lazy(() => import("./pages/MarketplaceEbooks"));
 const DropshippingOrders = lazy(() => import("./pages/DropshippingOrders"));
 
 const MarketingMaterials = lazy(() => import("./pages/MarketingMaterials"));
@@ -186,9 +188,21 @@ export const NAVIGATION_STRUCTURE = {
       layout: "DashboardLayout",
     },
     {
+      path: "/marketplaces/ebooks",
+      name: "E-books Marketplace",
+      component: "MarketplaceEbooks",
+      layout: "DashboardLayout",
+    },
+    {
       path: "/packs",
       name: "Pacotes & Upgrades",
       component: "PacksMarketplace",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/skills",
+      name: "Skills",
+      component: "SkillsMarketplace",
       layout: "DashboardLayout",
     },
     {
@@ -387,7 +401,9 @@ export default function App() {
             <Route path="/content/calendar" component={ContentCalendar} />
 
             <Route path="/marketplaces" component={Marketplaces} />
+            <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
             <Route path="/packs" component={PacksMarketplace} />
+            <Route path="/skills" component={SkillsMarketplace} />
             <Route path="/upgrades" component={Upgrades} />
             <Route path="/dropshipping/orders" component={DropshippingOrders} />
 

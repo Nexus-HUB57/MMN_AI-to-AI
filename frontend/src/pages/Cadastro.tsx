@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, Check, Zap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { ensureAffiliateMarketplaceProfile } from "@/lib/nexus-marketplace";
 
 export default function Cadastro() {
   const [, setLocation] = useLocation();
@@ -67,53 +68,59 @@ export default function Cadastro() {
       return;
     }
 
-    await loginAsDemo("affiliate", {
+    const nextUser = await loginAsDemo("affiliate", {
       name: formData.name,
       email: formData.email,
     });
 
-    setLocation("/dashboard");
+    ensureAffiliateMarketplaceProfile({
+      id: nextUser.id,
+      name: nextUser.name,
+      email: nextUser.email,
+    });
+
+    setLocation("/marketplaces?onboarding=1");
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-accent-cyan/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-green/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-accent-purple/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen overflow-hidden bg-background text-foreground">
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-accent-cyan/10 blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-accent-green/10 blur-3xl"></div>
+        <div className="absolute left-1/2 top-1/2 h-96 w-96 rounded-full bg-accent-purple/5 blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-        <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div className="order-2 lg:order-1 flex flex-col justify-center space-y-8">
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid w-full max-w-7xl grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="order-2 flex flex-col justify-center space-y-8 lg:order-1">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-background" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green">
+                  <Zap className="h-6 w-6 text-background" />
                 </div>
                 <h1 className="text-4xl font-bold gradient-text">MMNAI</h1>
               </div>
-              <p className="text-text-secondary text-lg max-w-md">
-                Junte-se à revisão funcional da plataforma e siga direto para o backoffice do usuário.
+              <p className="max-w-md text-lg text-text-secondary">
+                Junte-se ao ecossistema Nexus e siga direto para o Marketplace com o fluxo inicial de ativação do Pack A².
               </p>
             </div>
 
-            <div className="space-y-6 max-w-md">
+            <div className="max-w-md space-y-6">
               <div className="space-y-4">
-                <h2 className="text-3xl font-bold text-foreground">Crie sua conta e entre no painel</h2>
+                <h2 className="text-3xl font-bold text-foreground">Crie sua conta e ative sua jornada no Marketplace</h2>
                 <p className="text-text-secondary">
-                  O fluxo de cadastro agora conclui a validação local e abre o dashboard do afiliado para revisão imediata.
+                  O cadastro conclui a validação local e abre o Marketplace Nexus, liberando apenas o Pack Agente Afiliado A² para a primeira ativação.
                 </p>
               </div>
 
               <div className="space-y-4">
                 {[
                   { icon: "✓", title: "Cadastro guiado", desc: "Fluxo em 3 etapas com validação básica" },
-                  { icon: "✓", title: "Acesso imediato", desc: "Redirecionamento automático para /dashboard" },
-                  { icon: "✓", title: "Backoffice revisável", desc: "Painel do usuário pronto para inspeção visual" },
+                  { icon: "✓", title: "Marketplace inicial", desc: "Redirecionamento automático para /marketplaces" },
+                  { icon: "✓", title: "Upgrade por critérios", desc: "Demais packs liberados só após nível e XP" },
                 ].map((item) => (
                   <div key={item.title} className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center text-sm flex-shrink-0">
+                    <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-accent-green/20 text-sm text-accent-green">
                       {item.icon}
                     </span>
                     <div>
@@ -126,23 +133,23 @@ export default function Cadastro() {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 flex flex-col justify-center">
-            <Card className="border-accent/30 bg-card/50 backdrop-blur-md shadow-2xl">
+          <div className="order-1 flex flex-col justify-center lg:order-2">
+            <Card className="border-accent/30 bg-card/50 shadow-2xl backdrop-blur-md">
               <div className="p-8 sm:p-10">
                 <div className="mb-8">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="mb-4 flex items-center justify-between">
                     {[1, 2, 3].map((s) => (
                       <div key={s} className="flex items-center">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all ${
                             s <= step ? "bg-accent-cyan text-background" : "bg-muted text-text-muted"
                           }`}
                         >
-                          {s < step ? <Check className="w-4 h-4" /> : s}
+                          {s < step ? <Check className="h-4 w-4" /> : s}
                         </div>
                         {s < 3 && (
                           <div
-                            className={`w-16 sm:w-24 h-1 mx-2 rounded ${
+                            className={`mx-2 h-1 w-16 rounded sm:w-24 ${
                               s < step ? "bg-accent-cyan" : "bg-muted"
                             }`}
                           />
@@ -157,16 +164,16 @@ export default function Cadastro() {
                   </div>
                 </div>
 
-                <div className="space-y-2 mb-6">
+                <div className="mb-6 space-y-2">
                   <h3 className="text-2xl font-bold text-foreground">
                     {step === 1 && "Dados Pessoais"}
                     {step === 2 && "Informações de Contato"}
                     {step === 3 && "Segurança"}
                   </h3>
-                  <p className="text-text-secondary text-sm">
-                    {step === 1 && "Informe seus dados para abrir a conta de revisão"}
-                    {step === 2 && "Precisamos do contato para personalizar o painel"}
-                    {step === 3 && "Finalize o acesso local ao backoffice do usuário"}
+                  <p className="text-sm text-text-secondary">
+                    {step === 1 && "Informe seus dados para abrir a conta inicial do afiliado"}
+                    {step === 2 && "Precisamos do contato para personalizar o onboarding do Marketplace"}
+                    {step === 3 && "Finalize o acesso local e siga para ativar o Pack A²"}
                   </p>
                 </div>
 
@@ -211,9 +218,9 @@ export default function Cadastro() {
                         <Label htmlFor="confirmPassword">Confirmar Senha</Label>
                         <Input id="confirmPassword" name="confirmPassword" type="password" placeholder="Repita a senha" value={formData.confirmPassword} onChange={handleChange} className="bg-background" />
                       </div>
-                      <div className="flex items-start gap-2 p-4 rounded-lg bg-accent-cyan/5 border border-accent-cyan/20">
+                      <div className="flex items-start gap-2 rounded-lg border border-accent-cyan/20 bg-accent-cyan/5 p-4">
                         <input type="checkbox" id="acceptTerms" name="acceptTerms" checked={formData.acceptTerms} onChange={handleChange} className="mt-1" />
-                        <Label htmlFor="acceptTerms" className="text-sm text-text-secondary cursor-pointer">
+                        <Label htmlFor="acceptTerms" className="cursor-pointer text-sm text-text-secondary">
                           Eu aceito os <a href="#" className="text-accent-cyan hover:underline">Termos de Uso</a> e a <a href="#" className="text-accent-cyan hover:underline">Política de Privacidade</a>
                         </Label>
                       </div>
@@ -233,14 +240,14 @@ export default function Cadastro() {
                       </Button>
                     )}
                     {step < 3 ? (
-                      <Button onClick={handleNextStep} className="flex-1 gradient-btn">
+                      <Button onClick={handleNextStep} className="gradient-btn flex-1">
                         Continuar
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     ) : (
-                      <Button onClick={handleSubmit} className="flex-1 gradient-btn" disabled={!formData.acceptTerms}>
+                      <Button onClick={handleSubmit} className="gradient-btn flex-1" disabled={!formData.acceptTerms}>
                         Finalizar Cadastro
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     )}
                   </div>

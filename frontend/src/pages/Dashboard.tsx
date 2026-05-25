@@ -7,6 +7,7 @@ import {
   Activity,
   ArrowRight,
   BarChart3,
+  BookOpen,
   Bot,
   Calendar,
   ChevronRight,
@@ -63,6 +64,13 @@ const QUICK_ACTIONS = [
     description: "Skills extras para seu agente",
     icon: Sparkles,
     accent: "from-quantum-purple/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/marketplaces/ebooks",
+    label: "E-books IA",
+    description: "5 títulos a R$ 0,50 / revenda R$ 1,00",
+    icon: BookOpen,
+    accent: "from-quantum-lime/30 to-quantum-cyan/0",
   },
 ];
 

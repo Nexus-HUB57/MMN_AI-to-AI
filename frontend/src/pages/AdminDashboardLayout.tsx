@@ -45,6 +45,8 @@ const MENU_ITEMS = [
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
   { label: "Logs", path: "/admin/logs", icon: Activity },
+  { label: "Agendamentos", path: "/admin/schedules", icon: CalendarClock },
+  { label: "Status Sistema", path: "/admin/status", icon: Database },
   { label: "Configuracoes", path: "/admin/settings", icon: Settings },
 ] as const;
 

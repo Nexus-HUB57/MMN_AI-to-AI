@@ -1,5 +1,13 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.4 Admin Backoffice Navigation Coverage
+
+### `fix(admin-nav)` — Cobertura do menu do backoffice administrativo
+
+- adicionados ao `frontend/src/pages/AdminDashboardLayout.tsx` os atalhos de navegação para `/admin/schedules` e `/admin/status`
+- removido o descompasso entre as rotas administrativas registradas no `App.tsx` e os links realmente exibidos no sidebar do admin
+- revisão garante acesso visual completo aos módulos de Agendamentos e Status do Sistema durante a validação funcional do backoffice administrador
+
 ## 2026-05-25 — v1.2.3 Review Continuation (Homepage + Backoffices + Route Coverage)
 
 ### `feat(review)` — Continuidade da revisão funcional do frontend

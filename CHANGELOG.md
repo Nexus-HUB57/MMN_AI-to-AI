@@ -1,5 +1,23 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.3 Review Continuation (Homepage + Backoffices + Route Coverage)
+
+### `feat(review)` — Continuidade da revisão funcional do frontend
+
+- homepage, login e cadastro mantidos como fluxo principal de revisão funcional do produto
+- login administrativo preservado com direcionamento para o backoffice do admin usando o perfil de **Lucas Thomaz** (`lucasmpthomaz@gmail.com`)
+- dashboard do usuário mantido em layout de backoffice para facilitar inspeção do fluxo afiliado
+
+### `fix(routes)` — Cobertura de rotas do backoffice do usuário
+
+- adicionadas ao `frontend/src/App.tsx` as rotas ausentes `/network` e `/upgrades`
+- `NAVIGATION_STRUCTURE` atualizado para refletir a navegação real do backoffice afiliado
+- removido o descompasso entre links do `DashboardLayout` e as rotas efetivamente registradas no App
+
+### `docs(review)` — Documentação operacional de deploy e revisão
+
+- `DEPLOY_ANALYSIS_HOSTGATOR.md` expandido com seção específica de revisão funcional de homepage, login/cadastro, backoffice do usuário e backoffice do administrador
+
 ## 2026-05-24 — v1.2.2 Fase Beta Continuation (Domains + Event Bus + CI Hardening)
 
 ### `feat(domains)` — Camada anti-corruption por domínio

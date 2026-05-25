@@ -25,6 +25,8 @@ const AdminSchedules = lazy(() => import("./pages/AdminSchedules"));
 const AffiliateProfile = lazy(() => import("./pages/AffiliateProfile"));
 const AffiliatePayments = lazy(() => import("./pages/AffiliatePayments"));
 const AffiliateMiniSite = lazy(() => import("./pages/AffiliateMiniSite"));
+const Network = lazy(() => import("./pages/Network"));
+const Upgrades = lazy(() => import("./pages/Upgrades"));
 
 const Agents = lazy(() => import("./pages/Agents"));
 const AgentDashboard = lazy(() => import("./pages/AgentDashboard"));
@@ -91,6 +93,12 @@ export const NAVIGATION_STRUCTURE = {
       path: "/commissions",
       name: "Comissões",
       component: "Commissions",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/network",
+      name: "Rede MMN",
+      component: "Network",
       layout: "DashboardLayout",
     },
     {
@@ -181,6 +189,12 @@ export const NAVIGATION_STRUCTURE = {
       path: "/packs",
       name: "Pacotes & Upgrades",
       component: "PacksMarketplace",
+      layout: "DashboardLayout",
+    },
+    {
+      path: "/upgrades",
+      name: "Upgrades",
+      component: "Upgrades",
       layout: "DashboardLayout",
     },
     {
@@ -356,6 +370,7 @@ export default function App() {
             <Route path="/profile" component={AffiliateProfile} />
             <Route path="/payments" component={AffiliatePayments} />
             <Route path="/commissions" component={Commissions} />
+            <Route path="/network" component={Network} />
             <Route path="/bonus" component={BonusPage} />
             <Route path="/minisite" component={AffiliateMiniSite} />
 
@@ -373,6 +388,7 @@ export default function App() {
 
             <Route path="/marketplaces" component={Marketplaces} />
             <Route path="/packs" component={PacksMarketplace} />
+            <Route path="/upgrades" component={Upgrades} />
             <Route path="/dropshipping/orders" component={DropshippingOrders} />
 
             <Route path="/marketing/materials" component={MarketingMaterials} />

@@ -253,5 +253,35 @@ O sistema **MMN AI-to-AI v1.2.x** está **pronto para deploy em produção** com
 
 ---
 
+## 8. Execução do Deploy — 2026-05-25 (Hostgator Shared, domínio oneverso.com.br)
+
+### 8.1 Contexto de hospedagem confirmado
+
+- Conta Hostgator **luc92554** servindo `oneverso.com.br` no IP **50.116.112.98**.
+- Acesso SSH negado pelo provedor ("Shell access is not enabled on your account"); deploy executado via **cPanel UAPI** e **FTPS**.
+- Estrutura confirmada em `/home1/luc92554/public_html` (`api/`, `assets/`, `cgi-bin/`, `index.html`, `.htaccess`) e subdomínio `wallet.oneverso.com.br` já criado.
+
+### 8.2 Caminho A executado — frontend estático atualizado
+
+1. **Correção de rotas SPA**: publicado novo `.htaccess` em `public_html` com fallback para `index.html`, preservando `/api/` e arquivos reais.
+2. **Build do frontend**: `npm install` isolado no workspace `frontend/` e `npx vite build` gerando `frontend/dist` (~1.4 MB, 124 chunks).
+3. **Backup remoto**: `public_html/assets`, `index.html` e `.htaccess` originais salvos antes da publicação.
+4. **Publicação via FTPS** com `lftp mirror --delete` apenas em `assets/` e `put` em `index.html` e `.htaccess`. `api/` e `cgi-bin/` mantidos.
+5. **Validação pós-deploy**: rotas `/`, `/login`, `/cadastro`, `/dashboard`, `/admin/dashboard` respondem **HTTP 200**; bundle `index-CHqlwy1K.js` servido com `Content-Type: text/javascript`.
+
+### 8.3 Pendências para o Caminho B (VPS / backend)
+
+- Backend tRPC, workers BullMQ, Redis e migrações MySQL ainda **não** estão publicados em produção: o plano atual é shared hosting sem shell.
+- Para habilitar o stack completo, contratar plano VPS (ou Cloud) com SSH, Node 22, Redis e PM2, conforme seções 2 e 4 deste documento.
+- Enquanto isso, a interface pública opera apenas com a camada de demo (`loginAsDemo`) para revisão funcional.
+
+### 8.4 Ações de segurança recomendadas após o deploy
+
+- Rotacionar senha do cPanel/FTP `luc92554`.
+- Revogar e regenerar token de cPanel API utilizado para o deploy.
+- Reemitir chave SSH compartilhada para uso futuro.
+
+---
+
 **Documento criado por:** MiniMax Agent
 **Data:** 2026-05-25

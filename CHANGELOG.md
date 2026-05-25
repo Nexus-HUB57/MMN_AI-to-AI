@@ -1,5 +1,17 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.5 Hostgator Frontend Deploy (Caminho A)
+
+### `ops(deploy)` — Publicação do frontend atualizado em oneverso.com.br
+
+- Confirmado que a conta Hostgator **luc92554** roda em ambiente shared sem shell ativo; deploy executado via cPanel UAPI e FTPS
+- Publicado novo `.htaccess` em `public_html` com fallback SPA para `index.html`, preservando `/api/` e arquivos reais
+- Realizado `npm install` isolado em `frontend/` e `npx vite build`, gerando `frontend/dist` com 124 chunks (~1.4 MB total)
+- Backup remoto de `public_html/assets`, `index.html` e `.htaccess` originais antes da substituição
+- Sincronizada nova build para `public_html/assets`, substituindo `index.html` e mantendo `api/` e `cgi-bin/` intactos
+- Validação pós-deploy: rotas `/`, `/login`, `/cadastro`, `/dashboard` e `/admin/dashboard` retornam HTTP 200 e o bundle principal serve com `Content-Type: text/javascript`
+- Documentação atualizada em `DEPLOY_ANALYSIS_HOSTGATOR.md` (seção 8) com timeline do deploy e pendências do Caminho B (VPS para backend, Redis e workers)
+
 ## 2026-05-25 — v1.2.4 Admin Backoffice Navigation Coverage
 
 ### `fix(admin-nav)` — Cobertura do menu do backoffice administrativo

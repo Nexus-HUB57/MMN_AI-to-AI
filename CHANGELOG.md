@@ -1,5 +1,23 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.7 Hero Backgrounds Cinemáticos (Obsidian/Quantum)
+
+### `feat(assets)` — Backgrounds gerados por IA e integrados nas páginas-chave
+
+- gerados três backgrounds cinemáticos em estilo Obsidian/Quantum usando o modelo `nano-banana-pro` (1920x1080)
+  - `frontend/src/assets/bg-home.webp` — núcleo IA sentient com filamentos cyan/purple
+  - `frontend/src/assets/bg-user.webp` — grafo gravitacional com clusters de nós
+  - `frontend/src/assets/bg-admin.webp` — matriz global tipo command center
+- imagens otimizadas com ImageMagick (resize 1920px, brightness 78%) e cwebp (q78) reduzindo de 14.6 MB (PNG bruto) para **252 KB no total**
+- aplicadas como camada `bg-cover` com overlay gradient (`obsidian/70 → obsidian`) para preservar legibilidade dos cards e textos
+- na Home o background acompanha o scroll; nos backoffices ele é `fixed inset-0 -z-10` para se manter constante durante a navegação
+
+### `ops(deploy)` — Redeploy no Hostgator
+
+- nova build do Vite gera 127 arquivos em `dist/assets` (124 chunks JS/CSS + 3 WebP)
+- redeploy via FTPS com `mirror --delete`, mantendo `api/` e `cgi-bin/` intactos
+- validação: rotas `/`, `/login`, `/dashboard`, `/admin/dashboard` retornam HTTP 200; backgrounds servidos com `Content-Type: image/webp`
+
 ## 2026-05-25 — v1.2.6 Obsidian/Quantum Redesign + Tailwind Pipeline
 
 ### `feat(theme)` — Tema Obsidian/Quantum corporativo

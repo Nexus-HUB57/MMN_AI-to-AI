@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
+import bgAdmin from "@/assets/bg-admin.webp";
 import {
   Activity,
   AlertCircle,
@@ -132,7 +133,14 @@ export default function AdminDashboard() {
 
   return (
     <AdminDashboardLayout>
-      <div className="space-y-8 font-sans antialiased">
+      <div className="relative space-y-8 font-sans antialiased">
+        {/* Background atmosférico fixo do command center */}
+        <div
+          className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url(${bgAdmin})` }}
+          aria-hidden="true"
+        />
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-obsidian/90 via-obsidian/75 to-obsidian" aria-hidden="true" />
         {/* Header */}
         <header className="flex flex-col gap-4 border-b border-obsidian-700 pb-5 md:flex-row md:items-center md:justify-between">
           <div>

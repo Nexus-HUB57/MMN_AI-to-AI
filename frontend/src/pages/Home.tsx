@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Activity, ArrowRight, Cpu, Network, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import bgHome from "@/assets/bg-home.webp";
 
 const NAV_LINKS = [
   { href: "#malha", label: "// MALHA_IA" },
@@ -47,11 +48,19 @@ const STATUS_LINES = [
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-obsidian text-foreground overflow-hidden font-sans antialiased selection:bg-quantum-cyan/30">
+      {/* Hero image background com overlay para legibilidade */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-60"
+        style={{ backgroundImage: `url(${bgHome})` }}
+        aria-hidden="true"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-obsidian/70 via-obsidian/40 to-obsidian" aria-hidden="true" />
+
       {/* Malha isométrica */}
-      <div className="pointer-events-none absolute inset-0 bg-grid-obsidian bg-grid-50 opacity-[0.18]" />
+      <div className="pointer-events-none absolute inset-0 bg-grid-obsidian bg-grid-50 opacity-[0.12]" />
 
       {/* Aura quântica central */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-quantum-cyan via-quantum-purple to-quantum-violet opacity-[0.08] blur-[160px] animate-slow-pulse" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-quantum-cyan via-quantum-purple to-quantum-violet opacity-[0.10] blur-[160px] animate-slow-pulse" />
 
       {/* Top nav */}
       <nav className="relative z-40 flex h-16 items-center justify-between border-b border-obsidian-700 bg-obsidian/80 px-6 backdrop-blur-md">

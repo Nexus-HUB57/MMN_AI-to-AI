@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "./DashboardLayout";
+import bgUser from "@/assets/bg-user.webp";
 import {
   Activity,
   ArrowRight,
@@ -134,7 +135,14 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 font-sans antialiased">
+      <div className="relative space-y-8 font-sans antialiased">
+        {/* Background atmosférico fixo do backoffice usuário */}
+        <div
+          className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: `url(${bgUser})` }}
+          aria-hidden="true"
+        />
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-obsidian/85 via-obsidian/70 to-obsidian" aria-hidden="true" />
         {/* Sub-header técnico */}
         <header className="flex flex-col gap-4 border-b border-obsidian-700 pb-5 md:flex-row md:items-center md:justify-between">
           <div>

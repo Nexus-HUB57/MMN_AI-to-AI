@@ -218,7 +218,36 @@ O sistema **MMN AI-to-AI v1.2.x** está **pronto para deploy em produção** com
 2. **Instalar Redis** e configurar Workers com PM2
 3. **Configurar Nginx** como reverse proxy com SSL
 4. **Executar build** e migrações
-5. **Validar health check** antes de liberar usuários
+
+---
+
+## 7. Revisão Funcional das Páginas Críticas
+
+### 7.1 Homepage
+- Homepage revisada para expor atalhos diretos para:
+  - `/cadastro` (fluxo do usuário)
+  - `/login?mode=affiliate` (acesso backoffice usuário)
+  - `/login?mode=admin` (acesso backoffice administrador)
+- Inclusa seção de revisão funcional para validar rapidamente homepage + backoffices.
+
+### 7.2 Login / Cadastro
+- `Login.tsx` ajustado para alternar entre acesso de **usuário** e **administrador**.
+- Perfil administrativo de revisão configurado para **Lucas Thomaz** (`lucasmpthomaz@gmail.com`).
+- `Cadastro.tsx` ajustado para concluir o fluxo localmente e redirecionar para `/dashboard`, facilitando validação do backoffice do usuário.
+
+### 7.3 Backoffice Usuário
+- `Dashboard.tsx` revisado para operar dentro do `DashboardLayout`, entregando navegação lateral e contexto visual de backoffice.
+- Informações do usuário autenticado exibidas com fallback de sessão local de revisão.
+
+### 7.4 Backoffice Administrador
+- `AdminDashboard.tsx` e `AdminDashboardLayout.tsx` mantidos como base do backoffice admin.
+- Validação de acesso administrativo preservada via contexto de autenticação.
+- Fluxo de entrada administrativa direcionado para o dashboard com o perfil de Lucas Thomaz.
+
+### 7.5 Observação de Deploy
+- Essas revisões deixam a navegação de validação funcional mais consistente para testes pré-deploy em Hostgator/VPS.
+- Para produção, recomenda-se substituir a sessão local de revisão pelo fluxo definitivo do backend/autenticação persistente.
+- Antes da liberação para usuários reais, **validar o health check** e o fluxo final de autenticação do backend.
 
 **Recomendação final**: O sistema está pronto da perspectiva de código. O sucesso do deploy depende da configuração adequada do ambiente VPS na Hostgator.
 

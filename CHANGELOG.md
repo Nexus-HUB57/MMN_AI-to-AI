@@ -1,5 +1,37 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.6 Obsidian/Quantum Redesign + Tailwind Pipeline
+
+### `feat(theme)` — Tema Obsidian/Quantum corporativo
+
+- adicionado `frontend/tailwind.config.js` com paleta Obsidian (`#0B0C10`, `#10131A`, `#1F232B`) e Quantum (`#00E5FF`, `#7000FF`, `#8B5CF6`, `#7CFFB2`)
+- adicionado `frontend/postcss.config.js` para habilitar Tailwind via PostCSS
+- `frontend/src/index.css` refatorado com diretivas `@tailwind base|components|utilities` + camada de classes legadas (`.btn`, `.gradient-text`, `.gradient-btn`) para compatibilidade com páginas existentes
+- registrados tokens `background`, `foreground`, `card`, `border`, `accent-cyan`, `accent-green`, `accent-purple`, `text-secondary`, `text-muted` para não quebrar as páginas que já usavam essas classes
+- novos keyframes/animations: `fade-in`, `slow-pulse`, `orbit`; backgrounds utilitários: `bg-grid-obsidian`, `bg-quantum-radial`
+
+### `fix(build)` — Pipeline de estilos restaurado
+
+- antes deste commit o projeto importava classes Tailwind mas não tinha `tailwind.config.js` nem `postcss.config.js`, então nenhuma classe utilitária era processada na build (`index.css` final tinha ~5KB e páginas ficavam sem estilo)
+- após o fix o CSS final é gerado pelo Tailwind (~92KB) e todas as classes utilitárias passam a ser aplicadas em produção
+
+### `feat(home)` — Homepage Obsidian/Quantum
+
+- `Home.tsx` reescrito com grid isométrico, aura quantum central, navegação top-bar minimalista, CTA tripla (Cadastrar / Backoffice Usuário / Backoffice Admin)
+- hero stats (15K+ afiliados, R$ 2.5M comissões, 98.5% uptime, 0.8ms NanoBanana)
+- seção "Camadas do Protocolo" com 4 motores e painel "Live Network Stream"
+
+### `feat(user-backoffice)` — Backoffice usuário Obsidian
+
+- `Dashboard.tsx` reescrito mantendo `DashboardLayout` lateral
+- KPIs (Saldo BTC, Comissões do Mês, Sub-IAs, Rendimento P2P) + painel de grafo gravitacional animado + status da infra
+- 6 atalhos rápidos e stream de atividade recente
+
+### `feat(admin-backoffice)` — Backoffice administrativo Obsidian
+
+- `AdminDashboard.tsx` reescrito com KPI cards, heatmap global da malha (28x8), painel de comissões em cascata, command quick actions e tabela de usuários filtrável
+- mantém `AdminDashboardLayout` lateral com Schedules e Status já incluídos
+
 ## 2026-05-25 — v1.2.5 Hostgator Frontend Deploy (Caminho A)
 
 ### `ops(deploy)` — Publicação do frontend atualizado em oneverso.com.br

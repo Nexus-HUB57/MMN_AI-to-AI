@@ -1,352 +1,261 @@
 import { Link } from "wouter";
-import { trpc } from "../lib/trpc";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-  ArrowRight,
-  Zap,
-  Shield,
-  TrendingUp,
-  Users,
-  Bot,
-  ShoppingCart,
-  BarChart3,
-  Star,
-  Check,
-} from "lucide-react";
+import { Activity, ArrowRight, Cpu, Network, ShieldCheck, Sparkles, Zap } from "lucide-react";
 
-const ADMIN_EMAIL = "lucasmpthomaz@gmail.com";
+const NAV_LINKS = [
+  { href: "#malha", label: "// MALHA_IA" },
+  { href: "#protocolo", label: "// PROTOCOLO" },
+  { href: "#mercado", label: "// MERCADO" },
+];
+
+const HERO_STATS = [
+  { label: "Afiliados na malha", value: "15K+" },
+  { label: "Comissões pagas", value: "R$ 2.5M" },
+  { label: "Uptime núcleo IA", value: "98.5%" },
+  { label: "Latência NanoBanana", value: "0.8ms" },
+];
+
+const FEATURES = [
+  {
+    icon: Cpu,
+    title: "Núcleo Sentient IA",
+    text: "Agente central calcula rotas MMN, otimiza comissões e cuida do compliance em tempo real.",
+  },
+  {
+    icon: Network,
+    title: "Cascata em 15 níveis",
+    text: "Rede gravitacional auto-organizada que recompensa colmeias com maior volume P2P.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Trilha auditável",
+    text: "Logs imutáveis, criptografia AES-256 e fluxo OAuth seguro para cada nó da rede.",
+  },
+  {
+    icon: Sparkles,
+    title: "Marketplace integrado",
+    text: "Olist, Mercado Livre, Shopee e Amazon orquestrados por agentes especializados.",
+  },
+];
+
+const STATUS_LINES = [
+  { label: "Runtime", value: "ok", tone: "good" as const },
+  { label: "Database", value: "ok", tone: "good" as const },
+  { label: "Redis", value: "warming", tone: "warn" as const },
+  { label: "Genkit Agentic", value: "online", tone: "good" as const },
+];
 
 export default function Home() {
-  const systemInfo = trpc.system.info.useQuery();
-  const bootstrapStatus = trpc.bootstrap.status.useQuery();
-
-  const features = [
-    {
-      icon: <Bot className="w-6 h-6" />,
-      title: "Agentes IA Autônomos",
-      desc: "Squads de agentes trabalhando 24/7 para maximizar seus resultados",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Comissões em Cascata",
-      desc: "Ganhe comissões em até 15 níveis da sua rede",
-    },
-    {
-      icon: <ShoppingCart className="w-6 h-6" />,
-      title: "Marketplaces Integrados",
-      desc: "Mercado Livre, Shopee, Hotmart e mais",
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: "Analytics Avançado",
-      desc: "Dashboard completo com métricas em tempo real",
-    },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: "Rede Neural MMN",
-      desc: "Visualize e gerencie toda sua rede de afiliados",
-    },
-    {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Segurança Robusta",
-      desc: "JWT, RBAC e proteção de dados em camadas",
-    },
-  ];
-
-  const stats = [
-    { value: "15K+", label: "Afiliados Ativos" },
-    { value: "R$ 2.5M+", label: "Comissões Pagas" },
-    { value: "98.5%", label: "Uptime do Sistema" },
-    { value: "24/7", label: "Suporte IA" },
-  ];
-
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-cyan/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-accent-purple/10 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-green/5 rounded-full blur-[150px]" />
-      </div>
+    <div className="relative min-h-screen bg-obsidian text-foreground overflow-hidden font-sans antialiased selection:bg-quantum-cyan/30">
+      {/* Malha isométrica */}
+      <div className="pointer-events-none absolute inset-0 bg-grid-obsidian bg-grid-50 opacity-[0.18]" />
 
-      <header className="relative z-50 border-b border-border/50 backdrop-blur-md bg-background/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
-                <Zap className="w-5 h-5 text-background" />
-              </div>
-              <span className="text-xl font-bold gradient-text">MMNAI</span>
-            </div>
-            <nav className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm text-text-secondary hover:text-foreground transition-colors">Funcionalidades</a>
-              <a href="#review" className="text-sm text-text-secondary hover:text-foreground transition-colors">Revisão</a>
-              <Link href="/login" className="text-sm text-text-secondary hover:text-foreground transition-colors">Entrar</Link>
-            </nav>
-            <div className="flex items-center gap-3">
-              <Link href="/login?mode=admin" className="hidden sm:inline-flex">
-                <Button variant="ghost" size="sm">Admin</Button>
-              </Link>
-              <Link href="/cadastro">
-                <Button size="sm" className="gradient-btn">Cadastre-se Grátis</Button>
-              </Link>
-            </div>
-          </div>
+      {/* Aura quântica central */}
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-quantum-cyan via-quantum-purple to-quantum-violet opacity-[0.08] blur-[160px] animate-slow-pulse" />
+
+      {/* Top nav */}
+      <nav className="relative z-40 flex h-16 items-center justify-between border-b border-obsidian-700 bg-obsidian/80 px-6 backdrop-blur-md">
+        <div className="flex items-center gap-2">
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-quantum-cyan shadow-[0_0_12px_#00E5FF]">
+            <span className="absolute inset-0 animate-ping rounded-full bg-quantum-cyan/60" />
+          </span>
+          <span className="font-bold tracking-wider text-sm text-white">
+            NEXUS <span className="text-quantum-cyan">AFFIL'IA'TE</span>
+          </span>
         </div>
-      </header>
+        <div className="hidden gap-6 text-xs font-mono text-slate-400 md:flex">
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href} className="transition-colors hover:text-white">
+              {link.label}
+            </a>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className="hidden rounded border border-obsidian-700 bg-obsidian-700/30 px-3 py-1.5 text-[11px] font-mono uppercase tracking-widest text-slate-300 transition hover:border-quantum-cyan/40 hover:text-quantum-cyan sm:inline-flex"
+          >
+            Login
+          </Link>
+          <Link
+            href="/cadastro"
+            className="inline-flex items-center gap-2 rounded border border-quantum-cyan/40 bg-quantum-cyan/10 px-3 py-1.5 text-[11px] font-mono uppercase tracking-widest text-quantum-cyan transition hover:bg-quantum-cyan/20"
+          >
+            Cadastrar <ArrowRight size={12} />
+          </Link>
+        </div>
+      </nav>
 
-      <section className="relative z-10 pt-20 pb-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-cyan/10 border border-accent-cyan/20">
-                <Star className="w-4 h-4 text-accent-cyan" />
-                <span className="text-sm text-accent-cyan font-medium">Plataforma MMN com revisão guiada de usuário e admin</span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="gradient-text">Marketing Multinível</span>
-                <br />
-                <span className="text-foreground">Reinventado com IA</span>
-              </h1>
-              <p className="text-lg text-text-secondary max-w-xl">
-                Homepage preparada para validar cadastro, login, backoffice do afiliado e backoffice administrativo.
+      {/* Hero */}
+      <section className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 pb-24 pt-20 text-center">
+        <div className="mb-8 inline-flex animate-fade-in items-center gap-2 rounded border border-obsidian-700 bg-obsidian-700/40 px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-slate-400 backdrop-blur-md">
+          <span className="h-1.5 w-1.5 rounded-full bg-quantum-cyan shadow-[0_0_8px_#00E5FF]" />
+          SISTEMA CORE: 100% OPERACIONAL
+        </div>
+
+        <h1 className="font-sans text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl">
+          Nexus{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-quantum-cyan to-quantum-purple">
+            Affil'IA'te
+          </span>
+        </h1>
+
+        <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
+          A Inteligência Central que ramifica o futuro. Marketing multinível reinventado por agentes
+          autônomos, comissões em cascata e marketplaces integrados.
+        </p>
+        <p className="mt-3 font-mono text-xs uppercase tracking-[0.35em] text-white/60">
+          Conecte · Automatize · Lucre
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-10 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
+          <Link
+            href="/cadastro"
+            className="inline-flex items-center justify-center gap-2 rounded border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-cyan2 px-7 py-3 text-sm font-bold text-obsidian shadow-quantum transition-all hover:-translate-y-0.5 hover:shadow-quantum-strong"
+          >
+            <Zap size={16} /> Ativar Meu Agente
+          </Link>
+          <Link
+            href="/login?mode=affiliate"
+            className="inline-flex items-center justify-center gap-2 rounded border border-obsidian-700 bg-obsidian-700/40 px-7 py-3 text-xs font-mono uppercase tracking-widest text-slate-300 backdrop-blur-md transition hover:border-quantum-cyan/40 hover:bg-obsidian-700/60 hover:text-white"
+          >
+            Backoffice Usuário
+          </Link>
+          <Link
+            href="/login?mode=admin"
+            className="inline-flex items-center justify-center gap-2 rounded border border-quantum-purple/40 bg-quantum-purple/10 px-7 py-3 text-xs font-mono uppercase tracking-widest text-quantum-purple backdrop-blur-md transition hover:border-quantum-purple/70 hover:bg-quantum-purple/20"
+          >
+            Backoffice Admin
+          </Link>
+        </div>
+
+        {/* Hero stats */}
+        <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
+          {HERO_STATS.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded border border-obsidian-700 bg-obsidian-800/40 px-4 py-3 text-left backdrop-blur"
+            >
+              <p className="font-sans text-2xl font-bold text-white">{stat.value}</p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                {stat.label}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/cadastro">
-                  <Button size="lg" className="w-full sm:w-auto gradient-btn text-lg px-8">
-                    Revisar fluxo de cadastro
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </Link>
-                <Link href="/login?mode=admin">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8">
-                    Revisar acesso admin
-                  </Button>
-                </Link>
-              </div>
-              <div className="flex items-center gap-6 pt-4">
-                <div className="flex -space-x-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-cyan to-accent-green border-2 border-background flex items-center justify-center text-xs font-bold text-background">
-                      {String.fromCharCode(64 + i)}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-text-muted">+2.500 afiliados ativos</p>
-                </div>
-              </div>
             </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-cyan/20 to-accent-purple/20 rounded-3xl blur-2xl" />
-              <Card className="relative bg-card/50 backdrop-blur-xl border-border/50 p-6 rounded-3xl space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
-                      <Zap className="w-6 h-6 text-background" />
-                    </div>
-                    <div>
-                      <p className="font-semibold">Revisão de acesso</p>
-                      <p className="text-sm text-accent-green">User e admin prontos</p>
-                    </div>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-accent-green/20 text-accent-green text-sm font-medium">Ativo</span>
-                </div>
-                <div className="grid gap-3">
-                  <div className="p-4 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20">
-                    <p className="text-sm font-medium text-accent-cyan mb-1">Backoffice Usuário</p>
-                    <p className="text-sm text-text-secondary">Fluxo com cadastro, login e dashboard do afiliado.</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-accent-purple/10 border border-accent-purple/20">
-                    <p className="text-sm font-medium text-accent-purple mb-1">Backoffice Admin</p>
-                    <p className="text-sm text-text-secondary">Acesso administrativo revisado com Lucas Thomaz ({ADMIN_EMAIL}).</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      <section className="relative z-10 py-16 border-y border-border/50 bg-card/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-3xl sm:text-4xl font-bold gradient-text">{stat.value}</p>
-                <p className="text-sm text-text-secondary mt-1">{stat.label}</p>
+      {/* Features */}
+      <section
+        id="malha"
+        className="relative z-10 border-t border-obsidian-700 bg-obsidian/60 px-6 py-20 backdrop-blur"
+      >
+        <div className="mx-auto max-w-6xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.45em] text-quantum-cyan">
+            // CAMADAS_DO_PROTOCOLO
+          </p>
+          <h2 className="mt-3 max-w-3xl font-sans text-3xl font-bold text-white sm:text-4xl">
+            Quatro motores autônomos compõem a malha
+            <span className="text-quantum-cyan"> Affil'IA'te</span>.
+          </h2>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map(({ icon: Icon, title, text }) => (
+              <div
+                key={title}
+                className="group relative overflow-hidden rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition-all hover:-translate-y-1 hover:border-quantum-cyan/40 hover:shadow-quantum"
+              >
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                  <Icon size={18} />
+                </div>
+                <h3 className="font-sans text-base font-semibold text-white">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">{text}</p>
+                <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-quantum-cyan/10 opacity-0 blur-2xl transition-opacity group-hover:opacity-100" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="review" className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Revisão funcional <span className="gradient-text">homepage + backoffices</span>
-            </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              A homepage agora conduz diretamente para os fluxos de usuário e administrador, simplificando a validação completa do sistema.
+      {/* Status widget + footer */}
+      <section
+        id="protocolo"
+        className="relative z-10 border-t border-obsidian-700 px-6 py-16"
+      >
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[2fr_1fr]">
+          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-6 backdrop-blur">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+                // LIVE_NETWORK_STREAM
+              </p>
+              <span className="inline-flex items-center gap-2 rounded border border-quantum-cyan/30 bg-quantum-cyan/10 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-quantum-cyan">
+                <Activity size={10} /> Realtime
+              </span>
+            </div>
+            <p className="mt-3 text-base text-white">
+              Sentient AI Core Sphere calculando rotas MMN entre 15K+ nós.
             </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <p className="text-sm font-semibold text-accent-cyan">Cadastro</p>
-              <p className="mt-3 text-sm text-text-secondary">Fluxo em 3 etapas com validação local e redirecionamento automático para o painel do usuário.</p>
-              <Link href="/cadastro" className="mt-6 inline-flex">
-                <Button variant="outline">Abrir cadastro</Button>
-              </Link>
-            </Card>
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <p className="text-sm font-semibold text-accent-green">Login usuário</p>
-              <p className="mt-3 text-sm text-text-secondary">Entrada rápida para revisar o backoffice do afiliado e os atalhos principais da operação.</p>
-              <Link href="/login?mode=affiliate" className="mt-6 inline-flex">
-                <Button variant="outline">Abrir login usuário</Button>
-              </Link>
-            </Card>
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <p className="text-sm font-semibold text-accent-purple">Login admin</p>
-              <p className="mt-3 text-sm text-text-secondary">Acesso administrativo preparado para Lucas Thomaz com destino direto ao /admin/dashboard.</p>
-              <Link href="/login?mode=admin" className="mt-6 inline-flex">
-                <Button variant="outline">Abrir login admin</Button>
-              </Link>
-            </Card>
-          </div>
-        </div>
-      </section>
+            <p className="mt-1 text-sm text-slate-400">
+              Latência da camada NanoBanana:{" "}
+              <span className="text-quantum-lime">0.8ms</span> · Throughput médio{" "}
+              <span className="text-white">4.2k req/min</span>.
+            </p>
 
-      <section id="features" className="relative z-10 py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Tudo que você precisa para <span className="gradient-text">dominar o mercado</span>
-            </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              Uma plataforma completa com ferramentas avançadas de IA para impulsionar seus resultados no marketing multinível.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <Card key={feature.title} className="p-6 bg-card/50 backdrop-blur border-border/50 hover:border-accent-cyan/50 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-xl bg-accent-cyan/10 flex items-center justify-center text-accent-cyan mb-4 group-hover:bg-accent-cyan/20 transition-colors">
-                  {feature.icon}
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {STATUS_LINES.map((line) => (
+                <div
+                  key={line.label}
+                  className="flex items-center justify-between rounded border border-obsidian-700 bg-obsidian-900/60 px-3 py-2"
+                >
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+                    {line.label}
+                  </span>
+                  <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
+                    <span
+                      className={`h-2 w-2 rounded-full ${
+                        line.tone === "good"
+                          ? "bg-quantum-lime shadow-[0_0_8px_#7CFFB2]"
+                          : "bg-amber-400 shadow-[0_0_8px_#FBBF24]"
+                      }`}
+                    />
+                    <span
+                      className={line.tone === "good" ? "text-quantum-lime" : "text-amber-300"}
+                    >
+                      {line.value}
+                    </span>
+                  </span>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-text-secondary">{feature.desc}</p>
-              </Card>
-            ))}
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-lg border border-obsidian-700 bg-gradient-to-br from-quantum-cyan/5 via-obsidian-800 to-quantum-purple/10 p-6 backdrop-blur">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-purple">
+                // PRONTO PARA ESCALAR
+              </p>
+              <h3 className="mt-3 font-sans text-xl font-semibold text-white">
+                Configure sua colmeia em menos de 3 minutos.
+              </h3>
+              <p className="mt-2 text-sm text-slate-400">
+                Cadastro guiado, agente IA inicial gratuito e marketplaces conectados em 1 clique.
+              </p>
+            </div>
+            <Link
+              href="/cadastro"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-5 py-3 text-sm font-bold text-obsidian shadow-quantum transition-all hover:-translate-y-0.5 hover:shadow-quantum-strong"
+            >
+              Começar agora <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
-      </section>
 
-      <section className="relative z-10 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8">
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
-                Estado do Sistema
-              </h3>
-              {systemInfo.isLoading ? (
-                <p className="text-text-muted">Consultando...</p>
-              ) : systemInfo.data ? (
-                <dl className="space-y-3">
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Runtime</dt>
-                    <dd className="font-medium">{systemInfo.data.runtime}</dd>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Database</dt>
-                    <dd className="font-medium">{systemInfo.data.database}</dd>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Redis</dt>
-                    <dd className="font-medium">{systemInfo.data.redis}</dd>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <dt className="text-text-secondary">Mode</dt>
-                    <dd className="font-medium">{systemInfo.data.mode}</dd>
-                  </div>
-                </dl>
-              ) : (
-                <p className="text-red-400">Erro ao conectar</p>
-              )}
-            </Card>
-
-            <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-                Routers Ativos
-              </h3>
-              {bootstrapStatus.isLoading ? (
-                <p className="text-text-muted">Consultando...</p>
-              ) : bootstrapStatus.data ? (
-                <dl className="space-y-3">
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Frontend</dt>
-                    <dd className={`font-medium ${bootstrapStatus.data.frontend === "operational" ? "text-accent-green" : "text-yellow-500"}`}>
-                      {bootstrapStatus.data.frontend}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Backend</dt>
-                    <dd className={`font-medium ${bootstrapStatus.data.backend === "operational" ? "text-accent-green" : "text-yellow-500"}`}>
-                      {bootstrapStatus.data.backend}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-border/50">
-                    <dt className="text-text-secondary">Genkit</dt>
-                    <dd className={`font-medium ${bootstrapStatus.data.genkit === "operational" ? "text-accent-green" : "text-yellow-500"}`}>
-                      {bootstrapStatus.data.genkit}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <dt className="text-text-secondary">Agentic Layer</dt>
-                    <dd className="font-medium text-accent-cyan">Ativo</dd>
-                  </div>
-                </dl>
-              ) : (
-                <p className="text-red-400">Erro ao conectar</p>
-              )}
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <Card className="p-8 sm:p-12 bg-gradient-to-br from-accent-cyan/20 to-accent-purple/20 border-accent-cyan/30 backdrop-blur-xl text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Pronto para revisar o sistema?</h2>
-            <p className="text-text-secondary mb-8 max-w-xl mx-auto">
-              Acesse a homepage, valide o cadastro, confira o painel do afiliado e revise o backoffice administrativo com o perfil de Lucas Thomaz.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/cadastro">
-                <Button size="lg" className="w-full sm:w-auto gradient-btn text-lg px-8">
-                  Criar Conta Grátis
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/login?mode=admin">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8">
-                  Abrir admin
-                </Button>
-              </Link>
-            </div>
-            <div className="flex items-center justify-center gap-6 mt-8 text-sm text-text-muted flex-wrap">
-              <span className="flex items-center gap-2"><Check className="w-4 h-4 text-accent-green" /> Cadastro revisado</span>
-              <span className="flex items-center gap-2"><Check className="w-4 h-4 text-accent-green" /> Login dual user/admin</span>
-              <span className="flex items-center gap-2"><Check className="w-4 h-4 text-accent-green" /> Backoffice validável</span>
-            </div>
-          </Card>
+        <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-obsidian-700 pt-6 text-xs text-slate-500 sm:flex-row">
+          <span className="font-mono uppercase tracking-widest">
+            © {new Date().getFullYear()} Nexus Affil'IA'te · Obsidian Build
+          </span>
+          <span className="font-mono uppercase tracking-widest">v1.2.5 · oneverso.com.br</span>
         </div>
       </section>
     </div>

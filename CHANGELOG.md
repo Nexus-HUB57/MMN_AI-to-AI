@@ -1,5 +1,23 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-25 — v1.2.8 Redeploy Consolidado Hostgator (Layout Obsidian Completo)
+
+### `ops(deploy)` — Plataforma reimplantada com todas as alterações de layout
+
+- gerada nova build da Vite consolidando: Tailwind pipeline (v1.2.6), redesign Obsidian/Quantum das páginas Home, Dashboard e AdminDashboard, atalhos de `/admin/schedules` e `/admin/status`, rotas `/network` e `/upgrades`, e backgrounds cinemáticos gerados por IA (v1.2.7)
+- backup remoto completo de `public_html/assets`, `index.html` e `.htaccess` antes da publicação (127 assets recuperados)
+- redeploy via FTPS com `mirror -R --delete`: 124 chunks JS/CSS + 3 backgrounds WebP sincronizados em `public_html/assets`
+- `index.html` e `.htaccess` (fallback SPA) republicados
+- pastas `api/` e `cgi-bin/` preservadas no `public_html`
+
+### `verify(deploy)` — Validação pós-publicação
+
+- rotas `/`, `/login`, `/cadastro`, `/dashboard` e `/admin/dashboard` respondem HTTP 200
+- bundle principal `index-CSiwYBKg.js` servido como `text/javascript`
+- Tailwind CSS final `index-BJxPmTym.css` servido como `text/css` (94 KB compilados)
+- backgrounds em `image/webp`: `bg-home` 103 KB, `bg-user` 35 KB, `bg-admin` 112 KB (total 250 KB)
+- conteúdo renderizado via JS confirmando hero, stats da malha (15K+, R$ 2.5M, 98.5%, 0.8ms), seção Camadas do Protocolo e painel Live Network Stream
+
 ## 2026-05-25 — v1.2.7 Hero Backgrounds Cinemáticos (Obsidian/Quantum)
 
 ### `feat(assets)` — Backgrounds gerados por IA e integrados nas páginas-chave

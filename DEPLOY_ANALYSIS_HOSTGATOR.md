@@ -253,6 +253,40 @@ O sistema **MMN AI-to-AI v1.2.x** está **pronto para deploy em produção** com
 
 ---
 
+## 9. Redeploy Consolidado — 2026-05-25 (Layout Obsidian Completo)
+
+### 9.1 Escopo do redeploy
+
+Foi feito o redeploy completo do frontend em `oneverso.com.br` consolidando todas as modificações de layout aplicadas até então:
+
+- pipeline Tailwind/PostCSS habilitada (v1.2.6)
+- páginas Home, Dashboard (Backoffice Usuário) e AdminDashboard (Backoffice Administrador) reescritas no padrão Obsidian/Quantum
+- atalhos de `/admin/schedules` e `/admin/status` no menu administrativo
+- rotas `/network` e `/upgrades` registradas no `App.tsx`
+- backgrounds cinemáticos gerados por IA (`bg-home`, `bg-user`, `bg-admin`) integrados como camada visual com overlays gradientes
+
+### 9.2 Procedimento executado
+
+1. `npx vite build` consolidando 124 chunks JS/CSS + 3 backgrounds WebP em `frontend/dist`
+2. Backup remoto FTPS de `public_html/assets`, `index.html` e `.htaccess` antes da publicação
+3. `lftp mirror -R --delete --only-newer` em `public_html/assets`
+4. `put` em `public_html/index.html` e `public_html/.htaccess`
+5. Pastas `api/` e `cgi-bin/` preservadas intactas
+
+### 9.3 Validação de produção
+
+- rotas `/`, `/login`, `/cadastro`, `/dashboard`, `/admin/dashboard` retornam **HTTP 200**
+- bundle principal `index-CSiwYBKg.js` servido como `text/javascript`
+- Tailwind CSS `index-BJxPmTym.css` servido como `text/css` (94 KB compilados)
+- backgrounds servidos como `image/webp` (Home 103 KB, User 35 KB, Admin 112 KB)
+- conteúdo renderizado via JS confirma hero, KPIs, seção Camadas do Protocolo e painel Live Network Stream
+
+### 9.4 Pendências mantidas
+
+O backend tRPC + workers BullMQ + Redis continuam **não publicados**, pois o plano Hostgator atual é shared sem shell ativo. Para subir o stack completo, ainda é necessário migrar para um VPS, conforme seções 2 e 4 deste documento.
+
+---
+
 ## 8. Execução do Deploy — 2026-05-25 (Hostgator Shared, domínio oneverso.com.br)
 
 ### 8.1 Contexto de hospedagem confirmado

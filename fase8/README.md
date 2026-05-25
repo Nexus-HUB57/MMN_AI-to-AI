@@ -1,77 +1,115 @@
-# Fase 8 - Beta Launch Program
+# Fase 8 - Dropshipping Automatizado
 
-## Visão Geral
+## Descrição
 
-Este diretório contém a implementação do **Beta Launch Program** da Fase 8, preparando a plataforma MMN_AI-to-AI para o lançamento público.
+Backend automatizado para dropshipping que permite afiliados venderem produtos de marketplaces (Shopee, Mercado Livre, etc.) com gestão automatizada de pedidos, comissões e notificações.
 
-## Estrutura
+## Funcionalidades
+
+- **Registro de Pedidos**: Criação automática de pedidos com cálculo de comissões
+- **Gestão de Status**: Atualização de status (pending → processing → shipped → delivered)
+- **Comissões Automáticas**: Cálculo e registro de comissões na entrega
+- **Notificações**: Sistema de notificações para cliente e afiliado
+- **API REST**: Endpoints completos para integração
+
+## Estrutura de Diretórios
 
 ```
 fase8/
 ├── src/
-│   ├── __init__.py
-│   ├── main.py              # Aplicação FastAPI
-│   ├── api/
-│   │   ├── __init__.py
-│   │   └── beta.py          # API Router
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── beta.py          # Modelos Pydantic
 │   ├── services/
-│   │   ├── __init__.py
-│   │   └── beta_service.py  # Lógica de negócio
-│   └── middleware/
-│       └── __init__.py
+│   │   └── dropshippingService.ts    # Lógica de negócio
+│   └── routes/
+│       └── dropshippingRoutes.ts      # Endpoints da API
 ├── tests/
-│   └── __init__.py
-├── SPEC.md                  # Especificação técnica
-└── README.md                # Este arquivo
+│   └── dropshipping.test.ts          # Testes unitários
+├── docs/
+│   └── SPEC.md                       # Especificação técnica
+└── README.md
 ```
 
-## Funcionalidades
-
-- [x] Gerenciamento de Programas Beta
-- [x] Cadastro e gestão de Testadores
-- [x] Sistema de Feedback
-- [x] Rastreamento de Bugs
-- [x] Sistema de Convites
-- [x] Pesquisas de Satisfação
-- [x] Métricas e Analytics
-
-## Como Usar
+## Instalação
 
 ```bash
 # Instalar dependências
-pip install fastapi uvicorn pydantic
+npm install
 
-# Executar servidor
-python src/main.py
+# Executar testes
+npm test
 
-# Acessar documentação
-# http://localhost:8000/docs
+# Build
+npm run build
 ```
 
-## API Endpoints
+## Uso
 
-### Programas
-- `POST /beta/programs` - Criar programa
-- `GET /beta/programs` - Listar programas
-- `GET /beta/programs/{id}` - Detalhes
+### Registrar Pedido
 
-### Testadores
-- `POST /beta/testers` - Adicionar testador
-- `GET /beta/testers` - Listar testadores
-- `PATCH /beta/testers/{id}/status` - Atualizar status
+```bash
+curl -X POST http://localhost:3000/dropshipping/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "affiliateId": 1,
+    "productId": 10,
+    "externalOrderId": "SHOPEE-123456",
+    "marketplace": "shopee",
+    "customerName": "João Silva",
+    "customerEmail": "joao@email.com",
+    "shippingAddress": "Rua Teste, 123 - São Paulo, SP",
+    "amount": 5990
+  }'
+```
 
-### Feedback
-- `POST /beta/feedback` - Submeter feedback
-- `GET /beta/feedback` - Listar feedbacks
+### Atualizar Status
 
-### Bugs
-- `POST /beta/bugs` - Reportar bug
-- `GET /beta/bugs` - Listar bugs
+```bash
+curl -X PATCH http://localhost:3000/dropshipping/orders/1/status \
+  -H "Content-Type: application/json" \
+  -d '{"status": "delivered"}'
+```
+
+## Fluxo de Dados
+
+```
+Afiliado → Pedido (amount) → Cálculo Comissão → Registro → Notificações
+                ↓
+         Comissões (pending)
+                ↓
+         Afiliado (pendingCommissions)
+```
+
+## Status dos Pedidos
+
+| Status | Descrição |
+|--------|-----------|
+| `pending` | Pedido criado, aguardando processamento |
+| `processing` | Pedido em processamento |
+| `shipped` | Pedido enviado |
+| `delivered` | Pedido entregue (trigger佣金) |
+| `cancelled` | Pedido cancelado |
+
+## Cálculo de Comissão
+
+```
+commissionAmount = amount × (commissionPercentage / 100)
+
+Exemplo:
+- amount = R$ 100,00
+- commissionPercentage = 10%
+- commissionAmount = R$ 10,00
+```
+
+## Integração com Banco de Dados
+
+Utiliza o schema existente em `database/schemas/schema-final.ts`:
+
+- `orders` - Pedidos de dropshipping
+- `products` - Produtos dos marketplaces
+- `affiliates` - Afiliados com código e percentual
+- `commissions` - Comissões geradas
 
 ---
 
 **Versão**: 1.0.0
+**Data**: 2026-05-25
 **Autor**: Nexus-HUB57 / MiniMax Agent

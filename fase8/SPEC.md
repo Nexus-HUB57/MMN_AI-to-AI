@@ -1,239 +1,264 @@
-# Especificação Técnica - Fase 8 Beta Launch Program
+# Especificação Técnica - Fase 8: Dropshipping Automatizado
 
 ## Visão Geral
 
-Implementação da **Fase 8** com **Beta Launch Program** para preparação do lançamento público da plataforma MMN_AI-to-AI.
+A **Fase 8** implementa o backend de dropshipping automatizado para a plataforma MMN_AI-to-AI, permitindo que afiliados vendam produtos de marketplaces (Shopee, Mercado Livre, etc.) com gestão automatizada de pedidos, comissões e notificações.
 
 ## Stack Tecnológica
 
 | Componente | Tecnologia | Versão |
 |------------|------------|--------|
-| Framework | FastAPI | 0.109.0 |
-| Server | Uvicorn | 0.27.0 |
-| Validação | Pydantic | 2.5.3 |
-| HTTP Client | aiohttp | 3.9.1 |
-| Testes | pytest | 7.4.4 |
+| Runtime | Node.js | 20.x |
+| Linguagem | TypeScript | 5.x |
+| ORM | Drizzle ORM | Latest |
+| Database | PostgreSQL | 15+ |
+| Testes | Vitest | 1.x |
+| API | REST (Express-compatible) | - |
 
 ## Arquitetura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      FastAPI Application                     │
+│                   API Routes (Express)                      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│  │ Programs │  │ Testers │  │Feedbacks │  │   Bugs   │     │
-│  │  Router  │  │  Router │  │  Router  │  │  Router  │     │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘     │
-│       │             │             │             │              │
-│       └─────────────┴─────────────┴─────────────┘             │
-│                           │                                   │
-│  ┌─────────────────────────┴─────────────────────────────┐   │
-│  │                  BetaService                          │   │
-│  │  • Program Management                                  │   │
-│  │  • Tester Management                                  │   │
-│  │  • Feedback Collection                                 │   │
-│  │  • Bug Tracking                                        │   │
-│  │  • Survey Management                                   │   │
-│  │  • Metrics & Analytics                                │   │
-│  └─────────────────────────┬─────────────────────────────┘   │
-│                            │                               │
-│  ┌─────────────────────────┴─────────────────────────────┐   │
-│  │                  Models (Pydantic)                    │   │
-│  │  BetaProgram │ BetaTester │ Feedback │ BugReport        │   │
-│  │  BetaInvite │ BetaSurvey │ BetaMetrics               │   │
-│  └───────────────────────────────────────────────────────┘   │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+│  ┌──────────────────┐  ┌──────────────────┐                │
+│  │ dropshippingRoutes│  │  (futuro) orders  │                │
+│  │                   │  │                   │                │
+│  └────────┬─────────┘  └────────┬─────────┘                │
+│           │                     │                          │
+│           └──────────┬──────────┘                          │
+│                      │                                     │
+│  ┌───────────────────┴────────────────────────────┐       │
+│  │           DropshippingService                   │       │
+│  │  - registerDropshippingOrder()                 │       │
+│  │  - updateDropshippingOrderStatus()             │       │
+│  │  - calculateConsumptionCommission()            │       │
+│  └───────────────────┬────────────────────────────┘       │
+│                      │                                     │
+│  ┌───────────────────┴────────────────────────────┐       │
+│  │              Database Layer (Drizzle)           │       │
+│  │  orders │ products │ affiliates │ commissions    │       │
+│  └───────────────────┬────────────────────────────┘       │
+│                      │                                     │
+└──────────────────────┴────────────────────────────────────┘
 ```
 
-## Modelos de Dados
+## Endpoints da API
 
-### BetaProgram
+### Registrar Pedido
 
-```python
+```
+POST /dropshipping/orders
+```
+
+**Request Body:**
+```json
 {
-    "id": "beta_abc123def456",
-    "name": "Beta v2.0 - MMN AI Platform",
-    "version": "2.0.0",
-    "description": "Programa beta para nova versão...",
-    "status": "open",  # planning, open, closed, evaluating, completed
-    "max_testers": 100,
-    "current_testers": 45,
-    "start_date": "2026-06-01T00:00:00Z",
-    "end_date": "2026-08-01T00:00:00Z",
-    "target_features": ["Nova Dashboard", "API v2", "Agent Skills"],
-    "rewards_enabled": true,
-    "reward_description": "Desconto de 30% no plano anual"
+  "affiliateId": 1,
+  "productId": 10,
+  "externalOrderId": "SHOPEE-123456",
+  "marketplace": "shopee",
+  "customerName": "João Silva",
+  "customerEmail": "joao@email.com",
+  "shippingAddress": "Rua Teste, 123 - São Paulo, SP",
+  "amount": 5990
 }
 ```
 
-### BetaTester
-
-```python
+**Response (201):**
+```json
 {
-    "id": "tester_xyz789",
-    "user_id": "user_123",
-    "program_id": "beta_abc123",
-    "status": "active",  # pending, approved, active, suspended, removed
-    "email": "tester@example.com",
-    "name": "João Silva",
-    "company": "Tech Corp",
-    "experience_level": "advanced",
-    "feedback_count": 5,
-    "bug_reports_count": 2,
-    "acceptance_rate": 0.8,
-    "created_at": "2026-06-01T10:00:00Z"
+  "success": true,
+  "orderId": 1,
+  "commissionAmount": 599,
+  "message": "Pedido registrado com sucesso"
 }
 ```
 
-### FeedbackSubmission
+### Atualizar Status do Pedido
 
-```python
+```
+PATCH /dropshipping/orders/:orderId/status
+```
+
+**Request Body:**
+```json
 {
-    "id": "fb_123abc",
-    "tester_id": "tester_xyz789",
-    "program_id": "beta_abc123",
-    "title": "Dashboard carrega lentamente",
-    "content": "Descrição detalhada do problema...",
-    "severity": "high",  # critical, high, medium, low, suggestion
-    "status": "acknowledged",  # submitted, acknowledged, in_progress, resolved, closed
-    "rating": 4,
-    "response": "Obrigado pelo feedback!"
+  "status": "delivered"
 }
 ```
 
-### BugReport
+**Status válidos:** `pending`, `processing`, `shipped`, `delivered`, `cancelled`
 
-```python
+**Response (200):**
+```json
 {
-    "id": "bug_456def",
-    "tester_id": "tester_xyz789",
-    "program_id": "beta_abc123",
-    "title": "Erro 500 ao criar afiliado",
-    "description": "Ao preencher formulário...",
-    "steps_to_reproduce": ["Passo 1", "Passo 2", "Passo 3"],
-    "expected_behavior": "Deveria criar afiliado",
-    "actual_behavior": "Retorna erro 500",
-    "severity": "critical",
-    "status": "reported",  # reported, triaged, assigned, in_review, fixed, verified, closed
-    "category": "api",  # ui, api, performance, security, other
-    "tags": ["afiliado", "cadastro", "erro500"]
+  "success": true,
+  "orderId": 1,
+  "commissionCalculated": 599,
+  "message": "Status atualizado para delivered"
 }
 ```
 
-## Endpoints Implementados
+### Buscar Pedido
 
-### Programas Beta
+```
+GET /dropshipping/orders/:orderId
+```
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/programs` | POST | Criar programa beta |
-| `/beta/programs` | GET | Listar programas |
-| `/beta/programs/{program_id}` | GET | Detalhes do programa |
-| `/beta/programs/{program_id}` | PATCH | Atualizar programa |
-| `/beta/programs/{program_id}/open` | POST | Abrir inscrições |
-| `/beta/programs/{program_id}/close` | POST | Encerrar programa |
-| `/beta/programs/{program_id}/metrics` | GET | Métricas do programa |
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "affiliateId": 1,
+    "productId": 10,
+    "externalOrderId": "SHOPEE-123456",
+    "marketplace": "shopee",
+    "amount": 5990,
+    "commissionAmount": 599,
+    "status": "delivered",
+    "customerName": "João Silva",
+    "customerEmail": "joao@email.com",
+    "shippingAddress": "Rua Teste, 123 - São Paulo, SP",
+    "createdAt": "2026-05-25T21:00:00Z",
+    "updatedAt": "2026-05-25T21:30:00Z"
+  }
+}
+```
 
-### Testadores
+### Listar Pedidos do Afiliado
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/testers` | POST | Adicionar testador |
-| `/beta/testers` | GET | Listar testadores |
-| `/beta/testers/{tester_id}` | GET | Detalhes do testador |
-| `/beta/testers/{tester_id}/status` | PATCH | Atualizar status |
-| `/beta/testers/{tester_id}` | DELETE | Remover testador |
-| `/beta/testers/{tester_id}/metrics` | GET | Métricas do testador |
+```
+GET /dropshipping/affiliates/:affiliateId/orders?limit=50
+```
 
-### Feedback
+### Listar Todos os Pedidos (Admin)
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/feedback` | POST | Submeter feedback |
-| `/beta/feedback` | GET | Listar feedbacks |
-| `/beta/feedback/{feedback_id}` | GET | Detalhes do feedback |
-| `/beta/feedback/{feedback_id}/status` | PATCH | Atualizar status |
+```
+GET /dropshipping/orders?limit=100
+```
 
-### Bugs
+### Calcular Comissão
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/bugs` | POST | Reportar bug |
-| `/beta/bugs` | GET | Listar bugs |
-| `/beta/bugs/{bug_id}` | GET | Detalhes do bug |
-| `/beta/bugs/{bug_id}/status` | PATCH | Atualizar status |
+```
+POST /dropshipping/orders/:orderId/calculate-commission
+```
 
-### Convites
+## Modelo de Dados
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/invites` | POST | Criar convite |
-| `/beta/invites/validate/{token}` | GET | Validar token |
-| `/beta/invites/accept/{token}` | POST | Aceitar convite |
+### Tabela: orders ( existente no schema-final.ts )
 
-### Pesquisas
+```typescript
+orders = {
+  id: serial,
+  affiliateId: integer,        // FK -> affiliates
+  productId: integer,          // FK -> products
+  externalOrderId: varchar,    // ID do marketplace
+  marketplace: varchar,         // shopee, mercadolivre, etc.
+  amount: integer,             // Valor em centavos
+  commissionAmount: integer,   // Comissão calculada
+  status: varchar,             // pending|processing|shipped|delivered|cancelled
+  customerName: varchar,
+  customerEmail: varchar,
+  shippingAddress: text,       // Endereço de entrega
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/beta/surveys` | POST | Submeter pesquisa |
-| `/beta/surveys/program/{program_id}` | GET | Listar pesquisas |
+### Tabela: commissions ( existente no schema-final.ts )
 
-## Status do Programa Beta
+```typescript
+commissions = {
+  id: serial,
+  affiliateId: integer,
+  amount: integer,
+  level: integer,              // 1 = venda direta
+  source: varchar,             // 'dropshipping'
+  sourceId: integer,           // orderId
+  status: varchar,             // pending|confirmed|paid
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
 
-| Status | Descrição |
-|--------|-----------|
-| `planning` | Programa em planejamento |
-| `open` | Aceitando inscrições |
-| `closed` | Inscrições encerradas |
-| `evaluating` | Em avaliação |
-| `completed` | Programa concluído |
+## Fluxo de Negócio
 
-## Status do Testador
+### 1. Registro de Pedido
 
-| Status | Descrição |
-|--------|-----------|
-| `pending` | Aguardando aprovação |
-| `approved` | Aprovado |
-| `active` | Ativo no programa |
-| `suspended` | Suspenso |
-| `removed` | Removido |
+```
+1. Validar afiliado existe
+2. Validar produto existe
+3. Calcular comissão (% do afiliado ou % do produto)
+4. Criar pedido com status "pending"
+5. Notificar fornecedor (placeholder)
+6. Notificar cliente
+7. Retornar orderId e commissionAmount
+```
 
-## Severidade de Issues
+### 2. Atualização de Status
 
-| Severidade | Descrição |
-|------------|-----------|
-| `critical` | Bloca uso do sistema |
-| `high` | Impacta significativamente |
-| `medium` | Impacta parcialmente |
-| `low` | Impacto menor |
-| `suggestion` | Sugestão de melhoria |
+```
+1. Validar pedido existe
+2. Atualizar status
+3. Se status = "delivered":
+   - Calcular comissão de consumo
+   - Registrar em commissions
+   - Atualizar pendingCommissions do afiliado
+4. Notificar cliente
+5. Notificar afiliado
+```
 
-## Métricas do Programa
+### 3. Cálculo de Comissão
 
-| Métrica | Descrição |
-|---------|-----------|
-| `total_testers` | Total de testadores |
-| `active_testers` | Testadores ativos |
-| `total_feedback` | Total de feedbacks |
-| `total_bugs` | Total de bugs reportados |
-| `critical_bugs` | Bugs críticos |
-| `resolved_bugs` | Bugs resolvidos |
-| `resolution_rate` | Taxa de resolução |
-| `average_satisfaction` | Satisfação média |
+```
+1. Buscar pedido e afiliado
+2. Buscar percentual em affiliate.commissionPercentage
+   ou fallback para product.commissionPercentage
+3. commissionAmount = amount * (percentage / 100)
+4. Registrar em commissions com status "pending"
+5. Atualizar affiliates.pendingCommissions
+```
 
-## Dependências
+## Pendências Identificadas (Análise Prévia)
 
-- Fase 5: Packs e Modularização
-- Fase 6: Revisão e Otimização
-- Fase 7: White-Label Module (Completo)
+### 1. Inconsistência no Schema
 
-## Status
+A migration SQL `0001_large_rumiko_fujikawa.sql` não incluía a coluna `shippingAddress` na tabela `orders`. O `schema-final.ts` já inclui esta coluna, então a correção foi validada.
 
-| Sprint | Status | Entregas |
-|--------|--------|----------|
-| Fase 8: Beta Launch | ✅ Em Desenvolvimento | Programas, Testadores, Feedback, Bugs, Convites, Métricas |
+### 2. Placeholder de Notificação ao Fornecedor
+
+O `notifySupplier()` usa `userId: 1` como placeholder. Em produção, implementar lógica para identificar fornecedor correto baseado no `productId`.
+
+### 3. Configuração de Ambiente
+
+O arquivo `db.ts` tinha inconsistências de importação. O código atual utiliza `process.env.DATABASE_URL` corretamente.
+
+## Status de Implementação
+
+| Componente | Status | Descrição |
+|------------|--------|-----------|
+| DropshippingService | ✅ Completo | registerDropshippingOrder, updateDropshippingOrderStatus |
+| calculateConsumptionCommission | ✅ Completo | Cálculo de comissão na entrega |
+| Routes API | ✅ Completo | CRUD completo de pedidos |
+| Testes Unitários | ✅ Completo | Cobertura de fluxos principais |
+| Migration SQL | ⚠️ Pendente | Executar migration para adicionar shippingAddress |
+| Notificações Reais | ⚠️ Pendente | Implementar envio de email real |
+| Integração Marketplace | 📋 Planejado | Webhooks para marketplaces |
+
+## Próximos Passos
+
+1. ✅ Implementar serviço e rotas
+2. ✅ Criar testes unitários
+3. ⚠️ Executar migration SQL (shippingAddress)
+4. 📋 Implementar notificações por email
+5. 📋 Adicionar webhooks de marketplaces
+6. 📋 Implementar retry logic para falhas
+
+---
 
 **Versão**: 1.0.0
 **Data**: 2026-05-25

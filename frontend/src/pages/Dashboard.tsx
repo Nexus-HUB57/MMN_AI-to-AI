@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "./DashboardLayout";
@@ -7,12 +7,15 @@ import {
   Activity,
   ArrowRight,
   BarChart3,
+  Bitcoin,
   BookOpen,
   Bot,
   Calendar,
   ChevronRight,
   Gift,
   Globe,
+  Layers,
+  Lock,
   ShoppingCart,
   Sparkles,
   Star,
@@ -21,6 +24,8 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
+import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
+import { allocateBrlToBtc, isBtcLocked, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
 
 const QUICK_ACTIONS = [
   {
@@ -71,6 +76,13 @@ const QUICK_ACTIONS = [
     description: "5 títulos a R$ 0,50 / revenda R$ 1,00",
     icon: BookOpen,
     accent: "from-quantum-lime/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/sisu",
+    label: "Painel Sub-Redes (SiSu)",
+    description: "Sub-contas A² vinculadas ao seu CPF",
+    icon: Layers,
+    accent: "from-quantum-cyan/30 to-quantum-lime/0",
   },
 ];
 
@@ -124,10 +136,18 @@ function toneDot(tone: "good" | "warn" | "info") {
   return "bg-quantum-cyan shadow-[0_0_8px_#00E5FF]";
 }
 
+const MOCK_BTC_PRICE_BRL = 360000; // Preço referencial de cotação BTC/BRL
+
 export default function Dashboard() {
   const { user } = useAuth();
-  const [balance, setBalance] = useState(0.0412);
+  const { profile, refresh } = useMarketplaceProfile();
   const [isCollecting, setIsCollecting] = useState(false);
+  const [showBtcModal, setShowBtcModal] = useState(false);
+  const [btcAmountBrl, setBtcAmountBrl] = useState(100);
+
+  const balance = profile.btcAllocated;
+  const btcLocked = isBtcLocked(profile);
+  const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
 
   const displayName = user?.name || "Usuário MMN";
   const displayEmail = user?.email || "usuario@demo.mmn.ai";
@@ -136,9 +156,16 @@ export default function Dashboard() {
   const handleHarvest = () => {
     setIsCollecting(true);
     setTimeout(() => {
-      setBalance((prev) => prev + 0.0035);
       setIsCollecting(false);
+      refresh();
     }, 1200);
+  };
+
+  const handleConfirmBtcAllocation = () => {
+    if (btcAmountBrl <= 0) return;
+    allocateBrlToBtc(profile, btcAmountBrl * 100, MOCK_BTC_PRICE_BRL);
+    refresh();
+    setShowBtcModal(false);
   };
 
   return (
@@ -189,15 +216,25 @@ export default function Dashboard() {
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
+          <button
+            type="button"
+            onClick={() => setShowBtcModal(true)}
+            className="text-left rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum"
+          >
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-              // Saldo Alocado (IA Core)
+              // Saldo Alocado (IA Core) · BRL → BTC Binânce
             </p>
             <p className="mt-3 font-sans text-3xl font-bold text-white">
               {balance.toFixed(4)} <span className="text-sm text-quantum-cyan">BTC</span>
             </p>
-            <p className="mt-2 text-xs text-slate-400">~ R$ 1.250,00 disponíveis</p>
-          </div>
+            <p className="mt-2 text-xs text-slate-400">
+              ~ R$ {(balance * MOCK_BTC_PRICE_BRL).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} alocados em custódia
+            </p>
+            <p className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-quantum-cyan">
+              <Bitcoin size={12} />
+              {btcLocked ? `Cong. até ${profile.btcLockUntil?.slice(0, 10)}· 90d` : `Clique para alocar (lock ${BTC_LOCK_DAYS}d)`}
+            </p>
+          </button>
 
           <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
@@ -393,11 +430,10 @@ export default function Dashboard() {
                 // RECOMPENSAS
               </p>
               <h3 className="mt-2 font-sans text-xl font-semibold text-white">
-                Você está a 1 nível do bônus Diamante.
+                Próximo nível: {progress.nextPack?.shortName ?? "Topo do plano"}
               </h3>
               <p className="mt-2 text-sm text-slate-400">
-                Adicione mais 3 indicados diretos para liberar uma comissão extra de 5% sobre toda a
-                sua malha.
+                Faltam {Math.max(0, progress.xpTarget - progress.xpCurrent).toLocaleString("pt-BR")} XP e {Math.max(0, progress.directTarget - progress.directCurrent)} diretos para liberar o próximo upgrade.
               </p>
             </div>
             <Link
@@ -409,6 +445,69 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
+
+      {showBtcModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowBtcModal(false)}>
+          <div
+            className="relative w-full max-w-lg rounded-2xl border border-quantum-cyan/30 bg-obsidian-900 p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowBtcModal(false)}
+              className="absolute right-3 top-3 text-slate-400 hover:text-white"
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-quantum-cyan/10 text-quantum-cyan">
+                <Bitcoin size={20} />
+              </span>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// CUSTÓDIA BINÂNCE</p>
+                <h2 className="text-lg font-semibold text-white">Alocar BRL em BTC</h2>
+              </div>
+            </div>
+            <p className="mt-4 text-sm text-slate-300">
+              A conversão BRL/BTC é realizada via custody address da Binânce. O valor convertido fica
+              <strong className="text-quantum-cyan"> congelado por 90 dias </strong> antes de poder ser sacado.
+            </p>
+            <div className="mt-5 space-y-3">
+              <label className="block text-xs uppercase tracking-widest text-slate-400" htmlFor="btcAmount">Valor a alocar (BRL)</label>
+              <input
+                id="btcAmount"
+                type="number"
+                min={10}
+                step={10}
+                value={btcAmountBrl}
+                onChange={(event) => setBtcAmountBrl(Number(event.target.value) || 0)}
+                className="w-full rounded-lg border border-obsidian-700 bg-obsidian-800 px-3 py-2 text-white focus:border-quantum-cyan focus:outline-none"
+              />
+              <p className="text-xs text-slate-400">
+                Equivalente estimado: {(btcAmountBrl / MOCK_BTC_PRICE_BRL).toFixed(8)} BTC · cotação referencial R$ {MOCK_BTC_PRICE_BRL.toLocaleString("pt-BR")}
+              </p>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleConfirmBtcAllocation}
+                disabled={btcAmountBrl <= 0}
+                className="inline-flex items-center gap-2 rounded-lg border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-4 py-2 text-sm font-bold text-obsidian shadow-quantum disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Lock size={14} /> Confirmar alocação (lock {BTC_LOCK_DAYS}d)
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowBtcModal(false)}
+                className="inline-flex items-center gap-2 rounded-lg border border-obsidian-700 bg-obsidian-800 px-4 py-2 text-sm text-slate-200 hover:border-quantum-cyan/30"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

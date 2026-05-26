@@ -1,60 +1,89 @@
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, ADMIN_EMAIL } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowRight, Shield, User, Zap } from "lucide-react";
+import { ArrowRight, Shield, User, Zap, Lock, AlertTriangle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
 
-const ADMIN_EMAIL = "lucasmpthomaz@gmail.com";
-
 export default function Login() {
-  const { isAuthenticated, login, loginAsDemo, user } = useAuth();
+  const { isAuthenticated, login, loginAsDemo, loginAdmin, user } = useAuth();
   const [, setLocation] = useLocation();
-  const searchParams = useMemo(() => new URLSearchParams(window.location.search), []);
+  const searchParams = useMemo(
+    () => (typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams()),
+    [],
+  );
   const initialMode = searchParams.get("mode") === "admin" ? "admin" : "affiliate";
 
-  const [email, setEmail] = useState(initialMode === "admin" ? ADMIN_EMAIL : "");
-  const [name, setName] = useState(initialMode === "admin" ? "Lucas Thomaz" : "");
   const [mode, setMode] = useState<"admin" | "affiliate">(initialMode);
+  const [email, setEmail] = useState(initialMode === "admin" ? ADMIN_EMAIL : "");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getAffiliateEntryPath = () => {
     const profile = loadMarketplaceProfile();
     return profile.activePackSlugs.length === 0 ? "/marketplaces" : "/dashboard";
   };
 
-  const getReturnPath = () => {
-    const from = searchParams.get("from");
-    if (from) return from;
-    return mode === "admin" ? "/admin/dashboard" : getAffiliateEntryPath();
-  };
+  const getReturnPath = () =>
+    searchParams.get("from") ??
+    (mode === "admin" ? "/admin/dashboard" : getAffiliateEntryPath());
 
   useEffect(() => {
     if (isAuthenticated) {
       const fallbackPath = user?.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath();
       setLocation(searchParams.get("from") || fallbackPath);
     }
-  }, [isAuthenticated, searchParams, setLocation, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
-  const handleQuickAccess = async (nextMode: "admin" | "affiliate") => {
-    const nextUser = await loginAsDemo(
-      nextMode,
-      nextMode === "admin"
-        ? { name: "Lucas Thomaz", email: ADMIN_EMAIL }
-        : undefined,
-    );
-    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath()));
+  const handleAffiliateQuickAccess = async () => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      const nextUser = await loginAsDemo("affiliate");
+      setLocation(searchParams.get("from") || getAffiliateEntryPath());
+      void nextUser;
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleCredentialAccess = async () => {
-    const nextUser = await login({
-      email,
-      name,
-      role: mode,
-    });
-    setLocation(searchParams.get("from") || (nextUser.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath()));
+  const handleAdminLogin = async () => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      await loginAdmin(email, password);
+      setLocation(searchParams.get("from") || "/admin/dashboard");
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAffiliateLogin = async () => {
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      await login({ email, name, role: "affiliate" });
+      setLocation(searchParams.get("from") || getAffiliateEntryPath());
+    } catch (error) {
+      setErrorMessage((error as Error).message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (mode === "admin") return handleAdminLogin();
+    return handleAffiliateLogin();
   };
 
   return (
@@ -76,7 +105,7 @@ export default function Login() {
                 <h1 className="text-4xl font-bold gradient-text">MMNAI</h1>
               </div>
               <p className="text-text-secondary text-lg max-w-md">
-                Acesso rápido para revisão da homepage, backoffice do usuário e backoffice administrativo.
+                Acesso ao painel do afiliado e ao backoffice administrativo restrito.
               </p>
             </div>
 
@@ -84,35 +113,36 @@ export default function Login() {
               <div className="rounded-2xl border border-accent-cyan/20 bg-accent-cyan/5 p-5">
                 <p className="text-sm font-semibold text-accent-cyan">Acesso usuário</p>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Fluxo recomendado para revisar cadastro, login e painel do afiliado.
+                  Painel completo do afiliado: marketplace, packs, agentes, recompensas e mais.
                 </p>
                 <div className="mt-4">
-                  <Button variant="outline" className="border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan/10" onClick={() => handleQuickAccess("affiliate") }>
+                  <Button
+                    variant="outline"
+                    className="border-accent-cyan/40 text-accent-cyan hover:bg-accent-cyan/10"
+                    onClick={handleAffiliateQuickAccess}
+                    disabled={isSubmitting}
+                  >
                     <User className="w-4 h-4 mr-2" />
-                    Entrar como usuário
+                    Entrar como usuário (demo)
                   </Button>
                 </div>
               </div>
 
               <div className="rounded-2xl border border-accent-purple/20 bg-accent-purple/5 p-5">
-                <p className="text-sm font-semibold text-accent-purple">Acesso administrador</p>
-                <p className="mt-2 text-sm text-text-secondary">
-                  Revisão do backoffice admin usando o perfil <strong>Lucas Thomaz</strong> ({ADMIN_EMAIL}).
+                <p className="flex items-center gap-2 text-sm font-semibold text-accent-purple">
+                  <Lock className="h-4 w-4" /> Acesso administrador (restrito)
                 </p>
-                <div className="mt-4">
-                  <Button variant="outline" className="border-accent-purple/40 text-accent-purple hover:bg-accent-purple/10" onClick={() => handleQuickAccess("admin") }>
-                    <Shield className="w-4 h-4 mr-2" />
-                    Entrar como administrador
-                  </Button>
-                </div>
+                <p className="mt-2 text-sm text-text-secondary">
+                  Backoffice administrativo é exclusivo do administrador <strong>Lucas Thomaz</strong> ({ADMIN_EMAIL}). Acesso requer e-mail e senha.
+                </p>
               </div>
 
               <div className="space-y-3">
                 {[
-                  "Homepage com atalhos para login e revisão dos painéis",
-                  "Cadastro agora redireciona para o Marketplace Nexus",
-                  "Login comuta entre perfil afiliado e administrador",
-                  "Backoffice admin validado para Lucas Thomaz",
+                  "Cadastro redireciona automaticamente para o Marketplace",
+                  "Acesso de afiliado libera apenas o Pack A² inicialmente",
+                  "Backoffice admin protegido por senha e e-mail registrado",
+                  "Sessão persistida com checagem de integridade do papel",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3 text-sm text-text-secondary">
                     <span className="mt-1 h-2 w-2 rounded-full bg-accent-green"></span>
@@ -129,7 +159,9 @@ export default function Login() {
                 <div className="space-y-2">
                   <h3 className="text-2xl font-bold text-foreground">Acessar ambiente</h3>
                   <p className="text-text-secondary">
-                    Escolha o perfil para validar o fluxo e abrir o painel correspondente.
+                    {mode === "admin"
+                      ? "Insira o e-mail e a senha do administrador para abrir o backoffice."
+                      : "Acesse o painel do afiliado para gerenciar agentes e marketplace."}
                   </p>
                 </div>
 
@@ -140,8 +172,9 @@ export default function Login() {
                     className={mode === "affiliate" ? "gradient-btn" : "text-text-secondary"}
                     onClick={() => {
                       setMode("affiliate");
+                      setPassword("");
+                      setErrorMessage(null);
                       if (email === ADMIN_EMAIL) setEmail("");
-                      if (name === "Lucas Thomaz") setName("");
                     }}
                   >
                     Usuário
@@ -154,6 +187,7 @@ export default function Login() {
                       setMode("admin");
                       setEmail(ADMIN_EMAIL);
                       setName("Lucas Thomaz");
+                      setErrorMessage(null);
                     }}
                   >
                     Admin
@@ -161,16 +195,18 @@ export default function Login() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nome</Label>
-                    <Input
-                      id="name"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                      placeholder={mode === "admin" ? "Lucas Thomaz" : "Nome do usuário"}
-                      className="bg-background"
-                    />
-                  </div>
+                  {mode === "affiliate" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nome</Label>
+                      <Input
+                        id="name"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
+                        placeholder="Nome do usuário"
+                        className="bg-background"
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="email">E-mail</Label>
                     <Input
@@ -180,9 +216,31 @@ export default function Login() {
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder={mode === "admin" ? ADMIN_EMAIL : "usuario@demo.mmn.ai"}
                       className="bg-background"
+                      autoComplete="email"
                     />
                   </div>
+                  {mode === "admin" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Senha</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Senha do administrador"
+                        className="bg-background"
+                        autoComplete="current-password"
+                      />
+                    </div>
+                  )}
                 </div>
+
+                {errorMessage && (
+                  <div className="flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
 
                 <div className="rounded-xl border border-border/60 bg-background/40 p-4 text-sm text-text-secondary">
                   <p className="font-medium text-foreground">Destino após login</p>
@@ -190,17 +248,25 @@ export default function Login() {
                 </div>
 
                 <div className="grid gap-3">
-                  <Button onClick={handleCredentialAccess} className="w-full h-12 gradient-btn text-base font-semibold">
-                    Entrar e abrir painel
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="w-full h-12 gradient-btn text-base font-semibold"
+                  >
+                    {mode === "admin" ? <Shield className="w-4 h-4 mr-2" /> : <User className="w-4 h-4 mr-2" />}
+                    {mode === "admin" ? "Entrar no backoffice admin" : "Entrar no painel do afiliado"}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => handleQuickAccess(mode)}
-                    className="w-full border-border hover:bg-muted"
-                  >
-                    Acesso rápido do perfil atual
-                  </Button>
+                  {mode === "affiliate" && (
+                    <Button
+                      variant="outline"
+                      onClick={handleAffiliateQuickAccess}
+                      disabled={isSubmitting}
+                      className="w-full border-border hover:bg-muted"
+                    >
+                      Acesso rápido (demo)
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>

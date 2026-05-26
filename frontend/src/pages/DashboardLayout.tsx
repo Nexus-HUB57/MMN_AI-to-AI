@@ -36,7 +36,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { ReactNode, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
@@ -61,7 +61,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, loading, logout } = useAuth();
   const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation();
+
+  // Auto-recolhe o popup de configurações após inatividade.
+  React.useEffect(() => {
+    if (!userMenuOpen) return;
+    const timer = window.setTimeout(() => setUserMenuOpen(false), 6000);
+    return () => window.clearTimeout(timer);
+  }, [userMenuOpen]);
 
   const navGroups: NavGroup[] = [
     {
@@ -189,6 +197,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           badge: "R$ 0,50",
         },
         {
+          label: "Sub-Redes (SiSu)",
+          href: "/sisu",
+          icon: <Network className="w-5 h-5" />,
+          badge: "CPF",
+        },
+        {
           label: "Dropshipping",
           href: "/dropshipping/orders",
           icon: <Box className="w-5 h-5" />,
@@ -278,7 +292,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* User Menu */}
-          <DropdownMenu>
+          <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -300,7 +314,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent
+              align="end"
+              className="w-56"
+              onMouseLeave={() => setUserMenuOpen(false)}
+            >
               {/* User Info */}
               <div className="px-4 py-3 border-b border-border space-y-3">
                 <div>

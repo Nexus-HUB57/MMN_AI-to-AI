@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import {
+  EXTERNAL_MARKETPLACES,
   NEXUS_PACKS,
   formatCurrency,
   getLevelLabel,
@@ -18,15 +19,21 @@ import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
+  ExternalLink,
+  Flame,
   Lock,
   Package,
   ShieldCheck,
+  ShoppingBag,
   ShoppingCart,
   Sparkles,
+  Tag,
   Trophy,
   Users,
   Zap,
 } from "lucide-react";
+
+const MARKETPLACE_ICONS = { ShoppingBag, Flame, ShoppingCart, Tag } as Record<string, typeof ShoppingBag>;
 
 function ProgressBar({ value, tone = "cyan" }: { value: number; tone?: "cyan" | "lime" }) {
   return (
@@ -60,6 +67,60 @@ export default function Marketplaces() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
+        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.85),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Canais de venda integrados</Badge>
+              <h2 className="mt-3 text-2xl font-bold text-white">Marketplaces conectados ao agente IA</h2>
+              <p className="mt-2 max-w-2xl text-sm text-slate-300">
+                O agente IA opera vendas diretas no Marketplace Nexus Storie e em plataformas parceiras (Hotmart, Shopee e Mercado Livre) via dropshipping e revenda.
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {EXTERNAL_MARKETPLACES.map((channel) => {
+              const Icon = MARKETPLACE_ICONS[channel.icon] ?? ShoppingBag;
+              const url = channel.externalUrl ?? channel.internalUrl ?? "#";
+              const isExternal = Boolean(channel.externalUrl);
+              return (
+                <a
+                  key={channel.slug}
+                  href={url}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noreferrer" : undefined}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:-translate-y-0.5 hover:border-white/20"
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className="flex h-10 w-10 items-center justify-center rounded-xl text-base font-bold"
+                      style={{ backgroundColor: `${channel.color}22`, color: channel.color }}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    {isExternal ? (
+                      <ExternalLink className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                    ) : (
+                      <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                    )}
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-white">{channel.name}</p>
+                  <p className="mt-1 text-xs text-slate-400 leading-5">{channel.description}</p>
+                  <Badge
+                    className="mt-3 border"
+                    style={{
+                      borderColor: `${channel.color}44`,
+                      backgroundColor: `${channel.color}11`,
+                      color: channel.color,
+                    }}
+                  >
+                    {channel.status === "ativo" ? "Ativo" : channel.status === "em_breve" ? "Em breve" : "Em manutenção"}
+                  </Badge>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+
         <section className="rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.82),rgba(2,6,23,0.94))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl space-y-4">

@@ -1,613 +1,421 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  Trophy,
-  Gift,
-  Star,
-  Award,
-  TrendingUp,
-  Zap,
+  Calendar,
+  Coins,
   Crown,
-  Cpu,
+  Gift,
+  HandCoins,
+  PiggyBank,
+  Sparkles,
+  Star,
+  Target,
+  Trophy,
+  Users,
 } from "lucide-react";
-import TopSponsors from "./TopSponsors";
-import DashboardLayout from "@/components/DashboardLayout";
-import { trpc } from "@/lib/trpc";
+import { useMemo } from "react";
+import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
+import { getHighestActivePack, getLevelLabel } from "@/lib/nexus-marketplace";
 
-interface BonusGoal {
+// =============================================================================
+// Bônus oficiais (docs/planning/Plano de Carreira Peer)
+//   1) Revenda / Dropshipping
+//   2) Bônus OnePack
+//   3) Bônus de Consumo
+//   4) Bônus N.O (formação de Orquestradores)
+//   5) Bônus Inspiration (auto-consumo)
+//   6) Bônus Grafo (sorteios)
+//   7) Bônus Corp (Títulos / TPR / Royalties)
+//   8) Bônus Harp'IA (patrocínio Agentic)
+//   9) Bônus Nexus (Hall N)
+// =============================================================================
+
+type BonusCategory =
+  | "Revenda"
+  | "OnePack"
+  | "Consumo"
+  | "Networking"
+  | "Inspiration"
+  | "Grafo"
+  | "Corp"
+  | "Harp'IA"
+  | "Hall N";
+
+interface BonusEntry {
   id: string;
   title: string;
+  category: BonusCategory;
   description: string;
-  progress: number;
-  maxProgress: number;
   reward: string;
-  rewardType: "cash" | "prize" | "percentage";
+  unlockLevel: string;
   icon: React.ReactNode;
-  category: "network" | "sales" | "leadership" | "achievement";
-  deadline?: Date;
-  status: "active" | "completed" | "expired";
+  progress?: number;
+  expiresAt?: string;
+  isEventual?: boolean;
+  requirements: string[];
 }
 
-interface BonusStats {
-  totalCommissions: number;
-  pendingCommissions: number;
-  availableCommissions: number;
-  recentSalesVolume: number;
-  averageTicket: number;
-}
+const BONUS_LIST: BonusEntry[] = [
+  // 1 – Revenda / Dropshipping (fixo, sempre ativo)
+  {
+    id: "revenda-marketplace",
+    category: "Revenda",
+    title: "Revenda Infoprodutos Marketplace Nexus",
+    description:
+      "100% de lucro na revenda + comissões em cascata no N.O (5 níveis): 20% / 10% / 5% / 2,5% / 1%.",
+    reward: "Até 100% margem + 5 níveis",
+    unlockLevel: "Liberado já no Pack A²",
+    icon: <HandCoins className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["Pack ativo", "Vendas com tracking via mini-site"],
+  },
+  {
+    id: "dropshipping",
+    category: "Revenda",
+    title: "Dropshipping de Plataformas Parceiras",
+    description: "Revenda de produtos Hotmart, Shopee, Mercado Livre com margem definida por plataforma.",
+    reward: "Margens variáveis por produto",
+    unlockLevel: "Liberado já no Pack A²",
+    icon: <Coins className="w-6 h-6 text-amber-300" />,
+    requirements: ["Pack ativo", "Conta conectada à plataforma parceira"],
+  },
+  // 2 – OnePack
+  {
+    id: "onepack-a2iii",
+    category: "OnePack",
+    title: "Bônus OnePack · A²III",
+    description: "R$ 2,50 por A²II adquirido no seu N.O (Pack R$ 50).",
+    reward: "R$ 2,50 / Pack A²II",
+    unlockLevel: "A partir do Agente Afiliado Nível III",
+    icon: <Gift className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Concluir os 3 níveis Afiliado"],
+  },
+  {
+    id: "onepack-ag",
+    category: "OnePack",
+    title: "Bônus OnePack · AG / AGII / AGIII",
+    description: "R$ 10 (AG) · R$ 25 (AGII) · R$ 50 (AGIII) por upgrade preditivo no N.O.",
+    reward: "R$ 10 – R$ 50 / Pack Preditivo",
+    unlockLevel: "Agente Preditivo I+",
+    icon: <Gift className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack Preditivo ativo"],
+  },
+  {
+    id: "onepack-agn",
+    category: "OnePack",
+    title: "Bônus OnePack · AGN / AGNII / AGNIII",
+    description: "R$ 75 / R$ 100 / R$ 200 por upgrade generativo no N.O.",
+    reward: "R$ 75 – R$ 200 / Pack Generativo",
+    unlockLevel: "Agente Generativo I+",
+    icon: <Gift className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack Generativo ativo"],
+  },
+  {
+    id: "onepack-ao",
+    category: "OnePack",
+    title: "Bônus OnePack · AO / AOII / AOIII",
+    description: "R$ 300 / R$ 500 / R$ 1.000 por upgrade Orquestrador no N.O.",
+    reward: "R$ 300 – R$ 1.000 / Pack Orquestrador",
+    unlockLevel: "Agente Orquestrador I+",
+    icon: <Gift className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack Orquestrador ativo"],
+  },
+  {
+    id: "onepack-aa",
+    category: "OnePack",
+    title: "Bônus OnePack · AA / AAII / AAIII",
+    description: "R$ 2.500 / R$ 5.000 / R$ 7.500 por upgrade Agentic no N.O.",
+    reward: "R$ 2.500 – R$ 7.500 / Pack Agentic",
+    unlockLevel: "IA Agêntica SCC+ I+",
+    icon: <Gift className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack Agentic ativo"],
+  },
+  // 3 – Consumo
+  {
+    id: "consumo-preditivo",
+    category: "Consumo",
+    title: "Bônus de Consumo · Preditivo I/II/III",
+    description: "3% (1º nível) · até 1,5% / 2% nos 2º e 3º níveis, conforme o pack ativo.",
+    reward: "Até 6,5% sobre ativações do N.O",
+    unlockLevel: "Agente Preditivo I+",
+    icon: <PiggyBank className="w-6 h-6 text-quantum-lime" />,
+    requirements: ["Pack Preditivo ativo", "Ativações mensais do N.O"],
+  },
+  {
+    id: "consumo-generativo",
+    category: "Consumo",
+    title: "Bônus de Consumo · Generativo I/II/III",
+    description: "Até 3% / 2% / 2% / 1,5% nos 4 primeiros níveis (sustenta o consumo da rede).",
+    reward: "Até 8,5% sobre ativações do N.O",
+    unlockLevel: "Agente Generativo I+",
+    icon: <PiggyBank className="w-6 h-6 text-quantum-lime" />,
+    requirements: ["Pack Generativo ativo"],
+  },
+  {
+    id: "consumo-orquestrador",
+    category: "Consumo",
+    title: "Bônus de Consumo · Orquestrador I/II/III",
+    description: "Até 9% acumulados nos 4 primeiros níveis do N.O.",
+    reward: "Até 9% sobre ativações do N.O",
+    unlockLevel: "Agente Orquestrador I+",
+    icon: <PiggyBank className="w-6 h-6 text-quantum-lime" />,
+    requirements: ["Pack Orquestrador ativo"],
+  },
+  {
+    id: "consumo-agentic",
+    category: "Consumo",
+    title: "Bônus de Consumo · Agentic I/II/III",
+    description: "Até 14% acumulados nos 5 níveis do N.O para o nível CEO.",
+    reward: "Até 14% sobre ativações do N.O",
+    unlockLevel: "IA Agêntica SCC+ I+",
+    icon: <PiggyBank className="w-6 h-6 text-quantum-lime" />,
+    requirements: ["Pack Agentic ativo"],
+  },
+  // 4 – N.O (formação)
+  {
+    id: "no-orquestrador",
+    category: "Networking",
+    title: "Bônus N.O · Formação de Orquestradores",
+    description: "R$ 500 (forma AO) · R$ 1.000 (forma AOII) · R$ 2.000 (forma AOIII) por orquestrador formado.",
+    reward: "R$ 500 – R$ 2.000 / Orquestrador formado",
+    unlockLevel: "Agente Orquestrador I+",
+    icon: <Users className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["Ser Orquestrador", "Formar Orquestradores qualificados"],
+  },
+  // 5 – Inspiration
+  {
+    id: "inspiration-vip",
+    category: "Inspiration",
+    title: "Bônus Inspiration · VIP (R$ 1.000 – R$ 5.000)",
+    description: "Divisão de 1% dos resultados/mês + Credencial Harmonic Life VIP + HUB Partner.",
+    reward: "1% dos resultados/mês",
+    unlockLevel: "Auto-consumo R$ 1.000 a R$ 5.000",
+    icon: <Sparkles className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Investimento mensal R$ 1.000–5.000", "Excluindo packs"],
+  },
+  {
+    id: "inspiration-black",
+    category: "Inspiration",
+    title: "Bônus Inspiration · Black (acima de R$ 5.000)",
+    description: "Divisão de 2,5% dos resultados/mês + Credencial Harmonic Life Black + HUB Partner+.",
+    reward: "2,5% dos resultados/mês",
+    unlockLevel: "Auto-consumo acima de R$ 5.000",
+    icon: <Sparkles className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["Investimento mensal acima de R$ 5.000", "Excluindo packs"],
+  },
+  // 6 – Grafo (sorteios — ações eventuais)
+  {
+    id: "grafo-afiliado",
+    category: "Grafo",
+    title: "Sorteio Oficial Agente Afiliado (Grafo+IA)",
+    description: "5.000 Números +IA. Premiações de R$ 500 a R$ 7.500 conforme nível.",
+    reward: "R$ 500 – R$ 7.500",
+    unlockLevel: "Agente Afiliado I+",
+    icon: <Trophy className="w-6 h-6 text-amber-300" />,
+    requirements: ["Pack Afiliado ativo", "Ações operacionais válidas"],
+    isEventual: true,
+  },
+  {
+    id: "grafo-meta",
+    category: "Grafo",
+    title: "Sorteios Temáticos (Meta+IA)",
+    description: "100 Números +IA². Premiações de R$ 1.500 a R$ 10.000 por metas de venda.",
+    reward: "R$ 1.500 – R$ 10.000",
+    unlockLevel: "Agente Afiliado I+",
+    icon: <Target className="w-6 h-6 text-quantum-lime" />,
+    requirements: ["Aquisição de Packs PNE", "Metas mensais"],
+    isEventual: true,
+  },
+  {
+    id: "grafo-zetta",
+    category: "Grafo",
+    title: "Sorteios Oficiais Zetta (Grafo+IA/Zettascale)",
+    description: "100 Números +IA³ por metas alcançadas no N.O.",
+    reward: "Sorteios institucionais",
+    unlockLevel: "Agente Preditivo I+",
+    icon: <Star className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["Metas N.O atingidas"],
+    isEventual: true,
+  },
+  {
+    id: "grafo-vip",
+    category: "Grafo",
+    title: "Sorteios VIP (Grafo+IA/VIP)",
+    description: "100 Números +IA · Destaques do Mês.",
+    reward: "Premiações VIP",
+    unlockLevel: "Agente Generativo I+",
+    icon: <Star className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Estar entre os destaques do mês"],
+    isEventual: true,
+  },
+  // 7 – Corp
+  {
+    id: "corp-titulos",
+    category: "Corp",
+    title: "Bônus Corp · Títulos Impactos",
+    description: "Sorteio de Títulos de R$ 10.000 (Grafo+IA/IM) — adiantamento corporativo.",
+    reward: "R$ 10.000 por título sorteado",
+    unlockLevel: "Agente Orquestrador II+",
+    icon: <Crown className="w-6 h-6 text-amber-300" />,
+    requirements: ["Possuir Títulos Impactos"],
+    isEventual: true,
+  },
+  {
+    id: "corp-tpr",
+    category: "Corp",
+    title: "Bônus Corp · TPR (Holding Nexus)",
+    description: "Cotas de Participação nos Resultados por Grupo de Negócio Techs+IA.",
+    reward: "Cotas TPR · resultado anual",
+    unlockLevel: "IA Agêntica SCC+ I+",
+    icon: <Crown className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["TPR ativos no Hall de Sócios"],
+  },
+  {
+    id: "corp-royalties",
+    category: "Corp",
+    title: "Bônus Corp · Royalties Holding Nexus (PLR)",
+    description: "Royalties mensais da Holding Nexus para níveis Agentic.",
+    reward: "Royalties recorrentes",
+    unlockLevel: "IA Agêntica SCC+ II+",
+    icon: <Crown className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack AAII ou superior"],
+  },
+  // 8 – Harp'IA
+  {
+    id: "harpia",
+    category: "Harp'IA",
+    title: "Bônus Harp'IA · Patrocínio de Startups",
+    description:
+      "Grupos de 10 Peers Agentic recebem até R$ 500.000 para validar uma startup IA em 12 meses.",
+    reward: "Budget até R$ 500.000",
+    unlockLevel: "IA Agêntica SCC+ I+ (formação de grupos)",
+    icon: <Sparkles className="w-6 h-6 text-quantum-cyan" />,
+    requirements: ["10 Peers Agentic agrupados", "Projeto validado em 12 meses"],
+    isEventual: true,
+  },
+  // 9 – Hall N
+  {
+    id: "hall-n",
+    category: "Hall N",
+    title: "Bônus Nexus · Hall N",
+    description:
+      "Acesso ao Cowork N, Notebooks/Smartphones, Veículos, Imóveis, Viagens e benefícios exclusivos.",
+    reward: "Benefícios corporativos",
+    unlockLevel: "IA Agêntica SCC+ III",
+    icon: <Trophy className="w-6 h-6 text-quantum-purple" />,
+    requirements: ["Pack AAIII ativo"],
+  },
+];
 
-const orderDate = (value: unknown) => {
-  if (!value) return null;
-  const date = value instanceof Date ? value : new Date(String(value));
-  return Number.isNaN(date.getTime()) ? null : date;
+const CATEGORY_COLORS: Record<BonusCategory, string> = {
+  Revenda: "text-quantum-cyan",
+  OnePack: "text-quantum-purple",
+  Consumo: "text-quantum-lime",
+  Networking: "text-quantum-cyan",
+  Inspiration: "text-quantum-purple",
+  Grafo: "text-amber-300",
+  Corp: "text-amber-300",
+  "Harp'IA": "text-quantum-cyan",
+  "Hall N": "text-quantum-purple",
 };
 
-const shouldFormatProgressAsCurrency = (bonus: BonusGoal) =>
-  bonus.maxProgress >= 1000;
-
 export default function BonusPage() {
-  const [selectedBonus, setSelectedBonus] = useState<BonusGoal | null>(null);
-
-  const { data: profile, isLoading: isLoadingProfile } =
-    trpc.mmn.getProfile.useQuery();
-  const { data: statsData, isLoading: isLoadingStats } =
-    trpc.mmn.getStats.useQuery(undefined, {
-      enabled: !!profile,
-    });
-  const { data: directReferrals = [], isLoading: isLoadingReferrals } =
-    trpc.mmn.getDirectReferrals.useQuery(undefined, {
-      enabled: !!profile,
-    });
-  const { data: recentOrders = [], isLoading: isLoadingOrders } =
-    trpc.mmn.getRecentOrders.useQuery(undefined, {
-      enabled: !!profile,
-    });
-  const { data: dashboardMetrics } = trpc.dashboard.getMetrics.useQuery(
-    undefined,
-    {
-      enabled: !!profile,
-    },
-  );
-
-  const loading =
-    isLoadingProfile || isLoadingStats || isLoadingReferrals || isLoadingOrders;
-
-  const paidLikeOrders = useMemo(
-    () =>
-      recentOrders.filter((order: any) =>
-        ["confirmed", "shipped", "delivered"].includes(String(order.status)),
-      ),
-    [recentOrders],
-  );
-
-  const salesVolume = useMemo(
-    () =>
-      paidLikeOrders.reduce(
-        (sum: number, order: any) => sum + Number(order.amount ?? 0),
-        0,
-      ),
-    [paidLikeOrders],
-  );
-
-  const averageTicket =
-    paidLikeOrders.length > 0 ? salesVolume / paidLikeOrders.length : 0;
-  const totalCommissions = Number(
-    statsData?.total ?? profile?.totalCommissions ?? 0,
-  );
-  const pendingCommissions = Number(
-    statsData?.pending ?? profile?.pendingCommissions ?? 0,
-  );
-  const availableCommissions = Math.max(
-    totalCommissions - pendingCommissions,
-    0,
-  );
-  const agentIsActive = dashboardMetrics?.agent?.status === "active";
-
-  const stats = useMemo<BonusStats>(
-    () => ({
-      totalCommissions,
-      pendingCommissions,
-      availableCommissions,
-      recentSalesVolume: salesVolume,
-      averageTicket,
-    }),
-    [
-      averageTicket,
-      availableCommissions,
-      pendingCommissions,
-      salesVolume,
-      totalCommissions,
-    ],
-  );
-
-  const bonuses = useMemo<BonusGoal[]>(() => {
-    const fastStartStatus =
-      directReferrals.length >= 5 ? "completed" : "active";
-    const salesStatus = salesVolume >= 50000 ? "completed" : "active";
-    const consistencyProgress = Math.min(paidLikeOrders.length, 10);
-    const consistencyStatus =
-      consistencyProgress >= 10 ? "completed" : "active";
-    const walletStatus = availableCommissions >= 10000 ? "completed" : "active";
-    const agentStatus = agentIsActive ? "completed" : "active";
-
-    return [
-      {
-        id: "bonus-fast-start",
-        title: "Bônus de Início Rápido",
-        description:
-          "Atinja 5 novos afiliados diretos para acelerar a expansão da rede.",
-        progress: directReferrals.length,
-        maxProgress: 5,
-        reward: "R$ 500,00",
-        rewardType: "cash",
-        icon: <TrendingUp className="text-neon-cyan" />,
-        category: "network",
-        deadline: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-        status: fastStartStatus,
-      },
-      {
-        id: "bonus-sales-volume",
-        title: "Prêmio Esmeralda",
-        description:
-          "Consolide volume recente de vendas para capturar campanhas de maior escala.",
-        progress: salesVolume,
-        maxProgress: 50000,
-        reward: "Viagem para Resort",
-        rewardType: "prize",
-        icon: <Award className="text-neon-pink" />,
-        category: "sales",
-        deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
-        status: salesStatus,
-      },
-      {
-        id: "bonus-consistency",
-        title: "Bônus de Consistência",
-        description:
-          "Mantenha um bloco sólido de pedidos confirmados para aumentar previsibilidade operacional.",
-        progress: consistencyProgress,
-        maxProgress: 10,
-        reward: "R$ 2.000,00",
-        rewardType: "cash",
-        icon: <Zap className="text-yellow-400" />,
-        category: "sales",
-        status: consistencyStatus,
-      },
-      {
-        id: "bonus-wallet",
-        title: "Meta de Caixa Operacional",
-        description:
-          "Alcance saldo disponível robusto para reinvestimento, tráfego e escala da operação.",
-        progress: availableCommissions,
-        maxProgress: 10000,
-        reward: "Participação estratégica",
-        rewardType: "percentage",
-        icon: <Crown className="text-purple-500" />,
-        category: "achievement",
-        deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-        status: walletStatus,
-      },
-      {
-        id: "bonus-agent",
-        title: "Ativação do Agente IA",
-        description:
-          "Coloque o agente em modo ativo para iniciar ciclos reais de produtividade assistida.",
-        progress: agentIsActive ? 1 : 0,
-        maxProgress: 1,
-        reward: "Boost operacional",
-        rewardType: "prize",
-        icon: <Cpu className="text-green-400" />,
-        category: "leadership",
-        status: agentStatus,
-      },
-    ];
-  }, [
-    agentIsActive,
-    availableCommissions,
-    directReferrals.length,
-    paidLikeOrders.length,
-    salesVolume,
-  ]);
-
-  const getProgressPercentage = (bonus: BonusGoal): number => {
-    return Math.min(
-      100,
-      Math.round((bonus.progress / bonus.maxProgress) * 100),
-    );
-  };
-
-  const getProgressColor = (percentage: number): string => {
-    if (percentage >= 100) return "bg-green-500";
-    if (percentage >= 75) return "bg-blue-500";
-    if (percentage >= 50) return "bg-purple-500";
-    if (percentage >= 25) return "bg-yellow-500";
-    return "bg-red-500";
-  };
-
-  const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
-
-  const getDaysRemaining = (deadline?: Date): number | null => {
-    if (!deadline) return null;
-    const diff = deadline.getTime() - Date.now();
-    return Math.ceil(diff / (1000 * 60 * 60 * 24));
-  };
-
-  const latestOrderDate = useMemo(() => {
-    const dates = recentOrders
-      .map((order: any) => orderDate(order.createdAt))
-      .filter(Boolean) as Date[];
-    return dates.length > 0
-      ? dates.sort((a, b) => b.getTime() - a.getTime())[0]
-      : null;
-  }, [recentOrders]);
-
-  const activeBonuses = bonuses.filter((b) => b.status === "active");
-  const completedBonuses = bonuses.filter((b) => b.status === "completed");
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="p-8 flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neon-cyan mx-auto mb-4"></div>
-            <p className="text-neon-cyan font-space-mono">
-              Carregando metas operacionais...
-            </p>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
+  const { profile } = useMarketplaceProfile();
+  const highest = useMemo(() => getHighestActivePack(profile), [profile]);
 
   return (
     <DashboardLayout>
-      <div className="p-8 space-y-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-orbitron font-bold text-glow-pink">
-            Bônus e Prêmios
-          </h1>
-          <p className="text-neon-cyan font-space-mono">
-            Metas agora conectadas ao estado real da carteira, rede, pedidos
-            recentes e status do agente.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <Card className="hud-frame bg-black/40 border-neon-cyan/30">
-            <CardContent className="pt-6 text-center">
-              <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                Total de Comissões
+      <div className="space-y-8">
+        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
+              <Badge className="border border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple">
+                Clube de Vantagens · Bônus oficiais Nexus
+              </Badge>
+              <h1 className="text-3xl font-bold text-white md:text-4xl">Bônus e Formas de Ganho</h1>
+              <p className="max-w-3xl text-sm leading-6 text-slate-300">
+                Esta lista segue exclusivamente o documento <strong className="text-quantum-cyan">Plano de Carreira Peer</strong>. Não existem prêmios <em>Diamante</em> ou <em>Esmeralda</em> — apenas os bônus oficiais. Sorteios e prêmios temáticos têm <strong className="text-amber-300">prazo final</strong>, por serem ações eventuais (não-efetivas).
               </p>
-              <p className="text-2xl font-bold text-neon-cyan font-orbitron">
-                {formatCurrency(stats.totalCommissions)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hud-frame bg-black/40 border-neon-pink/30">
-            <CardContent className="pt-6 text-center">
-              <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                Pendentes
-              </p>
-              <p className="text-2xl font-bold text-neon-pink font-orbitron">
-                {formatCurrency(stats.pendingCommissions)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hud-frame bg-black/40 border-green-500/30">
-            <CardContent className="pt-6 text-center">
-              <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                Disponíveis
-              </p>
-              <p className="text-2xl font-bold text-green-500 font-orbitron">
-                {formatCurrency(stats.availableCommissions)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hud-frame bg-black/40 border-yellow-500/30">
-            <CardContent className="pt-6 text-center">
-              <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                Volume Recente
-              </p>
-              <p className="text-2xl font-bold text-yellow-500 font-orbitron">
-                {formatCurrency(stats.recentSalesVolume)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hud-frame bg-black/40 border-purple-500/30">
-            <CardContent className="pt-6 text-center">
-              <p className="text-xs text-text-secondary uppercase font-space-mono mb-2">
-                Ticket Médio
-              </p>
-              <p className="text-2xl font-bold text-purple-500 font-orbitron">
-                {formatCurrency(stats.averageTicket)}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-2xl font-orbitron text-white flex items-center gap-2">
-              <Gift className="text-neon-pink" /> Metas Ativas (
-              {activeBonuses.length})
-            </h2>
-
-            {activeBonuses.length > 0 ? (
-              <div className="grid gap-6">
-                {activeBonuses.map((bonus) => {
-                  const percentage = getProgressPercentage(bonus);
-                  const daysRemaining = getDaysRemaining(bonus.deadline);
-
-                  return (
-                    <Card
-                      key={bonus.id}
-                      className="hud-frame bg-black/40 border-neon-cyan/30 cursor-pointer hover:border-neon-cyan/60 transition-all"
-                      onClick={() => setSelectedBonus(bonus)}
-                    >
-                      <div className="corner-bracket top-left"></div>
-                      <div className="corner-bracket top-right"></div>
-                      <div className="corner-bracket bottom-left"></div>
-                      <div className="corner-bracket bottom-right"></div>
-
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-black/60 rounded-lg border border-neon-cyan/20">
-                            {bonus.icon}
-                          </div>
-                          <div>
-                            <CardTitle className="text-xl font-orbitron text-white">
-                              {bonus.title}
-                            </CardTitle>
-                            <p className="text-sm text-text-secondary font-space-mono">
-                              {bonus.description}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-text-secondary uppercase font-space-mono">
-                            Prêmio
-                          </p>
-                          <p className="text-lg font-bold text-neon-pink font-orbitron">
-                            {bonus.reward}
-                          </p>
-                        </div>
-                      </CardHeader>
-
-                      <CardContent className="pt-4 space-y-3">
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm font-space-mono">
-                            <span className="text-neon-cyan">Progresso</span>
-                            <span className="text-white">{percentage}%</span>
-                          </div>
-                          <Progress
-                            value={percentage}
-                            className={`h-2 bg-black/60 ${getProgressColor(percentage)}`}
-                          />
-                          <p className="text-xs text-text-secondary font-space-mono">
-                            {shouldFormatProgressAsCurrency(bonus)
-                              ? `${formatCurrency(bonus.progress)} de ${formatCurrency(bonus.maxProgress)}`
-                              : `${bonus.progress} de ${bonus.maxProgress}`}
-                          </p>
-                        </div>
-
-                        {daysRemaining !== null && (
-                          <div className="flex items-center gap-2 p-2 bg-black/60 rounded border border-yellow-500/20">
-                            <Zap className="w-4 h-4 text-yellow-500" />
-                            <p className="text-xs text-yellow-500 font-space-mono">
-                              {daysRemaining} dias restantes
-                            </p>
-                          </div>
-                        )}
-
-                        <Button className="w-full btn-neon-cyan font-orbitron text-xs">
-                          VER DETALHES DA META
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            ) : (
-              <Card className="hud-frame bg-black/40 border-neon-cyan/30">
-                <CardContent className="pt-6 text-center">
-                  <p className="text-text-secondary font-space-mono">
-                    Nenhuma meta ativa no momento
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {completedBonuses.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="text-xl font-orbitron text-green-500 flex items-center gap-2">
-                  <Trophy className="text-green-500" /> Metas Completadas (
-                  {completedBonuses.length})
-                </h3>
-                <div className="grid gap-4">
-                  {completedBonuses.map((bonus) => (
-                    <Card
-                      key={bonus.id}
-                      className="hud-frame bg-black/40 border-green-500/30"
-                    >
-                      <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-500/20 rounded-lg border border-green-500/30">
-                              {bonus.icon}
-                            </div>
-                            <div>
-                              <p className="font-orbitron text-green-500">
-                                {bonus.title}
-                              </p>
-                              <p className="text-sm text-text-secondary font-space-mono">
-                                Prêmio: {bonus.reward}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-green-500 font-orbitron">
-                              ✓ Completada
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+              <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-quantum-cyan">nível atual</p>
+              <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
+              {highest && (
+                <p className="mt-1 text-xs text-slate-400">Pack ativo: {highest.shortName}</p>
+              )}
+            </div>
           </div>
+        </section>
 
-          <div className="space-y-6">
-            <h2 className="text-2xl font-orbitron text-white flex items-center gap-2">
-              <Star className="text-yellow-500" /> Top Patrocinadores
-            </h2>
-            <TopSponsors />
-
-            <Card className="hud-frame bg-black/40 border-neon-cyan/30">
-              <CardHeader>
-                <CardTitle className="text-lg font-orbitron text-white">
-                  Leituras Operacionais
-                </CardTitle>
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {BONUS_LIST.map((bonus) => (
+            <Card
+              key={bonus.id}
+              className="border-white/10 bg-white/5 backdrop-blur transition hover:border-white/20"
+            >
+              <CardHeader className="space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-2">{bonus.icon}</div>
+                    <div>
+                      <Badge
+                        className={`border ${CATEGORY_COLORS[bonus.category]} border-white/10 bg-white/5`}
+                      >
+                        {bonus.category}
+                      </Badge>
+                      <CardTitle className="mt-1 text-base text-white leading-snug">
+                        {bonus.title}
+                      </CardTitle>
+                    </div>
+                  </div>
+                  {bonus.isEventual && (
+                    <Badge className="border border-amber-400/30 bg-amber-400/10 text-amber-300">
+                      <Calendar className="mr-1 h-3 w-3" /> Eventual
+                    </Badge>
+                  )}
+                </div>
+                <CardDescription className="text-sm leading-6 text-slate-300">
+                  {bonus.description}
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm font-space-mono text-text-secondary">
-                <p>
-                  Indicados diretos rastreados:{" "}
-                  <span className="text-white">{directReferrals.length}</span>
-                </p>
-                <p>
-                  Pedidos recentes considerados:{" "}
-                  <span className="text-white">{recentOrders.length}</span>
-                </p>
-                <p>
-                  Status do agente:{" "}
-                  <span className="text-white">
-                    {agentIsActive ? "ativo" : "configurando"}
-                  </span>
-                </p>
-                <p>
-                  Último pedido:{" "}
-                  <span className="text-white">
-                    {latestOrderDate
-                      ? latestOrderDate.toLocaleDateString("pt-BR")
-                      : "sem registros"}
-                  </span>
-                </p>
+              <CardContent className="space-y-3">
+                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Recompensa</p>
+                  <p className="mt-1 font-semibold text-white">{bonus.reward}</p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Liberação</p>
+                  <p className="mt-1 text-slate-200">{bonus.unlockLevel}</p>
+                </div>
+                <ul className="space-y-1 text-xs text-slate-400">
+                  {bonus.requirements.map((req) => (
+                    <li key={req} className="flex items-start gap-2">
+                      <span className="mt-1 h-1 w-1 rounded-full bg-quantum-cyan/60" /> {req}
+                    </li>
+                  ))}
+                </ul>
+                {typeof bonus.progress === "number" && (
+                  <Progress value={bonus.progress} className="h-2 bg-white/10" />
+                )}
+                {bonus.expiresAt && (
+                  <p className="text-xs text-amber-300">
+                    <Calendar className="mr-1 inline h-3 w-3" /> Prazo final: {bonus.expiresAt}
+                  </p>
+                )}
               </CardContent>
             </Card>
-          </div>
-        </div>
+          ))}
+        </section>
 
-        {selectedBonus && (
-          <Card className="fixed inset-0 z-50 m-4 max-w-2xl mx-auto my-auto hud-frame bg-black/95 border-neon-cyan/30">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-black/60 rounded-lg border border-neon-cyan/20">
-                  {selectedBonus.icon}
-                </div>
-                <div>
-                  <CardTitle className="text-2xl font-orbitron text-white">
-                    {selectedBonus.title}
-                  </CardTitle>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedBonus(null)}
-                className="text-neon-cyan border-neon-cyan/30"
-              >
-                ✕
-              </Button>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <p className="text-text-secondary font-space-mono">
-                {selectedBonus.description}
-              </p>
-
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm font-space-mono">
-                  <span className="text-neon-cyan">Progresso</span>
-                  <span className="text-white">
-                    {getProgressPercentage(selectedBonus)}%
-                  </span>
-                </div>
-                <Progress
-                  value={getProgressPercentage(selectedBonus)}
-                  className={`h-3 bg-black/60 ${getProgressColor(getProgressPercentage(selectedBonus))}`}
-                />
-                <p className="text-xs text-text-secondary font-space-mono">
-                  {shouldFormatProgressAsCurrency(selectedBonus)
-                    ? `${formatCurrency(selectedBonus.progress)} de ${formatCurrency(selectedBonus.maxProgress)}`
-                    : `${selectedBonus.progress} de ${selectedBonus.maxProgress}`}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 p-4 bg-black/60 rounded border border-neon-cyan/20">
-                <div>
-                  <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
-                    Tipo de Prêmio
-                  </p>
-                  <p className="font-bold text-neon-pink font-orbitron">
-                    {selectedBonus.reward}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
-                    Categoria
-                  </p>
-                  <p className="font-bold text-neon-cyan font-orbitron capitalize">
-                    {selectedBonus.category}
-                  </p>
-                </div>
-                {selectedBonus.deadline && (
-                  <div>
-                    <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
-                      Prazo
-                    </p>
-                    <p className="font-bold text-yellow-500 font-orbitron">
-                      {getDaysRemaining(selectedBonus.deadline)} dias
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs text-text-secondary uppercase font-space-mono mb-1">
-                    Status
-                  </p>
-                  <p className="font-bold text-green-500 font-orbitron capitalize">
-                    {selectedBonus.status}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3 pt-4 border-t border-neon-cyan/20">
-                <Button className="flex-1 btn-neon-cyan font-orbitron text-sm">
-                  Acompanhar Meta
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1 border-neon-cyan/30 text-neon-cyan font-orbitron text-sm"
-                  onClick={() => setSelectedBonus(null)}
-                >
-                  Fechar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <section className="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
+          <p className="font-semibold">⚠️ Ações eventuais</p>
+          <p className="mt-1">
+            Sorteios, metas e desafios são ações <strong>eventuais</strong>, não efetivas. Sempre que uma nova ação é lançada ela vem com prazo final e regras específicas, divulgados no painel oficial.
+          </p>
+        </section>
       </div>
     </DashboardLayout>
   );

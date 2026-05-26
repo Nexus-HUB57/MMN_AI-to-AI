@@ -59,7 +59,7 @@ const SEED_SKILLS = [
     features: JSON.stringify([
       "Calendário editorial básico",
       "Agendamento de posts",
-      "Resgadas automáticas simples",
+      "Respostas automáticas simples",
       "Relatórios mensais",
       "Gestão de comentarios",
     ]),
@@ -993,7 +993,7 @@ const SEED_SKILLS = [
     slug: "analytics-full-avancado",
     description: "Análise avançada com dashboards customizados, funis de conversão e previsões com machine learning.",
     shortDescription: "Análise avançada com dashboards e previsões.",
-    level: "0" as const,
+    level: "advanced" as const,
     category: "analytics",
     subcategory: "intelligence",
     price: 9800,

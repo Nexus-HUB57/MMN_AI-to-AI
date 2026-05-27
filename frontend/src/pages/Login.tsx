@@ -133,7 +133,7 @@ export default function Login() {
                   <Lock className="h-4 w-4" /> BackOffice Administrador Restrito
                 </p>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Acesso exclusivo do administrador <strong>Lucas Thomaz</strong> ({ADMIN_EMAIL}). Requer e-mail e senha.
+                  Acesso Restrito — <strong>Equipe Nexus Affil&apos;IA&apos;te</strong>. Requer e-mail e senha autorizados.
                 </p>
               </div>
 
@@ -185,8 +185,9 @@ export default function Login() {
                     className={mode === "admin" ? "gradient-btn" : "text-text-secondary"}
                     onClick={() => {
                       setMode("admin");
-                      setEmail(ADMIN_EMAIL);
-                      setName("Lucas Thomaz");
+                      // Não pré-preencher email/nome do administrador na UI
+                      setEmail("");
+                      setName("");
                       setErrorMessage(null);
                     }}
                   >
@@ -214,7 +215,7 @@ export default function Login() {
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
-                      placeholder={mode === "admin" ? ADMIN_EMAIL : "usuario@demo.mmn.ai"}
+                      placeholder={mode === "admin" ? "E-mail autorizado da Equipe Nexus Affil'IA'te" : "usuario@demo.mmn.ai"}
                       className="bg-background"
                       autoComplete="email"
                     />

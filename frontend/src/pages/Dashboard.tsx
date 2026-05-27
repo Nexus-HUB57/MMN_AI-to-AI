@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "./DashboardLayout";
 import bgUser from "@/assets/bg-user.webp";
@@ -12,8 +13,9 @@ import {
   Bot,
   Calendar,
   ChevronRight,
+  Copy,
   Gift,
-  Globe,
+  Hash,
   Layers,
   Lock,
   Package,
@@ -158,7 +160,9 @@ export default function Dashboard() {
   const { profile, refresh } = useMarketplaceProfile();
   const [isCollecting, setIsCollecting] = useState(false);
   const [showBtcModal, setShowBtcModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [btcAmountBrl, setBtcAmountBrl] = useState(100);
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
 
   const balance = profile.btcAllocated;
   const btcLocked = isBtcLocked(profile);
@@ -167,6 +171,54 @@ export default function Dashboard() {
   const displayName = user?.name || "Afiliado IOAID · SaaS";
   const displayEmail = user?.email || "usuario@demo.mmn.ai";
   const displayRole = user?.role === "admin" ? "Administrador" : "Afiliado";
+
+  // -------------------------------------------------------------------------
+  // Identificadores públicos do Afiliado (Nexus SaaS · IOAID)
+  // -------------------------------------------------------------------------
+  // ID de Indicador: prefixo NX + primeiros 8 chars do user.id (sem hífens)
+  const referralId = useMemo(() => {
+    const raw = (user?.id || profile.userId || "").toString().replace(/[^A-Za-z0-9]/g, "");
+    return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
+  }, [user?.id, profile.userId]);
+
+  // Link de indicação público (mini-site / cadastro)
+  const referralLink = useMemo(() => {
+    if (typeof window === "undefined") return `/afiliado/${referralId}`;
+    return `${window.location.origin}/afiliado/${referralId}`;
+  }, [referralId]);
+
+  // -------------------------------------------------------------------------
+  // Saldo total (Comissões liberadas em R$ — base de saque)
+  // -------------------------------------------------------------------------
+  // Em produção este valor virá de `trpc.payments.getAvailableBalance`.
+  // Por enquanto consolidamos o saldo disponível mock (R$).
+  const totalBalanceBrl = 3450.0;
+  const totalBalanceLocked = totalBalanceBrl * 0.35; // 35% retido no ciclo até fechamento da janela
+  const totalBalanceAvailable = totalBalanceBrl - totalBalanceLocked;
+
+  const handleCopyReferral = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      toast.success("Link de indicação copiado");
+    } catch {
+      toast.error("Não foi possível copiar o link");
+    }
+  };
+
+  const handleRequestWithdraw = () => {
+    if (withdrawAmount <= 0) {
+      toast.error("Informe um valor maior que zero");
+      return;
+    }
+    if (withdrawAmount > totalBalanceAvailable) {
+      toast.error(`Valor acima do disponível (R$ ${totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })})`);
+      return;
+    }
+    // Em produção: trpc.payments.requestWithdrawal.mutate({ amount: withdrawAmount * 100 })
+    toast.success(`Solicitação de saque de R$ ${withdrawAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} enviada. Janela oficial: dia 10 a 15 de cada mês.`);
+    setShowWithdrawModal(false);
+    setWithdrawAmount(0);
+  };
 
   const handleHarvest = () => {
     setIsCollecting(true);
@@ -206,6 +258,19 @@ export default function Dashboard() {
             <p className="mt-1 text-sm text-slate-400">
               {displayEmail} · {displayRole} · NEXUS_NODE // CONEXÃO_ESTÁVEL
             </p>
+            <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-md border border-quantum-cyan/30 bg-quantum-cyan/5 px-3 py-1.5 font-mono text-[11px] text-quantum-cyan">
+              <Hash size={12} />
+              <span className="uppercase tracking-widest text-[10px] text-slate-400">ID de Indicador</span>
+              <span className="font-bold tracking-wider text-white">{referralId}</span>
+              <button
+                type="button"
+                onClick={handleCopyReferral}
+                className="ml-1 inline-flex items-center gap-1 rounded border border-quantum-cyan/30 px-2 py-0.5 text-[10px] uppercase tracking-widest hover:bg-quantum-cyan/15"
+                title="Copiar link de indicação"
+              >
+                <Copy size={10} /> Copiar link
+              </button>
+            </div>
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
             <button
@@ -231,6 +296,51 @@ export default function Dashboard() {
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {/* SALDO TOTAL (R$) · com botão Solicitar Saque */}
+          <div className="rounded-lg border border-quantum-lime/40 bg-gradient-to-br from-quantum-lime/10 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-lime/60 hover:shadow-quantum">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                  // Saldo Total · BRL
+                </p>
+                <p className="mt-3 font-sans text-3xl font-bold text-quantum-lime">
+                  R$ {totalBalanceBrl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">
+                <Wallet size={16} />
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+              <div className="rounded border border-quantum-lime/20 bg-quantum-lime/5 px-2 py-1.5">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Disponível</p>
+                <p className="font-mono font-semibold text-quantum-lime">
+                  R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded border border-amber-400/20 bg-amber-400/5 px-2 py-1.5">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Retido (ciclo)</p>
+                <p className="font-mono font-semibold text-amber-300">
+                  R$ {totalBalanceLocked.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setWithdrawAmount(Number(totalBalanceAvailable.toFixed(2)));
+                setShowWithdrawModal(true);
+              }}
+              disabled={totalBalanceAvailable <= 0}
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md border border-quantum-lime/40 bg-quantum-lime/15 px-3 py-2 font-mono text-[11px] uppercase tracking-widest text-quantum-lime transition hover:bg-quantum-lime/25 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Wallet size={12} /> Solicitar Saque
+            </button>
+            <p className="mt-2 text-[10px] text-slate-500">
+              Janela oficial: dia 10 a 15 de cada mês · PIX/BeYour Banker
+            </p>
+          </div>
+
           <button
             type="button"
             onClick={() => setShowBtcModal(true)}
@@ -254,16 +364,6 @@ export default function Dashboard() {
               bc1qwwgdhzdgy97ysqqtd9z7rwv76fwktg0w4tvwf8
             </p>
           </button>
-
-          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-              // Comissões do Mês
-            </p>
-            <p className="mt-3 font-sans text-3xl font-bold text-white">R$ 3.450,00</p>
-            <p className="mt-2 inline-flex items-center gap-1 text-xs text-quantum-lime">
-              <TrendingUp size={12} /> +18% vs. mês passado
-            </p>
-          </div>
 
           <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
@@ -464,6 +564,85 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
+
+      {/* MODAL: Solicitar Saque */}
+      {showWithdrawModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowWithdrawModal(false)}>
+          <div
+            className="relative w-full max-w-lg rounded-2xl border border-quantum-lime/40 bg-obsidian-900 p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowWithdrawModal(false)}
+              className="absolute right-3 top-3 text-slate-400 hover:text-white"
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-quantum-lime/10 text-quantum-lime">
+                <Wallet size={20} />
+              </span>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-lime">// SAQUE BRL</p>
+                <h2 className="text-lg font-semibold text-white">Solicitar Saque</h2>
+              </div>
+            </div>
+            <p className="mt-4 text-sm text-slate-300">
+              Saques são processados na <strong className="text-quantum-lime">janela oficial entre o dia 10 e 15 de cada mês</strong> via PIX/BeYour Banker, conforme PIX cadastrado no seu perfil.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+              <div className="rounded-lg border border-quantum-lime/30 bg-quantum-lime/5 p-3">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Saldo disponível</p>
+                <p className="mt-1 font-mono text-lg font-bold text-quantum-lime">
+                  R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded-lg border border-amber-400/30 bg-amber-400/5 p-3">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Retido no ciclo</p>
+                <p className="mt-1 font-mono text-lg font-bold text-amber-300">
+                  R$ {totalBalanceLocked.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 space-y-3">
+              <label className="block text-xs uppercase tracking-widest text-slate-400" htmlFor="withdrawAmount">
+                Valor a sacar (BRL)
+              </label>
+              <input
+                id="withdrawAmount"
+                type="number"
+                min={0}
+                step={10}
+                value={withdrawAmount}
+                onChange={(event) => setWithdrawAmount(Number(event.target.value) || 0)}
+                className="w-full rounded-lg border border-obsidian-700 bg-obsidian-800 px-3 py-2 text-white focus:border-quantum-lime focus:outline-none"
+              />
+              <p className="text-xs text-slate-400">
+                Mínimo R$ 50,00 · máximo R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleRequestWithdraw}
+                disabled={withdrawAmount <= 0}
+                className="inline-flex items-center gap-2 rounded-lg border border-quantum-lime/40 bg-gradient-to-r from-quantum-lime to-quantum-cyan px-4 py-2 text-sm font-bold text-obsidian shadow-quantum disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Wallet size={14} /> Confirmar solicitação
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowWithdrawModal(false)}
+                className="inline-flex items-center gap-2 rounded-lg border border-obsidian-700 bg-obsidian-800 px-4 py-2 text-sm text-slate-200 hover:border-quantum-lime/30"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showBtcModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowBtcModal(false)}>

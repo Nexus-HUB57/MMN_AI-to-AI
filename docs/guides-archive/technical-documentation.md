@@ -21,12 +21,12 @@ O frontend é desenvolvido utilizando React com TypeScript, proporcionando uma i
 
 O backend é construído com Node.js e TypeScript, utilizando o framework tRPC para a criação de APIs. Ele é responsável pela lógica de negócios, persistência de dados, integrações com serviços externos (marketplaces, pagamentos) e funcionalidades de IA.
 
-*   **Tecnologias**: Node.js, TypeScript, tRPC, **Drizzle ORM**, **MySQL 8** (banco de dados).
+*   **Tecnologias**: Node.js, TypeScript, tRPC, **Drizzle ORM**, **PostgreSQL** (banco de dados).
 *   **Estrutura**: Routers (e.g., `backend/src/routers/`), serviços (e.g., `backend/src/services/`), configurações (e.g., `backend/src/config/`).
 
 ### 2.3. Banco de Dados
 
-O sistema utiliza **MySQL 8** como banco de dados relacional para armazenar informações de usuários, afiliados, comissões, produtos, pedidos e configurações. O **Drizzle ORM** é utilizado para interagir com o banco de forma segura e tipada (schemas em `database/schemas/schema-final.ts`, migrações em `database/migrations/`, config em `infra/drizzle.config.ts`).
+O sistema utiliza **PostgreSQL** como banco de dados relacional para armazenar informações de usuários, afiliados, comissões, produtos, pedidos e configurações. O **Drizzle ORM** é utilizado para interagir com o banco de forma segura e tipada (schemas em `database/schemas/schema-final.ts`, migrações em `database/migrations/`, config em `infra/drizzle.config.ts`).
 
 ## 3. Estrutura de Diretórios e Módulos Principais
 

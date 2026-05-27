@@ -20,7 +20,7 @@
 
 | Função | Acesso | Permissões |
 |--------|--------|------------|
-| Administrador Principal | Lucas Thomaz | Total |
+| Administrador Principal | Equipe Nexus Affil'IA'te | Total |
 | Gestor de Rede | Designado | Parcial |
 | Suporte Nível 1 | Equipe | Apenas leitura |
 | Suporte Nível 2 | Equipe | Leitura + Ajustes |

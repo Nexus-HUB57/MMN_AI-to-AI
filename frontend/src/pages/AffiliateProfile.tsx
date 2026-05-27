@@ -25,8 +25,9 @@ import {
 import { useEffect, useState } from "react";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { updateMarketplaceProfile, getLevelLabel } from "@/lib/nexus-marketplace";
+import type { PixKeyType } from "@/lib/nexus-marketplace";
 
-type PixType = "cpf" | "email" | "telefone" | "aleatoria";
+type PixType = PixKeyType;
 
 export default function AffiliateProfile() {
   const { user } = useAuth();
@@ -34,11 +35,11 @@ export default function AffiliateProfile() {
 
   const [name, setName] = useState(user?.name ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(profile.phone ?? "");
   const [cpf, setCpf] = useState(profile.cpf ?? "");
-  const [pixType, setPixType] = useState<PixType>("cpf");
+  const [pixType, setPixType] = useState<PixType>(profile.pixType ?? "cpf");
   const [pixKey, setPixKey] = useState(profile.pixKey ?? "");
-  const [autoWithdraw, setAutoWithdraw] = useState(false);
+  const [autoWithdraw, setAutoWithdraw] = useState<boolean>(profile.autoWithdraw ?? false);
   const [copied, setCopied] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
@@ -46,8 +47,11 @@ export default function AffiliateProfile() {
     setName(user?.name ?? "");
     setEmail(user?.email ?? "");
     setCpf(profile.cpf ?? "");
+    setPhone(profile.phone ?? "");
     setPixKey(profile.pixKey ?? "");
-  }, [user?.name, user?.email, profile.cpf, profile.pixKey]);
+    setPixType(profile.pixType ?? "cpf");
+    setAutoWithdraw(profile.autoWithdraw ?? false);
+  }, [user?.name, user?.email, profile.cpf, profile.phone, profile.pixKey, profile.pixType, profile.autoWithdraw]);
 
   const affiliateCode = (user?.id ?? "nexus-peer").slice(0, 12);
   const affiliateUrl =
@@ -67,7 +71,10 @@ export default function AffiliateProfile() {
       userName: name,
       userEmail: email,
       cpf,
+      phone,
       pixKey,
+      pixType,
+      autoWithdraw,
     });
     refresh();
     setSavedAt(Date.now());
@@ -199,7 +206,12 @@ export default function AffiliateProfile() {
                     type="button"
                     role="switch"
                     aria-checked={autoWithdraw}
-                    onClick={() => setAutoWithdraw((v) => !v)}
+                    onClick={() => {
+                      const next = !autoWithdraw;
+                      setAutoWithdraw(next);
+                      updateMarketplaceProfile({ autoWithdraw: next });
+                      refresh();
+                    }}
                     className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border transition ${
                       autoWithdraw
                         ? "border-quantum-cyan/60 bg-quantum-cyan/40"

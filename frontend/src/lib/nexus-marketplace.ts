@@ -140,6 +140,8 @@ export interface ExternalMarketplaceChannel {
   internalUrl?: string;
 }
 
+export type PixKeyType = "cpf" | "email" | "telefone" | "aleatoria";
+
 export interface MarketplaceProfile {
   version: number;
   userId?: string;
@@ -147,6 +149,9 @@ export interface MarketplaceProfile {
   userEmail?: string;
   cpf?: string;
   pixKey?: string;
+  pixType?: PixKeyType;
+  phone?: string;
+  autoWithdraw?: boolean;
   currentXp: number;
   directReferrals: number;
   currentLevel: CareerLevelKey;

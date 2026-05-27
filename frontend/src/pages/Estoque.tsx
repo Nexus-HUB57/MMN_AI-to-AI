@@ -10,6 +10,7 @@ import {
   getOperationalInventory,
   type OperationalStockItem,
 } from "@/lib/nexus-marketplace";
+import { NEXUS_PARTNERS, getPartnerBySlug } from "@/lib/nexus-partners";
 import {
   AlertCircle,
   ArrowRight,
@@ -26,10 +27,10 @@ import {
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// Catálogo demonstrativo de "Produtos em Alta" agregados das plataformas
-// parceiras (Shopee, Hotmart, Mercado Livre). Estes dados podem ser
-// substituídos por um endpoint real quando o pipeline de tendências estiver
-// online. Mantemos a estrutura para que o Agente IA consiga sincronizar.
+// Catálogo de "Produtos em Alta" agregados das plataformas parceiras
+// (Shopee, Hotmart, Mercado Livre). Os itens abaixo são curados pela equipe
+// Nexus SaaS e usados como base enquanto o pipeline server-side de Hotmart
+// (OAuth client credentials) e Shopee Afiliados (ID público) sincroniza.
 // ---------------------------------------------------------------------------
 const TRENDING_PRODUCTS = [
   {
@@ -117,6 +118,24 @@ export default function Estoque() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
+        {/* Aviso de vínculo Nexus SaaS · plataformas parceiras */}
+        <section className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/5 p-4 text-sm text-quantum-cyan/90">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p>
+              <strong className="text-white">Nexus SaaS</strong> está vinculada às plataformas parceiras. O Agente IA usa o perfil oficial para revenda e tracking de comissões.
+            </p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {NEXUS_PARTNERS.map((partner) => (
+                <span key={partner.slug} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-200">
+                  {partner.name}
+                  {partner.affiliateId ? ` · ID ${partner.affiliateId}` : ""}
+                  {partner.username ? ` · @${partner.username}` : ""}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Header */}
         <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -294,6 +313,7 @@ export default function Estoque() {
                   const Icon = PLATFORM_ICONS[channel.icon] ?? ShoppingBag;
                   const url = channel.externalUrl ?? channel.internalUrl ?? "#";
                   const isExternal = Boolean(channel.externalUrl);
+                  const partner = getPartnerBySlug(channel.slug as any);
                   return (
                     <a
                       key={channel.slug}
@@ -311,6 +331,12 @@ export default function Estoque() {
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-white">{channel.name}</p>
                         <p className="mt-1 text-xs text-slate-400 leading-5">{channel.description}</p>
+                        {partner && (
+                          <p className="mt-1 text-[10px] uppercase tracking-widest text-quantum-cyan/80">
+                            {partner.affiliateProfile}
+                            {partner.affiliateId ? ` · ID ${partner.affiliateId}` : ""}
+                          </p>
+                        )}
                       </div>
                       <ExternalLink className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
                     </a>

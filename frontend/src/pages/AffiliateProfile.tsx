@@ -38,6 +38,7 @@ export default function AffiliateProfile() {
   const [cpf, setCpf] = useState(profile.cpf ?? "");
   const [pixType, setPixType] = useState<PixType>("cpf");
   const [pixKey, setPixKey] = useState(profile.pixKey ?? "");
+  const [autoWithdraw, setAutoWithdraw] = useState(false);
   const [copied, setCopied] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
@@ -185,10 +186,42 @@ export default function AffiliateProfile() {
                 />
                 <p className="text-xs text-slate-400">{pixHelp[pixType]}</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-slate-300">
+              <div className="rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 p-3 text-sm text-slate-200">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-white inline-flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-quantum-cyan" />
+                      Autorizar Saque Automático
+                    </p>
+                    <p className="text-xs text-slate-300">Retirada Mensal Automática.</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={autoWithdraw}
+                    onClick={() => setAutoWithdraw((v) => !v)}
+                    className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border transition ${
+                      autoWithdraw
+                        ? "border-quantum-cyan/60 bg-quantum-cyan/40"
+                        : "border-white/15 bg-white/10"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                        autoWithdraw ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-xs text-slate-300 space-y-1">
                 <p className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-quantum-lime" />
                   Os saques só são processados para a chave PIX cadastrada e validada pelo titular do CPF.
+                </p>
+                <p className="text-slate-400">
+                  As retiradas acontecem <strong className="text-slate-200">entre o dia 10 e 15 de cada mês</strong>.
                 </p>
               </div>
             </CardContent>

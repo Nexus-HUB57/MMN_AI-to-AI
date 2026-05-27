@@ -211,9 +211,29 @@ export default function Marketplaces() {
                 ))
               ) : (
                 <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                  Nenhuma nova ativação mensal está disponível neste instante. Complete os critérios de carreira para liberar o próximo pack.
+                  Nenhuma nova ativação mensal está disponível neste instante. Estar em dia com a sua Ativação é a única Garantia para receber os Bônus e Comissões!
                 </div>
               )}
+
+              <Link href="/estoque">
+                <Button variant="outline" className="w-full border-amber-300/30 bg-amber-300/5 text-amber-100 hover:bg-amber-300/15">
+                  <ShoppingBag className="mr-2 h-4 w-4" />
+                  Adquirir Produtos para o meu Estoque Operacional
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+
+              <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs leading-6 text-amber-100/90">
+                <p className="font-semibold text-amber-200">⏱️ Janela oficial de Ativação Mensal</p>
+                <p className="mt-1">
+                  A operação de Ativação Mensal deve ser configurada ao sistema, devendo esse compromisso ser efetivado <strong>do dia 01 ao dia 10 de cada mês</strong>.
+                </p>
+                <p className="mt-3 font-semibold text-amber-200">Diretrizes de inadimplência</p>
+                <ul className="mt-1 space-y-1 list-disc pl-5">
+                  <li>Inadimplência de <strong>3 meses consecutivos</strong>: suspensão de <strong>90 dias</strong> de Bônus e Comissões.</li>
+                  <li>Inadimplência superior a <strong>4 meses consecutivos</strong>: retrocesso de Nível + suspensão de <strong>120 dias</strong> de Bônus e Comissões.</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
 

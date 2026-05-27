@@ -40,6 +40,7 @@ const SkillsMarketplace = lazy(() => import("./pages/SkillsMarketplace"));
 const MarketplaceEbooks = lazy(() => import("./pages/MarketplaceEbooks"));
 const SisuPanel = lazy(() => import("./pages/SisuPanel"));
 const DropshippingOrders = lazy(() => import("./pages/DropshippingOrders"));
+const Estoque = lazy(() => import("./pages/Estoque"));
 
 const MarketingMaterials = lazy(() => import("./pages/MarketingMaterials"));
 const BannerManager = lazy(() => import("./pages/BannerManager"));
@@ -408,6 +409,7 @@ export default function App() {
             <Route path="/skills" component={SkillsMarketplace} />
             <Route path="/upgrades" component={Upgrades} />
             <Route path="/dropshipping/orders" component={DropshippingOrders} />
+            <Route path="/estoque" component={Estoque} />
 
             <Route path="/marketing/materials" component={MarketingMaterials} />
             <Route path="/marketing/banners" component={BannerManager} />

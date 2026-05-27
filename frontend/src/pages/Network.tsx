@@ -10,10 +10,10 @@ export default function Network() {
         {/* Page Header */}
         <div>
           <h1 className="text-4xl font-bold text-foreground mb-2">
-            Sua Rede de Afiliados
+            Seu Networking Operacional &quot;N.O&quot;
           </h1>
           <p className="text-text-secondary">
-            Visualize e gerencie sua rede de indicados e comissoes
+            Visualize e Gerencie a sua Rede / Networking Operacional (Indicados e Comissões).
           </p>
         </div>
 
@@ -25,10 +25,10 @@ export default function Network() {
             </div>
           </div>
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            Secao em Desenvolvimento
+            Seção em Desenvolvimento
           </h2>
           <p className="text-text-secondary mb-6">
-            A visualizacao de rede de afiliados esta sendo desenvolvida. Volte em breve!
+            A visualização de rede de afiliados está sendo desenvolvida. Volte em breve!
           </p>
           <Button
             onClick={() => window.history.back()}

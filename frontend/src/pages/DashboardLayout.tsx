@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           icon: <BarChart3 className="w-5 h-5" />,
         },
         {
-          label: "Rede MMN",
+          label: "Rede Binária N.O",
           href: "/network",
           icon: <Network className="w-5 h-5" />,
         },
@@ -208,6 +208,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           href: "/marketplaces/ebooks",
           icon: <BookOpen className="w-5 h-5" />,
           badge: "R$ 0,50",
+        },
+        {
+          label: "Meu Estoque",
+          href: "/estoque",
+          icon: <Box className="w-5 h-5" />,
+          badge: "Novo",
         },
         {
           label: "Sub-Redes (SiSu)",

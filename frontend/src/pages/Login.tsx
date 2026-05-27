@@ -102,18 +102,18 @@ export default function Login() {
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
                   <Zap className="w-6 h-6 text-background" />
                 </div>
-                <h1 className="text-4xl font-bold gradient-text">MMNAI</h1>
+                <h1 className="text-4xl font-bold gradient-text">IOAID · SaaS</h1>
               </div>
               <p className="text-text-secondary text-lg max-w-md">
-                Acesso ao painel do afiliado e ao backoffice administrativo restrito.
+                Acesso ao Painel do Afiliado e ao BackOffice Administrador Restrito.
               </p>
             </div>
 
             <div className="space-y-5 max-w-xl">
               <div className="rounded-2xl border border-accent-cyan/20 bg-accent-cyan/5 p-5">
-                <p className="text-sm font-semibold text-accent-cyan">Acesso usuário</p>
+                <p className="text-sm font-semibold text-accent-cyan">Acesso Afiliado</p>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Painel completo do afiliado: marketplace, packs, agentes, recompensas e mais.
+                  Painel do Afiliado: Sistema, Marketplace, Packs, Agente(s), Clube de Vantagens e mais.
                 </p>
                 <div className="mt-4">
                   <Button
@@ -123,26 +123,26 @@ export default function Login() {
                     disabled={isSubmitting}
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Entrar como usuário (demo)
+                    Conhecer o Sistema Nexus Afil&apos;IA&apos;te (Conta Demo)
                   </Button>
                 </div>
               </div>
 
               <div className="rounded-2xl border border-accent-purple/20 bg-accent-purple/5 p-5">
                 <p className="flex items-center gap-2 text-sm font-semibold text-accent-purple">
-                  <Lock className="h-4 w-4" /> Acesso administrador (restrito)
+                  <Lock className="h-4 w-4" /> BackOffice Administrador Restrito
                 </p>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Backoffice administrativo é exclusivo do administrador <strong>Lucas Thomaz</strong> ({ADMIN_EMAIL}). Acesso requer e-mail e senha.
+                  Acesso exclusivo do administrador <strong>Lucas Thomaz</strong> ({ADMIN_EMAIL}). Requer e-mail e senha.
                 </p>
               </div>
 
               <div className="space-y-3">
                 {[
-                  "Cadastro redireciona automaticamente para o Marketplace",
-                  "Acesso de afiliado libera apenas o Pack A² inicialmente",
-                  "Backoffice admin protegido por senha e e-mail registrado",
-                  "Sessão persistida com checagem de integridade do papel",
+                  "Cadastro com Redirecionamento Automático para o Backoffice",
+                  "Pack Agente Afiliado A² — Pacote Inicial de Acesso",
+                  "Rede Binária de Alto Fluxo e Produtos de Alta Demanda e Tendência",
+                  "Sessão persistida com Checagem de Integridade do Papel",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3 text-sm text-text-secondary">
                     <span className="mt-1 h-2 w-2 rounded-full bg-accent-green"></span>
@@ -157,11 +157,11 @@ export default function Login() {
             <Card className="border-accent/30 bg-card/50 backdrop-blur-md shadow-2xl">
               <div className="p-8 sm:p-10 space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-foreground">Acessar ambiente</h3>
+                  <h3 className="text-2xl font-bold text-foreground">Acessar Ambiente Digital</h3>
                   <p className="text-text-secondary">
                     {mode === "admin"
-                      ? "Insira o e-mail e a senha do administrador para abrir o backoffice."
-                      : "Acesse o painel do afiliado para gerenciar agentes e marketplace."}
+                      ? "Insira o e-mail e a senha do administrador para abrir o BackOffice."
+                      : "Acesse o Painel do Afiliado para Gerenciar Agentes e Acessar Marketplaces."}
                   </p>
                 </div>
 
@@ -257,16 +257,6 @@ export default function Login() {
                     {mode === "admin" ? "Entrar no backoffice admin" : "Entrar no painel do afiliado"}
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
-                  {mode === "affiliate" && (
-                    <Button
-                      variant="outline"
-                      onClick={handleAffiliateQuickAccess}
-                      disabled={isSubmitting}
-                      className="w-full border-border hover:bg-muted"
-                    >
-                      Acesso rápido (demo)
-                    </Button>
-                  )}
                 </div>
               </div>
             </Card>

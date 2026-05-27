@@ -39,9 +39,16 @@ const QUICK_ACTIONS = [
   {
     href: "/marketplaces?focus=monthly-activation",
     label: "Ativação Mensal",
-    description: "Escolher packs e produtos para abastecer o Estoque",
+    description: "Ative-se e se Qualifique aos Bônus e Comissões",
     icon: Package,
     accent: "from-amber-400/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/estoque",
+    label: "Meu Estoque",
+    description: "Meus Produtos · Produtos em Alta nas plataformas parceiras",
+    icon: ShoppingCart,
+    accent: "from-quantum-lime/30 to-quantum-cyan/0",
   },
   {
     href: "/marketplaces",
@@ -157,7 +164,7 @@ export default function Dashboard() {
   const btcLocked = isBtcLocked(profile);
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
 
-  const displayName = user?.name || "Usuário MMN";
+  const displayName = user?.name || "Afiliado IOAID · SaaS";
   const displayEmail = user?.email || "usuario@demo.mmn.ai";
   const displayRole = user?.role === "admin" ? "Administrador" : "Afiliado";
 
@@ -242,6 +249,10 @@ export default function Dashboard() {
               <Bitcoin size={12} />
               {btcLocked ? `Cong. até ${profile.btcLockUntil?.slice(0, 10)}· 90d` : `Clique para alocar (lock ${BTC_LOCK_DAYS}d)`}
             </p>
+            <p className="mt-3 break-all rounded border border-quantum-cyan/20 bg-quantum-cyan/5 px-2 py-1 text-left font-mono text-[10px] text-quantum-cyan/90">
+              <span className="block text-[9px] uppercase tracking-widest text-slate-500">Endereço de Custódia BTC</span>
+              bc1qwwgdhzdgy97ysqqtd9z7rwv76fwktg0w4tvwf8
+            </p>
           </button>
 
           <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
@@ -321,9 +332,9 @@ export default function Dashboard() {
             <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
               // STATUS_DA_INFRA
             </p>
-            <h3 className="mt-2 font-sans text-lg font-semibold text-white">Saúde do sistema</h3>
+            <h3 className="mt-2 font-sans text-lg font-semibold text-white">Saúde do Sistema</h3>
             <p className="mt-1 text-xs text-slate-400">
-              Monitoramento em tempo real do bootstrap MMN AI-to-AI.
+              Monitoramento em tempo real do bootstrap IOAID · SaaS.
             </p>
 
             <div className="mt-5 space-y-2">

@@ -109,12 +109,16 @@ export default function Home() {
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
-          A Inteligência Central que ramifica o futuro. Marketing multinível reinventado por agentes
-          autônomos, comissões em cascata e marketplaces integrados.
+        <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 sm:text-lg">
+          A Inteligência Central que <strong className="text-white">Orquestra o Futuro</strong>.
         </p>
-        <p className="mt-3 font-mono text-xs uppercase tracking-[0.35em] text-white/60">
-          Conecte · Automatize · Lucre
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-400 sm:text-base">
+          <strong className="text-quantum-cyan">SaaS · IOAID</strong>{" "}
+          <span className="text-slate-500">(Infraestrutura Operacional Autônoma de Inteligência Distribuída)</span>.
+          Produção 24/7 com Agentes Autônomos, Marketplaces Integrados e Comissões em Cascata.
+        </p>
+        <p className="mt-5 font-mono text-xs uppercase tracking-[0.45em] text-quantum-cyan">
+          Conectar · Automatizar · Lucrar
         </p>
 
         {/* CTAs */}

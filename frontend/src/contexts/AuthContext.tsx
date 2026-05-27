@@ -49,7 +49,7 @@ const ADMIN_USER: User = {
 
 const AFFILIATE_DEMO_USER: User = {
   id: "affiliate-review-user",
-  name: "Usuário MMN",
+  name: "Afiliado IOAID · SaaS",
   email: "usuario@demo.mmn.ai",
   role: "affiliate",
 };

@@ -63,8 +63,8 @@ function KPICard({ icon: Icon, label, value, change, trend, accent }: KPIProps) 
 const MOCK_USERS = [
   {
     id: 1,
-    name: "Lucas Thomaz",
-    email: "lucasmpthomaz@gmail.com",
+    name: "Equipe Nexus Affil'IA'te",
+    email: "equipe-restrita@nexus.internal",
     role: "admin" as const,
     status: "active" as const,
     createdAt: "2025-04-12",

@@ -25,25 +25,24 @@ interface AuthContextType {
   login: (credentials?: LoginCredentials) => Promise<User>;
   loginAsDemo: (role: "admin" | "affiliate", overrides?: Partial<User>) => Promise<User>;
   logout: () => Promise<void>;
-  /**
-   * Tenta autenticar credenciais administrativas. Lança erro descritivo se inválidas.
-   */
   loginAdmin: (email: string, password: string) => Promise<User>;
 }
 
 const STORAGE_KEY = "mmn-ai-auth-session";
+const ADMIN_SESSION_ID = "admin-nexus-affiliate-core";
+const ADMIN_INTERNAL_EMAIL = "equipe-restrita@nexus.internal";
+const AUTHORIZED_ADMIN_EMAIL_SHA256 =
+  "7d67005172b41a8cf0abe1b5de9a5f1605821ff22d0207e9bd0f2cfcb91384b2";
+const AUTHORIZED_ADMIN_PASSWORD_SHA256 =
+  "81493748f444279b87fbdb2770ad8a24e12d4c676ede14087d6920c98f6d9a2e";
 
-// =============================================================================
-// CREDENCIAIS ADMIN — único administrador permitido.
-// O backoffice admin é EXCLUSIVO para Lucas Thomaz (lucasmpthomaz@gmail.com).
-// =============================================================================
-export const ADMIN_EMAIL = "lucasmpthomaz@gmail.com";
-const ADMIN_PASSWORD = "Benjamin2020*1981$";
+export const ADMIN_ACCESS_LABEL = "Equipe Nexus Affil'IA'te";
+export const ADMIN_RESTRICTED_NOTICE = "Acesso Restrito - Equipe Nexus Affil'IA'te";
 
 const ADMIN_USER: User = {
-  id: "admin-lucas-thomaz",
-  name: "Lucas Thomaz",
-  email: ADMIN_EMAIL,
+  id: ADMIN_SESSION_ID,
+  name: ADMIN_ACCESS_LABEL,
+  email: ADMIN_INTERNAL_EMAIL,
   role: "admin",
 };
 
@@ -69,6 +68,41 @@ function buildAffiliateUser(overrides?: Partial<User>): User {
   return { ...AFFILIATE_DEMO_USER, ...overrides, role: "affiliate" };
 }
 
+function isAuthorizedAdminSession(user: User) {
+  return user.role === "admin" && user.id === ADMIN_SESSION_ID && user.name === ADMIN_ACCESS_LABEL;
+}
+
+async function sha256(value: string) {
+  if (typeof window === "undefined" || !window.crypto?.subtle) {
+    throw new Error("Criptografia do navegador indisponível para validar acesso administrativo.");
+  }
+
+  const encoded = new TextEncoder().encode(value);
+  const digest = await window.crypto.subtle.digest("SHA-256", encoded);
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function matchesAuthorizedAdminEmail(email: string) {
+  if (!email) return false;
+  return (await sha256(email.trim().toLowerCase())) === AUTHORIZED_ADMIN_EMAIL_SHA256;
+}
+
+async function validateAdminCredentials(email: string, password: string) {
+  if (!email.trim() || !password) return false;
+
+  const [emailHash, passwordHash] = await Promise.all([
+    sha256(email.trim().toLowerCase()),
+    sha256(password),
+  ]);
+
+  return (
+    emailHash === AUTHORIZED_ADMIN_EMAIL_SHA256 &&
+    passwordHash === AUTHORIZED_ADMIN_PASSWORD_SHA256
+  );
+}
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,13 +112,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setLoading(false);
       return;
     }
+
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as User;
-        // Segurança: se houver um "admin" persistido que NÃO seja o e-mail oficial,
-        // descarta para não permitir injeção via localStorage.
-        if (parsed.role === "admin" && parsed.email.trim().toLowerCase() !== ADMIN_EMAIL) {
+        if (parsed.role === "admin" && !isAuthorizedAdminSession(parsed)) {
           window.localStorage.removeItem(STORAGE_KEY);
         } else {
           setUser(parsed);
@@ -99,12 +132,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const loginAsDemo = async (role: "admin" | "affiliate", overrides?: Partial<User>) => {
-    // Acesso admin via "demo" NÃO é mais permitido sem senha.
     if (role === "admin") {
       throw new Error(
-        "Backoffice admin restrito ao administrador Lucas Thomaz. Faça login com e-mail e senha.",
+        `${ADMIN_RESTRICTED_NOTICE}. Faça login com e-mail e senha autorizados.`,
       );
     }
+
     const nextUser = buildAffiliateUser(overrides);
     setUser(nextUser);
     persistUser(nextUser);
@@ -118,25 +151,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const loginAdmin = async (email: string, password: string) => {
-    const normalizedEmail = email.trim().toLowerCase();
-    if (normalizedEmail !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+    const isValid = await validateAdminCredentials(email, password);
+    if (!isValid) {
       throw new Error("E-mail ou senha inválidos para o backoffice administrativo.");
     }
+
     setUser(ADMIN_USER);
     persistUser(ADMIN_USER);
     return ADMIN_USER;
   };
 
   const login = async (credentials?: LoginCredentials) => {
-    const normalizedEmail = credentials?.email?.trim().toLowerCase();
+    const normalizedEmail = credentials?.email?.trim().toLowerCase() ?? "";
     const requestedAdmin =
-      credentials?.role === "admin" || normalizedEmail === ADMIN_EMAIL;
+      credentials?.role === "admin" || (normalizedEmail ? await matchesAuthorizedAdminEmail(normalizedEmail) : false);
 
     if (requestedAdmin) {
       if (!credentials?.password) {
         throw new Error("Acesso administrativo exige senha.");
       }
-      return loginAdmin(credentials.email ?? ADMIN_EMAIL, credentials.password);
+      return loginAdmin(normalizedEmail, credentials.password);
     }
 
     const nextUser = buildAffiliateUser({
@@ -160,7 +194,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     if (typeof window !== "undefined") {
       window.sessionStorage.clear();
-      window.localStorage.removeItem("mmn-ai-auth-session");
+      window.localStorage.removeItem(STORAGE_KEY);
     }
   };
 

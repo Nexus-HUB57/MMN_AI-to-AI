@@ -1,4 +1,8 @@
-import { useAuth, ADMIN_EMAIL } from "@/contexts/AuthContext";
+import {
+  useAuth,
+  ADMIN_ACCESS_LABEL,
+  ADMIN_RESTRICTED_NOTICE,
+} from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,7 +22,7 @@ export default function Login() {
   const initialMode = searchParams.get("mode") === "admin" ? "admin" : "affiliate";
 
   const [mode, setMode] = useState<"admin" | "affiliate">(initialMode);
-  const [email, setEmail] = useState(initialMode === "admin" ? ADMIN_EMAIL : "");
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -133,7 +137,7 @@ export default function Login() {
                   <Lock className="h-4 w-4" /> BackOffice Administrador Restrito
                 </p>
                 <p className="mt-2 text-sm text-text-secondary">
-                  Acesso Restrito — <strong>Equipe Nexus Affil&apos;IA&apos;te</strong>. Requer e-mail e senha autorizados.
+                  <strong>{ADMIN_RESTRICTED_NOTICE}</strong>. Requer e-mail e senha autorizados.
                 </p>
               </div>
 
@@ -160,7 +164,7 @@ export default function Login() {
                   <h3 className="text-2xl font-bold text-foreground">Acessar Ambiente Digital</h3>
                   <p className="text-text-secondary">
                     {mode === "admin"
-                      ? "Insira o e-mail e a senha do administrador para abrir o BackOffice."
+                      ? `Insira o e-mail e a senha autorizados da ${ADMIN_ACCESS_LABEL} para abrir o BackOffice.`
                       : "Acesse o Painel do Afiliado para Gerenciar Agentes e Acessar Marketplaces."}
                   </p>
                 </div>
@@ -174,7 +178,7 @@ export default function Login() {
                       setMode("affiliate");
                       setPassword("");
                       setErrorMessage(null);
-                      if (email === ADMIN_EMAIL) setEmail("");
+                      setEmail("");
                     }}
                   >
                     Usuário
@@ -215,7 +219,7 @@ export default function Login() {
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
-                      placeholder={mode === "admin" ? "E-mail autorizado da Equipe Nexus Affil'IA'te" : "usuario@demo.mmn.ai"}
+                      placeholder={mode === "admin" ? `E-mail autorizado da ${ADMIN_ACCESS_LABEL}` : "usuario@demo.mmn.ai"}
                       className="bg-background"
                       autoComplete="email"
                     />

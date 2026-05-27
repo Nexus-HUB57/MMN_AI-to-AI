@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, ADMIN_ACCESS_LABEL, ADMIN_RESTRICTED_NOTICE } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -85,10 +85,10 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
           </div>
           <h1 className="mb-4 text-2xl font-bold">Acesso Negado</h1>
           <p className="mb-6 text-text-secondary">
-            Esta area e exclusiva para administradores do Backoffice MMN AI-to-AI.
+            {ADMIN_RESTRICTED_NOTICE}. Faça login com e-mail e senha autorizados.
           </p>
-          <Button onClick={() => navigate("/")} className="gradient-btn">
-            Voltar para Home
+          <Button onClick={() => navigate("/login?mode=admin&from=/admin/dashboard")} className="gradient-btn">
+            Ir para login administrativo
           </Button>
         </Card>
       </div>
@@ -111,6 +111,7 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
               <div>
                 <p className="text-xs text-text-muted uppercase tracking-wider">Nexus System</p>
                 <h1 className="text-sm font-bold">Backoffice Admin</h1>
+                <p className="text-[10px] text-text-muted">{ADMIN_ACCESS_LABEL}</p>
               </div>
             </div>
           ) : (
@@ -216,11 +217,11 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
             <div className="mb-3 rounded-xl bg-accent-purple/5 border border-accent-purple/20 px-3 py-3 text-sm">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center text-xs font-bold text-background">
-                  {user.name?.charAt(0).toUpperCase() || "A"}
+                  N
                 </div>
                 <div>
-                  <p className="font-medium text-sm">{user.name || "Admin"}</p>
-                  <p className="text-xs text-accent-cyan">Administrador</p>
+                  <p className="font-medium text-sm">{ADMIN_ACCESS_LABEL}</p>
+                  <p className="text-xs text-accent-cyan">Operação administrativa protegida</p>
                 </div>
               </div>
             </div>

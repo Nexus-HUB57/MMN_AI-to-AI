@@ -313,18 +313,34 @@ export const skillsRouter = router({
       if (!agent) return;
 
       // Atualizar contador de uso e última utilização
+      const currentSkillRow = (
+        await db
+          .select({
+            usageCount: agentSkills.usageCount,
+          })
+          .from(agentSkills)
+          .where(
+            and(
+              eq(agentSkills.id, input.agentSkillId),
+              eq(agentSkills.agentId, agent.id)
+            )
+          )
+          .limit(1)
+      )[0];
+
       await db
         .update(agentSkills)
         .set({
           lastUsedAt: new Date(),
-          usageCount: (await db
-            .select()
-            .from(agentSkills)
-            .where(eq(agentSkills.id, input.agentSkillId))
-            .limit(1))[0]?.usageCount || 0 + 1,
+          usageCount: (currentSkillRow?.usageCount ?? 0) + 1,
           updatedAt: new Date(),
         })
-        .where(eq(agentSkills.id, input.agentSkillId));
+        .where(
+          and(
+            eq(agentSkills.id, input.agentSkillId),
+            eq(agentSkills.agentId, agent.id)
+          )
+        );
     }),
 
   // ============================================================================

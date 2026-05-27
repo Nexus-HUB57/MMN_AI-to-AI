@@ -212,3 +212,34 @@ O Score é exibido no `/agents/dashboard` e no Admin (`/admin/dashboard`).
 **Próximo passo recomendado:** validar as decisões da Parte 3, depois iniciar a Fase 1 do roadmap (30 dias) em paralelo ao deploy do backend Render que já está pronto no [`render.yaml`](../../render.yaml).
 
 Documento mantido por Equipe Nexus Affil'IA'te · Núcleo Orquestrador.
+
+---
+
+## Addendum técnico · auditoria operacional aplicada em 2026-05-27
+
+### Ajustes implementados neste ciclo
+- **Login administrativo endurecido**: o frontend deixou de carregar as credenciais administrativas em texto puro; a validação passou a usar comparação por hash SHA-256 e a sessão persistida do admin agora usa identidade genérica de exibição (`Equipe Nexus Affil'IA'te`) em vez de nome/e-mail pessoais.
+- **Backoffice mascarado**: o layout do admin exibe apenas `Equipe Nexus Affil'IA'te` e `Acesso Restrito - Equipe Nexus Affil'IA'te`, preservando a regra de não expor identidade operacional na UI.
+- **Router de Skills corrigido**: `skillsRouter.logSkillUsage` teve o contador de uso corrigido para `(usageCount ?? 0) + 1` e passou a exigir vínculo entre `agentSkillId` e `agentId`, evitando incremento inconsistente ou atualização cruzada.
+
+### Achados confirmados na base atual
+1. O domínio `agent-runtime` está apto para **geração de conteúdo** e **auditoria de sessão**, mas ainda não executa handlers específicos por skill.
+2. O runtime publica eventos de início, conclusão, falha e conteúdo gerado, porém **não existe ainda um dispatcher operacional** por capacidade (ex.: prospecção, outreach, auto-publicação, detecção de padrões, fechamento de follow-up).
+3. O catálogo de skills e os vínculos do agente existem, mas a maioria das skills ainda opera como **entitlement/catálogo**, não como automação completa de ponta a ponta.
+4. O score de performance do agente já pode ser incrementado e auditado, porém o **Autonomy Score composto** descrito neste documento ainda não foi materializado no painel.
+
+### Sincronização de critérios e algoritmos — prioridade operacional
+Para sair do modo “catálogo com geração” e entrar em “agente autônomo operacional”, a sequência técnica recomendada permanece:
+1. criar um **dispatcher de skills** (`executeSkill`) no backend;
+2. mapear as skills prioritárias para handlers reais;
+3. atrelar cada handler ao `eventBus` e aos logs de auditoria;
+4. aplicar policies por ação crítica (`auto_post`, `auto_outreach`, `auto_purchase_skill`, `auto_withdraw_request`);
+5. expor métricas no admin para revisão humana assistida.
+
+### Status atualizado após este ciclo
+- **Login administrativo**: endurecido
+- **Mascaramento de identidade admin na UI**: aplicado
+- **Contador/telemetria básica de uso de skill**: corrigido
+- **Execução autônoma completa por skill**: pendente
+- **Tomada de decisão autônoma com policies**: pendente
+- **Autonomy Score no painel**: pendente

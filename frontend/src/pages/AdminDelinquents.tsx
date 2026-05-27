@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertCircle, BellRing, RefreshCw, ShieldAlert, Wallet } from "lucide-react";
+import { AlertCircle, BellRing, BookOpen, CalendarClock, CreditCard, Package, RefreshCw, ShieldAlert, Sparkles, Wallet } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,11 +17,88 @@ import { toast } from "sonner";
 type DelinquentStatus = "all" | "active" | "inactive" | "suspended";
 type RouterDelinquentStatus = Exclude<DelinquentStatus, "all">;
 type ReminderTemplate = "first" | "second" | "final" | "custom";
+type DelinquentCategory =
+  | "all"
+  | "monthly_activation"
+  | "pack"
+  | "skill"
+  | "ebook"
+  | "commission";
 
 const statusMeta: Record<RouterDelinquentStatus, { label: string; className: string }> = {
   active: { label: "Ativo", className: "bg-amber-100 text-amber-800" },
   inactive: { label: "Inativo", className: "bg-slate-200 text-slate-700" },
   suspended: { label: "Suspenso", className: "bg-red-100 text-red-800" },
+};
+
+// -----------------------------------------------------------------------------
+// Nexus SaaS · IOAID — Listas oficiais de inadimplência operacional
+// Cada categoria representa um vetor diferente do regramento da plataforma.
+// -----------------------------------------------------------------------------
+const CATEGORY_TABS: Array<{
+  value: DelinquentCategory;
+  label: string;
+  shortLabel: string;
+  icon: typeof CalendarClock;
+  description: string;
+  ruleHint: string;
+}> = [
+  {
+    value: "all",
+    label: "Todas as listas",
+    shortLabel: "Todas",
+    icon: Sparkles,
+    description: "Visão consolidada de todas as listas de inadimplência da Nexus SaaS.",
+    ruleHint: "Agregador de todas as categorias operacionais.",
+  },
+  {
+    value: "monthly_activation",
+    label: "Lista Inad. Ativação Mensal",
+    shortLabel: "Ativação Mensal",
+    icon: CalendarClock,
+    description: "Afiliados que perderam a janela oficial de Ativação Mensal (01 a 10 de cada mês).",
+    ruleHint: "3 meses consecutivos → suspensão 90 dias · >4 meses → retrocesso de Nível + suspensão 120 dias.",
+  },
+  {
+    value: "pack",
+    label: "Lista Inad. Pack",
+    shortLabel: "Pack",
+    icon: Package,
+    description: "Afiliados com pendência na renovação ou aquisição do Pack vigente do seu nível.",
+    ruleHint: "Pack vigente é pré-requisito para liberar bônus e comissões dos níveis superiores.",
+  },
+  {
+    value: "skill",
+    label: "Lista Inad. Skills/Upgrades",
+    shortLabel: "Skills",
+    icon: Sparkles,
+    description: "Parcelas em atraso de Skills (Nível I/II/III) ou Upgrades do Agente IA.",
+    ruleHint: "Skill em atraso bloqueia o uso da capacidade no Agente IA até regularização.",
+  },
+  {
+    value: "ebook",
+    label: "Lista Inad. Ebooks/PREU",
+    shortLabel: "Ebooks/PREU",
+    icon: BookOpen,
+    description: "Pendências relacionadas à revenda Marketplace Nexus (ebooks e PREU).",
+    ruleHint: "Quantidade em estoque é vinculada ao Pack vigente; revenda inadimplente trava o ciclo.",
+  },
+  {
+    value: "commission",
+    label: "Lista Inad. Comissões/Estornos",
+    shortLabel: "Comissões",
+    icon: CreditCard,
+    description: "Saldo retido por desqualificação, estorno ou bloqueio operacional do BeYour Banker.",
+    ruleHint: "Retenção é liberada após análise administrativa ou regularização do downline.",
+  },
+];
+
+const categoryMeta: Record<Exclude<DelinquentCategory, "all">, { label: string; className: string }> = {
+  monthly_activation: { label: "Ativação Mensal", className: "bg-blue-100 text-blue-800" },
+  pack: { label: "Pack", className: "bg-purple-100 text-purple-800" },
+  skill: { label: "Skill", className: "bg-emerald-100 text-emerald-800" },
+  ebook: { label: "Ebook/PREU", className: "bg-orange-100 text-orange-800" },
+  commission: { label: "Comissão", className: "bg-cyan-100 text-cyan-800" },
 };
 
 const formatCurrency = (value: number | string | null | undefined) =>
@@ -33,6 +110,7 @@ const formatCurrency = (value: number | string | null | undefined) =>
 export default function AdminDelinquents() {
   const [statusFilter, setStatusFilter] = useState<DelinquentStatus>("all");
   const [daysFilter, setDaysFilter] = useState("all");
+  const [categoryTab, setCategoryTab] = useState<DelinquentCategory>("all");
   const [selectedDelinquent, setSelectedDelinquent] = useState<{
     id: number;
     status: RouterDelinquentStatus;
@@ -45,6 +123,7 @@ export default function AdminDelinquents() {
     limit: 50,
     minDaysOverdue: daysFilter === "all" ? undefined : Number(daysFilter),
     status: statusFilter === "all" ? undefined : statusFilter,
+    category: categoryTab,
   });
 
   const statsQuery = trpc.delinquents.getStats.useQuery();
@@ -56,8 +135,8 @@ export default function AdminDelinquents() {
       statsQuery.refetch();
       setSelectedDelinquent(null);
     },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao atualizar status do inadimplente");
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao atualizar status do inadimplente");
     },
   });
 
@@ -67,8 +146,8 @@ export default function AdminDelinquents() {
       setReminderTargetId(null);
       setReminderTemplate("first");
     },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao enviar lembrete");
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao enviar lembrete");
     },
   });
 
@@ -76,15 +155,18 @@ export default function AdminDelinquents() {
 
   const visibleSummary = useMemo(
     () => ({
-      totalOutstanding: delinquents.reduce((sum, item) => sum + Number(item.outstandingAmount || 0), 0),
-      active: delinquents.filter((item) => item.status === "active").length,
-      suspended: delinquents.filter((item) => item.status === "suspended").length,
+      totalOutstanding: delinquents.reduce((sum: number, item: any) => sum + Number(item.outstandingAmount || 0), 0),
+      active: delinquents.filter((item: any) => item.status === "active").length,
+      suspended: delinquents.filter((item: any) => item.status === "suspended").length,
       averageAttempts: delinquents.length
-        ? Math.round(delinquents.reduce((sum, item) => sum + Number(item.contactAttempts || 0), 0) / delinquents.length)
+        ? Math.round(delinquents.reduce((sum: number, item: any) => sum + Number(item.contactAttempts || 0), 0) / delinquents.length)
         : 0,
     }),
     [delinquents]
   );
+
+  const activeTab = CATEGORY_TABS.find((tab) => tab.value === categoryTab) ?? CATEGORY_TABS[0];
+  const byCategory: Record<string, number> = (statsQuery.data as any)?.byCategory ?? {};
 
   const getSeverityClass = (daysOverdue: number) => {
     if (daysOverdue >= 90) return "bg-red-100 text-red-800";
@@ -117,7 +199,7 @@ export default function AdminDelinquents() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Inadimplência operacional</h1>
             <p className="mt-2 text-slate-600">
-              Supervisão administrativa de afiliados com pendências financeiras, com filtros, atualização de status e disparo de lembretes.
+              Listas oficiais Nexus SaaS · IOAID. Cada aba representa um vetor distinto de inadimplência operacional, com regras próprias do regramento da plataforma.
             </p>
           </div>
           <Button
@@ -133,6 +215,7 @@ export default function AdminDelinquents() {
           </Button>
         </section>
 
+        {/* KPIs gerais */}
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Card className="bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 text-slate-600">
@@ -166,6 +249,52 @@ export default function AdminDelinquents() {
           </Card>
         </section>
 
+        {/* Abas de listas oficiais */}
+        <Card className="bg-white p-5 shadow-sm">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-slate-900">Listas Oficiais Nexus SaaS</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Selecione a categoria para visualizar a respectiva lista de inadimplência e suas regras específicas.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {CATEGORY_TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = tab.value === categoryTab;
+              const count = tab.value === "all"
+                ? statsQuery.data?.totalDelinquents
+                : byCategory[tab.value] ?? 0;
+              return (
+                <button
+                  key={tab.value}
+                  type="button"
+                  onClick={() => setCategoryTab(tab.value)}
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
+                    isActive
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                  }`}
+                >
+                  <Icon size={14} />
+                  <span>{tab.shortLabel}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] ${isActive ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-600"}`}>
+                    {count ?? 0}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-sm font-semibold text-slate-900">{activeTab.label}</p>
+            <p className="mt-1 text-sm text-slate-600">{activeTab.description}</p>
+            <p className="mt-2 text-xs uppercase tracking-wider text-slate-500">Regra oficial</p>
+            <p className="mt-1 text-xs text-slate-600">{activeTab.ruleHint}</p>
+          </div>
+        </Card>
+
+        {/* Filtros */}
         <Card className="bg-white p-5 shadow-sm">
           <div className="grid gap-4 lg:grid-cols-[220px_220px_1fr] lg:items-end">
             <div>
@@ -219,10 +348,13 @@ export default function AdminDelinquents() {
           </div>
         </Card>
 
+        {/* Tabela */}
         <Card className="overflow-x-auto bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-slate-900">Lista operacional de inadimplentes</h2>
-            <p className="text-sm text-slate-500">Atualização via domínio dedicado <code>trpc.delinquents.*</code>.</p>
+          <div className="mb-4 flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">{activeTab.label}</h2>
+            <p className="text-sm text-slate-500">
+              Domínio dedicado <code>trpc.delinquents.list</code> · categoria: <code>{categoryTab}</code>
+            </p>
           </div>
 
           <table className="w-full min-w-[1100px]">
@@ -230,6 +362,7 @@ export default function AdminDelinquents() {
               <tr className="border-b border-slate-200 text-left">
                 <th className="px-4 py-3 font-semibold text-slate-900">Afiliado</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Código</th>
+                <th className="px-4 py-3 font-semibold text-slate-900">Categoria</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Saldo em atraso</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Dias</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Último pagamento</th>
@@ -245,6 +378,7 @@ export default function AdminDelinquents() {
                     <td className="px-4 py-4"><Skeleton className="h-4 w-44" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
+                    <td className="px-4 py-4"><Skeleton className="h-4 w-24" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-28" /></td>
                     <td className="px-4 py-4"><Skeleton className="h-4 w-20" /></td>
@@ -253,8 +387,9 @@ export default function AdminDelinquents() {
                   </tr>
                 ))
               ) : delinquents.length > 0 ? (
-                delinquents.map((delinquent) => {
+                delinquents.map((delinquent: any) => {
                   const status = delinquent.status as RouterDelinquentStatus;
+                  const category = delinquent.category as keyof typeof categoryMeta | undefined;
                   return (
                     <tr key={delinquent.id} className="border-b border-slate-100 transition hover:bg-slate-50">
                       <td className="px-4 py-4">
@@ -264,6 +399,15 @@ export default function AdminDelinquents() {
                         </div>
                       </td>
                       <td className="px-4 py-4 text-sm text-slate-600">{delinquent.affiliateCode}</td>
+                      <td className="px-4 py-4">
+                        {category ? (
+                          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${categoryMeta[category]?.className || "bg-slate-100 text-slate-700"}`}>
+                            {categoryMeta[category]?.label || category}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-slate-400">—</span>
+                        )}
+                      </td>
                       <td className="px-4 py-4 font-semibold text-red-700">
                         R$ {formatCurrency(delinquent.outstandingAmount)}
                       </td>
@@ -306,8 +450,8 @@ export default function AdminDelinquents() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
-                    Nenhum inadimplente encontrado para os filtros atuais.
+                  <td colSpan={9} className="px-4 py-10 text-center text-slate-500">
+                    Nenhum inadimplente encontrado para os filtros atuais nesta lista.
                   </td>
                 </tr>
               )}

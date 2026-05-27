@@ -467,20 +467,62 @@ export const adminRouter = router({
    * Buscar configurações da plataforma
    */
   getSettings: adminProcedure.query(async ({ ctx }) => {
-    // Retornar configurações padrão (em produção, viria de tabela de configurações)
+    // -----------------------------------------------------------------------
+    // Nexus SaaS · IOAID — Regramento oficial de comissionamento
+    // Fonte: docs/planning/Age.txt (Clube de Vantagens · Revenda Multilevel)
+    // -----------------------------------------------------------------------
+    // Estrutura: Matriz Forçada com profundidade máxima de 5 Níveis.
+    // Sem percentual padrão: cada nível tem seu próprio percentual oficial.
+    // -----------------------------------------------------------------------
     return {
-      platformName: "Nexus AfilIAte-AI",
-      supportEmail: "suporte@nexus-ai.com",
-      defaultCommission: 10,
+      platformName: "Nexus SaaS · IOAID",
+      supportEmail: "suporte@nexus-saas.com.br",
+      // Sem comissão padrão — cada nível é regido pelo regramento oficial
+      defaultCommission: null,
+      networkModel: "forced_matrix",
       commissionLevels: [
-        { level: 1, percentage: 10 },
-        { level: 2, percentage: 8 },
-        { level: 3, percentage: 6 },
-        { level: 4, percentage: 4 },
-        { level: 5, percentage: 2 },
+        {
+          level: 1,
+          percentage: 20,
+          label: "1º Nível",
+          description: "20% de Participação sobre Resultados do N.O 1º Nível (Multilevel)",
+        },
+        {
+          level: 2,
+          percentage: 10,
+          label: "2º Nível",
+          description: "10% de Participação sobre Resultados do N.O 2º Nível (Multilevel)",
+        },
+        {
+          level: 3,
+          percentage: 5,
+          label: "3º Nível",
+          description: "5% de Participação sobre Resultados do N.O 3º Nível (Multilevel)",
+        },
+        {
+          level: 4,
+          percentage: 2.5,
+          label: "4º Nível",
+          description: "2,5% de Participação sobre Resultados do N.O 4º Nível (Multilevel)",
+        },
+        {
+          level: 5,
+          percentage: 1,
+          label: "5º Nível",
+          description: "1% de Participação sobre Resultados do N.O 5º Nível (Multilevel)",
+        },
       ],
-      maxNetworkDepth: 15,
+      // Matriz Forçada padronizada em 5 níveis
+      maxNetworkDepth: 5,
       compressionEnabled: true,
+      apiStatus: {
+        gemini: Boolean(process.env.GEMINI_API_KEY),
+        openai: Boolean(process.env.OPENAI_API_KEY),
+        database: Boolean(process.env.DATABASE_URL),
+        redis: Boolean(process.env.REDIS_URL),
+        hotmart: Boolean(process.env.HOTMART_CLIENT_ID),
+        shopee: Boolean(process.env.SHOPEE_AFFILIATE_ID),
+      },
     };
   }),
 
@@ -491,9 +533,19 @@ export const adminRouter = router({
     .input(z.object({
       platformName: z.string().optional(),
       supportEmail: z.string().email().optional(),
-      defaultCommission: z.number().min(0).max(100).optional(),
+      defaultCommission: z.number().min(0).max(100).nullable().optional(),
       maxNetworkDepth: z.number().min(1).max(20).optional(),
       compressionEnabled: z.boolean().optional(),
+      commissionLevels: z
+        .array(
+          z.object({
+            level: z.number().int().min(1).max(20),
+            percentage: z.number().min(0).max(100),
+            label: z.string().optional(),
+            description: z.string().optional(),
+          }),
+        )
+        .optional(),
     }))
     .mutation(async ({ input }) => {
       // Em produção, salvaria em tabela de configurações

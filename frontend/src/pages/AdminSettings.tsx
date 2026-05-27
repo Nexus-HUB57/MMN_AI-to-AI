@@ -4,9 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { useState, useEffect } from "react";
-import { Settings, Save, RefreshCw } from "lucide-react";
+import { Settings, Save, ShieldCheck, AlertTriangle, BookOpen } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+
+// -----------------------------------------------------------------------------
+// Nexus SaaS · IOAID — Regramento oficial de comissionamento (default fallback)
+// Fonte: docs/planning/Age.txt · Clube de Vantagens · Revenda Multilevel.
+// Matriz Forçada com 5 Níveis. Cada nível tem seu próprio percentual oficial.
+// -----------------------------------------------------------------------------
+const DEFAULT_OFFICIAL_LEVELS = [
+  { level: 1, percentage: 20, label: "1º Nível", description: "20% sobre Resultados do N.O 1º Nível (Multilevel)" },
+  { level: 2, percentage: 10, label: "2º Nível", description: "10% sobre Resultados do N.O 2º Nível (Multilevel)" },
+  { level: 3, percentage: 5, label: "3º Nível", description: "5% sobre Resultados do N.O 3º Nível (Multilevel)" },
+  { level: 4, percentage: 2.5, label: "4º Nível", description: "2,5% sobre Resultados do N.O 4º Nível (Multilevel)" },
+  { level: 5, percentage: 1, label: "5º Nível", description: "1% sobre Resultados do N.O 5º Nível (Multilevel)" },
+];
+
+type CommissionLevel = {
+  level: number;
+  percentage: number;
+  label?: string;
+  description?: string;
+};
 
 export default function AdminSettings() {
   const { data: settings, isLoading, refetch } = trpc.admin.getSettings.useQuery();
@@ -15,54 +35,87 @@ export default function AdminSettings() {
       toast.success("Configurações salvas com sucesso");
       refetch();
     },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao salvar configurações");
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao salvar configurações");
     },
   });
 
   const [formData, setFormData] = useState({
     platformName: "",
     supportEmail: "",
-    defaultCommission: 10,
-    maxNetworkDepth: 15,
+    maxNetworkDepth: 5,
     compressionEnabled: true,
   });
 
-  const [commissionLevels, setCommissionLevels] = useState<{ level: number; percentage: number }[]>([]);
+  const [commissionLevels, setCommissionLevels] = useState<CommissionLevel[]>([]);
 
   useEffect(() => {
     if (settings) {
       setFormData({
-        platformName: settings.platformName || "",
+        platformName: settings.platformName || "Nexus SaaS · IOAID",
         supportEmail: settings.supportEmail || "",
-        defaultCommission: settings.defaultCommission || 10,
-        maxNetworkDepth: settings.maxNetworkDepth || 15,
+        maxNetworkDepth: settings.maxNetworkDepth || 5,
         compressionEnabled: settings.compressionEnabled ?? true,
       });
-      setCommissionLevels(settings.commissionLevels || []);
+
+      const incoming = (settings as any).commissionLevels as CommissionLevel[] | undefined;
+      setCommissionLevels(incoming && incoming.length > 0 ? incoming : DEFAULT_OFFICIAL_LEVELS);
     }
   }, [settings]);
 
   const handleSave = () => {
-    updateSettingsMutation.mutate(formData);
-  };
-
-  const handleAddLevel = () => {
-    const nextLevel = (commissionLevels.length || 0) + 1;
-    setCommissionLevels([...commissionLevels, { level: nextLevel, percentage: Math.max(0, 10 - nextLevel) }]);
+    updateSettingsMutation.mutate({
+      ...formData,
+      defaultCommission: null,
+      commissionLevels,
+    } as any);
   };
 
   const handleUpdateLevel = (index: number, percentage: number) => {
     const updated = [...commissionLevels];
-    updated[index].percentage = percentage;
+    updated[index] = { ...updated[index], percentage };
     setCommissionLevels(updated);
   };
 
-  const handleRemoveLevel = (index: number) => {
-    const updated = commissionLevels.filter((_, i) => i !== index);
-    // Renumber levels
-    setCommissionLevels(updated.map((level, i) => ({ ...level, level: i + 1 })));
+  const handleRestoreOfficial = () => {
+    setCommissionLevels(DEFAULT_OFFICIAL_LEVELS);
+    toast.success("Regramento oficial Nexus SaaS · IOAID restaurado (5 níveis · Matriz Forçada)");
   };
+
+  const apiStatus = (settings as any)?.apiStatus ?? {};
+
+  const apiStatusRows: Array<{ label: string; ok: boolean; help: string }> = [
+    {
+      label: "Status da API Gemini",
+      ok: Boolean(apiStatus.gemini),
+      help: "Configurar variável GEMINI_API_KEY no painel do provedor de hospedagem do backend.",
+    },
+    {
+      label: "Status da API OpenAI",
+      ok: Boolean(apiStatus.openai),
+      help: "Configurar OPENAI_API_KEY no Render → Environment.",
+    },
+    {
+      label: "Banco de Dados (PostgreSQL/MySQL)",
+      ok: Boolean(apiStatus.database),
+      help: "Provisionar PostgreSQL no Render e copiar Internal Database URL para DATABASE_URL.",
+    },
+    {
+      label: "Redis (filas BullMQ)",
+      ok: Boolean(apiStatus.redis),
+      help: "Provisionar Redis no Render para liberar workers de comissões, marketplace e ordens.",
+    },
+    {
+      label: "Hotmart API",
+      ok: Boolean(apiStatus.hotmart),
+      help: "Configurar HOTMART_CLIENT_ID, HOTMART_CLIENT_SECRET e HOTMART_BASIC_AUTH (já documentado em infra/RENDER_DEPLOY.md).",
+    },
+    {
+      label: "Shopee Afiliados",
+      ok: Boolean(apiStatus.shopee),
+      help: "Configurar SHOPEE_AFFILIATE_ID e SHOPEE_AFFILIATE_USERNAME (Nexus SaaS · @lucasthomaz2 · ID 18325891080).",
+    },
+  ];
 
   return (
     <AdminDashboardLayout>
@@ -74,7 +127,9 @@ export default function AdminSettings() {
               <Settings size={32} className="text-blue-600" />
               Configurações da Plataforma
             </h1>
-            <p className="text-gray-600 mt-2">Gerencie as configurações gerais do sistema</p>
+            <p className="text-gray-600 mt-2">
+              Gestão administrativa do regramento oficial Nexus SaaS · IOAID (Matriz Forçada · 5 Níveis).
+            </p>
           </div>
           <Button onClick={handleSave} disabled={updateSettingsMutation.isPending}>
             <Save size={20} className="mr-2" />
@@ -100,7 +155,7 @@ export default function AdminSettings() {
                 <Input
                   value={formData.platformName}
                   onChange={(e) => setFormData({ ...formData, platformName: e.target.value })}
-                  placeholder="Nome da sua plataforma"
+                  placeholder="Nexus SaaS · IOAID"
                 />
               </div>
 
@@ -112,22 +167,20 @@ export default function AdminSettings() {
                   type="email"
                   value={formData.supportEmail}
                   onChange={(e) => setFormData({ ...formData, supportEmail: e.target.value })}
-                  placeholder="suporte@exemplo.com"
+                  placeholder="suporte@nexus-saas.com.br"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Comissão Padrão (%)
+                    Modelo de Rede
                   </label>
-                  <Input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={formData.defaultCommission}
-                    onChange={(e) => setFormData({ ...formData, defaultCommission: parseInt(e.target.value) || 0 })}
-                  />
+                  <div className="flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                    <ShieldCheck size={16} className="text-emerald-600" />
+                    <span className="font-semibold">Matriz Forçada</span>
+                    <span className="text-xs text-slate-500">(regramento oficial · Age.txt)</span>
+                  </div>
                 </div>
 
                 <div>
@@ -139,8 +192,11 @@ export default function AdminSettings() {
                     min="1"
                     max="20"
                     value={formData.maxNetworkDepth}
-                    onChange={(e) => setFormData({ ...formData, maxNetworkDepth: parseInt(e.target.value) || 15 })}
+                    onChange={(e) => setFormData({ ...formData, maxNetworkDepth: parseInt(e.target.value) || 5 })}
                   />
+                  <p className="mt-1 text-xs text-slate-500">
+                    Regramento oficial: <strong>5 níveis (Matriz Forçada)</strong>.
+                  </p>
                 </div>
               </div>
 
@@ -160,111 +216,94 @@ export default function AdminSettings() {
           )}
         </Card>
 
-        {/* Commission Levels */}
+        {/* Commission Levels (regramento oficial) */}
         <Card className="p-6 bg-white">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Níveis de Comissionamento</h3>
-            <Button variant="outline" size="sm" onClick={handleAddLevel}>
-              <RefreshCw size={16} className="mr-2" />
-              Adicionar Nível
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <BookOpen size={18} className="text-blue-600" />
+                Níveis de Comissionamento (Multilevel)
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Regramento oficial Nexus SaaS · IOAID conforme <code>docs/planning/Age.txt</code> · Clube de Vantagens · Revenda Multilevel.
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRestoreOfficial}>
+              Restaurar regramento oficial
             </Button>
           </div>
 
-          <p className="text-sm text-gray-600 mb-6">
-            Configure o percentual de comissão para cada nível de profundidade na rede.
-            Quanto maior o nível, menor a comissão (estratégia recomendada).
-          </p>
+          <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
+            <p className="font-semibold">Sem percentual padrão</p>
+            <p className="mt-1">
+              Cada nível tem seu próprio percentual oficial. O sistema NÃO aplica um percentual genérico —
+              os valores abaixo são lidos diretamente do regramento da plataforma.
+            </p>
+          </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {commissionLevels.length > 0 ? (
               commissionLevels.map((level, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <span className="font-medium text-gray-900">Nível {level.level}</span>
+                <div key={level.level} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex-1 min-w-[200px]">
+                      <p className="font-semibold text-gray-900">{level.label || `Nível ${level.level}`}</p>
+                      <p className="text-xs text-gray-600 mt-1">{level.description || "Sem descrição"}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        value={level.percentage}
+                        onChange={(e) => handleUpdateLevel(index, parseFloat(e.target.value) || 0)}
+                        className="w-28"
+                      />
+                      <span className="text-gray-600 font-medium">%</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={level.percentage}
-                      onChange={(e) => handleUpdateLevel(index, parseInt(e.target.value) || 0)}
-                      className="w-24"
-                    />
-                    <span className="text-gray-600">%</span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveLevel(index)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    Remover
-                  </Button>
                 </div>
               ))
             ) : (
               <div className="text-center py-8 text-gray-500">
-                <p>Nenhum nível de comissão configurado</p>
-                <Button variant="outline" onClick={handleAddLevel} className="mt-4">
-                  Adicionar Primeiro Nível
-                </Button>
+                <p>Carregando regramento oficial...</p>
               </div>
             )}
           </div>
+
+          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900">
+            <p className="font-semibold inline-flex items-center gap-2">
+              <AlertTriangle size={14} />
+              Atenção
+            </p>
+            <p className="mt-1">
+              A alteração dos percentuais abaixo afeta diretamente o cálculo de comissões em toda a rede.
+              Recomenda-se manter os valores oficiais e usar a função <strong>Restaurar regramento oficial</strong>
+              em caso de dúvida.
+            </p>
+          </div>
         </Card>
 
-        {/* API Keys (Read-only display) */}
+        {/* API Keys */}
         <Card className="p-6 bg-white">
-          <h3 className="text-lg font-semibold mb-6 text-gray-900">Configurações de API</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Status da API Gemini
-              </label>
-              <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${process.env.GEMINI_API_KEY ? "bg-green-500" : "bg-red-500"}`}></span>
-                <span className="text-sm text-gray-600">
-                  {process.env.GEMINI_API_KEY ? "Configurada" : "Não configurada"}
-                </span>
+          <h3 className="text-lg font-semibold mb-2 text-gray-900">Configurações de API</h3>
+          <p className="text-sm text-gray-600 mb-6">
+            Status em tempo real das integrações do backend. Configurar via painel do provedor de hospedagem (Render → Environment).
+          </p>
+          <div className="grid gap-3 md:grid-cols-2">
+            {apiStatusRows.map((row) => (
+              <div key={row.label} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-700">{row.label}</p>
+                  <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${row.ok ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+                    <span className={`h-2 w-2 rounded-full ${row.ok ? "bg-emerald-500" : "bg-red-500"}`}></span>
+                    {row.ok ? "Configurada" : "Não configurada"}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-gray-500">{row.help}</p>
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Status da API OpenAI
-              </label>
-              <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${process.env.OPENAI_API_KEY ? "bg-green-500" : "bg-red-500"}`}></span>
-                <span className="text-sm text-gray-600">
-                  {process.env.OPENAI_API_KEY ? "Configurada" : "Não configurada"}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Banco de Dados
-              </label>
-              <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${process.env.DATABASE_URL ? "bg-green-500" : "bg-red-500"}`}></span>
-                <span className="text-sm text-gray-600">
-                  {process.env.DATABASE_URL ? "Configurado" : "Não configurado"}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Redis
-              </label>
-              <div className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${process.env.REDIS_URL ? "bg-green-500" : "bg-red-500"}`}></span>
-                <span className="text-sm text-gray-600">
-                  {process.env.REDIS_URL ? "Configurado" : "Não configurado"}
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         </Card>
 

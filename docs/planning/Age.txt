@@ -1,5 +1,5 @@
-﻿# Nexus System AfilIAte_AI-to-AI
-Marketing de Afiliados AI-to-AI
+# Nexus System AfilIAte_AI-to-AI
+SaaS Marketing de Afiliados e Vendas Diretas
 
 Sistema de Marketing Multinível com Agentes IA (AI-to-AI)
 Arquitetura de sistemas automatizados, marketing digital, IA multiagente e plataformas de afiliados.
@@ -52,17 +52,176 @@ Requisitos obrigatórios do sistema:
 
 1. Plataforma Afiliate/MMN Programada:
 
-- FORMAS DE GANHO /Plano de Carreira
-1 Vendas Direta:
-° 100% E-books
-° até 80% Marketplace Nexus System
-° (%) Percentuais Específicos /Plataformas Parceiras - Dropshipping
-2 Multilevel no "N.O" de até 5 Níveis de Bonificação entre 5% e 25%
-3 (Grafo+IA) Sorteios Oficiais
-4 (Meta+IA) Metas de Venda
-5 (Grafo+IA/Zettascalle) Metas "N.O"
-6 (Grafo+IA/VIP) Destaques
-7 Títulos de Capitalização 
+O sistema MMN AI-to-AI oferece ao usuário/peer, responsável pela gestão do negócio e por orquestrar o Agente IA, que por sua vez é o reponsável pelo operacional do ecossistema. Nesse modelo híbrido de operação MMN, o usuário e o Agente IA, são responsáveis pela saúde corporativa de uma "startup", que inicialmente segue incubada no HUB HighTech Nexus, até que o sistema alcance o Nível Preditivo (2°Nível/Posição no Plano de Carreira). 
+
+**Hub HighTech Nexus /Incubadora**
+O ecossistema Nexus, promove ao usuário uma experiência completa, atuando através da orquestração do Agente IA, no desenvolvimento do seu próprio negócio. O objetivo é que no formato de uma "Holding Big Tech", o ecossistema de startups se torne promissor, em especial porque o modelo de atuação adotado é traduzido pelo trabalho em equipe, onde são formado grupos de negócio, denominados "Networking Operacional". 
+Através do "N.O" o usuário poderá alavancar os seus resultados, considerando que o sistema promove um "Clube de Vantagens", que tem como finalidade principal, gerar networking profissional, altamente produtivo, capaz de proporcionar uma experiência empreendedora de ponta e o mais interessante, atuando num dos mercados emergentes mais importantes da atualidade ... o Universo IA. 
+Dessa forma, todos os novos membros do ecossistema, iniciam a sua trajetório inseridos numa experiência corporativa, iniciando a sua startup num programa de maturação "Incubadora de Startups", que posteriormente, ao cumprir os critérios estabelecidos e alcançar os níveis que seguem no cronograma de desenvolvimento, estes negócios poderão iniciar uma nova dinâmica, elevando o padrão de atividade e consequentemente, de lucratividade. Afinal, o objetivo principal de cada novo "Empresário Fundador" é se tornar um orquestrador bem sucedido e conduzir o seu negócio a estabilidade operacional e escalabilidade financeira ... ou seja, gerar um projeto rentável e lucrativo. 
+
+##CLUBE DE VANTAGENS##
+O Clube de Vantagens do Sistema Nexus, representa o potencial de ganho, promovido e plenamente alcançável por cada orquestrador de uma "Startup" do ecossistema. Resumindo, trata-se do sistema de bonificação e geração de renda, que é apresentado através de um conjunto de ações de potencial de ganho (financeiro) e ações de aprendizado (conhecimento). Sendo:
+
+#1 - REVENDA /DROPSHIPPING 
+Os Peer's poderão alcançar até 100% de Lucro na Revenda. Este operação é dividida em dois segmentos:
+
+°Revenda Infoprodutos Marketplace Nexus - Corresponde às vendas de infoprodutos exclusivos do Sistema. 
+- 100% na Revenda dos Infoprodutos
+- 20% de Participação /Comissão dos Resultados do seu "NO" 1º Nível (Multilevel)
+- 10% de Participação /Comissão dos Resultados do seu "NO" 2º Nível (Multilevel)
+-  5% de Participação /Comissão dos Resultados do seu "NO" 3º Nível (Multilevel)
+- 2.5% de Participação /Comissão dos Resultados do seu "NO" 4º Nível (Multilevel)
+-  1% de Participação /Comissão dos Resultados do seu "NO" 5º Nível (Multilevel)
+
+°Dropshipping - Revenda de Produtos de Plataformas Parceiras, com margem de lucro especificadas por produto, de acordo com as diretrizes de cada plataforma.
+
+
+#2 - BÔNUS ONEPACK
+O nome está relacionado a aquisição do Pack, sendo um processo necessário tanto para o ingresso, como para a manutenção da evolução do Peer dentro do sistema. Ao concluir os 3 Níveis do Agente Afiliado, o Peer passa a ter direito ao Bônus OnePack, que diz respeito a um percentual sobre a aquisição de Pack pelos membros do seu "N.O", sempre que estes alcançam o respectivo nível. Onde:
+
+AGENTE AFILIADO
+- Agente Afiliado Nível III recebe R$2,50 Pack A²II (Valor do Pack R$50) 
+
+AGENTE PREDITIVO
+- Agente Preditivo Nível I recebe R$10 por Pack AG (Valor do Pack R$250)
+- Agente Preditivo Nível II recebe R$25 por Pack AGII (Valor do Pack R$500)
+- Agente Preditivo Nível III recebe R$50 por Pack AGIII (Valor do Pack 750)
+
+AGENTE GENERATIVO
+- Agente Generativo Nível I recebe R$75 por Pack AGN (Valor do Pack R$1000)
+- Agente Generativo Nível II recebe R$100 por Pack AGNII (Valor do Pack R$2000)
+- Agente Generativo Nível III recebe R$200 por Pack AGNIII (Valor do Pack R$3000)
+
+AGENTE ORQUESTRADOR
+- Agente Orquestrador Nível I recebe R$300 por Pack AO (Valor do Pack R$5000)
+- Agente Generativo Nível II recebe R$500 por Pack AOII (Valor do Pack R$10.000)
+- Agente Generativo Nível III recebe R$1000 por Pack AOIII (Valor do Pack R$20.000) 
+
+AGENTE AGENTIC IA
+- Agente Agentic IA Nível I recebe R$2500 por Pack AA (Valor do Pack R$50.000)
+- Agente Agentic IA Nível II recebe R$5000 por Pack AAII (Valor do Pack R$100.000)
+- Agente Agentic IA Nível III recebe R$7500 por Pack AAIII (Valor do Pack R$200.000) 
+
+
+#3 - BÔNUS DE CONSUMO
+O nome está relacionado a questão do incentivo ao consumo sustentável. Onde cada Peer poderá investir, além do aprimoramento do Agente, em produtos técnicos e de estudos. Ao ser qualificado Agente Preditivo, o Perr passa a ter direito ao Bônus de Consumo, que se trata de uma participação de até 5% nas ativações mensais do seu "N.O". Onde: 
+
+AGENTE PREDITIVO
+- Agente Preditivo Nível I participa de:
+  3% do volume mensal do 1º Nível
+- Agente Preditivo Nível II participa de: 
+  3% do volume mensal do 1º Nível
++ 1.5% do volume mensal do 2º Nível
+- Agente Preditivo Nível III participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 1.5% do volume mensal do 3º Nível
+
+AGENTE GENERATIVO
+- Agente Generativo Nível I participa de:
+  3% do volume mensal do 1º Nível
++ 1.5% do volume mensal do 2º Nível
+- Agente Generativo Nível II participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 1.5% do volume mensal do 3º Nível
+- Agente Generativo Nível III participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 2% do volume mensal do 3º Nível
++ 1.5% do volume mensal do 4º Nível
+
+AGENTE ORQUESTRADOR
+- Agente Orquestrador Nível I participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 1.5% do volume mensal do 3º Nível
+- Agente Orquestrador Nível II participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 2% do volume mensal do 3º Nível
++ 1.5% do volume mensal do 4º Nível
+- Agente Orquestrador Nível III participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 2% do volume mensal do 3º Nível
++ 2% do volume mensal do 4º Nível
+
+AGENTE AGENTIC IA
+- Agente Agentic IA Nível I participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 2% do volume mensal do 3º Nível
++ 1.5% do volume mensal do 4º Nível
+- Agente Agentic IA Nível participa de:
+  3% do volume mensal do 1º Nível
++ 2% do volume mensal do 2º Nível
++ 2% do volume mensal do 3º Nível
++ 2% do volume mensal do 4º Nível
++ 1.5% do volume mensal do 5º Nível
+- Agente Agentic IA Nível III participa de:
+  4% do volume mensal do 1º Nível
++ 3% do volume mensal do 2º Nível
++ 3% do volume mensal do 3º Nível
++ 2% do volume mensal do 4º Nível
++ 2% do volume mensal do 5º Nível
+
+
+#4 - BÔNUS "N.O"
+O nome traz a referência de um das principais propostas do sistema, o Networking Operacional ou "N.O", considerando a cadeia de gestão operacional na qual o Peer está integrado e mais que isso, na qual vem se empenhando a desenvolver um modelo de trabalho capaz de alavancar os resultados de todo o grupo. Dessa forma, em reconhecimento ao desenvolvimento exemplar, o sistema de bonificações oferece um Bônus para todos aqueles Agentes Orquestradores, que formam novos Agentes Orquestradores. Sendo:
+
+Agente Orquestrador Nível I
+- Forma Agente Orquestrador Nível I - Bônus R$500
+Agente Orquestrador Nível II
+- Forma Agente Orquestrador Nível II - Bônus R$1000
+Agente Orquestrador Nível III
+- Forma Agente Orquestrador Nível III - Bônus R$2000
+
+
+#5 - BÔNUS INSPIRATION
+Um dos bônus mais desejados do sistema ... o INSPIRATION (Intelligent Neural Systems Predictive Integration Reasoning Adaptive Transformative Intelligence Operational Networking) que tem como inspiração um fator fundamental para esse modelo de sistema, o comprometimento com o desenvolvimento do seu negócio. Nesse caso, o bônus está associado ao incentivo pelo investimento na otimização do seu Agente, o que consequentemente representa otimizar processos, aprimorar operações e alcançar resultados expressivos o suficiente para tornar o negócio cada vez mais promissor. Assim , todos os Peer's que investem no "auto-consumo", são integrados num seleto e próspero grupo. Ou seja, além de investirem no próprio negócio, os Peer's participam dos resultados/mês do ecossistema. Onde:
+
+- Acima de R$1000 até R$5000 (exceto Pack):
+° divisão de 1% dos resultados /mês
+° Credencial Harmonic Life - VIP (eventos e treinamentos)
+° Credencial HUB Tecnológico - Partner (+ Nexus Academ'IA)
+
+- Acima de R$5000 (exceto Pack):
+° divisão de 2.5% dos resultados /mês
+° Credencial Harmonic Life - Black (eventos e treinamentos)
+° Credencial HUB Tecnológico - Partner+ (+ Nexus Academ'IA)
+
+
+#6 - BÔNUS GRAFO
+O sistema conta com o Grafo IA, que é um algorítimo de sorteios utilizado para promover uma oportunidade de entretenimento, como também condições reais de bonificação. Assim, 90% das ações realizadas dentro do sistema, geram números para concorrer as seguintes premiações: 
+
+- Sorteios Oficiais Agente Afiliado (Grafo+IA) 5000 Números +IA
+- Sorteios Temáticos /Aquisição dos Packs PNE - Pacotes Nexus Exclusivos (Meta+IA) 100 Números +IA² *Metas de Venda
+- Sorteios Oficiais Zetta (Grafo+IA/Zettascalle) 100 Números +IA³ *Metas "N.O"
+- Sorteios VIP’s (Grafo+IA/VIP) 100 Números +IA *Destaques do Mês
+
+
+#7 - BÔNUS CORP
+Utilizando o mesmo modelo do Grafo IA. Nesse sistema os sorteios contemplam Peer's com Títulos de Participação nos Resultados /Ano, seguindo um padrão de adiantamento de parte destes valores, mesmo antes da data de vencimento. Onde: 
+
+- Títulos Impactos (Grafo+IA/IM) *Títulos de R$10.000
+- Título de Participação dos Resultados (Holding Nexus /Techs+IA) *Cotas por Grupo de Negócio
+- Hoyalties Holding Nexus (PLR)
+
+
+#8 - BÔNUS HARP'IA	
+Hybrid Architecture .	Reasoning Platform . Intelligent Automation
+Este é um bônus exclusivo para os Peer's que alcançam o nível de Agentic IA. O objetivo principal é criar grupos de 10 Peer's e oferecer a oportunidade de desenvolvimento de projetos e negócios (Startup's), via patrocínio 100%, desde que estejam relacionados diretamente ao Universo IA. Ou seja, conforme a qualificação, o Peer é inserido, seguindo a ordem de qualificação, num Grupo de Negócios e quando alcançado o número de 10 Peer's, eles terão o prazo de que em até 12 meses, apresentem um projeto validado para um Budget de até R$500.000 
+
+
+#9 - BÔNUS NEXUS
+Todos os Peer's que alcançam o nível Agentic IA III são integrado ao "Hall N", um grupo que poderá usufruir de diversos benefícios corporativos como:
+
+- Acesso aos espaços Cowork N
+- Notebooks e Smartphones
+- Veículos
+- Imóveis
+- Além de Viagens e muitos outros benefícios exclusivos. 
 
 
 - PLANO DE CARREIRA "PD" ou PLANO DE DESENVOLVIMENTO SCC /Lógica de níveis: 
@@ -115,11 +274,11 @@ Sem Ativação Mensal: R$0
 
 
 Agente Afiliado Nível II (Unilevel)
-Inicia o "N.O" /Rede de 2 Agentes AI no 1º Nível (Diretos) = 3000XP
+Inicia o "N.O" /Rede de 2 Agentes AI no 1º Nível (Diretos) 2000XP + 3000XP (Pack A² II) = 5000XP
 - Rede de +2 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP x2 = 2000XP) 
-- Alcance da Meta de 3000XP *Acumulativos/Mês
+- Alcance da Meta de 5000XP *Acumulativos/Mês
 
-Agente Afiliado Nível II /Vendas Diretas 3000XP 
+Agente Afiliado Nível II /Vendas Diretas 5000XP 
 Investimento: Aquisição do Pack Agente Afiliado "A²II"
 ° Pack Agente Afiliado "A²II": 
 - Upgrade Agente IA /Prompt Básico 3 Skills Nível I
@@ -152,11 +311,11 @@ Ativação Mensal: R$10 (1x Pack A²)
 
 
 Agente Afiliado Nivel III (Unilevel)
-Projeta o "N.O" /Rede de 5 Agentes AI no 1º Nível (Diretos) = 6000XP
+Projeta o "N.O" /Rede de 5 Agentes AI no 1º Nível (Diretos) = 5000XP + 5000XP (Pack A² III) = 10.000XP
 - Rede de +5 Agentes AI no 1º Nível (Diretos) = 1000XP (XP correspondente a 1 Agente Direto = 1000XP x5 = 5000XP) 
-- Alcance da Meta de 6000XP *Acumulativos/Mês 
+- Alcance da Meta de 10.000XP *Acumulativos/Mês 
 
-Agente Afiliado Nível III /Vendas Diretas 6000XP 
+Agente Afiliado Nível III /Vendas Diretas 10.000XP 
 Investimento: Aquisição do Pack Agente Afiliado "A²III"
 ° Pack Agente Afiliado "A²III": 
 - Upgrade Agente IA /Prompt Básico 5 Skills Nível I
@@ -193,9 +352,9 @@ Apesar deste ser o 4º Nível do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENT
 
 Nível de Formação (Multilevel) 
 Agente Preditivo Nível I 
-Desenvolve o "N.O" /Rede +10 Agentes AI /Afiliado Nivel II no 1º Nível (Diretos) = 65.000XP 
+Desenvolve o "N.O" /Rede +10 Agentes AI /Afiliado Nivel II no 1º Nível (Diretos) = 30.000XP + 10.000XP 2º Nível + 25.000XP (Pack AG) 25.000 XP = 65.000XP 
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 30.000XP (XP correspondente a 1 Agente Direto = 3000XP x10 = 30.000XP) 
-- Alcance da Meta de 65.000XP *Acumulativos/Mês
+- Alcance da Meta de 55.000XP *Acumulativos/Mês
 (25.000XP Individual + 10 x 3000XP = 30.000XP 1º Nível + 10 x 1000XP 2º Nível = 10.000XP)
 
 Agente Preditivo Nível I /Marketing Digital 65.000XP 
@@ -234,12 +393,12 @@ Ativação Mensal: R$20 (2x Pack A²)
 
 
 Preditivo Nível II
-Configura o "N.O" como potencial gerador de Resultados Exponenciais /Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 170.000XP 
+Configura o "N.O" como potencial gerador de Resultados Exponenciais /Rede +20 Agentes AI /Afiliado Nivel III no 1º Nível (Diretos) = 100.000XP 
 - Rede de +20 Agentes AI no 1º Nível (Diretos) = 100.000XP (XP correspondente a 1 Agente Direto = 5000XP x20 = 100.000XP) 
 - Alcance da Meta de 170.000XP *Acumulativos/Mês
-(50.000XP Individual + 20 x 5000XP = 100.000XP 1° Nível + 20 x 3000XP 2° Nível = 60.000XP)
+(50.000XP Individual + 20 x 5000XP = 100.000XP 1° Nível + 20 x 3000XP 2° Nível = 60.000XP = 210.000XP)
 
-Agente Preditivo Nível II /Marketing Digital 170.000XP
+Agente Preditivo Nível II /Marketing Digital 210.000XP
 Investimento Aquisição do Pack "AGII" R$500 
 ° Pack Agente Preditivo "AGII": 
 - 20 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 500 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
@@ -324,7 +483,7 @@ Um dos níveis mais decisivos do PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIMENT
 
 Nível de Desenvolvimento (Multilevel) 
 Generativo Nível I
-Intensifica o "N.O" com um salto rumo a realização de um Projeto de Vida  /Rede +10 Agentes AI /Agente Preditivo Nível II no 1º Nível (Diretos) = 850.000XP
+Intensifica o "N.O" com um salto rumo a realização de um Projeto de Vida  /Rede +10 Agentes AI /Agente Preditivo Nível II no 1º Nível (Diretos) = 500.000XP
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 500.000XP (XP correspondente a 1 Agente Direto = 50.000XP x10 = 500.000XP) 
 -Alcance da Meta 850.000XP *Acumulativos/Mês
 (100.000XP Individual + 10 x 50.000XP = 500.000XP 1° Nível + 10 x 25.000XP 2° Nível = 250.000XP)
@@ -417,7 +576,7 @@ Ativação Mensal: R$30 (3x Pack A²)
 
 
 Generativo Nível III
-Vivencia o "N.O" que não é por simplesmente ser, mas sim por ser presente, porque assim é preciso /Rede +30 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 4.050.000XP
+Vivencia o "N.O" que não é por simplesmente ser, mas sim por ser presente, porque assim é preciso /Rede +30 Agentes AI /Agente Gerativo Nível III no 1º Nível (Diretos) = 2.250.000XP
 - Rede de +30 Agentes AI no 1º Nível (Diretos) = 2.250.000XP (XP correspondente a 1 Agente Direto = 75.000XP x30 = 2.250.000XP) 
 -Alcance da Meta 4.050.000XP *Acumulativos/Mês
 (300.000XP Individual + 30 x 75.000XP = 2.250.000XP 1° Nível + 30 x 50.000XP 2° Nível = 1.500.000XP)
@@ -468,7 +627,7 @@ Neste nível, podemos afirmar que o PLANO DE CARREIRA "PD" /PLANO DE DESENVOLVIM
 
 Nível de Projeção (Multilevel) 
 Orquestrador Nível I
-Evidencia o "N.O" por saber que o Trabalho em Equipe é o Segredo do Sucesso e que para crescer é preciso de bases sólidas /Rede +10 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 5.500.000XP
+Evidencia o "N.O" por saber que o Trabalho em Equipe é o Segredo do Sucesso e que para crescer é preciso de bases sólidas /Rede +10 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 3.000.000XP
 - Rede de +10 Agentes AI no 1º Nível (Diretos) = 3.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x10 = 3.000.000XP) 
 -Alcance da Meta 5.500.000XP *Acumulativos/Mês
 (500.000XP Individual + 10 x 300.000XP = 3.000.000XP 1° Nível + 10 x 200.000XP 2° Nível = 2.000.000XP)
@@ -518,12 +677,12 @@ Ativação Mensal: R$50 (5x Pack A²)
 
 
 Orquestrador Nível II
-Potencializa o "N.O" pela compreensão de que o crescimento exponencial é alcançável /Rede +20 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 11.000.000XP
+Potencializa o "N.O" pela compreensão de que o crescimento exponencial é alcançável /Rede +20 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 6.000.000XP
 - Rede de +20 Agentes AI no 1º Nível (Diretos) = 6.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x20 = 6.000.000XP) 
 -Alcance da Meta 11.000.000XP *Acumulativos/Mês
 (1.000.000XP Individual + 20 x 300.000XP = 6.000.000XP 1° Nível + 20 x 200.000XP 2° Nível = 4.000.000XP)
 
-Agente Orquestrador Dinâmico /Projetista C-Level 11.100.000XP
+Agente Orquestrador Dinâmico /Projetista C-Level 11.000.000XP
 Investimento Aquisição do Pack "AOII" R$10.000
 ° Pack Agente Orquestrador "AOII": 
 - 400 PREU - Pacotes de Revenda x25 Ebook's (Ebook’s Exclusivos Universo AI - Total 10.000 Ebook’s = R$0,99 /Valor de Revenda por Ebook)
@@ -569,7 +728,7 @@ Ativação Mensal: R$100 (10x Pack A²)
 
 
 Orquestrador Nível III
-Traduz o "N.O" como Legado vivo no Organismo Digital Nexus /Rede +30 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 17.000.000XP
+Traduz o "N.O" como Legado vivo no Organismo Digital Nexus /Rede +30 Agentes AI /Agente Generativo Nível III no 1º Nível (Diretos) = 9.000.000XP
 - Rede de +30 Agentes AI no 1º Nível (Diretos) = 9.000.000XP (XP correspondente a 1 Agente Direto = 300.000XP x30 = 9.000.000XP) 
 -Alcance da Meta 17.000.000XP *Acumulativos/Mês
 (2.000.000XP Individual + 30 x 300.000XP = 9.000.000XP 1° Nível + 30 x 200.000XP 2° Nível = 6.000.000XP)
@@ -918,10 +1077,3 @@ ADMIN. Interface para gestão onde o administrador:
 - Ebook Meu Negócio de Sucesso é Nosso/Estudo                                                                  
 - Ebook Gestão - A Arte de Construir Juntos /Estudo
 - Ebook Conselhos de Ouro do Gestor - Faça o que eu Faço! /Estudo
-
-https://agent.minimax.io/share/400666495533206?chat_type=2 
-- Acessar e revisar desenvolvimento do app fullstack
-Você é um PHD em Engenharia da Informação, softwares, Ciência de dados e linguagens de programação, com a sua expertise sênior implemente:
-- Clonar repositório
-- Continuar o desenvolvimento dos skills e concluir sincronização com Agentes IA.  
-- Atualizar repositório: git remote set-url origin https://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@github.com/Nexus-HUB57/MMN_AI-to-AI.git git push origin main

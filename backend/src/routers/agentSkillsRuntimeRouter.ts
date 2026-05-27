@@ -8,6 +8,7 @@ import {
   listRegisteredSkillHandlers,
 } from "../agentic/skills/dispatcher";
 import { computeAutonomyScore } from "../agentic/autonomyScore";
+import { addExecution, getTelemetry } from "../agentic/runtimeTelemetry";
 import {
   findAgentByUserId,
   insertAgentRuntimeAudit,
@@ -74,6 +75,16 @@ export const agentSkillsRuntimeRouter = router({
         context,
       });
 
+      // Telemetria in-memory (alimenta Autonomy Score real)
+      addExecution({
+        skill: input.slug,
+        decision: result.decision,
+        success: result.success,
+        latencyMs: result.latencyMs,
+        channel: input.channelHint,
+        warningsCount: result.warnings?.length ?? 0,
+      });
+
       // Auditoria best-effort (não bloqueia resposta)
       try {
         await insertAgentRuntimeAudit({
@@ -95,6 +106,10 @@ export const agentSkillsRuntimeRouter = router({
 
       return result;
     }),
+
+  telemetry: publicProcedure.query(() => {
+    return getTelemetry();
+  }),
 
   autonomyScore: publicProcedure
     .input(
@@ -129,14 +144,17 @@ export const agentSkillsRuntimeRouter = router({
       console.warn("[agentSkillsRuntime] DB indisponível p/ score do agente:", error);
     }
 
+    const telemetry = getTelemetry();
+    const hasRealTelemetry = telemetry.sampleSize >= 5;
+
     return computeAutonomyScore({
       totalSkills,
-      operationalSkills,
-      autonomousTasksPct: 65,
+      operationalSkills: operationalSkills ?? listRegisteredSkillHandlers().length,
+      autonomousTasksPct: hasRealTelemetry ? telemetry.autonomousTasksPct : 65,
       judgeAccuracyPct: 78,
-      avgLatencyMs: 1850,
-      manualApprovalPct: 82,
-      activeChannels: 2,
+      avgLatencyMs: hasRealTelemetry ? telemetry.avgLatencyMs : 1850,
+      manualApprovalPct: hasRealTelemetry ? telemetry.manualApprovalPct : 82,
+      activeChannels: hasRealTelemetry ? Math.max(telemetry.activeChannels, 1) : 2,
     });
   }),
 });

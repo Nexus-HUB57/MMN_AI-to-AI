@@ -30,6 +30,82 @@ interface AuthContextType {
 
 const STORAGE_KEY = "mmn-ai-auth-session";
 const ADMIN_TOKEN_KEY = "mmn-ai-admin-token";
+const ADMIN_LOCKOUT_KEY = "mmn-ai-admin-lockout";
+const ADMIN_LOCAL_TTL_MS = 12 * 60 * 60 * 1000; // 12h
+const ADMIN_MAX_ATTEMPTS = 5;
+const ADMIN_LOCKOUT_MS = 10 * 60 * 1000; // 10 min
+
+interface AdminLockoutState {
+  attempts: number;
+  lockedUntil: number | null;
+}
+
+function readLockout(): AdminLockoutState {
+  if (typeof window === "undefined") return { attempts: 0, lockedUntil: null };
+  try {
+    const raw = window.localStorage.getItem(ADMIN_LOCKOUT_KEY);
+    if (!raw) return { attempts: 0, lockedUntil: null };
+    const parsed = JSON.parse(raw) as AdminLockoutState;
+    if (parsed.lockedUntil && parsed.lockedUntil < Date.now()) {
+      return { attempts: 0, lockedUntil: null };
+    }
+    return parsed;
+  } catch {
+    return { attempts: 0, lockedUntil: null };
+  }
+}
+
+function writeLockout(state: AdminLockoutState) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ADMIN_LOCKOUT_KEY, JSON.stringify(state));
+}
+
+function clearLockout() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(ADMIN_LOCKOUT_KEY);
+}
+
+function registerAdminFailure() {
+  const current = readLockout();
+  const attempts = current.attempts + 1;
+  const lockedUntil =
+    attempts >= ADMIN_MAX_ATTEMPTS ? Date.now() + ADMIN_LOCKOUT_MS : current.lockedUntil;
+  writeLockout({ attempts, lockedUntil });
+}
+
+function ensureAdminUnlocked() {
+  const lockout = readLockout();
+  if (lockout.lockedUntil && lockout.lockedUntil > Date.now()) {
+    const minutes = Math.max(1, Math.ceil((lockout.lockedUntil - Date.now()) / 60000));
+    throw new Error(
+      `Acesso administrativo temporariamente bloqueado por ${minutes} min após tentativas inválidas.`,
+    );
+  }
+}
+
+function persistAdminSessionWindow() {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(
+    ADMIN_TOKEN_KEY,
+    JSON.stringify({
+      token: "local-fallback",
+      expiresAt: new Date(Date.now() + ADMIN_LOCAL_TTL_MS).toISOString(),
+    }),
+  );
+}
+
+function isAdminLocalSessionValid(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = window.localStorage.getItem(ADMIN_TOKEN_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw) as { expiresAt?: string };
+    if (!parsed.expiresAt) return false;
+    return new Date(parsed.expiresAt).getTime() > Date.now();
+  } catch {
+    return false;
+  }
+}
 
 function getTrpcBaseUrl(): string {
   if (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_TRPC_URL) {
@@ -171,8 +247,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as User;
-        if (parsed.role === "admin" && !isAuthorizedAdminSession(parsed)) {
-          window.localStorage.removeItem(STORAGE_KEY);
+        if (parsed.role === "admin") {
+          if (!isAuthorizedAdminSession(parsed) || !isAdminLocalSessionValid()) {
+            window.localStorage.removeItem(STORAGE_KEY);
+            window.localStorage.removeItem(ADMIN_TOKEN_KEY);
+          } else {
+            setUser(parsed);
+          }
         } else {
           setUser(parsed);
         }
@@ -205,6 +286,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const loginAdmin = async (email: string, password: string) => {
+    ensureAdminUnlocked();
     const normalizedEmail = email.trim().toLowerCase();
 
     // 1) Verifica disponibilidade do backend de auth admin.
@@ -219,6 +301,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }>("adminAuth.login", { email: normalizedEmail, password });
 
       if (error || !data?.success || !data.token) {
+        registerAdminFailure();
         throw new Error(error || "E-mail ou senha inválidos para o backoffice administrativo.");
       }
 
@@ -229,6 +312,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         );
       }
 
+      clearLockout();
       setUser(ADMIN_USER);
       persistUser(ADMIN_USER);
       return ADMIN_USER;
@@ -237,9 +321,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // 2) Fallback local (backend ainda não publicado): valida hash no cliente.
     const isValid = await validateAdminCredentials(normalizedEmail, password);
     if (!isValid) {
+      registerAdminFailure();
       throw new Error("E-mail ou senha inválidos para o backoffice administrativo.");
     }
 
+    clearLockout();
+    persistAdminSessionWindow();
     setUser(ADMIN_USER);
     persistUser(ADMIN_USER);
     return ADMIN_USER;
@@ -280,6 +367,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       window.sessionStorage.clear();
       window.localStorage.removeItem(STORAGE_KEY);
       window.localStorage.removeItem(ADMIN_TOKEN_KEY);
+      window.localStorage.removeItem(ADMIN_LOCKOUT_KEY);
     }
   };
 

@@ -176,6 +176,17 @@ export interface SisuSubAccount {
   level: CareerLevelKey;
 }
 
+export interface OperationalStockItem {
+  id: string;
+  type: "pack" | "ebooks" | "preu";
+  title: string;
+  description: string;
+  quantity: number;
+  badge: string;
+  sourcePackSlug: string;
+  availableForAgent: boolean;
+}
+
 export interface ProgressSnapshot {
   currentPack: NexusPack | null;
   nextPack: NexusPack | null;
@@ -238,12 +249,12 @@ export const NEXUS_PACKS: NexusPack[] = [
     slug: "pack-a2ii", order: 2, stage: "affiliate",
     name: 'Pack Agente Afiliado "A²II"', shortName: "A²II",
     description: "Upgrade A²II — expande N.O e dobra o catálogo comercial.",
-    priceCents: 3000, xpGranted: 3000, levelGranted: "affiliate_ii",
+    priceCents: 3000, xpGranted: 5000, levelGranted: "affiliate_ii",
     promptTier: "basico",
     skills: { basico: 3, intermediario: 0, avancado: 0 },
     ebooks: 30, preuPacks: 0, sisuPacksA2: 1,
     badge: "Upgrade",
-    requirements: { minXp: 3000, minDirectReferrals: 2, requiredPackSlugs: ["pack-a2"] },
+    requirements: { minXp: 5000, minDirectReferrals: 2, requiredPackSlugs: ["pack-a2"] },
     highlights: [
       "Upgrade do Agente IA para 3 Skills Nível I",
       "30 e-books · 1 Pack A² SiSu",
@@ -254,12 +265,12 @@ export const NEXUS_PACKS: NexusPack[] = [
     slug: "pack-a2iii", order: 3, stage: "affiliate",
     name: 'Pack Agente Afiliado "A²III"', shortName: "A²III",
     description: "Upgrade A²III — destaque do afiliado com rede direta ampliada.",
-    priceCents: 5000, xpGranted: 6000, levelGranted: "affiliate_iii",
+    priceCents: 5000, xpGranted: 10000, levelGranted: "affiliate_iii",
     promptTier: "basico",
     skills: { basico: 5, intermediario: 0, avancado: 0 },
     ebooks: 50, preuPacks: 0, sisuPacksA2: 2,
     badge: "Upgrade",
-    requirements: { minXp: 6000, minDirectReferrals: 5, requiredPackSlugs: ["pack-a2ii"] },
+    requirements: { minXp: 10000, minDirectReferrals: 5, requiredPackSlugs: ["pack-a2ii"] },
     highlights: [
       "5 Skills Nível I · 50 e-books · 2 Packs A² SiSu",
       "Bônus OnePack começa a contar (R$ 2,50 por A²II do N.O)",
@@ -269,7 +280,7 @@ export const NEXUS_PACKS: NexusPack[] = [
   // ---------------- PREDITIVO ----------------
   {
     slug: "pack-ag", order: 4, stage: "predictive",
-    name: 'Pack Agente Gerativo "AG"', shortName: "AG",
+    name: 'Pack Agente Preditivo "AG"', shortName: "AG",
     description: "Pack AG — entrada profissional preditiva e marketing digital.",
     priceCents: 25000, xpGranted: 65000, levelGranted: "predictive_i",
     promptTier: "intermediario",
@@ -287,12 +298,12 @@ export const NEXUS_PACKS: NexusPack[] = [
     slug: "pack-agii", order: 5, stage: "predictive",
     name: 'Pack Agente Preditivo "AGII"', shortName: "AGII",
     description: "Pack AGII — operação preditiva expandida.",
-    priceCents: 50000, xpGranted: 170000, levelGranted: "predictive_ii",
+    priceCents: 50000, xpGranted: 210000, levelGranted: "predictive_ii",
     promptTier: "intermediario",
     skills: { basico: 5, intermediario: 2, avancado: 0 },
     ebooks: 0, preuPacks: 20, sisuPacksA2: 10,
     badge: "Escala preditiva",
-    requirements: { minXp: 170000, minDirectReferrals: 20, requiredPackSlugs: ["pack-ag"] },
+    requirements: { minXp: 210000, minDirectReferrals: 20, requiredPackSlugs: ["pack-ag"] },
     highlights: [
       "5 Skills Nível I + 2 Skills Nível II",
       "20 PREU (500 e-books) + 10 Packs A² SiSu",
@@ -308,7 +319,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 5, intermediario: 5, avancado: 0 },
     ebooks: 0, preuPacks: 30, sisuPacksA2: 20,
     badge: "Consolidação",
-    requirements: { minXp: 315000, minDirectReferrals: 35, requiredPackSlugs: ["pack-agii"] },
+    requirements: { minXp: 315000, minDirectReferrals: 30, requiredPackSlugs: ["pack-agii"] },
     highlights: [
       "5 Skills Nível I + 5 Skills Nível II",
       "30 PREU (750 e-books) + 20 Packs A² SiSu + 1 Pack AG SiSu",
@@ -325,7 +336,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 5, avancado: 0 },
     ebooks: 100, preuPacks: 40, sisuPacksA2: 30,
     badge: "Profissional Generativo",
-    requirements: { minXp: 850000, minDirectReferrals: 60, requiredPackSlugs: ["pack-agiii"] },
+    requirements: { minXp: 850000, minDirectReferrals: 10, requiredPackSlugs: ["pack-agiii"] },
     highlights: [
       "7 Skills Nível I + 5 Skills Nível II",
       "40 PREU (1.000 e-books) + 30 Packs A² SiSu",
@@ -341,7 +352,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 7, avancado: 0 },
     ebooks: 2000, preuPacks: 80, sisuPacksA2: 40,
     badge: "Avançado Generativo",
-    requirements: { minXp: 2700000, minDirectReferrals: 100, requiredPackSlugs: ["pack-agn"] },
+    requirements: { minXp: 2700000, minDirectReferrals: 20, requiredPackSlugs: ["pack-agn"] },
     highlights: [
       "7 Skills Nível I + 7 Skills Nível II",
       "80 PREU (2.000 e-books) + 40 Packs A² SiSu",
@@ -357,7 +368,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 7, avancado: 2 },
     ebooks: 3000, preuPacks: 120, sisuPacksA2: 50,
     badge: "C-level Inicial",
-    requirements: { minXp: 4050000, minDirectReferrals: 150, requiredPackSlugs: ["pack-agnii"] },
+    requirements: { minXp: 4050000, minDirectReferrals: 30, requiredPackSlugs: ["pack-agnii"] },
     highlights: [
       "7 Skills Nível I + 7 Skills Nível II + 2 Skills Nível III",
       "120 PREU (3.000 e-books) + 50 Packs A² + 1 Pack AGN SiSu",
@@ -374,7 +385,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 3, intermediario: 1, avancado: 0 },
     ebooks: 5000, preuPacks: 200, sisuPacksA2: 100,
     badge: "C-level",
-    requirements: { minXp: 5500000, minDirectReferrals: 220, requiredPackSlugs: ["pack-agniii"] },
+    requirements: { minXp: 5500000, minDirectReferrals: 10, requiredPackSlugs: ["pack-agniii"] },
     highlights: [
       "Prompt Avançado + 3 Skills Nível I + 1 Skill Nível II",
       "200 PREU (5.000 e-books) + 100 Packs A² SiSu",
@@ -390,7 +401,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 5, intermediario: 3, avancado: 0 },
     ebooks: 10000, preuPacks: 400, sisuPacksA2: 200,
     badge: "Corporativo",
-    requirements: { minXp: 11000000, minDirectReferrals: 350, requiredPackSlugs: ["pack-ao"] },
+    requirements: { minXp: 11000000, minDirectReferrals: 20, requiredPackSlugs: ["pack-ao"] },
     highlights: [
       "Prompt Avançado + 5 Skills Nível I + 3 Skills Nível II",
       "400 PREU (10.000 e-books) + 200 Packs A² SiSu",
@@ -406,7 +417,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 5, avancado: 2 },
     ebooks: 20000, preuPacks: 800, sisuPacksA2: 300,
     badge: "Orquestração Plena",
-    requirements: { minXp: 17000000, minDirectReferrals: 500, requiredPackSlugs: ["pack-aoii"] },
+    requirements: { minXp: 17000000, minDirectReferrals: 30, requiredPackSlugs: ["pack-aoii"] },
     highlights: [
       "Prompt Avançado + 7 Skills Nível I + 5 Skills Nível II + 2 Skills Nível III",
       "800 PREU (20.000 e-books) + 300 Packs A² + 1 Pack AO SiSu",
@@ -423,7 +434,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 7, avancado: 5 },
     ebooks: 50000, preuPacks: 2000, sisuPacksA2: 500,
     badge: "CEO",
-    requirements: { minXp: 35000000, minDirectReferrals: 700, requiredPackSlugs: ["pack-aoiii"] },
+    requirements: { minXp: 35000000, minDirectReferrals: 10, requiredPackSlugs: ["pack-aoiii"] },
     highlights: [
       "7 Skills Nível I + 7 Nível II + 5 Skills Nível III",
       "2.000 PREU (50.000 e-books) + 500 Packs A² SiSu",
@@ -439,7 +450,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 7, intermediario: 7, avancado: 7 },
     ebooks: 100000, preuPacks: 4000, sisuPacksA2: 1000,
     badge: "Royalties",
-    requirements: { minXp: 70000000, minDirectReferrals: 1100, requiredPackSlugs: ["pack-aa"] },
+    requirements: { minXp: 70000000, minDirectReferrals: 20, requiredPackSlugs: ["pack-aa"] },
     highlights: [
       "7 Skills Nível I + 7 Nível II + 7 Skills Nível III",
       "4.000 PREU (100.000 e-books) + 1.000 Packs A² SiSu",
@@ -455,7 +466,7 @@ export const NEXUS_PACKS: NexusPack[] = [
     skills: { basico: 15, intermediario: 15, avancado: 15 },
     ebooks: 200000, preuPacks: 6000, sisuPacksA2: 2000,
     badge: "Pleno · Hall N",
-    requirements: { minXp: 110000000, minDirectReferrals: 1500, requiredPackSlugs: ["pack-aaii"] },
+    requirements: { minXp: 110000000, minDirectReferrals: 30, requiredPackSlugs: ["pack-aaii"] },
     highlights: [
       "Acesso PLENO ao Prompt Básico + Intermediário + Avançado",
       "6.000 PREU (200.000 e-books) + 2.000 Packs A² SiSu",
@@ -817,6 +828,57 @@ export function getUnlockedSkillBundles(profile: MarketplaceProfile) {
     status: hasPackOrHigher(profile, bundle.unlockPackSlug) ? ("active" as const) : ("locked" as const),
     unlockPack: getPackBySlug(bundle.unlockPackSlug),
   }));
+}
+
+export function getOperationalInventory(profile: MarketplaceProfile): OperationalStockItem[] {
+  const activePacks = NEXUS_PACKS.filter((pack) => profile.activePackSlugs.includes(pack.slug)).sort(
+    (a, b) => a.order - b.order,
+  );
+
+  const packItems: OperationalStockItem[] = activePacks.map((pack) => ({
+    id: `stock-pack-${pack.slug}`,
+    type: "pack",
+    title: pack.name,
+    description: `Pack adquirido via ativação mensal. O agente IA usa este plano para habilitar vendas, skills e rotinas operacionais.`,
+    quantity: 1,
+    badge: pack.shortName,
+    sourcePackSlug: pack.slug,
+    availableForAgent: true,
+  }));
+
+  const productItems: OperationalStockItem[] = activePacks.flatMap((pack) => {
+    const items: OperationalStockItem[] = [];
+
+    if (pack.ebooks > 0) {
+      items.push({
+        id: `stock-ebooks-${pack.slug}`,
+        type: "ebooks",
+        title: `Biblioteca comercial ${pack.shortName}`,
+        description: `${pack.ebooks.toLocaleString("pt-BR")} e-books liberados para revenda direta pelo agente IA.`,
+        quantity: pack.ebooks,
+        badge: "E-books",
+        sourcePackSlug: pack.slug,
+        availableForAgent: true,
+      });
+    }
+
+    if (pack.preuPacks > 0) {
+      items.push({
+        id: `stock-preu-${pack.slug}`,
+        type: "preu",
+        title: `Pacotes PREU ${pack.shortName}`,
+        description: `${pack.preuPacks.toLocaleString("pt-BR")} pacotes PREU disponíveis para operação comercial do agente.`,
+        quantity: pack.preuPacks,
+        badge: "PREU",
+        sourcePackSlug: pack.slug,
+        availableForAgent: true,
+      });
+    }
+
+    return items;
+  });
+
+  return [...packItems, ...productItems];
 }
 
 export interface MarketplaceEbookState extends MarketplaceEbook {

@@ -64,6 +64,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation();
 
+  const invalidateRemoteSession = async () => {
+    try {
+      await Promise.race([
+        logoutMutation.mutateAsync(),
+        new Promise((_, reject) =>
+          window.setTimeout(() => reject(new Error("logout-timeout")), 2000),
+        ),
+      ]);
+    } catch (error) {
+      console.warn("Falha ao invalidar sessão remota. Logout local aplicado.", error);
+    }
+  };
+
   // Auto-recolhe o popup de configurações após inatividade.
   React.useEffect(() => {
     if (!userMenuOpen) return;
@@ -217,7 +230,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   const handleLogout = async () => {
-    setLocation("/logout");
+    setUserMenuOpen(false);
+    void invalidateRemoteSession();
+    await logout();
+    setLocation("/login");
   };
 
   const isActive = (href: string) => {
@@ -292,7 +308,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* User Menu */}
-          <DropdownMenu open={userMenuOpen} onOpenChange={setUserMenuOpen}>
+          <DropdownMenu modal={false} open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -316,24 +332,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-56"
+              className="w-64 border border-slate-300 bg-slate-50/95 text-slate-950 shadow-2xl shadow-black/20 backdrop-blur"
               onMouseLeave={() => setUserMenuOpen(false)}
+              onInteractOutside={() => setUserMenuOpen(false)}
             >
               {/* User Info */}
               <div className="px-4 py-3 border-b border-border space-y-3">
                 <div>
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className="text-sm font-semibold text-slate-900">
                     {user?.name || "Usuário"}
                   </p>
-                  <p className="text-xs text-text-secondary">{user?.email}</p>
-                  <p className="text-xs text-text-muted mt-1">
+                  <p className="text-xs text-slate-700">{user?.email}</p>
+                  <p className="mt-1 text-xs text-slate-600">
                     Papel:{" "}
                     {user?.role === "admin" ? "Administrador" : "Afiliado"}
                   </p>
                 </div>
                 <div className="pt-2 border-t border-border/50">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-text-secondary">
+                    <span className="text-xs text-slate-700">
                       Status do Agente IA:
                     </span>
                     <span
@@ -343,7 +360,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         agentStatus.slice(1)}
                     </span>
                   </div>
-                  <p className="text-xs text-text-muted mt-2">
+                  <p className="mt-2 text-xs text-slate-600">
                     {agentStatus === "ativo"
                       ? "Seu agente está operacional"
                       : agentStatus === "inativo"
@@ -355,14 +372,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
               {/* Menu Items */}
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-muted"
+                className="cursor-pointer text-slate-900 focus:bg-slate-100 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
                 onClick={() => setLocation("/profile")}
               >
                 <Settings className="w-4 h-4 mr-2" />
                 <span>Configurações da Conta</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="cursor-pointer hover:bg-muted"
+                className="cursor-pointer text-slate-900 focus:bg-slate-100 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
                 onClick={() => setLocation("/agents")}
               >
                 <Cpu className="w-4 h-4 mr-2" />
@@ -370,7 +387,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </DropdownMenuItem>
               {user?.role === "admin" && (
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-muted"
+                  className="cursor-pointer text-slate-900 focus:bg-slate-100 data-[highlighted]:bg-slate-100 data-[highlighted]:text-slate-950"
                   onClick={() => setLocation("/admin")}
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -383,7 +400,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* Logout */}
               <DropdownMenuItem
                 onClick={handleLogout}
-                className="cursor-pointer text-red-400 focus:bg-red-500/10 hover:bg-red-500/10"
+                className="cursor-pointer text-red-700 focus:bg-red-100 data-[highlighted]:bg-red-100 data-[highlighted]:text-red-800"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 <span>Sair</span>

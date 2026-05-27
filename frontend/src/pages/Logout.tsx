@@ -12,30 +12,38 @@ export default function Logout() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const logoutMutation = trpc.auth.logout.useMutation();
 
-  const handleConfirmLogout = async () => {
-    setIsLoggingOut(true);
+  const invalidateRemoteSession = async () => {
     try {
-      await logoutMutation.mutateAsync();
-      logout();
-      // Redirecionar para login apos logout bem-sucedido
-      setTimeout(() => {
-        setLocation("/login");
-      }, 1000);
+      await Promise.race([
+        logoutMutation.mutateAsync(),
+        new Promise((_, reject) =>
+          window.setTimeout(() => reject(new Error("logout-timeout")), 2000),
+        ),
+      ]);
     } catch (error) {
-      console.error("Erro ao fazer logout:", error);
-      setIsLoggingOut(false);
+      console.warn("Falha ao finalizar sessão remota. Logout local aplicado.", error);
     }
+  };
+
+  const handleConfirmLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    void invalidateRemoteSession();
+    await logout();
+    setTimeout(() => {
+      setLocation("/login");
+    }, 150);
   };
 
   const handleCancel = () => {
     setLocation("/");
   };
 
-  // Auto-logout se ja estiver desconectado
+  // Auto-logout com fallback local
   useEffect(() => {
     const timer = setTimeout(() => {
-      handleConfirmLogout();
-    }, 3000);
+      void handleConfirmLogout();
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);

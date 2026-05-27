@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import {
   formatCurrency,
   getLevelLabel,
   getLevelSubtitle,
+  getOperationalInventory,
   getPackAccess,
   getProgressSnapshot,
   getUnlockedEbookBundles,
@@ -52,6 +54,7 @@ export default function Marketplaces() {
   const ebookBundles = getUnlockedEbookBundles(profile);
   const skillBundles = getUnlockedSkillBundles(profile);
   const hasOnboardingFlag = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
+  const focusMonthlyActivation = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("focus") === "monthly-activation";
 
   const packStates = NEXUS_PACKS.map((pack) => ({
     ...pack,
@@ -63,6 +66,7 @@ export default function Marketplaces() {
   const activeCount = packStates.filter((pack) => pack.access.status === "active").length;
   const activeEbooks = ebookBundles.filter((bundle) => bundle.status === "active").length;
   const activeSkills = skillBundles.filter((bundle) => bundle.status === "active").length;
+  const stockItems = useMemo(() => getOperationalInventory(profile), [profile]);
 
   return (
     <DashboardLayout>
@@ -121,7 +125,7 @@ export default function Marketplaces() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.82),rgba(2,6,23,0.94))] p-6 shadow-2xl shadow-black/20">
+        <section className={`rounded-3xl border p-6 shadow-2xl shadow-black/20 ${focusMonthlyActivation ? "border-amber-400/40 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.18),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))]" : "border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.82),rgba(2,6,23,0.94))]"}`}>
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl space-y-4">
               <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
@@ -130,7 +134,7 @@ export default function Marketplaces() {
               <div className="space-y-3">
                 <h1 className="text-3xl font-bold text-white md:text-4xl">Marketplace Nexus reconfigurado por nível, XP e plano</h1>
                 <p className="max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
-                  O fluxo inicial agora respeita o plano de carreira do Nexus: após o cadastro, o usuário entra no Marketplace com apenas o Pack Agente Afiliado A² liberado. Todos os demais packs, bibliotecas, skills e upgrades ficam bloqueados até a conclusão integral dos critérios de nível / XP.
+                  O fluxo inicial agora respeita o plano de carreira do Nexus: após o cadastro, o usuário entra no Marketplace com apenas o Pack Agente Afiliado A² liberado. Todos os demais packs, bibliotecas, skills e upgrades ficam bloqueados até a conclusão integral dos critérios de nível / XP. A ação <strong className="text-amber-300">Ativação Mensal</strong> leva você direto para este painel para escolher os packs e produtos do valor correspondente à sua operação.
                 </p>
               </div>
               {hasOnboardingFlag && (
@@ -169,6 +173,84 @@ export default function Marketplaces() {
               </CardContent>
             </Card>
           </div>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+          <Card className="border-amber-400/30 bg-amber-400/10 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <ShoppingCart className="h-5 w-5 text-amber-300" />
+                Ativação Mensal
+              </CardTitle>
+              <CardDescription className="text-amber-100/90">
+                Escolha os packs ou produtos do valor correspondente à sua solicitação. Tudo o que for ativado aqui passa a compor o estoque operacional do Agente IA.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {availableNow.length > 0 ? (
+                availableNow.map((pack) => (
+                  <div key={`monthly-${pack.slug}`} className="rounded-2xl border border-amber-300/20 bg-black/20 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-base font-semibold text-white">{pack.name}</p>
+                        <p className="mt-1 text-sm leading-6 text-slate-300">{pack.description}</p>
+                      </div>
+                      <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">{pack.shortName}</Badge>
+                    </div>
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.3em] text-slate-500">valor</p>
+                        <p className="mt-1 text-xl font-bold text-white">{formatCurrency(pack.priceCents)}</p>
+                      </div>
+                      <Button className="gradient-btn" onClick={() => activate(pack.slug)}>
+                        Ativar agora
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
+                  Nenhuma nova ativação mensal está disponível neste instante. Complete os critérios de carreira para liberar o próximo pack.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Package className="h-5 w-5 text-quantum-cyan" />
+                Estoque operacional do Agente IA
+              </CardTitle>
+              <CardDescription className="text-slate-300">
+                Todos os produtos adquiridos ficam listados aqui para uso nas vendas diretas do agente.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {stockItems.length === 0 ? (
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
+                  Seu estoque ainda está vazio. Faça uma ativação mensal para liberar packs, bibliotecas e produtos operacionais.
+                </div>
+              ) : (
+                stockItems.map((item) => (
+                  <div key={item.id} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-white">{item.title}</p>
+                        <p className="mt-1 text-xs leading-5 text-slate-400">{item.description}</p>
+                      </div>
+                      <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">{item.badge}</Badge>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Qtd. {item.quantity.toLocaleString("pt-BR")}</span>
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Uso direto pelo Agente IA</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -255,10 +337,10 @@ export default function Marketplaces() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
-                Liberado agora no pós-cadastro
+                Packs disponíveis para ativação
               </CardTitle>
               <CardDescription className="text-slate-400">
-                Apenas ofertas realmente acessíveis neste momento.
+                Escolha abaixo o pack liberado para a sua ativação mensal neste momento.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

@@ -24,6 +24,24 @@ const STAGE_LABELS: Record<CareerStage, { title: string; subtitle: string; accen
 
 type StageFilter = "all" | CareerStage;
 
+const PROGRESSION_GUIDES: Record<string, string> = {
+  "pack-a2": '0 diretos na Rede "N.O"',
+  "pack-a2ii": 'Rede "N.O" com 2 Agentes Afiliados A²: 1.000 XP x 2 = 2.000 XP + 3.000 XP do Pack A²II = 5.000 XP.',
+  "pack-a2iii": 'Rede "N.O" com 5 Agentes Afiliados A²: 1.000 XP x 5 = 5.000 XP + 5.000 XP do Pack A²III = 10.000 XP.',
+  "pack-ag": 'Rede "N.O" com 10 Agentes Afiliados A²II: 3.000 XP x 10 = 30.000 XP + 10.000 XP de 2º nível + 25.000 XP do Pack AG = 65.000 XP.',
+  "pack-agii": 'Rede "N.O" com 20 Agentes Afiliados A²III = 100.000 XP + 60.000 XP de 2º nível + 50.000 XP do Pack AGII = 210.000 XP.',
+  "pack-agiii": 'Rede "N.O" com 30 Agentes Afiliados A²III = 150.000 XP + 90.000 XP de 2º nível + 75.000 XP do Pack AGIII = 315.000 XP.',
+  "pack-agn": 'Rede "N.O" com 10 Agentes Preditivos AGII = 500.000 XP + 250.000 XP de 2º nível + 100.000 XP do Pack AGN = 850.000 XP.',
+  "pack-agnii": 'Rede "N.O" com 20 Agentes Preditivos AGIII = 1.500.000 XP + 1.000.000 XP de 2º nível + 200.000 XP do Pack AGNII = 2.700.000 XP.',
+  "pack-agniii": 'Rede "N.O" com 30 Agentes Preditivos AGIII = 2.250.000 XP + 1.500.000 XP de 2º nível + 300.000 XP do Pack AGNIII = 4.050.000 XP.',
+  "pack-ao": 'Rede "N.O" com 10 Agentes Generativos AGNIII = 3.000.000 XP + 2.000.000 XP de 2º nível + 500.000 XP do Pack AO = 5.500.000 XP.',
+  "pack-aoii": 'Rede "N.O" com 20 Agentes Generativos AGNIII = 6.000.000 XP + 4.000.000 XP de 2º nível + 1.000.000 XP do Pack AOII = 11.000.000 XP.',
+  "pack-aoiii": 'Rede "N.O" com 30 Agentes Generativos AGNIII = 9.000.000 XP + 6.000.000 XP de 2º nível + 2.000.000 XP do Pack AOIII = 17.000.000 XP.',
+  "pack-aa": 'Rede "N.O" com 10 Agentes Orquestradores AOIII = 20.000.000 XP + 10.000.000 XP de 2º nível + 5.000.000 XP do Pack AA = 35.000.000 XP.',
+  "pack-aaii": 'Rede "N.O" com 20 Agentes Orquestradores AOIII = 40.000.000 XP + 20.000.000 XP de 2º nível + 10.000.000 XP do Pack AAII = 70.000.000 XP.',
+  "pack-aaiii": 'Rede "N.O" com 30 Agentes Orquestradores AOIII = 60.000.000 XP + 30.000.000 XP de 2º nível + 20.000.000 XP do Pack AAIII = 110.000.000 XP.',
+};
+
 export default function PacksMarketplace() {
   const { profile, activate } = useMarketplaceProfile();
   const [stage, setStage] = useState<StageFilter>("all");
@@ -159,7 +177,7 @@ export default function PacksMarketplace() {
                       <p className="mt-2 text-xl font-semibold text-white">{pack.requirements.minXp.toLocaleString("pt-BR")}</p>
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Diretos qualificados</p>
+                      <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Rede N.O mínima</p>
                       <p className="mt-2 text-xl font-semibold text-white">{pack.requirements.minDirectReferrals}</p>
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -168,6 +186,11 @@ export default function PacksMarketplace() {
                         {formatSkillSummary(pack.skills, pack.promptTier)}
                       </p>
                     </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
+                    <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Diretriz oficial de progressão</p>
+                    <p className="mt-2 leading-6 text-slate-200">{PROGRESSION_GUIDES[pack.slug]}</p>
                   </div>
 
                   {pack.access.missingCriteria.length > 0 && (
@@ -218,8 +241,32 @@ export default function PacksMarketplace() {
           })}
         </section>
 
-        <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-400">
+        <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-300">
           <strong className="text-quantum-cyan">Regra do Agente IA:</strong> apenas o <strong>Pack A²</strong> entrega 1 Agente IA via OpenClaw. Todos os 14 packs seguintes apenas <strong>fazem upgrade automático</strong> do mesmo agente conforme o usuário sobe de nível, sem criar um novo agente.
+        </section>
+
+        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.86),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+          <div className="space-y-2">
+            <Badge className="border border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple">
+              Progressão oficial · 1 XP = R$ 1
+            </Badge>
+            <h2 className="text-2xl font-bold text-white">Cálculo detalhado de avanço por pack</h2>
+            <p className="max-w-3xl text-sm leading-6 text-slate-300">
+              As diretrizes abaixo consolidam a regra operacional informada para o avanço entre níveis do plano Nexus. O total de XP exibido em cada card já reflete esse cálculo final.
+            </p>
+          </div>
+          <div className="mt-5 grid gap-3 xl:grid-cols-2">
+            {NEXUS_PACKS.map((pack) => (
+              <div key={`guide-${pack.slug}`} className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-white">{pack.name}</p>
+                  <Badge className="border border-white/10 bg-white/5 text-slate-300">{pack.shortName}</Badge>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-slate-300">{PROGRESSION_GUIDES[pack.slug]}</p>
+                <p className="mt-3 text-xs uppercase tracking-[0.25em] text-quantum-cyan">Total exigido: {pack.requirements.minXp.toLocaleString("pt-BR")} XP</p>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </DashboardLayout>

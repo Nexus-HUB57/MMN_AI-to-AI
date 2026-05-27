@@ -157,6 +157,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = async () => {
     setUser(null);
     persistUser(null);
+
+    if (typeof window !== "undefined") {
+      window.sessionStorage.clear();
+      window.localStorage.removeItem("mmn-ai-auth-session");
+    }
   };
 
   const value = useMemo<AuthContextType>(

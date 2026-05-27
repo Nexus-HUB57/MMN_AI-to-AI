@@ -336,8 +336,8 @@ export default function BonusPage() {
                 Clube de Vantagens · Bônus oficiais Nexus
               </Badge>
               <h1 className="text-3xl font-bold text-white md:text-4xl">Bônus e Formas de Ganho</h1>
-              <p className="max-w-3xl text-sm leading-6 text-slate-300">
-                Esta lista segue exclusivamente o documento <strong className="text-quantum-cyan">Plano de Carreira Peer</strong>. Não existem prêmios <em>Diamante</em> ou <em>Esmeralda</em> — apenas os bônus oficiais. Sorteios e prêmios temáticos têm <strong className="text-amber-300">prazo final</strong>, por serem ações eventuais (não-efetivas).
+              <p className="max-w-3xl text-sm leading-6 text-slate-200 md:text-base">
+                O Nexus Afil&apos;IA&apos;te oferece <strong className="text-quantum-cyan">9 Formas de Ganhos</strong>. Isso significa <strong className="text-quantum-lime">+ 9 Motivos</strong> pra você Ativar o seu Agente hoje mesmo + <strong className="text-amber-300">Lucros x9</strong> + <strong className="text-quantum-purple">Oportunidades x9</strong>.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">

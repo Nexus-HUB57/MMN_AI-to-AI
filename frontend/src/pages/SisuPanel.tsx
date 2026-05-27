@@ -22,10 +22,17 @@ export default function SisuPanel() {
   const { profile } = useMarketplaceProfile();
   const highest = useMemo(() => getHighestActivePack(profile), [profile]);
 
-  const cumulativeSisuEntitlement = useMemo(() => {
-    const order = highest?.order ?? 0;
-    return NEXUS_PACKS.filter((p) => p.order <= order).reduce((acc, pack) => acc + pack.sisuPacksA2, 0);
-  }, [highest?.order]);
+  const cumulativeSisuEntitlement = useMemo(() => highest?.sisuPacksA2 ?? 0, [highest?.sisuPacksA2]);
+
+  const sisuReleaseMatrix = useMemo(
+    () =>
+      NEXUS_PACKS.filter((pack) => pack.order > 1).map((pack) => ({
+        slug: pack.slug,
+        shortName: pack.shortName,
+        total: pack.sisuPacksA2,
+      })),
+    [],
+  );
 
   const subAccounts = profile.sisuSubAccounts;
   const totalMonthly = subAccounts.reduce((acc, sub) => acc + sub.monthlyResultCents, 0);
@@ -123,25 +130,28 @@ export default function SisuPanel() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Activity className="h-5 w-5 text-quantum-cyan" />
-                Direito acumulado (SiSu)
+                Direito liberado (SiSu)
               </CardTitle>
               <CardDescription className="text-slate-300">
-                Total de Packs A² SiSu que você acumulou nos packs já ativados.
+                Liberação oficial do seu pack mais alto ativo, conforme a tabela SiSu do plano de carreira.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Direito cumulativo</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Total liberado</p>
                 <p className="mt-2 text-4xl font-bold text-quantum-cyan">{cumulativeSisuEntitlement}</p>
-                <p className="mt-1 text-xs text-slate-400">Packs A² SiSu cumulativos (Age.txt)</p>
+                <p className="mt-1 text-xs text-slate-400">Total SiSu liberado no pack atual</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs text-slate-400">
-                <p className="font-semibold text-quantum-cyan">Regra</p>
-                <ul className="mt-1 space-y-1">
-                  <li>• A²II libera 1 SiSu · A²III libera 2 · AG libera 5</li>
-                  <li>• Generativo I libera 30 · Orquestrador I libera 100</li>
-                  <li>• Agentic I libera 500 · Agentic III libera 2.000</li>
-                </ul>
+              <div className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs text-slate-300">
+                <p className="font-semibold text-quantum-cyan">Tabela oficial de liberação</p>
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {sisuReleaseMatrix.map((entry) => (
+                    <div key={entry.slug} className="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+                      <p className="text-[11px] font-semibold text-white">Pack {entry.shortName}</p>
+                      <p className="mt-1 text-[11px] text-slate-400">{entry.total.toLocaleString("pt-BR")} SiSu</p>
+                    </div>
+                  ))}
+                </div>
               </div>
               <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10" disabled>
                 Ativar nova sub-conta (em breve via API)

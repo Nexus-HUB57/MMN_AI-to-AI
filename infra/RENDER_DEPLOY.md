@@ -79,18 +79,35 @@ No painel do serviço: **Environment → Environment Variables**.
 
 ### 4.2 Segredos (adicionar manualmente)
 
-| Chave | Conteúdo |
+> 🔐 **Importante**: os valores abaixo devem ser preenchidos diretamente no
+> painel do Render e **não devem permanecer documentados em texto puro no
+> repositório**. Se algum segredo já tiver sido versionado anteriormente,
+> recomenda-se rotação imediata no provedor correspondente.
+
+| Chave | Conteúdo esperado |
 |---|---|
-| `HOTMART_CLIENT_ID` | `a1680cf3-3595-4a5c-a5a9-e2168a20f6d7` |
-| `HOTMART_CLIENT_SECRET` | `643a5db2-8238-4e16-8936-e528915e1710` |
-| `HOTMART_BASIC_AUTH` | `Basic YTE2ODBjZjMtMzU5NS00YTVjLWE1YTktZTIxNjhhMjBmNmQ3OjY0M2E1ZGIyLTgyMzgtNGUxNi04OTM2LWU1Mjg5MTVlMTcxMA==` |
-| `SHOPEE_LOGIN_EMAIL` | `lucasmpthomaz@gmail.com` |
-| `SHOPEE_LOGIN_PASSWORD` | `Alberto1$` |
-| `JWT_SECRET` | (gerado automaticamente pelo Render) |
+| `HOTMART_CLIENT_ID` | Client ID atual da aplicação Hotmart |
+| `HOTMART_CLIENT_SECRET` | Client Secret atual da aplicação Hotmart |
+| `HOTMART_BASIC_AUTH` | Header Basic correspondente ao par Client ID/Secret vigente |
+| `SHOPEE_LOGIN_EMAIL` | E-mail operacional da conta de afiliado Shopee |
+| `SHOPEE_LOGIN_PASSWORD` | Senha operacional da conta de afiliado Shopee |
+| `JWT_SECRET` | gerado automaticamente pelo Render |
 
 > 💡 Cole cada valor individualmente em **Add Environment Variable** e
 > marque a opção **Secret** para os campos sensíveis. Após salvar,
 > o Render fará um redeploy automático.
+
+#### Checklist do painel Render
+
+1. Abrir **Service → Environment**.
+2. Confirmar que `NODE_ENV`, `PORT`, `FRONTEND_ORIGIN`, `ALLOWED_ORIGINS` e
+   `PUBLIC_DIR` vieram do `render.yaml`.
+3. Adicionar manualmente os segredos desta seção.
+4. Verificar se `ADMIN_SESSION_SECRET` foi gerado automaticamente.
+5. Adicionar `ADMIN_EMAIL_SHA256` e `ADMIN_PASSWORD_SHA256`.
+6. Em **Settings → Custom Domains**, confirmar o domínio
+   `api.oneverso.com.br`.
+7. Só então validar `GET /api/health` e `adminAuth.status`.
 
 ### 4.3 Banco e Redis (opcionais agora)
 
@@ -223,17 +240,28 @@ login administrativo passa a ter um caminho server-side opcional. Quando as
 variáveis abaixo estiverem definidas no Render, o frontend automaticamente
 usa o backend para validar credenciais; senão cai no fallback local atual.
 
-| Variável                | Obrigatória | Descrição                                                |
-|-------------------------|-------------|----------------------------------------------------------|
-| `ADMIN_EMAIL_SHA256`    | sim         | SHA-256 (64 chars hex) do e-mail autorizado em minúsculas |
-| `ADMIN_PASSWORD_SHA256` | sim         | SHA-256 (64 chars hex) da senha autorizada                |
-| `ADMIN_SESSION_SECRET`  | sim         | Segredo HMAC (≥16 chars) para assinar tokens admin        |
+| Variável                | Obrigatória | Descrição                                                | Valor pronto |
+|-------------------------|-------------|----------------------------------------------------------|---|
+| `ADMIN_EMAIL_SHA256`    | sim         | SHA-256 (64 chars hex) do e-mail autorizado em minúsculas | `7d67005172b41a8cf0abe1b5de9a5f1605821ff22d0207e9bd0f2cfcb91384b2` |
+| `ADMIN_PASSWORD_SHA256` | sim         | SHA-256 (64 chars hex) da senha autorizada                | `81493748f444279b87fbdb2770ad8a24e12d4c676ede14087d6920c98f6d9a2e` |
+| `ADMIN_SESSION_SECRET`  | sim         | Segredo HMAC (≥16 chars) para assinar tokens admin        | gerado pelo Render |
 
 Fluxo:
 1. `adminAuth.status` (público) informa se o backend está pronto.
 2. `adminAuth.login` valida hashes em tempo constante (`timingSafeEqual`).
 3. Em sucesso, retorna token assinado HMAC-SHA256 (TTL 12h).
 4. `adminAuth.verify` revalida o token para reidratar sessão após reload.
+
+Validação operacional no navegador/terminal:
+
+```bash
+curl https://api.oneverso.com.br/api/health
+curl 'https://api.oneverso.com.br/api/trpc/adminAuth.status?batch=1&input=%7B%220%22%3Anull%7D'
+```
+
+Se `api.oneverso.com.br` ainda retornar **Domain name not found**, o problema
+não está no router `adminAuthRouter`: significa que o **Custom Domain/CNAME
+no Render/HostGator ainda não foi concluído ou não propagou**.
 
 O `subject` do token é sempre `nexus-admin-core` e o `displayLabel` retornado
 é `Equipe Nexus Affil'IA'te`, preservando o mascaramento de identidade na UI.

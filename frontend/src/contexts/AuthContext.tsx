@@ -29,6 +29,60 @@ interface AuthContextType {
 }
 
 const STORAGE_KEY = "mmn-ai-auth-session";
+const ADMIN_TOKEN_KEY = "mmn-ai-admin-token";
+
+function getTrpcBaseUrl(): string {
+  if (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_TRPC_URL) {
+    return (import.meta as any).env.VITE_TRPC_URL as string;
+  }
+  if (typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.host}/api/trpc`;
+  }
+  return "/api/trpc";
+}
+
+async function callTrpcQuery<T>(procedure: string, input?: unknown): Promise<T | null> {
+  if (typeof fetch === "undefined") return null;
+  try {
+    const base = getTrpcBaseUrl();
+    const params = new URLSearchParams();
+    if (input !== undefined) {
+      params.set("input", JSON.stringify(input));
+    }
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    const response = await fetch(`${base}/${procedure}${qs}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) return null;
+    const json = await response.json();
+    return (json?.result?.data as T) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function callTrpcMutation<T>(procedure: string, input: unknown): Promise<{ data: T | null; error: string | null }> {
+  if (typeof fetch === "undefined") return { data: null, error: null };
+  try {
+    const base = getTrpcBaseUrl();
+    const response = await fetch(`${base}/${procedure}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(input ?? {}),
+    });
+    const json = await response.json();
+    if (!response.ok) {
+      const message = json?.error?.message || "Falha na chamada administrativa.";
+      return { data: null, error: message };
+    }
+    return { data: (json?.result?.data as T) ?? null, error: null };
+  } catch {
+    return { data: null, error: null };
+  }
+}
 const ADMIN_SESSION_ID = "admin-nexus-affiliate-core";
 const ADMIN_INTERNAL_EMAIL = "equipe-restrita@nexus.internal";
 const AUTHORIZED_ADMIN_EMAIL_SHA256 =
@@ -151,7 +205,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const loginAdmin = async (email: string, password: string) => {
-    const isValid = await validateAdminCredentials(email, password);
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 1) Verifica disponibilidade do backend de auth admin.
+    const status = await callTrpcQuery<{ ready: boolean }>("adminAuth.status");
+
+    if (status?.ready) {
+      // Caminho server-side: backend faz comparação por hash + emite token assinado.
+      const { data, error } = await callTrpcMutation<{
+        success: boolean;
+        token: string;
+        expiresAt: string;
+      }>("adminAuth.login", { email: normalizedEmail, password });
+
+      if (error || !data?.success || !data.token) {
+        throw new Error(error || "E-mail ou senha inválidos para o backoffice administrativo.");
+      }
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          ADMIN_TOKEN_KEY,
+          JSON.stringify({ token: data.token, expiresAt: data.expiresAt }),
+        );
+      }
+
+      setUser(ADMIN_USER);
+      persistUser(ADMIN_USER);
+      return ADMIN_USER;
+    }
+
+    // 2) Fallback local (backend ainda não publicado): valida hash no cliente.
+    const isValid = await validateAdminCredentials(normalizedEmail, password);
     if (!isValid) {
       throw new Error("E-mail ou senha inválidos para o backoffice administrativo.");
     }
@@ -195,6 +279,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (typeof window !== "undefined") {
       window.sessionStorage.clear();
       window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(ADMIN_TOKEN_KEY);
     }
   };
 

@@ -35,6 +35,8 @@ import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
+import { adminAuthRouter } from "./routers/adminAuthRouter";
+import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 
 export const appRouter = router({
   system: router({
@@ -140,6 +142,8 @@ export const appRouter = router({
         cron: true,
         aiSync: true,
         performance: true,
+        adminAuth: true,
+        agentSkillsRuntime: true,
       },
     })),
   }),
@@ -179,6 +183,8 @@ export const appRouter = router({
   cron: cronRouter,
   performance: performanceRouter,
   health: healthRouter,
+  adminAuth: adminAuthRouter,
+  agentSkillsRuntime: agentSkillsRuntimeRouter,
 });
 
 export type AppRouter = typeof appRouter;

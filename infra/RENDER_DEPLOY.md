@@ -213,3 +213,46 @@ mudanças no código.
 ---
 
 Documentação atualizada em 2026-05-27.
+
+---
+
+## 11. Backoffice Admin server-side (NOVO)
+
+A partir do commit que introduz `backend/src/routers/adminAuthRouter.ts`, o
+login administrativo passa a ter um caminho server-side opcional. Quando as
+variáveis abaixo estiverem definidas no Render, o frontend automaticamente
+usa o backend para validar credenciais; senão cai no fallback local atual.
+
+| Variável                | Obrigatória | Descrição                                                |
+|-------------------------|-------------|----------------------------------------------------------|
+| `ADMIN_EMAIL_SHA256`    | sim         | SHA-256 (64 chars hex) do e-mail autorizado em minúsculas |
+| `ADMIN_PASSWORD_SHA256` | sim         | SHA-256 (64 chars hex) da senha autorizada                |
+| `ADMIN_SESSION_SECRET`  | sim         | Segredo HMAC (≥16 chars) para assinar tokens admin        |
+
+Fluxo:
+1. `adminAuth.status` (público) informa se o backend está pronto.
+2. `adminAuth.login` valida hashes em tempo constante (`timingSafeEqual`).
+3. Em sucesso, retorna token assinado HMAC-SHA256 (TTL 12h).
+4. `adminAuth.verify` revalida o token para reidratar sessão após reload.
+
+O `subject` do token é sempre `nexus-admin-core` e o `displayLabel` retornado
+é `Equipe Nexus Affil'IA'te`, preservando o mascaramento de identidade na UI.
+
+---
+
+## 12. Skills operacionais e Autonomy Score (NOVO)
+
+Foi adicionado o dispatcher operacional em `backend/src/agentic/skills/` com
+o primeiro handler real (`copywriter-persuasivo`) e o router
+`agentSkillsRuntimeRouter` expõe:
+
+- `agentSkillsRuntime.listHandlers` (público): lista skills com handler real.
+- `agentSkillsRuntime.execute` (protegido): executa skill operacional e
+  registra auditoria em `audit_logs` (best-effort).
+- `agentSkillsRuntime.autonomyScore` (público): calcula score 0-100 dado o
+  input controlado pelo chamador.
+- `agentSkillsRuntime.myAutonomyScore` (protegido): score consolidado para o
+  agente do usuário logado, já considerando cobertura operacional real.
+
+O frontend exibe o score no painel do agente (`/agents/dashboard`) e no
+admin (`/admin/dashboard`).

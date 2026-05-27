@@ -22,6 +22,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import AutonomyScoreCard from "@/components/agents/AutonomyScoreCard";
 
 interface KPIProps {
   icon: typeof Users;
@@ -203,6 +204,15 @@ export default function AdminDashboard() {
             change="-5% no mês"
             trend="down"
             accent="bg-amber-400/30"
+          />
+        </section>
+
+        {/* Autonomy Score da rede */}
+        <section>
+          <AutonomyScoreCard
+            scope="network"
+            title="Autonomia operacional da malha"
+            subtitle="Média ponderada dos agentes ativos · indicador composto do roadmap Nexus Affil'IA'te."
           />
         </section>
 

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Save, AlertCircle } from "lucide-react";
+import AutonomyScoreCard from "@/components/agents/AutonomyScoreCard";
 import { toast } from "sonner";
 
 export default function AgentDashboard() {
@@ -109,6 +110,12 @@ export default function AgentDashboard() {
 
   return (
     <div className="space-y-6 p-6">
+      <AutonomyScoreCard
+        scope="agent"
+        title="Autonomia do meu Agente IA"
+        subtitle="Score 0-100 calculado a partir do roadmap oficial (skills operacionais, latência, aprovação manual, canais ativos)."
+      />
+
       <div className="grid gap-6">
         {/* Agent Overview Card */}
         <Card>

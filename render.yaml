@@ -73,3 +73,15 @@ services:
         generateValue: true
       - key: OPENAI_API_KEY
         sync: false
+
+      # ---------------------------------------------------------------------
+      # Backoffice Admin server-side (login restrito à Equipe Nexus Affil'IA'te)
+      # ADMIN_SESSION_SECRET é gerado pelo Render; e-mail e senha (hashes hex
+      # SHA-256) devem ser cadastrados manualmente como Secret.
+      # ---------------------------------------------------------------------
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL_SHA256
+        sync: false
+      - key: ADMIN_PASSWORD_SHA256
+        sync: false

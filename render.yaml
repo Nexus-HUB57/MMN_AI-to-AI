@@ -1,0 +1,75 @@
+# =============================================================================
+# Render Blueprint · Nexus SaaS Backend (IOAID)
+# https://render.com/docs/blueprint-spec
+#
+# Como usar:
+#   1. No painel Render → New → Blueprint → conectar o repo
+#       https://github.com/Nexus-HUB57/MMN_AI-to-AI
+#   2. O Render lerá este arquivo automaticamente.
+#   3. Configurar as Environment Variables marcadas como sync:false
+#      (segredos Hotmart/Shopee) no painel após o primeiro deploy.
+#   4. Em Settings → Custom Domains: adicionar `api.oneverso.com.br`.
+# =============================================================================
+
+services:
+  - type: web
+    name: nexus-saas-backend
+    runtime: docker
+    plan: starter
+    region: oregon
+    branch: main
+    autoDeploy: true
+    rootDir: .
+    dockerfilePath: ./infra/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: FRONTEND_ORIGIN
+        value: https://oneverso.com.br
+      - key: ALLOWED_ORIGINS
+        value: https://oneverso.com.br,https://www.oneverso.com.br,https://api.oneverso.com.br
+      - key: PUBLIC_DIR
+        value: /app/public
+
+      # ---------------------------------------------------------------------
+      # Segredos · configurar manualmente no painel Render (sync:false)
+      # Painel: Service → Environment → Add Environment Variable
+      # ---------------------------------------------------------------------
+      - key: HOTMART_CLIENT_ID
+        sync: false
+      - key: HOTMART_CLIENT_SECRET
+        sync: false
+      - key: HOTMART_BASIC_AUTH
+        sync: false
+      - key: HOTMART_TOKEN_URL
+        value: https://api-sec-vlc.hotmart.com/security/oauth/token
+      - key: HOTMART_API_BASE
+        value: https://developers.hotmart.com
+
+      - key: SHOPEE_AFFILIATE_PROFILE_NAME
+        value: Nexus SaaS
+      - key: SHOPEE_AFFILIATE_USERNAME
+        value: lucasthomaz2
+      - key: SHOPEE_AFFILIATE_ID
+        value: "18325891080"
+      - key: SHOPEE_LOGIN_EMAIL
+        sync: false
+      - key: SHOPEE_LOGIN_PASSWORD
+        sync: false
+
+      # ---------------------------------------------------------------------
+      # Banco e cache · começam vazios (modo standalone com fallback in-memory)
+      # Habilitar quando o Render Postgres/Redis forem provisionados.
+      # ---------------------------------------------------------------------
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false

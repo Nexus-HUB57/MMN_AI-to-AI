@@ -1,9 +1,9 @@
 # ============================================================
-# Dockerfile multi-stage do monorepo MMN_AI-to-AI
+# Dockerfile multi-stage do monorepo MMN_AI-to-AI (Nexus SaaS)
 # Estrutura real: /frontend (React+Vite), /backend (tRPC+Drizzle),
 #                 /database (schemas+migrations), /infra (config)
-# Build deve ser executado a partir da RAIZ do repositório:
-#   docker build -f infra/Dockerfile -t mmn-ai-to-ai .
+# Build a partir da RAIZ:
+#   docker build -f infra/Dockerfile -t nexus-saas .
 # ============================================================
 
 # ---------- Stage 1: build do Frontend (React + Vite) ----------
@@ -15,7 +15,9 @@ COPY package.json package-lock.json* ./
 COPY frontend/package.json ./frontend/
 
 # Instala dependências do workspace frontend
-RUN npm install --workspace frontend --include-workspace-root
+# (npm ci falha sem package-lock atualizado; usamos install com legacy peer deps
+#  porque o workspace mobile tem dependências do Expo que não impactam o build do front)
+RUN npm install --workspace frontend --include-workspace-root --legacy-peer-deps --no-audit --no-fund
 
 # Código-fonte do frontend
 COPY frontend ./frontend
@@ -31,7 +33,8 @@ WORKDIR /repo
 COPY package.json package-lock.json* ./
 COPY backend/package.json ./backend/
 
-RUN npm install --workspace backend --include-workspace-root
+# drizzle-orm é dependência runtime, garantida no package.json do backend
+RUN npm install --workspace backend --include-workspace-root --legacy-peer-deps --no-audit --no-fund
 
 # Backend + schemas/migrations compartilhados
 COPY backend ./backend
@@ -39,7 +42,7 @@ COPY database ./database
 COPY infra ./infra
 COPY tsconfig*.json ./
 
-# Build (gera backend/dist)
+# Build (gera backend/dist via esbuild)
 RUN npm run build --workspace backend
 
 # ---------- Stage 3: imagem final de produção ----------
@@ -52,23 +55,23 @@ ENV NODE_ENV=production \
 COPY backend/package.json ./backend/
 COPY package.json ./
 
-# Instala apenas prod deps do backend
+# Instala apenas prod deps do backend (ignorando workspaces para evitar mobile/expo)
 WORKDIR /app/backend
-RUN npm install --omit=dev --no-audit --no-fund
+RUN npm install --omit=dev --no-audit --no-fund --workspaces=false --legacy-peer-deps
 
-# Copia artefatos compilados
+# Artefatos compilados do backend e database
 COPY --from=backend-builder /repo/backend/dist ./dist
-COPY --from=backend-builder /repo/database ../database
-COPY --from=backend-builder /repo/infra ../infra
+COPY --from=backend-builder /repo/database /app/database
+COPY --from=backend-builder /repo/infra /app/infra
 
-# Frontend estático servido pelo backend (ou por reverse-proxy)
-COPY --from=frontend-builder /repo/frontend/dist ../public
+# Frontend estático servido pelo backend Express na rota /
+COPY --from=frontend-builder /repo/frontend/dist /app/public
 
 WORKDIR /app
 EXPOSE 3000
 
-# Healthcheck simples
+# Healthcheck (a aplicação responde em /api/health e /health)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO- http://localhost:${PORT}/health || exit 1
+  CMD wget -qO- http://localhost:${PORT}/api/health || exit 1
 
 CMD ["node", "backend/dist/index.js"]

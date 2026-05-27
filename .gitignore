@@ -917,3 +917,8 @@
 !frontend/src/lib/
 !frontend/src/lib/**
 !scripts/render_ebooks_pdf.py
+
+# ============================================================================
+# Frontend env de produção (apenas URLs públicas Nexus SaaS · sem segredos)
+# ============================================================================
+!frontend/.env.production

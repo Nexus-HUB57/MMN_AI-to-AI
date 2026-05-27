@@ -4,7 +4,7 @@ import {
   billingHistory,
   invoiceItems,
   invoices,
-} from "../../../database/schemas/schema-legacy-migration";
+} from "../../../../database/schemas/schema-legacy-migration";
 import type {
   BillingCreateInvoiceInput,
   BillingHistoryQueryInput,

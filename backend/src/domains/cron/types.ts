@@ -1,4 +1,4 @@
-import type { CronFrequency } from "../../../database/schemas/schema-cron";
+import type { CronFrequency } from "../../../../database/schemas/schema-cron";
 
 export type CronJobFrequency = CronFrequency;
 

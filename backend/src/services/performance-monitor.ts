@@ -6,8 +6,8 @@
  */
 
 import { getDb } from "./db";
-import { agentSkills, skillUsageLogs } from "../../database/schemas/schema-skills";
-import { agents } from "../../database/schemas/schema-final";
+import { agentSkills, skillUsageLogs } from "../../../database/schemas/schema-skills";
+import { agents } from "../../../database/schemas/schema-final";
 import { eq, desc, and, gte, sql } from "drizzle-orm";
 
 export interface AgentPerformanceMetrics {

@@ -1,13 +1,30 @@
 import "dotenv/config";
 import express from "express";
+import fs from "fs";
+import path from "path";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import type { Context } from "./trpc/context";
-import { startCronScheduler, initializeDefaultJobs, getSchedulerStatus } from "./services/cronScheduler";
+import {
+  startCronScheduler,
+  initializeDefaultJobs,
+  getSchedulerStatus,
+} from "./services/cronScheduler";
 import { registerAuditSubscribers } from "./_core/events/auditSubscribers";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || FRONTEND_ORIGIN)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const PUBLIC_DIR = process.env.PUBLIC_DIR || path.resolve(__dirname, "../../public");
+const HAS_PUBLIC_BUNDLE = fs.existsSync(path.join(PUBLIC_DIR, "index.html"));
+
+function resolveOrigin(origin?: string) {
+  if (!origin) return ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
+  return ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
+}
 
 function createContext(opts: { req: express.Request; res: express.Response }): Context {
   const userId = opts.req.header("x-user-id");
@@ -26,15 +43,20 @@ function createContext(opts: { req: express.Request; res: express.Response }): C
 }
 
 const app = express();
+const trpcMiddleware = createExpressMiddleware({
+  router: appRouter,
+  createContext,
+});
 
 app.use(express.json({ limit: "2mb" }));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", FRONTEND_ORIGIN);
+  const origin = resolveOrigin(req.header("origin") || undefined);
+  res.header("Access-Control-Allow-Origin", origin);
   res.header("Vary", "Origin");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-user-id, x-user-role"
+    "Content-Type, Authorization, x-user-id, x-user-role",
   );
   res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 
@@ -46,13 +68,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (_req, res) => {
+app.get("/api", (_req, res) => {
   res.json({
     name: "MMN AI-to-AI",
     service: "backend",
     mode: "full",
-    trpc: "/trpc",
-    health: "/health",
+    trpc: "/api/trpc",
+    health: "/api/health",
+    publicBundle: HAS_PUBLIC_BUNDLE,
   });
 });
 
@@ -65,36 +88,67 @@ app.get("/health", (_req, res) => {
   });
 });
 
+app.get("/api/health", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "mmn-ai-to-ai-backend",
+    mode: "full",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get("/cron/status", (_req, res) => {
   res.json(getSchedulerStatus());
 });
 
-app.use(
-  "/trpc",
-  createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  })
-);
+app.use("/trpc", trpcMiddleware);
+app.use("/api/trpc", trpcMiddleware);
 
-// Inicializar Cron Scheduler
+if (HAS_PUBLIC_BUNDLE) {
+  app.use(express.static(PUBLIC_DIR));
+
+  app.get("*", (req, res, next) => {
+    if (
+      req.path.startsWith("/trpc") ||
+      req.path.startsWith("/api/") ||
+      req.path === "/health" ||
+      req.path === "/cron/status"
+    ) {
+      next();
+      return;
+    }
+
+    res.sendFile(path.join(PUBLIC_DIR, "index.html"));
+  });
+} else {
+  app.get("/", (_req, res) => {
+    res.json({
+      name: "MMN AI-to-AI",
+      service: "backend",
+      mode: "full",
+      trpc: "/api/trpc",
+      health: "/api/health",
+    });
+  });
+}
+
 async function initializeCron() {
   try {
-    console.log('[CronScheduler] Inicializando...');
+    console.log("[CronScheduler] Inicializando...");
     await initializeDefaultJobs();
     await startCronScheduler();
-    console.log('[CronScheduler] Inicializado com sucesso');
+    console.log("[CronScheduler] Inicializado com sucesso");
   } catch (error) {
-    console.error('[CronScheduler] Erro na inicialização:', error);
+    console.error("[CronScheduler] Erro na inicialização:", error);
   }
 }
 
-// Registrar subscribers de auditoria do eventBus antes de qualquer publish
 registerAuditSubscribers();
-
-// Inicializar cron ao iniciar o servidor
 initializeCron();
 
 app.listen(PORT, () => {
   console.log(`MMN AI-to-AI backend full ativo em http://localhost:${PORT}`);
+  if (HAS_PUBLIC_BUNDLE) {
+    console.log(`[HTTP] Frontend estático servindo de ${PUBLIC_DIR}`);
+  }
 });

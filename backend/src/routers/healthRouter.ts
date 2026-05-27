@@ -6,8 +6,8 @@
  */
 
 import { router, publicProcedure } from "../config/trpc";
-import { CircuitBreakerFactory } from "../../_core/CircuitBreaker";
-import { eventBus, DomainEventType } from "../../_core/events/eventBus";
+import { CircuitBreakerFactory } from "../_core/CircuitBreaker";
+import { eventBus, DomainEventType } from "../_core/events/eventBus";
 
 // ============================================================================
 // TYPES

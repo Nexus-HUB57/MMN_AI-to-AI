@@ -1,4 +1,4 @@
-import { CRON_JOB_CONFIGS } from "../../../database/schemas/schema-cron";
+import { CRON_JOB_CONFIGS } from "../../../../database/schemas/schema-cron";
 
 import type {
   CronHistoryFilters,

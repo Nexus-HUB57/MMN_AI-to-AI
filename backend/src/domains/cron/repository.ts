@@ -4,7 +4,7 @@ import {
   cronJobHistory,
   cronJobs,
   cronSettings,
-} from "../../../database/schemas/schema-cron";
+} from "../../../../database/schemas/schema-cron";
 import type {
   CronHistoryFilters,
   CronJobInput,

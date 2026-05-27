@@ -34,6 +34,7 @@ import { cronRouter } from "./domains/cron/router";
 import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
+import { partnersRouter } from "./routers/partnersRouter";
 
 export const appRouter = router({
   system: router({
@@ -164,6 +165,7 @@ export const appRouter = router({
   packs: packsRouter,
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
+  partners: partnersRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,
   billing: billingRouter,

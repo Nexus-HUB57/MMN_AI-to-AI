@@ -3,7 +3,7 @@ import {
   getActiveUpgrades,
   getAgentByUserId,
   updateAgent,
-} from "../../../database/schemas/db";
+} from "../../../../database/schemas/db";
 
 import type {
   AgentRuntimeAgentRecord,

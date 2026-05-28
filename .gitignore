@@ -922,3 +922,7 @@
 # Frontend env de produção (apenas URLs públicas Nexus SaaS · sem segredos)
 # ============================================================================
 !frontend/.env.production
+
+# operacional local (não versionar)
+hostgator_mmn/backup/
+hostgator_mmn/stage_*/

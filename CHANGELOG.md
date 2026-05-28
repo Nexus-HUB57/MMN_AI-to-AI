@@ -1,5 +1,27 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.4.0-sprint2 Fase 10 Sprint 10.2 — PIX Checkout UI + Webhook DB + Login Social
+
+### `feat(pix)` — Epic 10.2.3: Webhook PIX com persistência no banco
+
+- handler `webhook` em `pixRouter.ts` agora persiste cada pagamento confirmado na tabela `payments` via Drizzle ORM (dual-write: cache Redis + DB)
+- falha no DB não aborta o webhook — warning em stderr, cache garantido, PSP recebe `{ ok: true }`
+- `console.log` substituído por `process.stdout.write` com JSON estruturado (padrão do logger do projeto)
+- imports adicionados: `getDb`, `payments` (schema Drizzle), `InferInsertModel`
+
+### `feat(frontend)` — Epic 10.2.4: Página de Checkout PIX `/pix/checkout`
+
+- criada `frontend/src/pages/PixCheckout.tsx`: formulário de cobrança, QR Code (via api.qrserver.com), Copia-e-Cola, polling automático a cada 5 s, confirmação visual, modo sandbox com botão de simulação, aba de informações de configuração
+- zero dependências novas — QR Code renderizado via URL pública
+- rota `/pix/checkout` registrada no `App.tsx` com lazy import
+
+### `feat(auth)` — Epic 10.3.2: Botões de Login Social Google / Facebook / Apple
+
+- adicionados componentes `SocialLoginDivider` e `SocialLoginButtons` em `Login.tsx`
+- SVGs inline das 3 marcas; visíveis apenas no modo afiliado (não no admin)
+- dispara `CustomEvent("mmn:social-login")` para integração futura com Firebase Client SDK
+- sem dependências externas; pronto para substituição por `signInWithPopup` na Sprint 10.3.3
+
 ## 2026-05-28 — v1.3.0-sprint1 Fase 10 Sprint 10.1 — PIX + Firebase Auth + Prometheus + Cache + Mobile Fix
 
 ### `feat(pix)` — Epic 10.2: Módulo PIX — QR Code estático e dinâmico (Issues #10.2.1, #10.2.2)

@@ -16,6 +16,9 @@ import {
 } from "../services/pixService";
 import { getOrSet, CACHE_KEYS, setCached, getCached } from "../services/cache-service";
 import { TRPCError } from "@trpc/server";
+import { getDb } from "../../../database/schemas/db";
+import { payments } from "../../../database/schemas/schema-final";
+import type { InferInsertModel } from "drizzle-orm";
 
 const PIX_RECEIVER_NAME = process.env.PIX_RECEIVER_NAME ?? "MMN AI-to-AI";
 const PIX_RECEIVER_CITY = process.env.PIX_RECEIVER_CITY ?? "SAO PAULO";
@@ -163,11 +166,14 @@ export const pixRouter = router({
     )
     .mutation(async ({ input }) => {
       const processed: string[] = [];
+      const db = await getDb();
 
       for (const pix of input.pix) {
         const txid = pix.txid ?? pix.endToEndId;
         const cacheKey = `pix:status:${txid}`;
+        const valorCents = Math.round(parseFloat(pix.valor) * 100);
 
+        // 1. Atualizar cache (resposta imediata ao polling do frontend)
         await setCached(
           cacheKey,
           {
@@ -179,7 +185,35 @@ export const pixRouter = router({
           3600 * 24,
         );
 
-        console.log(
+        // 2. Persistir no banco de pagamentos quando DB disponível
+        if (db) {
+          try {
+            const newPayment = {
+              affiliateId: 0,
+              amount: valorCents,
+              method: "pix" as const,
+              status: "confirmed" as const,
+              bankNumber: txid.substring(0, 20),
+              account: pix.endToEndId.substring(0, 20),
+              paymentDate: new Date(pix.horario),
+              confirmedAt: new Date(),
+            } satisfies Partial<InferInsertModel<typeof payments>>;
+
+            await db.insert(payments).values(newPayment as InferInsertModel<typeof payments>);
+          } catch (dbErr) {
+            // não abortar o webhook por falha no DB — o cache já gravou
+            process.stderr.write(
+              JSON.stringify({
+                level: "warn",
+                tag: "pix-webhook-db",
+                txid,
+                error: String(dbErr),
+              }) + "\n",
+            );
+          }
+        }
+
+        process.stdout.write(
           JSON.stringify({
             level: "info",
             tag: "pix-webhook",
@@ -187,7 +221,7 @@ export const pixRouter = router({
             endToEndId: pix.endToEndId,
             valor: pix.valor,
             horario: pix.horario,
-          }),
+          }) + "\n",
         );
 
         processed.push(txid);

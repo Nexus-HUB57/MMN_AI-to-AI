@@ -66,6 +66,7 @@ const CareerProgress = lazy(() => import("./pages/CareerProgress"));
 const ExecutionLogs = lazy(() => import("./pages/ExecutionLogs"));
 const Utilities = lazy(() => import("./pages/Utilities"));
 const SystemStatus = lazy(() => import("./pages/SystemStatus"));
+const PixCheckout = lazy(() => import("./pages/PixCheckout"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export const NAVIGATION_STRUCTURE = {
@@ -423,6 +424,7 @@ export default function App() {
             <Route path="/orchestrator" component={OrchestratorDashboard} />
             <Route path="/career" component={CareerProgress} />
             <Route path="/utilities" component={Utilities} />
+            <Route path="/pix/checkout" component={PixCheckout} />
 
             <Route path="/admin" component={AdminDashboard} />
             <Route path="/admin/dashboard" component={AdminDashboard} />

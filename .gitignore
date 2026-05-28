@@ -908,21 +908,3 @@
 # This allows outer git to track inner repo files while preserving inner git history
 **/.git_backup_by_agent
 **/.git_backup_by_agent/
-
-# ============================================================================
-# Nexus Marketplace overrides (re-include public/lib do frontend Vite)
-# ============================================================================
-!frontend/public/
-!frontend/public/**
-!frontend/src/lib/
-!frontend/src/lib/**
-!scripts/render_ebooks_pdf.py
-
-# ============================================================================
-# Frontend env de produção (apenas URLs públicas Nexus SaaS · sem segredos)
-# ============================================================================
-!frontend/.env.production
-
-# operacional local (não versionar)
-hostgator_mmn/backup/
-hostgator_mmn/stage_*/

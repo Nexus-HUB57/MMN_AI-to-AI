@@ -1,0 +1,190 @@
+groups:
+  # ====================================================================
+  # Alertas de Disponibilidade e Saúde do Backend MMN AI-to-AI
+  # Epic 10.4.1 — Sprint 10.4
+  #
+  # Requisitos:
+  #   - Prometheus com scrape do endpoint GET /metrics do backend
+  #   - Alertmanager configurado (Slack, PagerDuty, e-mail, etc.)
+  # ====================================================================
+
+  - name: mmn.availability
+    rules:
+
+      # Backend offline (sem scrape bem-sucedido por > 2 min)
+      - alert: BackendDown
+        expr: up{job="mmn-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Backend MMN offline"
+          description: "O job '{{ $labels.job }}' não está respondendo ao scrape do Prometheus há mais de 2 minutos."
+
+      # Taxa de erro HTTP > 5% nos últimos 5 min
+      - alert: HighHttpErrorRate
+        expr: >
+          rate(http_requests_error_total[5m])
+          /
+          rate(http_requests_total[5m])
+          > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Taxa de erro HTTP elevada"
+          description: "Taxa de erro HTTP acima de 5% nos últimos 5 minutos. Valor atual: {{ $value | humanizePercentage }}."
+
+      # Taxa de erro tRPC > 10% nos últimos 5 min
+      - alert: HighTrpcErrorRate
+        expr: >
+          rate(trpc_errors_total[5m])
+          /
+          rate(trpc_calls_total[5m])
+          > 0.10
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Taxa de erro tRPC elevada"
+          description: "Taxa de erro tRPC acima de 10% nos últimos 5 minutos. Valor atual: {{ $value | humanizePercentage }}."
+
+  - name: mmn.latency
+    rules:
+
+      # Latência p95 HTTP > 2 segundos
+      - alert: HighHttpLatencyP95
+        expr: >
+          histogram_quantile(0.95, rate(http_request_duration_ms_bucket[5m]))
+          > 2000
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Latência HTTP p95 acima de 2s"
+          description: "O percentil 95 de latência HTTP está em {{ $value | humanize }}ms, acima do limite de 2000ms."
+
+      # Latência p99 HTTP > 5 segundos (crítico)
+      - alert: CriticalHttpLatencyP99
+        expr: >
+          histogram_quantile(0.99, rate(http_request_duration_ms_bucket[5m]))
+          > 5000
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Latência HTTP p99 CRÍTICA (>5s)"
+          description: "O percentil 99 de latência HTTP está em {{ $value | humanize }}ms. Investigação urgente necessária."
+
+      # Latência tRPC p95 > 3 segundos
+      - alert: HighTrpcLatencyP95
+        expr: >
+          histogram_quantile(0.95, rate(trpc_call_duration_ms_bucket[5m]))
+          > 3000
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Latência tRPC p95 acima de 3s"
+          description: "Percentil 95 de latência tRPC: {{ $value | humanize }}ms."
+
+  - name: mmn.pix
+    rules:
+
+      # PIX: sem QR Codes gerados nas últimas 2h em horário comercial
+      - alert: NoPIXQrGenerated
+        expr: >
+          increase(pix_qr_generated_total[2h]) == 0
+          and
+          hour() >= 9
+          and
+          hour() <= 18
+        for: 10m
+        labels:
+          severity: warning
+          team: payments
+        annotations:
+          summary: "Nenhum QR Code PIX gerado nas últimas 2h (horário comercial)"
+          description: "O módulo PIX pode estar com problemas. Verifique a configuração PIX_KEY e a conectividade."
+
+      # PIX webhook spike: > 100 confirmações em 1 min (possível replay attack)
+      - alert: PIXWebhookSpike
+        expr: rate(pix_payments_confirmed_total[1m]) > 100
+        for: 1m
+        labels:
+          severity: critical
+          team: payments
+        annotations:
+          summary: "Spike de confirmações PIX detectado"
+          description: "Taxa de confirmações PIX: {{ $value }}/min. Possível replay attack ou problema de integração."
+
+  - name: mmn.agents
+    rules:
+
+      # Taxa de falha de sessões de agente > 20%
+      - alert: HighAgentFailureRate
+        expr: >
+          rate(agent_sessions_failed_total[10m])
+          /
+          rate(agent_sessions_started_total[10m])
+          > 0.20
+        for: 5m
+        labels:
+          severity: warning
+          team: agents
+        annotations:
+          summary: "Taxa de falha dos agentes IA elevada"
+          description: "{{ $value | humanizePercentage }} das sessões de agente estão falhando nos últimos 10 minutos."
+
+  - name: mmn.resources
+    rules:
+
+      # Heap Node.js > 800 MB
+      - alert: HighHeapUsage
+        expr: process_heap_used_bytes > 800 * 1024 * 1024
+        for: 5m
+        labels:
+          severity: warning
+          team: infra
+        annotations:
+          summary: "Uso de heap Node.js elevado"
+          description: "Heap em uso: {{ $value | humanize1024 }}. Considere aumentar --max-old-space-size ou investigar vazamentos."
+
+      # Processo reiniciado (uptime < 5 min após ter estado ativo por > 1h)
+      - alert: ProcessRestarted
+        expr: >
+          process_uptime_seconds < 300
+          and
+          process_uptime_seconds offset 1h > 3600
+        for: 0m
+        labels:
+          severity: warning
+          team: infra
+        annotations:
+          summary: "Processo backend reiniciado inesperadamente"
+          description: "O processo foi reiniciado. Uptime atual: {{ $value | humanize }}s."
+
+  - name: mmn.commissions
+    rules:
+
+      # Nenhum evento de comissão em 24h em horário de pico
+      - alert: NoCommissionEvents
+        expr: >
+          increase(commission_events_total[24h]) == 0
+          and
+          day_of_week() >= 1
+          and
+          day_of_week() <= 5
+        for: 30m
+        labels:
+          severity: warning
+          team: finance
+        annotations:
+          summary: "Nenhum evento de comissão nas últimas 24h (dia útil)"
+          description: "Verifique o pipeline de comissões e a integração com marketplaces."

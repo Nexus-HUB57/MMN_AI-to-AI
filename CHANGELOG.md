@@ -1,5 +1,31 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.6.0-sprint4 Fase 10 Sprint 10.4 — OpenPix + Firebase + Alertas + Cache
+
+### `feat(pix)` — Epic 10.2.8: Serviço OpenPix PSP
+
+- criado `backend/src/services/openPixService.ts`: `createOpenPixCharge`, `getOpenPixChargeStatus`, `validateOpenPixWebhookSignature`, `mapOpenPixStatus`, `isOpenPixAvailable`
+- variáveis: `OPENPIX_TOKEN`, `OPENPIX_APP_ID` (documentadas em `.env.example`)
+- pixRouter: `checkPaymentStatus` usa OpenPix em produção quando `isOpenPixAvailable()` + fallback para DB Drizzle
+- pixRouter: imports adicionados `isOpenPixAvailable`, `createOpenPixCharge`, `getOpenPixChargeStatus`, `mapOpenPixStatus`, `invalidateCachePattern`
+
+### `feat(pix)` — Epic 10.5.2: Cache invalidation pós-webhook PIX
+
+- webhook PIX chama `invalidateCachePattern(CACHE_KEYS.DASHBOARD_PATTERN)` após confirmar pagamentos
+- dashboard do usuário recebe dados frescos automaticamente após cada PIX confirmado
+
+### `feat(auth)` — Epic 10.3.3: Firebase Client SDK + endpoint backend
+
+- criado `frontend/src/lib/firebase.ts`: `signInWithGoogle`, `signInWithFacebook`, `signInWithApple` com lazy dynamic import
+- Login.tsx `SocialLoginButtons`: usa firebase.ts real; estado `loading/socialError`; imports React movidos para topo do arquivo (fix)
+- authRouter: endpoint `loginWithFirebaseToken` (publicProcedure) — verifica ID Token Firebase Admin SDK, audit log, retorna perfil social
+- variáveis cliente: `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_APP_ID`
+
+### `feat(observability)` — Epic 10.4.1: Alertas Prometheus
+
+- criado `monitoring/prometheus-alerts.yml`: 12 alertas organizados em 5 grupos
+- grupos: availability (BackendDown, HighHttpErrorRate, HighTrpcErrorRate), latency (p95/p99 HTTP + tRPC), pix (NoPIXQrGenerated, PIXWebhookSpike), agents (HighAgentFailureRate), resources (HighHeapUsage, ProcessRestarted), commissions (NoCommissionEvents)
+
 ## 2026-05-28 — v1.5.0-sprint3 Fase 10 Sprint 10.3 — PIX History + Nav + Grafana + Firebase prep
 
 ### `feat(pix)` — Epic 10.2.5: Endpoint histórico PIX com paginação e filtros de data

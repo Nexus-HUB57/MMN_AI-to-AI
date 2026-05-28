@@ -490,4 +490,73 @@ export const authRouter = router({
       await db.updateUserPreference(ctx.user.id, input.key, input.value);
       return { success: true };
     }),
+
+  // ============ FIREBASE SOCIAL AUTH (Epic 10.3.3) ============
+
+  /**
+   * Verifica um ID Token Firebase e retorna informações do usuário autenticado.
+   * O frontend envia o idToken obtido via signInWithPopup (Google/Facebook/Apple).
+   * O backend valida o token com o Firebase Admin SDK e retorna o perfil social.
+   */
+  loginWithFirebaseToken: publicProcedure
+    .input(
+      z.object({
+        idToken: z.string().min(1, "ID Token é obrigatório"),
+        provider: z.enum(["google", "facebook", "apple"]),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      let admin: Awaited<ReturnType<typeof import("../services/firebaseAdmin")["getFirebaseAdmin"]>>;
+      try {
+        const { getFirebaseAdmin } = await import("../services/firebaseAdmin");
+        admin = await getFirebaseAdmin();
+      } catch {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Firebase Admin SDK não disponível. Configure FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL e FIREBASE_PRIVATE_KEY no servidor.",
+        });
+      }
+
+      if (!admin) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Firebase Admin SDK não inicializado. Verifique as variáveis de ambiente Firebase.",
+        });
+      }
+
+      let decodedToken: import("firebase-admin/auth").DecodedIdToken;
+      try {
+        decodedToken = await admin.auth().verifyIdToken(input.idToken);
+      } catch (err) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: `Token Firebase inválido ou expirado: ${err instanceof Error ? err.message : String(err)}`,
+        });
+      }
+
+      const uid = decodedToken.uid;
+      const email = decodedToken.email ?? null;
+      const name = decodedToken.name ?? decodedToken.display_name ?? null;
+      const picture = decodedToken.picture ?? null;
+
+      await db.createSessionAudit({
+        id: crypto.randomBytes(16).toString("hex"),
+        userId: 0,
+        sessionId: uid,
+        action: "social_login",
+        ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || ctx.req?.socket?.remoteAddress,
+        userAgent: ctx.req?.headers["user-agent"],
+        metadata: { method: input.provider, firebase_uid: uid },
+        createdAt: new Date(),
+      });
+
+      return {
+        success: true,
+        firebaseUid: uid,
+        email,
+        name,
+        picture,
+        provider: input.provider,
+      };
+    }),
 });

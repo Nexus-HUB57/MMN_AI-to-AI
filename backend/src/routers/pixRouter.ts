@@ -14,7 +14,8 @@ import {
   detectPixKeyType,
   simulateSandboxConfirmation,
 } from "../services/pixService";
-import { getOrSet, CACHE_KEYS, setCached, getCached } from "../services/cache-service";
+import { getOrSet, CACHE_KEYS, setCached, getCached, invalidateCachePattern } from "../services/cache-service";
+import { isOpenPixAvailable, createOpenPixCharge, getOpenPixChargeStatus, mapOpenPixStatus } from "../services/openPixService";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../../../database/schemas/db";
 import { payments } from "../../../database/schemas/schema-final";
@@ -119,29 +120,57 @@ export const pixRouter = router({
   checkPaymentStatus: protectedProcedure
     .input(z.object({ txid: z.string() }))
     .query(async ({ input }) => {
-      const cacheKey = `pix:status:${input.txid}`;
+      const cacheKey = CACHE_KEYS.PIX_STATUS(input.txid);
       const cached = await getCached<{ status: string; paidAt?: string }>(cacheKey);
       if (cached) {
-        return { ...cached, fromCache: true, sandbox: PIX_SANDBOX };
+        return { ...cached, txid: input.txid, fromCache: true, sandbox: PIX_SANDBOX };
       }
 
-      if (PIX_SANDBOX) {
-        const confirmation = simulateSandboxConfirmation(input.txid, 0);
-        const result = {
-          txid: input.txid,
-          status: "ATIVA" as const,
-          paidAt: undefined,
-          sandbox: true,
-          fromCache: false,
-        };
-        return result;
+      // Produção com OpenPix: consultar status real via API
+      if (!PIX_SANDBOX && isOpenPixAvailable()) {
+        try {
+          const resp = await getOpenPixChargeStatus(input.txid);
+          const status = mapOpenPixStatus(resp.charge.status);
+          const result = {
+            txid: input.txid,
+            status,
+            paidAt: resp.charge.paidAt ?? undefined,
+            sandbox: false,
+            fromCache: false,
+          };
+          if (status === "CONCLUIDA") {
+            await setCached(cacheKey, result, 3600 * 24);
+          }
+          return result;
+        } catch {
+          // continua para fallback via DB
+        }
+      }
+
+      // Fallback: consultar banco de dados
+      const dbConn = await getDb();
+      if (dbConn) {
+        const [row] = await dbConn
+          .select()
+          .from(payments)
+          .where(and(eq(payments.method, "pix"), eq(payments.bankNumber, input.txid.substring(0, 20))))
+          .limit(1);
+        if (row?.status === "confirmed") {
+          return {
+            txid: input.txid,
+            status: "CONCLUIDA" as const,
+            paidAt: row.paymentDate?.toISOString(),
+            sandbox: PIX_SANDBOX,
+            fromCache: false,
+          };
+        }
       }
 
       return {
         txid: input.txid,
         status: "ATIVA" as const,
         paidAt: undefined,
-        sandbox: false,
+        sandbox: PIX_SANDBOX,
         fromCache: false,
       };
     }),
@@ -226,6 +255,11 @@ export const pixRouter = router({
         );
 
         processed.push(txid);
+      }
+
+      // Invalidar cache do dashboard para forçar dados frescos no próximo load
+      if (processed.length > 0) {
+        await invalidateCachePattern(CACHE_KEYS.DASHBOARD_PATTERN).catch(() => undefined);
       }
 
       return { ok: true, processed };

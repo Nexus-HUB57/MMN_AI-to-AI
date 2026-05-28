@@ -1,3 +1,6 @@
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "wouter";
+import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
 import {
   useAuth,
   ADMIN_ACCESS_LABEL,
@@ -24,22 +27,44 @@ interface SocialLoginButtonsProps {
 }
 
 function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
-  const handleSocial = (provider: string) => {
-    window.dispatchEvent(
-      new CustomEvent("mmn:social-login", { detail: { provider } }),
-    );
-    alert(
-      `Login com ${provider} será ativado após configuração do Firebase Auth.\nDefina FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL e FIREBASE_PRIVATE_KEY no servidor.`,
-    );
+  const [loading, setLoading] = useState<string | null>(null);
+  const [socialError, setSocialError] = useState<string | null>(null);
+
+  const handleSocial = async (provider: "Google" | "Facebook" | "Apple") => {
+    setSocialError(null);
+    setLoading(provider);
+    try {
+      const { signInWithGoogle, signInWithFacebook, signInWithApple } = await import("@/lib/firebase");
+      const signInFn = provider === "Google" ? signInWithGoogle : provider === "Facebook" ? signInWithFacebook : signInWithApple;
+      const profile = await signInFn();
+
+      window.dispatchEvent(
+        new CustomEvent("mmn:social-login", { detail: { provider, uid: profile.uid, email: profile.email } }),
+      );
+      // TODO: send profile.idToken to backend auth.loginWithFirebaseToken
+      // const utils = trpc.useUtils();
+      // await trpc.auth.loginWithFirebaseToken.mutate({ idToken: profile.idToken });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setSocialError(msg.includes("não está instalado") || msg.includes("não configurado")
+        ? `Login social requer configuração Firebase. Contate o administrador.`
+        : `Erro ao entrar com ${provider}: ${msg.split('\n')[0]}`);
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="space-y-2">
+      {socialError && (
+        <p className="text-xs text-red-500 text-center">{socialError}</p>
+      )}
+      <div className="grid grid-cols-3 gap-2">
       <Button
         type="button"
         variant="outline"
         className="h-10 gap-2 border-border/60 text-text-secondary hover:border-[#4285F4]/60 hover:text-[#4285F4] hover:bg-[#4285F4]/5 transition-colors"
-        disabled={disabled}
+        disabled={disabled || !!loading}
         onClick={() => handleSocial("Google")}
         title="Entrar com Google"
       >
@@ -68,7 +93,7 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
         type="button"
         variant="outline"
         className="h-10 gap-2 border-border/60 text-text-secondary hover:border-[#1877F2]/60 hover:text-[#1877F2] hover:bg-[#1877F2]/5 transition-colors"
-        disabled={disabled}
+        disabled={disabled || !!loading}
         onClick={() => handleSocial("Facebook")}
         title="Entrar com Facebook"
       >
@@ -82,7 +107,7 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
         type="button"
         variant="outline"
         className="h-10 gap-2 border-border/60 text-text-secondary hover:border-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors"
-        disabled={disabled}
+        disabled={disabled || !!loading}
         onClick={() => handleSocial("Apple")}
         title="Entrar com Apple"
       >
@@ -92,11 +117,9 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
         <span className="sr-only sm:not-sr-only text-xs">Apple</span>
       </Button>
     </div>
+    </div>
   );
 }
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "wouter";
-import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
 
 export default function Login() {
   const { isAuthenticated, login, loginAsDemo, loginAdmin, user } = useAuth();

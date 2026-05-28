@@ -173,7 +173,7 @@ async function callTrpcMutation<T>(procedure: string, input: unknown): Promise<{
 const ADMIN_SESSION_ID = "admin-nexus-affiliate-core";
 const ADMIN_INTERNAL_EMAIL = "equipe-restrita@nexus.internal";
 const AUTHORIZED_ADMIN_EMAIL_SHA256 =
-  "7d67005172b41a8cf0abe1b5de9a5f1605821ff22d0207e9bd0f2cfcb91384b2";
+  "a5553ecd1fe9aede188e04ae102e589618532d940abb9f80f1db78fb073eb5b2";
 const AUTHORIZED_ADMIN_PASSWORD_SHA256 =
   "81493748f444279b87fbdb2770ad8a24e12d4c676ede14087d6920c98f6d9a2e";
 

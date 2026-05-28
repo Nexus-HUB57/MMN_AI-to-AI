@@ -22,6 +22,7 @@ const AdminMaterials = lazy(() => import("./pages/AdminMaterials"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 const AdminSchedules = lazy(() => import("./pages/AdminSchedules"));
 const AdminRuntime = lazy(() => import("./pages/AdminRuntime"));
+const AdminSkills = lazy(() => import("./pages/AdminSkills"));
 
 const AffiliateProfile = lazy(() => import("./pages/AffiliateProfile"));
 const AffiliatePayments = lazy(() => import("./pages/AffiliatePayments"));
@@ -60,6 +61,8 @@ const TrackingLinks = lazy(() => import("./pages/TrackingLinks"));
 const Login = lazy(() => import("./pages/Login"));
 const Logout = lazy(() => import("./pages/Logout"));
 const Cadastro = lazy(() => import("./pages/Cadastro"));
+const Termos = lazy(() => import("./pages/Termos"));
+const Privacidade = lazy(() => import("./pages/Privacidade"));
 const EspacoAberto = lazy(() => import("./pages/EspacoAberto"));
 
 const CareerProgress = lazy(() => import("./pages/CareerProgress"));
@@ -75,6 +78,8 @@ export const NAVIGATION_STRUCTURE = {
     { path: "/", name: "Home", component: "Home" },
     { path: "/login", name: "Login", component: "Login" },
     { path: "/cadastro", name: "Cadastro", component: "Cadastro" },
+    { path: "/termos", name: "Termos", component: "Termos" },
+    { path: "/privacidade", name: "Privacidade", component: "Privacidade" },
     { path: "/espaco-aberto", name: "Espaço Aberto", component: "EspacoAberto" },
   ],
   AFFILIATE: [
@@ -384,6 +389,8 @@ export default function App() {
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/cadastro" component={Cadastro} />
+            <Route path="/termos" component={Termos} />
+            <Route path="/privacidade" component={Privacidade} />
             <Route path="/espaco-aberto" component={EspacoAberto} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/profile" component={AffiliateProfile} />
@@ -439,6 +446,7 @@ export default function App() {
             <Route path="/admin/materials" component={AdminMaterials} />
             <Route path="/admin/logs" component={ExecutionLogs} />
             <Route path="/admin/schedules" component={AdminSchedules} />
+            <Route path="/admin/skills" component={AdminSkills} />
             <Route path="/admin/runtime" component={AdminRuntime} />
             <Route path="/admin/settings" component={AdminSettings} />
             <Route path="/admin/status" component={SystemStatus} />

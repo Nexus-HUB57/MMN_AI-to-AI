@@ -242,8 +242,8 @@ usa o backend para validar credenciais; senão cai no fallback local atual.
 
 | Variável                | Obrigatória | Descrição                                                | Valor pronto |
 |-------------------------|-------------|----------------------------------------------------------|---|
-| `ADMIN_EMAIL_SHA256`    | sim         | SHA-256 (64 chars hex) do e-mail autorizado em minúsculas | `7d67005172b41a8cf0abe1b5de9a5f1605821ff22d0207e9bd0f2cfcb91384b2` |
-| `ADMIN_PASSWORD_SHA256` | sim         | SHA-256 (64 chars hex) da senha autorizada                | `81493748f444279b87fbdb2770ad8a24e12d4c676ede14087d6920c98f6d9a2e` |
+| `ADMIN_EMAIL_SHA256`    | sim         | SHA-256 (64 chars hex) do e-mail autorizado em minúsculas | `a5553ecd1fe9aede188e04ae102e589618532d940abb9f80f1db78fb073eb5b2` para `equipe-restrita@nexus.internal` |
+| `ADMIN_PASSWORD_SHA256` | sim         | SHA-256 (64 chars hex) da senha autorizada                | gerar localmente com `node scripts/render-admin-hashes.mjs <email> <senha>` |
 | `ADMIN_SESSION_SECRET`  | sim         | Segredo HMAC (≥16 chars) para assinar tokens admin        | gerado pelo Render |
 
 Fluxo:
@@ -251,6 +251,12 @@ Fluxo:
 2. `adminAuth.login` valida hashes em tempo constante (`timingSafeEqual`).
 3. Em sucesso, retorna token assinado HMAC-SHA256 (TTL 12h).
 4. `adminAuth.verify` revalida o token para reidratar sessão após reload.
+
+Gerador rápido dos hashes para o painel Render:
+
+```bash
+node scripts/render-admin-hashes.mjs equipe-restrita@nexus.internal '<senha-autorizada>'
+```
 
 Validação operacional no navegador/terminal:
 

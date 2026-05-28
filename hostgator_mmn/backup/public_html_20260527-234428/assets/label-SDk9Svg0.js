@@ -1,1 +1,0 @@
-import{v as s,t as o}from"./index-Cja66WYr.js";import{c as t}from"./index-DHk-Frat.js";const l=s.forwardRef(({className:e,...a},r)=>o.jsx("label",{ref:r,className:t("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",e),...a}));l.displayName="Label";export{l as L};

@@ -89,6 +89,8 @@ const categoryAccent: Record<string, string> = {
   publishing: "bg-accent-green/10 text-accent-green border-accent-green/30",
   decision: "bg-yellow-500/10 text-yellow-300 border-yellow-500/30",
   sales: "bg-pink-500/10 text-pink-300 border-pink-500/30",
+  retention: "bg-orange-500/10 text-orange-300 border-orange-500/30",
+  analytics: "bg-blue-500/10 text-blue-300 border-blue-500/30",
 };
 
 const FALLBACK_HANDLERS: SkillHandlerSummary[] = [

@@ -31,19 +31,11 @@ export interface ScheduledPostJob {
   requiresApproval: boolean;
 }
 
-type ChannelDispatcher = (job: ScheduledPostJob) => Promise<{
-  sent: boolean;
-  externalId?: string;
-  detail?: string;
-}>;
+import { REAL_DISPATCHERS, getDispatcherStatus } from "./channelDispatchers";
+import type { ChannelDispatcher } from "./channelDispatchers";
 
-const DEFAULT_DISPATCHERS: Record<ScheduledPostJob["channel"], ChannelDispatcher> = {
-  instagram: async (job) => ({ sent: true, externalId: `ig_${job.publishKey}`, detail: "stub-instagram" }),
-  whatsapp: async (job) => ({ sent: true, externalId: `wa_${job.publishKey}`, detail: "stub-whatsapp" }),
-  facebook: async (job) => ({ sent: true, externalId: `fb_${job.publishKey}`, detail: "stub-facebook" }),
-  email: async (job) => ({ sent: true, externalId: `em_${job.publishKey}`, detail: "stub-email" }),
-  landing: async (job) => ({ sent: true, externalId: `ld_${job.publishKey}`, detail: "stub-landing" }),
-};
+const DEFAULT_DISPATCHERS: Record<ScheduledPostJob["channel"], ChannelDispatcher> = REAL_DISPATCHERS;
+export { getDispatcherStatus };
 
 const inMemoryQueue: ScheduledPostJob[] = [];
 const processedKeys = new Set<string>();

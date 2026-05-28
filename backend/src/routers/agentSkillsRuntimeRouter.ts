@@ -12,8 +12,15 @@ import { addExecution, getTelemetry } from "../agentic/runtimeTelemetry";
 import {
   enqueueScheduledPosts,
   getAutoPublisherStats,
+  getDispatcherStatus,
   startAutoPublisherWorker,
 } from "../workers/autoPublisherWorker";
+import {
+  decideApproval,
+  enqueueApproval,
+  getApprovalStats,
+  listApprovals,
+} from "../agentic/approvalsQueue";
 
 // Inicializa o worker uma vez quando o router é carregado.
 startAutoPublisherWorker();
@@ -93,9 +100,21 @@ export const agentSkillsRuntimeRouter = router({
         warningsCount: result.warnings?.length ?? 0,
       });
 
+      // Quando a política determina needs_review, cria entrada na fila de
+      // aprovações para o admin revisar antes de qualquer acionamento real.
+      if (result.decision === "needs_review") {
+        enqueueApproval({
+          executionId: result.executionId,
+          skill: input.slug,
+          warnings: result.warnings ?? [],
+          output: result.output,
+          channelHint: input.channelHint,
+        });
+      }
+
       // Auto-enqueue: quando o auto-publisher gera schedule e a política permite,
       // a fila do worker recebe os jobs prontos para distribuição real.
-      if (input.slug === "auto-publisher" && result.success) {
+      if (input.slug === "auto-publisher" && result.success && result.decision === "auto") {
         const output = (result.output as any) ?? {};
         const schedule = Array.isArray(output.schedule) ? output.schedule : [];
         if (schedule.length > 0) {
@@ -144,6 +163,44 @@ export const agentSkillsRuntimeRouter = router({
   workerStats: publicProcedure.query(() => {
     return getAutoPublisherStats();
   }),
+
+  dispatcherStatus: publicProcedure.query(() => {
+    return getDispatcherStatus();
+  }),
+
+  approvalsList: publicProcedure
+    .input(
+      z
+        .object({
+          status: z.enum(["pending", "approved", "rejected"]).optional(),
+          limit: z.number().int().min(1).max(200).optional(),
+        })
+        .optional(),
+    )
+    .query(({ input }) => ({
+      stats: getApprovalStats(),
+      items: listApprovals({ status: input?.status, limit: input?.limit }),
+    })),
+
+  approvalsDecide: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().min(3).max(120),
+        decision: z.enum(["approved", "rejected"]),
+        note: z.string().max(500).optional(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      const resolvedBy = `user:${ctx.user.id}`;
+      const item = decideApproval(input.id, input.decision, resolvedBy, input.note);
+      if (!item) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Aprovação ${input.id} não encontrada ou já resolvida.`,
+        });
+      }
+      return item;
+    }),
 
   autonomyScore: publicProcedure
     .input(

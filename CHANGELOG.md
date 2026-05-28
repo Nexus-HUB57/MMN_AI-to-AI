@@ -1,5 +1,42 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.3.0-sprint1 Fase 10 Sprint 10.1 — PIX + Firebase Auth + Prometheus + Cache + Mobile Fix
+
+### `feat(pix)` — Epic 10.2: Módulo PIX — QR Code estático e dinâmico (Issues #10.2.1, #10.2.2)
+
+- criado `backend/src/services/pixService.ts` com geração de payload EMV (Banco Central do Brasil) para QR Code estático e dinâmico, CRC-16/CCITT-FALSE, detecção e validação de tipos de chave (CPF, CNPJ, telefone, email, EVP) e confirmação sandbox
+- criado `backend/src/routers/pixRouter.ts` com endpoints tRPC: `generateStaticQr`, `generateDynamicQr`, `validateKey`, `checkPaymentStatus`, `webhook`, `config` (público) e `sandboxConfirm` (admin)
+- router `pix` registrado no `appRouter`; webhook grava confirmações de pagamento no cache com TTL 24 h
+- suporta modo sandbox (`PIX_SANDBOX=true`) sem dependência de PSP externo; pronto para integrar Celcoin/OpenPix na Sprint 10.2
+
+### `feat(auth)` — Epic 10.3.1: Firebase Admin SDK — inicialização lazy (Issue #10.3.1)
+
+- criado `backend/src/services/firebaseAdmin.ts`: inicialização lazy com `firebase-admin`, suporte a conta de serviço via variáveis de ambiente (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`), fallback gracioso quando credenciais ausentes
+- funções: `verifyFirebaseIdToken`, `setCustomClaims` (RBAC), `getFirebaseUser`, `revokeUserTokens`, `isFirebaseAdminAvailable`
+- sem quebra de compatibilidade: SDK carregado dinamicamente (`import()`) — evita erros de boot quando `firebase-admin` não está instalado
+
+### `feat(observability)` — Epic 10.6.1: Prometheus metrics endpoint (Issue #10.6.1)
+
+- criado `backend/src/middlewares/prometheusMetrics.ts` com serialização manual do formato Prometheus text 0.0.4 (sem `prom-client`, zero deps adicionais)
+- contadores: `http_requests_total`, `http_requests_success_total`, `http_requests_error_total`, `trpc_calls_total`, `trpc_errors_total`, `pix_qr_generated_total`, `pix_payments_confirmed_total`, `agent_sessions_*`, `commission_events_total`
+- histogramas: `http_request_duration_ms`, `trpc_call_duration_ms` (buckets configurados)
+- métricas de processo: `process_uptime_seconds`, `process_heap_used_bytes`, `process_heap_total_bytes`, `process_rss_bytes`, `nodejs_version_info`
+- middleware `metricsCollector` registrado em `index.ts` (coleta latência de todos os requests)
+- endpoint `GET /metrics` exposto no Express; pronto para Prometheus scrape e Grafana Agent
+
+### `feat(cache)` — Epic 10.5.1: Extensão das CACHE_KEYS e CACHE_TTL
+
+- adicionados 18 novos `CACHE_KEYS` domain-específicos em `cache-service.ts`: Dashboard, Commissions, PIX, Network, Marketplace e Firebase
+- TTLs calibrados: dashboard metrics 30 s, recent sales 60 s, network/commissions 120 s, marketplace 300 s, PIX status 24 h, Firebase user 300 s
+
+### `fix(mobile)` — Epic 10.1.1: Erro "Objects are not valid as a React child" (Issue #10.1.1)
+
+- corrigido `mobile/app/(tabs)/index.tsx`: campo `date` do sale agora usa conversão defensiva `Date → toLocaleDateString("pt-BR")` com try/catch para qualquer formato inesperado do servidor; campo `id` e `product` também explicitamente convertidos para `String()` antes de chegar ao JSX
+
+### `chore(config)` — Variáveis de ambiente para novos módulos
+
+- atualizado `.env.example` com seções PIX e Firebase Auth
+
 ## 2026-05-25 — v1.2.8 Redeploy Consolidado Hostgator (Layout Obsidian Completo)
 
 ### `ops(deploy)` — Plataforma reimplantada com todas as alterações de layout

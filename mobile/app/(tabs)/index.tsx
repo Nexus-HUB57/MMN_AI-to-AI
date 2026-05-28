@@ -50,12 +50,25 @@ export default function HomeScreen() {
 
   const recentSales = useMemo<RecentSale[]>(
     () =>
-      (recentSalesData ?? []).map((sale: any) => ({
-        id: sale.id,
-        product: sale.product ?? sale.externalOrderId ?? "Venda recente",
-        date: sale.date ?? sale.createdAt ?? sale.created_at ?? "Agora",
-        value: Number(sale.value ?? sale.amount ?? sale.commissionAmount ?? 0),
-      })),
+      (recentSalesData ?? []).map((sale: any) => {
+        const rawDate = sale.date ?? sale.createdAt ?? sale.created_at;
+        let dateStr = "Agora";
+        if (rawDate) {
+          try {
+            dateStr = rawDate instanceof Date
+              ? rawDate.toLocaleDateString("pt-BR")
+              : new Date(rawDate).toLocaleDateString("pt-BR");
+          } catch {
+            dateStr = String(rawDate);
+          }
+        }
+        return {
+          id: String(sale.id ?? Math.random()),
+          product: String(sale.product ?? sale.externalOrderId ?? "Venda recente"),
+          date: dateStr,
+          value: Number(sale.value ?? sale.amount ?? sale.commissionAmount ?? 0),
+        };
+      }),
     [recentSalesData],
   );
 

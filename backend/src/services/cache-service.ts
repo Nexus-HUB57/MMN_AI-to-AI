@@ -202,6 +202,37 @@ export const CACHE_KEYS = {
   TEMPLATES_PATTERN: (userId: number) => `templates:list:${userId}:*`,
   POSTS_PATTERN: (userId: number) => `posts:*:${userId}:*`,
   ANALYTICS_PATTERN: (userId: number) => `analytics:${userId}:*`,
+
+  // Dashboard (Epic 10.5)
+  DASHBOARD_METRICS: (userId: number) => `dashboard:metrics:${userId}`,
+  DASHBOARD_RECENT_SALES: (userId: number) => `dashboard:recent-sales:${userId}`,
+  DASHBOARD_NETWORK: (userId: number) => `dashboard:network:${userId}`,
+  DASHBOARD_PATTERN: (userId: number) => `dashboard:*:${userId}`,
+
+  // Commissions (Epic 10.5)
+  COMMISSIONS_STATS: (affiliateId: number) => `commissions:stats:${affiliateId}`,
+  COMMISSIONS_LIST: (affiliateId: number, period: string) =>
+    `commissions:list:${affiliateId}:${period}`,
+  COMMISSIONS_PATTERN: (affiliateId: number) => `commissions:*:${affiliateId}:*`,
+
+  // PIX (Epic 10.2)
+  PIX_STATUS: (txid: string) => `pix:status:${txid}`,
+  PIX_PATTERN: "pix:*",
+
+  // Network (Epic 10.5)
+  NETWORK_TREE: (userId: number) => `network:tree:${userId}`,
+  NETWORK_DIRECT: (userId: number) => `network:direct:${userId}`,
+  NETWORK_PATTERN: (userId: number) => `network:*:${userId}`,
+
+  // Marketplace (Epic 10.5)
+  MARKETPLACE_TRENDING: "marketplace:trending",
+  MARKETPLACE_PRODUCTS: (marketplace: string) => `marketplace:products:${marketplace}`,
+  MARKETPLACE_PATTERN: "marketplace:*",
+
+  // Firebase (Epic 10.3)
+  FIREBASE_USER: (uid: string) => `firebase:user:${uid}`,
+  FIREBASE_CLAIMS: (uid: string) => `firebase:claims:${uid}`,
+  FIREBASE_PATTERN: "firebase:*",
 };
 
 export const CACHE_TTL = {
@@ -212,6 +243,14 @@ export const CACHE_TTL = {
   POSTS: 600,
   ANALYTICS: 600,
   CONTENT: 1800,
+  // New TTLs — Epic 10.5
+  DASHBOARD_METRICS: 30,
+  DASHBOARD_RECENT_SALES: 60,
+  NETWORK: 120,
+  COMMISSIONS: 120,
+  MARKETPLACE: 300,
+  PIX_STATUS: 86400,
+  FIREBASE_USER: 300,
 };
 
 export async function clearAllCache(): Promise<boolean> {

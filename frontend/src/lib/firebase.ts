@@ -44,12 +44,14 @@ function isFirebaseConfigured(): boolean {
 
 async function loadFirebase() {
   try {
+    const firebaseAppModule = "firebase/app";
+    const firebaseAuthModule = "firebase/auth";
     const [
       { initializeApp, getApps, getApp },
       { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, OAuthProvider },
     ] = await Promise.all([
-      import("firebase/app"),
-      import("firebase/auth"),
+      import(/* @vite-ignore */ firebaseAppModule),
+      import(/* @vite-ignore */ firebaseAuthModule),
     ]);
 
     const config = getFirebaseConfig();

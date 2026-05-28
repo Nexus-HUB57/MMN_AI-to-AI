@@ -102,7 +102,7 @@ export default function PerformanceScreen() {
   const metrics = metricsQuery.data;
   const systemHealth = systemHealthQuery.data;
   const skillAnalytics = skillAnalyticsQuery.data;
-  const networkComparison = networkComparison.data;
+  const networkComparison = networkComparisonQuery?.data;
 
   // Calculate success rate
   const successRate = metrics.totalActions > 0

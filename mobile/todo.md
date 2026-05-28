@@ -120,6 +120,7 @@
 
 - [x] #10.1.1 - Resolver erro "Objects are not valid as a React child" - CORRIGIDO em profile.tsx e index.tsx
 - [x] Adicionar validação de tipos para evitar objetos sendo passados para Text components
+- [x] #10.1.2 - Corrigir bug em performance.tsx linha 105 - Referência circular networkComparison.data → networkComparisonQuery?.data
 
 ---
 

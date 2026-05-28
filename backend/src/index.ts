@@ -12,6 +12,7 @@ import {
 } from "./services/cronScheduler";
 import { registerAuditSubscribers } from "./_core/events/auditSubscribers";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
+import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -51,6 +52,10 @@ const trpcMiddleware = createExpressMiddleware({
 
 app.use(express.json({ limit: "2mb" }));
 app.use(metricsCollector);
+
+// Rate limiting para endpoints PIX (proteção contra abuso / flood)
+app.use(["/trpc/pix.webhook", "/api/trpc/pix.webhook"], pixWebhookRateLimiter);
+app.use(["/trpc/pix.generateDynamicQr", "/api/trpc/pix.generateDynamicQr"], pixQrRateLimiter);
 app.use((req, res, next) => {
   const origin = resolveOrigin(req.header("origin") || undefined);
   res.header("Access-Control-Allow-Origin", origin);

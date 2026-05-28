@@ -16,6 +16,7 @@ import {
   Zap,
   History,
   Search,
+  Download,
 } from "lucide-react";
 
 const PAGE_SIZE = 20;
@@ -52,6 +53,35 @@ export default function PixHistory() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filters, setFilters] = useState<{ startDate?: string; endDate?: string }>({});
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const utils = trpc.useUtils();
+
+  const handleExportCsv = async () => {
+    setIsDownloading(true);
+    try {
+      const result = await utils.payments.exportCommissionsCsv.fetch({
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+      });
+      if (!result?.csvBase64) return;
+
+      const bytes = Uint8Array.from(atob(result.csvBase64), (c) => c.charCodeAt(0));
+      const blob = new Blob([bytes], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = result.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      // Silently fail — user may not be an affiliate yet
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const { data, isLoading, refetch, isFetching } = trpc.pix.listHistory.useQuery(
     {
@@ -100,6 +130,16 @@ export default function PixHistory() {
                 <Zap className="h-3 w-3" /> Sandbox
               </Badge>
             )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportCsv}
+              disabled={isDownloading}
+              title="Exportar comissões como CSV"
+            >
+              <Download className={`h-4 w-4 mr-1 ${isDownloading ? "animate-pulse" : ""}`} />
+              {isDownloading ? "Exportando…" : "Exportar CSV"}
+            </Button>
             <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
               <RefreshCw className={`h-4 w-4 mr-1 ${isFetching ? "animate-spin" : ""}`} />
               Atualizar

@@ -1,5 +1,32 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.9.0-sprint7 Fase 10 Sprint 10.7 — CSV Button + Auto-login + Rate Limit + Testes
+
+### `feat(frontend)` — Epic 10.9.2: Botão "Exportar CSV" na PixHistory
+
+- `PixHistory.tsx`: import `Download` (lucide), estado `isDownloading`, `handleExportCsv` usa `utils.payments.exportCommissionsCsv.fetch` com filtros de data ativos → download automático via Blob/URL
+- Botão aparece ao lado de "Atualizar" com ícone de download e feedback visual `animate-pulse`
+
+### `feat(auth)` — Epic 10.3.6: Auto-login social na inicialização do AuthProvider
+
+- `AuthContext.tsx`: ao restaurar sessão de `STORAGE_KEY`, verifica `SOCIAL_TOKEN_KEY` — se `expiresAt` ainda válido, restaura o usuário; se expirado, limpa ambas as chaves
+- Usuários sociais mantêm sessão entre recargas da página por até 7 dias
+
+### `feat(backend)` — Epic 10.11.1: Rate limiter PIX em memória
+
+- criado `backend/src/middlewares/pixRateLimiter.ts`: `createPixRateLimiter(windowMs, maxRequests, namespace)` usando `Map<ip, WindowEntry>`, sem dependências externas
+- `pixWebhookRateLimiter`: 100 req/min por IP para webhook
+- `pixQrRateLimiter`: 20 req/min por IP para geração de QR
+- Cabeçalhos `X-RateLimit-Limit/Remaining/Reset`, HTTP 429 com `Retry-After` ao exceder limite
+- `backend/src/index.ts`: import e aplicação dos dois middlewares antes do CORS
+
+### `test(backend)` — Epic 10.7.1: Testes de integração webhook PIX + refund
+
+- criado `backend/src/tests/pixWebhook.test.ts` (Vitest):
+  - Grupo `pix.webhook`: processa pagamento válido + cache, conversão valor→centavos (5 casos), fallback endToEndId→txid, múltiplos pagamentos simultâneos
+  - Grupo `pix.refund`: status REFUNDED_SIMULATED em sandbox, geração de correlationID único, conversão amount→centavos, erro sem OPENPIX_TOKEN em produção
+  - Grupo payload PIX: CRC-16 CCITT vetores conhecidos (`123456789` → `29B1`), formato EMV obrigatório, campos BRL/BR
+
 ## 2026-05-28 — v1.8.0-sprint6 Fase 10 Sprint 10.6 — AuthContext Social + pix.refund + CSV Export + Alertmanager
 
 ### `feat(auth)` — Epic 10.3.5: AuthContext integra sessão de login social

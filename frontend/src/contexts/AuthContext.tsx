@@ -266,7 +266,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser(parsed);
           }
         } else {
-          setUser(parsed);
+          // Verificar se existe sessão social válida para restaurar
+          const socialRaw = window.localStorage.getItem(SOCIAL_TOKEN_KEY);
+          if (socialRaw) {
+            try {
+              const socialSession = JSON.parse(socialRaw) as { expiresAt?: string };
+              if (socialSession.expiresAt && new Date(socialSession.expiresAt).getTime() > Date.now()) {
+                // Sessão social ainda válida — restaurar
+                setUser(parsed);
+              } else {
+                // Sessão social expirada — limpar e não restaurar
+                window.localStorage.removeItem(STORAGE_KEY);
+                window.localStorage.removeItem(SOCIAL_TOKEN_KEY);
+              }
+            } catch {
+              setUser(parsed);
+            }
+          } else {
+            setUser(parsed);
+          }
         }
       }
     } catch (error) {

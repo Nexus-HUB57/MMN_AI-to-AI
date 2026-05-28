@@ -75,13 +75,54 @@ export const pixRouter = router({
     .input(
       z.object({
         amount: z.number().min(0.01),
-        cobUrl: z.string().url("URL de cobrança inválida"),
+        cobUrl: z.string().url("URL de cobrança inválida").optional(),
         txid: z.string().max(35).optional(),
+        description: z.string().max(140).optional(),
+        payerName: z.string().optional(),
+        payerEmail: z.string().email().optional(),
       }),
     )
     .mutation(async ({ input }) => {
+      const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
+      // Produção com OpenPix: gerar cobrança dinâmica real
+      if (!PIX_SANDBOX && isOpenPixAvailable()) {
+        const correlationID =
+          input.txid ?? `mmn-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+        const charge = await createOpenPixCharge({
+          correlationID,
+          value: Math.round(input.amount * 100),
+          comment: input.description ?? `MMN AI-to-AI — R$ ${input.amount.toFixed(2)}`,
+          expiresIn: 1800,
+          customer: input.payerName
+            ? {
+                name: input.payerName,
+                email: input.payerEmail,
+              }
+            : undefined,
+          additionalInfo: [{ key: "Plataforma", value: "MMN AI-to-AI" }],
+        });
+
+        return {
+          qrCodePayload: charge.charge.brCode ?? "",
+          qrCodeImageUrl: charge.charge.qrCodeImage,
+          paymentLinkUrl: charge.charge.paymentLinkUrl,
+          txid: correlationID,
+          amount: input.amount,
+          type: "dynamic" as const,
+          sandbox: false,
+          expiresAt: charge.charge.expiresDate ?? expiresAt,
+          openPixStatus: charge.charge.status,
+        };
+      }
+
+      // Sandbox ou sem OpenPix: usar payload dinâmico local
+      const cobUrl =
+        input.cobUrl ?? `https://api.openpix.com.br/openpix/charge/brcode/${Date.now()}`;
+
       const result = generatePixDynamicPayload({
-        url: input.cobUrl,
+        url: cobUrl,
         merchantName: PIX_RECEIVER_NAME,
         merchantCity: PIX_RECEIVER_CITY,
         amount: input.amount,
@@ -90,11 +131,14 @@ export const pixRouter = router({
 
       return {
         qrCodePayload: result.fullPayload,
+        qrCodeImageUrl: undefined,
+        paymentLinkUrl: undefined,
         txid: result.txid,
         amount: result.amount,
         type: result.type,
         sandbox: PIX_SANDBOX,
-        expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+        expiresAt,
+        openPixStatus: undefined,
       };
     }),
 

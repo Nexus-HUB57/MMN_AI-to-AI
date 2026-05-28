@@ -491,12 +491,12 @@ export const authRouter = router({
       return { success: true };
     }),
 
-  // ============ FIREBASE SOCIAL AUTH (Epic 10.3.3) ============
+  // ============ FIREBASE SOCIAL AUTH (Epic 10.3.3 / 10.3.4) ============
 
   /**
-   * Verifica um ID Token Firebase e retorna informações do usuário autenticado.
-   * O frontend envia o idToken obtido via signInWithPopup (Google/Facebook/Apple).
-   * O backend valida o token com o Firebase Admin SDK e retorna o perfil social.
+   * Verifica ID Token Firebase, faz upsert do usuário no banco e cria sessão.
+   * Fluxo completo: signInWithPopup → idToken → loginWithFirebaseToken → sessão.
+   * Suporta: Google, Facebook, Apple.
    */
   loginWithFirebaseToken: publicProcedure
     .input(
@@ -506,27 +506,15 @@ export const authRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      let admin: Awaited<ReturnType<typeof import("../services/firebaseAdmin")["getFirebaseAdmin"]>>;
-      try {
-        const { getFirebaseAdmin } = await import("../services/firebaseAdmin");
-        admin = await getFirebaseAdmin();
-      } catch {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Firebase Admin SDK não disponível. Configure FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL e FIREBASE_PRIVATE_KEY no servidor.",
-        });
-      }
-
-      if (!admin) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Firebase Admin SDK não inicializado. Verifique as variáveis de ambiente Firebase.",
-        });
-      }
-
+      // ── 1. Verificar token com Firebase Admin SDK ──────────────────────────
       let decodedToken: import("firebase-admin/auth").DecodedIdToken;
       try {
-        decodedToken = await admin.auth().verifyIdToken(input.idToken);
+        const { getFirebaseAdmin } = await import("../services/firebaseAdmin");
+        const adminApp = await getFirebaseAdmin();
+        if (!adminApp) {
+          throw new Error("Firebase Admin SDK retornou null — verifique FIREBASE_PROJECT_ID/FIREBASE_CLIENT_EMAIL/FIREBASE_PRIVATE_KEY.");
+        }
+        decodedToken = await adminApp.auth().verifyIdToken(input.idToken);
       } catch (err) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
@@ -534,28 +522,89 @@ export const authRouter = router({
         });
       }
 
-      const uid = decodedToken.uid;
+      const firebaseUid = decodedToken.uid;
       const email = decodedToken.email ?? null;
-      const name = decodedToken.name ?? decodedToken.display_name ?? null;
+      const displayName =
+        (decodedToken as unknown as { name?: string }).name ??
+        (decodedToken as unknown as { display_name?: string }).display_name ??
+        null;
       const picture = decodedToken.picture ?? null;
+
+      // ── 2. Encontrar ou criar usuário no banco ────────────────────────────
+      let user = await db.getUserByOpenId(firebaseUid);
+
+      if (!user && email) {
+        user = await db.getUserByEmail(email);
+      }
+
+      if (!user) {
+        // Auto-create social user
+        await db.upsertUser({
+          openId: firebaseUid,
+          name: displayName,
+          email,
+          role: "user",
+          loginMethod: input.provider,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        user = await db.getUserByOpenId(firebaseUid);
+      }
+
+      if (!user) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Falha ao criar ou recuperar usuário após login social.",
+        });
+      }
+
+      // Se openId ainda não está vinculado ao Firebase UID, atualizar
+      if (user.openId !== firebaseUid) {
+        await db.updateLegacyUserToModern(user.id, firebaseUid);
+      }
+
+      // ── 3. Criar sessão (refresh token) ───────────────────────────────────
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || ctx.req?.socket?.remoteAddress || "unknown";
+      const userAgent = ctx.req?.headers["user-agent"] || "unknown";
+      const sessionId = crypto.randomBytes(16).toString("hex");
+      const tokenId = generateRefreshTokenId();
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      const tokenHash = hashToken(rawToken);
+      const expiresAt = getExpiryDate();
+
+      await db.createRefreshToken({
+        id: tokenId,
+        userId: user.id,
+        tokenHash,
+        deviceInfo: `social:${input.provider}`,
+        ipAddress,
+        userAgent,
+        expiresAt,
+        createdAt: new Date(),
+      });
 
       await db.createSessionAudit({
         id: crypto.randomBytes(16).toString("hex"),
-        userId: 0,
-        sessionId: uid,
+        userId: user.id,
+        sessionId,
         action: "social_login",
-        ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || ctx.req?.socket?.remoteAddress,
-        userAgent: ctx.req?.headers["user-agent"],
-        metadata: { method: input.provider, firebase_uid: uid },
+        ipAddress,
+        userAgent,
+        metadata: { method: input.provider, firebase_uid: firebaseUid, picture },
         createdAt: new Date(),
       });
 
       return {
         success: true,
-        firebaseUid: uid,
-        email,
-        name,
-        picture,
+        user: {
+          id: user.id,
+          name: user.name ?? displayName,
+          email: user.email ?? email,
+          role: user.role,
+          picture,
+        },
+        sessionId,
+        tokenId,
         provider: input.provider,
       };
     }),

@@ -38,12 +38,24 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
       const signInFn = provider === "Google" ? signInWithGoogle : provider === "Facebook" ? signInWithFacebook : signInWithApple;
       const profile = await signInFn();
 
+      const { trpc: trpcClient } = await import("@/lib/trpc");
+      const session = await trpcClient.auth.loginWithFirebaseToken.mutate({
+        idToken: profile.idToken,
+        provider: profile.provider,
+      });
+
       window.dispatchEvent(
-        new CustomEvent("mmn:social-login", { detail: { provider, uid: profile.uid, email: profile.email } }),
+        new CustomEvent("mmn:social-login", {
+          detail: {
+            provider,
+            uid: profile.uid,
+            email: profile.email,
+            sessionId: session.sessionId,
+            tokenId: session.tokenId,
+            user: session.user,
+          },
+        }),
       );
-      // TODO: send profile.idToken to backend auth.loginWithFirebaseToken
-      // const utils = trpc.useUtils();
-      // await trpc.auth.loginWithFirebaseToken.mutate({ idToken: profile.idToken });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setSocialError(msg.includes("não está instalado") || msg.includes("não configurado")

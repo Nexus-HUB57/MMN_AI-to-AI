@@ -1,5 +1,19 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.7.0-sprint5 Fase 10 Sprint 10.5 — Firebase Sessão Completa + OpenPix Dynamic QR
+
+### `feat(auth)` — Epic 10.3.4: Fluxo Firebase social login completo (sessão + DB)
+
+- authRouter `loginWithFirebaseToken` refatorado: passo 1 verifica token, passo 2 `getUserByOpenId` / `getUserByEmail` / `upsertUser` para encontrar/criar usuário, passo 3 cria refresh token + session audit, retorna `{ user, sessionId, tokenId, provider }`
+- Login.tsx: após `signInWithPopup` chama `trpc.auth.loginWithFirebaseToken` e emite evento `mmn:social-login` com dados de sessão completos
+- Comentário duplicado em authRouter removido
+
+### `feat(pix)` — Epic 10.2.9: `generateDynamicQr` usa OpenPix em produção
+
+- `generateDynamicQr` atualizado: quando `!PIX_SANDBOX && isOpenPixAvailable()`, chama `createOpenPixCharge` com `value` em centavos, retorna `brCode`, `qrCodeImage`, `paymentLinkUrl`, `expiresDate` do OpenPix
+- input expandido: `cobUrl` passa a ser opcional, adicionados `description`, `payerName`, `payerEmail`
+- fallback para `generatePixDynamicPayload` local em sandbox ou sem OpenPix configurado
+
 ## 2026-05-28 — v1.6.0-sprint4 Fase 10 Sprint 10.4 — OpenPix + Firebase + Alertas + Cache
 
 ### `feat(pix)` — Epic 10.2.8: Serviço OpenPix PSP

@@ -10,6 +10,14 @@ import {
 import { computeAutonomyScore } from "../agentic/autonomyScore";
 import { addExecution, getTelemetry } from "../agentic/runtimeTelemetry";
 import {
+  enqueueScheduledPosts,
+  getAutoPublisherStats,
+  startAutoPublisherWorker,
+} from "../workers/autoPublisherWorker";
+
+// Inicializa o worker uma vez quando o router é carregado.
+startAutoPublisherWorker();
+import {
   findAgentByUserId,
   insertAgentRuntimeAudit,
   listActiveUpgradesByAgentId,
@@ -85,6 +93,28 @@ export const agentSkillsRuntimeRouter = router({
         warningsCount: result.warnings?.length ?? 0,
       });
 
+      // Auto-enqueue: quando o auto-publisher gera schedule e a política permite,
+      // a fila do worker recebe os jobs prontos para distribuição real.
+      if (input.slug === "auto-publisher" && result.success) {
+        const output = (result.output as any) ?? {};
+        const schedule = Array.isArray(output.schedule) ? output.schedule : [];
+        if (schedule.length > 0) {
+          enqueueScheduledPosts(
+            schedule.map((post: any) => ({
+              publishKey: post.publishKey,
+              channel: post.channel,
+              scheduledAtIso: post.scheduledAtIso,
+              headline: post.headline,
+              body: post.body,
+              ctaLabel: post.ctaLabel,
+              ctaLink: post.ctaLink,
+              hashtags: post.hashtags ?? [],
+              requiresApproval: Boolean(post.requiresApproval),
+            })),
+          );
+        }
+      }
+
       // Auditoria best-effort (não bloqueia resposta)
       try {
         await insertAgentRuntimeAudit({
@@ -109,6 +139,10 @@ export const agentSkillsRuntimeRouter = router({
 
   telemetry: publicProcedure.query(() => {
     return getTelemetry();
+  }),
+
+  workerStats: publicProcedure.query(() => {
+    return getAutoPublisherStats();
   }),
 
   autonomyScore: publicProcedure

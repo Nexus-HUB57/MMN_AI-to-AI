@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Cpu,
   Globe,
+  History,
   Image,
   LineChart,
   Link2,
@@ -25,6 +26,7 @@ import {
   MessageSquare,
   Network,
   Package,
+  QrCode,
   Settings,
   ShoppingCart,
   Star,
@@ -112,6 +114,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           label: "Pagamentos",
           href: "/payments",
           icon: <Wallet className="w-5 h-5" />,
+        },
+        {
+          label: "Checkout PIX",
+          href: "/pix/checkout",
+          icon: <QrCode className="w-5 h-5" />,
+          badge: "Novo",
+        },
+        {
+          label: "Histórico PIX",
+          href: "/pix/history",
+          icon: <History className="w-5 h-5" />,
         },
         {
           label: "Bônus & Recompensas",

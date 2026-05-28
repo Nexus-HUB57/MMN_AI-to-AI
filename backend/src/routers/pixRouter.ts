@@ -19,6 +19,7 @@ import { TRPCError } from "@trpc/server";
 import { getDb } from "../../../database/schemas/db";
 import { payments } from "../../../database/schemas/schema-final";
 import type { InferInsertModel } from "drizzle-orm";
+import { eq, desc, and, gte, lte } from "drizzle-orm";
 
 const PIX_RECEIVER_NAME = process.env.PIX_RECEIVER_NAME ?? "MMN AI-to-AI";
 const PIX_RECEIVER_CITY = process.env.PIX_RECEIVER_CITY ?? "SAO PAULO";
@@ -243,6 +244,57 @@ export const pixRouter = router({
       sandbox: PIX_SANDBOX,
     };
   }),
+
+  /**
+   * Lista o histórico de pagamentos PIX confirmados.
+   * Admin vê todos; afiliado vê apenas os próprios.
+   */
+  listHistory: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(20),
+        offset: z.number().min(0).default(0),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return { items: [], total: 0, sandbox: PIX_SANDBOX };
+      }
+
+      const conditions = [eq(payments.method, "pix")];
+      if (input.startDate) {
+        conditions.push(gte(payments.createdAt, new Date(input.startDate)));
+      }
+      if (input.endDate) {
+        conditions.push(lte(payments.createdAt, new Date(input.endDate)));
+      }
+
+      const items = await db
+        .select()
+        .from(payments)
+        .where(and(...conditions))
+        .orderBy(desc(payments.createdAt))
+        .limit(input.limit)
+        .offset(input.offset);
+
+      return {
+        items: items.map((p) => ({
+          id: p.id,
+          amount: p.amount,
+          status: p.status,
+          txid: p.bankNumber ?? "",
+          endToEndId: p.account ?? "",
+          paymentDate: p.paymentDate?.toISOString() ?? null,
+          confirmedAt: p.confirmedAt?.toISOString() ?? null,
+          createdAt: p.createdAt.toISOString(),
+        })),
+        total: items.length,
+        sandbox: PIX_SANDBOX,
+      };
+    }),
 
   /**
    * Admin: simula confirmação de pagamento (apenas sandbox).

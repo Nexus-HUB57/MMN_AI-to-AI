@@ -1,5 +1,29 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.5.0-sprint3 Fase 10 Sprint 10.3 — PIX History + Nav + Grafana + Firebase prep
+
+### `feat(pix)` — Epic 10.2.5: Endpoint histórico PIX com paginação e filtros de data
+
+- adicionado `pix.listHistory` em `pixRouter.ts`: query Drizzle filtrando `payments.method = "pix"`, paginação `limit/offset`, filtros `startDate/endDate`, imports `eq, desc, and, gte, lte`
+- retorna `{ items[], total, sandbox }` com campos normalizados (txid, endToEndId, confirmedAt, paymentDate)
+
+### `feat(frontend)` — Epic 10.2.6: Página Histórico PIX `/pix/history`
+
+- criada `frontend/src/pages/PixHistory.tsx`: tabela paginada de transações PIX com filtros de data, badges de status (confirmado/pendente/erro), paginação next/prev, botão de atualização
+- rota `/pix/history` registrada no `App.tsx` com lazy import
+
+### `feat(nav)` — Epic 10.2.7: Links PIX no menu lateral
+
+- adicionados `QrCode` e `History` ao import lucide-react de `DashboardLayout.tsx`
+- itens "Checkout PIX" (badge "Novo") e "Histórico PIX" adicionados ao grupo "Geral" após "Pagamentos"
+
+### `feat(observability)` — Epic 10.6.2: Dashboard Grafana — Sprint 10.3
+
+- criado `monitoring/grafana-dashboard.json`: dashboard completo Grafana 10+ para Prometheus
+- painéis: Visão Geral (6 stats), Latência HTTP (p50/p95/p99), Latência tRPC, PIX (taxa QR/confirmados), Eventos de Comissão, Sessões de Agente IA, Heap Node.js, Taxa de Requests
+- UTC timezone configurado para America/Sao_Paulo; auto-refresh 30 s; tag `mmn,nexus,backend,pix,agents`
+- para importar: Grafana → Dashboards → Import → colar JSON ou upload arquivo
+
 ## 2026-05-28 — v1.4.0-sprint2 Fase 10 Sprint 10.2 — PIX Checkout UI + Webhook DB + Login Social
 
 ### `feat(pix)` — Epic 10.2.3: Webhook PIX com persistência no banco

@@ -219,9 +219,10 @@ MMN_AI-to-AI/
 ```bash
 cd backend
 npm install
-npm run build
-node dist/index.js
+npm run dev
 # → http://localhost:3000 (configurável via PORT)
+# Desenvolvimento: tsx watch com hot-reload
+# Produção: npm run build && npm start
 ```
 
 ### Frontend local
@@ -229,16 +230,16 @@ node dist/index.js
 cd frontend
 npm install
 npm run dev
-# → http://localhost:5173
+# → http://localhost:5173 (Vite dev server com HMR)
 ```
 
 ### Build de produção
 ```bash
 # Backend
-cd backend && npm run build      # dist/index.js (~750KB)
+cd backend && npm run build      # dist/index.js (~750KB, esbuild)
 
 # Frontend
-cd frontend && npm run build     # dist/ (assets + index.html)
+cd frontend && npm run build    # dist/ (assets + index.html)
 ```
 
 ---

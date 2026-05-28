@@ -22,6 +22,22 @@ O **Nexus Affil'IA'te** é um SaaS estratégico que unifica:
 
 ---
 
+## ✨ Os 3 principais diferenciais do OnVerso
+
+### 1) Runtime de Skills Operacionais IA com 8 handlers em produção
+
+O sistema entrega um runtime operacional com **8 skills especializados já em produção**, equivalentes a **17,8%** de um roadmap de 45 skills planejados. Esses handlers cobrem desde **copywriting persuasivo** até **segmentação de audiências**, **prospecção outbound** e **análise de tendências**, com execução autônoma e histórico reaproveitável por replay.
+
+### 2) Autonomy Score em tempo real (0-100)
+
+O **Autonomy Score** é um indicador proprietário calculado continuamente com base em **6 dimensões ponderadas**: percentual de tarefas autônomas (30%), acurácia do LLM-as-Judge (20%), cobertura operacional (15%), latência média (15%), aprovação manual (10%) e diversidade de canais (10%). O resultado é exposto em bandas objetivas: `low`, `developing`, `operational` e `advanced`.
+
+### 3) Arquitetura SaaS escalável com governança comercial granular
+
+O OnVerso unifica **rastreamento ponta a ponta**, **comissionamento dinâmico**, **regras de atribuição customizáveis** e uma **fila de aprovações granulares** (`needs_review`) com **RBAC em 5 escopos**: `runtime:read`, `runtime:execute`, `runtime:approve`, `runtime:reject` e `runtime:rerun`. A base técnica combina **Node.js 22 + tRPC + Drizzle ORM em Postgres**, com suporte a execução distribuída via **BullMQ/Redis** e visão analítica em tempo real do **ROI por canal** e **LTV por parceiro**.
+
+---
+
 ## 🏗️ Arquitetura
 
 ```
@@ -272,6 +288,12 @@ SHOPEE_AFFILIATE_USERNAME=...
 ```env
 VITE_TRPC_URL=https://api.oneverso.com.br/api/trpc
 VITE_API_URL=https://api.oneverso.com.br
+
+# Social login (opcional; botões ficam indisponíveis quando ausente)
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_APP_ID=
 ```
 
 ---

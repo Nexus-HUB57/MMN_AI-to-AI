@@ -29,6 +29,7 @@ import bgHome from "@/assets/bg-home.webp";
 
 const NAV_LINKS = [
   { href: "#sobre", label: "// SOBRE" },
+  { href: "#diferenciais", label: "// DIFERENCIAIS" },
   { href: "#competencias", label: "// COMPETÊNCIAS" },
   { href: "#cenarios", label: "// CENÁRIOS" },
   { href: "#metodologia", label: "// MÉTODO" },
@@ -80,6 +81,45 @@ const COMPETENCIES = [
     icon: ShieldCheck,
     title: "Experiência e Personalização",
     text: "Painéis white-label elegantes para os seus parceiros acompanharem suas métricas. Implementação ágil, adaptando a plataforma às regras de negócio da sua empresa, e não o contrário.",
+  },
+];
+
+const DIFFERENTIALS = [
+  {
+    icon: Cpu,
+    marker: "01",
+    title: "Runtime de Skills Operacionais IA com 8 handlers em produção",
+    summary:
+      "O OnVerso executa tarefas comerciais com 8 skills especializados já operando em produção, equivalentes a 17,8% do roadmap de 45 skills. O runtime cobre copywriting persuasivo, segmentação de audiências, prospecção outbound e análise de tendências, com execução autônoma e replay de histórico.",
+    highlights: [
+      "8 skills operacionais reais registradas no dispatcher",
+      "17,8% do roadmap total de 45 skills planejados",
+      "Handlers otimizados para afiliados, creators e growth comercial",
+    ],
+  },
+  {
+    icon: Activity,
+    marker: "02",
+    title: "Autonomy Score em tempo real (0-100)",
+    summary:
+      "O Autonomy Score mede a maturidade operacional do sistema em seis dimensões ponderadas: percentual de tarefas autônomas (30%), acurácia do LLM-as-Judge (20%), cobertura operacional (15%), latência média (15%), aprovação manual (10%) e diversidade de canais (10%).",
+    highlights: [
+      "Bandas claras: low, developing, operational e advanced",
+      "Leitura contínua da evolução do runtime sem depender de feeling operacional",
+      "Transparência objetiva para tecnologia, operação e governança",
+    ],
+  },
+  {
+    icon: ShieldCheck,
+    marker: "03",
+    title: "Arquitetura SaaS escalável com governança comercial granular",
+    summary:
+      "A plataforma unifica rastreamento ponta a ponta, comissionamento dinâmico, regras de atribuição customizáveis e fila de aprovações needs_review com RBAC em 5 escopos: runtime:read, runtime:execute, runtime:approve, runtime:reject e runtime:rerun. A base técnica combina Node.js 22, tRPC e Drizzle ORM sobre Postgres, com execução distribuída via BullMQ/Redis.",
+    highlights: [
+      "Visão analítica em tempo real do ROI por canal e LTV por parceiro",
+      "Trilha auditável completa para decisões, replays e aprovações",
+      "Stack preparada para escala empresarial com baixa latência",
+    ],
   },
 ];
 
@@ -341,6 +381,47 @@ export default function Home() {
                 <div>
                   <h3 className="text-base font-semibold text-white mb-1">{title}</h3>
                   <p className="text-sm leading-relaxed text-slate-300">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* DIFERENCIAIS */}
+      <section id="diferenciais" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60">
+        <div className="mx-auto max-w-6xl space-y-8">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// TRÊS PRINCIPAIS DIFERENCIAIS</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">O que torna o OnVerso uma operação SaaS orientada a autonomia real</h2>
+            <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-300">
+              Mais do que discurso de automação, o produto entrega runtime operacional com handlers reais, medição contínua de autonomia e governança comercial pronta para escala corporativa.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {DIFFERENTIALS.map(({ icon: Icon, marker, title, summary, highlights }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-obsidian-700 bg-obsidian-800/30 p-6 transition hover:border-quantum-cyan/40 hover:bg-obsidian-800/50"
+              >
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-quantum-cyan/10 text-quantum-cyan">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="rounded-full border border-quantum-cyan/30 bg-quantum-cyan/5 px-2.5 py-1 text-[10px] font-mono uppercase tracking-[0.28em] text-quantum-cyan">
+                    {marker}
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-300">{summary}</p>
+                <div className="mt-4 space-y-2">
+                  {highlights.map((item) => (
+                    <div key={item} className="flex items-start gap-2 text-sm text-slate-200">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

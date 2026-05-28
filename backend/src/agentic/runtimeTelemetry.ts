@@ -28,16 +28,17 @@ const ring: RuntimeExecutionRecord[] = [];
 const judgeRing: number[] = [];
 
 function tryPersist(record: RuntimeExecutionRecord): void {
-  // Best-effort: importa dinamicamente para não falhar quando o módulo de DB
-  // estiver em fallback in-memory. Erros são silenciados.
+  // Best-effort: importa dinamicamente o repositório de telemetria. Quando o
+  // DATABASE_URL está configurado, grava na tabela `agent_telemetry`; caso
+  // contrário é no-op silencioso.
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const db = require("../../../database/schemas/db");
-    if (typeof db?.createAgentTelemetryRecord === "function") {
-      Promise.resolve(db.createAgentTelemetryRecord(record)).catch(() => undefined);
+    const repo = require("./telemetryRepository");
+    if (typeof repo?.persistTelemetry === "function") {
+      Promise.resolve(repo.persistTelemetry(record)).catch(() => undefined);
     }
   } catch {
-    // sem DB disponível — segue só em memória
+    // módulo não resolvido — segue só em memória
   }
 }
 

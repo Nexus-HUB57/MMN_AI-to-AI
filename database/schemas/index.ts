@@ -7,4 +7,5 @@ export * from "./schema-final";
 export * from "./banking-schema";
 export * from "./marketplace-schema";
 export * from "./agentic";
+export * from "./agentTelemetry";
 export * from "./schema-cron";

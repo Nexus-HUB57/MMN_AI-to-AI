@@ -46,6 +46,7 @@ const MENU_ITEMS = [
   { label: "Materiais", path: "/admin/materials", icon: FileText },
   { label: "Logs", path: "/admin/logs", icon: Activity },
   { label: "Agendamentos", path: "/admin/schedules", icon: CalendarClock },
+  { label: "Runtime Skills", path: "/admin/runtime", icon: Zap },
   { label: "Status Sistema", path: "/admin/status", icon: Database },
   { label: "Configuracoes", path: "/admin/settings", icon: Settings },
 ] as const;

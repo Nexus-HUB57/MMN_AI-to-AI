@@ -21,6 +21,7 @@ const AdminDelinquents = lazy(() => import("./pages/AdminDelinquents"));
 const AdminMaterials = lazy(() => import("./pages/AdminMaterials"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 const AdminSchedules = lazy(() => import("./pages/AdminSchedules"));
+const AdminRuntime = lazy(() => import("./pages/AdminRuntime"));
 
 const AffiliateProfile = lazy(() => import("./pages/AffiliateProfile"));
 const AffiliatePayments = lazy(() => import("./pages/AffiliatePayments"));
@@ -434,6 +435,7 @@ export default function App() {
             <Route path="/admin/materials" component={AdminMaterials} />
             <Route path="/admin/logs" component={ExecutionLogs} />
             <Route path="/admin/schedules" component={AdminSchedules} />
+            <Route path="/admin/runtime" component={AdminRuntime} />
             <Route path="/admin/settings" component={AdminSettings} />
             <Route path="/admin/status" component={SystemStatus} />
             <Route component={NotFound} />

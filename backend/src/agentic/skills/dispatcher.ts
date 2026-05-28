@@ -4,6 +4,7 @@ import { copywriterPersuasivoHandler } from "./copywriterPersuasivo";
 import { detectorTendenciasHandler } from "./detectorTendencias";
 import { autoPublisherHandler } from "./autoPublisher";
 import { judgeRevisorHandler } from "./judgeRevisor";
+import { prospeccaoOutboundHandler } from "./prospeccaoOutbound";
 import type {
   SkillExecutionContext,
   SkillExecutionResult,
@@ -27,6 +28,7 @@ const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [detectorTendenciasHandler.slug]: detectorTendenciasHandler,
   [autoPublisherHandler.slug]: autoPublisherHandler,
   [judgeRevisorHandler.slug]: judgeRevisorHandler,
+  [prospeccaoOutboundHandler.slug]: prospeccaoOutboundHandler,
 };
 
 export function listRegisteredSkillHandlers(): Array<{

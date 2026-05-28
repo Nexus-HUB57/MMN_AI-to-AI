@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
+import { invokeLLM } from "../../services/llm-v2";
 import { recordJudgeEvaluation } from "../runtimeTelemetry";
 import type {
   SkillExecutionContext,
@@ -221,13 +222,58 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
           ? "Artefato promissor, mas com lacunas operacionais ou de canal — recomendar ajuste antes de publicar."
           : "Artefato reprovado: risco de compliance e/ou ausência de elementos operacionais essenciais.";
 
+    // Modo elevado: se OPENAI_API_KEY estiver disponível, consulta o LLM como
+    // segunda opinião e funde a nota (média ponderada 60% heurística + 40% LLM)
+    // mantendo a rubrica heurística como ground truth auditavel.
+    let finalScore = score;
+    let finalVerdict = verdict;
+    let finalReasoning = reasoning;
+    let llmUsed = false;
+
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        const response = await invokeLLM({
+          modelType: "gpt-4.1-mini",
+          fallbackToGeneric: true,
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "system",
+              content:
+                "Você é um LLM-as-Judge para conteúdo de marketing de afiliados. Avalie clareza, intenção comercial, encaixe de canal, compliance publicitário e operacionalidade. Responda JSON: { score: 0-100, verdict: pass|revise|fail, reasoning: string }.",
+            },
+            {
+              role: "user",
+              content: JSON.stringify({ artifact, goal: input.goal, audience: input.audience, constraints: input.constraints }),
+            },
+          ],
+        });
+        const parsed = JSON.parse(response.content) as {
+          score?: number;
+          verdict?: JudgeOutput["verdict"];
+          reasoning?: string;
+        };
+        if (parsed && typeof parsed.score === "number") {
+          const llmScore = Math.max(0, Math.min(100, parsed.score));
+          finalScore = Math.round(score * 0.6 + llmScore * 0.4);
+          finalVerdict = verdictFor(finalScore);
+          if (parsed.reasoning) {
+            finalReasoning = `${reasoning} | LLM: ${parsed.reasoning}`;
+          }
+          llmUsed = true;
+        }
+      } catch (error) {
+        console.warn("[judgeRevisor] Fallback heurístico — LLM indisponível:", error);
+      }
+    }
+
     // Registra na telemetria para alimentar Autonomy Score real (judgeAccuracyPct).
-    recordJudgeEvaluation(score);
+    recordJudgeEvaluation(finalScore);
 
     const decision: SkillExecutionResult["decision"] =
-      !context.autonomyAllowed || verdict === "fail"
+      !context.autonomyAllowed || finalVerdict === "fail"
         ? "needs_review"
-        : verdict === "revise"
+        : finalVerdict === "revise"
           ? "needs_review"
           : "auto";
 
@@ -238,14 +284,14 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
       decision,
       latencyMs: Date.now() - startedAt,
       output: {
-        score,
-        verdict,
+        score: finalScore,
+        verdict: finalVerdict,
         rubric,
-        reasoning,
+        reasoning: finalReasoning,
         suggestions,
       },
       warnings: suggestions,
-      message: `Judge ${verdict.toUpperCase()} (score ${score}).`,
+      message: `Judge ${finalVerdict.toUpperCase()} (score ${finalScore})${llmUsed ? " · LLM ativo" : " · heurístico"}.`,
     };
   },
 };

@@ -15,7 +15,8 @@ export type SkillSlug =
   | "auto-publisher"
   | "follow-up-strategist"
   | "judge-revisor"
-  | "analytics-reporter";
+  | "analytics-reporter"
+  | "audience-segmenter";
 
 export interface SkillExecutionContext {
   agentId: number;

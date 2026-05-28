@@ -5,12 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Activity,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
   Cpu,
   Gauge,
   Play,
   RefreshCw,
   Send,
   ShieldCheck,
+  XCircle,
   Zap,
 } from "lucide-react";
 
@@ -100,7 +104,36 @@ const FALLBACK_HANDLERS: SkillHandlerSummary[] = [
   { slug: "judge-revisor", title: "LLM-as-Judge · Revisor", category: "decision", version: "1.0.0", supportsAutonomous: true },
   { slug: "prospeccao-outbound", title: "Prospecção Outbound", category: "sales", version: "1.0.0", supportsAutonomous: true },
   { slug: "follow-up-strategist", title: "Follow-Up Strategist", category: "retention", version: "1.0.0", supportsAutonomous: true },
+  { slug: "analytics-reporter", title: "Analytics Reporter", category: "analytics", version: "1.0.0", supportsAutonomous: true },
+  { slug: "audience-segmenter", title: "Audience Segmenter", category: "intelligence", version: "1.0.0", supportsAutonomous: true },
 ];
+
+interface ExecutionHistoryItem {
+  id: string;
+  skill: string;
+  success: boolean;
+  decision: "auto" | "needs_review";
+  latencyMs: number;
+  warningsCount: number;
+  inputSummary: string;
+  triggeredBy: string;
+  createdAt: string;
+}
+
+interface AnalyticsLatest {
+  status: { running: boolean; intervalHours: number; reportsStored: number; lastError: string | null };
+  latest: {
+    generatedAt: string;
+    triggeredBy: "cron" | "manual";
+    decision: "auto" | "needs_review";
+    output: {
+      summary: string;
+      metrics: Record<string, number | null>;
+      healthSignals: Array<{ severity: "ok" | "warn" | "critical"; message: string }>;
+      recommendations: string[];
+    };
+  } | null;
+}
 
 interface WorkerStats {
   enqueued: number;
@@ -241,14 +274,38 @@ export default function AdminRuntime() {
   const [backendOnline, setBackendOnline] = useState(false);
   const [running, setRunning] = useState<string | null>(null);
   const [lastRun, setLastRun] = useState<{ slug: string; success: boolean; message: string } | null>(null);
+  const [dispatchers, setDispatchers] = useState<Record<string, "real" | "stub"> | null>(null);
+  const [approvals, setApprovals] = useState<{
+    stats: { pending: number; approved: number; rejected: number; total: number };
+    items: Array<{
+      id: string;
+      executionId: string;
+      skill: string;
+      status: "pending" | "approved" | "rejected";
+      warnings: string[];
+      createdAt: string;
+      resolutionNote?: string;
+      channelHint?: string;
+    }>;
+  }>({ stats: { pending: 0, approved: 0, rejected: 0, total: 0 }, items: [] });
+  const [executionHistory, setExecutionHistory] = useState<{
+    stats: { total: number; successRate: number; avgLatencyMs: number; bySkill: Record<string, number> };
+    items: ExecutionHistoryItem[];
+  }>({ stats: { total: 0, successRate: 0, avgLatencyMs: 0, bySkill: {} }, items: [] });
+  const [analyticsLatest, setAnalyticsLatest] = useState<AnalyticsLatest | null>(null);
+  const [replaying, setReplaying] = useState<string | null>(null);
 
   const refresh = async () => {
     setLoading(true);
-    const [h, t, a, w] = await Promise.all([
+    const [h, t, a, w, d, ap, eh, an] = await Promise.all([
       fetchTrpcQuery<{ total: number; handlers: SkillHandlerSummary[] }>("agentSkillsRuntime.listHandlers"),
       fetchTrpcQuery<TelemetrySnapshot>("agentSkillsRuntime.telemetry"),
       fetchTrpcQuery<AutonomyResult>("agentSkillsRuntime.autonomyScore"),
       fetchTrpcQuery<WorkerStats>("agentSkillsRuntime.workerStats"),
+      fetchTrpcQuery<Record<string, "real" | "stub">>("agentSkillsRuntime.dispatcherStatus"),
+      fetchTrpcQuery<typeof approvals>("agentSkillsRuntime.approvalsList"),
+      fetchTrpcQuery<typeof executionHistory>("agentSkillsRuntime.executionHistory"),
+      fetchTrpcQuery<AnalyticsLatest>("agentSkillsRuntime.analyticsLatest"),
     ]);
     const anyResponse = Boolean(h || t || a || w);
     setBackendOnline(anyResponse);
@@ -256,8 +313,40 @@ export default function AdminRuntime() {
     if (t) setTelemetry(t);
     if (a) setAutonomy(a);
     if (w) setWorker(w);
+    if (d) setDispatchers(d);
+    if (ap) setApprovals(ap);
+    if (eh) setExecutionHistory(eh);
+    if (an) setAnalyticsLatest(an);
     setLastSync(new Date().toISOString());
     setLoading(false);
+  };
+
+  const replayExecution = async (id: string) => {
+    setReplaying(id);
+    setLastRun(null);
+    try {
+      const response = await fetch(`${getTrpcBaseUrl()}/agentSkillsRuntime.executionReplay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ id }),
+      });
+      const json = await response.json();
+      if (!response.ok) {
+        setLastRun({ slug: id, success: false, message: json?.error?.message ?? `HTTP ${response.status}` });
+      } else {
+        const replay = json?.result?.data?.replay;
+        setLastRun({
+          slug: id,
+          success: Boolean(replay?.success),
+          message: `Replay: ${replay?.message ?? `decisão ${replay?.decision}`}`,
+        });
+      }
+    } catch (error) {
+      setLastRun({ slug: id, success: false, message: (error as Error).message });
+    }
+    setReplaying(null);
+    void refresh();
   };
 
   const runSkill = async (slug: string) => {
@@ -546,6 +635,208 @@ export default function AdminRuntime() {
             <p className="text-[11px] text-text-secondary">Nenhuma publicação pendente na fila.</p>
           )}
         </Card>
+
+        {/* APROVAÇÕES needs_review */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-yellow-300" /> Fila de Aprovações de Runtime
+            </h2>
+            <div className="flex items-center gap-3 text-xs">
+              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 text-yellow-300">
+                <Clock className="h-3 w-3" /> {approvals.stats.pending} pendente(s)
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-accent-green">
+                <CheckCircle className="h-3 w-3" /> {approvals.stats.approved} aprovada(s)
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-red-300">
+                <XCircle className="h-3 w-3" /> {approvals.stats.rejected} rejeitada(s)
+              </span>
+            </div>
+          </div>
+          {approvals.items.length === 0 ? (
+            <p className="text-[11px] text-text-secondary">
+              Nenhuma execução pendente de revisão. Quando uma skill terminar com
+              <code className="mx-1 rounded bg-background/40 px-1">needs_review</code>,
+              ela aparece aqui para o admin decidir.
+            </p>
+          ) : (
+            <div className="space-y-2 max-h-80 overflow-y-auto">
+              {approvals.items.slice(0, 10).map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-border/60 bg-background/40 p-3 space-y-2"
+                >
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2">
+                      <code className="text-[11px] text-text-secondary">{item.id.slice(0, 18)}</code>
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${
+                          item.status === "pending"
+                            ? "border-yellow-500/30 text-yellow-300"
+                            : item.status === "approved"
+                              ? "border-accent-green/30 text-accent-green"
+                              : "border-red-500/30 text-red-300"
+                        }`}
+                      >
+                        {item.status}
+                      </Badge>
+                      <span className="text-xs text-foreground">{item.skill}</span>
+                    </div>
+                    <span className="text-[11px] text-text-secondary">
+                      {new Date(item.createdAt).toLocaleString("pt-BR")}
+                    </span>
+                  </div>
+                  {item.warnings.length > 0 && (
+                    <ul className="text-[11px] text-text-secondary space-y-0.5 pl-3 list-disc">
+                      {item.warnings.slice(0, 4).map((warning, idx) => (
+                        <li key={`${item.id}-w-${idx}`}>{warning}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        {/* HISTÓRICO DE EXECUÇÕES + REPLAY */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Clock className="h-4 w-4 text-accent-cyan" /> Histórico de execuções
+            </h2>
+            <div className="flex items-center gap-3 text-[11px] text-text-secondary">
+              <span>Total: <strong className="text-foreground">{executionHistory.stats.total}</strong></span>
+              <span>Sucesso: <strong className="text-foreground">{executionHistory.stats.successRate}%</strong></span>
+              <span>Latência média: <strong className="text-foreground">{executionHistory.stats.avgLatencyMs}ms</strong></span>
+            </div>
+          </div>
+          {executionHistory.items.length === 0 ? (
+            <p className="text-[11px] text-text-secondary">
+              Nenhuma execução registrada. Use o painel acima para disparar a primeira.
+            </p>
+          ) : (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {executionHistory.items.slice(0, 15).map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-border/60 bg-background/40 p-3 flex items-center justify-between gap-3 flex-wrap"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <code className="text-[11px] text-text-secondary">{item.id.slice(0, 16)}</code>
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${
+                          item.success
+                            ? "border-accent-green/30 text-accent-green"
+                            : "border-red-500/30 text-red-300"
+                        }`}
+                      >
+                        {item.success ? "✓" : "✗"}
+                      </Badge>
+                      <span className="text-xs text-foreground">{item.skill}</span>
+                      <span className="text-[10px] text-text-secondary">
+                        · {item.decision} · {item.latencyMs}ms
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[11px] text-text-secondary truncate">
+                      {item.inputSummary}
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={replaying === item.id}
+                    onClick={() => void replayExecution(item.id)}
+                    className="gap-1"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${replaying === item.id ? "animate-spin" : ""}`} />
+                    {replaying === item.id ? "Replay..." : "Rerun"}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        {/* DISPATCHERS STATUS */}
+        {dispatchers && (
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Send className="h-4 w-4 text-accent-cyan" /> Dispatchers de canal
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {Object.keys(dispatchers).map((channel) => (
+                <span
+                  key={channel}
+                  className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] ${
+                    dispatchers[channel] === "real"
+                      ? "border-accent-green/30 bg-accent-green/10 text-accent-green"
+                      : "border-border bg-background/40 text-text-secondary"
+                  }`}
+                >
+                  {channel}: {dispatchers[channel]}
+                </span>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {/* CRON ANALYTICS */}
+        {analyticsLatest?.latest && (
+          <Card className="p-6 border-blue-500/20 bg-blue-500/5">
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <Gauge className="h-4 w-4 text-blue-300" /> Último relatório do cron (analytics)
+              </h2>
+              <div className="flex items-center gap-2 text-[11px] text-text-secondary">
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 ${
+                    analyticsLatest.status.running
+                      ? "border-accent-green/30 bg-accent-green/10 text-accent-green"
+                      : "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                  }`}
+                >
+                  Cron {analyticsLatest.status.running ? "ativo" : "parado"} · a cada {analyticsLatest.status.intervalHours}h
+                </span>
+                <span>{analyticsLatest.status.reportsStored} relatório(s) em memória</span>
+              </div>
+            </div>
+            <p className="text-sm text-foreground mb-3">{analyticsLatest.latest.output.summary}</p>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {analyticsLatest.latest.output.healthSignals.map((signal, idx) => (
+                <span
+                  key={`signal-${idx}`}
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] ${
+                    signal.severity === "critical"
+                      ? "border-red-500/30 bg-red-500/10 text-red-300"
+                      : signal.severity === "warn"
+                        ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                        : "border-accent-green/30 bg-accent-green/10 text-accent-green"
+                  }`}
+                >
+                  [{signal.severity}] {signal.message}
+                </span>
+              ))}
+            </div>
+            {analyticsLatest.latest.output.recommendations.length > 0 && (
+              <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-text-secondary mb-2">Recomendações</p>
+                <ul className="text-[11px] text-foreground space-y-1 list-disc list-inside">
+                  {analyticsLatest.latest.output.recommendations.map((rec, idx) => (
+                    <li key={`rec-${idx}`}>{rec}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <p className="mt-3 text-[10px] text-text-secondary">
+              Gerado em {new Date(analyticsLatest.latest.generatedAt).toLocaleString("pt-BR")} via {analyticsLatest.latest.triggeredBy}
+            </p>
+          </Card>
+        )}
 
         {telemetry.skillsExercised.length > 0 && (
           <Card className="p-6">

@@ -21,6 +21,25 @@ import {
   getApprovalStats,
   listApprovals,
 } from "../agentic/approvalsQueue";
+import {
+  getExecution,
+  getExecutionStats,
+  listExecutions,
+  recordExecution,
+} from "../agentic/executionHistory";
+import {
+  getAnalyticsCronStatus,
+  getLatestAnalyticsReport,
+  listAnalyticsReports,
+  startAnalyticsCron,
+  triggerAnalyticsReportNow,
+} from "../agentic/analyticsCron";
+import {
+  deriveRuntimeScopes,
+  hasRuntimeScope,
+} from "../agentic/runtimeRbac";
+
+startAnalyticsCron();
 
 // Inicializa o worker uma vez quando o router é carregado.
 startAutoPublisherWorker();
@@ -98,6 +117,20 @@ export const agentSkillsRuntimeRouter = router({
         latencyMs: result.latencyMs,
         channel: input.channelHint,
         warningsCount: result.warnings?.length ?? 0,
+      });
+
+      // Histórico com replay
+      recordExecution({
+        executionId: result.executionId,
+        skill: input.slug,
+        success: result.success,
+        decision: result.decision,
+        latencyMs: result.latencyMs,
+        warningsCount: result.warnings?.length ?? 0,
+        input: input.input,
+        output: result.output,
+        channelHint: input.channelHint,
+        triggeredBy: `user:${ctx.user.id}`,
       });
 
       // Quando a política determina needs_review, cria entrada na fila de
@@ -191,6 +224,14 @@ export const agentSkillsRuntimeRouter = router({
       }),
     )
     .mutation(({ ctx, input }) => {
+      // RBAC granular: requer escopo específico por tipo de decisão.
+      const requiredScope = input.decision === "approved" ? "runtime:approve" : "runtime:reject";
+      if (!hasRuntimeScope(ctx, requiredScope)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `Permissão insuficiente: requer escopo ${requiredScope}.`,
+        });
+      }
       const resolvedBy = `user:${ctx.user.id}`;
       const item = decideApproval(input.id, input.decision, resolvedBy, input.note);
       if (!item) {
@@ -200,6 +241,104 @@ export const agentSkillsRuntimeRouter = router({
         });
       }
       return item;
+    }),
+
+  myScopes: protectedProcedure.query(({ ctx }) => ({
+    scopes: deriveRuntimeScopes(ctx),
+    role: ctx.user.role ?? null,
+  })),
+
+  executionHistory: publicProcedure
+    .input(
+      z
+        .object({
+          skill: z.string().min(2).max(80).optional(),
+          limit: z.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(({ input }) => ({
+      stats: getExecutionStats(),
+      items: listExecutions({ skill: input?.skill, limit: input?.limit }),
+    })),
+
+  executionReplay: protectedProcedure
+    .input(z.object({ id: z.string().min(5).max(120) }))
+    .mutation(async ({ ctx, input }) => {
+      if (!hasRuntimeScope(ctx, "runtime:rerun")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permissão insuficiente: requer escopo runtime:rerun.",
+        });
+      }
+      const original = getExecution(input.id);
+      if (!original) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Execução ${input.id} não encontrada no histórico.`,
+        });
+      }
+      if (!hasSkillHandler(original.skill)) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `Handler ${original.skill} não mais disponível.`,
+        });
+      }
+      const replayResult = await executeSkill({
+        slug: original.skill,
+        rawInput: original.input,
+        context: {
+          agentId: -1,
+          userId: ctx.user.id,
+          agentName: "Replay",
+          performanceScore: 50,
+          autonomyAllowed: true,
+          channelHint: original.channelHint,
+        },
+      });
+      addExecution({
+        skill: original.skill,
+        decision: replayResult.decision,
+        success: replayResult.success,
+        latencyMs: replayResult.latencyMs,
+        channel: original.channelHint,
+        warningsCount: replayResult.warnings?.length ?? 0,
+      });
+      recordExecution({
+        executionId: replayResult.executionId,
+        skill: original.skill,
+        success: replayResult.success,
+        decision: replayResult.decision,
+        latencyMs: replayResult.latencyMs,
+        warningsCount: replayResult.warnings?.length ?? 0,
+        input: original.input,
+        output: replayResult.output,
+        channelHint: original.channelHint,
+        triggeredBy: `replay:user:${ctx.user.id}`,
+      });
+      return { original: original.id, replay: replayResult };
+    }),
+
+  analyticsLatest: publicProcedure.query(() => ({
+    status: getAnalyticsCronStatus(),
+    latest: getLatestAnalyticsReport(),
+  })),
+
+  analyticsReports: publicProcedure
+    .input(z.object({ limit: z.number().int().min(1).max(20).optional() }).optional())
+    .query(({ input }) => listAnalyticsReports(input?.limit ?? 10)),
+
+  analyticsTrigger: protectedProcedure
+    .input(z.object({}).optional())
+    .mutation(async ({ ctx }) => {
+      if (!hasRuntimeScope(ctx, "runtime:execute")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permissão insuficiente: requer escopo runtime:execute.",
+        });
+      }
+      const report = await triggerAnalyticsReportNow();
+      return report;
     }),
 
   autonomyScore: publicProcedure

@@ -3,6 +3,7 @@ import {
   Activity,
   ArrowRight,
   BarChart3,
+  Bot,
   Briefcase,
   Calendar,
   CheckCircle2,
@@ -20,6 +21,7 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
+  UserPlus,
   Users,
   Zap,
 } from "lucide-react";
@@ -213,6 +215,22 @@ export default function Home() {
             className="inline-flex items-center gap-1 rounded-md border border-quantum-cyan/40 bg-quantum-cyan/10 px-3 py-1.5 text-xs font-semibold text-quantum-cyan transition hover:bg-quantum-cyan/20"
           >
             Entrar <ArrowRight className="h-3 w-3" />
+          </Link>
+          {/* Botão Cadastrar com ícone de robô IA pulsante (ativação do Agente) */}
+          <Link
+            href="/cadastro"
+            className="group relative inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-quantum-cyan via-quantum-violet to-quantum-purple px-3 py-1.5 text-xs font-semibold text-obsidian shadow-lg shadow-quantum-cyan/30 transition hover:opacity-90"
+            aria-label="Cadastrar e ativar Agente IA"
+          >
+            <span className="relative inline-flex h-4 w-4 items-center justify-center">
+              <Bot className="h-4 w-4" />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 -m-0.5 rounded-full border border-obsidian/40 animate-ping"
+              />
+            </span>
+            <span>Cadastrar</span>
+            <UserPlus className="h-3 w-3 opacity-80" />
           </Link>
         </div>
       </nav>

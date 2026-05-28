@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 
 import { copywriterPersuasivoHandler } from "./copywriterPersuasivo";
 import { detectorTendenciasHandler } from "./detectorTendencias";
+import { autoPublisherHandler } from "./autoPublisher";
+import { judgeRevisorHandler } from "./judgeRevisor";
 import type {
   SkillExecutionContext,
   SkillExecutionResult,
@@ -23,6 +25,8 @@ import type {
 const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [copywriterPersuasivoHandler.slug]: copywriterPersuasivoHandler,
   [detectorTendenciasHandler.slug]: detectorTendenciasHandler,
+  [autoPublisherHandler.slug]: autoPublisherHandler,
+  [judgeRevisorHandler.slug]: judgeRevisorHandler,
 };
 
 export function listRegisteredSkillHandlers(): Array<{

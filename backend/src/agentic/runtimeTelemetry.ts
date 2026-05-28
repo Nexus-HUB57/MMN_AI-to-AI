@@ -1,17 +1,15 @@
 /**
- * Telemetria operacional em memória do runtime de skills.
+ * Telemetria operacional do runtime de skills.
  * -----------------------------------------------------------------------------
- * Mantém uma janela rolante das últimas execuções (default 200) para alimentar
- * o cálculo do Autonomy Score com números reais (não estimativas).
+ * Camada in-memory com janela rolante (default 200 execuções) que alimenta o
+ * cálculo real do Autonomy Score. Mantém também a média móvel das avaliações
+ * do LLM-as-Judge (`judge-revisor`) para preencher `judgeAccuracyPct` real.
  *
- * Esta é uma camada in-memory intencional: o objetivo é registrar telemetria
- * imediata sem depender de DB. Quando o Postgres do Render estiver online,
- * o registro pode ser duplicado para persistência sem alterar a API pública.
- *
- * Estrutura:
- *  - addExecution(record) → adiciona uma execução à janela.
- *  - getTelemetry() → snapshot agregado pronto para o Autonomy Score.
- *  - resetTelemetry() → utilitário de testes.
+ * Persistência opcional:
+ *  - Se o banco estiver disponível e o módulo `database/schemas/db` exportar
+ *    `createAgentTelemetryRecord`, replicamos cada execução em best-effort
+ *    sem bloquear a resposta. Isso permite sobrevivência a restarts no
+ *    Render quando o Postgres estiver provisionado.
  */
 
 export interface RuntimeExecutionRecord {
@@ -25,7 +23,23 @@ export interface RuntimeExecutionRecord {
 }
 
 const MAX_WINDOW = 200;
+const MAX_JUDGE_WINDOW = 50;
 const ring: RuntimeExecutionRecord[] = [];
+const judgeRing: number[] = [];
+
+function tryPersist(record: RuntimeExecutionRecord): void {
+  // Best-effort: importa dinamicamente para não falhar quando o módulo de DB
+  // estiver em fallback in-memory. Erros são silenciados.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const db = require("../../../database/schemas/db");
+    if (typeof db?.createAgentTelemetryRecord === "function") {
+      Promise.resolve(db.createAgentTelemetryRecord(record)).catch(() => undefined);
+    }
+  } catch {
+    // sem DB disponível — segue só em memória
+  }
+}
 
 export function addExecution(record: Omit<RuntimeExecutionRecord, "at"> & { at?: number }): void {
   const entry: RuntimeExecutionRecord = {
@@ -36,10 +50,21 @@ export function addExecution(record: Omit<RuntimeExecutionRecord, "at"> & { at?:
   if (ring.length > MAX_WINDOW) {
     ring.splice(0, ring.length - MAX_WINDOW);
   }
+  tryPersist(entry);
+}
+
+export function recordJudgeEvaluation(score: number): void {
+  if (!Number.isFinite(score)) return;
+  const normalized = Math.max(0, Math.min(100, score));
+  judgeRing.push(normalized);
+  if (judgeRing.length > MAX_JUDGE_WINDOW) {
+    judgeRing.splice(0, judgeRing.length - MAX_JUDGE_WINDOW);
+  }
 }
 
 export function resetTelemetry(): void {
   ring.length = 0;
+  judgeRing.length = 0;
 }
 
 export interface RuntimeTelemetrySnapshot {
@@ -54,10 +79,25 @@ export interface RuntimeTelemetrySnapshot {
   activeChannels: number;
   /** lista das skills executadas com pelo menos uma execução na janela. */
   skillsExercised: string[];
+  /** Acurácia média do LLM-as-Judge (0-100), `null` se ainda não houver avaliação. */
+  judgeAccuracyPct: number | null;
+  /** quantidade de avaliações do judge na janela rolante. */
+  judgeSampleSize: number;
   windowSizeMax: number;
+  judgeWindowSizeMax: number;
 }
 
 export function getTelemetry(): RuntimeTelemetrySnapshot {
+  const base: Omit<RuntimeTelemetrySnapshot, "autonomousTasksPct" | "manualApprovalPct" | "avgLatencyMs" | "activeChannels" | "skillsExercised" | "sampleSize"> = {
+    judgeAccuracyPct:
+      judgeRing.length === 0
+        ? null
+        : Math.round(judgeRing.reduce((acc, value) => acc + value, 0) / judgeRing.length),
+    judgeSampleSize: judgeRing.length,
+    windowSizeMax: MAX_WINDOW,
+    judgeWindowSizeMax: MAX_JUDGE_WINDOW,
+  };
+
   if (ring.length === 0) {
     return {
       sampleSize: 0,
@@ -66,7 +106,7 @@ export function getTelemetry(): RuntimeTelemetrySnapshot {
       avgLatencyMs: 0,
       activeChannels: 0,
       skillsExercised: [],
-      windowSizeMax: MAX_WINDOW,
+      ...base,
     };
   }
 
@@ -87,6 +127,6 @@ export function getTelemetry(): RuntimeTelemetrySnapshot {
     avgLatencyMs: Math.round(latencySum / ring.length),
     activeChannels: channels.size,
     skillsExercised: Array.from(skills),
-    windowSizeMax: MAX_WINDOW,
+    ...base,
   };
 }

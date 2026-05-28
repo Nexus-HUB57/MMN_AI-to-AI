@@ -146,12 +146,16 @@ export const agentSkillsRuntimeRouter = router({
 
     const telemetry = getTelemetry();
     const hasRealTelemetry = telemetry.sampleSize >= 5;
+    const judgeAccuracyPct =
+      telemetry.judgeAccuracyPct !== null && telemetry.judgeSampleSize >= 3
+        ? telemetry.judgeAccuracyPct
+        : 78;
 
     return computeAutonomyScore({
       totalSkills,
       operationalSkills: operationalSkills ?? listRegisteredSkillHandlers().length,
       autonomousTasksPct: hasRealTelemetry ? telemetry.autonomousTasksPct : 65,
-      judgeAccuracyPct: 78,
+      judgeAccuracyPct,
       avgLatencyMs: hasRealTelemetry ? telemetry.avgLatencyMs : 1850,
       manualApprovalPct: hasRealTelemetry ? telemetry.manualApprovalPct : 82,
       activeChannels: hasRealTelemetry ? Math.max(telemetry.activeChannels, 1) : 2,

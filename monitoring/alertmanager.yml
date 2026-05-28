@@ -1,0 +1,170 @@
+# Alertmanager Configuration — MMN AI-to-AI
+# Epic 10.6.3 — Sprint 10.6
+#
+# Substitua os valores de ambiente antes de usar em produção.
+# Variáveis de ambiente necessárias:
+#   SLACK_WEBHOOK_CRITICAL  — Webhook URL do canal Slack para alertas críticos
+#   SLACK_WEBHOOK_WARNING   — Webhook URL do canal Slack para alertas de aviso
+#   SMTP_USERNAME           — Usuário do servidor SMTP
+#   SMTP_PASSWORD           — Senha do servidor SMTP
+#   ALERT_EMAIL_FROM        — E-mail de origem
+#   ALERT_EMAIL_CRITICAL    — E-mail(s) para alertas críticos (vírgula-separados)
+#   ALERT_EMAIL_TEAM        — E-mail(s) para alertas de equipe
+#
+# Referência: https://prometheus.io/docs/alerting/latest/configuration/
+
+global:
+  smtp_smarthost: "smtp.gmail.com:587"
+  smtp_from: "${ALERT_EMAIL_FROM}"
+  smtp_auth_username: "${SMTP_USERNAME}"
+  smtp_auth_password: "${SMTP_PASSWORD}"
+  smtp_require_tls: true
+
+  resolve_timeout: 5m
+
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"
+
+route:
+  group_by: ["alertname", "severity", "team"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: "slack-warning"
+
+  routes:
+    # Alertas críticos → Slack crítico + E-mail imediato
+    - matchers:
+        - severity = "critical"
+      receiver: "critical"
+      group_wait: 10s
+      repeat_interval: 30m
+
+    # Alertas de pagamentos/PIX → canal dedicado
+    - matchers:
+        - team = "payments"
+      receiver: "payments-team"
+      group_wait: 1m
+      repeat_interval: 2h
+
+    # Alertas de finanças/comissões → canal finance
+    - matchers:
+        - team = "finance"
+      receiver: "finance-team"
+      group_wait: 5m
+      repeat_interval: 8h
+
+    # Alertas de infraestrutura → infra
+    - matchers:
+        - team = "infra"
+      receiver: "infra-team"
+      group_wait: 2m
+      repeat_interval: 2h
+
+    # Default: todos os warnings → Slack warning
+    - matchers:
+        - severity = "warning"
+      receiver: "slack-warning"
+
+receivers:
+  - name: "critical"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_CRITICAL}"
+        channel: "#mmn-alerts-critical"
+        username: "Prometheus Alertmanager"
+        icon_emoji: ":rotating_light:"
+        title: ":rotating_light: [CRÍTICO] {{ .CommonLabels.alertname }}"
+        text: |
+          *Severity:* {{ .CommonLabels.severity }}
+          *Team:* {{ .CommonLabels.team }}
+          {{ range .Alerts }}
+          *Alert:* {{ .Labels.alertname }}
+          *Description:* {{ .Annotations.description }}
+          *Started:* {{ .StartsAt | since }}
+          {{ end }}
+        send_resolved: true
+    email_configs:
+      - to: "${ALERT_EMAIL_CRITICAL}"
+        require_tls: true
+        headers:
+          Subject: "[CRÍTICO] MMN Alert: {{ .CommonLabels.alertname }}"
+        html: |
+          <h2>🚨 Alerta Crítico — MMN AI-to-AI</h2>
+          <p><strong>Alert:</strong> {{ .CommonLabels.alertname }}</p>
+          <p><strong>Severity:</strong> {{ .CommonLabels.severity }}</p>
+          {{ range .Alerts }}
+          <p><strong>Description:</strong> {{ .Annotations.description }}</p>
+          <p><strong>Summary:</strong> {{ .Annotations.summary }}</p>
+          <p><strong>Started:</strong> {{ .StartsAt }}</p>
+          {{ end }}
+        send_resolved: true
+
+  - name: "slack-warning"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_WARNING}"
+        channel: "#mmn-alerts-warning"
+        username: "Prometheus Alertmanager"
+        icon_emoji: ":warning:"
+        title: ":warning: [AVISO] {{ .CommonLabels.alertname }}"
+        text: |
+          *Severity:* {{ .CommonLabels.severity }}
+          *Team:* {{ .CommonLabels.team }}
+          {{ range .Alerts }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+        send_resolved: true
+
+  - name: "payments-team"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_WARNING}"
+        channel: "#mmn-pagamentos"
+        username: "PIX Monitor"
+        icon_emoji: ":bank:"
+        title: "[PIX/Pagamentos] {{ .CommonLabels.alertname }}"
+        text: |
+          {{ range .Alerts }}*{{ .Annotations.summary }}*
+          {{ .Annotations.description }}{{ end }}
+        send_resolved: true
+    email_configs:
+      - to: "${ALERT_EMAIL_TEAM}"
+        require_tls: true
+        headers:
+          Subject: "[Pagamentos] MMN Alert: {{ .CommonLabels.alertname }}"
+        send_resolved: true
+
+  - name: "finance-team"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_WARNING}"
+        channel: "#mmn-financeiro"
+        username: "Finance Monitor"
+        icon_emoji: ":moneybag:"
+        title: "[Financeiro] {{ .CommonLabels.alertname }}"
+        text: |
+          {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+        send_resolved: true
+
+  - name: "infra-team"
+    slack_configs:
+      - api_url: "${SLACK_WEBHOOK_WARNING}"
+        channel: "#mmn-infra"
+        username: "Infra Monitor"
+        icon_emoji: ":computer:"
+        title: "[Infra] {{ .CommonLabels.alertname }}"
+        text: |
+          {{ range .Alerts }}*{{ .Annotations.summary }}*
+          {{ .Annotations.description }}{{ end }}
+        send_resolved: true
+
+inhibit_rules:
+  # Se o backend está completamente offline, suprimir alertas secundários
+  - source_matchers:
+      - alertname = "BackendDown"
+    target_matchers:
+      - severity = "warning"
+    equal: ["job"]
+
+  # Se p99 crítico, suprimir p95 warning
+  - source_matchers:
+      - alertname = "CriticalHttpLatencyP99"
+    target_matchers:
+      - alertname = "HighHttpLatencyP95"

@@ -1,5 +1,35 @@
 # Changelog MMN AI-to-AI
 
+## 2026-05-28 — v1.8.0-sprint6 Fase 10 Sprint 10.6 — AuthContext Social + pix.refund + CSV Export + Alertmanager
+
+### `feat(auth)` — Epic 10.3.5: AuthContext integra sessão de login social
+
+- `AuthContextType` ampliado com `loginWithSocial(payload: SocialSessionPayload): User`
+- `AuthProvider`: event listener `mmn:social-login` — ao receber evento (emitido por `SocialLoginButtons` após `loginWithFirebaseToken`), chama `loginWithSocial` automaticamente → usuário logado no contexto
+- `loginWithSocial` persiste `{ sessionId, tokenId, provider, expiresAt }` em `SOCIAL_TOKEN_KEY` localStorage
+- `logout` limpa `SOCIAL_TOKEN_KEY`
+
+### `feat(pix)` — Epic 10.8.1: Endpoint `pix.refund`
+
+- `refund` adicionado ao `pixRouter` (protectedProcedure)
+- Em sandbox: retorna `REFUNDED_SIMULATED` sem chamar API externa
+- Em produção: `POST https://api.openpix.com.br/api/v1/refund` com `correlationID`, `chargeCorrelationID`, `value` (centavos), `comment`
+- Input: `{ txid, correlationID?, amount?, reason? }`
+
+### `feat(payments)` — Epic 10.9.1: `payments.exportCommissionsCsv`
+
+- Endpoint `exportCommissionsCsv` (protectedProcedure) no `paymentsRouter`
+- Filtra comissões por `affiliateId`, `status`, `startDate`, `endDate`
+- Gera CSV: `id,affiliateId,amount,status,source,sourceId,type,createdAt`
+- Retorna `{ csvBase64, filename, totalRows, affiliateId }`
+
+### `feat(observability)` — Epic 10.6.3: Alertmanager config
+
+- criado `monitoring/alertmanager.yml`: roteamento por severity/team, 5 receivers (critical, slack-warning, payments-team, finance-team, infra-team)
+- Regras de inibição: BackendDown suprime warnings; CriticalP99 suprime P95 warning
+- Canais Slack: `#mmn-alerts-critical`, `#mmn-alerts-warning`, `#mmn-pagamentos`, `#mmn-financeiro`, `#mmn-infra`
+- Variáveis: `SLACK_WEBHOOK_CRITICAL`, `SLACK_WEBHOOK_WARNING`, `SMTP_*`, `ALERT_EMAIL_*`
+
 ## 2026-05-28 — v1.7.0-sprint5 Fase 10 Sprint 10.5 — Firebase Sessão Completa + OpenPix Dynamic QR
 
 ### `feat(auth)` — Epic 10.3.4: Fluxo Firebase social login completo (sessão + DB)

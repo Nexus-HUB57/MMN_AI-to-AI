@@ -444,6 +444,90 @@ export const paymentsRouter = router({
   }),
 
   /**
+   * Exportar comissões de um afiliado como CSV (Epic 10.9.1)
+   * Admin pode exportar de qualquer afiliado; afiliado exporta apenas as próprias.
+   */
+  exportCommissionsCsv: protectedProcedure
+    .input(
+      z.object({
+        affiliateId: z.number().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        status: z.enum(["pending", "confirmed", "paid", "cancelled"]).optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+      }
+
+      let targetAffiliateId = input.affiliateId;
+
+      if (!targetAffiliateId) {
+        const affiliate = await db
+          .select()
+          .from(affiliates)
+          .where(eq(affiliates.userId, ctx.user.id))
+          .limit(1);
+        if (affiliate.length === 0) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Perfil de afiliado não encontrado." });
+        }
+        targetAffiliateId = affiliate[0].id;
+      }
+
+      if (ctx.user.role === "user" && targetAffiliateId !== ctx.user.id) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Você só pode exportar suas próprias comissões." });
+      }
+
+      const conditions: ReturnType<typeof eq>[] = [eq(commissions.affiliateId, targetAffiliateId)];
+      if (input.status) conditions.push(eq(commissions.status, input.status));
+
+      const rows = await db
+        .select()
+        .from(commissions)
+        .where(and(...conditions))
+        .orderBy(desc(commissions.createdAt));
+
+      // Filtrar por data (em memória, já que datas podem ser strings ISO)
+      const filtered = rows.filter((r) => {
+        if (input.startDate && r.createdAt < new Date(input.startDate)) return false;
+        if (input.endDate && r.createdAt > new Date(input.endDate)) return false;
+        return true;
+      });
+
+      // Gerar CSV
+      const csvLines: string[] = [
+        "id,affiliateId,amount,status,source,sourceId,type,createdAt",
+        ...filtered.map((r) =>
+          [
+            r.id,
+            r.affiliateId,
+            (r.amount / 100).toFixed(2),
+            r.status,
+            r.source ?? "",
+            r.sourceId ?? "",
+            r.commissionType ?? "payment",
+            r.createdAt.toISOString(),
+          ]
+            .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+            .join(","),
+        ),
+      ];
+
+      const csvContent = csvLines.join("\r\n");
+      const csvBase64 = Buffer.from(csvContent, "utf-8").toString("base64");
+      const filename = `comissoes_afiliado_${targetAffiliateId}_${new Date().toISOString().substring(0, 10)}.csv`;
+
+      return {
+        csvBase64,
+        filename,
+        totalRows: filtered.length,
+        affiliateId: targetAffiliateId,
+      };
+    }),
+
+  /**
    * Marcar comissões como pagas (apenas admin)
    */
   markCommissionsAsPaid: adminProcedure

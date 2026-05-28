@@ -18,12 +18,22 @@ interface LoginCredentials {
   role?: UserRole;
 }
 
+interface SocialSessionPayload {
+  uid: string;
+  email: string | null;
+  user: { id: number; name: string | null; email: string | null; role: string; picture?: string | null };
+  sessionId: string;
+  tokenId: string;
+  provider: "google" | "facebook" | "apple";
+}
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (credentials?: LoginCredentials) => Promise<User>;
   loginAsDemo: (role: "admin" | "affiliate", overrides?: Partial<User>) => Promise<User>;
+  loginWithSocial: (payload: SocialSessionPayload) => User;
   logout: () => Promise<void>;
   loginAdmin: (email: string, password: string) => Promise<User>;
 }
@@ -31,6 +41,7 @@ interface AuthContextType {
 const STORAGE_KEY = "mmn-ai-auth-session";
 const ADMIN_TOKEN_KEY = "mmn-ai-admin-token";
 const ADMIN_LOCKOUT_KEY = "mmn-ai-admin-lockout";
+const SOCIAL_TOKEN_KEY = "mmn-ai-social-token";
 const ADMIN_LOCAL_TTL_MS = 12 * 60 * 60 * 1000; // 12h
 const ADMIN_MAX_ATTEMPTS = 5;
 const ADMIN_LOCKOUT_MS = 10 * 60 * 1000; // 10 min
@@ -359,6 +370,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return nextUser;
   };
 
+  const loginWithSocial = (payload: SocialSessionPayload): User => {
+    const socialUser: User = {
+      id: String(payload.user.id),
+      name: payload.user.name ?? payload.email ?? "Usuário",
+      email: payload.user.email ?? payload.email ?? "",
+      role: (payload.user.role as UserRole) ?? "user",
+    };
+
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        SOCIAL_TOKEN_KEY,
+        JSON.stringify({
+          sessionId: payload.sessionId,
+          tokenId: payload.tokenId,
+          provider: payload.provider,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        }),
+      );
+    }
+
+    setUser(socialUser);
+    persistUser(socialUser);
+    return socialUser;
+  };
+
+  // Escuta evento disparado por SocialLoginButtons após login Firebase bem-sucedido
+  useEffect(() => {
+    const handler = (ev: Event) => {
+      const detail = (ev as CustomEvent<SocialSessionPayload>).detail;
+      if (detail?.sessionId && detail?.user) {
+        loginWithSocial(detail);
+      }
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("mmn:social-login", handler);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("mmn:social-login", handler);
+      }
+    };
+  }, []);
+
   const logout = async () => {
     setUser(null);
     persistUser(null);
@@ -368,6 +422,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       window.localStorage.removeItem(STORAGE_KEY);
       window.localStorage.removeItem(ADMIN_TOKEN_KEY);
       window.localStorage.removeItem(ADMIN_LOCKOUT_KEY);
+      window.localStorage.removeItem(SOCIAL_TOKEN_KEY);
     }
   };
 
@@ -378,6 +433,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isAuthenticated: Boolean(user),
       login,
       loginAsDemo,
+      loginWithSocial,
       loginAdmin,
       logout,
     }),

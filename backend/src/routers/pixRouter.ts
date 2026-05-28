@@ -375,6 +375,87 @@ export const pixRouter = router({
     }),
 
   /**
+   * Solicita devolução (estorno) de um pagamento PIX.
+   * Em produção: chama API OpenPix /api/v1/refund.
+   * Em sandbox: simula a devolução.
+   */
+  refund: protectedProcedure
+    .input(
+      z.object({
+        txid: z.string().min(1, "txid obrigatório"),
+        correlationID: z.string().optional(),
+        amount: z.number().min(0.01).optional(),
+        reason: z.string().max(140).optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const refundCorrelationID =
+        input.correlationID ??
+        `refund-${input.txid}-${Date.now().toString(36)}`;
+
+      if (PIX_SANDBOX) {
+        return {
+          ok: true,
+          refundCorrelationID,
+          txid: input.txid,
+          amount: input.amount ?? null,
+          status: "REFUNDED_SIMULATED",
+          sandbox: true,
+          message: "Devolução simulada (sandbox). Em produção exige OPENPIX_TOKEN.",
+        };
+      }
+
+      if (!isOpenPixAvailable()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Devolução PIX requer OPENPIX_TOKEN configurado em produção.",
+        });
+      }
+
+      const OPENPIX_BASE_URL = "https://api.openpix.com.br/api/v1";
+      const OPENPIX_TOKEN = process.env.OPENPIX_TOKEN ?? "";
+
+      const body: Record<string, unknown> = {
+        correlationID: refundCorrelationID,
+        chargeCorrelationID: input.txid,
+        comment: input.reason ?? "Devolução solicitada via MMN AI-to-AI",
+      };
+      if (input.amount !== undefined) {
+        body.value = Math.round(input.amount * 100);
+      }
+
+      const res = await fetch(`${OPENPIX_BASE_URL}/refund`, {
+        method: "POST",
+        headers: {
+          Authorization: OPENPIX_TOKEN,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `OpenPix refund error ${res.status}: ${errText}`,
+        });
+      }
+
+      const data = await res.json();
+
+      return {
+        ok: true,
+        refundCorrelationID,
+        txid: input.txid,
+        amount: input.amount ?? null,
+        status: (data as { refund?: { status?: string } })?.refund?.status ?? "PENDING",
+        sandbox: false,
+        message: "Solicitação de devolução enviada ao OpenPix.",
+      };
+    }),
+
+  /**
    * Admin: simula confirmação de pagamento (apenas sandbox).
    */
   sandboxConfirm: adminProcedure

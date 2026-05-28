@@ -73,6 +73,12 @@ services:
         generateValue: true
       - key: OPENAI_API_KEY
         sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
 
       # ---------------------------------------------------------------------
       # Backoffice Admin server-side (login restrito à Equipe Nexus Affil'IA'te)

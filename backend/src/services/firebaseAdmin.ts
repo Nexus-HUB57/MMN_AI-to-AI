@@ -42,7 +42,7 @@ function getConfig(): FirebaseAdminConfig | null {
   return { projectId, clientEmail, privateKey };
 }
 
-async function getAdmin(): Promise<any | null> {
+export async function getFirebaseAdmin(): Promise<any | null> {
   if (adminInitialized) return adminApp;
   adminInitialized = true;
 
@@ -99,7 +99,7 @@ async function getAdmin(): Promise<any | null> {
 export async function verifyFirebaseIdToken(
   idToken: string,
 ): Promise<{ uid: string; email?: string; name?: string; claims: Record<string, unknown> } | null> {
-  const app = await getAdmin();
+  const app = await getFirebaseAdmin();
   if (!app) return null;
 
   try {
@@ -124,7 +124,7 @@ export async function setCustomClaims(
   uid: string,
   claims: Record<string, unknown>,
 ): Promise<boolean> {
-  const app = await getAdmin();
+  const app = await getFirebaseAdmin();
   if (!app) return false;
 
   try {
@@ -141,7 +141,7 @@ export async function setCustomClaims(
  * Busca dados de um usuário pelo UID.
  */
 export async function getFirebaseUser(uid: string): Promise<FirebaseUserRecord | null> {
-  const app = await getAdmin();
+  const app = await getFirebaseAdmin();
   if (!app) return null;
 
   try {
@@ -166,7 +166,7 @@ export async function getFirebaseUser(uid: string): Promise<FirebaseUserRecord |
  * Revoga todos os tokens de refresh de um usuário (logout forçado).
  */
 export async function revokeUserTokens(uid: string): Promise<boolean> {
-  const app = await getAdmin();
+  const app = await getFirebaseAdmin();
   if (!app) return false;
 
   try {
@@ -183,11 +183,12 @@ export async function revokeUserTokens(uid: string): Promise<boolean> {
  * Verifica se o Firebase Admin está disponível (credenciais configuradas e SDK carregado).
  */
 export async function isFirebaseAdminAvailable(): Promise<boolean> {
-  const app = await getAdmin();
+  const app = await getFirebaseAdmin();
   return app !== null;
 }
 
 export default {
+  getFirebaseAdmin,
   verifyFirebaseIdToken,
   setCustomClaims,
   getFirebaseUser,

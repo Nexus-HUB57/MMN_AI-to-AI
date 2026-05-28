@@ -32,6 +32,12 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
   const [socialError, setSocialError] = useState<string | null>(null);
   const firebaseReady = isFirebaseConfigured();
 
+  useEffect(() => {
+    if (!socialError) return;
+    const timer = window.setTimeout(() => setSocialError(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [socialError]);
+
   const handleSocial = async (provider: "Google" | "Facebook" | "Apple") => {
     setSocialError(null);
     setLoading(provider);
@@ -194,6 +200,12 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!errorMessage) return;
+    const timer = window.setTimeout(() => setErrorMessage(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [errorMessage]);
 
   const getAffiliateEntryPath = () => {
     const profile = loadMarketplaceProfile();

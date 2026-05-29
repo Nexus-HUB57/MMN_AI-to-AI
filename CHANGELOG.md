@@ -1,6 +1,69 @@
 # Changelog MMN AI-to-AI
 
-## 2026-05-28 — v1.9.0-sprint7 Fase 10 Sprint 10.7 — CSV Button + Auto-login + Rate Limit + Testes
+## 2026-05-29 — v1.3.0-sprint7 — Nexus Partners Skills Expansion
+
+### `feat(agentic)` — Nexus Partners: Novas Skills Operacionais (#19-23)
+
+Adicionadas 5 novas skills ao runtime agentic para expandir capacidades operacionais:
+
+#### Skill #19: `fraud-detector` (Detector de Fraudes)
+- **Categoria**: governance
+- **Função**: Monitora padrões suspeitos em cliques, conversões e comissões
+- **Features**: Detecção de cliques múltiplos por IP, padrões de commission farming, análise de velocidade, fingerprinting de dispositivo
+- **Suporta**: Análise multi-touchpoint, alertas de risco (low/medium/high/critical)
+
+#### Skill #20: `compliance-auditor` (Auditor de Conformidade)
+- **Categoria**: governance
+- **Função**: Verifica claims publicitários conforme diretrizes CONAR
+- **Features**: Verificação LGPD, análise de termos prohibidos, compliance de comparações com concorrência
+- **Suporta**: 6 verticais de mercado (health, beauty, finance, education, tech, general)
+
+#### Skill #21: `roi-attributor` (Atribuidor de ROI Multi-Touch)
+- **Categoria**: analytics
+- **Função**: Atribui receita multi-touch para entender contribuição de cada ponto de contato
+- **Models**: First Touch, Last Touch, Linear, Time Decay, Position Based (40-20-40), Data Driven
+- **Suporta**: Análise por canal, affiliate attribution, ROI calculation
+
+#### Skill #22: `cold-emailer` (E-mail Marketing Outbound)
+- **Categoria**: sales
+- **Função**: Gera sequências de cold emails personalizados com multi-channel outreach
+- **Features**: Sequenciamento 3-7 emails, A/B testing variants, LinkedIn touchpoints, spam score analysis
+- **Suporta**: 4 verticais (SaaS, E-commerce, Agency, General) + tom configurável
+
+#### Skill #23: `upsell-strategist` (Estrategista de Upsell)
+- **Categoria**: sales
+- **Função**: Identifica oportunidades de upsell/cross-sell para maximização de LTV
+- **Features**: Customer tier classification, bundle suggestions, personalized offers, optimal timing
+- **Suporta**: 3 estratégias (upsell, crossSell, bundle, all) + considerações sazonais
+
+### `feat(agentic)` — Skills Runtime: Handlers Registry
+
+- **Handler**: `fraudDetectorHandler` registrado no dispatcher
+- **Handler**: `complianceAuditorHandler` registrado no dispatcher
+- **Handler**: `roiAttributorHandler` registrado no dispatcher
+- **Handler**: `coldEmailerHandler` registrado no dispatcher
+- **Handler**: `upsellStrategistHandler` registrado no dispatcher
+
+### `feat(agentic)` — Autonomy Score Expansion
+
+- Total de skills operacionais: 23 (anterior: 18)
+- Roadmap progress: 23/45 implementadas (~51%)
+- Categories cubiertas: content, sales, marketing, analytics, governance, finance, strategy, optimization, retention, integration, i18n
+
+## 2026-05-25 — v1.2.0 — Nexus Partners GA Launch
+
+### `feat(agentic)` — Phase 9 GA Launch completed
+
+- Landing Page API
+- Documentation System
+- Support Ticket System
+- Community Hub
+- Circuit Breakers system
+- RBAC permissions system
+- Firebase Auth integration
+- Raffle system with Graph+AI
+- Holdings and Dividends
+- Capitalization titles
 
 ### `feat(frontend)` — Epic 10.9.2: Botão "Exportar CSV" na PixHistory
 

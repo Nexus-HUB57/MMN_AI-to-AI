@@ -18,6 +18,11 @@ import { contentTranslatorHandler } from "./contentTranslator";
 import { creatorMatcherHandler } from "./creatorMatcher";
 import { lifecycleOrchestratorHandler } from "./lifecycleOrchestrator";
 import { webhookRouterHandler } from "./webhookRouter";
+import { fraudDetectorHandler } from "./fraudDetector";
+import { complianceAuditorHandler } from "./complianceAuditor";
+import { roiAttributorHandler } from "./roiAttributor";
+import { coldEmailerHandler } from "./coldEmailer";
+import { upsellStrategistHandler } from "./upsellStrategist";
 import type {
   SkillExecutionContext,
   SkillExecutionResult,
@@ -55,6 +60,11 @@ const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [creatorMatcherHandler.slug]: creatorMatcherHandler,
   [lifecycleOrchestratorHandler.slug]: lifecycleOrchestratorHandler,
   [webhookRouterHandler.slug]: webhookRouterHandler,
+  [fraudDetectorHandler.slug]: fraudDetectorHandler,
+  [complianceAuditorHandler.slug]: complianceAuditorHandler,
+  [roiAttributorHandler.slug]: roiAttributorHandler,
+  [coldEmailerHandler.slug]: coldEmailerHandler,
+  [upsellStrategistHandler.slug]: upsellStrategistHandler,
 };
 
 export function listRegisteredSkillHandlers(): Array<{

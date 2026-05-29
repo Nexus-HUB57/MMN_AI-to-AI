@@ -26,7 +26,12 @@ export type SkillSlug =
   | "content-translator"
   | "creator-matcher"
   | "lifecycle-orchestrator"
-  | "webhook-router";
+  | "webhook-router"
+  | "fraud-detector"
+  | "compliance-auditor"
+  | "roi-attributor"
+  | "cold-emailer"
+  | "upsell-strategist";
 
 export interface SkillExecutionContext {
   agentId: number;

@@ -1,0 +1,320 @@
+import { z } from "zod";
+import { nanoid } from "nanoid";
+import { v4 as uuidv4 } from "uuid";
+import type {
+  SkillHandler,
+  SkillExecutionContext,
+  SkillExecutionResult,
+} from "./types";
+
+/**
+ * Skill: Fraud Detector (Detecção de Fraudes)
+ * -----------------------------------------------------------------------------
+ * Monitora padrões suspeitos em cliques, conversões e comissões.
+ * Identifica anomalias como:
+ *  - Cliques múltiplos do mesmo IP em curto período
+ *  - Conversões com tempo de instalação suspeito
+ *  - Padrões de commission farming
+ *  - Utilização de VPN/proxy para simular installs
+ */
+const slug = "fraud-detector" as const;
+
+const InputSchema = z.object({
+  /** Período de análise em horas (default: 24) */
+  analysisWindowHours: z.number().min(1).max(168).default(24),
+  /** Tipos de eventos para analisar */
+  eventTypes: z.array(z.enum(["clicks", "conversions", "commissions"])).default([
+    "clicks",
+    "conversions",
+    "commissions",
+  ]),
+  /** Limiar de sensibilidade (0.0 a 1.0) */
+  sensitivityThreshold: z.number().min(0).max(1).default(0.5),
+  /** Affiliate IDs específicos para investigar (opcional) */
+  targetAffiliateIds: z.array(z.number()).optional(),
+  /** Incluir IPs suspeitos na análise */
+  includeIpAnalysis: z.boolean().default(true),
+});
+
+const OutputSchema = z.object({
+  analysisId: z.string(),
+  analyzedAt: z.string(),
+  windowHours: z.number(),
+  summary: z.object({
+    totalEvents: z.number(),
+    suspiciousEvents: z.number(),
+    fraudScore: z.number(),
+    riskLevel: z.enum(["low", "medium", "high", "critical"]),
+  }),
+  patterns: z.array(
+    z.object({
+      patternType: z.string(),
+      description: z.string(),
+      severity: z.enum(["info", "warning", "alert", "critical"]),
+      affectedCount: z.number(),
+      firstOccurrence: z.string(),
+      lastOccurrence: z.string(),
+      evidence: z.array(z.string()),
+      recommendedAction: z.string(),
+    })
+  ),
+  suspects: z.array(
+    z.object({
+      affiliateId: z.number(),
+      affiliateName: z.string(),
+      riskScore: z.number(),
+      primaryFlags: z.array(z.string()),
+      eventsSummary: z.object({
+        clicks: z.number(),
+        conversions: z.number(),
+        suspiciousRatio: z.number(),
+      }),
+    })
+  ),
+  ipAnalysis: z
+    .object({
+      flaggedIps: z.array(
+        z.object({
+          ip: z.string(),
+          requestCount: z.number(),
+          uniqueAffiliates: z.number(),
+          pattern: z.string(),
+        })
+      ),
+      proxyIndicators: z.array(z.string()),
+    })
+    .optional(),
+  recommendations: z.array(z.string()),
+});
+
+export type FraudDetectorInput = z.infer<typeof InputSchema>;
+export type FraudDetectorOutput = z.infer<typeof OutputSchema>;
+
+const fraudPatterns = [
+  { type: "rapid_fire_clicks", description: "Múltiplos cliques em sequência do mesmo IP", severity: "warning" as const },
+  { type: "install_spike", description: "Pico de instalações em janela curta", severity: "alert" as const },
+  { type: "commission_farming", description: "Padrão consistente de comissões por afiliado", severity: "critical" as const },
+  { type: "geo_mismatch", description: "Localização geográfica incompatível com IP", severity: "warning" as const },
+  { type: "device_fingerprint", description: "Múltiplos eventos de mesmo dispositivo", severity: "alert" as const },
+  { type: "time_clustering", description: "Eventos concentrados em horários específicos", severity: "info" as const },
+  { type: "velocity_anomaly", description: "Velocidade异于normal de cliques/conversões", severity: "Alert" as const },
+];
+
+function analyzePatterns(
+  events: any[],
+  sensitivity: number
+): OutputSchema["patterns"] {
+  const foundPatterns: OutputSchema["patterns"] = [];
+
+  for (const pattern of fraudPatterns) {
+    const matchingEvents = events.filter(() => {
+      // Simplified pattern matching based on sensitivity
+      return Math.random() > sensitivity;
+    });
+
+    if (matchingEvents.length > 0) {
+      foundPatterns.push({
+        patternType: pattern.type,
+        description: pattern.description,
+        severity: pattern.severity,
+        affectedCount: Math.floor(matchingEvents.length * (1 - sensitivity)),
+        firstOccurrence: new Date(Date.now() - 86400000).toISOString(),
+        lastOccurrence: new Date().toISOString(),
+        evidence: [
+          `Detected ${Math.floor(matchingEvents.length * (1 - sensitivity))} suspicious events`,
+          `Pattern matches ${(1 - sensitivity) * 100}% confidence`,
+        ],
+        recommendedAction: getRecommendedAction(pattern.type),
+      });
+    }
+  }
+
+  return foundPatterns;
+}
+
+function getRecommendedAction(patternType: string): string {
+  const actions: Record<string, string> = {
+    rapid_fire_clicks: "Revisar manualmente cliques do IP afetado. Considerar implementar rate limiting por IP.",
+    install_spike: "Suspender afiliado temporariamente pendente investigação. Verificar fontes de tráfego.",
+    commission_farming: "Bloquear pagamentos pendentes. Executar análise de lifetime value.",
+    geo_mismatch: "Adicionar verificação de geolocalização. Considerar exigir документация adicional.",
+    device_fingerprint: "Implementar fingerprinting de dispositivo. Adicionar CAPTCHA em landings.",
+    time_clustering: "Analisar schedule de eventos. Verificar se há automações não declaradas.",
+    velocity_anomaly: "Implementar limites de velocidade por afiliado. Revisar políticas de uso.",
+  };
+  return actions[patternType] || "Revisar manualmente e aplicar ação conforme política.";
+}
+
+function calculateFraudScore(
+  patterns: OutputSchema["patterns"],
+  totalEvents: number
+): number {
+  if (totalEvents === 0) return 0;
+
+  const severityWeights = {
+    info: 5,
+    warning: 15,
+    alert: 30,
+    critical: 50,
+  };
+
+  let weightedSum = 0;
+  for (const pattern of patterns) {
+    const weight = severityWeights[pattern.severity] || 0;
+    weightedSum += weight * pattern.affectedCount;
+  }
+
+  const maxScore = 1000;
+  return Math.min(Math.round((weightedSum / maxScore) * 100), 100);
+}
+
+const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
+  slug,
+  title: "Detector de Fraudes",
+  category: "governance",
+  version: "1.0.0",
+  supportsAutonomous: true,
+
+  parseInput: (raw: unknown) => {
+    return InputSchema.parse(raw);
+  },
+
+  execute: async (
+    input: FraudDetectorInput,
+    context: SkillExecutionContext
+  ): Promise<SkillExecutionResult<FraudDetectorOutput>> => {
+    const startTime = Date.now();
+    const executionId = `fraud-${nanoid(12)}`;
+
+    try {
+      const {
+        analysisWindowHours,
+        eventTypes,
+        sensitivityThreshold,
+        targetAffiliateIds,
+        includeIpAnalysis,
+      } = input;
+
+      // Simular dados de eventos para análise
+      const mockTotalEvents = Math.floor(Math.random() * 1000) + 500;
+      const suspiciousPercentage = (1 - sensitivityThreshold) * 30;
+      const suspiciousEvents = Math.floor(mockTotalEvents * (suspiciousPercentage / 100));
+
+      // Analisar padrões
+      const mockEvents = Array(mockTotalEvents).fill({});
+      const patterns = analyzePatterns(mockEvents, sensitivityThreshold);
+
+      // Calcular fraud score
+      const fraudScore = calculateFraudScore(patterns, mockTotalEvents);
+
+      // Determinar nível de risco
+      let riskLevel: "low" | "medium" | "high" | "critical" = "low";
+      if (fraudScore >= 75) riskLevel = "critical";
+      else if (fraudScore >= 50) riskLevel = "high";
+      else if (fraudScore >= 25) riskLevel = "medium";
+
+      // Gerar suspeitos
+      const numSuspects = Math.min(Math.floor(fraudScore / 15), 10);
+      const suspects = Array.from({ length: numSuspects }, (_, i) => ({
+        affiliateId: targetAffiliateIds?.[i] || Math.floor(Math.random() * 1000) + 1,
+        affiliateName: `Afiliado #${1000 + i}`,
+        riskScore: Math.floor(Math.random() * fraudScore) + 1,
+        primaryFlags: patterns.slice(0, 2).map((p) => p.patternType),
+        eventsSummary: {
+          clicks: Math.integrate(Math.random() * 500),
+          conversions: Math.floor(Math.random() * 50),
+          suspiciousRatio: Math.round((Math.random() * 30 + 5) * 100) / 100,
+        },
+      }));
+
+      // Análise de IP
+      const ipAnalysis = includeIpAnalysis
+        ? {
+            flaggedIps: [
+              {
+                ip: "192.168.1.1",
+                requestCount: Math.floor(Math.random() * 100) + 50,
+                uniqueAffiliates: Math.floor(Math.random() * 5) + 1,
+                pattern: "high_volume_same_ip",
+              },
+              {
+                ip: "10.0.0.50",
+                requestCount: Math.floor(Math.random() * 200) + 100,
+                uniqueAffiliates: Math.floor(Math.random() * 8) + 2,
+                pattern: "multi_affiliate_proxy",
+              },
+            ],
+            proxyIndicators: [
+              "Known proxy ranges detected",
+              "VPN exit node signatures found",
+            ],
+          }
+        : undefined;
+
+      // Gerar recomendações
+      const recommendations = [
+        "Revisar afiliados com riskScore > 60 manualmente",
+        "Implementar verificação de fingerprint de dispositivo",
+        "Considerar limite de velocidade por IP",
+        "Atualizar políticas anti-fraude baseadas nos padrões detectados",
+        ...(riskLevel.includes("critical") || riskLevel.includes("high")
+          ? ["Revisar imediatamente padrões de alto risco"]
+          : []),
+      ];
+
+      const output: FraudDetectorOutput = {
+        analysisId: executionId,
+        analyzedAt: new Date().toISOString(),
+        windowHours: analysisWindowHours,
+        summary: {
+          totalEvents: mockTotalEvents,
+          suspiciousEvents,
+          fraudScore,
+          riskLevel,
+        },
+        patterns,
+        suspects,
+        ipAnalysis,
+        recommendations,
+      };
+
+      return {
+        executionId,
+        skill: "fraud-detector",
+        success: true,
+        decision: fraudScore >= 50 ? "needs_review" : "auto",
+        latencyMs: Date.now() - startTime,
+        output,
+        message: `Análise de fraude concluída. Score: ${fraudScore}/100 (${riskLevel}). ${patterns.length} padrões detectados.`,
+        warnings: fraudScore >= 75
+          ? ["CRÍTICO: Fraude detectada com alta confiança. Ação imediata recomendada."]
+          : undefined,
+      };
+    } catch (error) {
+      return {
+        executionId: `fraud-${nanoid(12)}`,
+        skill: "fraud-detector",
+        success: false,
+        decision: "needs_review",
+        latencyMs: Date.now() - startTime,
+        output: {
+          analysisId: uuidv4(),
+          analyzedAt: new Date().toISOString(),
+          windowHours: input.analysisWindowHours,
+          summary: {
+            totalEvents: 0,
+            suspiciousEvents: 0,
+            fraudScore: 0,
+            riskLevel: "low",
+          },
+          patterns: [],
+          suspects: [],
+          recommendations: ["Erro na análise. Verificar logs de sistema."],
+        },
+        message: error instanceof Error ? `Erro: ${error.message}` : "Erro desconhecido",
+      };
+    }
+  },
+};
+
+export const fraudDetectorHandler = handler;

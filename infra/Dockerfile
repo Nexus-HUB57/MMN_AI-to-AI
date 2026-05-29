@@ -8,42 +8,36 @@
 
 # ---------- Stage 1: build do Frontend (React + Vite) ----------
 FROM node:22-alpine AS frontend-builder
-WORKDIR /repo
+WORKDIR /repo/frontend
 
-# Manifests do workspace
-COPY package.json package-lock.json* ./
-COPY frontend/package.json ./frontend/
-
-# Instala dependências do workspace frontend
-# (npm ci falha sem package-lock atualizado; usamos install com legacy peer deps
-#  porque o workspace mobile tem dependências do Expo que não impactam o build do front)
-RUN npm install --workspace frontend --include-workspace-root --legacy-peer-deps --no-audit --no-fund
+# Instala apenas as dependências do frontend.
+# Não usamos o workspace raiz aqui porque o monorepo inclui o app mobile Expo,
+# e versões inválidas/indisponíveis desse workspace podem quebrar o deploy web.
+COPY frontend/package.json ./package.json
+RUN npm install --workspaces=false --legacy-peer-deps --no-audit --no-fund
 
 # Código-fonte do frontend
-COPY frontend ./frontend
-COPY tsconfig*.json ./
+COPY frontend ./
 
 # Build (gera frontend/dist)
-RUN npm run build --workspace frontend
+RUN npm run build
 
 # ---------- Stage 2: build do Backend (tRPC + Drizzle) ----------
 FROM node:22-alpine AS backend-builder
-WORKDIR /repo
+WORKDIR /repo/backend
 
-COPY package.json package-lock.json* ./
-COPY backend/package.json ./backend/
+COPY backend/package.json ./package.json
 
-# drizzle-orm é dependência runtime, garantida no package.json do backend
-RUN npm install --workspace backend --include-workspace-root --legacy-peer-deps --no-audit --no-fund
+# Instala apenas as dependências do backend, isolando o deploy do workspace mobile.
+RUN npm install --workspaces=false --legacy-peer-deps --no-audit --no-fund
 
 # Backend + schemas/migrations compartilhados
-COPY backend ./backend
-COPY database ./database
-COPY infra ./infra
-COPY tsconfig*.json ./
+COPY backend ./
+COPY database /repo/database
+COPY infra /repo/infra
 
 # Build (gera backend/dist via esbuild)
-RUN npm run build --workspace backend
+RUN npm run build
 
 # ---------- Stage 3: imagem final de produção ----------
 FROM node:22-alpine AS runner

@@ -425,7 +425,7 @@ const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
         "Manter registro de aprovações para auditoria futura",
         ...(overallStatus === "needs_revision" || overallStatus === "rejected"
           ? ["Solicitar revisão legal antes da publicação"]
-          : []:),
+          : []),
       ];
 
       // Gerar versão revisada do texto
@@ -487,7 +487,7 @@ const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
           violations: [
             {
               id: `vr-${nanoid(6)}`,
-           severity: "critical" as const,
+              severity: "critical" as const,
               category: "conar_violation" as const,
               description: "Erro no processamento do conteúdo",
               term: "",

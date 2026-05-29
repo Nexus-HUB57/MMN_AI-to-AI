@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
 import { getOperationalInventory, type OperationalStockItem } from "@/lib/nexus-marketplace";
+import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
 import {
   buildMiniSiteCatalogItem,
   getMiniSiteCatalogEventName,
@@ -34,7 +36,13 @@ function formatCurrency(cents: number) {
 
 export default function AffiliateMiniSite() {
   const { profile } = useMarketplaceProfile();
+  const { isAuthenticated } = useAuth();
   const [catalog, setCatalog] = useState<MiniSiteCatalogItem[]>(() => loadMiniSiteCatalog());
+
+  const showcaseProfile = useMemo(
+    () => resolveShowcaseMarketplaceProfile(profile, isAuthenticated),
+    [isAuthenticated, profile],
+  );
 
   useEffect(() => {
     const refresh = () => setCatalog(loadMiniSiteCatalog());
@@ -51,8 +59,8 @@ export default function AffiliateMiniSite() {
   }, []);
 
   const availableStock = useMemo(
-    () => getOperationalInventory(profile).filter((item) => isSyncableItem(item) && item.availableForAgent),
-    [profile],
+    () => getOperationalInventory(showcaseProfile).filter((item) => isSyncableItem(item) && item.availableForAgent),
+    [showcaseProfile],
   );
 
   const previewCatalog = useMemo(
@@ -92,13 +100,13 @@ export default function AffiliateMiniSite() {
             <div className="flex flex-wrap gap-3 pt-2">
               <Link href="/estoque">
                 <Button className="gradient-btn">
-                  Gerenciar estoque
+                  {isAuthenticated ? "Gerenciar estoque" : "Abrir loja virtual"}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/marketplaces">
+              <Link href={isAuthenticated ? "/marketplaces" : "/login"}>
                 <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
-                  Abrir marketplace
+                  {isAuthenticated ? "Abrir marketplace" : "Entrar no painel"}
                   <Store className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -149,6 +157,11 @@ export default function AffiliateMiniSite() {
                 <p className="mt-2">
                   Estoque → sincronização com agente → mini-site → apresentação automatizada → checkout operacional.
                 </p>
+                {!isAuthenticated && (
+                  <p className="mt-2 text-slate-300">
+                    No modo público, a vitrine usa um inventário demonstrativo para você testar o fluxo completo antes do login.
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

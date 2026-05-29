@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
   getOperationalInventory,
   type OperationalStockItem,
 } from "@/lib/nexus-marketplace";
+import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
 import { NEXUS_PARTNERS, getPartnerBySlug, type PartnerConfig } from "@/lib/nexus-partners";
 import { buildMarketplaceCheckoutUrl, parseCurrencyTextToCents } from "@/lib/marketplace-payments";
 import {
@@ -151,8 +153,14 @@ function isSyncableItem(item: OperationalStockItem) {
 
 export default function Estoque() {
   const { profile } = useMarketplaceProfile();
+  const { isAuthenticated } = useAuth();
   const [tab, setTab] = useState<Tab>("produtos");
   const [catalogVersion, setCatalogVersion] = useState(0);
+
+  const showcaseProfile = useMemo(
+    () => resolveShowcaseMarketplaceProfile(profile, isAuthenticated),
+    [isAuthenticated, profile],
+  );
 
   const partnersQuery = trpc.partners.list.useQuery(undefined, {
     retry: 0,
@@ -167,7 +175,7 @@ export default function Estoque() {
     },
   );
 
-  const stockItems = useMemo(() => getOperationalInventory(profile), [profile]);
+  const stockItems = useMemo(() => getOperationalInventory(showcaseProfile), [showcaseProfile]);
   const myProducts = stockItems.filter((item) => isSyncableItem(item));
   const packsActivated = stockItems.filter((item) => item.type === "pack");
 
@@ -213,9 +221,8 @@ export default function Estoque() {
     setCatalogVersion((current) => current + 1);
   };
 
-  return (
-    <DashboardLayout>
-      <div className="space-y-8">
+  const content = (
+    <div className="space-y-8">
         <section className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/5 p-4 text-sm text-quantum-cyan/90">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
@@ -533,8 +540,13 @@ export default function Estoque() {
           </>
         )}
       </div>
-    </DashboardLayout>
   );
+
+  if (!isAuthenticated) {
+    return <PublicStockShell>{content}</PublicStockShell>;
+  }
+
+  return <DashboardLayout>{content}</DashboardLayout>;
 }
 
 function StockProductCard({
@@ -648,6 +660,42 @@ function KpiBlock({ label, value, tone }: { label: string; value: ReactNode; ton
     <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center backdrop-blur">
       <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500">{label}</p>
       <p className={`mt-1 text-xl font-bold ${tone}`}>{value}</p>
+    </div>
+  );
+}
+
+function PublicStockShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.1),transparent_25%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.12),transparent_30%),linear-gradient(180deg,#020617,#0f172a_38%,#111827)] text-white">
+      <section className="border-b border-white/10 px-6 py-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-3">
+            <p className="inline-flex rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-quantum-cyan">
+              Loja virtual pública Nexus
+            </p>
+            <div>
+              <h1 className="text-3xl font-black tracking-tight md:text-4xl">Estoque operacional em modo vitrine</h1>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+                Você está vendo a versão pública da loja virtual. Os produtos abaixo usam um perfil comercial de demonstração para liberar a experiência
+                <strong className="text-white"> /estoque → sincronização → /minisite</strong> no navegador, mesmo sem login.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link href="/minisite">
+              <Button className="gradient-btn">Abrir mini-site</Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                Entrar no painel
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-7xl px-6 py-10">{children}</main>
     </div>
   );
 }

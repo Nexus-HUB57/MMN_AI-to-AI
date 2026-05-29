@@ -16,7 +16,17 @@ export type SkillSlug =
   | "follow-up-strategist"
   | "judge-revisor"
   | "analytics-reporter"
-  | "audience-segmenter";
+  | "audience-segmenter"
+  | "funnel-architect"
+  | "lead-enricher"
+  | "objection-handler"
+  | "pricing-optimizer"
+  | "ab-test-designer"
+  | "commission-calculator"
+  | "content-translator"
+  | "creator-matcher"
+  | "lifecycle-orchestrator"
+  | "webhook-router";
 
 export interface SkillExecutionContext {
   agentId: number;

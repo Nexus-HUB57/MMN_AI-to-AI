@@ -1,6 +1,6 @@
 # 🛣️ Roadmap · Nexus Affil'IA'te
 
-> Plano de evolução de curto, médio e longo prazo. Atualizado em **2026-05-28**.
+> Plano de evolução de curto, médio e longo prazo. Atualizado em **2026-05-29**.
 
 ---
 
@@ -8,9 +8,9 @@
 
 | Métrica | Valor |
 |---|---|
-| Skills operacionais | **8 / 45** (17.8%) |
+| Skills operacionais | **18 / 45** (40.0%) |
 | Autonomy Score (input realista) | **77** (operational) |
-| Categorias cobertas | content, intelligence, publishing, decision, sales, retention, analytics |
+| Categorias cobertas | content, intelligence, publishing, decision, sales, retention, analytics, strategy, finance, i18n, optimization, integration |
 | Canais de distribuição | 5 (whatsapp, email, facebook, instagram, landing) |
 | Dispatchers reais prontos | 3 (whatsapp, email, facebook) |
 | Páginas frontend | Home, Login, Cadastro, AdminDashboard, AdminRuntime + 10 outras admin |

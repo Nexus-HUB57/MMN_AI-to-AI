@@ -8,6 +8,16 @@ import { prospeccaoOutboundHandler } from "./prospeccaoOutbound";
 import { followUpStrategistHandler } from "./followUpStrategist";
 import { analyticsReporterHandler } from "./analyticsReporter";
 import { audienceSegmenterHandler } from "./audienceSegmenter";
+import { funnelArchitectHandler } from "./funnelArchitect";
+import { leadEnricherHandler } from "./leadEnricher";
+import { objectionHandlerHandler } from "./objectionHandler";
+import { pricingOptimizerHandler } from "./pricingOptimizer";
+import { abTestDesignerHandler } from "./abTestDesigner";
+import { commissionCalculatorHandler } from "./commissionCalculator";
+import { contentTranslatorHandler } from "./contentTranslator";
+import { creatorMatcherHandler } from "./creatorMatcher";
+import { lifecycleOrchestratorHandler } from "./lifecycleOrchestrator";
+import { webhookRouterHandler } from "./webhookRouter";
 import type {
   SkillExecutionContext,
   SkillExecutionResult,
@@ -35,6 +45,16 @@ const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [followUpStrategistHandler.slug]: followUpStrategistHandler,
   [analyticsReporterHandler.slug]: analyticsReporterHandler,
   [audienceSegmenterHandler.slug]: audienceSegmenterHandler,
+  [funnelArchitectHandler.slug]: funnelArchitectHandler,
+  [leadEnricherHandler.slug]: leadEnricherHandler,
+  [objectionHandlerHandler.slug]: objectionHandlerHandler,
+  [pricingOptimizerHandler.slug]: pricingOptimizerHandler,
+  [abTestDesignerHandler.slug]: abTestDesignerHandler,
+  [commissionCalculatorHandler.slug]: commissionCalculatorHandler,
+  [contentTranslatorHandler.slug]: contentTranslatorHandler,
+  [creatorMatcherHandler.slug]: creatorMatcherHandler,
+  [lifecycleOrchestratorHandler.slug]: lifecycleOrchestratorHandler,
+  [webhookRouterHandler.slug]: webhookRouterHandler,
 };
 
 export function listRegisteredSkillHandlers(): Array<{

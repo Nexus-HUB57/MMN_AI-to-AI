@@ -43,6 +43,27 @@ const POSITIONING_PILLARS = [
   { label: "Visão Analítica", icon: BarChart3 },
 ];
 
+const PARTNERS_PACK_CARDS = [
+  {
+    icon: Briefcase,
+    title: "Ativação comercial oficial",
+    pill: "Core Business",
+    text: "O Nexus Partners Pack é o produto central de entrada comercial do ecossistema. Ele organiza a jornada de ativação, dá acesso à operação e prepara o terreno para aquisição de packs, biblioteca de produtos e sincronização com o Agente IA.",
+  },
+  {
+    icon: Database,
+    title: "Infraestrutura para catálogo e operação",
+    pill: "Marketplace ready",
+    text: "Ao lado do sistema Nexus Affil'IA'te, o Partners Pack materializa a camada comercial: packs, bibliotecas, revenda, mini-site, fluxo de estoque e governança de produtos prontos para automação e escala.",
+  },
+  {
+    icon: Zap,
+    title: "Conexão direta com automação",
+    pill: "Agente IA",
+    text: "A proposta do pack não é apenas acesso. É ativar uma operação capaz de sincronizar ofertas, acelerar abordagem comercial e transformar materiais digitais em um canal de vendas assistido por IA.",
+  },
+];
+
 const VISION_CARDS = [
   {
     icon: Sparkles,
@@ -312,6 +333,53 @@ export default function Home() {
             >
               Agendar demonstração <Briefcase className="h-4 w-4" />
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 border-t border-obsidian-700/60 bg-[radial-gradient(circle_at_top_right,rgba(124,255,178,0.12),transparent_30%),rgba(2,6,23,0.72)] px-6 py-14">
+        <div className="mx-auto max-w-6xl space-y-8">
+          <div className="text-center space-y-3">
+            <span className="text-xs font-mono uppercase tracking-widest text-quantum-lime">// NEXUS PARTNERS PACK · CORE BUSINESS</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Depois da apresentação oficial do sistema, entra o produto central da operação</h2>
+            <p className="mx-auto max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+              O topo desta página mantém a apresentação institucional oficial do <strong className="text-white">Nexus Affil'IA'te</strong>. Logo abaixo, o <strong className="text-white">Nexus Partners Pack</strong> assume o papel de produto principal do negócio: a porta de entrada comercial para ativação, catálogo, revenda e operação orientada por Agente IA.
+            </p>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-3">
+            {PARTNERS_PACK_CARDS.map(({ icon: Icon, title, pill, text }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-quantum-lime/30"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-quantum-lime/10 text-quantum-lime">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="rounded-full border border-quantum-lime/25 bg-quantum-lime/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.28em] text-quantum-lime">
+                    {pill}
+                  </span>
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{text}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <Link
+              href="/marketplaces"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-quantum-lime to-quantum-cyan px-6 py-3 text-sm font-semibold text-obsidian shadow-lg shadow-quantum-lime/20 transition hover:opacity-90"
+            >
+              Explorar Nexus Partners Pack <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/cadastro"
+              className="inline-flex items-center gap-2 rounded-lg border border-quantum-lime/30 bg-quantum-lime/10 px-6 py-3 text-sm font-semibold text-quantum-lime transition hover:bg-quantum-lime/15"
+            >
+              Ativar acesso inicial <Sparkles className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

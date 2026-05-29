@@ -8,15 +8,22 @@ import { trpc } from "@/lib/trpc";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import {
   EXTERNAL_MARKETPLACES,
+  MARKETPLACE_EBOOKS,
   getOperationalInventory,
   type OperationalStockItem,
 } from "@/lib/nexus-marketplace";
 import { NEXUS_PARTNERS, getPartnerBySlug, type PartnerConfig } from "@/lib/nexus-partners";
 import { buildMarketplaceCheckoutUrl, parseCurrencyTextToCents } from "@/lib/marketplace-payments";
 import {
+  buildMiniSiteCatalogItem,
+  loadMiniSiteCatalog,
+  toggleOperationalItemSync,
+} from "@/lib/minisite-catalog";
+import {
   AlertCircle,
   ArrowRight,
   BookOpen,
+  CheckCircle2,
   ExternalLink,
   Flame,
   Layers,
@@ -24,8 +31,10 @@ import {
   ShoppingBag,
   ShoppingCart,
   Sparkles,
+  Store,
   Tag,
   TrendingUp,
+  Zap,
 } from "lucide-react";
 
 type PartnerFeed = PartnerConfig;
@@ -45,6 +54,8 @@ type TrendingProduct = {
 };
 
 type TrendingCardProduct = TrendingProduct & { color: string };
+
+type Tab = "produtos" | "tendencias";
 
 const TRENDING_FALLBACK: TrendingProduct[] = [
   {
@@ -134,11 +145,14 @@ const PLATFORM_ICONS: Record<string, typeof ShoppingBag> = {
   Tag,
 };
 
-type Tab = "produtos" | "tendencias";
+function isSyncableItem(item: OperationalStockItem) {
+  return item.type === "ebooks" || item.type === "preu";
+}
 
 export default function Estoque() {
   const { profile } = useMarketplaceProfile();
   const [tab, setTab] = useState<Tab>("produtos");
+  const [catalogVersion, setCatalogVersion] = useState(0);
 
   const partnersQuery = trpc.partners.list.useQuery(undefined, {
     retry: 0,
@@ -154,11 +168,21 @@ export default function Estoque() {
   );
 
   const stockItems = useMemo(() => getOperationalInventory(profile), [profile]);
-  const myProducts = stockItems.filter((item) => item.type === "ebooks" || item.type === "preu");
+  const myProducts = stockItems.filter((item) => isSyncableItem(item));
   const packsActivated = stockItems.filter((item) => item.type === "pack");
 
-  const totalEbooks = myProducts.reduce((acc, item) => acc + (item.type === "ebooks" ? item.quantity : 0), 0);
-  const totalPreu = myProducts.reduce((acc, item) => acc + (item.type === "preu" ? item.quantity : 0), 0);
+  const syncedIds = useMemo(() => {
+    const ids = loadMiniSiteCatalog().map((item) => item.sourceItemId);
+    return new Set(ids);
+  }, [catalogVersion]);
+
+  const productsForVitrine = useMemo(
+    () => myProducts.map((item) => ({ item, catalogItem: buildMiniSiteCatalogItem(item) })).filter((entry) => entry.catalogItem),
+    [myProducts],
+  ) as Array<{ item: OperationalStockItem; catalogItem: NonNullable<ReturnType<typeof buildMiniSiteCatalogItem>> }>;
+
+  const totalUnits = myProducts.reduce((acc, item) => acc + item.quantity, 0);
+  const syncedCount = syncedIds.size;
 
   const partners: PartnerFeed[] = useMemo(() => {
     const livePartners = partnersQuery.data?.partners;
@@ -183,6 +207,11 @@ export default function Estoque() {
     const isLive = Boolean(trendingQuery.data?.products?.length);
     return { updatedAt, liveCount, curatedCount, isLive };
   }, [trendingProducts.length, trendingQuery.data]);
+
+  const handleSync = (item: OperationalStockItem) => {
+    toggleOperationalItemSync(item);
+    setCatalogVersion((current) => current + 1);
+  };
 
   return (
     <DashboardLayout>
@@ -217,28 +246,29 @@ export default function Estoque() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-2">
+        <section className="rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+            <div className="space-y-3 max-w-3xl">
               <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                Loja &amp; Operações · Estoque do Agente IA
+                Loja virtual do estoque · produtos prontos para automação
               </Badge>
               <h1 className="text-3xl font-bold text-white md:text-4xl">Meu Estoque</h1>
-              <p className="max-w-3xl text-sm leading-6 text-slate-300 md:text-base">
-                Aqui ficam todos os e-books, PREU e demais materiais que você adquirir, liberados para revenda direta pelo Agente IA. Em <strong className="text-quantum-cyan">Produtos em Alta</strong> você acompanha as melhores oportunidades de comissionamento nas plataformas parceiras.
+              <p className="max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+                Aqui ficam as unidades disponíveis para revenda. Cada produto pode ser exibido em formato de <strong className="text-white">vitrine</strong>, sincronizado com o Agente IA e publicado no <strong className="text-white">mini-site</strong> para vendas automatizadas.
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
-              <KpiBlock label="Packs ativos" value={packsActivated.length} tone="text-quantum-cyan" />
-              <KpiBlock label="E-books" value={totalEbooks.toLocaleString("pt-BR")} tone="text-quantum-lime" />
-              <KpiBlock label="PREU" value={totalPreu.toLocaleString("pt-BR")} tone="text-quantum-purple" />
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <KpiBlock label="Packs ativos" value={packsActivated.length.toString()} tone="text-quantum-cyan" />
+              <KpiBlock label="Produtos" value={myProducts.length.toString()} tone="text-quantum-lime" />
+              <KpiBlock label="Unidades" value={totalUnits.toLocaleString("pt-BR")} tone="text-white" />
+              <KpiBlock label="Sincronizados" value={syncedCount.toString()} tone="text-quantum-purple" />
             </div>
           </div>
         </section>
 
         <div className="flex flex-wrap gap-2">
           <TabButton active={tab === "produtos"} onClick={() => setTab("produtos")}>
-            <Package className="mr-2 h-4 w-4" /> Meus Produtos
+            <Package className="mr-2 h-4 w-4" /> Minha vitrine
           </TabButton>
           <TabButton active={tab === "tendencias"} onClick={() => setTab("tendencias")}>
             <TrendingUp className="mr-2 h-4 w-4" /> Produtos em Alta
@@ -250,20 +280,33 @@ export default function Estoque() {
             <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Layers className="h-5 w-5 text-quantum-cyan" />
-                  Materiais disponíveis para revenda
+                  <Store className="h-5 w-5 text-quantum-cyan" />
+                  Vitrine sincronizável com o mini-site
                 </CardTitle>
                 <CardDescription className="text-slate-300">
-                  Todos os e-books, PREU e bibliotecas adquiridos via Packs ou ativações ficam aqui para uso direto do Agente IA. O agente também pode adquirir mais materiais para revenda quando configurado.
+                  Use o botão <strong className="text-white">Sincronizar com Agente</strong> para publicar o produto no mini-site e habilitar a apresentação automatizada da oferta.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {myProducts.length === 0 ? (
+              <CardContent>
+                {productsForVitrine.length === 0 ? (
                   <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                    Seu estoque ainda está vazio. Faça uma Ativação Mensal ou adquira mais materiais no Marketplace para abastecer o agente.
+                    Seu estoque ainda está vazio. Faça uma ativação mensal ou adquira mais materiais no Marketplace para abastecer o agente.
                   </div>
                 ) : (
-                  myProducts.map((item) => <StockRow key={item.id} item={item} />)
+                  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    {productsForVitrine.map(({ item, catalogItem }) => {
+                      const isSynced = syncedIds.has(item.id);
+                      return (
+                        <StockProductCard
+                          key={item.id}
+                          item={item}
+                          catalogItem={catalogItem}
+                          isSynced={isSynced}
+                          onSync={() => handleSync(item)}
+                        />
+                      );
+                    })}
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -276,7 +319,7 @@ export default function Estoque() {
                     Packs ativos vinculados ao estoque
                   </CardTitle>
                   <CardDescription className="text-slate-400">
-                    Cada pack ativo alimenta o estoque com cota oficial de e-books, PREU e SiSu.
+                    Cada pack alimenta a vitrine com cota oficial de e-books, PREU e demais materiais operacionais.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 md:grid-cols-2">
@@ -298,25 +341,32 @@ export default function Estoque() {
             )}
 
             <Card className="border-amber-400/30 bg-amber-400/5 backdrop-blur">
-              <CardContent className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between">
-                <div className="space-y-1 text-sm text-amber-100">
+              <CardContent className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
+                <div className="space-y-2 text-sm text-amber-100">
                   <p className="inline-flex items-center gap-2 font-semibold text-amber-200">
                     <AlertCircle className="h-4 w-4" />
-                    Cuidados operacionais com o estoque
+                    Fluxo operacional recomendado
                   </p>
                   <p>
-                    Produtos de <strong>Pronta Entrega</strong> exigem atenção redobrada com as quantidades disponíveis. Já os de <strong>Dropshipping</strong> ficam a critério das respectivas plataformas parceiras.
+                    Estoque → sincronização com o agente → mini-site → apresentação automatizada → pagamento.
                   </p>
                   <p className="text-amber-100/80">
-                    Os produtos do estoque acompanham os Packs e podem ser ampliados pelo usuário ou pelo próprio Agente IA via compra de materiais para revenda.
+                    Produtos de <strong>Pronta Entrega</strong> exigem atenção à quantidade disponível. Itens de <strong>Dropshipping</strong> seguem a disponibilidade das plataformas parceiras.
                   </p>
                 </div>
-                <Link href="/marketplaces?focus=monthly-activation">
-                  <Button className="gradient-btn whitespace-nowrap">
-                    Adquirir mais materiais
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/minisite">
+                    <Button className="gradient-btn">
+                      Ver mini-site
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/marketplaces?focus=monthly-activation">
+                    <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                      Comprar mais materiais
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </>
@@ -333,16 +383,12 @@ export default function Estoque() {
                       Produtos em Alta nas plataformas parceiras
                     </CardTitle>
                     <CardDescription className="mt-2 text-slate-300">
-                      Curadoria automática de produtos com alta procura e alto potencial de comissionamento na Shopee, Hotmart e Mercado Livre. Sincronize com o Agente para acelerar prospecção e vendas.
+                      Curadoria automática de produtos com alta procura e alto potencial de comissionamento na Shopee, Hotmart e Mercado Livre.
                     </CardDescription>
                   </div>
                   <div className="flex flex-wrap gap-2 text-xs">
-                    <Badge className="border border-white/10 bg-white/5 text-slate-200">
-                      {feedMeta.liveCount} ao vivo
-                    </Badge>
-                    <Badge className="border border-white/10 bg-white/5 text-slate-200">
-                      {feedMeta.curatedCount} curados
-                    </Badge>
+                    <Badge className="border border-white/10 bg-white/5 text-slate-200">{feedMeta.liveCount} ao vivo</Badge>
+                    <Badge className="border border-white/10 bg-white/5 text-slate-200">{feedMeta.curatedCount} curados</Badge>
                     {trendingQuery.isLoading && (
                       <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
                         Atualizando feed...
@@ -385,23 +431,19 @@ export default function Estoque() {
                       </div>
 
                       <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
-                        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                          {product.fulfillment}
-                        </span>
+                        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{product.fulfillment}</span>
                         <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-quantum-cyan/90">
                           {product.source === "live" ? "Origem: API ao vivo" : "Origem: Curadoria Nexus"}
                         </span>
                         {partner?.affiliateId && (
-                          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                            ID {partner.affiliateId}
-                          </span>
+                          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">ID {partner.affiliateId}</span>
                         )}
                       </div>
 
                       <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
                         <p className="font-medium text-white">Sincronização operacional</p>
                         <p className="mt-1 leading-5">
-                          Envie esta oportunidade para o Agente IA monitorar demanda, montar abordagem comercial e rastrear comissão no ecossistema {partner?.affiliateProfile ?? "Nexus SaaS"}.
+                          Envie esta oportunidade para o Agente IA monitorar demanda e montar abordagem comercial no ecossistema {partner?.affiliateProfile ?? "Nexus SaaS"}.
                         </p>
                       </div>
 
@@ -410,29 +452,29 @@ export default function Estoque() {
                           Sincronizar com Agente
                         </Button>
                         <div className="flex flex-wrap gap-2">
-                        <Link
-                          href={buildMarketplaceCheckoutUrl({
-                            source: "estoque",
-                            type: "produto",
-                            slug: product.id,
-                            name: product.title,
-                            amountCents: parseCurrencyTextToCents(product.avgPrice) ?? undefined,
-                            description: `${product.platform} · ${product.category} · ${product.fulfillment}`,
-                          })}
-                        >
-                          <Button size="sm" className="gradient-btn">
-                            Ir para pagamento
-                            <ArrowRight className="ml-2 h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        {product.productUrl ? (
-                          <a href={product.productUrl} target="_blank" rel="noreferrer">
-                            <Button size="sm" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
-                              Ver oferta externa
-                              <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                          <Link
+                            href={buildMarketplaceCheckoutUrl({
+                              source: "estoque",
+                              type: "produto",
+                              slug: product.id,
+                              name: product.title,
+                              amountCents: parseCurrencyTextToCents(product.avgPrice) ?? undefined,
+                              description: `${product.platform} · ${product.category} · ${product.fulfillment}`,
+                            })}
+                          >
+                            <Button size="sm" className="gradient-btn">
+                              Ir para pagamento
+                              <ArrowRight className="ml-2 h-3.5 w-3.5" />
                             </Button>
-                          </a>
-                        ) : null}
+                          </Link>
+                          {product.productUrl ? (
+                            <a href={product.productUrl} target="_blank" rel="noreferrer">
+                              <Button size="sm" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                                Ver oferta externa
+                                <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                              </Button>
+                            </a>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -488,21 +530,6 @@ export default function Estoque() {
                 })}
               </CardContent>
             </Card>
-
-            <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-xs leading-6 text-amber-100/90">
-              <p className="inline-flex items-center gap-2 font-semibold text-amber-200">
-                <AlertCircle className="h-4 w-4" />
-                Importante
-              </p>
-              <p className="mt-1">
-                É importante <strong>sincronizar estes produtos com o Agente</strong>, para facilitar a prospecção e as vendas.
-              </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5">
-                <li>Produtos de <strong>Pronta Entrega</strong> já adquiridos exigem atenção com a quantidade disponível.</li>
-                <li>Produtos de <strong>Dropshipping</strong> ficam a critério das respectivas plataformas parceiras.</li>
-                <li>Os produtos do estoque acompanham os Packs; usuário e/ou Agente podem adquirir mais materiais para revenda.</li>
-              </ul>
-            </div>
           </>
         )}
       </div>
@@ -510,66 +537,130 @@ export default function Estoque() {
   );
 }
 
-function StockRow({ item }: { item: OperationalStockItem }) {
-  const Icon = item.type === "ebooks" ? BookOpen : item.type === "preu" ? Layers : Package;
-  const resalePrice = item.type === "ebooks" ? "R$ 0,99 / e-book" : item.type === "preu" ? "R$ 24,75 / PREU (25 e-books)" : "—";
+function StockProductCard({
+  item,
+  catalogItem,
+  isSynced,
+  onSync,
+}: {
+  item: OperationalStockItem;
+  catalogItem: NonNullable<ReturnType<typeof buildMiniSiteCatalogItem>>;
+  isSynced: boolean;
+  onSync: () => void;
+}) {
+  const Icon = item.type === "ebooks" ? BookOpen : Layers;
+  const checkoutUrl = buildMarketplaceCheckoutUrl({
+    source: "estoque",
+    type: "produto",
+    slug: item.id,
+    name: `${catalogItem.title} · ${catalogItem.subtitle}`,
+    amountCents: catalogItem.priceCents,
+    description: item.description,
+  });
+  const showcaseTags =
+    item.type === "ebooks"
+      ? MARKETPLACE_EBOOKS.slice(0, 3).map((ebook) => ebook.title)
+      : ["Pack com 25 e-books", "Oferta pronta para revenda", "Ideal para mini-site"]; 
+
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-quantum-cyan">
-            <Icon className="h-4 w-4" />
-          </span>
+    <Card className="overflow-hidden border-white/10 bg-white/5 shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
+      <div className={`relative h-40 bg-gradient-to-br ${catalogItem.coverGradient}`}>
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative flex h-full flex-col justify-between p-5 text-white">
+          <div className="flex items-start justify-between gap-3">
+            <Badge className="border border-white/25 bg-black/20 text-white">{catalogItem.title}</Badge>
+            <Badge className="border border-white/25 bg-black/20 text-white">{item.badge}</Badge>
+          </div>
           <div>
-            <p className="text-sm font-semibold text-white">{item.title}</p>
-            <p className="mt-1 text-xs leading-5 text-slate-400">{item.description}</p>
+            <p className="text-lg font-bold leading-snug">{catalogItem.subtitle}</p>
+            <p className="mt-1 text-xs text-white/80">{item.type === "ebooks" ? "Biblioteca pronta para revenda" : "Pack comercial pronto para ativação"}</p>
           </div>
         </div>
-        <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">{item.badge}</Badge>
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-        <div className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5">
-          <p className="uppercase tracking-[0.2em] text-slate-500">Quantidade</p>
-          <p className="mt-1 font-semibold text-white">{item.quantity.toLocaleString("pt-BR")}</p>
+
+      <CardContent className="space-y-4 p-5">
+        <div className="flex items-start gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-quantum-cyan">
+            <Icon className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-sm font-semibold text-white">{catalogItem.title}</p>
+            <p className="mt-1 text-sm leading-6 text-slate-300">{item.description}</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5">
-          <p className="uppercase tracking-[0.2em] text-slate-500">Preço de revenda</p>
-          <p className="mt-1 font-semibold text-quantum-lime">{resalePrice}</p>
+
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">Quantidade</p>
+            <p className="mt-2 text-xl font-bold text-white">{item.quantity.toLocaleString("pt-BR")}</p>
+          </div>
+          <div className="rounded-2xl border border-quantum-lime/20 bg-quantum-lime/10 p-3">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-quantum-lime">Valor</p>
+            <p className="mt-2 text-base font-bold text-quantum-lime">{catalogItem.priceLabel}</p>
+          </div>
         </div>
-      </div>
-    </div>
+
+        <div className="flex flex-wrap gap-2">
+          {showcaseTags.map((tag) => (
+            <span key={tag} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-slate-300">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <div className={`rounded-2xl border p-3 text-xs leading-6 ${isSynced ? "border-quantum-cyan/20 bg-quantum-cyan/5 text-slate-200" : "border-white/10 bg-white/5 text-slate-300"}`}>
+          <p className={`inline-flex items-center gap-2 font-semibold ${isSynced ? "text-quantum-cyan" : "text-white"}`}>
+            {isSynced ? <CheckCircle2 className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+            {isSynced ? "Sincronizado com o Agente" : "Disponível para sincronização"}
+          </p>
+          <p className="mt-1">
+            {isSynced
+              ? "Este produto já está publicado na vitrine do mini-site e pronto para abordagem automatizada."
+              : "Ao sincronizar, ele passa a aparecer no mini-site e entra no fluxo de vendas automatizadas."}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={onSync} className={isSynced ? "w-full border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan hover:bg-quantum-cyan/20" : "gradient-btn w-full"}>
+            {isSynced ? "Remover da sincronização" : "Sincronizar com Agente"}
+          </Button>
+          <div className="grid w-full gap-2 sm:grid-cols-2">
+            <Link href="/minisite">
+              <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
+                Ver mini-site
+              </Button>
+            </Link>
+            <Link href={checkoutUrl}>
+              <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
+                Simular venda
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function KpiBlock({ label, value, tone }: { label: string; value: ReactNode; tone: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center">
+    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center backdrop-blur">
       <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500">{label}</p>
       <p className={`mt-1 text-xl font-bold ${tone}`}>{value}</p>
     </div>
   );
 }
 
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
+function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
-        active
-          ? "border-quantum-cyan/60 bg-quantum-cyan/15 text-quantum-cyan"
-          : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20"
-      }`}
+      variant="outline"
+      className={active ? "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan" : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"}
     >
       {children}
-    </button>
+    </Button>
   );
 }

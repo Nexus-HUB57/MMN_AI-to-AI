@@ -22,7 +22,7 @@ services:
     rootDir: .
     dockerfilePath: ./infra/Dockerfile
     dockerContext: .
-    healthCheckPath: /health
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production

@@ -22,7 +22,7 @@
 - [x] Configurar sincronização diária/semanal de marketplaces
 - [x] Configurar geração periódica de conteúdo para redes sociais
 - [x] Configurar verificação de status de pedidos e comissões
-- [x] Criar interface para gerenciar agendamentos (Integrado ao Dashboard)
+- [x] Criar interface para gerenciar agendamentos
 
 ## Fase 4: Dashboard Administrativo
 - [x] Criar layout do dashboard com sidebar
@@ -34,37 +34,37 @@
 - [x] Criar página de detalhes de cada agente
 
 ## Fase 5: Painel de Intervenção Humana
-- [x] Criar interface de aprovação de pagamentos (Implementado em AdminPayments)
-- [x] Implementar definição de metas estratégicas (Implementado em GoalCreation)
-- [x] Implementar resolução de exceções (Integrado ao Dashboard de Orquestração)
+- [x] Criar interface de aprovação de pagamentos
+- [x] Implementar definição de metas estratégicas
+- [ ] Implementar resolução de exceções
 - [x] Criar formulário para criar novas metas
 - [x] Implementar histórico de metas executadas
 
 ## Fase 6: Sistema de Alertas
-- [x] Implementar notificações de falhas em workers
-- [x] Implementar notificações de jobs com erro
-- [x] Implementar notificações de comissões confirmadas
-- [x] Implementar notificações de exceções que exigem intervenção
-- [x] Integrar com sistema de notificação do Manus
+- [ ] Implementar notificações de falhas em workers
+- [ ] Implementar notificações de jobs com erro
+- [ ] Implementar notificações de comissões confirmadas
+- [ ] Implementar notificações de exceções que exigem intervenção
+- [ ] Integrar com sistema de notificação do Manus
 
 ## Fase 7: Histórico e Logs
-- [x] Criar tabela de logs de execução (Schema definido)
-- [x] Implementar rastreabilidade de jobs (JobLogger persistente)
-- [x] Criar página de visualização de histórico
-- [x] Implementar filtros e busca de logs
-- [x] Implementar exportação de logs
+- [ ] Criar tabela de logs de execução
+- [ ] Implementar rastreabilidade de jobs
+- [ ] Criar página de visualização de histórico
+- [ ] Implementar filtros e busca de logs
+- [ ] Implementar exportação de logs
 
 ## Fase 8: Integração e Testes
-- [x] Testes unitários de workers
-- [x] Testes de integração de filas
-- [x] Testes do orquestrador
-- [x] Testes do scheduler
-- [x] Testes do dashboard
-- [x] Testes de alertas
-- [x] Validação end-to-end
+- [ ] Testes unitários de workers
+- [ ] Testes de integração de filas
+- [ ] Testes do orquestrador
+- [ ] Testes do scheduler
+- [ ] Testes do dashboard
+- [ ] Testes de alertas
+- [ ] Validação end-to-end
 
 ## Fase 9: Documentação e Deploy
-- [x] Documentar arquitetura
-- [x] Documentar APIs
-- [x] Documentar procedimentos de operação (docs/operacao.md)
-- [x] Preparar para deploy (Dockerfile e docker-compose.yml criados)
+- [ ] Documentar arquitetura
+- [ ] Documentar APIs
+- [ ] Documentar procedimentos de operação
+- [ ] Preparar para deploy

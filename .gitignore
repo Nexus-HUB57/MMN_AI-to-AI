@@ -908,8 +908,3 @@
 # This allows outer git to track inner repo files while preserving inner git history
 **/.git_backup_by_agent
 **/.git_backup_by_agent/
-
-# Environment files with secrets
-.env
-.env.local
-.env.*.local

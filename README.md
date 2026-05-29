@@ -1288,45 +1288,6 @@ MMN_AI-to-AI/
 ├── infra/               # Docker e configurações
 ├── scripts/             # Scripts utilitários
 └── tests/               # Testes
-```
-
-# 🤖 Nexus Partners · SaaS
-
-> Infraestrutura SaaS proprietária para escalar operações de **parcerias, creators e afiliados**, com governança comercial, automação inteligente e visão analítica em tempo real.
-
-[![Production](https://img.shields.io/badge/production-oneverso.com.br-00E5FF)](https://oneverso.com.br)
-[![Skills Operacionais](https://img.shields.io/badge/skills_operacionais-8%2F45-7B61FF)](#-runtime-de-skills-operacionais)
-[![Autonomy Score](https://img.shields.io/badge/autonomy_score-77/100-22c55e)](#-runtime-de-skills-operacionais)
-[![License](https://img.shields.io/badge/license-Proprietary-94a3b8)](#)
-
----
-
-## 🎯 Visão geral
-
-O **Nexus Partners** é um SaaS estratégico que unifica:
-- 🔗 **Rastreamento ponta a ponta** de afiliados, creators e parceiros
-- 💰 **Comissionamento dinâmico** com regras de atribuição customizáveis
-- 🤖 **Agentes IA operacionais** para conteúdo, prospecção, distribuição e retenção
-- 📊 **Visão analítica** em tempo real do ROI por canal e LTV por parceiro
-- 🛡️ **Governança comercial** com aprovações granulares e trilha auditável
-
-**Portal**: [oneverso.com.br](https://oneverso.com.br) · **API**: `api.oneverso.com.br` (Render)
-
----
-
-## ✨ Os 3 principais diferenciais do OnVerso
-
-### 1) Runtime de Skills Operacionais IA com 8 handlers em produção
-
-O sistema entrega um runtime operacional com **8 skills especializados já em produção**, equivalentes a **17,8%** de um roadmap de 45 skills planejados. Esses handlers cobrem desde **copywriting persuasivo** até **segmentação de audiências**, **prospecção outbound** e **análise de tendências**, com execução autônoma e histórico reaproveitável por replay.
-
-### 2) Autonomy Score em tempo real (0-100)
-
-O **Autonomy Score** é um indicador proprietário calculado continuamente com base em **6 dimensões ponderadas**: percentual de tarefas autônomas (30%), acurácia do LLM-as-Judge (20%), cobertura operacional (15%), latência média (15%), aprovação manual (10%) e diversidade de canais (10%). O resultado é exposto em bandas objetivas: `low`, `developing`, `operational` e `advanced`.
-
-### 3) Arquitetura SaaS escalável com governança comercial granular
-
-O OnVerso unifica **rastreamento ponta a ponta**, **comissionamento dinâmico**, **regras de atribuição customizáveis** e uma **fila de aprovações granulares** (`needs_review`) com **RBAC em 5 escopos**: `runtime:read`, `runtime:execute`, `runtime:approve`, `runtime:reject` e `runtime:rerun`. A base técnica combina **Node.js 22 + tRPC + Drizzle ORM em Postgres**, com suporte a execução distribuída via **BullMQ/Redis** e visão analítica em tempo real do **ROI por canal** e **LTV por parceiro**.
 
 ---
 
@@ -1630,6 +1591,34 @@ lftp -e "mirror -R --delete --only-newer hostgator_mmn/stage_final/assets public
 - [`ROADMAP.md`](ROADMAP.md) — Próximos passos
 
 ---
+##PRINCIPAL PRODUTO DO NEXUS AFFIL'IA'TE
+
+🤖 Nexus Partners · SaaS
+Infraestrutura SaaS proprietária para escalar operações de parcerias, criadores e afiliados , com governança comercial, automação inteligente e visão analítica em tempo real.
+
+Produção Habilidades Operacionais Pontuação de Autonomia Licença
+
+🎯 Visão geral
+O Nexus Partners é uma estratégia SaaS que unifica:
+
+🔗 Rastreamento ponta a ponta de afiliados, criadores e parceiros
+💰 Comissionamento sonoro com regras de atribuição customizáveis
+🤖 Agentes IA operacionais para conteúdo, prospecção, distribuição e retenção
+📊 Visão analítica em tempo real do ROI por canal e LTV por parceiro
+🛡️ Governança comercial com aprovações granulares e trilha auditável
+Portal : oneverso.com.br · API : api.oneverso.com.br(Renderização)
+
+✨ Os 3 principais diferenciais do OnVerso
+1) Runtime de Skills Operacionais IA com 8 manipuladores em produção
+O sistema entrega um runtime operacional com 8 habilidades especializadas já em produção , equivalentes a 17,8% de um roadmap de 45 habilidades planejadas. Esses manipuladores cobrem desde copywriting persuasivo até segmentação de audiências , prospecção outbound e análise de tendências , com execução inteligente e histórico reaproveitável por replay.
+
+2) Pontuação de Autonomia em tempo real (0-100)
+O Autonomy Score é um indicador proprietário calculado continuamente com base em 6 dimensões ponderadas : percentual de tarefas autônomas (30%), acurácia do LLM-as-Judge (20%), cobertura operacional (15%), latência média (15%), aprovação manual (10%) e diversidade de canais (10%). O resultado é exposto em bandas objetivas: low, developing, operationale advanced.
+
+3) Arquitetura SaaS escalável com governança comercial granular
+O OnVerso unifica rastreamento ponta a ponta , comissionamento dinâmico , regras de atribuição customizáveis ​​e uma fila de aprovações granulares ( needs_review) com RBAC em 5 escopos : runtime:read, runtime:execute, runtime:approve, runtime:rejecte runtime:rerun. A técnica base combina Node.js 22 + tRPC + Drizzle ORM em Postgres , com suporte à execução distribuída via BullMQ/Redis e visão analítica em tempo real do ROI por canal e LTV por parceiro .
+
+O produto serpa oferecido como a principal e mais valiosa ferramenta do sistema, sob licença mensal, com planos de até 48 meses. 
 
 ## 📞 Contato
 

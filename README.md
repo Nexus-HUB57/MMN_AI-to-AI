@@ -1265,7 +1265,7 @@ MIT BNJ57
 
 ---
 
-**Autor:** Lucas Thomaz
+**Resumo:** Equipe Nexus Affil'IA'te
 **Última Atualização:** 2026-05-25
 **Versão:** 1.2.0
 

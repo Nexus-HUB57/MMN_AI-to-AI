@@ -52,14 +52,16 @@ export default function ProfileScreen() {
             <View className="items-center gap-2">
               <View className="w-16 h-16 bg-primary rounded-full items-center justify-center">
                 <Text className="text-2xl font-bold text-white">
-                  {user?.name?.charAt(0).toUpperCase() || "?"}
+                  {typeof user?.name === 'string' && user.name.length > 0
+                    ? user.name.charAt(0).toUpperCase()
+                    : "?"}
                 </Text>
               </View>
               {isLoading ? (
                 <ActivityIndicator size="small" />
               ) : (
                 <Text className="text-xl font-bold text-foreground">
-                  {user?.name || "Usuário"}
+                  {typeof user?.name === 'string' ? user.name : "Usuário"}
                 </Text>
               )}
             </View>
@@ -73,7 +75,7 @@ export default function ProfileScreen() {
                   <ActivityIndicator size="small" />
                 ) : (
                   <Text className="text-sm text-foreground">
-                    {user?.email || "N/A"}
+                    {typeof user?.email === 'string' ? user.email : "N/A"}
                   </Text>
                 )}
               </View>

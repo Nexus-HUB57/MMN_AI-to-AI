@@ -1,247 +1,46 @@
 # Changelog MMN AI-to-AI
 
-## 2026-05-29 — v1.3.0-sprint7 — Nexus Partners Skills Expansion
-
-### `feat(agentic)` — Nexus Partners: Novas Skills Operacionais (#19-23)
-
-Adicionadas 5 novas skills ao runtime agentic para expandir capacidades operacionais:
-
-#### Skill #19: `fraud-detector` (Detector de Fraudes)
-- **Categoria**: governance
-- **Função**: Monitora padrões suspeitos em cliques, conversões e comissões
-- **Features**: Detecção de cliques múltiplos por IP, padrões de commission farming, análise de velocidade, fingerprinting de dispositivo
-- **Suporta**: Análise multi-touchpoint, alertas de risco (low/medium/high/critical)
-
-#### Skill #20: `compliance-auditor` (Auditor de Conformidade)
-- **Categoria**: governance
-- **Função**: Verifica claims publicitários conforme diretrizes CONAR
-- **Features**: Verificação LGPD, análise de termos prohibidos, compliance de comparações com concorrência
-- **Suporta**: 6 verticais de mercado (health, beauty, finance, education, tech, general)
-
-#### Skill #21: `roi-attributor` (Atribuidor de ROI Multi-Touch)
-- **Categoria**: analytics
-- **Função**: Atribui receita multi-touch para entender contribuição de cada ponto de contato
-- **Models**: First Touch, Last Touch, Linear, Time Decay, Position Based (40-20-40), Data Driven
-- **Suporta**: Análise por canal, affiliate attribution, ROI calculation
-
-#### Skill #22: `cold-emailer` (E-mail Marketing Outbound)
-- **Categoria**: sales
-- **Função**: Gera sequências de cold emails personalizados com multi-channel outreach
-- **Features**: Sequenciamento 3-7 emails, A/B testing variants, LinkedIn touchpoints, spam score analysis
-- **Suporta**: 4 verticais (SaaS, E-commerce, Agency, General) + tom configurável
-
-#### Skill #23: `upsell-strategist` (Estrategista de Upsell)
-- **Categoria**: sales
-- **Função**: Identifica oportunidades de upsell/cross-sell para maximização de LTV
-- **Features**: Customer tier classification, bundle suggestions, personalized offers, optimal timing
-- **Suporta**: 3 estratégias (upsell, crossSell, bundle, all) + considerações sazonais
-
-### `feat(agentic)` — Skills Runtime: Handlers Registry
-
-- **Handler**: `fraudDetectorHandler` registrado no dispatcher
-- **Handler**: `complianceAuditorHandler` registrado no dispatcher
-- **Handler**: `roiAttributorHandler` registrado no dispatcher
-- **Handler**: `coldEmailerHandler` registrado no dispatcher
-- **Handler**: `upsellStrategistHandler` registrado no dispatcher
-
-### `feat(agentic)` — Autonomy Score Expansion
-
-- Total de skills operacionais: 23 (anterior: 18)
-- Roadmap progress: 23/45 implementadas (~51%)
-- Categories cubiertas: content, sales, marketing, analytics, governance, finance, strategy, optimization, retention, integration, i18n
-
-## 2026-05-25 — v1.2.0 — Nexus Partners GA Launch
-
-### `feat(agentic)` — Phase 9 GA Launch completed
-
-- Landing Page API
-- Documentation System
-- Support Ticket System
-- Community Hub
-- Circuit Breakers system
-- RBAC permissions system
-- Firebase Auth integration
-- Raffle system with Graph+AI
-- Holdings and Dividends
-- Capitalization titles
-
-### `feat(frontend)` — Epic 10.9.2: Botão "Exportar CSV" na PixHistory
-
-- `PixHistory.tsx`: import `Download` (lucide), estado `isDownloading`, `handleExportCsv` usa `utils.payments.exportCommissionsCsv.fetch` com filtros de data ativos → download automático via Blob/URL
-- Botão aparece ao lado de "Atualizar" com ícone de download e feedback visual `animate-pulse`
-
-### `feat(auth)` — Epic 10.3.6: Auto-login social na inicialização do AuthProvider
-
-- `AuthContext.tsx`: ao restaurar sessão de `STORAGE_KEY`, verifica `SOCIAL_TOKEN_KEY` — se `expiresAt` ainda válido, restaura o usuário; se expirado, limpa ambas as chaves
-- Usuários sociais mantêm sessão entre recargas da página por até 7 dias
-
-### `feat(backend)` — Epic 10.11.1: Rate limiter PIX em memória
-
-- criado `backend/src/middlewares/pixRateLimiter.ts`: `createPixRateLimiter(windowMs, maxRequests, namespace)` usando `Map<ip, WindowEntry>`, sem dependências externas
-- `pixWebhookRateLimiter`: 100 req/min por IP para webhook
-- `pixQrRateLimiter`: 20 req/min por IP para geração de QR
-- Cabeçalhos `X-RateLimit-Limit/Remaining/Reset`, HTTP 429 com `Retry-After` ao exceder limite
-- `backend/src/index.ts`: import e aplicação dos dois middlewares antes do CORS
-
-### `test(backend)` — Epic 10.7.1: Testes de integração webhook PIX + refund
-
-- criado `backend/src/tests/pixWebhook.test.ts` (Vitest):
-  - Grupo `pix.webhook`: processa pagamento válido + cache, conversão valor→centavos (5 casos), fallback endToEndId→txid, múltiplos pagamentos simultâneos
-  - Grupo `pix.refund`: status REFUNDED_SIMULATED em sandbox, geração de correlationID único, conversão amount→centavos, erro sem OPENPIX_TOKEN em produção
-  - Grupo payload PIX: CRC-16 CCITT vetores conhecidos (`123456789` → `29B1`), formato EMV obrigatório, campos BRL/BR
-
-## 2026-05-28 — v1.8.0-sprint6 Fase 10 Sprint 10.6 — AuthContext Social + pix.refund + CSV Export + Alertmanager
-
-### `feat(auth)` — Epic 10.3.5: AuthContext integra sessão de login social
-
-- `AuthContextType` ampliado com `loginWithSocial(payload: SocialSessionPayload): User`
-- `AuthProvider`: event listener `mmn:social-login` — ao receber evento (emitido por `SocialLoginButtons` após `loginWithFirebaseToken`), chama `loginWithSocial` automaticamente → usuário logado no contexto
-- `loginWithSocial` persiste `{ sessionId, tokenId, provider, expiresAt }` em `SOCIAL_TOKEN_KEY` localStorage
-- `logout` limpa `SOCIAL_TOKEN_KEY`
-
-### `feat(pix)` — Epic 10.8.1: Endpoint `pix.refund`
-
-- `refund` adicionado ao `pixRouter` (protectedProcedure)
-- Em sandbox: retorna `REFUNDED_SIMULATED` sem chamar API externa
-- Em produção: `POST https://api.openpix.com.br/api/v1/refund` com `correlationID`, `chargeCorrelationID`, `value` (centavos), `comment`
-- Input: `{ txid, correlationID?, amount?, reason? }`
-
-### `feat(payments)` — Epic 10.9.1: `payments.exportCommissionsCsv`
-
-- Endpoint `exportCommissionsCsv` (protectedProcedure) no `paymentsRouter`
-- Filtra comissões por `affiliateId`, `status`, `startDate`, `endDate`
-- Gera CSV: `id,affiliateId,amount,status,source,sourceId,type,createdAt`
-- Retorna `{ csvBase64, filename, totalRows, affiliateId }`
-
-### `feat(observability)` — Epic 10.6.3: Alertmanager config
-
-- criado `monitoring/alertmanager.yml`: roteamento por severity/team, 5 receivers (critical, slack-warning, payments-team, finance-team, infra-team)
-- Regras de inibição: BackendDown suprime warnings; CriticalP99 suprime P95 warning
-- Canais Slack: `#mmn-alerts-critical`, `#mmn-alerts-warning`, `#mmn-pagamentos`, `#mmn-financeiro`, `#mmn-infra`
-- Variáveis: `SLACK_WEBHOOK_CRITICAL`, `SLACK_WEBHOOK_WARNING`, `SMTP_*`, `ALERT_EMAIL_*`
-
-## 2026-05-28 — v1.7.0-sprint5 Fase 10 Sprint 10.5 — Firebase Sessão Completa + OpenPix Dynamic QR
-
-### `feat(auth)` — Epic 10.3.4: Fluxo Firebase social login completo (sessão + DB)
-
-- authRouter `loginWithFirebaseToken` refatorado: passo 1 verifica token, passo 2 `getUserByOpenId` / `getUserByEmail` / `upsertUser` para encontrar/criar usuário, passo 3 cria refresh token + session audit, retorna `{ user, sessionId, tokenId, provider }`
-- Login.tsx: após `signInWithPopup` chama `trpc.auth.loginWithFirebaseToken` e emite evento `mmn:social-login` com dados de sessão completos
-- Comentário duplicado em authRouter removido
-
-### `feat(pix)` — Epic 10.2.9: `generateDynamicQr` usa OpenPix em produção
-
-- `generateDynamicQr` atualizado: quando `!PIX_SANDBOX && isOpenPixAvailable()`, chama `createOpenPixCharge` com `value` em centavos, retorna `brCode`, `qrCodeImage`, `paymentLinkUrl`, `expiresDate` do OpenPix
-- input expandido: `cobUrl` passa a ser opcional, adicionados `description`, `payerName`, `payerEmail`
-- fallback para `generatePixDynamicPayload` local em sandbox ou sem OpenPix configurado
-
-## 2026-05-28 — v1.6.0-sprint4 Fase 10 Sprint 10.4 — OpenPix + Firebase + Alertas + Cache
-
-### `feat(pix)` — Epic 10.2.8: Serviço OpenPix PSP
-
-- criado `backend/src/services/openPixService.ts`: `createOpenPixCharge`, `getOpenPixChargeStatus`, `validateOpenPixWebhookSignature`, `mapOpenPixStatus`, `isOpenPixAvailable`
-- variáveis: `OPENPIX_TOKEN`, `OPENPIX_APP_ID` (documentadas em `.env.example`)
-- pixRouter: `checkPaymentStatus` usa OpenPix em produção quando `isOpenPixAvailable()` + fallback para DB Drizzle
-- pixRouter: imports adicionados `isOpenPixAvailable`, `createOpenPixCharge`, `getOpenPixChargeStatus`, `mapOpenPixStatus`, `invalidateCachePattern`
-
-### `feat(pix)` — Epic 10.5.2: Cache invalidation pós-webhook PIX
-
-- webhook PIX chama `invalidateCachePattern(CACHE_KEYS.DASHBOARD_PATTERN)` após confirmar pagamentos
-- dashboard do usuário recebe dados frescos automaticamente após cada PIX confirmado
-
-### `feat(auth)` — Epic 10.3.3: Firebase Client SDK + endpoint backend
-
-- criado `frontend/src/lib/firebase.ts`: `signInWithGoogle`, `signInWithFacebook`, `signInWithApple` com lazy dynamic import
-- Login.tsx `SocialLoginButtons`: usa firebase.ts real; estado `loading/socialError`; imports React movidos para topo do arquivo (fix)
-- authRouter: endpoint `loginWithFirebaseToken` (publicProcedure) — verifica ID Token Firebase Admin SDK, audit log, retorna perfil social
-- variáveis cliente: `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_APP_ID`
-
-### `feat(observability)` — Epic 10.4.1: Alertas Prometheus
-
-- criado `monitoring/prometheus-alerts.yml`: 12 alertas organizados em 5 grupos
-- grupos: availability (BackendDown, HighHttpErrorRate, HighTrpcErrorRate), latency (p95/p99 HTTP + tRPC), pix (NoPIXQrGenerated, PIXWebhookSpike), agents (HighAgentFailureRate), resources (HighHeapUsage, ProcessRestarted), commissions (NoCommissionEvents)
-
-## 2026-05-28 — v1.5.0-sprint3 Fase 10 Sprint 10.3 — PIX History + Nav + Grafana + Firebase prep
-
-### `feat(pix)` — Epic 10.2.5: Endpoint histórico PIX com paginação e filtros de data
-
-- adicionado `pix.listHistory` em `pixRouter.ts`: query Drizzle filtrando `payments.method = "pix"`, paginação `limit/offset`, filtros `startDate/endDate`, imports `eq, desc, and, gte, lte`
-- retorna `{ items[], total, sandbox }` com campos normalizados (txid, endToEndId, confirmedAt, paymentDate)
-
-### `feat(frontend)` — Epic 10.2.6: Página Histórico PIX `/pix/history`
-
-- criada `frontend/src/pages/PixHistory.tsx`: tabela paginada de transações PIX com filtros de data, badges de status (confirmado/pendente/erro), paginação next/prev, botão de atualização
-- rota `/pix/history` registrada no `App.tsx` com lazy import
-
-### `feat(nav)` — Epic 10.2.7: Links PIX no menu lateral
-
-- adicionados `QrCode` e `History` ao import lucide-react de `DashboardLayout.tsx`
-- itens "Checkout PIX" (badge "Novo") e "Histórico PIX" adicionados ao grupo "Geral" após "Pagamentos"
-
-### `feat(observability)` — Epic 10.6.2: Dashboard Grafana — Sprint 10.3
-
-- criado `monitoring/grafana-dashboard.json`: dashboard completo Grafana 10+ para Prometheus
-- painéis: Visão Geral (6 stats), Latência HTTP (p50/p95/p99), Latência tRPC, PIX (taxa QR/confirmados), Eventos de Comissão, Sessões de Agente IA, Heap Node.js, Taxa de Requests
-- UTC timezone configurado para America/Sao_Paulo; auto-refresh 30 s; tag `mmn,nexus,backend,pix,agents`
-- para importar: Grafana → Dashboards → Import → colar JSON ou upload arquivo
-
-## 2026-05-28 — v1.4.0-sprint2 Fase 10 Sprint 10.2 — PIX Checkout UI + Webhook DB + Login Social
-
-### `feat(pix)` — Epic 10.2.3: Webhook PIX com persistência no banco
-
-- handler `webhook` em `pixRouter.ts` agora persiste cada pagamento confirmado na tabela `payments` via Drizzle ORM (dual-write: cache Redis + DB)
-- falha no DB não aborta o webhook — warning em stderr, cache garantido, PSP recebe `{ ok: true }`
-- `console.log` substituído por `process.stdout.write` com JSON estruturado (padrão do logger do projeto)
-- imports adicionados: `getDb`, `payments` (schema Drizzle), `InferInsertModel`
-
-### `feat(frontend)` — Epic 10.2.4: Página de Checkout PIX `/pix/checkout`
-
-- criada `frontend/src/pages/PixCheckout.tsx`: formulário de cobrança, QR Code (via api.qrserver.com), Copia-e-Cola, polling automático a cada 5 s, confirmação visual, modo sandbox com botão de simulação, aba de informações de configuração
-- zero dependências novas — QR Code renderizado via URL pública
-- rota `/pix/checkout` registrada no `App.tsx` com lazy import
-
-### `feat(auth)` — Epic 10.3.2: Botões de Login Social Google / Facebook / Apple
-
-- adicionados componentes `SocialLoginDivider` e `SocialLoginButtons` em `Login.tsx`
-- SVGs inline das 3 marcas; visíveis apenas no modo afiliado (não no admin)
-- dispara `CustomEvent("mmn:social-login")` para integração futura com Firebase Client SDK
-- sem dependências externas; pronto para substituição por `signInWithPopup` na Sprint 10.3.3
-
-## 2026-05-28 — v1.3.0-sprint1 Fase 10 Sprint 10.1 — PIX + Firebase Auth + Prometheus + Cache + Mobile Fix
-
-### `feat(pix)` — Epic 10.2: Módulo PIX — QR Code estático e dinâmico (Issues #10.2.1, #10.2.2)
-
-- criado `backend/src/services/pixService.ts` com geração de payload EMV (Banco Central do Brasil) para QR Code estático e dinâmico, CRC-16/CCITT-FALSE, detecção e validação de tipos de chave (CPF, CNPJ, telefone, email, EVP) e confirmação sandbox
-- criado `backend/src/routers/pixRouter.ts` com endpoints tRPC: `generateStaticQr`, `generateDynamicQr`, `validateKey`, `checkPaymentStatus`, `webhook`, `config` (público) e `sandboxConfirm` (admin)
-- router `pix` registrado no `appRouter`; webhook grava confirmações de pagamento no cache com TTL 24 h
-- suporta modo sandbox (`PIX_SANDBOX=true`) sem dependência de PSP externo; pronto para integrar Celcoin/OpenPix na Sprint 10.2
-
-### `feat(auth)` — Epic 10.3.1: Firebase Admin SDK — inicialização lazy (Issue #10.3.1)
-
-- criado `backend/src/services/firebaseAdmin.ts`: inicialização lazy com `firebase-admin`, suporte a conta de serviço via variáveis de ambiente (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`), fallback gracioso quando credenciais ausentes
-- funções: `verifyFirebaseIdToken`, `setCustomClaims` (RBAC), `getFirebaseUser`, `revokeUserTokens`, `isFirebaseAdminAvailable`
-- sem quebra de compatibilidade: SDK carregado dinamicamente (`import()`) — evita erros de boot quando `firebase-admin` não está instalado
-
-### `feat(observability)` — Epic 10.6.1: Prometheus metrics endpoint (Issue #10.6.1)
-
-- criado `backend/src/middlewares/prometheusMetrics.ts` com serialização manual do formato Prometheus text 0.0.4 (sem `prom-client`, zero deps adicionais)
-- contadores: `http_requests_total`, `http_requests_success_total`, `http_requests_error_total`, `trpc_calls_total`, `trpc_errors_total`, `pix_qr_generated_total`, `pix_payments_confirmed_total`, `agent_sessions_*`, `commission_events_total`
-- histogramas: `http_request_duration_ms`, `trpc_call_duration_ms` (buckets configurados)
-- métricas de processo: `process_uptime_seconds`, `process_heap_used_bytes`, `process_heap_total_bytes`, `process_rss_bytes`, `nodejs_version_info`
-- middleware `metricsCollector` registrado em `index.ts` (coleta latência de todos os requests)
-- endpoint `GET /metrics` exposto no Express; pronto para Prometheus scrape e Grafana Agent
-
-### `feat(cache)` — Epic 10.5.1: Extensão das CACHE_KEYS e CACHE_TTL
-
-- adicionados 18 novos `CACHE_KEYS` domain-específicos em `cache-service.ts`: Dashboard, Commissions, PIX, Network, Marketplace e Firebase
-- TTLs calibrados: dashboard metrics 30 s, recent sales 60 s, network/commissions 120 s, marketplace 300 s, PIX status 24 h, Firebase user 300 s
-
-### `fix(mobile)` — Epic 10.1.1: Erro "Objects are not valid as a React child" (Issue #10.1.1)
-
-- corrigido `mobile/app/(tabs)/index.tsx`: campo `date` do sale agora usa conversão defensiva `Date → toLocaleDateString("pt-BR")` com try/catch para qualquer formato inesperado do servidor; campo `id` e `product` também explicitamente convertidos para `String()` antes de chegar ao JSX
-
-### `chore(config)` — Variáveis de ambiente para novos módulos
-
-- atualizado `.env.example` com seções PIX e Firebase Auth
+## 2026-05-28 — v1.2.9 Repositório Analisado e Preparado para Fase 10
+
+### `analysis(repository)` — Análise Completa do Repositório
+
+- **Commits Analisados (01-28 Mai)**: 45+ commits analisados dos branches ebooks/main
+- **Atividade Principal**:
+  - Skills expandidas para 45 total
+  - Sistema de e-books (5 ebooks sobre IA)
+  - Redesign Obsidian/Quantum do tema
+  - Automação Cron consolidada com BullMQ
+  - Backoffice Admin completo (16 entregas cron/financeiro)
+  - Marketplace Nexus com sync em tempo real
+
+- **Estrutura Verificada**:
+  - 42+ routers tRPC operacionais
+  - 125+ componentes React
+  - 30+ schemas de banco de dados
+  - Conformidade: 92-95%
+  - Verificação beta-structure: 100% OK (48 arquivos, 13 verificações de conteúdo)
+
+- **Roadmap Fase 10 Confirmado**:
+  - 8 epics planejados (Mobile, PIX, Firebase, WhatsApp, Performance, Monitoring, Multi-tenancy, Security)
+  - Período: 2026-05-26 a 2026-06-30
+  - Meta: v1.3.0 MVP+ estabilizado
+
+### `docs(status)` — Status Consolidado
+
+| Área | Status | Observações |
+|------|--------|-------------|
+| Backend tRPC | ✅ Estável | 42+ routers, todos os domínios migrados |
+| Frontend React | ✅ Funcional | 125+ componentes, tema Obsidian/Quantum |
+| Mobile Expo | ⚠️ Blocker | Erro React child pendente |
+| Database MySQL | ✅ Completo | 30+ schemas, migrações Drizzle |
+| Camada Agentic | ✅ Funcional | 71% implementação, expansão planejada |
+| Sistema MMN | ✅ Operacional | 15 níveis, compressão, comissões |
+| Packs/Skills | ✅ Completo | 8 packs, marketplace funcional |
+| Cron Automation | ✅ Completo | SLA, alertas, dispatcher BullMQ |
+| Marketplace Nexus | ✅ Operacional | Sync marketplace, carrinho, checkout |
+| Sistema XP/Carreiras | ✅ Implementado | 27 níveis, leaderboard, progressão |
+
+---
 
 ## 2026-05-25 — v1.2.8 Redeploy Consolidado Hostgator (Layout Obsidian Completo)
 

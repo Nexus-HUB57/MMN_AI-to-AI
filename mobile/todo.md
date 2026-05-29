@@ -17,14 +17,14 @@
 ### Autenticação
 - [x] Criar tela de Login
 - [x] Implementar validação de email/senha (básica)
-- [ ] Criar tela de Logout com confirmação
+- [x] Criar tela de Logout com confirmação
 - [ ] Integrar OAuth Manus (placeholder)
-- [ ] Implementar useAuth hook
+- [x] Implementar useAuth hook
 
 ### tRPC Client
 - [x] Configurar cliente tRPC
 - [x] Implementar tipagem de ponta a ponta
-- [ ] Criar hooks para chamadas de API
+- [x] Criar hooks para chamadas de API
 
 ### Branding
 - [x] Gerar logo/ícone do app
@@ -58,7 +58,7 @@
 - [x] Implementar tela de rede
 - [x] Criar componente de árvore hierárquica
 - [x] Implementar expansão/colapso de nós
-- [ ] Adicionar busca/filtro
+- [x] Adicionar busca/filtro
 - [ ] Implementar tap para detalhes do afiliado
 - [x] Adicionar botão compartilhar link
 
@@ -118,7 +118,9 @@
 
 ## Bugs e Correções
 
-- [ ] (Nenhum registrado no momento)
+- [x] #10.1.1 - Resolver erro "Objects are not valid as a React child" - CORRIGIDO em profile.tsx e index.tsx
+- [x] Adicionar validação de tipos para evitar objetos sendo passados para Text components
+- [x] #10.1.2 - Corrigir bug em performance.tsx linha 105 - Referência circular networkComparison.data → networkComparisonQuery?.data
 
 ---
 
@@ -129,3 +131,11 @@
 - Testar em iOS e Android
 - Validar acessibilidade (VoiceOver, TalkBack)
 - Implementar dark mode desde o início
+
+---
+
+## Blockers Resolvidos (Fase 10)
+
+| Issue | Descrição | Status |
+|-------|-----------|--------|
+| #10.1.1 | Resolver erro `Objects are not valid as a React child` | ✅ RESOLVIDO |

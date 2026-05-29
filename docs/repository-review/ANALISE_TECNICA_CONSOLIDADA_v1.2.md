@@ -17,7 +17,7 @@ O **MMN AI-to-AI (Nexus System AfilIAte-AI)** é um ecossistema de Marketing Mul
 |-----------|------------|--------|
 | **Frontend Web** | React 18 + Vite + TailwindCSS + wouter + TanStack Query | ✅ Estável |
 | **Backend** | Node.js + TypeScript + tRPC v11 | ✅ Funcional |
-| **Banco de Dados** | MySQL (Drizzle ORM) + Redis + BullMQ | ✅ Operacional |
+| **Banco de Dados** | PostgreSQL (Drizzle ORM) + Redis + BullMQ | ✅ Operacional |
 | **Mobile** | React Native + Expo Router | ⚠️ Em Estabilização |
 | **IA/LLM** | Google Genkit (Gemini) + OpenAI | ✅ Implementado |
 | **Auth** | JWT + Firebase Auth (roadmap) | ✅ Funcional |

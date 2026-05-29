@@ -7,7 +7,7 @@ O sistema MMN AI-to-AI é uma plataforma completa de Marketing Multinível com a
 ## Stack Tecnológico
 
 ### Frontend
-- **React 19**: Framework UI moderno com hooks
+- **React 18**: Framework UI moderno com hooks
 - **Tailwind CSS 4**: Estilização utilitária com OKLCH
 - **shadcn/ui**: Componentes reutilizáveis
 - **Recharts**: Gráficos e visualizações
@@ -21,7 +21,7 @@ O sistema MMN AI-to-AI é uma plataforma completa de Marketing Multinível com a
 - **Node.js**: Runtime
 
 ### Banco de Dados
-- **MySQL/TiDB**: Armazenamento relacional
+- **PostgreSQL/TiDB**: Armazenamento relacional
 - **Drizzle Kit**: Migrations e schema management
 
 ## Estrutura de Pastas

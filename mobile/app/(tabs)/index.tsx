@@ -43,10 +43,18 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
-  const totalCommissions = metricsData?.commissions?.total ?? 0;
-  const agentStatus = metricsData?.agent?.status ?? "Inativo";
-  const agentEnergy = metricsData?.agent?.vitals?.energy ?? 0;
-  const agentHealth = metricsData?.agent?.vitals?.health ?? 0;
+  const totalCommissions = typeof metricsData?.commissions?.total === 'number'
+    ? metricsData.commissions.total
+    : 0;
+  const agentStatus = typeof metricsData?.agent?.status === 'string'
+    ? metricsData.agent.status
+    : "Inativo";
+  const agentEnergy = typeof metricsData?.agent?.vitals?.energy === 'number'
+    ? metricsData.agent.vitals.energy
+    : 0;
+  const agentHealth = typeof metricsData?.agent?.vitals?.health === 'number'
+    ? metricsData.agent.vitals.health
+    : 0;
 
   const recentSales = useMemo<RecentSale[]>(
     () =>

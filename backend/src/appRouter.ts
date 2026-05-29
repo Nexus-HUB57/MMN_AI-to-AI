@@ -38,7 +38,6 @@ import { partnersRouter } from "./routers/partnersRouter";
 import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
-import { pixHistoryRouter } from "./routers/pixHistoryRouter";
 
 export const appRouter = router({
   system: router({
@@ -188,7 +187,6 @@ export const appRouter = router({
   adminAuth: adminAuthRouter,
   agentSkillsRuntime: agentSkillsRuntimeRouter,
   pix: pixRouter,
-  pixHistory: pixHistoryRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -270,7 +270,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(0,229,255,0.16),transparent_28%),linear-gradient(180deg,#020617,#0f172a)] text-foreground">
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-accent-cyan/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-green/10 rounded-full blur-3xl"></div>
@@ -281,22 +281,30 @@ export default function Login() {
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="order-2 lg:order-1 flex flex-col justify-center space-y-8">
             <div className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-green">
+                  Loja Virtual Nexus
+                </span>
+                <span className="inline-flex rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-cyan">
+                  Packs + E-books + Checkout
+                </span>
+              </div>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center shadow-lg shadow-cyan-500/20">
                   <Zap className="w-6 h-6 text-background" />
                 </div>
-                <h1 className="text-4xl font-bold gradient-text">IOAID · SaaS</h1>
+                <h1 className="text-4xl font-bold gradient-text">Nexus Store Access</h1>
               </div>
-              <p className="text-text-secondary text-lg max-w-md">
-                Acesso ao Painel do Afiliado e ao BackOffice Administrador Restrito.
+              <p className="text-text-secondary text-lg max-w-xl leading-8">
+                Entre no ecossistema comercial com uma experiência mais premium para afiliados, biblioteca digital, packs evolutivos e acesso administrativo restrito.
               </p>
             </div>
 
             <div className="space-y-5 max-w-xl">
               <div className="rounded-2xl border border-accent-cyan/20 bg-accent-cyan/5 p-5">
                 <p className="text-sm font-semibold text-accent-cyan">Acesso Afiliado</p>
-                <p className="mt-2 text-sm text-text-secondary">
-                  Painel do Afiliado: Sistema, Marketplace, Packs, Agente(s), Clube de Vantagens e mais.
+                <p className="mt-2 text-sm leading-6 text-text-secondary">
+                  Entre no painel comercial do afiliado para explorar a loja virtual, packs, e-books, estoque operacional, agente IA e atalhos de venda.
                 </p>
                 <div className="mt-4">
                   <Button
@@ -306,7 +314,7 @@ export default function Login() {
                     disabled={isSubmitting}
                   >
                     <User className="w-4 h-4 mr-2" />
-                    Conhecer o Sistema Nexus Afil&apos;IA&apos;te (Conta Demo)
+Explorar demo da Loja Virtual Nexus
                   </Button>
                 </div>
               </div>
@@ -322,10 +330,10 @@ export default function Login() {
 
               <div className="space-y-3">
                 {[
-                  "Cadastro com Redirecionamento Automático para o Backoffice",
-                  "Pack Agente Afiliado A² — Pacote Inicial de Acesso",
-                  "Rede Binária de Alto Fluxo e Produtos de Alta Demanda e Tendência",
-                  "Sessão persistida com Checagem de Integridade do Papel",
+                  "Entrada guiada para Marketplace, packs, bibliotecas e checkout digital",
+                  "Pack Agente Afiliado A² como porta de entrada operacional",
+                  "Experiência otimizada para conversão com Pix e Mercado Pago",
+                  "Sessão persistida com checagem de integridade e papel de acesso",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3 text-sm text-text-secondary">
                     <span className="mt-1 h-2 w-2 rounded-full bg-accent-green"></span>
@@ -340,11 +348,11 @@ export default function Login() {
             <Card className="border-accent/30 bg-card/50 backdrop-blur-md shadow-2xl">
               <div className="p-8 sm:p-10 space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-foreground">Acessar Ambiente Digital</h3>
-                  <p className="text-text-secondary">
+                  <h3 className="text-2xl font-bold text-foreground">Entrar no ambiente Nexus</h3>
+                  <p className="text-text-secondary leading-7">
                     {mode === "admin"
                       ? `Insira o e-mail e a senha autorizados da ${ADMIN_ACCESS_LABEL} para abrir o BackOffice.`
-                      : "Acesse o Painel do Afiliado para Gerenciar Agentes e Acessar Marketplaces."}
+                      : "Acesse sua Loja Virtual Nexus para gerenciar packs, e-books, agente IA, checkout e operação comercial."}
                   </p>
                 </div>
 
@@ -360,7 +368,7 @@ export default function Login() {
                       setEmail("");
                     }}
                   >
-                    Usuário
+Afiliado
                   </Button>
                   <Button
                     type="button"

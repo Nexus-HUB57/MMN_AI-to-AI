@@ -22,7 +22,7 @@ services:
     rootDir: .
     dockerfilePath: ./infra/Dockerfile
     dockerContext: .
-    healthCheckPath: /api/health
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -79,6 +79,24 @@ services:
         sync: false
       - key: FIREBASE_PRIVATE_KEY
         sync: false
+
+      # ---------------------------------------------------------------------
+      # Pagamentos Marketplace · Mercado Pago + fallback PIX manual
+      # ---------------------------------------------------------------------
+      - key: MERCADO_PAGO_ACCESS_TOKEN
+        sync: false
+      - key: MERCADO_PAGO_NOTIFICATION_URL
+        sync: false
+      - key: MERCADO_PAGO_USE_SANDBOX
+        value: "false"
+      - key: MARKETPLACE_PIX_KEY
+        sync: false
+      - key: MARKETPLACE_PIX_RECEIVER_NAME
+        value: Nexus SaaS
+      - key: MARKETPLACE_PIX_RECEIVER_CITY
+        value: SAO PAULO
+      - key: MARKETPLACE_PIX_BANK_LABEL
+        value: Nubank
 
       # ---------------------------------------------------------------------
       # Backoffice Admin server-side (login restrito à Equipe Nexus Affil'IA'te)

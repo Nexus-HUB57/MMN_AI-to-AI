@@ -12,6 +12,7 @@ import {
   type OperationalStockItem,
 } from "@/lib/nexus-marketplace";
 import { NEXUS_PARTNERS, getPartnerBySlug, type PartnerConfig } from "@/lib/nexus-partners";
+import { buildMarketplaceCheckoutUrl, parseCurrencyTextToCents } from "@/lib/marketplace-payments";
 import {
   AlertCircle,
   ArrowRight,
@@ -408,14 +409,31 @@ export default function Estoque() {
                         <Button size="sm" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
                           Sincronizar com Agente
                         </Button>
+                        <div className="flex flex-wrap gap-2">
+                        <Link
+                          href={buildMarketplaceCheckoutUrl({
+                            source: "estoque",
+                            type: "produto",
+                            slug: product.id,
+                            name: product.title,
+                            amountCents: parseCurrencyTextToCents(product.avgPrice) ?? undefined,
+                            description: `${product.platform} · ${product.category} · ${product.fulfillment}`,
+                          })}
+                        >
+                          <Button size="sm" className="gradient-btn">
+                            Ir para pagamento
+                            <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
                         {product.productUrl ? (
                           <a href={product.productUrl} target="_blank" rel="noreferrer">
-                            <Button size="sm" className="gradient-btn">
-                              Abrir oferta
+                            <Button size="sm" variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                              Ver oferta externa
                               <ExternalLink className="ml-2 h-3.5 w-3.5" />
                             </Button>
                           </a>
                         ) : null}
+                        </div>
                       </div>
                     </div>
                   );

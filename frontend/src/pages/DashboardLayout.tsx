@@ -274,23 +274,41 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Faça login para continuar
-            </h1>
-            <p className="text-sm text-text-secondary text-center max-w-sm">
-              Acesso a este painel requer autenticação. Clique abaixo para
-              iniciar o fluxo de login.
-            </p>
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.16),transparent_25%),radial-gradient(circle_at_top_right,rgba(0,229,255,0.16),transparent_28%),linear-gradient(180deg,#020617,#0f172a)] px-6">
+        <div className="w-full max-w-2xl rounded-[32px] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/30 backdrop-blur md:p-10">
+          <div className="mx-auto flex max-w-xl flex-col items-center gap-6 text-center">
+            <div className="inline-flex rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-quantum-cyan">
+              Acesso protegido
+            </div>
+            <div className="space-y-3">
+              <h1 className="text-3xl font-black tracking-tight text-white md:text-4xl">
+                Faça login para acessar sua Loja Virtual Nexus.
+              </h1>
+              <p className="text-sm leading-7 text-slate-300 md:text-base">
+                O painel comercial, os packs, os e-books e o checkout inteligente ficam disponíveis após autenticação. Entre para continuar sua jornada com uma experiência mais premium e organizada.
+              </p>
+            </div>
+            <div className="grid w-full gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Packs</p>
+                <p className="mt-2 text-lg font-bold text-white">15 níveis</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Bibliotecas</p>
+                <p className="mt-2 text-lg font-bold text-white">Entrega digital</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Checkout</p>
+                <p className="mt-2 text-lg font-bold text-white">Pix + MP</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => setLocation("/login")}
+              className="gradient-btn h-12 w-full max-w-sm shadow-lg transition-all hover:shadow-xl"
+            >
+              Ir para Login
+            </Button>
           </div>
-          <Button
-            onClick={() => setLocation("/login")}
-            className="w-full shadow-lg hover:shadow-xl transition-all gradient-btn"
-          >
-            Ir para Login
-          </Button>
         </div>
       </div>
     );

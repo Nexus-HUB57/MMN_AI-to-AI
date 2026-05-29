@@ -378,8 +378,21 @@ export default function App() {
       <AuthProvider>
         <Suspense
           fallback={
-            <div className="flex min-h-screen items-center justify-center">
-              Carregando...
+            <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.18),transparent_25%),radial-gradient(circle_at_top_right,rgba(0,229,255,0.18),transparent_28%),linear-gradient(180deg,#020617,#0f172a)] px-6">
+              <div className="w-full max-w-xl rounded-[32px] border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-black/30 backdrop-blur">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/5">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-quantum-cyan/40 border-t-quantum-cyan" />
+                </div>
+                <div className="mt-6 inline-flex rounded-full border border-quantum-lime/30 bg-quantum-lime/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-quantum-lime">
+                  Nexus Store carregando
+                </div>
+                <h2 className="mt-5 text-3xl font-black tracking-tight text-white md:text-4xl">
+                  Preparando sua experiência de loja virtual.
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-slate-300 md:text-base">
+                  Estamos sincronizando catálogo, packs, bibliotecas e atalhos de compra para uma navegação mais rápida e elegante.
+                </p>
+              </div>
             </div>
           }
         >

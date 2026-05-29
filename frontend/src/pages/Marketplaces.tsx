@@ -17,6 +17,7 @@ import {
   getUnlockedEbookBundles,
   getUnlockedSkillBundles,
 } from "@/lib/nexus-marketplace";
+import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
 import {
   ArrowRight,
   BookOpen,
@@ -29,9 +30,12 @@ import {
   ShoppingBag,
   ShoppingCart,
   Sparkles,
+  Star,
+  Store,
   Tag,
   Trophy,
   Users,
+  Wallet,
   Zap,
 } from "lucide-react";
 
@@ -41,20 +45,48 @@ function ProgressBar({ value, tone = "cyan" }: { value: number; tone?: "cyan" | 
   return (
     <div className="h-2 overflow-hidden rounded-full bg-white/8">
       <div
-        className={`h-full rounded-full ${tone === "lime" ? "bg-quantum-lime" : "bg-quantum-cyan"}`}
+        className={`h-full rounded-full transition-all duration-500 ${tone === "lime" ? "bg-quantum-lime" : "bg-quantum-cyan"}`}
         style={{ width: `${Math.max(4, value)}%` }}
       />
     </div>
   );
 }
 
+function KpiCard({
+  label,
+  value,
+  icon: Icon,
+  accent,
+}: {
+  label: string;
+  value: string;
+  icon: typeof Trophy;
+  accent: string;
+}) {
+  return (
+    <div className="rounded-3xl border border-white/10 bg-black/25 p-5 backdrop-blur">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">{label}</p>
+          <p className="mt-3 text-3xl font-bold text-white">{value}</p>
+        </div>
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 ${accent}`}>
+          <Icon className="h-5 w-5" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Marketplaces() {
-  const { profile, activate } = useMarketplaceProfile();
+  const { profile } = useMarketplaceProfile();
   const progress = getProgressSnapshot(profile);
   const ebookBundles = getUnlockedEbookBundles(profile);
   const skillBundles = getUnlockedSkillBundles(profile);
-  const hasOnboardingFlag = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
-  const focusMonthlyActivation = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("focus") === "monthly-activation";
+  const hasOnboardingFlag =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
+  const focusMonthlyActivation =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("focus") === "monthly-activation";
 
   const packStates = NEXUS_PACKS.map((pack) => ({
     ...pack,
@@ -67,22 +99,330 @@ export default function Marketplaces() {
   const activeEbooks = ebookBundles.filter((bundle) => bundle.status === "active").length;
   const activeSkills = skillBundles.filter((bundle) => bundle.status === "active").length;
   const stockItems = useMemo(() => getOperationalInventory(profile), [profile]);
+  const heroPacks = availableNow.slice(0, 3);
+  const featuredChannels = EXTERNAL_MARKETPLACES.slice(0, 4);
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
-        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.85),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+      <div className="space-y-8 pb-8">
+        <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(0,229,255,0.18),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
+          <div className="absolute inset-y-0 right-0 hidden w-[38%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_55%)] lg:block" />
+          <div className="relative grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
+            <div className="space-y-6">
+              <div className="flex flex-wrap gap-2">
+                <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">
+                  Loja Virtual Nexus Store
+                </Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">Checkout com Pix e Mercado Pago</Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">Entrega digital imediata</Badge>
+              </div>
+
+              <div className="space-y-4">
+                <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-5xl xl:text-6xl">
+                  Seu Marketplace agora opera como uma <span className="text-quantum-lime">loja virtual premium</span>.
+                </h1>
+                <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+                  Reestruturamos o hub comercial para um formato mais elegante, intuitivo e orientado à conversão: vitrine de packs,
+                  biblioteca de e-books, jornadas por nível e atalhos de compra em destaque, inspirado em experiências de venda mais
+                  modernas e visuais.
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <KpiCard label="packs ativos" value={String(activeCount)} icon={Package} accent="text-quantum-cyan" />
+                <KpiCard label="bibliotecas" value={String(activeEbooks)} icon={BookOpen} accent="text-quantum-lime" />
+                <KpiCard label="skills liberadas" value={String(activeSkills)} icon={Sparkles} accent="text-quantum-purple" />
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/marketplaces/ebooks">
+                  <Button className="gradient-btn h-12 px-6 text-sm font-semibold">
+                    Explorar loja de e-books
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/packs">
+                  <Button variant="outline" className="h-12 border-white/15 bg-white/5 px-6 text-sm text-white hover:bg-white/10">
+                    Ver packs e planos
+                  </Button>
+                </Link>
+                <Link href="/estoque">
+                  <Button variant="outline" className="h-12 border-white/15 bg-white/5 px-6 text-sm text-white hover:bg-white/10">
+                    Abrir estoque operacional
+                  </Button>
+                </Link>
+              </div>
+
+              {hasOnboardingFlag && (
+                <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
+                  Cadastro concluído. Seu onboarding já entra pela Loja Virtual com o Pack A² como primeira ativação possível.
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-1">
+              <Card className="overflow-hidden border-white/10 bg-white/6 backdrop-blur">
+                <CardHeader className="space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-xl text-white">Status da conta comercial</CardTitle>
+                      <CardDescription className="mt-2 text-slate-300">
+                        Visão rápida do seu nível e da próxima meta da loja.
+                      </CardDescription>
+                    </div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-quantum-cyan">
+                      <ShieldCheck className="h-5 w-5" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
+                    <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">carreira atual</p>
+                    <p className="mt-3 text-2xl font-bold text-white">{getLevelLabel(profile.currentLevel)}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">XP atual</p>
+                      <p className="mt-2 text-2xl font-bold text-white">{profile.currentXp.toLocaleString("pt-BR")}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-[10px] uppercase tracking-[0.24em] text-slate-500">Diretos</p>
+                      <p className="mt-2 text-2xl font-bold text-white">{profile.directReferrals}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-white/10 bg-white/6 backdrop-blur">
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-white">
+                    <Trophy className="h-4 w-4 text-amber-300" />
+                    Próximo desbloqueio
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-white">{progress.nextPack?.name ?? "Todos os packs concluídos"}</p>
+                    <p className="mt-1 text-sm text-slate-400">
+                      {progress.nextPack ? `Meta atual: ${progress.nextPack.shortName}` : "Você já concluiu toda a jornada de packs."}
+                    </p>
+                  </div>
+                  <div className="space-y-3 rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="flex items-center justify-between text-sm text-slate-300">
+                      <span className="inline-flex items-center gap-2"><Zap className="h-4 w-4 text-quantum-cyan" /> XP</span>
+                      <span>
+                        {progress.xpCurrent.toLocaleString("pt-BR")} / {progress.xpTarget.toLocaleString("pt-BR")}
+                      </span>
+                    </div>
+                    <ProgressBar value={progress.xpProgress} />
+                  </div>
+                  <div className="space-y-3 rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <div className="flex items-center justify-between text-sm text-slate-300">
+                      <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-quantum-lime" /> Diretos</span>
+                      <span>
+                        {progress.directCurrent} / {progress.directTarget}
+                      </span>
+                    </div>
+                    <ProgressBar value={progress.directProgress} tone="lime" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-4 lg:grid-cols-3 xl:grid-cols-4">
+          {[
+            {
+              title: "Checkout fluido",
+              description: "Fluxo visual de compra com Pix e Mercado Pago integrado ao ecossistema de packs e produtos.",
+              icon: Wallet,
+              accent: "text-quantum-cyan",
+            },
+            {
+              title: "Catálogo elegante",
+              description: "Cards maiores, hierarquia visual clara e vitrine mais parecida com loja virtual profissional.",
+              icon: Store,
+              accent: "text-quantum-lime",
+            },
+            {
+              title: "Entrega instantânea",
+              description: "E-books, bibliotecas e upgrades ficam claros para o afiliado e prontos para distribuição.",
+              icon: CheckCircle2,
+              accent: "text-quantum-purple",
+            },
+            {
+              title: "Crescimento guiado",
+              description: "A jornada de carreira permanece visível com metas de XP, critérios e próximos upgrades.",
+              icon: Trophy,
+              accent: "text-amber-300",
+            },
+          ].map((item) => (
+            <Card key={item.title} className="border-white/10 bg-white/5 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
+              <CardContent className="space-y-3 p-5">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 ${item.accent}`}>
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-white">{item.title}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <Card
+            className={`overflow-hidden border shadow-2xl shadow-black/20 ${
+              focusMonthlyActivation
+                ? "border-amber-400/40 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.18),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.98))]"
+                : "border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.98))]"
+            }`}
+          >
+            <CardHeader className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">Vitrine de ativação mensal</Badge>
+                  <CardTitle className="mt-3 text-2xl text-white md:text-3xl">Produtos liberados para compra agora</CardTitle>
+                  <CardDescription className="mt-2 max-w-2xl text-slate-300">
+                    Transformamos sua ativação mensal em uma vitrine mais comercial: investimento, benefícios e CTA ficam visíveis na primeira dobra.
+                  </CardDescription>
+                </div>
+                <Link href="/packs">
+                  <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                    Ver catálogo completo
+                  </Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {heroPacks.length > 0 ? (
+                heroPacks.map((pack, index) => (
+                  <div
+                    key={`hero-pack-${pack.slug}`}
+                    className="group rounded-[28px] border border-white/10 bg-black/25 p-5 transition hover:-translate-y-1 hover:border-white/20"
+                  >
+                    <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">{pack.shortName}</Badge>
+                          {index === 0 && (
+                            <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">Mais recomendado</Badge>
+                          )}
+                          {pack.bringsAgent && (
+                            <Badge className="border border-purple-500/30 bg-purple-500/10 text-purple-300">Entrega agente IA</Badge>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-2xl font-bold text-white">{pack.name}</p>
+                          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{pack.description}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {pack.highlights.slice(0, 3).map((highlight) => (
+                            <span key={highlight} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
+                              {highlight}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="min-w-[250px] space-y-4 rounded-[24px] border border-white/10 bg-white/5 p-5">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">investimento</p>
+                          <p className="mt-2 text-4xl font-black text-white">{formatCurrency(pack.priceCents)}</p>
+                        </div>
+                        <Link
+                          href={buildMarketplaceCheckoutUrl({
+                            source: "marketplaces",
+                            type: "pack",
+                            slug: pack.slug,
+                            name: pack.name,
+                            amountCents: pack.priceCents,
+                            description: pack.description,
+                          })}
+                        >
+                          <Button className="gradient-btn h-12 w-full text-sm font-semibold">
+                            Comprar agora
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <p className="text-xs leading-5 text-slate-400">Liberação vinculada à sua carreira e ao histórico de ativações já concluídas.</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-[28px] border border-white/10 bg-black/25 p-6 text-sm leading-6 text-slate-300">
+                  Nenhum novo pack está aberto para compra neste instante. Complete os critérios de XP e diretos para destravar a próxima oferta da sua loja.
+                </div>
+              )}
+
+              <div className="rounded-3xl border border-amber-300/25 bg-amber-300/5 p-5 text-sm leading-6 text-amber-100/90">
+                <p className="font-semibold text-amber-200">Janela oficial da ativação mensal</p>
+                <p className="mt-2">O compromisso deve ser efetivado entre os dias 01 e 10 de cada mês para manter bônus e comissões ativos.</p>
+                <ul className="mt-3 space-y-1 pl-5 list-disc">
+                  <li>3 meses de inadimplência: suspensão de 90 dias.</li>
+                  <li>Acima de 4 meses: retrocesso de nível + suspensão de 120 dias.</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Package className="h-5 w-5 text-quantum-cyan" />
+                Estoque pronto para operação
+              </CardTitle>
+              <CardDescription className="text-slate-400">
+                Tudo o que o agente já pode vender ou utilizar operacionalmente aparece nesta área como vitrine interna.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {stockItems.length === 0 ? (
+                <div className="rounded-3xl border border-white/10 bg-black/25 p-6 text-sm leading-6 text-slate-300">
+                  Seu estoque ainda está vazio. Faça uma ativação mensal para liberar packs, bibliotecas e produtos operacionais.
+                </div>
+              ) : (
+                stockItems.slice(0, 6).map((item) => (
+                  <div key={item.id} className="rounded-3xl border border-white/10 bg-black/25 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-white">{item.title}</p>
+                        <p className="mt-2 text-xs leading-5 text-slate-400">{item.description}</p>
+                      </div>
+                      <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">{item.badge}</Badge>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Qtd. {item.quantity.toLocaleString("pt-BR")}</span>
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Uso direto pelo agente</span>
+                    </div>
+                  </div>
+                ))
+              )}
+
+              <Link href="/estoque">
+                <Button variant="outline" className="mt-2 w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
+                  Abrir painel completo do estoque
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="space-y-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Canais de venda integrados</Badge>
-              <h2 className="mt-3 text-2xl font-bold text-white">Marketplaces conectados ao agente IA</h2>
-              <p className="mt-2 max-w-2xl text-sm text-slate-300">
-                O agente IA opera vendas diretas no Marketplace Nexus Storie e em plataformas parceiras (Hotmart, Shopee e Mercado Livre) via dropshipping e revenda.
+              <Badge className="border border-white/10 bg-white/5 text-slate-200">Canais de distribuição</Badge>
+              <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">Ecossistema conectado ao seu mini-commerce</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                A loja principal organiza os ativos próprios do Nexus, enquanto os canais parceiros ampliam distribuição e monetização.
               </p>
             </div>
           </div>
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {EXTERNAL_MARKETPLACES.map((channel) => {
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {featuredChannels.map((channel) => {
               const Icon = MARKETPLACE_ICONS[channel.icon] ?? ShoppingBag;
               const url = channel.externalUrl ?? channel.internalUrl ?? "#";
               const isExternal = Boolean(channel.externalUrl);
@@ -92,32 +432,29 @@ export default function Marketplaces() {
                   href={url}
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noreferrer" : undefined}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:-translate-y-0.5 hover:border-white/20"
+                  className="group rounded-[28px] border border-white/10 bg-white/5 p-5 transition hover:-translate-y-1 hover:border-white/20"
                 >
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="flex h-10 w-10 items-center justify-center rounded-xl text-base font-bold"
-                      style={{ backgroundColor: `${channel.color}22`, color: channel.color }}
-                    >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5" style={{ color: channel.color }}>
                       <Icon className="h-5 w-5" />
-                    </span>
+                    </div>
                     {isExternal ? (
-                      <ExternalLink className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                      <ExternalLink className="h-4 w-4 text-slate-500 transition group-hover:text-white" />
                     ) : (
-                      <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                      <ArrowRight className="h-4 w-4 text-slate-500 transition group-hover:text-white" />
                     )}
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-white">{channel.name}</p>
-                  <p className="mt-1 text-xs text-slate-400 leading-5">{channel.description}</p>
+                  <p className="mt-4 text-lg font-semibold text-white">{channel.name}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{channel.description}</p>
                   <Badge
-                    className="mt-3 border"
+                    className="mt-4 border"
                     style={{
                       borderColor: `${channel.color}44`,
                       backgroundColor: `${channel.color}11`,
                       color: channel.color,
                     }}
                   >
-                    {channel.status === "ativo" ? "Ativo" : channel.status === "em_breve" ? "Em breve" : "Em manutenção"}
+                    {channel.status === "ativo" ? "Operação ativa" : channel.status === "em_breve" ? "Em breve" : "Em manutenção"}
                   </Badge>
                 </a>
               );
@@ -125,313 +462,44 @@ export default function Marketplaces() {
           </div>
         </section>
 
-        <section className={`rounded-3xl border p-6 shadow-2xl shadow-black/20 ${focusMonthlyActivation ? "border-amber-400/40 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.18),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))]" : "border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.82),rgba(2,6,23,0.94))]"}`}>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-3xl space-y-4">
-              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                Marketplace Nexus sincronizado com Age.txt
-              </Badge>
-              <div className="space-y-3">
-                <h1 className="text-3xl font-bold text-white md:text-4xl">Marketplace Nexus reconfigurado por nível, XP e plano</h1>
-                <p className="max-w-2xl text-sm leading-6 text-slate-300 md:text-base">
-                  O fluxo inicial agora respeita o plano de carreira do Nexus: após o cadastro, o usuário entra no Marketplace com apenas o Pack Agente Afiliado A² liberado. Todos os demais packs, bibliotecas, skills e upgrades ficam bloqueados até a conclusão integral dos critérios de nível / XP. A ação <strong className="text-amber-300">Ativação Mensal</strong> leva você direto para este painel para escolher os packs e produtos do valor correspondente à sua operação.
-                </p>
-              </div>
-              {hasOnboardingFlag && (
-                <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
-                  Cadastro concluído. Seu onboarding começou no Marketplace e o Pack A² foi liberado como primeira ativação.
-                </div>
-              )}
-            </div>
-
-            <Card className="w-full max-w-md border-white/10 bg-white/5 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <ShieldCheck className="h-5 w-5 text-quantum-cyan" />
-                  Status do afiliado
-                </CardTitle>
-                <CardDescription className="text-slate-400">
-                  Regras atuais de acesso do seu ecossistema Nexus.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-quantum-cyan">carreira atual</p>
-                  <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
-                  <p className="mt-1 text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-wider text-slate-400">XP atual</p>
-                    <p className="mt-2 text-2xl font-bold text-white">{profile.currentXp.toLocaleString("pt-BR")}</p>
-                  </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-wider text-slate-400">Diretos qualificados</p>
-                    <p className="mt-2 text-2xl font-bold text-white">{profile.directReferrals}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <Card className="border-amber-400/30 bg-amber-400/10 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <ShoppingCart className="h-5 w-5 text-amber-300" />
-                Ativação Mensal
-              </CardTitle>
-              <CardDescription className="text-amber-100/90">
-                Escolha os packs ou produtos do valor correspondente à sua solicitação. Tudo o que for ativado aqui passa a compor o estoque operacional do Agente IA.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {availableNow.length > 0 ? (
-                availableNow.map((pack) => (
-                  <div key={`monthly-${pack.slug}`} className="rounded-2xl border border-amber-300/20 bg-black/20 p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-base font-semibold text-white">{pack.name}</p>
-                        <p className="mt-1 text-sm leading-6 text-slate-300">{pack.description}</p>
-                      </div>
-                      <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">{pack.shortName}</Badge>
-                    </div>
-                    <div className="mt-4 flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.3em] text-slate-500">valor</p>
-                        <p className="mt-1 text-xl font-bold text-white">{formatCurrency(pack.priceCents)}</p>
-                      </div>
-                      <Button className="gradient-btn" onClick={() => activate(pack.slug)}>
-                        Ativar agora
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                  Nenhuma nova ativação mensal está disponível neste instante. Estar em dia com a sua Ativação é a única Garantia para receber os Bônus e Comissões!
-                </div>
-              )}
-
-              <Link href="/estoque">
-                <Button variant="outline" className="w-full border-amber-300/30 bg-amber-300/5 text-amber-100 hover:bg-amber-300/15">
-                  <ShoppingBag className="mr-2 h-4 w-4" />
-                  Adquirir Produtos para o meu Estoque Operacional
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-
-              <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs leading-6 text-amber-100/90">
-                <p className="font-semibold text-amber-200">⏱️ Janela oficial de Ativação Mensal</p>
-                <p className="mt-1">
-                  A operação de Ativação Mensal deve ser configurada ao sistema, devendo esse compromisso ser efetivado <strong>do dia 01 ao dia 10 de cada mês</strong>.
-                </p>
-                <p className="mt-3 font-semibold text-amber-200">Diretrizes de inadimplência</p>
-                <ul className="mt-1 space-y-1 list-disc pl-5">
-                  <li>Inadimplência de <strong>3 meses consecutivos</strong>: suspensão de <strong>90 dias</strong> de Bônus e Comissões.</li>
-                  <li>Inadimplência superior a <strong>4 meses consecutivos</strong>: retrocesso de Nível + suspensão de <strong>120 dias</strong> de Bônus e Comissões.</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <Package className="h-5 w-5 text-quantum-cyan" />
-                Estoque operacional do Agente IA
-              </CardTitle>
-              <CardDescription className="text-slate-300">
-                Todos os produtos adquiridos ficam listados aqui para uso nas vendas diretas do agente.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {stockItems.length === 0 ? (
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                  Seu estoque ainda está vazio. Faça uma ativação mensal para liberar packs, bibliotecas e produtos operacionais.
-                </div>
-              ) : (
-                stockItems.map((item) => (
-                  <div key={item.id} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-white">{item.title}</p>
-                        <p className="mt-1 text-xs leading-5 text-slate-400">{item.description}</p>
-                      </div>
-                      <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">{item.badge}</Badge>
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Qtd. {item.quantity.toLocaleString("pt-BR")}</span>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Uso direto pelo Agente IA</span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: "Packs ativos", value: activeCount, icon: Package, tone: "text-quantum-cyan" },
-            { label: "Packs bloqueados", value: lockedCount, icon: Lock, tone: "text-amber-300" },
-            { label: "Bibliotecas liberadas", value: activeEbooks, icon: BookOpen, tone: "text-quantum-lime" },
-            { label: "Skills liberadas", value: activeSkills, icon: Sparkles, tone: "text-quantum-purple" },
-          ].map((item) => (
-            <Card key={item.label} className="border-white/10 bg-white/5 backdrop-blur">
-              <CardContent className="flex items-center justify-between p-5">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{item.label}</p>
-                  <p className="mt-3 text-3xl font-bold text-white">{item.value}</p>
-                </div>
-                <item.icon className={`h-7 w-7 ${item.tone}`} />
-              </CardContent>
-            </Card>
-          ))}
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
           <Card className="border-white/10 bg-white/5 backdrop-blur">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
-                <Trophy className="h-5 w-5 text-quantum-cyan" />
-                Critérios para o próximo upgrade
+                <BookOpen className="h-5 w-5 text-quantum-lime" />
+                Bibliotecas de e-books por estágio
               </CardTitle>
               <CardDescription className="text-slate-400">
-                O próximo plano só é liberado quando nível, XP e rede qualificada forem concluídos integralmente.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-slate-500">próxima etapa</p>
-                    <p className="mt-2 text-lg font-semibold text-white">{progress.nextPack?.name ?? "Todos os packs concluídos"}</p>
-                  </div>
-                  {progress.nextPack ? (
-                    <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                      {progress.nextPack.shortName}
-                    </Badge>
-                  ) : (
-                    <Badge className="border border-green-500/30 bg-green-500/10 text-green-400">Concluído</Badge>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center justify-between text-sm text-slate-300">
-                  <span className="inline-flex items-center gap-2"><Zap className="h-4 w-4 text-quantum-cyan" /> XP acumulado</span>
-                  <span>{progress.xpCurrent.toLocaleString("pt-BR")} / {progress.xpTarget.toLocaleString("pt-BR")}</span>
-                </div>
-                <ProgressBar value={progress.xpProgress} />
-              </div>
-
-              <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center justify-between text-sm text-slate-300">
-                  <span className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-quantum-lime" /> Diretos qualificados</span>
-                  <span>{progress.directCurrent} / {progress.directTarget}</span>
-                </div>
-                <ProgressBar value={progress.directProgress} tone="lime" />
-              </div>
-
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                <Link href="/packs">
-                  <Button className="w-full gradient-btn">Ver packs</Button>
-                </Link>
-                <Link href="/skills">
-                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver skills</Button>
-                </Link>
-                <Link href="/upgrades">
-                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver upgrades</Button>
-                </Link>
-                <Link href="/marketplaces/ebooks">
-                  <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">Ver e-books</Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
-                Packs disponíveis para ativação
-              </CardTitle>
-              <CardDescription className="text-slate-400">
-                Escolha abaixo o pack liberado para a sua ativação mensal neste momento.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {availableNow.map((pack) => (
-                <div key={pack.slug} className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-lg font-semibold text-white">{pack.name}</p>
-                      <p className="mt-1 text-sm leading-6 text-slate-300">{pack.description}</p>
-                    </div>
-                    <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                      {pack.badge ?? "Disponível"}
-                    </Badge>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {pack.highlights.slice(0, 3).map((highlight) => (
-                      <span key={highlight} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                        {highlight}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="mt-5 flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-slate-500">investimento</p>
-                      <p className="mt-1 text-2xl font-bold text-white">{formatCurrency(pack.priceCents)}</p>
-                    </div>
-                    <Button className="gradient-btn" onClick={() => activate(pack.slug)}>
-                      Ativar agora
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              {availableNow.length === 0 && (
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                  Nenhum novo pack está disponível neste instante. Complete os critérios de carreira para avançar ao próximo upgrade.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-2">
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <BookOpen className="h-5 w-5 text-quantum-cyan" />
-                Bibliotecas de e-books vinculadas aos packs
-              </CardTitle>
-              <CardDescription className="text-slate-400">
-                Os e-books são liberados pela hierarquia de packs e permanecem sincronizados com o plano ativo.
+                Cada biblioteca acompanha a evolução da conta e funciona como uma linha de produtos da sua loja.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {ebookBundles.map((bundle) => (
-                <div key={bundle.slug} className={`rounded-2xl border p-4 ${bundle.status === "active" ? "border-green-500/30 bg-green-500/10" : "border-white/10 bg-black/20"}`}>
+                <div
+                  key={bundle.slug}
+                  className={`rounded-3xl border p-4 ${
+                    bundle.status === "active" ? "border-green-500/30 bg-green-500/10" : "border-white/10 bg-black/25"
+                  }`}
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-base font-semibold text-white">{bundle.name}</p>
-                      <p className="mt-1 text-sm text-slate-300">{bundle.description}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">{bundle.description}</p>
                     </div>
-                    {bundle.status === "active" ? (
-                      <Badge className="border border-green-500/30 bg-green-500/10 text-green-400">Liberado</Badge>
-                    ) : (
-                      <Badge className="border border-amber-500/30 bg-amber-500/10 text-amber-300">Bloqueado</Badge>
-                    )}
+                    <Badge
+                      className={`border ${
+                        bundle.status === "active"
+                          ? "border-green-500/30 bg-green-500/10 text-green-400"
+                          : "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                      }`}
+                    >
+                      {bundle.status === "active" ? "Liberado" : "Bloqueado"}
+                    </Badge>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
                     <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{bundle.ebookCount} e-books</span>
                     <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Revenda {bundle.resalePriceLabel}</span>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Vinculado ao {bundle.unlockPack?.shortName}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Pack {bundle.unlockPack?.shortName}</span>
                   </div>
                 </div>
               ))}
@@ -442,24 +510,29 @@ export default function Marketplaces() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Sparkles className="h-5 w-5 text-quantum-purple" />
-                Skills liberadas por plano
+                Skills e upgrades do agente
               </CardTitle>
               <CardDescription className="text-slate-400">
-                Cada bundle de skills acompanha o upgrade do agente e só aparece quando o pack correspondente for concluído.
+                A experiência de loja agora também mostra os bundles de skills como produtos de evolução do seu agente.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {skillBundles.map((bundle) => (
-                <div key={bundle.slug} className={`rounded-2xl border p-4 ${bundle.status === "active" ? "border-purple-500/30 bg-purple-500/10" : "border-white/10 bg-black/20"}`}>
+                <div
+                  key={bundle.slug}
+                  className={`rounded-3xl border p-4 ${
+                    bundle.status === "active" ? "border-purple-500/30 bg-purple-500/10" : "border-white/10 bg-black/25"
+                  }`}
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-base font-semibold text-white">{bundle.name}</p>
-                      <p className="mt-1 text-sm text-slate-300">{bundle.description}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">{bundle.description}</p>
                     </div>
                     {bundle.status === "active" ? (
-                      <CheckCircle2 className="h-5 w-5 text-green-400" />
+                      <CheckCircle2 className="mt-1 h-5 w-5 text-green-400" />
                     ) : (
-                      <Lock className="h-5 w-5 text-amber-300" />
+                      <Lock className="mt-1 h-5 w-5 text-amber-300" />
                     )}
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">

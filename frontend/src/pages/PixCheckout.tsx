@@ -1,25 +1,68 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { trpc } from "@/lib/trpc";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import { trpc } from "@/lib/trpc";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  QrCode,
-  Copy,
-  CheckCircle2,
-  Clock,
-  RefreshCw,
   AlertCircle,
-  Zap,
+  ArrowLeft,
+  CheckCircle2,
+  Copy,
+  CreditCard,
+  ExternalLink,
   Info,
-  X,
+  Landmark,
+  LoaderCircle,
+  QrCode,
+  ShieldCheck,
+  Smartphone,
+  Wallet,
 } from "lucide-react";
+import {
+  MARKETPLACE_PIX_BANK_LABEL,
+  MARKETPLACE_PIX_KEY,
+  MARKETPLACE_PIX_KEY_TYPE_LABEL,
+  buildMarketplaceCheckoutUrl,
+  formatCurrencyFromCents,
+  generateMarketplacePixPayload,
+  getMarketplaceReturnUrl,
+  readMarketplaceCheckoutIntent,
+} from "@/lib/marketplace-payments";
 
-const PIX_POLL_INTERVAL_MS = 5_000;
+interface MarketplaceCheckoutSession {
+  amount: number;
+  amountCents: number;
+  externalReference: string;
+  mercadoPago: {
+    configured: boolean;
+    preferenceId: string | null;
+    initPoint: string | null;
+    sandboxInitPoint: string | null;
+  };
+  pix: {
+    provider: "manual_key" | "mercado_pago";
+    paymentId: string | null;
+    status: string | null;
+    qrCode: string | null;
+    qrCodeBase64: string | null;
+    ticketUrl: string | null;
+    expiresAt: string | null;
+    fallback: {
+      pixKey: string;
+      keyType: string | null;
+      receiverName: string;
+      receiverCity: string;
+      bankLabel: string;
+    };
+  };
+  warnings: string[];
+}
 
 function formatBRL(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -28,384 +71,456 @@ function formatBRL(value: number) {
   }).format(value);
 }
 
-function QrCodeImage({ payload }: { payload: string }) {
-  const encodedPayload = encodeURIComponent(payload);
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodedPayload}&size=250x250&format=png&ecc=M&margin=8`;
+function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: string | null }) {
+  const imageSrc = base64
+    ? `data:image/png;base64,${base64}`
+    : payload
+      ? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(payload)}&size=280x280&format=png&ecc=M&margin=8`
+      : null;
+
+  if (!imageSrc) {
+    return (
+      <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-white/10 bg-black/20 px-6 text-center text-slate-400">
+        <QrCode className="h-14 w-14 opacity-20" />
+        <p className="max-w-sm text-sm leading-6">Preencha um valor válido para gerar o QR Code do pagamento.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="bg-white rounded-2xl p-4 shadow-inner border border-gray-100">
-        <img
-          src={qrUrl}
-          alt="QR Code PIX"
-          width={250}
-          height={250}
-          className="rounded-lg"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
-          }}
-        />
+      <div className="rounded-3xl border border-white/10 bg-white p-4 shadow-inner shadow-black/10">
+        <img src={imageSrc} alt="QR Code PIX" width={280} height={280} className="rounded-xl" />
       </div>
-      <span className="text-xs text-muted-foreground">
-        Escaneie com qualquer app de banco
-      </span>
+      <span className="text-xs text-slate-400">Escaneie com o app do seu banco</span>
     </div>
   );
 }
 
-type PixStatus = "idle" | "generated" | "polling" | "paid" | "expired" | "error";
-
-interface GeneratedQr {
-  qrCodePayload: string;
-  txid: string;
-  amount: number;
-  sandbox: boolean;
-  expiresAt: string;
-}
-
 export default function PixCheckout() {
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<PixStatus>("idle");
-  const [generatedQr, setGeneratedQr] = useState<GeneratedQr | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { user } = useAuth();
+  const checkoutIntent = useMemo(() => readMarketplaceCheckoutIntent(), []);
+  const defaultAmount = checkoutIntent?.amountCents ? (checkoutIntent.amountCents / 100).toFixed(2) : "";
+  const defaultDescription = checkoutIntent?.description ?? checkoutIntent?.name ?? "";
 
-  const configQuery = trpc.pix.config.useQuery(undefined, {
-    retry: false,
-    staleTime: 60_000,
-  });
+  const [amount, setAmount] = useState(defaultAmount);
+  const [description, setDescription] = useState(defaultDescription);
+  const [payerEmail, setPayerEmail] = useState(user?.email ?? "");
+  const [payerDocument, setPayerDocument] = useState(user?.cpf ?? "");
+  const [copiedState, setCopiedState] = useState<"pix" | "key" | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [checkoutSession, setCheckoutSession] = useState<MarketplaceCheckoutSession | null>(null);
 
-  const generateQrMutation = trpc.pix.generateStaticQr.useMutation({
-    onSuccess: (data) => {
-      setGeneratedQr(data as GeneratedQr);
-      setStatus("generated");
-      setErrorMsg(null);
-      startPolling((data as GeneratedQr).txid);
-    },
-    onError: (err) => {
-      setErrorMsg(err.message);
-      setStatus("error");
-    },
-  });
-
-  const checkStatusQuery = trpc.pix.checkPaymentStatus.useQuery(
-    { txid: generatedQr?.txid ?? "" },
-    {
-      enabled: false,
-      retry: false,
-    },
-  );
-
-  const sandboxConfirmMutation = trpc.pix.sandboxConfirm.useMutation({
-    onSuccess: () => {
-      setPaymentConfirmed(true);
-      setStatus("paid");
-      stopPolling();
-    },
-    onError: (err) => {
-      setErrorMsg(err.message);
-    },
-  });
-
-  const stopPolling = useCallback(() => {
-    if (pollRef.current) {
-      clearInterval(pollRef.current);
-      pollRef.current = null;
-    }
-  }, []);
-
-  const startPolling = useCallback(
-    (txid: string) => {
-      stopPolling();
-      setStatus("polling");
-      pollRef.current = setInterval(async () => {
-        try {
-          const result = await checkStatusQuery.refetch();
-          if (result.data?.status === "CONCLUIDA") {
-            setPaymentConfirmed(true);
-            setStatus("paid");
-            stopPolling();
-          }
-        } catch {
-          // silent — continue polling
-        }
-      }, PIX_POLL_INTERVAL_MS);
-    },
-    [stopPolling, checkStatusQuery],
-  );
+  const requestIdRef = useRef(0);
+  const createCheckoutMutation = trpc.pix.createMarketplaceCheckout.useMutation();
 
   useEffect(() => {
-    return () => stopPolling();
-  }, [stopPolling]);
+    if (user?.email) setPayerEmail((current) => current || user.email);
+    if (user?.cpf) setPayerDocument((current) => current || user.cpf || "");
+  }, [user?.cpf, user?.email]);
 
-  const handleGenerate = () => {
-    const amountNumber = parseFloat(amount.replace(",", "."));
-    if (isNaN(amountNumber) || amountNumber < 0.01) {
-      setErrorMsg("Informe um valor válido (mínimo R$ 0,01).");
+  const returnUrl = getMarketplaceReturnUrl(checkoutIntent?.source);
+  const amountNumber = Number.parseFloat(amount.replace(",", "."));
+  const hasValidAmount = Number.isFinite(amountNumber) && amountNumber >= 0.01;
+  const amountCents = hasValidAmount ? Math.round(amountNumber * 100) : 0;
+  const absoluteReturnUrl = typeof window !== "undefined" ? `${window.location.origin}${returnUrl}` : undefined;
+
+  const paymentContext = useMemo(() => ({
+    source: checkoutIntent?.source ?? "checkout-manual",
+    type: checkoutIntent?.type ?? "produto",
+    slug: checkoutIntent?.slug ?? "checkout-manual",
+    name: checkoutIntent?.name ?? "Pagamento Nexus",
+    description: description || checkoutIntent?.description || checkoutIntent?.name || "Pagamento Nexus",
+    amountCents: hasValidAmount ? amountCents : checkoutIntent?.amountCents,
+  }), [amountCents, checkoutIntent, description, hasValidAmount]);
+
+  const fallbackPixPayload = useMemo(() => {
+    if (!hasValidAmount) return null;
+    return generateMarketplacePixPayload({
+      amountCents,
+      description: description || checkoutIntent?.name || "Pagamento Nexus",
+    });
+  }, [amountCents, checkoutIntent?.name, description, hasValidAmount]);
+
+  useEffect(() => {
+    if (!hasValidAmount) {
+      setCheckoutSession(null);
       return;
     }
-    setStatus("idle");
-    setGeneratedQr(null);
-    setPaymentConfirmed(false);
-    setErrorMsg(null);
-    generateQrMutation.mutate({
-      amount: amountNumber,
-      description: description || undefined,
-    });
+
+    const currentRequestId = ++requestIdRef.current;
+    const timer = window.setTimeout(async () => {
+      try {
+        const session = (await createCheckoutMutation.mutateAsync({
+          source: paymentContext.source,
+          type: paymentContext.type,
+          slug: paymentContext.slug,
+          name: paymentContext.name,
+          description: paymentContext.description,
+          amountCents,
+          returnUrl: absoluteReturnUrl,
+          payerEmail: payerEmail || undefined,
+          payerName: user?.name || undefined,
+          payerDocument: payerDocument || undefined,
+        })) as MarketplaceCheckoutSession;
+
+        if (requestIdRef.current === currentRequestId) {
+          setCheckoutSession(session);
+        }
+      } catch (error) {
+        if (requestIdRef.current === currentRequestId) {
+          setCheckoutSession(null);
+          setFeedback(error instanceof Error ? error.message : "Não foi possível preparar o checkout agora.");
+        }
+      }
+    }, 450);
+
+    return () => window.clearTimeout(timer);
+  }, [absoluteReturnUrl, amountCents, createCheckoutMutation, hasValidAmount, payerDocument, payerEmail, paymentContext.description, paymentContext.name, paymentContext.slug, paymentContext.source, paymentContext.type, user?.name]);
+
+  useEffect(() => {
+    if (!copiedState) return;
+    const timer = window.setTimeout(() => setCopiedState(null), 2200);
+    return () => window.clearTimeout(timer);
+  }, [copiedState]);
+
+  useEffect(() => {
+    if (!feedback) return;
+    const timer = window.setTimeout(() => setFeedback(null), 5000);
+    return () => window.clearTimeout(timer);
+  }, [feedback]);
+
+  const handleCopy = async (value: string, type: "pix" | "key") => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedState(type);
+      setFeedback(type === "pix" ? "Código PIX copiado com sucesso." : "Chave PIX copiada com sucesso.");
+    } catch {
+      setFeedback("Não foi possível copiar automaticamente. Faça a cópia manual.");
+    }
   };
 
-  const handleCopy = async () => {
-    if (!generatedQr?.qrCodePayload) return;
-    await navigator.clipboard.writeText(generatedQr.qrCodePayload);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const pixCode = checkoutSession?.pix.qrCode || fallbackPixPayload?.qrCodePayload || null;
+  const pixBase64 = checkoutSession?.pix.qrCodeBase64 || null;
+  const pixKey = checkoutSession?.pix.fallback.pixKey || MARKETPLACE_PIX_KEY;
+  const pixBank = checkoutSession?.pix.fallback.bankLabel || MARKETPLACE_PIX_BANK_LABEL;
+  const pixReceiver = checkoutSession?.pix.fallback.receiverName || "ONEVERSO MMN AI";
+  const pixCity = checkoutSession?.pix.fallback.receiverCity || "SAO PAULO";
+  const hasMercadoPagoLink = Boolean(checkoutSession?.mercadoPago.initPoint);
+  const isGeneratingCheckout = createCheckoutMutation.isPending;
 
-  const handleReset = () => {
-    stopPolling();
-    setGeneratedQr(null);
-    setStatus("idle");
-    setPaymentConfirmed(false);
-    setErrorMsg(null);
-  };
-
-  const handleSandboxConfirm = () => {
-    if (!generatedQr) return;
-    const amountNumber = parseFloat(amount.replace(",", "."));
-    sandboxConfirmMutation.mutate({
-      txid: generatedQr.txid,
-      amount: amountNumber,
-      payerName: "Teste Sandbox",
-    });
-  };
-
-  const config = configQuery.data;
-  const isSandbox = config?.sandbox ?? true;
-  const isConfigured = config?.configured ?? false;
+  const title = checkoutIntent ? "Área de pagamentos do Marketplace" : "Checkout PIX";
+  const subtitle = checkoutIntent
+    ? "Revise o item, gere o checkout server-side do Mercado Pago e pague por QR Code PIX ou link de checkout."
+    : "Use este checkout para cobranças avulsas do ecossistema Nexus com Mercado Pago e PIX.";
 
   return (
     <DashboardLayout>
-      <div className="max-w-3xl mx-auto p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Checkout PIX</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Gere QR Codes PIX para receber pagamentos instantâneos
-            </p>
+      <div className="mx-auto max-w-6xl space-y-6 p-6">
+        <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                  {checkoutIntent ? "Compra originada do Marketplace" : "Checkout avulso"}
+                </Badge>
+                <Badge className="border border-amber-400/30 bg-amber-400/10 text-amber-200">
+                  PIX + Mercado Pago
+                </Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-300">
+                  Token protegido no servidor
+                </Badge>
+              </div>
+              <h1 className="text-3xl font-bold text-white md:text-4xl">{title}</h1>
+              <p className="max-w-3xl text-sm leading-6 text-slate-300 md:text-base">{subtitle}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href={returnUrl}>
+                <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Voltar
+                </Button>
+              </Link>
+              {checkoutIntent && (
+                <Link href={buildMarketplaceCheckoutUrl(checkoutIntent)}>
+                  <Button variant="outline" className="border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan hover:bg-quantum-cyan/15">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    Reabrir checkout
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {isSandbox && (
-              <Badge variant="outline" className="border-yellow-500 text-yellow-600 gap-1">
-                <Zap className="h-3 w-3" /> Sandbox
-              </Badge>
-            )}
-            {isConfigured && !isSandbox && (
-              <Badge className="bg-green-600 text-white gap-1">
-                <CheckCircle2 className="h-3 w-3" /> Produção
-              </Badge>
-            )}
-          </div>
-        </div>
+        </section>
 
-        {!isConfigured && !isSandbox && (
-          <div className="flex items-start gap-3 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <span>
-              Chave PIX não configurada. Defina a variável <code>PIX_KEY</code> no servidor
-              para habilitar pagamentos reais.
-            </span>
+        {feedback && (
+          <div className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 px-4 py-3 text-sm text-quantum-cyan">
+            {feedback}
           </div>
         )}
 
-        <Tabs defaultValue="qr" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="qr" className="gap-2">
-              <QrCode className="h-4 w-4" /> Gerar QR Code
+        {checkoutSession?.warnings?.length ? (
+          <div className="space-y-2 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100">
+            {checkoutSession.warnings.map((warning) => (
+              <p key={warning} className="flex items-start gap-2">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{warning}</span>
+              </p>
+            ))}
+          </div>
+        ) : null}
+
+        <Tabs defaultValue="checkout" className="w-full">
+          <TabsList className="mb-4 grid w-full grid-cols-2">
+            <TabsTrigger value="checkout" className="gap-2">
+              <Wallet className="h-4 w-4" /> Checkout
             </TabsTrigger>
             <TabsTrigger value="info" className="gap-2">
               <Info className="h-4 w-4" /> Informações
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="qr">
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* Left: form */}
-              <Card>
+          <TabsContent value="checkout" className="space-y-6">
+            <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
                 <CardHeader>
-                  <CardTitle className="text-base">Dados da Cobrança</CardTitle>
-                  <CardDescription>
-                    Informe o valor e uma descrição para gerar o QR Code
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <Wallet className="h-5 w-5 text-quantum-cyan" />
+                    Dados do pagamento
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">
+                    O checkout é preparado no backend e o Access Token do Mercado Pago permanece fora do cliente.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="amount">Valor (R$)</Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                        R$
-                      </span>
+                <CardContent className="space-y-5">
+                  {checkoutIntent ? (
+                    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Item selecionado</p>
+                          <p className="mt-2 text-lg font-semibold text-white">{checkoutIntent.name}</p>
+                          <p className="mt-1 text-sm text-slate-300">
+                            {checkoutIntent.description || "Pedido gerado a partir do Marketplace Nexus."}
+                          </p>
+                        </div>
+                        <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan uppercase">
+                          {checkoutIntent.type}
+                        </Badge>
+                      </div>
+                      <div className="mt-4 grid gap-3 md:grid-cols-2">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Origem</p>
+                          <p className="mt-2 text-sm font-medium text-white">{checkoutIntent.source || "marketplace"}</p>
+                        </div>
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Valor sugerido</p>
+                          <p className="mt-2 text-sm font-medium text-white">
+                            {typeof checkoutIntent.amountCents === "number" ? formatCurrencyFromCents(checkoutIntent.amountCents) : "Definir manualmente"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100">
+                      Use este checkout para cobranças manuais ou acessos diretos ao PIX quando não houver um item pré-selecionado do Marketplace.
+                    </div>
+                  )}
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="amount">Valor (R$)</Label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">R$</span>
+                        <Input
+                          id="amount"
+                          type="number"
+                          min="0.01"
+                          step="0.01"
+                          placeholder="0,00"
+                          className="border-white/10 bg-white/5 pl-9 text-white"
+                          value={amount}
+                          onChange={(event) => setAmount(event.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="description">Descrição</Label>
                       <Input
-                        id="amount"
-                        type="number"
-                        min="0.01"
-                        step="0.01"
-                        placeholder="0,00"
-                        className="pl-9"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        disabled={status === "polling" || status === "paid"}
+                        id="description"
+                        placeholder="Ex: Pack Agente Afiliado A²"
+                        maxLength={72}
+                        className="border-white/10 bg-white/5 text-white"
+                        value={description}
+                        onChange={(event) => setDescription(event.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <Label htmlFor="description">Descrição (opcional)</Label>
-                    <Input
-                      id="description"
-                      placeholder="Ex: Assinatura Nexus Pro"
-                      maxLength={72}
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      disabled={status === "polling" || status === "paid"}
-                    />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="payerEmail">E-mail do comprador</Label>
+                      <Input
+                        id="payerEmail"
+                        type="email"
+                        placeholder="seu@email.com"
+                        className="border-white/10 bg-white/5 text-white"
+                        value={payerEmail}
+                        onChange={(event) => setPayerEmail(event.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="payerDocument">CPF/CNPJ para PIX Mercado Pago</Label>
+                      <Input
+                        id="payerDocument"
+                        placeholder="Opcional"
+                        className="border-white/10 bg-white/5 text-white"
+                        value={payerDocument}
+                        onChange={(event) => setPayerDocument(event.target.value)}
+                      />
+                    </div>
                   </div>
 
-                  {errorMsg && (
-                    <div className="flex items-start gap-2 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">
-                      <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-                      {errorMsg}
+                  {!hasValidAmount && (
+                    <div className="flex items-start gap-2 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>Informe um valor válido para liberar o QR Code PIX e levar o valor correto para o fluxo de pagamento.</span>
                     </div>
                   )}
 
-                  <div className="flex gap-2 pt-1">
-                    <Button
-                      className="flex-1 gap-2"
-                      onClick={handleGenerate}
-                      disabled={generateQrMutation.isPending || status === "paid"}
-                    >
-                      {generateQrMutation.isPending ? (
-                        <>
-                          <RefreshCw className="h-4 w-4 animate-spin" />
-                          Gerando...
-                        </>
-                      ) : (
-                        <>
-                          <QrCode className="h-4 w-4" />
-                          Gerar QR Code
-                        </>
-                      )}
-                    </Button>
-                    {generatedQr && (
-                      <Button variant="outline" size="icon" onClick={handleReset} title="Novo QR">
-                        <X className="h-4 w-4" />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <div className="flex items-center gap-2 text-white">
+                        <CreditCard className="h-4 w-4 text-sky-300" />
+                        <p className="font-semibold">Mercado Pago</p>
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
+                        O backend cria a preferência de checkout e devolve o link pronto para o usuário concluir a compra.
+                      </p>
+                      <Button
+                        className="mt-4 w-full gradient-btn"
+                        disabled={!hasMercadoPagoLink || !hasValidAmount || isGeneratingCheckout}
+                        onClick={() => {
+                          if (!checkoutSession?.mercadoPago.initPoint) {
+                            setFeedback("O link do Mercado Pago ainda não está disponível para este item.");
+                            return;
+                          }
+                          window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
+                        }}
+                      >
+                        {isGeneratingCheckout ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : <ExternalLink className="mr-2 h-4 w-4" />}
+                        Abrir checkout Mercado Pago
                       </Button>
-                    )}
-                  </div>
+                      <div className="mt-3 rounded-2xl border border-white/10 bg-black/20 p-3 text-xs text-slate-300">
+                        <p className="font-medium text-white">Status</p>
+                        <p className="mt-1">
+                          {isGeneratingCheckout
+                            ? "Gerando preferência de pagamento no servidor..."
+                            : hasMercadoPagoLink
+                              ? "Checkout pronto para abertura."
+                              : "Aguardando configuração do token ou retorno da API."}
+                        </p>
+                      </div>
+                    </div>
 
-                  {isSandbox && generatedQr && status !== "paid" && (
-                    <Button
-                      variant="outline"
-                      className="w-full gap-2 border-yellow-400 text-yellow-700 hover:bg-yellow-50"
-                      onClick={handleSandboxConfirm}
-                      disabled={sandboxConfirmMutation.isPending}
-                    >
-                      {sandboxConfirmMutation.isPending ? (
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Zap className="h-4 w-4" />
-                      )}
-                      Simular Pagamento (Sandbox)
-                    </Button>
-                  )}
+                    <div className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 p-4">
+                      <div className="flex items-center gap-2 text-white">
+                        <QrCode className="h-4 w-4 text-quantum-cyan" />
+                        <p className="font-semibold">PIX direto</p>
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
+                        Chave {MARKETPLACE_PIX_KEY_TYPE_LABEL.toLowerCase()} {pixKey} · {pixBank}. Se o QR dinâmico do Mercado Pago não estiver disponível, o checkout mantém a chave PIX manual como fallback.
+                      </p>
+                      <Button
+                        variant="outline"
+                        className="mt-4 w-full border-quantum-cyan/30 bg-quantum-cyan/5 text-quantum-cyan hover:bg-quantum-cyan/10"
+                        onClick={() => handleCopy(pixKey, "key")}
+                      >
+                        {copiedState === "key" ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                        Copiar chave PIX
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
-              {/* Right: QR display */}
-              <Card className="flex flex-col items-center justify-center">
-                <CardContent className="pt-6 w-full">
-                  {status === "idle" && (
-                    <div className="flex flex-col items-center justify-center gap-4 py-12 text-center text-muted-foreground">
-                      <QrCode className="h-16 w-16 opacity-20" />
-                      <p className="text-sm">
-                        Informe o valor ao lado e clique em <strong>Gerar QR Code</strong>
-                      </p>
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <QrCode className="h-5 w-5 text-quantum-cyan" />
+                    QR Code e dados PIX
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">
+                    O checkout prioriza o QR dinâmico do Mercado Pago e faz fallback para a chave celular Nubank quando necessário.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <QrCodeImage payload={pixCode} base64={pixBase64} />
+
+                  {isGeneratingCheckout && hasValidAmount && (
+                    <div className="flex items-center gap-2 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 p-3 text-sm text-quantum-cyan">
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                      Preparando QR Code e link do checkout no servidor...
                     </div>
                   )}
 
-                  {(status === "generated" || status === "polling") && generatedQr && !paymentConfirmed && (
-                    <div className="flex flex-col items-center gap-4">
-                      <QrCodeImage payload={generatedQr.qrCodePayload} />
-
-                      <div className="w-full space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Valor:</span>
-                          <span className="font-semibold">{formatBRL(generatedQr.amount)}</span>
+                  {hasValidAmount && (
+                    <>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Valor</p>
+                          <p className="mt-2 text-lg font-semibold text-white">{formatBRL(amountCents / 100)}</p>
                         </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">TxID:</span>
-                          <code className="text-xs bg-muted px-2 py-0.5 rounded">
-                            {generatedQr.txid}
-                          </code>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Expira em:</span>
-                          <span className="text-xs text-yellow-600">
-                            {new Date(generatedQr.expiresAt).toLocaleTimeString("pt-BR")}
-                          </span>
+                        <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                          <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Recebedor</p>
+                          <p className="mt-2 text-sm font-semibold text-white">{pixReceiver}</p>
                         </div>
                       </div>
 
-                      <div className="w-full">
-                        <p className="text-xs text-muted-foreground mb-1">Código Copia e Cola:</p>
-                        <div className="relative">
-                          <pre className="text-[10px] bg-muted rounded-md p-2 overflow-auto max-h-20 break-all whitespace-pre-wrap">
-                            {generatedQr.qrCodePayload}
-                          </pre>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
+                          <p className="inline-flex items-center gap-2 font-medium text-white">
+                            <Smartphone className="h-4 w-4 text-quantum-cyan" />
+                            Tipo da chave
+                          </p>
+                          <p className="mt-2">{MARKETPLACE_PIX_KEY_TYPE_LABEL}</p>
+                        </div>
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
+                          <p className="inline-flex items-center gap-2 font-medium text-white">
+                            <Landmark className="h-4 w-4 text-quantum-cyan" />
+                            Banco / Cidade
+                          </p>
+                          <p className="mt-2">{pixBank} · {pixCity}</p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-sm font-medium text-white">Código PIX copia e cola</p>
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
-                            className="absolute top-1 right-1 h-6 px-2 text-xs"
-                            onClick={handleCopy}
+                            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                            disabled={!pixCode}
+                            onClick={() => pixCode && handleCopy(pixCode, "pix")}
                           >
-                            {copied ? (
-                              <CheckCircle2 className="h-3 w-3 text-green-600" />
-                            ) : (
-                              <Copy className="h-3 w-3" />
-                            )}
+                            {copiedState === "pix" ? <CheckCircle2 className="mr-2 h-4 w-4 text-green-400" /> : <Copy className="mr-2 h-4 w-4" />}
+                            Copiar código
                           </Button>
                         </div>
+                        <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap break-all rounded-xl bg-black/30 p-3 text-[10px] text-slate-300">
+                          {pixCode || "Defina um valor para gerar o código PIX."}
+                        </pre>
                       </div>
 
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-4 w-4 animate-pulse text-yellow-500" />
-                        Aguardando pagamento...
-                      </div>
-                    </div>
-                  )}
-
-                  {status === "paid" && (
-                    <div className="flex flex-col items-center justify-center gap-4 py-10 text-center">
-                      <div className="rounded-full bg-green-100 p-6">
-                        <CheckCircle2 className="h-16 w-16 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-green-700">Pagamento Confirmado!</p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {formatBRL(generatedQr?.amount ?? 0)} recebido com sucesso
-                        </p>
-                        {isSandbox && (
-                          <Badge variant="outline" className="mt-2 border-yellow-400 text-yellow-600">
-                            Simulado — Sandbox
-                          </Badge>
-                        )}
-                      </div>
-                      <Button onClick={handleReset} variant="outline" className="gap-2">
-                        <RefreshCw className="h-4 w-4" /> Nova Cobrança
-                      </Button>
-                    </div>
+                      {checkoutSession?.pix.ticketUrl && (
+                        <a href={checkoutSession.pix.ticketUrl} target="_blank" rel="noreferrer" className="block">
+                          <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            Abrir ticket PIX do Mercado Pago
+                          </Button>
+                        </a>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
@@ -413,61 +528,63 @@ export default function PixCheckout() {
           </TabsContent>
 
           <TabsContent value="info">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Configuração PIX</CardTitle>
-                <CardDescription>Status atual do módulo de pagamentos PIX</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {configQuery.isLoading ? (
-                  <p className="text-sm text-muted-foreground">Carregando configuração...</p>
-                ) : config ? (
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-muted-foreground">Chave PIX configurada</span>
-                      <Badge className={config.configured ? "bg-green-600" : "bg-red-500"}>
-                        {config.configured ? "Sim" : "Não"}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-muted-foreground">Tipo da chave</span>
-                      <span className="font-medium uppercase">{config.keyType ?? "—"}</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-muted-foreground">Recebedor</span>
-                      <span className="font-medium">{config.receiverName}</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-muted-foreground">Cidade</span>
-                      <span className="font-medium">{config.receiverCity}</span>
-                    </div>
-                    <div className="flex items-center justify-between py-2">
-                      <span className="text-muted-foreground">Modo</span>
-                      <Badge
-                        variant="outline"
-                        className={
-                          config.sandbox
-                            ? "border-yellow-400 text-yellow-600"
-                            : "border-green-400 text-green-700"
-                        }
-                      >
-                        {config.sandbox ? "Sandbox" : "Produção"}
-                      </Badge>
-                    </div>
+            <div className="grid gap-6 xl:grid-cols-2">
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white">Como pagar</CardTitle>
+                  <CardDescription className="text-slate-400">
+                    Fluxo recomendado para packs e produtos do Marketplace.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-slate-300">
+                  <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <p><strong className="text-white">1.</strong> Confira o item, o valor e os dados do comprador.</p>
+                    <p className="mt-1"><strong className="text-white">2.</strong> O backend gera a preferência do Mercado Pago e tenta retornar o QR PIX dinâmico.</p>
+                    <p className="mt-1"><strong className="text-white">3.</strong> Se o QR dinâmico não vier, use a chave PIX manual e o código copia e cola exibidos na tela.</p>
+                    <p className="mt-1"><strong className="text-white">4.</strong> Após o pagamento, o fluxo administrativo pode validar/liberar o item adquirido.</p>
                   </div>
-                ) : (
-                  <p className="text-sm text-red-500">Erro ao carregar configuração.</p>
-                )}
+                  <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-amber-100">
+                    O QR PIX do Mercado Pago pode exigir dados do comprador, como e-mail e CPF/CNPJ. Por isso esses campos ficam disponíveis no checkout.
+                  </div>
+                </CardContent>
+              </Card>
 
-                <div className="rounded-lg border bg-muted/40 p-4 text-xs text-muted-foreground space-y-1 mt-4">
-                  <p className="font-medium text-foreground mb-2">Como configurar para produção:</p>
-                  <p>1. Defina <code>PIX_KEY</code> com sua chave PIX no servidor</p>
-                  <p>2. Defina <code>PIX_RECEIVER_NAME</code> com seu nome (máx. 25 chars)</p>
-                  <p>3. Defina <code>PIX_RECEIVER_CITY</code> com sua cidade (máx. 15 chars)</p>
-                  <p>4. Defina <code>PIX_SANDBOX=false</code> para ativar modo produção</p>
-                </div>
-              </CardContent>
-            </Card>
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white">Dados fixos do recebimento</CardTitle>
+                  <CardDescription className="text-slate-400">
+                    Informações públicas exibidas para o comprador no checkout.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-slate-300">
+                  <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                    <span>Chave PIX</span>
+                    <span className="font-semibold text-white">{pixKey}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                    <span>Tipo</span>
+                    <span className="font-semibold text-white">{MARKETPLACE_PIX_KEY_TYPE_LABEL}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                    <span>Banco</span>
+                    <span className="font-semibold text-white">{pixBank}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                    <span>Recebedor</span>
+                    <span className="font-semibold text-white">{pixReceiver}</span>
+                  </div>
+                  <div className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 p-4 text-xs leading-6 text-slate-200">
+                    <p className="inline-flex items-center gap-2 font-semibold text-white">
+                      <ShieldCheck className="h-4 w-4 text-quantum-cyan" />
+                      Segurança do token
+                    </p>
+                    <p className="mt-1">
+                      O Access Token do Mercado Pago não aparece no frontend. O navegador recebe apenas o link de checkout e os dados públicos necessários para o pagamento.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

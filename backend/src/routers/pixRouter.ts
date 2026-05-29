@@ -16,6 +16,12 @@ import {
 } from "../services/pixService";
 import { getOrSet, CACHE_KEYS, setCached, getCached, invalidateCachePattern } from "../services/cache-service";
 import { isOpenPixAvailable, createOpenPixCharge, getOpenPixChargeStatus, mapOpenPixStatus } from "../services/openPixService";
+import {
+  createMercadoPagoCheckoutPreference,
+  createMercadoPagoPixPayment,
+  isMercadoPagoConfigured,
+  resolveMercadoPagoCheckoutUrl,
+} from "../services/mercadoPagoService";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../../../database/schemas/db";
 import { payments } from "../../../database/schemas/schema-final";
@@ -26,6 +32,10 @@ const PIX_RECEIVER_NAME = process.env.PIX_RECEIVER_NAME ?? "MMN AI-to-AI";
 const PIX_RECEIVER_CITY = process.env.PIX_RECEIVER_CITY ?? "SAO PAULO";
 const PIX_KEY = process.env.PIX_KEY ?? "";
 const PIX_SANDBOX = process.env.PIX_SANDBOX === "true" || process.env.NODE_ENV !== "production";
+const MARKETPLACE_PIX_KEY = process.env.MARKETPLACE_PIX_KEY?.trim() || PIX_KEY || "19992691954";
+const MARKETPLACE_PIX_RECEIVER_NAME = process.env.MARKETPLACE_PIX_RECEIVER_NAME?.trim() || PIX_RECEIVER_NAME || "ONEVERSO MMN AI";
+const MARKETPLACE_PIX_RECEIVER_CITY = process.env.MARKETPLACE_PIX_RECEIVER_CITY?.trim() || PIX_RECEIVER_CITY || "SAO PAULO";
+const MARKETPLACE_PIX_BANK_LABEL = process.env.MARKETPLACE_PIX_BANK_LABEL?.trim() || "Nubank";
 
 export const pixRouter = router({
   /**
@@ -309,6 +319,154 @@ export const pixRouter = router({
       return { ok: true, processed };
     }),
 
+  createMarketplaceCheckout: protectedProcedure
+    .input(
+      z.object({
+        source: z.string().max(40).optional(),
+        type: z.enum(["pack", "produto", "ebook", "skill"]),
+        slug: z.string().min(1).max(120),
+        name: z.string().min(1).max(140),
+        description: z.string().max(240).optional(),
+        amountCents: z.number().int().min(1),
+        returnUrl: z.string().url().optional(),
+        payerEmail: z.string().email().optional(),
+        payerName: z.string().max(120).optional(),
+        payerDocument: z.string().max(18).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const warnings: string[] = [];
+      const amount = Number((input.amountCents / 100).toFixed(2));
+      const runtimeUser = ctx.user as { id: number; role: string; email?: string; name?: string };
+      const payerEmail = input.payerEmail?.trim() || runtimeUser.email?.trim() || undefined;
+      const payerName = input.payerName?.trim() || runtimeUser.name?.trim() || undefined;
+      const payerDocument = input.payerDocument?.replace(/\D/g, "") || undefined;
+      const identification = payerDocument
+        ? payerDocument.length === 11
+          ? { type: "CPF" as const, number: payerDocument }
+          : payerDocument.length === 14
+            ? { type: "CNPJ" as const, number: payerDocument }
+            : undefined
+        : undefined;
+
+      if (payerDocument && !identification) {
+        warnings.push("Documento do pagador inválido para o Mercado Pago. O checkout continuará com fallback PIX manual.");
+      }
+
+      const externalReference = `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
+      const fallbackPix = {
+        pixKey: MARKETPLACE_PIX_KEY,
+        keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
+        receiverName: MARKETPLACE_PIX_RECEIVER_NAME,
+        receiverCity: MARKETPLACE_PIX_RECEIVER_CITY,
+        bankLabel: MARKETPLACE_PIX_BANK_LABEL,
+      };
+
+      const result = {
+        amount,
+        amountCents: input.amountCents,
+        externalReference,
+        mercadoPago: {
+          configured: isMercadoPagoConfigured(),
+          preferenceId: null as string | null,
+          initPoint: null as string | null,
+          sandboxInitPoint: null as string | null,
+        },
+        pix: {
+          provider: "manual_key" as "manual_key" | "mercado_pago",
+          paymentId: null as string | null,
+          status: null as string | null,
+          qrCode: null as string | null,
+          qrCodeBase64: null as string | null,
+          ticketUrl: null as string | null,
+          expiresAt: null as string | null,
+          fallback: fallbackPix,
+        },
+        warnings,
+      };
+
+      if (!isMercadoPagoConfigured()) {
+        warnings.push("MERCADO_PAGO_ACCESS_TOKEN não configurado no servidor. O checkout manterá apenas o PIX manual com a chave definida.");
+        return result;
+      }
+
+      try {
+        const preference = await createMercadoPagoCheckoutPreference({
+          slug: input.slug,
+          title: input.name,
+          description: input.description,
+          amount,
+          externalReference,
+          payerEmail,
+          payerName,
+          backUrls: input.returnUrl
+            ? {
+                success: input.returnUrl,
+                pending: input.returnUrl,
+                failure: input.returnUrl,
+              }
+            : undefined,
+          metadata: {
+            source: input.source ?? "marketplace",
+            type: input.type,
+            slug: input.slug,
+            userId: runtimeUser.id,
+          },
+        });
+
+        result.mercadoPago = {
+          configured: true,
+          preferenceId: preference.id ?? null,
+          initPoint: resolveMercadoPagoCheckoutUrl(preference),
+          sandboxInitPoint: preference.sandbox_init_point ?? null,
+        };
+      } catch (error) {
+        warnings.push(`Não foi possível criar o link do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}.`);
+      }
+
+      if (!payerEmail) {
+        warnings.push("O e-mail do comprador não está disponível na sessão atual. O QR PIX do Mercado Pago pode depender desse dado; o fallback com chave PIX manual permanece ativo.");
+        return result;
+      }
+
+      try {
+        const payment = await createMercadoPagoPixPayment({
+          amount,
+          description: input.description || input.name,
+          payerEmail,
+          payerFirstName: payerName,
+          identification,
+          externalReference,
+          metadata: {
+            source: input.source ?? "marketplace",
+            type: input.type,
+            slug: input.slug,
+            userId: runtimeUser.id,
+          },
+        });
+
+        const transactionData = payment.point_of_interaction?.transaction_data;
+        if (transactionData?.qr_code || transactionData?.qr_code_base64 || transactionData?.ticket_url) {
+          result.pix = {
+            provider: "mercado_pago",
+            paymentId: String(payment.id),
+            status: payment.status ?? null,
+            qrCode: transactionData.qr_code ?? null,
+            qrCodeBase64: transactionData.qr_code_base64 ?? null,
+            ticketUrl: transactionData.ticket_url ?? null,
+            expiresAt: payment.date_of_expiration ?? null,
+            fallback: fallbackPix,
+          };
+        } else {
+          warnings.push("O Mercado Pago não retornou QR PIX nesta tentativa. O checkout exibirá a chave PIX manual como fallback.");
+        }
+      } catch (error) {
+        warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com a chave PIX manual.`);
+      }
+
+      return result;
+    }),
+
   /**
    * Retorna as configurações PIX públicas do servidor (sem expor a chave completa).
    */
@@ -320,6 +478,13 @@ export const pixRouter = router({
       receiverName: PIX_RECEIVER_NAME,
       receiverCity: PIX_RECEIVER_CITY,
       sandbox: PIX_SANDBOX,
+      marketplaceFallback: {
+        configured: !!MARKETPLACE_PIX_KEY,
+        keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
+        receiverName: MARKETPLACE_PIX_RECEIVER_NAME,
+        receiverCity: MARKETPLACE_PIX_RECEIVER_CITY,
+        bankLabel: MARKETPLACE_PIX_BANK_LABEL,
+      },
     };
   }),
 

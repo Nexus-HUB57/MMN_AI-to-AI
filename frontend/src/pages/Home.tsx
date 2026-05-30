@@ -16,10 +16,12 @@ import {
   MapPin,
   MessageSquare,
   Network,
+  Package,
   Quote,
   Send,
   ShieldCheck,
   Sparkles,
+  Star,
   Target,
   UserPlus,
   Users,
@@ -28,12 +30,12 @@ import {
 import bgHome from "@/assets/bg-home.webp";
 
 const NAV_LINKS = [
-  { href: "#sobre", label: "// SOBRE" },
-  { href: "#diferenciais", label: "// DIFERENCIAIS" },
-  { href: "#competencias", label: "// COMPETÊNCIAS" },
-  { href: "#cenarios", label: "// CENÁRIOS" },
-  { href: "#metodologia", label: "// MÉTODO" },
-  { href: "#contato", label: "// CONTATO" },
+  { href: "#sobre", label: "Sobre" },
+  { href: "#vitrine", label: "Packs" },
+  { href: "#diferenciais", label: "Diferenciais" },
+  { href: "#cenarios", label: "Cases" },
+  { href: "#metodologia", label: "Metodologia" },
+  { href: "#contato", label: "Contato" },
 ];
 
 const POSITIONING_PILLARS = [
@@ -46,21 +48,21 @@ const POSITIONING_PILLARS = [
 const PARTNERS_PACK_CARDS = [
   {
     icon: Briefcase,
-    title: "Ativação comercial oficial",
-    pill: "Core Business",
-    text: "O Nexus Partners Pack é o produto central de entrada comercial do ecossistema. Ele organiza a jornada de ativação, dá acesso à operação e prepara o terreno para aquisição de packs, biblioteca de produtos e sincronização com o Agente IA.",
+    title: "Ative e comece a operar",
+    pill: "Entrada oficial",
+    text: "Com o Pack A² você ativa o Agente IA, recebe acesso ao BackOffice, inicia sua jornada na plataforma e começa a construir sua rede comercial com suporte tecnológico de ponta.",
   },
   {
     icon: Database,
-    title: "Infraestrutura para catálogo e operação",
-    pill: "Marketplace ready",
-    text: "Ao lado do sistema Nexus Affil'IA'te, o Partners Pack materializa a camada comercial: packs, bibliotecas, revenda, mini-site, fluxo de estoque e governança de produtos prontos para automação e escala.",
+    title: "Catálogo, revenda e estoque",
+    pill: "Vitrine pronta",
+    text: "Cada pack libera uma cota de e-books, produtos e conteúdos prontos para revenda. Seu mini-site recebe o catálogo automaticamente e o Agente IA trata de apresentar as ofertas para você.",
   },
   {
     icon: Zap,
-    title: "Conexão direta com automação",
+    title: "Escale com automação real",
     pill: "Agente IA",
-    text: "A proposta do pack não é apenas acesso. É ativar uma operação capaz de sincronizar ofertas, acelerar abordagem comercial e transformar materiais digitais em um canal de vendas assistido por IA.",
+    text: "O ecossistema foi construído para crescer junto com você. Conforme avança de nível, seu agente ganha novas capacidades, sua rede expande e suas comissões evoluem automaticamente.",
   },
 ];
 
@@ -109,37 +111,37 @@ const DIFFERENTIALS = [
   {
     icon: Cpu,
     marker: "01",
-    title: "Runtime de Skills Operacionais IA com 8 handlers em produção",
+    title: "Agente IA com 8 capacidades comerciais ativas",
     summary:
-      "O OnVerso executa tarefas comerciais com 8 skills especializados já operando em produção, equivalentes a 17,8% do roadmap de 45 skills. O runtime cobre copywriting persuasivo, segmentação de audiências, prospecção outbound e análise de tendências, com execução autônoma e replay de histórico.",
+      "O OnVerso já opera com 8 capacidades autônomas de venda e prospecção: copywriting persuasivo, segmentação de audiências, abordagem outbound, análise de tendências e automação de fluxos comerciais. Cada operação é registrada e pode ser consultada no histórico de ações.",
     highlights: [
-      "8 skills operacionais reais registradas no dispatcher",
-      "17,8% do roadmap total de 45 skills planejados",
-      "Handlers otimizados para afiliados, creators e growth comercial",
+      "8 capacidades comerciais ativas no seu Agente IA",
+      "Execução autônoma com histórico consultável de todas as ações",
+      "Otimizado para afiliados, creators e operações de crescimento",
     ],
   },
   {
     icon: Activity,
     marker: "02",
-    title: "Autonomy Score em tempo real (0-100)",
+    title: "Índice de maturidade do agente em 6 dimensões",
     summary:
-      "O Autonomy Score mede a maturidade operacional do sistema em seis dimensões ponderadas: percentual de tarefas autônomas (30%), acurácia do LLM-as-Judge (20%), cobertura operacional (15%), latência média (15%), aprovação manual (10%) e diversidade de canais (10%).",
+      "O sistema mede continuamente o quanto o seu Agente IA está evoluindo: volume de tarefas autônomas, precisão das entregas, cobertura de canais, velocidade de execução, eficiência operacional e diversidade de abordagens. Tudo visível em tempo real, sem precisar de feeling.",
     highlights: [
-      "Bandas claras: low, developing, operational e advanced",
-      "Leitura contínua da evolução do runtime sem depender de feeling operacional",
-      "Transparência objetiva para tecnologia, operação e governança",
+      "Leitura contínua da evolução do Agente IA em 6 dimensões",
+      "Indicadores claros de maturidade: em desenvolvimento, operacional, avançado",
+      "Transparência total para você, sua equipe e seus parceiros",
     ],
   },
   {
     icon: ShieldCheck,
     marker: "03",
-    title: "Arquitetura SaaS escalável com governança comercial granular",
+    title: "Plataforma SaaS com governança comercial completa",
     summary:
-      "A plataforma unifica rastreamento ponta a ponta, comissionamento dinâmico, regras de atribuição customizáveis e fila de aprovações needs_review com RBAC em 5 escopos: runtime:read, runtime:execute, runtime:approve, runtime:reject e runtime:rerun. A base técnica combina Node.js 22, tRPC e Drizzle ORM sobre Postgres, com execução distribuída via BullMQ/Redis.",
+      "O sistema unifica rastreamento de conversões, comissionamento dinâmico com regras customizáveis e uma visão analítica profunda do ROI por canal e LTV por parceiro. A governança comercial é granular: cada aprovação, repasse e decisão gera trilha auditável.",
     highlights: [
-      "Visão analítica em tempo real do ROI por canal e LTV por parceiro",
-      "Trilha auditável completa para decisões, replays e aprovações",
-      "Stack preparada para escala empresarial com baixa latência",
+      "Rastreamento ponta a ponta com atribuição multicamadas",
+      "Comissionamento dinâmico com regras de negócio flexíveis",
+      "Visão analítica de ROI por canal e rentabilidade por parceiro",
     ],
   },
 ];
@@ -263,7 +265,7 @@ export default function Home() {
             NEXUS <span className="text-quantum-cyan">AFFIL'IA'TE</span>
           </span>
         </div>
-        <div className="hidden gap-6 text-xs font-mono text-slate-400 md:flex">
+        <div className="hidden gap-6 text-xs font-semibold text-slate-400 md:flex">
           {NAV_LINKS.map((link) => (
             <a key={link.href} href={link.href} className="transition-colors hover:text-white">
               {link.label}
@@ -340,10 +342,12 @@ export default function Home() {
       <section className="relative z-10 border-t border-obsidian-700/60 bg-[radial-gradient(circle_at_top_right,rgba(124,255,178,0.12),transparent_30%),rgba(2,6,23,0.72)] px-6 py-14">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-lime">// NEXUS PARTNERS PACK · CORE BUSINESS</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Depois da apresentação oficial do sistema, entra o produto central da operação</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-lime/30 bg-quantum-lime/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-lime">
+              <Sparkles className="h-3 w-3" /> Nexus Partners Pack
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Ative sua operação comercial no ecossistema Nexus</h2>
             <p className="mx-auto max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-              O topo desta página mantém a apresentação institucional oficial do <strong className="text-white">Nexus Affil'IA'te</strong>. Logo abaixo, o <strong className="text-white">Nexus Partners Pack</strong> assume o papel de produto principal do negócio: a porta de entrada comercial para ativação, catálogo, revenda e operação orientada por Agente IA.
+              O <strong className="text-white">Nexus Partners Pack</strong> é o seu ponto de entrada oficial. Com ele você ativa o Agente IA, acessa o catálogo de produtos, inicia a revenda e começa a operar com a infraestrutura completa do ecossistema — tudo orientado por automação comercial inteligente.
             </p>
           </div>
 
@@ -384,12 +388,98 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CONTEXTO ESTRATÉGICO */}
+      {/* VITRINE DE PACKS */}
+      <section id="vitrine" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60 bg-obsidian/40">
+        <div className="mx-auto max-w-6xl space-y-8">
+          <div className="text-center space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Package className="h-3 w-3" /> Packs de entrada
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Escolha seu pack de ativação e comece hoje</h2>
+            <p className="mx-auto max-w-2xl text-sm text-slate-400">
+              Cada pack libera o Agente IA, uma cota de produtos para revenda e o próximo nível da sua carreira comercial.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                name: 'Pack A²',
+                subtitle: 'Agente Afiliado Nível I',
+                price: 'R$ 10,00',
+                highlight: 'Ativação do Agente IA',
+                features: ['1 Agente IA ativado', '10 e-books para revenda', 'Acesso ao BackOffice', '2 skills liberadas'],
+                badge: 'Entrada gratuita',
+                color: 'quantum-cyan',
+                href: '/marketplaces',
+              },
+              {
+                name: 'Pack AG',
+                subtitle: 'Agente Preditivo Nível I',
+                price: 'R$ 250,00',
+                highlight: 'Operação preditiva',
+                features: ['Prompt Intermediário', '10 PREU (250 e-books)', 'Comissão 1º e 2º nível', '5 Packs SiSu'],
+                badge: 'Profissional',
+                color: 'quantum-lime',
+                href: '/marketplaces',
+              },
+              {
+                name: 'Pack AA',
+                subtitle: 'IA Agêntica SCC+ Nível I',
+                price: 'Sob consulta',
+                highlight: 'Nível CEO',
+                features: ['Hall de Sócios', 'Royalties e dividendos', 'Patrocínio Harp\'IA\'', 'Acesso pleno'],
+                badge: 'Elite',
+                color: 'quantum-purple',
+                href: '/marketplaces',
+              },
+            ].map((pack) => (
+              <div
+                key={pack.name}
+                className={`rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.10),transparent_40%),rgba(15,23,42,0.90)] p-6 transition hover:-translate-y-1 hover:border-white/20 shadow-xl shadow-black/20`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">{pack.subtitle}</p>
+                    <p className="mt-1 text-2xl font-black text-white">{pack.name}</p>
+                  </div>
+                  <span className={`rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-quantum-cyan`}>
+                    {pack.badge}
+                  </span>
+                </div>
+                <p className={`mt-4 text-3xl font-black text-white`}>{pack.price}</p>
+                <p className="mt-1 text-sm text-slate-400">{pack.highlight}</p>
+                <ul className="mt-5 space-y-2">
+                  {pack.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-slate-200">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={pack.href}
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-quantum-cyan to-quantum-violet px-4 py-2.5 text-sm font-semibold text-obsidian shadow-lg shadow-quantum-cyan/20 transition hover:opacity-90"
+                >
+                  Ver detalhes e adquirir <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-xs text-slate-500">
+            Todos os packs incluem acesso ao painel, Agente IA e suporte comercial.
+            <a href="/marketplaces" className="ml-1 text-quantum-cyan hover:underline">Ver todos os 15 packs disponíveis →</a>
+          </p>
+        </div>
+      </section>
+
+      {/* SOBRE O SISTEMA */}
       <section id="sobre" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60 bg-obsidian/40">
         <div className="mx-auto max-w-5xl space-y-6">
           <div className="text-center space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// CONTEXTO ESTRATÉGICO</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Por que o motor invisível do crescimento importa</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Globe className="h-3 w-3" /> O ecossistema
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">O motor invisível do crescimento das suas vendas</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             <p className="text-sm md:text-base leading-relaxed text-slate-300">
@@ -410,9 +500,11 @@ export default function Home() {
       <section className="relative z-10 px-6 py-14 border-t border-obsidian-700/60">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// VISÃO GERAL DA SOLUÇÃO</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Layers className="h-3 w-3" /> A solução
+            </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">
-              Centralizando o ciclo de vida completo de parceiros comerciais
+              Uma plataforma que centraliza toda a operação de parceiros comerciais
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -434,8 +526,10 @@ export default function Home() {
       <section id="competencias" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60 bg-obsidian/40">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// COMPETÊNCIAS TECNOLÓGICAS</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Quatro pilares para alta performance</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Zap className="h-3 w-3" /> Capacidades
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Quatro pilares que sustentam sua operação comercial</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             {COMPETENCIES.map(({ icon: Icon, title, text }) => (
@@ -460,10 +554,12 @@ export default function Home() {
       <section id="diferenciais" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// TRÊS PRINCIPAIS DIFERENCIAIS</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">O que torna o OnVerso uma operação SaaS orientada a autonomia real</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Star className="h-3 w-3" /> Diferenciais
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">O que torna o Nexus Affil'IA'te diferente de tudo que você já viu</h2>
             <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-300">
-              Mais do que discurso de automação, o produto entrega runtime operacional com handlers reais, medição contínua de autonomia e governança comercial pronta para escala corporativa.
+              Mais do que promessa de automação — o sistema entrega capacidades comerciais reais, medição contínua de evolução e governança completa da sua rede de parceiros.
             </p>
           </div>
 
@@ -501,9 +597,11 @@ export default function Home() {
       <section id="cenarios" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// CENÁRIOS DE APLICAÇÃO PRÁTICA</span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Target className="h-3 w-3" /> Cases
+            </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">
-              O Nexus Affil'IA'te se modela à natureza da sua operação
+              O sistema se molda à natureza da sua operação
             </h2>
             <p className="text-sm text-slate-400 max-w-2xl mx-auto">
               Três cenários de implementação estruturada, cada um entregando valor tático em uma vertical específica.
@@ -548,8 +646,10 @@ export default function Home() {
       <section id="metodologia" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60 bg-obsidian/40">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// COMO ENTREGAMOS VALOR</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Software é o meio. Resultado é o que entregamos.</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Calendar className="h-3 w-3" /> Como funciona
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Tecnologia a serviço do seu resultado comercial.</h2>
             <p className="text-sm text-slate-400 max-w-2xl mx-auto">
               Nossa esteira de implantação une tecnologia e processo corporativo em 5 etapas auditáveis.
             </p>
@@ -611,11 +711,13 @@ export default function Home() {
       <section id="contato" className="relative z-10 px-6 py-16 border-t border-obsidian-700/60 bg-obsidian/40">
         <div className="mx-auto max-w-5xl space-y-10">
           <div className="text-center space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-quantum-cyan">// PRONTO PARA O PRÓXIMO NÍVEL</span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Destrave o potencial adormecido da sua rede de parceiros</h2>
+            <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
+              <Send className="h-3 w-3" /> Contato
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Pronto para escalar sua operação de parceiros?</h2>
             <p className="text-sm md:text-base text-slate-300 max-w-2xl mx-auto">
-              Agende uma demonstração técnica e descubra como funciona. Ou cadastre-se e faça você mesmo o
-              "test-drive", levando o sistema até onde está a demanda por solução eficiente.
+              Agende uma demonstração e veja o sistema em ação. Ou cadastre-se agora e faça o test-drive do
+              Nexus Affil'IA'te diretamente na plataforma.
             </p>
           </div>
 

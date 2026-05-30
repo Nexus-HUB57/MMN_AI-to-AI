@@ -87,7 +87,7 @@ export default function AffiliateMiniSite() {
                 </span>
               </h1>
               <p className="max-w-3xl text-base leading-8 text-slate-300 md:text-lg">
-                Os produtos marcados em <strong className="text-white">Meu Estoque</strong> como “Sincronizar com Agente” aparecem aqui como vitrine operacional do mini-site. O Agente IA usa esse catálogo para apresentar ofertas, acelerar prospecção e encaminhar vendas com mais contexto comercial.
+                Os produtos marcados em <strong className="text-white">Meu Estoque</strong> como “Sincronizar com Agente” aparecem aqui como vitrine do seu mini-site. O Agente IA usa esse catálogo para apresentar ofertas, facilitar conversas e encaminhar vendas com mais contexto comercial.
               </p>
             </div>
 
@@ -120,19 +120,19 @@ export default function AffiliateMiniSite() {
                 Diagnóstico da vitrine automática
               </CardTitle>
               <CardDescription className="text-slate-300">
-                Estado atual do catálogo que o Agente IA pode utilizar em apresentações e fluxos de venda.
+                Visão atual do catálogo que o Agente IA pode usar em apresentações e oportunidades de venda.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-slate-300">
               <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Status operacional</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Status da vitrine</p>
                 <p className="mt-2 text-lg font-semibold text-white">
-                  {catalog.length > 0 ? "Catálogo pronto para automação" : "Aguardando sincronização inicial"}
+                  {catalog.length > 0 ? "Catálogo pronto para vender" : "Aguardando primeira sincronização"}
                 </p>
                 <p className="mt-2 leading-6">
                   {catalog.length > 0
-                    ? "Há itens válidos disponíveis para campanhas, recomendações do agente e exibição em vitrine comercial." 
-                    : "Vá até Meu Estoque e sincronize ao menos um produto para que o mini-site passe a trabalhar como vitrine comercial."}
+                    ? "Há itens válidos disponíveis para campanhas, recomendações do agente e exibição na sua vitrine comercial." 
+                    : "Vá até Meu Estoque e sincronize pelo menos um produto para que o mini-site comece a funcionar como sua vitrine comercial."}
                 </p>
               </div>
 
@@ -145,7 +145,7 @@ export default function AffiliateMiniSite() {
                 <StatusBlock
                   label="Itens elegíveis"
                   value={`${previewCatalog.length}`}
-                  helper="Produtos operacionais disponíveis no estoque"
+                  helper="Produtos disponíveis no estoque"
                 />
               </div>
 
@@ -155,7 +155,7 @@ export default function AffiliateMiniSite() {
                   Fluxo recomendado
                 </p>
                 <p className="mt-2">
-                  Estoque → sincronização com agente → mini-site → apresentação automatizada → checkout operacional.
+                  Estoque → sincronização com agente → mini-site → apresentação da oferta → checkout.
                 </p>
                 {!isAuthenticated && (
                   <p className="mt-2 text-slate-300">
@@ -177,7 +177,7 @@ export default function AffiliateMiniSite() {
               </Badge>
               <h2 className="mt-3 text-3xl font-bold text-white">Produtos sincronizados com o Agente IA</h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-                Cada card abaixo representa uma oferta que já pode ser usada em campanhas, apresentações e vendas automatizadas.
+                Cada card abaixo representa uma oferta que já pode ser usada em campanhas, apresentações e vendas com apoio do agente.
               </p>
             </div>
             <Link href="/estoque">
@@ -197,7 +197,7 @@ export default function AffiliateMiniSite() {
                 <div className="space-y-2">
                   <h3 className="text-2xl font-bold text-white">Seu mini-site ainda está vazio</h3>
                   <p className="max-w-2xl text-sm leading-7 text-slate-300 md:text-base">
-                    Há <strong className="text-white">{previewCatalog.length}</strong> itens operacionais elegíveis no estoque, mas nenhum foi sincronizado ainda. Ative a sincronização para publicar sua vitrine automatizada.
+                    Há <strong className="text-white">{previewCatalog.length}</strong> itens elegíveis no estoque, mas nenhum foi sincronizado ainda. Ative a sincronização para publicar sua vitrine.
                   </p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-3">
@@ -273,7 +273,7 @@ function ProductCard({ item }: { item: MiniSiteCatalogItem }) {
             <Zap className="h-4 w-4" />
             Sincronizado com o agente
           </p>
-          <p className="mt-1">Oferta ativa para vitrine comercial, abordagem automatizada e checkout operacional.</p>
+          <p className="mt-1">Oferta ativa para vitrine comercial, abordagem do agente e checkout integrado.</p>
         </div>
 
         <div className="flex flex-wrap gap-2">

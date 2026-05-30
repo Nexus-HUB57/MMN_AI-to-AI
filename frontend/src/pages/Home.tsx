@@ -50,7 +50,7 @@ const PARTNERS_PACK_CARDS = [
     icon: Briefcase,
     title: "Ative e comece a operar",
     pill: "Entrada oficial",
-    text: "Com o Pack A² você ativa o Agente IA, recebe acesso ao BackOffice, inicia sua jornada na plataforma e começa a construir sua rede comercial com suporte tecnológico de ponta.",
+    text: "Com o Pack A² você ativa seu Agente IA, abre sua vitrine de ofertas, entra no painel da plataforma e começa a vender com mais apoio, organização e velocidade.",
   },
   {
     icon: Database,
@@ -70,17 +70,17 @@ const VISION_CARDS = [
   {
     icon: Sparkles,
     title: "O que é",
-    text: "Um SaaS estratégico de ponta que unifica o rastreamento, comissionamento dinâmico, comunicação automatizada e análise de rentabilidade de ecossistemas de vendas e prospecção.",
+    text: "Uma plataforma que reúne em um só lugar a gestão dos parceiros, a automação das ofertas, o acompanhamento das vendas e a evolução comercial da sua operação.",
   },
   {
     icon: Users,
     title: "Para quem é",
-    text: "Produtores de infoprodutos de alto volume, operações de e-commerce D2C, marcas com redes de embaixadores e empresas B2B estruturando canais de integradores/representantes.",
+    text: "Negócios que vendem com afiliados, creators, embaixadores, representantes e parceiros comerciais que precisam de mais organização para crescer.",
   },
   {
     icon: Target,
     title: "O problema que resolve",
-    text: "Elimina a fricção operacional, previne fraudes de atribuição, resolve a complexidade do split de pagamentos e entrega visibilidade cristalina sobre o ROI de cada canal.",
+    text: "Substitui planilhas soltas, controles manuais e processos confusos por uma operação mais clara, com comissões organizadas, vitrine pronta e visão real do que está dando resultado.",
   },
 ];
 
@@ -88,22 +88,22 @@ const COMPETENCIES = [
   {
     icon: Zap,
     title: "Automação Inteligente",
-    text: "Fluxos desenhados para zerar o esforço manual. Da aprovação automática de parceiros qualificados ao cálculo de regras comissionadas complexas em milissegundos.",
+    text: "Automatiza tarefas repetitivas do dia a dia, desde o cadastro de parceiros até a liberação de ofertas, acompanhamento do estoque e ativação de campanhas.",
   },
   {
     icon: LineChart,
     title: "Inteligência e Rastreabilidade",
-    text: "Dashboards gerenciais com visão analítica profunda (LTV por parceiro, CAC cruzado). Rastreabilidade ponta a ponta que garante a governança e previne sobreposição de canais.",
+    text: "Mostra com clareza quais parceiros vendem mais, quais ofertas performam melhor e onde vale a pena concentrar seus próximos movimentos comerciais.",
   },
   {
     icon: Network,
     title: "Escalabilidade Operacional",
-    text: "Arquitetura cloud-native construída para suportar desde uma dezena de embaixadores exclusivos até dezenas de milhares de afiliados simultâneos sem gargalos de performance.",
+    text: "Foi pensada para crescer junto com a sua operação, do início da rede até uma estrutura com muitos parceiros ativos ao mesmo tempo.",
   },
   {
     icon: ShieldCheck,
     title: "Experiência e Personalização",
-    text: "Painéis white-label elegantes para os seus parceiros acompanharem suas métricas. Implementação ágil, adaptando a plataforma às regras de negócio da sua empresa, e não o contrário.",
+    text: "Entrega uma experiência organizada para quem vende com você, com painéis claros, identidade profissional e espaço para adaptar a operação ao seu modelo comercial.",
   },
 ];
 
@@ -113,7 +113,7 @@ const DIFFERENTIALS = [
     marker: "01",
     title: "Agente IA com 8 capacidades comerciais ativas",
     summary:
-      "O OnVerso já opera com 8 capacidades autônomas de venda e prospecção: copywriting persuasivo, segmentação de audiências, abordagem outbound, análise de tendências e automação de fluxos comerciais. Cada operação é registrada e pode ser consultada no histórico de ações.",
+      "O OnVerso já trabalha com 8 frentes práticas para venda e prospecção, como criação de mensagens, segmentação de público, abordagem comercial, leitura de tendências e automação de tarefas do dia a dia. Tudo fica registrado no histórico para acompanhamento.",
     highlights: [
       "8 capacidades comerciais ativas no seu Agente IA",
       "Execução autônoma com histórico consultável de todas as ações",
@@ -125,23 +125,23 @@ const DIFFERENTIALS = [
     marker: "02",
     title: "Índice de maturidade do agente em 6 dimensões",
     summary:
-      "O sistema mede continuamente o quanto o seu Agente IA está evoluindo: volume de tarefas autônomas, precisão das entregas, cobertura de canais, velocidade de execução, eficiência operacional e diversidade de abordagens. Tudo visível em tempo real, sem precisar de feeling.",
+      "O sistema mostra de forma contínua como o seu Agente IA está evoluindo: volume de entregas, consistência das ações, presença em canais, velocidade de resposta e variedade de abordagens. Tudo aparece de forma clara no painel.",
     highlights: [
       "Leitura contínua da evolução do Agente IA em 6 dimensões",
-      "Indicadores claros de maturidade: em desenvolvimento, operacional, avançado",
+      "Indicadores claros de evolução: inicial, em expansão e avançado",
       "Transparência total para você, sua equipe e seus parceiros",
     ],
   },
   {
     icon: ShieldCheck,
     marker: "03",
-    title: "Plataforma SaaS com governança comercial completa",
+    title: "Operação comercial com controle total",
     summary:
-      "O sistema unifica rastreamento de conversões, comissionamento dinâmico com regras customizáveis e uma visão analítica profunda do ROI por canal e LTV por parceiro. A governança comercial é granular: cada aprovação, repasse e decisão gera trilha auditável.",
+      "O Nexus Affil'IA'te centraliza comissões, ativações, acompanhamento de parceiros e histórico das principais decisões para que a operação cresça com mais segurança.",
     highlights: [
-      "Rastreamento ponta a ponta com atribuição multicamadas",
-      "Comissionamento dinâmico com regras de negócio flexíveis",
-      "Visão analítica de ROI por canal e rentabilidade por parceiro",
+      "Controle claro das vendas e repasses",
+      "Regras comerciais ajustadas ao seu modelo",
+      "Leitura prática do desempenho por parceiro e oferta",
     ],
   },
 ];
@@ -151,11 +151,11 @@ const SCENARIOS = [
     tag: "Cenário I",
     title: "Operação de Infoprodutos em Larga Escala",
     context:
-      "Uma robusta operação de educação digital lidava com atrasos nos relatórios de conversão e atrito com top afiliados devido à falta de transparência em regras de co-produção e multi-clique.",
+      "Uma operação de educação digital sofria com atrasos nos relatórios e desgaste com os melhores afiliados por falta de clareza nas regras de comissão.",
     solution:
-      "Parametrização de módulos de rastreamento com regras de atribuição customizadas (primeiro clique, último clique, decaimento) e liberação de um painel de performance em tempo real para os afiliados.",
+      "Organização das regras de comissão, definição clara dos critérios de venda e liberação de um painel em tempo real para os afiliados acompanharem o resultado.",
     impact:
-      "Redução instantânea de disputas financeiras, retenção da base de top performers pela confiança tecnológica e aumento orgânico do volume de tráfego injetado pelos parceiros.",
+      "Menos disputas financeiras, mais confiança da rede e aumento natural do volume de vendas trazido pelos parceiros.",
   },
   {
     tag: "Cenário II",
@@ -165,17 +165,17 @@ const SCENARIOS = [
     solution:
       "Geração de links parametrizados únicos por embaixador, dashboards gamificados mostrando metas de vendas e integração fluida com o checkout do e-commerce.",
     impact:
-      "Profissionalização imediata da relação com influenciadores, clareza sobre o ROI real de cada perfil e realocação inteligente do orçamento de marketing para os creators com maior taxa de conversão.",
+      "Relação mais profissional com creators, leitura clara do que converte e melhores decisões sobre onde investir energia e verba.",
   },
   {
     tag: "Cenário III",
     title: "Expansão de Canais de Parcerias B2B",
     context:
-      "Uma desenvolvedora de software buscava capilaridade nacional através de integradores regionais, precisando gerenciar leads indicados e comissionamento recorrente (MRR).",
+      "Uma empresa de software queria ampliar sua presença nacional com parceiros regionais e precisava organizar indicações, oportunidades e ganhos recorrentes.",
     solution:
-      "Criação de um portal seguro de Deal Registration para parceiros submeterem oportunidades, alinhado a um motor de cálculo automatizado de comissões sobre mensalidades.",
+      "Criação de um portal para registro de oportunidades, com acompanhamento das indicações e cálculo automático das comissões sobre contratos ativos.",
     impact:
-      "Fortalecimento da governança comercial, blindagem contra conflito de canais e aceleração no tempo de fechamento (Sales Cycle) derivado das vendas indiretas.",
+      "Mais clareza entre os canais, menos conflito comercial e fechamento mais rápido das oportunidades geradas por parceiros.",
   },
 ];
 
@@ -190,25 +190,25 @@ const METHODOLOGY = [
     icon: Layers,
     step: "2",
     title: "Estruturação e Setup",
-    text: "Configuração do ambiente cloud, definição de hierarquias de acesso, personalização visual (white-label) e parametrização das lógicas de campanha.",
+    text: "Configuração da operação, definição dos acessos, identidade visual e regras comerciais que vão sustentar a rotina da sua equipe e da sua rede.",
   },
   {
     icon: Database,
     step: "3",
     title: "Integração Tecnológica",
-    text: "Conexão nativa ou via APIs estruturadas com seus sistemas de checkout, ERPs e plataformas de e-commerce, garantindo um fluxo de dados blindado.",
+    text: "Conexão com checkout, ERP e plataformas de e-commerce para que os dados circulem com segurança e a operação não fique quebrada em vários sistemas.",
   },
   {
     icon: Users,
     step: "4",
     title: "Onboarding e Implantação",
-    text: "Treinamento da equipe interna de gestão e suporte na integração dos primeiros parceiros-chave (Early Adopters) para validar o uso fluido da plataforma.",
+    text: "Treinamento da equipe e entrada dos primeiros parceiros para validar o uso da plataforma de forma prática e segura.",
   },
   {
     icon: LineChart,
     step: "5",
     title: "Otimização Baseada em Dados",
-    text: "Acompanhamento analítico contínuo para refinar matrizes de atribuição, identificar canais subutilizados e tracionar a escala da operação comercial.",
+    text: "Acompanhamento contínuo para ajustar campanhas, identificar canais com mais potencial e acelerar a escala da operação comercial.",
   },
 ];
 
@@ -308,7 +308,7 @@ export default function Home() {
             Nexus <span className="bg-gradient-to-r from-quantum-cyan via-quantum-violet to-quantum-purple bg-clip-text text-transparent">Affil'IA'te</span>
           </h1>
           <p className="mx-auto max-w-3xl text-base md:text-lg text-slate-300">
-            A infraestrutura SaaS definitiva para escalar operações de parcerias, creators e afiliados.
+            A plataforma comercial para ativar, organizar e escalar redes de parceiros, creators e afiliados.
           </p>
 
           <div className="mx-auto mt-6 grid max-w-3xl grid-cols-2 gap-2 md:grid-cols-4">
@@ -407,7 +407,7 @@ export default function Home() {
                 subtitle: 'Agente Afiliado Nível I',
                 price: 'R$ 10,00',
                 highlight: 'Ativação do Agente IA',
-                features: ['1 Agente IA ativado', '10 e-books para revenda', 'Acesso ao BackOffice', '2 skills liberadas'],
+                features: ['1 Agente IA ativado', '10 e-books para revenda', 'Painel comercial liberado', '2 skills iniciais'],
                 badge: 'Entrada gratuita',
                 color: 'quantum-cyan',
                 href: '/marketplaces',
@@ -417,17 +417,17 @@ export default function Home() {
                 subtitle: 'Agente Preditivo Nível I',
                 price: 'R$ 250,00',
                 highlight: 'Operação preditiva',
-                features: ['Prompt Intermediário', '10 PREU (250 e-books)', 'Comissão 1º e 2º nível', '5 Packs SiSu'],
+                features: ['Agente em nível profissional', '250 e-books para ampliar a vitrine', 'Comissão em mais níveis da rede', '5 cotas extras de expansão'],
                 badge: 'Profissional',
                 color: 'quantum-lime',
                 href: '/marketplaces',
               },
               {
                 name: 'Pack AA',
-                subtitle: 'IA Agêntica SCC+ Nível I',
+                subtitle: 'Liderança estratégica Nível I',
                 price: 'Sob consulta',
-                highlight: 'Nível CEO',
-                features: ['Hall de Sócios', 'Royalties e dividendos', 'Patrocínio Harp\'IA\'', 'Acesso pleno'],
+                highlight: 'Camada estratégica',
+                features: ['Benefícios estratégicos exclusivos', 'Participação em receitas especiais', 'Apoio a novos projetos', 'Acesso total às capacidades do agente'],
                 badge: 'Elite',
                 color: 'quantum-purple',
                 href: '/marketplaces',
@@ -466,7 +466,7 @@ export default function Home() {
             ))}
           </div>
           <p className="text-center text-xs text-slate-500">
-            Todos os packs incluem acesso ao painel, Agente IA e suporte comercial.
+            Todos os packs incluem acesso ao painel, ativação progressiva do Agente IA e apoio comercial.
             <a href="/marketplaces" className="ml-1 text-quantum-cyan hover:underline">Ver todos os 15 packs disponíveis →</a>
           </p>
         </div>
@@ -483,14 +483,10 @@ export default function Home() {
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             <p className="text-sm md:text-base leading-relaxed text-slate-300">
-              No ecossistema digital contemporâneo, a capacidade de prospectar públicos e escalar vendas de forma previsível
-              é o que separa marcas estagnadas daquelas que dominam seus mercados. O sistema desenvolve tecnologias que
-              funcionam como o motor invisível desse crescimento.
+              Em qualquer operação de vendas por parceiros, o que faz diferença de verdade é conseguir atrair pessoas certas, organizar a rotina e transformar relacionamento em resultado de forma constante. É exatamente esse papel que o Nexus Affil'IA'te assume dentro da operação.
             </p>
             <p className="text-sm md:text-base leading-relaxed text-slate-300">
-              O Nexus Affil'IA'te é a solução proprietária de alto padrão, projetada para orquestrar e potencializar
-              redes comerciais complexas. Substituímos controles amadores, planilhas frágeis e plataformas engessadas
-              por um ambiente tecnológico robusto, orientado a dados e focado em alta performance.
+              O Nexus Affil'IA'te troca controles improvisados por uma base comercial mais profissional. Em vez de depender de planilhas, mensagens soltas e decisões sem contexto, sua equipe passa a operar com fluxo claro, vitrine pronta e acompanhamento centralizado.
             </p>
           </div>
         </div>
@@ -651,7 +647,7 @@ export default function Home() {
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Tecnologia a serviço do seu resultado comercial.</h2>
             <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-              Nossa esteira de implantação une tecnologia e processo corporativo em 5 etapas auditáveis.
+              Nossa implantação une tecnologia e processo comercial em 5 etapas práticas.
             </p>
           </div>
 
@@ -683,14 +679,10 @@ export default function Home() {
             Por que escolher o sistema Nexus Affil'IA'te?
           </h2>
           <p className="text-sm md:text-base leading-relaxed text-slate-300">
-            A Equipe Nexus não é apenas uma fornecedora de sistemas; somos arquitetos de infraestrutura para o crescimento.
-            Escolher o Nexus Affil'IA'te significa trazer para o centro da sua operação uma tecnologia desenvolvida com
-            resiliência corporativa.
+            A Equipe Nexus não entrega apenas uma ferramenta. Entrega uma estrutura pronta para vender melhor, organizar a rede e transformar a operação comercial em algo mais profissional e previsível.
           </p>
           <p className="text-sm md:text-base leading-relaxed text-slate-300">
-            Unimos segurança da informação, estabilidade em picos de tráfego e uma experiência de usuário polida.
-            Assumimos a complexidade técnica para que sua equipe de Growth mantenha o foco absoluto naquilo que mais
-            importa: estratégia, relacionamento humano e expansão agressiva de receita.
+            Nós cuidamos da base tecnológica para que sua equipe foque no que realmente importa: relacionamento, oferta, conversão e crescimento sustentável da receita.
           </p>
           <div className="flex flex-wrap justify-center gap-2 pt-3">
             {["Segurança da informação", "Estabilidade em picos", "UX polida", "Resiliência corporativa"].map(
@@ -772,7 +764,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <span className="relative inline-flex h-2 w-2 rounded-full bg-quantum-cyan" />
             <span>
-              NEXUS <span className="text-quantum-cyan">AFFIL'IA'TE</span> · IOAID · SaaS
+              NEXUS <span className="text-quantum-cyan">AFFIL'IA'TE</span> · Plataforma comercial inteligente
             </span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -780,7 +772,7 @@ export default function Home() {
               <MapPin className="h-3 w-3" /> oneverso.com.br
             </span>
             <span className="inline-flex items-center gap-1">
-              <Activity className="h-3 w-3 text-emerald-400" /> Plataforma operacional
+              <Activity className="h-3 w-3 text-emerald-400" /> Plataforma ativa
             </span>
           </div>
         </div>

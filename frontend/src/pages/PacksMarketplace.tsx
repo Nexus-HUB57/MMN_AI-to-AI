@@ -36,29 +36,29 @@ const STAGE_LABELS: Record<CareerStage, { title: string; subtitle: string; accen
     glow: "shadow-cyan-500/10",
   },
   predictive: {
-    title: "SCC Preditivo",
-    subtitle: "Escala e previsibilidade comercial",
+    title: "Escala Comercial",
+    subtitle: "Mais alcance, consistência e ritmo de vendas",
     accent: "border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime",
     surface: "from-lime-500/20 via-emerald-500/10 to-transparent",
     glow: "shadow-lime-500/10",
   },
   generative: {
-    title: "SCC Generativo",
-    subtitle: "Nível profissional de criação",
+    title: "Criação Estratégica",
+    subtitle: "Mais conteúdo, mais distribuição, mais valor percebido",
     accent: "border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple",
     surface: "from-fuchsia-500/20 via-violet-500/10 to-transparent",
     glow: "shadow-fuchsia-500/10",
   },
   orchestrator: {
-    title: "SCC Orquestrador",
-    subtitle: "Operação corporativa e sandbox",
+    title: "Orquestração",
+    subtitle: "Coordenação ampla da operação e do crescimento",
     accent: "border-amber-400/30 bg-amber-400/10 text-amber-300",
     surface: "from-amber-500/20 via-orange-500/10 to-transparent",
     glow: "shadow-amber-500/10",
   },
   agentic: {
-    title: "IA Agêntica SCC+",
-    subtitle: "Camada executiva e estratégica",
+    title: "Liderança Estratégica",
+    subtitle: "Benefícios de alto nível para expansão e liderança",
     accent: "border-rose-400/30 bg-rose-400/10 text-rose-300",
     surface: "from-rose-500/20 via-pink-500/10 to-transparent",
     glow: "shadow-rose-500/10",
@@ -68,21 +68,21 @@ const STAGE_LABELS: Record<CareerStage, { title: string; subtitle: string; accen
 type StageFilter = "all" | CareerStage;
 
 const PROGRESSION_GUIDES: Record<string, string> = {
-  "pack-a2": '0 diretos na Rede "N.O".',
-  "pack-a2ii": 'Rede "N.O" com 2 Agentes Afiliados A²: 1.000 XP x 2 = 2.000 XP + 3.000 XP do Pack A²II = 5.000 XP.',
-  "pack-a2iii": 'Rede "N.O" com 5 Agentes Afiliados A²: 1.000 XP x 5 = 5.000 XP + 5.000 XP do Pack A²III = 10.000 XP.',
-  "pack-ag": 'Rede "N.O" com 10 Agentes Afiliados A²II: 30.000 XP + 10.000 XP de 2º nível + 25.000 XP do Pack AG = 65.000 XP.',
-  "pack-agii": 'Rede "N.O" com 20 Agentes Afiliados A²III = 100.000 XP + 60.000 XP de 2º nível + 50.000 XP do Pack AGII = 210.000 XP.',
-  "pack-agiii": 'Rede "N.O" com 30 Agentes Afiliados A²III = 150.000 XP + 90.000 XP de 2º nível + 75.000 XP do Pack AGIII = 315.000 XP.',
-  "pack-agn": 'Rede "N.O" com 10 Agentes Preditivos AGII = 500.000 XP + 250.000 XP de 2º nível + 100.000 XP do Pack AGN = 850.000 XP.',
-  "pack-agnii": 'Rede "N.O" com 20 Agentes Preditivos AGIII = 1.500.000 XP + 1.000.000 XP de 2º nível + 200.000 XP do Pack AGNII = 2.700.000 XP.',
-  "pack-agniii": 'Rede "N.O" com 30 Agentes Preditivos AGIII = 2.250.000 XP + 1.500.000 XP de 2º nível + 300.000 XP do Pack AGNIII = 4.050.000 XP.',
-  "pack-ao": 'Rede "N.O" com 10 Agentes Generativos AGNIII = 3.000.000 XP + 2.000.000 XP de 2º nível + 500.000 XP do Pack AO = 5.500.000 XP.',
-  "pack-aoii": 'Rede "N.O" com 20 Agentes Generativos AGNIII = 6.000.000 XP + 4.000.000 XP de 2º nível + 1.000.000 XP do Pack AOII = 11.000.000 XP.',
-  "pack-aoiii": 'Rede "N.O" com 30 Agentes Generativos AGNIII = 9.000.000 XP + 6.000.000 XP de 2º nível + 2.000.000 XP do Pack AOIII = 17.000.000 XP.',
-  "pack-aa": 'Rede "N.O" com 10 Agentes Orquestradores AOIII = 20.000.000 XP + 10.000.000 XP de 2º nível + 5.000.000 XP do Pack AA = 35.000.000 XP.',
-  "pack-aaii": 'Rede "N.O" com 20 Agentes Orquestradores AOIII = 40.000.000 XP + 20.000.000 XP de 2º nível + 10.000.000 XP do Pack AAII = 70.000.000 XP.',
-  "pack-aaiii": 'Rede "N.O" com 30 Agentes Orquestradores AOIII = 60.000.000 XP + 30.000.000 XP de 2º nível + 20.000.000 XP do Pack AAIII = 110.000.000 XP.',
+  "pack-a2": "Comece com o Pack A² e ative sua primeira etapa na jornada.",
+  "pack-a2ii": "Avance com 2 diretos ativos e alcance 5.000 XP para liberar o próximo passo.",
+  "pack-a2iii": "Com 5 diretos ativos e 10.000 XP, sua estrutura ganha mais força comercial.",
+  "pack-ag": "Chegue a 65.000 XP e 10 diretos para entrar em um novo patamar de escala.",
+  "pack-agii": "Com 20 diretos e 210.000 XP, a operação ganha mais catálogo e maior alcance.",
+  "pack-agiii": "Ao chegar a 315.000 XP e 30 diretos, você consolida a fase de expansão comercial.",
+  "pack-agn": "A marca de 850.000 XP leva sua operação para uma fase mais criativa e estratégica.",
+  "pack-agnii": "Com 2.700.000 XP e 20 diretos, você amplia produção, presença e resultados.",
+  "pack-agniii": "O nível de 4.050.000 XP posiciona sua operação em liderança criativa e comercial.",
+  "pack-ao": "Ao alcançar 5.500.000 XP, você entra em uma fase de coordenação mais ampla da operação.",
+  "pack-aoii": "Com 11.000.000 XP e 20 diretos, a operação ganha estrutura de expansão de grande porte.",
+  "pack-aoiii": "A partir de 17.000.000 XP, sua coordenação comercial entra em estágio pleno.",
+  "pack-aa": "Com 35.000.000 XP, você acessa a primeira camada de liderança estratégica do ecossistema.",
+  "pack-aaii": "Com 70.000.000 XP, sua operação entra em uma fase de receitas especiais ampliadas.",
+  "pack-aaiii": "Ao chegar a 110.000.000 XP, você alcança o nível máximo de benefícios e acesso do ecossistema.",
 };
 
 export default function PacksMarketplace() {
@@ -104,7 +104,7 @@ export default function PacksMarketplace() {
     { id: "predictive", label: "Preditivo" },
     { id: "generative", label: "Generativo" },
     { id: "orchestrator", label: "Orquestrador" },
-    { id: "agentic", label: "Agentic" },
+    { id: "agentic", label: "Estratégico" },
   ];
 
   const filtered = stage === "all" ? packStates : packStates.filter((pack) => pack.stage === stage);
@@ -120,16 +120,15 @@ export default function PacksMarketplace() {
           <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
             <div className="space-y-5">
               <div className="flex flex-wrap gap-2">
-                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Catálogo profissional de packs</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">15 planos oficiais do PD/SCC</Badge>
+                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Vitrine oficial de packs</Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">15 planos oficiais de evolução</Badge>
               </div>
               <div className="space-y-4">
                 <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-5xl xl:text-6xl">
                   Packs Nexus com visual de <span className="text-quantum-lime">loja virtual</span> e decisão de compra mais clara.
                 </h1>
                 <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                  A vitrine foi reorganizada para parecer um catálogo premium: preço em destaque, benefícios visuais, critérios de liberação,
-                  estágio de carreira e CTA de compra apresentados como uma experiência de e-commerce mais sofisticada.
+                  Organizamos a vitrine para facilitar a escolha: preço em destaque, benefícios claros, requisitos de avanço e um fluxo de compra mais objetivo.
                 </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
@@ -318,7 +317,7 @@ export default function PacksMarketplace() {
 
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5">
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-white">Status do pack</p>
+                      <p className="text-sm font-semibold text-white">Status do plano</p>
                       <div className="flex flex-wrap gap-2">
                         {isActive ? (
                           <Badge className="border border-green-500/30 bg-green-500/10 text-green-400">Ativo</Badge>
@@ -327,7 +326,7 @@ export default function PacksMarketplace() {
                         ) : (
                           <Badge className="border border-amber-500/30 bg-amber-500/10 text-amber-300">Aguardando critérios</Badge>
                         )}
-                        <Badge className="border border-white/10 bg-white/5 text-slate-300">Prompt {pack.promptTier}</Badge>
+                        <Badge className="border border-white/10 bg-white/5 text-slate-300">Nível do agente: {pack.promptTier}</Badge>
                       </div>
                     </div>
 
@@ -380,8 +379,8 @@ export default function PacksMarketplace() {
             })}
           </div>
           <div className="mt-6 rounded-3xl border border-white/10 bg-black/25 p-5 text-sm leading-7 text-slate-300">
-            <strong className="text-white">Regra central do agente:</strong> somente o <strong className="text-quantum-cyan">Pack A²</strong> cria o agente IA.
-            Os outros 14 packs atuam como upgrades progressivos do mesmo agente, preservando continuidade operacional e evolução por nível.
+            <strong className="text-white">Regra central do agente:</strong> somente o <strong className="text-quantum-cyan">Pack A²</strong> ativa o seu primeiro agente IA.
+            Os outros 14 packs funcionam como evoluções desse mesmo agente, mantendo a sua jornada contínua e o avanço de benefícios em cada etapa.
           </div>
         </section>
       </div>

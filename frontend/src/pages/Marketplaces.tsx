@@ -487,12 +487,12 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Package className="h-5 w-5 text-quantum-cyan" />
-              {isPublicView ? "O que vem no seu estoque" : "Meu estoque operacional"}
+              {isPublicView ? "O que entra na sua vitrine" : "Meu estoque"}
             </CardTitle>
             <CardDescription className="text-slate-400">
               {isPublicView
                 ? "Produtos e conteúdos que ficam disponíveis para revenda assim que você ativa um pack."
-                : "Produtos que o Agente IA pode usar para automação e revenda."}
+                : "Produtos que o Agente IA pode usar para apresentar ofertas e apoiar suas vendas."}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -500,8 +500,8 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
               /* Preview de estoque para visitantes */
               [
                 { title: "Biblioteca de E-books A²", badge: "E-books", desc: "10 e-books prontos para revenda digital." },
-                { title: "Pacotes PREU AG", badge: "PREU", desc: "Pacotes comerciais com 25 e-books cada." },
-                { title: "Pack SiSu de indicação", badge: "SiSu", desc: "Sub-contas vinculadas ao seu CPF." },
+                { title: "Pacotes extras AG", badge: "Extras", desc: "Lotes com 25 e-books cada para ampliar sua vitrine." },
+                { title: "Cotas de expansão", badge: "Expansão", desc: "Cotas extras liberadas para ampliar sua operação." },
               ].map((item) => (
                 <div key={item.title} className="rounded-3xl border border-white/10 bg-black/25 p-4">
                   <div className="flex items-start justify-between gap-3">

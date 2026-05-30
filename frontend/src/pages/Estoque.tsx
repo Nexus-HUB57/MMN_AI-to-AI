@@ -227,16 +227,16 @@ export default function Estoque() {
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
               <p>
-                <strong className="text-white">Nexus SaaS</strong> está vinculada às plataformas parceiras. O Agente IA usa o perfil oficial para revenda, tracking de comissões e sincronização do catálogo operacional.
+                <strong className="text-white">Nexus Affil'IA'te</strong> conecta seu catálogo às plataformas parceiras. O Agente IA usa esse perfil para divulgar ofertas, acompanhar comissões e manter sua vitrine sempre pronta para vender.
               </p>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                  {feedMeta.isLive ? "Feed ao vivo conectado" : "Fallback inteligente ativo"}
+                  {feedMeta.isLive ? "Feed ao vivo conectado" : "Curadoria demonstrativa ativa"}
                 </Badge>
                 {feedMeta.updatedAt && <span>Atualizado em {feedMeta.updatedAt}</span>}
                 {!feedMeta.isLive && !trendingQuery.isLoading && (
                   <span className="text-slate-400">
-                    Enquanto o backend não estiver acessível, a página mantém a curadoria oficial Nexus SaaS em modo offline.
+                    Enquanto a conexão ao vivo não retorna, a página mantém uma curadoria oficial demonstrativa para você continuar usando a vitrine.
                   </span>
                 )}
               </div>
@@ -257,11 +257,11 @@ export default function Estoque() {
           <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
             <div className="space-y-3 max-w-3xl">
               <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                Loja virtual do estoque · produtos prontos para automação
+                Vitrine do seu estoque · ofertas prontas para vender
               </Badge>
               <h1 className="text-3xl font-bold text-white md:text-4xl">Meu Estoque</h1>
               <p className="max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-                Aqui ficam as unidades disponíveis para revenda. Cada produto pode ser exibido em formato de <strong className="text-white">vitrine</strong>, sincronizado com o Agente IA e publicado no <strong className="text-white">mini-site</strong> para vendas automatizadas.
+                Aqui ficam as unidades disponíveis para revenda. Cada produto pode entrar na sua <strong className="text-white">vitrine</strong>, ser sincronizado com o Agente IA e aparecer no <strong className="text-white">mini-site</strong> para acelerar suas vendas.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -297,7 +297,7 @@ export default function Estoque() {
               <CardContent>
                 {productsForVitrine.length === 0 ? (
                   <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300">
-                    Seu estoque ainda está vazio. Faça uma ativação mensal ou adquira mais materiais no Marketplace para abastecer o agente.
+                    Seu estoque ainda está vazio. Ative um pack ou adquira mais materiais no marketplace para abastecer sua vitrine.
                   </div>
                 ) : (
                   <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -326,7 +326,7 @@ export default function Estoque() {
                     Packs ativos vinculados ao estoque
                   </CardTitle>
                   <CardDescription className="text-slate-400">
-                    Cada pack alimenta a vitrine com cota oficial de e-books, PREU e demais materiais operacionais.
+                    Cada pack adiciona novas bibliotecas, lotes extras e materiais que fortalecem sua vitrine de vendas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 md:grid-cols-2">
@@ -352,10 +352,10 @@ export default function Estoque() {
                 <div className="space-y-2 text-sm text-amber-100">
                   <p className="inline-flex items-center gap-2 font-semibold text-amber-200">
                     <AlertCircle className="h-4 w-4" />
-                    Fluxo operacional recomendado
+                    Fluxo recomendado
                   </p>
                   <p>
-                    Estoque → sincronização com o agente → mini-site → apresentação automatizada → pagamento.
+                    Estoque → sincronização com o agente → mini-site → apresentação da oferta → pagamento.
                   </p>
                   <p className="text-amber-100/80">
                     Produtos de <strong>Pronta Entrega</strong> exigem atenção à quantidade disponível. Itens de <strong>Dropshipping</strong> seguem a disponibilidade das plataformas parceiras.
@@ -440,7 +440,7 @@ export default function Estoque() {
                       <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
                         <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{product.fulfillment}</span>
                         <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-quantum-cyan/90">
-                          {product.source === "live" ? "Origem: API ao vivo" : "Origem: Curadoria Nexus"}
+                          {product.source === "live" ? "Origem: ao vivo" : "Origem: curadoria Nexus"}
                         </span>
                         {partner?.affiliateId && (
                           <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">ID {partner.affiliateId}</span>
@@ -448,9 +448,9 @@ export default function Estoque() {
                       </div>
 
                       <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
-                        <p className="font-medium text-white">Sincronização operacional</p>
+                        <p className="font-medium text-white">Sincronização da oportunidade</p>
                         <p className="mt-1 leading-5">
-                          Envie esta oportunidade para o Agente IA monitorar demanda e montar abordagem comercial no ecossistema {partner?.affiliateProfile ?? "Nexus SaaS"}.
+                          Envie esta oportunidade para o Agente IA acompanhar a demanda e sugerir a melhor abordagem comercial dentro do ecossistema {partner?.affiliateProfile ?? "Nexus Affil'IA'te"}.
                         </p>
                       </div>
 
@@ -674,7 +674,7 @@ function PublicStockShell({ children }: { children: ReactNode }) {
               Loja virtual pública Nexus
             </p>
             <div>
-              <h1 className="text-3xl font-black tracking-tight md:text-4xl">Estoque operacional em modo vitrine</h1>
+              <h1 className="text-3xl font-black tracking-tight md:text-4xl">Estoque em modo vitrine</h1>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
                 Você está vendo a versão pública da loja virtual. Os produtos abaixo usam um perfil comercial de demonstração para liberar a experiência
                 <strong className="text-white"> /estoque → sincronização → /minisite</strong> no navegador, mesmo sem login.

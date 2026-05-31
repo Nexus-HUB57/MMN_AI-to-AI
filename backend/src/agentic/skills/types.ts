@@ -31,7 +31,30 @@ export type SkillSlug =
   | "compliance-auditor"
   | "roi-attributor"
   | "cold-emailer"
-  | "upsell-strategist";
+  | "upsell-strategist"
+  // Planned skills (Roadmap)
+  | "social-seller"
+  | "webinar-engine"
+  | "referral-engineer"
+  | "cross-sell-engine"
+  | "cart-recovery"
+  | "loyalty-architect"
+  | "video-script-writer"
+  | "image-prompt-engineer"
+  | "seo-strategist"
+  | "viral-hook-generator"
+  | "landing-page-builder"
+  | "email-sequence-designer"
+  | "kpi-monitor"
+  | "anomaly-detector"
+  | "incident-responder"
+  | "contract-analyzer"
+  | "tax-advisor-br"
+  | "cohort-analyzer"
+  | "churn-predictor"
+  | "ltv-forecaster"
+  | "competitor-watcher"
+  | "market-sentiment-tracker";
 
 export interface SkillExecutionContext {
   agentId: number;

@@ -9,3 +9,4 @@ export * from "./marketplace-schema";
 export * from "./agentic";
 export * from "./agentTelemetry";
 export * from "./schema-cron";
+export * from "./schema-agent-extras";

@@ -1,7 +1,36 @@
 import { z } from "zod";
+import { and, desc, eq } from "drizzle-orm";
 import { protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getAgentByUserId, createAgent, updateAgent as updateAgentDb } from "./db";
+import { getDb } from "../../../database/schemas/db";
+import {
+  generatedImages,
+  recommendedProducts,
+  agentSkillsRuntime,
+  agentEvolutionHistory,
+  generatedContent,
+  scheduledPosts,
+} from "../../../database/schemas";
+
+/** Garante que o agente exista e devolve seu id. Usa cache leve por requisição. */
+async function ensureAgent(userId: number): Promise<number> {
+  const existing = await getAgentByUserId(userId);
+  if (existing) return existing.id;
+  const created = await createAgent({
+    userId,
+    name: `Agent - User ${userId}`,
+    status: "learning",
+    contentStrategy: JSON.stringify({
+      platforms: ["instagram", "facebook", "whatsapp"],
+      postingFrequency: "daily",
+      tone: "professional",
+      targetAudience: "general",
+    }),
+    performanceScore: 0,
+  });
+  return created.id;
+}
 
 /**
  * Agents Router
@@ -255,5 +284,304 @@ export const agentsRouter = router({
           message: "Failed to update agent state",
         });
       }
+    }),
+
+  // ========== IMAGENS GERADAS ==========
+  getGeneratedImages: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const db = await getDb();
+      if (!db) return [];
+      const agentId = await ensureAgent(ctx.user.id);
+      const rows = await db
+        .select()
+        .from(generatedImages)
+        .where(eq(generatedImages.agentId, agentId))
+        .orderBy(desc(generatedImages.createdAt))
+        .limit(50);
+      return rows;
+    } catch (error) {
+      console.error("[agentsRouter] getGeneratedImages failed:", error);
+      return [];
+    }
+  }),
+
+  createGeneratedImage: protectedProcedure
+    .input(z.object({ prompt: z.string().min(1), imageUrl: z.string().url(), storageKey: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const agentId = await ensureAgent(ctx.user.id);
+      const [row] = await db
+        .insert(generatedImages)
+        .values({ agentId, prompt: input.prompt, imageUrl: input.imageUrl, storageKey: input.storageKey ?? null })
+        .returning();
+      return { success: true, image: row };
+    }),
+
+  // ========== SKILLS RUNTIME ==========
+  getAgentSkills: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const db = await getDb();
+      if (!db) return [];
+      const agentId = await ensureAgent(ctx.user.id);
+      return await db
+        .select()
+        .from(agentSkillsRuntime)
+        .where(eq(agentSkillsRuntime.agentId, agentId))
+        .orderBy(desc(agentSkillsRuntime.createdAt));
+    } catch (error) {
+      console.error("[agentsRouter] getAgentSkills failed:", error);
+      return [];
+    }
+  }),
+
+  createAgentSkill: protectedProcedure
+    .input(
+      z.object({
+        skillName: z.string().min(1),
+        description: z.string().optional(),
+        cost: z.number().int().nonnegative().default(0),
+        level: z.number().int().min(0).max(100).default(0),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const agentId = await ensureAgent(ctx.user.id);
+      const [row] = await db
+        .insert(agentSkillsRuntime)
+        .values({
+          agentId,
+          skillName: input.skillName,
+          description: input.description ?? null,
+          cost: input.cost,
+          proficiency: input.level,
+          status: "locked",
+        })
+        .returning();
+      await db.insert(agentEvolutionHistory).values({
+        agentId,
+        eventType: "skill_created",
+        description: `Skill criada: ${input.skillName}`,
+      });
+      return { success: true, skill: row };
+    }),
+
+  updateAgentSkill: protectedProcedure
+    .input(
+      z.object({
+        skillId: z.number().int().positive(),
+        status: z.enum(["locked", "unlocked", "active", "inactive"]).optional(),
+        proficiency: z.number().int().min(0).max(100).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const agentId = await ensureAgent(ctx.user.id);
+      const updates: Record<string, unknown> = { updatedAt: new Date() };
+      if (input.status) {
+        updates.status = input.status;
+        if (input.status === "unlocked" || input.status === "active") {
+          updates.acquiredAt = new Date();
+        }
+      }
+      if (typeof input.proficiency === "number") updates.proficiency = input.proficiency;
+      const [row] = await db
+        .update(agentSkillsRuntime)
+        .set(updates)
+        .where(and(eq(agentSkillsRuntime.id, input.skillId), eq(agentSkillsRuntime.agentId, agentId)))
+        .returning();
+      if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Skill não encontrada" });
+      if (input.status) {
+        await db.insert(agentEvolutionHistory).values({
+          agentId,
+          eventType: `skill_${input.status}`,
+          description: `Skill ${row.skillName} -> ${input.status}`,
+        });
+      }
+      return { success: true, skill: row };
+    }),
+
+  getEvolutionHistory: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const db = await getDb();
+      if (!db) return [];
+      const agentId = await ensureAgent(ctx.user.id);
+      return await db
+        .select()
+        .from(agentEvolutionHistory)
+        .where(eq(agentEvolutionHistory.agentId, agentId))
+        .orderBy(desc(agentEvolutionHistory.createdAt))
+        .limit(100);
+    } catch (error) {
+      console.error("[agentsRouter] getEvolutionHistory failed:", error);
+      return [];
+    }
+  }),
+
+  // ========== PRODUTOS RECOMENDADOS ==========
+  getRecommendedProducts: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const db = await getDb();
+      if (!db) return [];
+      const agentId = await ensureAgent(ctx.user.id);
+      return await db
+        .select()
+        .from(recommendedProducts)
+        .where(eq(recommendedProducts.agentId, agentId))
+        .orderBy(desc(recommendedProducts.createdAt));
+    } catch (error) {
+      console.error("[agentsRouter] getRecommendedProducts failed:", error);
+      return [];
+    }
+  }),
+
+  createRecommendedProduct: protectedProcedure
+    .input(
+      z.object({
+        productName: z.string().min(1),
+        description: z.string().optional(),
+        marketplace: z.string().min(1),
+        relevanceScore: z.number().int().min(0).max(100).default(50),
+        affiliateLink: z.string().url(),
+        productUrl: z.string().url().optional(),
+        price: z.number().nonnegative().optional(),
+        commission: z.number().nonnegative().optional(),
+        imageUrl: z.string().url().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const agentId = await ensureAgent(ctx.user.id);
+      const [row] = await db
+        .insert(recommendedProducts)
+        .values({
+          agentId,
+          productName: input.productName,
+          description: input.description ?? null,
+          marketplace: input.marketplace,
+          relevanceScore: input.relevanceScore,
+          affiliateLink: input.affiliateLink,
+          productUrl: input.productUrl ?? null,
+          price: input.price?.toString() ?? null,
+          commission: input.commission?.toString() ?? null,
+          imageUrl: input.imageUrl ?? null,
+        })
+        .returning();
+      return { success: true, product: row };
+    }),
+
+  // ========== CONTEÚDO GERADO ==========
+  createGeneratedContent: protectedProcedure
+    .input(
+      z.object({
+        prompt: z.string().min(1),
+        content: z.string().min(1),
+        contentType: z.string().optional(),
+        platform: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const id = `gc_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const [row] = await db
+        .insert(generatedContent)
+        .values({
+          id,
+          userId: ctx.user.id,
+          prompt: input.prompt,
+          content: input.content,
+          modelId: input.platform ?? input.contentType ?? "default",
+        })
+        .returning();
+      return { success: true, content: row };
+    }),
+
+  // ========== POSTS AGENDADOS ==========
+  getScheduledPosts: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const db = await getDb();
+      if (!db) return [];
+      const rows = await db
+        .select()
+        .from(scheduledPosts)
+        .where(eq(scheduledPosts.userId, ctx.user.id))
+        .orderBy(desc(scheduledPosts.scheduledFor))
+        .limit(100);
+      return rows.map((p) => ({
+        id: p.id,
+        content: p.content,
+        platform: Array.isArray(p.platforms) ? p.platforms[0] ?? "instagram" : "instagram",
+        scheduledAt: p.scheduledFor.toISOString(),
+        status: p.status,
+        imageUrl: Array.isArray(p.mediaUrls) ? p.mediaUrls[0] ?? undefined : undefined,
+      }));
+    } catch (error) {
+      console.error("[agentsRouter] getScheduledPosts failed:", error);
+      return [];
+    }
+  }),
+
+  createScheduledPost: protectedProcedure
+    .input(
+      z.object({
+        content: z.string().min(1),
+        platform: z.string().min(1),
+        scheduledAt: z.string().min(1),
+        imageUrl: z.string().url().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const id = `sp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const [row] = await db
+        .insert(scheduledPosts)
+        .values({
+          id,
+          userId: ctx.user.id,
+          content: input.content,
+          platforms: [input.platform],
+          scheduledFor: new Date(input.scheduledAt),
+          status: "scheduled",
+          mediaUrls: input.imageUrl ? [input.imageUrl] : null,
+        })
+        .returning();
+      return { success: true, post: row };
+    }),
+
+  updateScheduledPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string().min(1),
+        status: z.enum(["scheduled", "agendado", "publicado", "falhou", "published", "failed", "cancelled"]).optional(),
+        content: z.string().optional(),
+        scheduledAt: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const updates: Record<string, unknown> = {};
+      if (input.status) {
+        const normalized = input.status === "agendado" ? "scheduled"
+          : input.status === "publicado" ? "published"
+          : input.status === "falhou" ? "failed"
+          : input.status;
+        updates.status = normalized;
+        if (normalized === "published") updates.publishedAt = new Date();
+      }
+      if (input.content) updates.content = input.content;
+      if (input.scheduledAt) updates.scheduledFor = new Date(input.scheduledAt);
+      const [row] = await db
+        .update(scheduledPosts)
+        .set(updates)
+        .where(and(eq(scheduledPosts.id, input.postId), eq(scheduledPosts.userId, ctx.user.id)))
+        .returning();
+      if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Post não encontrado" });
+      return { success: true, post: row };
     }),
 });

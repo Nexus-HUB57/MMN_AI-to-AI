@@ -51,7 +51,7 @@ export default function RecommendedProducts({ agent }: RecommendedProductsProps)
     try {
       await createMutation.mutateAsync({
         productName: formData.productName,
-        productUrl: formData.productUrl,
+        productUrl: formData.productUrl || undefined,
         affiliateLink: formData.affiliateLink,
         relevanceScore: parseFloat(formData.relevanceScore),
         marketplace: formData.marketplace,

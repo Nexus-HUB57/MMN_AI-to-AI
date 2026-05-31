@@ -340,8 +340,8 @@ export const agentsRouter = router({
       z.object({
         skillName: z.string().min(1),
         description: z.string().optional(),
-        cost: z.number().int().nonnegative().default(0),
-        level: z.number().int().min(0).max(100).default(0),
+        cost: z.coerce.number().nonnegative().optional(),
+        level: z.coerce.number().int().min(0).max(100).default(0),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -354,7 +354,7 @@ export const agentsRouter = router({
           agentId,
           skillName: input.skillName,
           description: input.description ?? null,
-          cost: input.cost,
+          cost: Math.round(input.cost ?? 0),
           proficiency: input.level,
           status: "locked",
         })
@@ -370,15 +370,20 @@ export const agentsRouter = router({
   updateAgentSkill: protectedProcedure
     .input(
       z.object({
-        skillId: z.number().int().positive(),
+        id: z.coerce.number().int().positive().optional(),
+        skillId: z.coerce.number().int().positive().optional(),
         status: z.enum(["locked", "unlocked", "active", "inactive"]).optional(),
-        proficiency: z.number().int().min(0).max(100).optional(),
+        proficiency: z.coerce.number().int().min(0).max(100).optional(),
+      }).refine((data) => Boolean(data.id ?? data.skillId), {
+        message: "Skill id is required",
+        path: ["id"],
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
       const agentId = await ensureAgent(ctx.user.id);
+      const skillId = input.skillId ?? input.id!;
       const updates: Record<string, unknown> = { updatedAt: new Date() };
       if (input.status) {
         updates.status = input.status;
@@ -390,7 +395,7 @@ export const agentsRouter = router({
       const [row] = await db
         .update(agentSkillsRuntime)
         .set(updates)
-        .where(and(eq(agentSkillsRuntime.id, input.skillId), eq(agentSkillsRuntime.agentId, agentId)))
+        .where(and(eq(agentSkillsRuntime.id, skillId), eq(agentSkillsRuntime.agentId, agentId)))
         .returning();
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Skill não encontrada" });
       if (input.status) {
@@ -443,12 +448,12 @@ export const agentsRouter = router({
         productName: z.string().min(1),
         description: z.string().optional(),
         marketplace: z.string().min(1),
-        relevanceScore: z.number().int().min(0).max(100).default(50),
+        relevanceScore: z.coerce.number().min(0).max(100).default(50),
         affiliateLink: z.string().url(),
-        productUrl: z.string().url().optional(),
-        price: z.number().nonnegative().optional(),
-        commission: z.number().nonnegative().optional(),
-        imageUrl: z.string().url().optional(),
+        productUrl: z.union([z.string().url(), z.literal("")]).optional(),
+        price: z.coerce.number().nonnegative().optional(),
+        commission: z.coerce.number().nonnegative().optional(),
+        imageUrl: z.union([z.string().url(), z.literal("")]).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -462,12 +467,12 @@ export const agentsRouter = router({
           productName: input.productName,
           description: input.description ?? null,
           marketplace: input.marketplace,
-          relevanceScore: input.relevanceScore,
+          relevanceScore: Math.round(input.relevanceScore),
           affiliateLink: input.affiliateLink,
-          productUrl: input.productUrl ?? null,
+          productUrl: input.productUrl || null,
           price: input.price?.toString() ?? null,
           commission: input.commission?.toString() ?? null,
-          imageUrl: input.imageUrl ?? null,
+          imageUrl: input.imageUrl || null,
         })
         .returning();
       return { success: true, product: row };
@@ -516,7 +521,10 @@ export const agentsRouter = router({
         content: p.content,
         platform: Array.isArray(p.platforms) ? p.platforms[0] ?? "instagram" : "instagram",
         scheduledAt: p.scheduledFor.toISOString(),
-        status: p.status,
+        status: p.status === "scheduled" ? "agendado"
+          : p.status === "published" ? "publicado"
+          : p.status === "failed" ? "falhou"
+          : p.status,
         imageUrl: Array.isArray(p.mediaUrls) ? p.mediaUrls[0] ?? undefined : undefined,
       }));
     } catch (error) {
@@ -530,8 +538,8 @@ export const agentsRouter = router({
       z.object({
         content: z.string().min(1),
         platform: z.string().min(1),
-        scheduledAt: z.string().min(1),
-        imageUrl: z.string().url().optional(),
+        scheduledAt: z.coerce.date(),
+        imageUrl: z.union([z.string().url(), z.literal("")]).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -545,7 +553,7 @@ export const agentsRouter = router({
           userId: ctx.user.id,
           content: input.content,
           platforms: [input.platform],
-          scheduledFor: new Date(input.scheduledAt),
+          scheduledFor: input.scheduledAt,
           status: "scheduled",
           mediaUrls: input.imageUrl ? [input.imageUrl] : null,
         })
@@ -556,15 +564,20 @@ export const agentsRouter = router({
   updateScheduledPost: protectedProcedure
     .input(
       z.object({
-        postId: z.string().min(1),
+        id: z.string().min(1).optional(),
+        postId: z.string().min(1).optional(),
         status: z.enum(["scheduled", "agendado", "publicado", "falhou", "published", "failed", "cancelled"]).optional(),
         content: z.string().optional(),
-        scheduledAt: z.string().optional(),
+        scheduledAt: z.coerce.date().optional(),
+      }).refine((data) => Boolean(data.id ?? data.postId), {
+        message: "Post id is required",
+        path: ["id"],
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "Database unavailable" });
+      const postId = input.postId ?? input.id!;
       const updates: Record<string, unknown> = {};
       if (input.status) {
         const normalized = input.status === "agendado" ? "scheduled"
@@ -575,11 +588,11 @@ export const agentsRouter = router({
         if (normalized === "published") updates.publishedAt = new Date();
       }
       if (input.content) updates.content = input.content;
-      if (input.scheduledAt) updates.scheduledFor = new Date(input.scheduledAt);
+      if (input.scheduledAt) updates.scheduledFor = input.scheduledAt;
       const [row] = await db
         .update(scheduledPosts)
         .set(updates)
-        .where(and(eq(scheduledPosts.id, input.postId), eq(scheduledPosts.userId, ctx.user.id)))
+        .where(and(eq(scheduledPosts.id, postId), eq(scheduledPosts.userId, ctx.user.id)))
         .returning();
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Post não encontrado" });
       return { success: true, post: row };

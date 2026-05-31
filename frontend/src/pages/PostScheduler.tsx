@@ -51,7 +51,7 @@ export default function PostScheduler({ agent }: PostSchedulerProps) {
       await createMutation.mutateAsync({
         content: formData.content,
         platform: formData.platform,
-        scheduledAt: new Date(formData.scheduledAt),
+        scheduledAt: new Date(formData.scheduledAt).toISOString(),
         imageUrl: formData.imageUrl || undefined,
       });
 
@@ -72,7 +72,7 @@ export default function PostScheduler({ agent }: PostSchedulerProps) {
   const handleStatusChange = async (post: ScheduledPost, newStatus: 'agendado' | 'publicado' | 'falhou') => {
     try {
       await updateMutation.mutateAsync({
-        id: post.id,
+        postId: String(post.id),
         status: newStatus,
       });
       await refetch();
@@ -85,10 +85,13 @@ export default function PostScheduler({ agent }: PostSchedulerProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'agendado':
+      case 'scheduled':
         return <Badge className="bg-blue-100 text-blue-800">Agendado</Badge>;
       case 'publicado':
+      case 'published':
         return <Badge className="bg-green-100 text-green-800">Publicado</Badge>;
       case 'falhou':
+      case 'failed':
         return <Badge className="bg-red-100 text-red-800">Falhou</Badge>;
       default:
         return <Badge>{status}</Badge>;

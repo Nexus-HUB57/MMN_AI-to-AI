@@ -76,7 +76,7 @@ export default function SkillsUpgrades({ agent }: SkillsUpgradesProps) {
   const handleUnlockSkill = async (skill: AgentSkill) => {
     try {
       await updateSkillMutation.mutateAsync({
-        id: skill.id,
+        skillId: Number(skill.id),
         status: 'unlocked',
       });
       await refetchSkills();
@@ -89,7 +89,7 @@ export default function SkillsUpgrades({ agent }: SkillsUpgradesProps) {
   const handleActivateSkill = async (skill: AgentSkill) => {
     try {
       await updateSkillMutation.mutateAsync({
-        id: skill.id,
+        skillId: Number(skill.id),
         status: 'active',
         proficiency: 50,
       });
@@ -108,6 +108,8 @@ export default function SkillsUpgrades({ agent }: SkillsUpgradesProps) {
         return <Badge className="bg-yellow-100 text-yellow-800">Desbloqueada</Badge>;
       case 'active':
         return <Badge className="bg-green-100 text-green-800">Ativa</Badge>;
+      case 'inactive':
+        return <Badge className="bg-slate-100 text-slate-800">Inativa</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }

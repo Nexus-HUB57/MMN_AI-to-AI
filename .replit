@@ -58,6 +58,10 @@ waitForPort = 3000
 localPort = 3000
 externalPort = 3000
 
+[[ports]]
+localPort = 5000
+externalPort = 80
+
 [deployment]
 deploymentTarget = "autoscale"
 run = ["bash", "-c", "npm --prefix frontend run dev & cd backend && ../node_modules/.bin/tsx src/index.ts"]

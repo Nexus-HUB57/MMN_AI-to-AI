@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,11 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
+import {
+  buildMarketplaceCheckoutUrl,
+  clearMarketplaceCheckoutIntent,
+  readMarketplaceCheckoutIntent,
+} from "@/lib/marketplace-payments";
 
 const STAGE_LABELS: Record<CareerStage, { title: string; subtitle: string; accent: string; surface: string; glow: string }> = {
   affiliate: {
@@ -86,8 +90,35 @@ const PROGRESSION_GUIDES: Record<string, string> = {
 };
 
 export default function PacksMarketplace() {
-  const { profile } = useMarketplaceProfile();
+  const { profile, activate } = useMarketplaceProfile();
   const [stage, setStage] = useState<StageFilter>("all");
+  const [checkoutFeedback, setCheckoutFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const status = (params.get("status") || params.get("collection_status") || "").toLowerCase();
+
+    if (!["approved", "authorized", "accredited"].includes(status)) {
+      return;
+    }
+
+    const intent = readMarketplaceCheckoutIntent();
+    if (!intent?.slug || intent.type !== "pack") {
+      return;
+    }
+
+    if (!profile.activePackSlugs.includes(intent.slug)) {
+      activate(intent.slug);
+      setCheckoutFeedback(`Pagamento confirmado. O pack ${intent.name ?? intent.slug} agora está ativo no seu painel.`);
+    } else {
+      setCheckoutFeedback(`O pack ${intent.name ?? intent.slug} já está ativo no seu painel.`);
+    }
+
+    clearMarketplaceCheckoutIntent();
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }, [activate, profile.activePackSlugs]);
 
   const packStates = useMemo(
     () =>
@@ -116,6 +147,12 @@ export default function PacksMarketplace() {
   return (
     <DashboardLayout>
       <div className="space-y-8 pb-8">
+        {checkoutFeedback && (
+          <div className="rounded-2xl border border-quantum-lime/20 bg-quantum-lime/10 px-4 py-3 text-sm text-quantum-lime">
+            {checkoutFeedback}
+          </div>
+        )}
+
         <section className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(124,255,178,0.14),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
           <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
             <div className="space-y-5">

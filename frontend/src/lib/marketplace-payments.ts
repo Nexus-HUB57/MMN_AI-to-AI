@@ -58,6 +58,15 @@ function persistIntent(intent: MarketplaceCheckoutIntent) {
   }
 }
 
+export function clearMarketplaceCheckoutIntent() {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(MARKETPLACE_CHECKOUT_STORAGE_KEY);
+  } catch {
+    // noop
+  }
+}
+
 export function buildMarketplaceCheckoutUrl(intent: MarketplaceCheckoutIntent) {
   const normalized = normalizeIntent(intent);
   persistIntent(normalized);

@@ -28,7 +28,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
-import { allocateBrlToBtc, isBtcLocked, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
+import { allocateBrlToBtc, isBtcLocked, getLevelLabel, getLevelSubtitle, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
 
 const QUICK_ACTIONS = [
   {
@@ -270,6 +270,11 @@ export default function Dashboard() {
               >
                 <Copy size={10} /> Copiar link
               </button>
+            </div>
+            <div className="mt-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Qualificação atual</p>
+              <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
+              <p className="mt-1 text-sm text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
             </div>
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">

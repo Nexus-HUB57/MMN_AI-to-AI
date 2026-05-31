@@ -13,6 +13,7 @@ import Marketplaces from "@/pages/Marketplaces";
 import Estoque from "@/pages/Estoque";
 import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import PixCheckout from "@/pages/PixCheckout";
+import PixHistory from "@/pages/PixHistory";
 import PacksMarketplace from "@/pages/PacksMarketplace";
 import SkillsMarketplace from "@/pages/SkillsMarketplace";
 import Upgrades from "@/pages/Upgrades";
@@ -20,7 +21,19 @@ import Network from "@/pages/Network";
 import Payments from "@/pages/Payments";
 import CareerProgress from "@/pages/CareerProgress";
 import ContentHub from "@/pages/ContentHub";
+import ContentCalendar from "@/pages/ContentCalendar";
+import MarketingMaterials from "@/pages/MarketingMaterials";
+import TrackingLinks from "@/pages/TrackingLinks";
+import MarketplaceEbooks from "@/pages/MarketplaceEbooks";
+import SisuPanel from "@/pages/SisuPanel";
+import DropshippingOrders from "@/pages/DropshippingOrders";
+import Utilities from "@/pages/Utilities";
+import Commissions from "@/pages/Commissions";
+import BonusPage from "@/pages/BonusPage";
 import Agents from "@/pages/Agents";
+import AgentsSync from "@/pages/AgentsSync";
+import OrchestratorDashboard from "@/pages/OrchestratorDashboard";
+import SocialAccounts from "@/pages/SocialAccounts";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
@@ -32,18 +45,31 @@ function Router() {
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/marketplaces" component={Marketplaces} />
+      <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />
       <Route path="/minisite" component={AffiliateMiniSite} />
       <Route path="/afiliado/:code" component={AffiliateMiniSite} />
       <Route path="/pix/checkout" component={PixCheckout} />
+      <Route path="/pix/history" component={PixHistory} />
       <Route path="/packs" component={PacksMarketplace} />
       <Route path="/skills" component={SkillsMarketplace} />
       <Route path="/upgrades" component={Upgrades} />
       <Route path="/network" component={Network} />
       <Route path="/payments" component={Payments} />
+      <Route path="/commissions" component={Commissions} />
       <Route path="/career" component={CareerProgress} />
-      <Route path="/content-hub" component={ContentHub} />
+      <Route path="/bonus" component={BonusPage} />
       <Route path="/agents" component={Agents} />
+      <Route path="/agents/sync" component={AgentsSync} />
+      <Route path="/orchestrator" component={OrchestratorDashboard} />
+      <Route path="/content-hub" component={ContentHub} />
+      <Route path="/content/calendar" component={ContentCalendar} />
+      <Route path="/marketing/materials" component={MarketingMaterials} />
+      <Route path="/tracking/links" component={TrackingLinks} />
+      <Route path="/social/accounts" component={SocialAccounts} />
+      <Route path="/sisu" component={SisuPanel} />
+      <Route path="/dropshipping/orders" component={DropshippingOrders} />
+      <Route path="/utilities" component={Utilities} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

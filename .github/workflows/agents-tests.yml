@@ -1,0 +1,77 @@
+name: Agents Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/src/routers/agentsRouter.ts"
+      - "database/schemas/schema-agent-extras.ts"
+      - "database/migrations/0003_agent_extras.sql"
+      - "frontend/src/pages/SkillsUpgrades.tsx"
+      - "frontend/src/pages/PostScheduler.tsx"
+      - "frontend/src/pages/RecommendedProducts.tsx"
+      - "frontend/src/pages/ContentGenerator.tsx"
+      - "frontend/src/pages/ImageGenerator.tsx"
+      - "tests/unit/agents*.test.ts"
+      - ".github/workflows/agents-tests.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/src/routers/agentsRouter.ts"
+      - "database/schemas/schema-agent-extras.ts"
+      - "database/migrations/0003_agent_extras.sql"
+      - "frontend/src/pages/SkillsUpgrades.tsx"
+      - "frontend/src/pages/PostScheduler.tsx"
+      - "frontend/src/pages/RecommendedProducts.tsx"
+      - "frontend/src/pages/ContentGenerator.tsx"
+      - "frontend/src/pages/ImageGenerator.tsx"
+      - "tests/unit/agents*.test.ts"
+  workflow_dispatch:
+
+concurrency:
+  group: agents-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  agents-tests:
+    name: Validar contratos e persistência dos endpoints de agentes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Executar testes do domínio de agentes
+        run: |
+          npx vitest run \
+            tests/unit/agents.test.ts \
+            tests/unit/agents.contracts.test.ts \
+            tests/unit/agents.persistence.test.ts
+
+      - name: Resumo do job
+        if: always()
+        run: |
+          {
+            echo "## 🤖 Agents Tests"
+            echo
+            echo "- Contratos frontend ↔ backend"
+            echo "- Persistência (fallback + queries)"
+            echo "- Fluxos críticos: skills, posts agendados, produtos recomendados"
+          } >> "$GITHUB_STEP_SUMMARY"

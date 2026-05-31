@@ -1,34 +1,29 @@
-/**
- * Utilities - Página de Utilidades para Afiliados
- * Ferramentas úteis: calculadoras, conversores, geradores de links
- */
-
 import { useState } from "react";
-import { Link } from "wouter";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Calculator,
-  Link2,
-  Copy,
   Check,
-  RefreshCw,
-  Code,
+  Copy,
   Hash,
-  Globe,
+  Link2,
   QrCode,
-  FileText,
-  Zap,
-  Shield,
-  Users,
   TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
 
-type UtilityCategory = "calculators" | "generators" | "converters";
+type CategoryKey = "calculators" | "generators";
 
 interface CalculatorConfig {
   id: string;
   name: string;
   description: string;
-  icon: typeof Calculator;
+  icon: React.ElementType;
   inputs: { label: string; placeholder: string; suffix?: string }[];
   calculate: (values: number[]) => { result: string; breakdown: string[] };
 }
@@ -37,21 +32,21 @@ const CALCULATORS: CalculatorConfig[] = [
   {
     id: "commission",
     name: "Calculadora de Comissão",
-    description: "Calcule sua comissão estimada com base no volume de vendas",
+    description: "Estima sua comissão com base no volume de vendas e no nível atual.",
     icon: TrendingUp,
     inputs: [
-      { label: "Valor da Venda (R$)", placeholder: "1000" },
-      { label: "Nível de Carreira (1-27)", placeholder: "5" },
+      { label: "Valor da venda (R$)", placeholder: "1000" },
+      { label: "Nível de carreira (1-15)", placeholder: "5" },
     ],
     calculate: ([sale, level]) => {
-      const baseCommission = sale * 0.1;
-      const levelBonus = Math.min(level * 2, 50);
-      const total = baseCommission * (1 + levelBonus / 100);
+      const base = sale * 0.1;
+      const bonusPct = Math.min(level * 2, 50);
+      const total = base * (1 + bonusPct / 100);
       return {
         result: `R$ ${total.toFixed(2)}`,
         breakdown: [
-          `Comissão base (10%): R$ ${baseCommission.toFixed(2)}`,
-          `Bônus por nível (${levelBonus}%): R$ ${(total - baseCommission).toFixed(2)}`,
+          `Comissão base (10%): R$ ${base.toFixed(2)}`,
+          `Bônus por nível (${bonusPct}%): R$ ${(total - base).toFixed(2)}`,
           `Total estimado: R$ ${total.toFixed(2)}`,
         ],
       };
@@ -60,23 +55,23 @@ const CALCULATORS: CalculatorConfig[] = [
   {
     id: "network",
     name: "Calculadora de Rede",
-    description: "Estime o tamanho da sua rede baseado na compressão",
+    description: "Projeta o crescimento da sua rede a partir dos diretos.",
     icon: Users,
     inputs: [
-      { label: "Afiliados Diretos", placeholder: "10" },
-      { label: "Nível de Profundidade", placeholder: "3" },
-      { label: "Taxa de Conversão (%)", placeholder: "25" },
+      { label: "Afiliados diretos", placeholder: "10" },
+      { label: "Profundidade (níveis)", placeholder: "3" },
+      { label: "Taxa de conversão (%)", placeholder: "25" },
     ],
     calculate: ([direct, depth, rate]) => {
-      const total = direct * Math.pow((1 + rate / 100), depth);
-      const activeAffiliates = total * (rate / 100);
+      const total = direct * Math.pow(1 + rate / 100, depth);
+      const active = total * (rate / 100);
       return {
         result: `${Math.round(total)} afiliados potenciais`,
         breakdown: [
           `Rede direta: ${direct} afiliados`,
-          `Profundidade máxima: ${depth} níveis`,
+          `Profundidade: ${depth} níveis`,
           `Taxa de conversão: ${rate}%`,
-          `Afiliados ativos estimados: ${Math.round(activeAffiliates)}`,
+          `Afiliados ativos estimados: ${Math.round(active)}`,
         ],
       };
     },
@@ -84,24 +79,25 @@ const CALCULATORS: CalculatorConfig[] = [
   {
     id: "xp",
     name: "Calculadora de XP",
-    description: "Calcule quantos XP você precisa para o próximo nível",
+    description: "Quanto XP falta para você alcançar o próximo nível.",
     icon: Zap,
     inputs: [
-      { label: "XP Atual", placeholder: "5000" },
-      { label: "Nível Atual (1-27)", placeholder: "5" },
+      { label: "XP atual", placeholder: "5000" },
+      { label: "XP do próximo nível", placeholder: "10000" },
+      { label: "Média mensal de XP", placeholder: "2500" },
     ],
-    calculate: ([currentXp, currentLevel]) => {
-      const xpPerLevel = 1000 + currentLevel * 500;
-      const xpNeeded = xpPerLevel - (currentXp % xpPerLevel);
-      const monthlyRate = currentXp / 2;
-      const monthsToNext = xpNeeded / monthlyRate;
+    calculate: ([currentXp, targetXp, monthlyRate]) => {
+      const remaining = Math.max(0, targetXp - currentXp);
+      const months = monthlyRate > 0 ? remaining / monthlyRate : Infinity;
       return {
-        result: `${Math.round(xpNeeded)} XP para o próximo nível`,
+        result: `${Math.round(remaining).toLocaleString("pt-BR")} XP para o próximo nível`,
         breakdown: [
-          `XP atual: ${currentXp.toLocaleString()}`,
-          `XP necessário por nível: ${xpPerLevel.toLocaleString()}`,
-          `Média mensal: ${Math.round(monthlyRate).toLocaleString()} XP`,
-          `Estimativa: ${monthsToNext.toFixed(1)} meses para progredir`,
+          `XP atual: ${currentXp.toLocaleString("pt-BR")}`,
+          `XP alvo: ${targetXp.toLocaleString("pt-BR")}`,
+          `Média mensal: ${monthlyRate.toLocaleString("pt-BR")} XP`,
+          Number.isFinite(months)
+            ? `Estimativa: ${months.toFixed(1)} meses até atingir o nível`
+            : "Defina uma média mensal para estimar o tempo restante.",
         ],
       };
     },
@@ -112,7 +108,7 @@ interface GeneratorConfig {
   id: string;
   name: string;
   description: string;
-  icon: typeof Link2;
+  icon: React.ElementType;
   fields: { label: string; placeholder: string; defaultValue?: string }[];
   generate: (values: Record<string, string>) => string;
 }
@@ -120,20 +116,22 @@ interface GeneratorConfig {
 const GENERATORS: GeneratorConfig[] = [
   {
     id: "tracking",
-    name: "Gerador de Link de Tracking",
-    description: "Crie links de rastreamento com UTM para campanhas",
+    name: "Gerador de link UTM",
+    description: "Cria links com parâmetros UTM para campanhas.",
     icon: Link2,
     fields: [
-      { label: "URL Base", placeholder: "https://exemplo.com/afiliado", defaultValue: "https://nxnja0f28xnc.space.minimax.io" },
-      { label: "Campanha", placeholder: "instagram_verao_2024" },
-      { label: "Fonte (Source)", placeholder: "instagram", defaultValue: "organic" },
-      { label: "Medium", placeholder: "social", defaultValue: "affiliate" },
+      { label: "URL base", placeholder: "https://oneverso.com.br/afiliado/SEU-ID" },
+      { label: "Campanha", placeholder: "lancamento_pack_a2" },
+      { label: "Fonte", placeholder: "instagram", defaultValue: "organic" },
+      { label: "Canal", placeholder: "social", defaultValue: "affiliate" },
     ],
-    generate: ({ base, campaign, source, medium }) => {
+    generate: (values) => {
+      const base = values["URL base"] || "";
+      if (!base) return "";
       const params = new URLSearchParams();
-      params.set("utm_campaign", campaign);
-      params.set("utm_source", source);
-      params.set("utm_medium", medium);
+      if (values["Campanha"]) params.set("utm_campaign", values["Campanha"]);
+      if (values["Fonte"]) params.set("utm_source", values["Fonte"]);
+      if (values["Canal"]) params.set("utm_medium", values["Canal"]);
       params.set("ref", "afiliado");
       return `${base}?${params.toString()}`;
     },
@@ -141,333 +139,312 @@ const GENERATORS: GeneratorConfig[] = [
   {
     id: "shortcode",
     name: "Gerador de Short Code",
-    description: "Crie short codes únicos para tracking neural",
+    description: "Cria identificadores curtos para rastreamento.",
     icon: Hash,
     fields: [
       { label: "Prefixo", placeholder: "NX", defaultValue: "NX" },
-      { label: "Afiliado ID", placeholder: "12345" },
+      { label: "Identificador", placeholder: "12345" },
     ],
-    generate: ({ prefix, id }) => {
-      const timestamp = Date.now().toString(36).toUpperCase();
+    generate: (values) => {
+      const prefix = values["Prefixo"] || "NX";
+      const id = values["Identificador"] || "0001";
+      const timestamp = Date.now().toString(36).slice(-4).toUpperCase();
       const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-      return `${prefix}-${id}-${timestamp.slice(-4)}${random}`;
+      return `${prefix}-${id}-${timestamp}${random}`;
     },
   },
   {
     id: "qrcode",
-    name: "Gerador de Link QR Code",
-    description: "Crie URLs para gerar QR Codes de affiliates",
+    name: "Link para QR Code",
+    description: "Gera uma URL pronta para criar um QR Code do seu link.",
     icon: QrCode,
     fields: [
-      { label: "URL do MiniSite", placeholder: "https://site.com/u/123" },
-      { label: "Tamanho do QR (px)", placeholder: "200", defaultValue: "200" },
+      { label: "URL do mini-site", placeholder: "https://oneverso.com.br/afiliado/SEU-ID" },
+      { label: "Tamanho", placeholder: "200", defaultValue: "200" },
     ],
-    generate: ({ url }) => {
-      const encoded = encodeURIComponent(url);
-      return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
+    generate: (values) => {
+      const url = values["URL do mini-site"] || "";
+      if (!url) return "";
+      const size = values["Tamanho"] || "200";
+      return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
     },
   },
 ];
 
-const CONVERTERS = [
-  {
-    id: "currency",
-    name: "Conversor de Moeda",
-    description: "Converta valores entre moedas",
-    icon: Globe,
-    rates: { BRL: 1, USD: 5.0, EUR: 5.5 },
-  },
-  {
-    id: "utm",
-    name: "Conversor UTM",
-    description: "Gere parâmetros UTM para URLs",
-    icon: Code,
-  },
-  {
-    id: "markdown",
-    name: "Conversor de Markdown",
-    description: "Converta texto para formato de post",
-    icon: FileText,
-  },
-];
-
 export default function Utilities() {
-  const [activeCategory, setActiveCategory] = useState<UtilityCategory>("calculators");
+  const [category, setCategory] = useState<CategoryKey>("calculators");
   const [activeCalculator, setActiveCalculator] = useState<string | null>(null);
-  const [calculatorValues, setCalculatorValues] = useState<Record<string, string>>({});
-  const [calculatorResult, setCalculatorResult] = useState<string | null>(null);
-  const [calculatorBreakdown, setCalculatorBreakdown] = useState<string[]>([]);
-
+  const [calcValues, setCalcValues] = useState<Record<string, string>>({});
+  const [calcResult, setCalcResult] = useState<string | null>(null);
+  const [calcBreakdown, setCalcBreakdown] = useState<string[]>([]);
   const [activeGenerator, setActiveGenerator] = useState<string | null>(null);
-  const [generatorValues, setGeneratorValues] = useState<Record<string, string>>({});
-  const [generatedResult, setGeneratedResult] = useState<string | null>(null);
+  const [genValues, setGenValues] = useState<Record<string, string>>({});
+  const [genResult, setGenResult] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleCalculator = (calculator: CalculatorConfig) => {
-    const values = calculator.inputs.map((_, i) => parseFloat(Object.values(calculatorValues)[i] || "0") || 0);
-    const result = calculator.calculate(values);
-    setCalculatorResult(result.result);
-    setCalculatorBreakdown(result.breakdown);
+  const handleCalculator = (calc: CalculatorConfig) => {
+    const values = calc.inputs.map((_, idx) => {
+      const raw = calcValues[`${calc.id}-${idx}`] ?? "";
+      const parsed = Number.parseFloat(raw.replace(",", "."));
+      return Number.isFinite(parsed) ? parsed : 0;
+    });
+    const result = calc.calculate(values);
+    setCalcResult(result.result);
+    setCalcBreakdown(result.breakdown);
   };
 
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleGenerator = (gen: GeneratorConfig) => {
+    const result = gen.generate(genValues);
+    setGenResult(result || "Preencha os campos para gerar o resultado.");
   };
 
-  const handleGenerator = (generator: GeneratorConfig) => {
-    const result = generator.generate(generatorValues);
-    setGeneratedResult(result);
+  const handleCopy = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1800);
+    } catch {
+      /* noop */
+    }
   };
 
   return (
-    <main className="page-shell">
-      <div className="topbar">
-        <div>
-          <span className="pill">Ferramentas</span>
-          <h1>Utilidades para Afiliados</h1>
-          <p className="lead compact">
-            Ferramentas úteis para otimizar suas operações e campanhas.
-          </p>
-        </div>
-        <div className="cta-row">
-          <Link href="/dashboard" className="btn btn-secondary">
-            Voltar ao Dashboard
-          </Link>
-        </div>
-      </div>
-
-      {/* Category Tabs */}
-      <nav className="flex gap-2 mb-6">
-        {[
-          { id: "calculators" as UtilityCategory, label: "Calculadoras", icon: Calculator },
-          { id: "generators" as UtilityCategory, label: "Geradores", icon: Link2 },
-          { id: "converters" as UtilityCategory, label: "Conversores", icon: RefreshCw },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => {
-              setActiveCategory(tab.id);
-              setActiveCalculator(null);
-              setActiveGenerator(null);
-              setCalculatorResult(null);
-              setGeneratedResult(null);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-              activeCategory === tab.id
-                ? "bg-primary text-white"
-                : "bg-panel hover:bg-panel-hover"
-            }`}
-          >
-            <tab.icon size={18} />
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-
-      {/* Calculators */}
-      {activeCategory === "calculators" && (
-        <div className="grid gap-6">
-          {/* Calculator Selection */}
-          <div className="grid grid-cols-3 gap-4">
-            {CALCULATORS.map(calc => {
-              const Icon = calc.icon;
-              return (
-                <button
-                  key={calc.id}
-                  onClick={() => {
-                    setActiveCalculator(calc.id);
-                    setCalculatorResult(null);
-                    setCalculatorBreakdown([]);
-                  }}
-                  className={`p-4 rounded-lg border text-left transition-all ${
-                    activeCalculator === calc.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border bg-panel hover:border-primary/50"
-                  }`}
-                >
-                  <Icon className="w-8 h-8 text-primary mb-2" />
-                  <h3 className="font-semibold">{calc.name}</h3>
-                  <p className="text-sm text-muted mt-1">{calc.description}</p>
-                </button>
-              );
-            })}
+    <DashboardLayout>
+      <div className="space-y-8 pb-8">
+        <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.15),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(124,255,178,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                Ferramentas
+              </Badge>
+              <Badge className="border border-white/10 bg-white/5 text-slate-200">Operação rápida</Badge>
+            </div>
+            <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
+              Utilidades para sua operação
+            </h1>
+            <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+              Pequenas ferramentas para acelerar o dia a dia comercial: calculadoras, geradores de links e atalhos úteis.
+            </p>
           </div>
+        </section>
 
-          {/* Calculator Form */}
-          {activeCalculator && (
-            <section className="panel">
-              <h2 className="mb-4">
-                {CALCULATORS.find(c => c.id === activeCalculator)?.name}
-              </h2>
-              <div className="space-y-4">
-                {CALCULATORS.find(c => c.id === activeCalculator)?.inputs.map((input, i) => (
-                  <div key={i}>
-                    <label className="block text-sm font-medium mb-1">{input.label}</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="number"
-                        value={Object.values(calculatorValues)[i] || ""}
-                        onChange={e => {
-                          const newValues = { ...calculatorValues };
-                          newValues[`calc_${i}`] = e.target.value;
-                          setCalculatorValues(newValues);
-                        }}
-                        placeholder={input.placeholder}
-                        className="flex-1 px-3 py-2 bg-panel border border-border rounded-lg focus:border-primary focus:outline-none"
-                      />
-                      {input.suffix && (
-                        <span className="px-3 py-2 bg-muted rounded-lg text-sm">{input.suffix}</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                <button
-                  onClick={() => handleCalculator(CALCULATORS.find(c => c.id === activeCalculator)!)}
-                  className="btn btn-primary w-full"
-                >
-                  <Calculator size={18} />
-                  Calcular
-                </button>
-              </div>
+        <div className="flex flex-wrap gap-2">
+          {([
+            { id: "calculators", label: "Calculadoras", icon: Calculator },
+            { id: "generators", label: "Geradores", icon: Link2 },
+          ] as { id: CategoryKey; label: string; icon: React.ElementType }[]).map((tab) => {
+            const Icon = tab.icon;
+            const isActive = category === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setCategory(tab.id)}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+                  isActive
+                    ? "border-quantum-cyan/60 bg-quantum-cyan/15 text-quantum-cyan"
+                    : "border-white/10 bg-white/5 text-slate-300 hover:border-white/20"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
 
-              {/* Results */}
-              {calculatorResult && (
-                <div className="mt-6 p-4 bg-success/10 border border-success/30 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-success">Resultado</h3>
-                    <button
-                      onClick={() => copyToClipboard(calculatorResult, "calc-result")}
-                      className="btn btn-sm btn-secondary"
-                    >
-                      {copiedId === "calc-result" ? <Check size={16} /> : <Copy size={16} />}
-                      {copiedId === "calc-result" ? "Copiado!" : "Copiar"}
-                    </button>
-                  </div>
-                  <p className="text-2xl font-bold text-success">{calculatorResult}</p>
-                  <div className="mt-4 space-y-1">
-                    {calculatorBreakdown.map((item, i) => (
-                      <p key={i} className="text-sm text-muted">• {item}</p>
+        {category === "calculators" && (
+          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CALCULATORS.map((calc) => {
+                const Icon = calc.icon;
+                const isActive = activeCalculator === calc.id;
+                return (
+                  <button
+                    key={calc.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveCalculator(calc.id);
+                      setCalcValues({});
+                      setCalcResult(null);
+                      setCalcBreakdown([]);
+                    }}
+                    className={`rounded-2xl border p-5 text-left transition ${
+                      isActive
+                        ? "border-quantum-cyan/40 bg-quantum-cyan/10"
+                        : "border-white/10 bg-white/5 hover:border-white/20"
+                    }`}
+                  >
+                    <Icon className="h-8 w-8 text-quantum-cyan" />
+                    <p className="mt-3 text-base font-semibold text-white">{calc.name}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">{calc.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <Card className="border-white/10 bg-white/5 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-white">
+                  {activeCalculator ? CALCULATORS.find((c) => c.id === activeCalculator)?.name : "Escolha uma calculadora"}
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  {activeCalculator
+                    ? "Preencha os campos abaixo para visualizar o resultado."
+                    : "Selecione uma das calculadoras ao lado para começar."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {activeCalculator && (
+                  <>
+                    {CALCULATORS.find((c) => c.id === activeCalculator)!.inputs.map((input, idx) => (
+                      <div key={`${activeCalculator}-${idx}`} className="space-y-1.5">
+                        <Label>{input.label}</Label>
+                        <Input
+                          type="number"
+                          value={calcValues[`${activeCalculator}-${idx}`] ?? ""}
+                          placeholder={input.placeholder}
+                          onChange={(event) =>
+                            setCalcValues((current) => ({
+                              ...current,
+                              [`${activeCalculator}-${idx}`]: event.target.value,
+                            }))
+                          }
+                          className="border-white/10 bg-white/5 text-white"
+                        />
+                      </div>
                     ))}
-                  </div>
-                </div>
-              )}
-            </section>
-          )}
-        </div>
-      )}
-
-      {/* Generators */}
-      {activeCategory === "generators" && (
-        <div className="grid gap-6">
-          {/* Generator Selection */}
-          <div className="grid grid-cols-3 gap-4">
-            {GENERATORS.map(gen => {
-              const Icon = gen.icon;
-              return (
-                <button
-                  key={gen.id}
-                  onClick={() => {
-                    setActiveGenerator(gen.id);
-                    setGeneratedResult(null);
-                    // Set default values
-                    const defaults: Record<string, string> = {};
-                    gen.fields.forEach(f => {
-                      if (f.defaultValue) defaults[f.label] = f.defaultValue;
-                    });
-                    setGeneratorValues(defaults);
-                  }}
-                  className={`p-4 rounded-lg border text-left transition-all ${
-                    activeGenerator === gen.id
-                      ? "border-primary bg-primary/10"
-                      : "border-border bg-panel hover:border-primary/50"
-                  }`}
-                >
-                  <Icon className="w-8 h-8 text-accent mb-2" />
-                  <h3 className="font-semibold">{gen.name}</h3>
-                  <p className="text-sm text-muted mt-1">{gen.description}</p>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Generator Form */}
-          {activeGenerator && (
-            <section className="panel">
-              <h2 className="mb-4">
-                {GENERATORS.find(g => g.id === activeGenerator)?.name}
-              </h2>
-              <div className="space-y-4">
-                {GENERATORS.find(g => g.id === activeGenerator)?.fields.map((field, i) => (
-                  <div key={i}>
-                    <label className="block text-sm font-medium mb-1">{field.label}</label>
-                    <input
-                      type="text"
-                      value={generatorValues[field.label] || field.defaultValue || ""}
-                      onChange={e => {
-                        setGeneratorValues({ ...generatorValues, [field.label]: e.target.value });
-                      }}
-                      placeholder={field.placeholder}
-                      className="w-full px-3 py-2 bg-panel border border-border rounded-lg focus:border-primary focus:outline-none"
-                    />
-                  </div>
-                ))}
-                <button
-                  onClick={() => handleGenerator(GENERATORS.find(g => g.id === activeGenerator)!)}
-                  className="btn btn-primary w-full"
-                >
-                  <Zap size={18} />
-                  Gerar
-                </button>
-              </div>
-
-              {/* Generated Result */}
-              {generatedResult && (
-                <div className="mt-6 p-4 bg-accent/10 border border-accent/30 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-accent">Resultado</h3>
-                    <button
-                      onClick={() => copyToClipboard(generatedResult, "gen-result")}
-                      className="btn btn-sm btn-secondary"
+                    <Button
+                      className="gradient-btn w-full"
+                      onClick={() => handleCalculator(CALCULATORS.find((c) => c.id === activeCalculator)!)}
                     >
-                      {copiedId === "gen-result" ? <Check size={16} /> : <Copy size={16} />}
-                      {copiedId === "gen-result" ? "Copiado!" : "Copiar"}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2 p-3 bg-panel rounded-lg overflow-x-auto">
-                    <code className="text-sm text-accent whitespace-nowrap">{generatedResult}</code>
-                  </div>
-                </div>
-              )}
-            </section>
-          )}
-        </div>
-      )}
+                      <Calculator className="mr-2 h-4 w-4" />
+                      Calcular
+                    </Button>
 
-      {/* Converters */}
-      {activeCategory === "converters" && (
-        <div className="grid gap-6">
-          <div className="grid grid-cols-3 gap-4">
-            {CONVERTERS.map(conv => {
-              const Icon = conv.icon;
-              return (
-                <div
-                  key={conv.id}
-                  className="p-6 rounded-lg border bg-panel"
-                >
-                  <Icon className="w-8 h-8 text-warning mb-2" />
-                  <h3 className="font-semibold">{conv.name}</h3>
-                  <p className="text-sm text-muted mt-1">{conv.description}</p>
-                  <span className="inline-block mt-3 text-xs pill bg-muted">
-                    Em breve
-                  </span>
-                </div>
-              );
-            })}
+                    {calcResult && (
+                      <div className="rounded-2xl border border-quantum-lime/30 bg-quantum-lime/10 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-sm font-semibold text-quantum-lime">Resultado</p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                            onClick={() => handleCopy(calcResult, "calc-result")}
+                          >
+                            {copiedId === "calc-result" ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                            {copiedId === "calc-result" ? "Copiado" : "Copiar"}
+                          </Button>
+                        </div>
+                        <p className="mt-3 text-3xl font-black text-white">{calcResult}</p>
+                        <ul className="mt-3 space-y-1 text-sm text-slate-300">
+                          {calcBreakdown.map((item, idx) => (
+                            <li key={idx}>• {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        </div>
-      )}
-    </main>
+        )}
+
+        {category === "generators" && (
+          <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {GENERATORS.map((gen) => {
+                const Icon = gen.icon;
+                const isActive = activeGenerator === gen.id;
+                return (
+                  <button
+                    key={gen.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveGenerator(gen.id);
+                      const defaults: Record<string, string> = {};
+                      gen.fields.forEach((field) => {
+                        if (field.defaultValue) defaults[field.label] = field.defaultValue;
+                      });
+                      setGenValues(defaults);
+                      setGenResult(null);
+                    }}
+                    className={`rounded-2xl border p-5 text-left transition ${
+                      isActive
+                        ? "border-quantum-cyan/40 bg-quantum-cyan/10"
+                        : "border-white/10 bg-white/5 hover:border-white/20"
+                    }`}
+                  >
+                    <Icon className="h-8 w-8 text-quantum-purple" />
+                    <p className="mt-3 text-base font-semibold text-white">{gen.name}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">{gen.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            <Card className="border-white/10 bg-white/5 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-white">
+                  {activeGenerator ? GENERATORS.find((g) => g.id === activeGenerator)?.name : "Escolha um gerador"}
+                </CardTitle>
+                <CardDescription className="text-slate-400">
+                  {activeGenerator
+                    ? "Preencha os campos abaixo para gerar o resultado."
+                    : "Selecione um dos geradores ao lado para começar."}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {activeGenerator && (
+                  <>
+                    {GENERATORS.find((g) => g.id === activeGenerator)!.fields.map((field, idx) => (
+                      <div key={`${activeGenerator}-${idx}`} className="space-y-1.5">
+                        <Label>{field.label}</Label>
+                        <Input
+                          value={genValues[field.label] ?? field.defaultValue ?? ""}
+                          placeholder={field.placeholder}
+                          onChange={(event) =>
+                            setGenValues((current) => ({ ...current, [field.label]: event.target.value }))
+                          }
+                          className="border-white/10 bg-white/5 text-white"
+                        />
+                      </div>
+                    ))}
+                    <Button
+                      className="gradient-btn w-full"
+                      onClick={() => handleGenerator(GENERATORS.find((g) => g.id === activeGenerator)!)}
+                    >
+                      <Zap className="mr-2 h-4 w-4" />
+                      Gerar resultado
+                    </Button>
+
+                    {genResult && (
+                      <div className="rounded-2xl border border-quantum-purple/30 bg-quantum-purple/10 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-sm font-semibold text-quantum-purple">Resultado</p>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                            onClick={() => handleCopy(genResult, "gen-result")}
+                          >
+                            {copiedId === "gen-result" ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                            {copiedId === "gen-result" ? "Copiado" : "Copiar"}
+                          </Button>
+                        </div>
+                        <pre className="mt-3 whitespace-pre-wrap break-all rounded-xl bg-black/30 p-3 text-xs text-quantum-purple">
+                          {genResult}
+                        </pre>
+                      </div>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+    </DashboardLayout>
   );
 }

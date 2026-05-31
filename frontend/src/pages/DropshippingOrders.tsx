@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import DashboardLayout from '@/components/DashboardLayout';
 import { trpc } from '@/lib/trpc';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Plus, Loader2, Package, Eye } from 'lucide-react';
@@ -103,28 +103,32 @@ export default function DropshippingOrders() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header with Create Button */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Pedidos de Dropshipping</h1>
-          <p className="text-slate-600 mt-1">Gerencie seus pedidos e acompanhe o status</p>
-        </div>
-        <Button
-          onClick={() => setShowForm(!showForm)}
-          className="gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Novo Pedido
-        </Button>
-      </div>
+    <DashboardLayout>
+      <div className="space-y-6 pb-8">
+        <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.15),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(124,255,178,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Dropshipping</Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">Operação comercial</Badge>
+              </div>
+              <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">Pedidos de Dropshipping</h1>
+              <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+                Gerencie pedidos vinculados a plataformas parceiras e acompanhe a evolução de cada status em um único lugar.
+              </p>
+            </div>
+            <Button className="gradient-btn" onClick={() => setShowForm(!showForm)}>
+              <Plus className="mr-2 h-4 w-4" /> Novo Pedido
+            </Button>
+          </div>
+        </section>
 
       {/* New Order Form */}
       {showForm && (
-        <Card>
+        <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
           <CardHeader>
-            <CardTitle>Registrar Novo Pedido</CardTitle>
-            <CardDescription>Preencha os dados do pedido de dropshipping</CardDescription>
+            <CardTitle className="text-white">Registrar Novo Pedido</CardTitle>
+            <CardDescription className="text-slate-300">Preencha os dados do pedido de dropshipping</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -224,9 +228,9 @@ export default function DropshippingOrders() {
       )}
 
       {/* Filters */}
-      <Card>
+      <Card className="border-white/10 bg-white/5 backdrop-blur">
         <CardHeader>
-          <CardTitle>Filtros</CardTitle>
+          <CardTitle className="text-white">Filtros</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-2 flex-wrap">
@@ -252,10 +256,10 @@ export default function DropshippingOrders() {
       </Card>
 
       {/* Orders List */}
-      <Card>
+      <Card className="border-white/10 bg-white/5 backdrop-blur">
         <CardHeader>
-          <CardTitle>Meus Pedidos</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-white">Meus Pedidos</CardTitle>
+          <CardDescription className="text-slate-400">
             {orders.length} pedido{orders.length !== 1 ? 's' : ''} encontrado{orders.length !== 1 ? 's' : ''}
           </CardDescription>
         </CardHeader>
@@ -329,6 +333,7 @@ export default function DropshippingOrders() {
           )}
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

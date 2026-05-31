@@ -1,438 +1,328 @@
-import React, { useState } from "react";
-import { useTRPC } from "../components/trpc-provider";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  Link2,
-  Plus,
-  Copy,
-  CheckCircle2,
-  Eye,
-  MousePointer,
-  UserPlus,
-  ShoppingCart,
-  MoreVertical,
-  Edit2,
-  Trash2,
-  ExternalLink,
   BarChart3,
+  CheckCircle2,
+  Copy,
+  Eye,
+  ExternalLink,
+  Link2,
+  MousePointer,
+  Plus,
+  Trash2,
   TrendingUp,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-/**
- * TrackingLinks - Sistema de Tracking Neural
- * Links de rastreamento para acompanhamento de conversões
- */
+interface TrackingLinkEntry {
+  id: string;
+  name: string;
+  destinationUrl: string;
+  shortCode: string;
+  campaign?: string;
+  medium?: string;
+  clicks: number;
+  conversions: number;
+  createdAt: string;
+}
+
+const MEDIUM_PALETTE: Record<string, string> = {
+  social: "border-fuchsia-400/30 bg-fuchsia-400/10 text-fuchsia-200",
+  email: "border-sky-400/30 bg-sky-400/10 text-sky-200",
+  affiliate: "border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime",
+  influencer: "border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple",
+};
+
+function buildShortCode(prefix: string) {
+  const part = Math.random().toString(36).substring(2, 7).toUpperCase();
+  return `${prefix}${part}`;
+}
+
 export default function TrackingLinks() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [linkName, setLinkName] = useState("");
+  const { user } = useAuth();
+  const [links, setLinks] = useState<TrackingLinkEntry[]>([]);
+  const [showCreate, setShowCreate] = useState(false);
+  const [name, setName] = useState("");
   const [destinationUrl, setDestinationUrl] = useState("");
   const [campaign, setCampaign] = useState("");
   const [medium, setMedium] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Query para listar links de rastreamento
-  const { data: trackingLinks, isLoading } = useQuery({
-    queryKey: ["trackingLinks"],
-    queryFn: () => trpc.social.listTrackingLinks.query(),
-  });
+  const referralPrefix = useMemo(() => {
+    const raw = (user?.id || "").toString().replace(/[^A-Za-z0-9]/g, "");
+    return raw ? raw.substring(0, 4).toUpperCase() : "NX";
+  }, [user?.id]);
 
-  // Query para métricas de conversão
-  const { data: conversionMetrics } = useQuery({
-    queryKey: ["conversionMetrics"],
-    queryFn: () => trpc.social.getConversionMetrics.query(),
-  });
+  const totals = useMemo(() => {
+    const totalClicks = links.reduce((acc, link) => acc + link.clicks, 0);
+    const totalConversions = links.reduce((acc, link) => acc + link.conversions, 0);
+    const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+    return { totalClicks, totalConversions, conversionRate };
+  }, [links]);
 
-  // Mutation para criar link
-  const createLinkMutation = useMutation({
-    mutationFn: (data: {
-      name: string;
-      destinationUrl: string;
-      campaign?: string;
-      medium?: string;
-    }) => trpc.social.createTrackingLink.mutate(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["trackingLinks"] });
-      setShowCreateModal(false);
-      setLinkName("");
-      setDestinationUrl("");
-      setCampaign("");
-      setMedium("");
-    },
-  });
+  const handleCreate = () => {
+    if (!name.trim() || !destinationUrl.trim()) return;
 
-  // Mutation para deletar link
-  const deleteLinkMutation = useMutation({
-    mutationFn: (linkId: number) =>
-      trpc.social.deleteTrackingLink.mutate({ linkId }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["trackingLinks"] });
-    },
-  });
+    const entry: TrackingLinkEntry = {
+      id: `${Date.now()}`,
+      name: name.trim(),
+      destinationUrl: destinationUrl.trim(),
+      shortCode: buildShortCode(`${referralPrefix}-`),
+      campaign: campaign.trim() || undefined,
+      medium: medium.trim() || undefined,
+      clicks: 0,
+      conversions: 0,
+      createdAt: new Date().toISOString(),
+    };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    setLinks((current) => [entry, ...current]);
+    setName("");
+    setDestinationUrl("");
+    setCampaign("");
+    setMedium("");
+    setShowCreate(false);
   };
 
-  const getFullTrackingUrl = (shortCode: string) => {
-    return `${window.location.origin}/r/${shortCode}`;
-  };
-
-  const getMediumLabel = (medium: string) => {
-    switch (medium) {
-      case "social":
-        return "Social";
-      case "email":
-        return "E-mail";
-      case "affiliate":
-        return "Afiliado";
-      case "influencer":
-        return "Influenciador";
-      default:
-        return medium || "Direto";
+  const handleCopy = async (link: TrackingLinkEntry) => {
+    const url = `${typeof window === "undefined" ? "" : window.location.origin}/r/${link.shortCode}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedId(link.id);
+      setTimeout(() => setCopiedId(null), 1800);
+    } catch {
+      /* noop */
     }
   };
 
-  const getMediumColor = (medium: string) => {
-    switch (medium) {
-      case "social":
-        return "bg-pink-100 text-pink-700";
-      case "email":
-        return "bg-blue-100 text-blue-700";
-      case "affiliate":
-        return "bg-green-100 text-green-700";
-      case "influencer":
-        return "bg-purple-100 text-purple-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
+  const handleDelete = (id: string) => {
+    setLinks((current) => current.filter((link) => link.id !== id));
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Links de Rastreamento
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Crie e gerencie links para rastrear conversões da sua rede
-            </p>
-          </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Criar Link
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <Link2 className="w-5 h-5 text-indigo-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Total de Links</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {trackingLinks?.length || 0}
+    <DashboardLayout>
+      <div className="space-y-8 pb-8">
+        <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.15),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(124,255,178,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                  Rastreamento de Links
+                </Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">
+                  Operação comercial Nexus
+                </Badge>
+              </div>
+              <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
+                Crie links que sua rede consegue acompanhar
+              </h1>
+              <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+                Gere links exclusivos para campanhas, identifique a origem dos cliques e mantenha um controle simples de conversões dentro do mesmo painel comercial.
               </p>
             </div>
+            <Button className="gradient-btn" onClick={() => setShowCreate((current) => !current)}>
+              <Plus className="mr-2 h-4 w-4" />
+              {showCreate ? "Cancelar" : "Criar link"}
+            </Button>
           </div>
-        </div>
+        </section>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Eye className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Total de Cliques</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {conversionMetrics?.totalClicks || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <MousePointer className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Conversões</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {conversionMetrics?.totalConversions || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Taxa de Conversão</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {conversionMetrics?.conversionRate
-                  ? `${conversionMetrics.conversionRate.toFixed(2)}%`
-                  : "0%"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Loading State */}
-      {isLoading && (
-        <div className="text-center py-12">
-          <div className="inline-block w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="mt-4 text-sm text-gray-500">Carregando links...</p>
-        </div>
-      )}
-
-      {/* Links List */}
-      {!isLoading && (
-        <div className="space-y-4">
-          {trackingLinks && trackingLinks.length > 0 ? (
-            trackingLinks.map((link) => (
-              <div
-                key={link.id}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="font-medium text-gray-900">{link.name}</h3>
-                      <p className="text-sm text-gray-500">{link.destinationUrl}</p>
-                    </div>
-                    {link.campaign && (
-                      <span
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${getMediumColor(
-                          link.medium || ""
-                        )}`}
-                      >
-                        {getMediumLabel(link.campaign)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Tracking URL */}
-                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-4">
-                    <Link2 className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <code className="text-sm text-gray-700 flex-1 truncate">
-                      {getFullTrackingUrl(link.shortCode)}
-                    </code>
-                    <button
-                      onClick={() =>
-                        copyToClipboard(getFullTrackingUrl(link.shortCode))
-                      }
-                      className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
-                      title="Copiar link"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Metrics */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-1 text-gray-400 mb-1">
-                        <Eye className="w-4 h-4" />
-                        <span className="text-xs">Cliques</span>
-                      </div>
-                      <p className="text-lg font-bold text-gray-900">
-                        {link.clicks || 0}
-                      </p>
-                    </div>
-                    <div className="text-center border-l border-gray-100">
-                      <div className="flex items-center justify-center gap-1 text-gray-400 mb-1">
-                        <UserPlus className="w-4 h-4" />
-                        <span className="text-xs">Cadastros</span>
-                      </div>
-                      <p className="text-lg font-bold text-gray-900">
-                        {link.conversions || 0}
-                      </p>
-                    </div>
-                    <div className="text-center border-l border-gray-100">
-                      <div className="flex items-center justify-center gap-1 text-gray-400 mb-1">
-                        <ShoppingCart className="w-4 h-4" />
-                        <span className="text-xs">Vendas</span>
-                      </div>
-                      <p className="text-lg font-bold text-gray-900">
-                        {link.sales || 0}
-                      </p>
-                    </div>
-                  </div>
+        {showCreate && (
+          <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-white">Novo link de rastreamento</CardTitle>
+              <CardDescription className="text-slate-300">
+                Defina o nome, o destino e, opcionalmente, a campanha e o canal de distribuição.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="trk-name">Nome do link</Label>
+                  <Input
+                    id="trk-name"
+                    placeholder="Ex: Campanha verão"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    className="border-white/10 bg-white/5 text-white"
+                  />
                 </div>
-
-                {/* Actions */}
-                <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                  <div className="text-xs text-gray-500">
-                    Criado em{" "}
-                    {new Date(link.createdAt).toLocaleDateString("pt-BR")}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-white rounded-lg transition-colors"
-                      title="Ver estatísticas"
-                    >
-                      <BarChart3 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (
-                          confirm("Tem certeza que deseja deletar este link?")
-                        ) {
-                          deleteLinkMutation.mutate(link.id);
-                        }
-                      }}
-                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
-                      title="Deletar link"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="trk-url">URL de destino</Label>
+                  <Input
+                    id="trk-url"
+                    placeholder="https://oneverso.com.br/afiliado/SEU-ID"
+                    value={destinationUrl}
+                    onChange={(event) => setDestinationUrl(event.target.value)}
+                    className="border-white/10 bg-white/5 text-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="trk-campaign">Campanha (opcional)</Label>
+                  <Input
+                    id="trk-campaign"
+                    placeholder="Ex: lancamento_pack_a2"
+                    value={campaign}
+                    onChange={(event) => setCampaign(event.target.value)}
+                    className="border-white/10 bg-white/5 text-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="trk-medium">Canal (opcional)</Label>
+                  <Input
+                    id="trk-medium"
+                    placeholder="social, email, affiliate, influencer"
+                    value={medium}
+                    onChange={(event) => setMedium(event.target.value)}
+                    className="border-white/10 bg-white/5 text-white"
+                  />
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-xl">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                <Link2 className="w-8 h-8 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900">
-                Nenhum link criado
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Crie links de rastreamento para monitorar suas conversões
-              </p>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Criar primeiro link
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Create Link Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => setShowCreateModal(false)}
-          />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
-                Criar Link de Rastreamento
-              </h2>
-
-              {/* Link Name */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nome do link *
-                </label>
-                <input
-                  type="text"
-                  value={linkName}
-                  onChange={(e) => setLinkName(e.target.value)}
-                  placeholder="Ex: Post Instagram Campanha Janeiro"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                />
-              </div>
-
-              {/* Destination URL */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  URL de destino *
-                </label>
-                <input
-                  type="url"
-                  value={destinationUrl}
-                  onChange={(e) => setDestinationUrl(e.target.value)}
-                  placeholder="https://exemplo.com/pagina"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                />
-              </div>
-
-              {/* Campaign */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Campanha
-                </label>
-                <input
-                  type="text"
-                  value={campaign}
-                  onChange={(e) => setCampaign(e.target.value)}
-                  placeholder="Ex: Black Friday 2026"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                />
-              </div>
-
-              {/* Medium */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Meio
-                </label>
-                <select
-                  value={medium}
-                  onChange={(e) => setMedium(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
-                >
-                  <option value="">Selecione o meio</option>
-                  <option value="social">Social</option>
-                  <option value="email">E-mail</option>
-                  <option value="affiliate">Afiliado</option>
-                  <option value="influencer">Influenciador</option>
-                  <option value="direct">Direto</option>
-                </select>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
-                >
+              <div className="flex flex-wrap gap-3">
+                <Button className="gradient-btn" onClick={handleCreate}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Adicionar link
+                </Button>
+                <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10" onClick={() => setShowCreate(false)}>
                   Cancelar
-                </button>
-                <button
-                  onClick={() =>
-                    createLinkMutation.mutate({
-                      name: linkName,
-                      destinationUrl,
-                      campaign: campaign || undefined,
-                      medium: medium || undefined,
-                    })
-                  }
-                  disabled={
-                    !linkName ||
-                    !destinationUrl ||
-                    createLinkMutation.isPending
-                  }
-                  className="flex-1 px-4 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                >
-                  {createLinkMutation.isPending ? "Criando..." : "Criar Link"}
-                </button>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <KpiCard label="Links criados" value={links.length} icon={Link2} accent="text-quantum-cyan" />
+          <KpiCard label="Total de cliques" value={totals.totalClicks} icon={Eye} accent="text-quantum-lime" />
+          <KpiCard label="Conversões" value={totals.totalConversions} icon={MousePointer} accent="text-quantum-purple" />
+          <KpiCard label="Taxa de conversão" value={`${totals.conversionRate.toFixed(2)}%`} icon={TrendingUp} accent="text-amber-300" />
+        </section>
+
+        <Card className="border-white/10 bg-white/5 backdrop-blur">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <BarChart3 className="h-5 w-5 text-quantum-cyan" />
+              Seus links de rastreamento
+            </CardTitle>
+            <CardDescription className="text-slate-400">
+              Os links ficam armazenados nesta sessão para uso operacional imediato.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {links.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/10 bg-black/20 p-10 text-center text-slate-400">
+                <Link2 className="h-10 w-10 opacity-30" />
+                <p className="text-sm leading-6">
+                  Você ainda não criou nenhum link. Clique em <strong className="text-white">Criar link</strong> para começar a rastrear suas campanhas.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {links.map((link) => {
+                  const fullUrl = `${typeof window === "undefined" ? "" : window.location.origin}/r/${link.shortCode}`;
+                  const mediumClass = link.medium ? MEDIUM_PALETTE[link.medium] ?? "border-white/10 bg-white/5 text-slate-200" : null;
+                  return (
+                    <div key={link.id} className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-base font-semibold text-white">{link.name}</p>
+                          <p className="mt-1 text-xs text-slate-400">{link.destinationUrl}</p>
+                          <div className="mt-3 flex flex-wrap items-center gap-2">
+                            <Badge className="border border-white/10 bg-white/5 font-mono text-[10px] uppercase tracking-widest text-quantum-cyan">
+                              /r/{link.shortCode}
+                            </Badge>
+                            {link.campaign && (
+                              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                                {link.campaign}
+                              </Badge>
+                            )}
+                            {link.medium && mediumClass && (
+                              <Badge className={`border ${mediumClass}`}>
+                                {link.medium}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                            onClick={() => handleCopy(link)}
+                          >
+                            {copiedId === link.id ? <CheckCircle2 className="mr-2 h-4 w-4 text-quantum-lime" /> : <Copy className="mr-2 h-4 w-4" />}
+                            Copiar link
+                          </Button>
+                          <a href={fullUrl} target="_blank" rel="noreferrer">
+                            <Button variant="outline" size="sm" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                              <ExternalLink className="mr-2 h-4 w-4" />
+                              Abrir
+                            </Button>
+                          </a>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-rose-400/30 bg-rose-400/10 text-rose-200 hover:bg-rose-400/20"
+                            onClick={() => handleDelete(link.id)}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Remover
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                        <Stat label="Cliques" value={link.clicks} />
+                        <Stat label="Conversões" value={link.conversions} />
+                        <Stat
+                          label="Conversão"
+                          value={`${link.clicks > 0 ? ((link.conversions / link.clicks) * 100).toFixed(2) : "0.00"}%`}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </DashboardLayout>
+  );
+}
+
+function KpiCard({
+  label,
+  value,
+  icon: Icon,
+  accent,
+}: {
+  label: string;
+  value: number | string;
+  icon: React.ElementType;
+  accent: string;
+}) {
+  return (
+    <Card className="border-white/10 bg-white/5 backdrop-blur">
+      <CardContent className="flex items-center justify-between p-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{label}</p>
+          <p className={`mt-2 text-2xl font-bold ${accent}`}>{value}</p>
         </div>
-      )}
+        <Icon className={`h-5 w-5 ${accent}`} />
+      </CardContent>
+    </Card>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+      <p className="text-[10px] uppercase tracking-[0.28em] text-slate-500">{label}</p>
+      <p className="mt-1 text-base font-semibold text-white">{value}</p>
     </div>
   );
 }

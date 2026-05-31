@@ -9,7 +9,7 @@
     "dev:metro": "cross-env EXPO_USE_METRO_WORKSPACE_ROOT=1 NODE_PATH=./node_modules npx expo start --web --port ${EXPO_PORT:-8081}",
     "build": "cross-env NODE_PATH=./node_modules npx expo export --platform web",
     "start": "cross-env NODE_PATH=./node_modules npx expo start --web",
-    "check": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit",
+    "check": "tsc --noEmit",
     "lint": "cross-env NODE_PATH=./node_modules expo lint",
     "format": "prettier --write .",
     "test": "vitest run",
@@ -42,7 +42,7 @@
     "expo-image": "~3.0.11",
     "expo-keep-awake": "~15.0.8",
     "expo-linking": "~8.0.11",
-    "expo-local-authentication": "~16.0.8",
+    "expo-local-authentication": "~16.0.5",
     "expo-notifications": "~0.32.15",
     "expo-router": "~6.0.19",
     "expo-secure-store": "~15.0.8",
@@ -89,7 +89,7 @@
     "qrcode": "^1.5.4",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
-    "typescript": "~5.7.2",
+    "typescript": "~5.9.2",
     "vitest": "^2.1.9"
   }
 }

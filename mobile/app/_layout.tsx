@@ -27,9 +27,11 @@ export const unstable_settings = {
 export default function RootLayout() {
   useEffect(() => {
     // Initialize Manus runtime on mount
-    initManusRuntime().catch((err) => {
+    try {
+      initManusRuntime();
+    } catch (err) {
       console.warn('[RootLayout] Failed to init Manus runtime:', err);
-    });
+    }
   }, []);
 
   const providerInitialMetrics = useMemo(

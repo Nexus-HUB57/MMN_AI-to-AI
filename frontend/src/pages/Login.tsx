@@ -221,7 +221,6 @@ export default function Login() {
       const fallbackPath = user?.role === "admin" ? "/admin/dashboard" : getAffiliateEntryPath();
       setLocation(searchParams.get("from") || fallbackPath);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const handleAffiliateQuickAccess = async () => {

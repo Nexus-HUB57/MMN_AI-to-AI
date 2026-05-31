@@ -152,17 +152,19 @@ export default function AdminCommissions() {
     [commissions]
   );
 
-  const levelHighlights = useMemo(() => {
-    const levels = statsQuery.data?.byLevel || {};
+  const levelHighlights = useMemo<[string, number][]>(() => {
+    const levels = (statsQuery.data?.byLevel ?? {}) as Record<string, number | string>;
     return Object.entries(levels)
-      .sort(([, left], [, right]) => Number(right) - Number(left))
+      .map(([level, amount]) => [level, Number(amount || 0)] as [string, number])
+      .sort(([, left], [, right]) => right - left)
       .slice(0, 3);
   }, [statsQuery.data?.byLevel]);
 
-  const sourceHighlights = useMemo(() => {
-    const sources = statsQuery.data?.bySource || {};
+  const sourceHighlights = useMemo<[string, number][]>(() => {
+    const sources = (statsQuery.data?.bySource ?? {}) as Record<string, number | string>;
     return Object.entries(sources)
-      .sort(([, left], [, right]) => Number(right) - Number(left))
+      .map(([source, amount]) => [source, Number(amount || 0)] as [string, number])
+      .sort(([, left], [, right]) => right - left)
       .slice(0, 3);
   }, [statsQuery.data?.bySource]);
 

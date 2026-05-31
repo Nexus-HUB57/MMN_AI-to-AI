@@ -139,7 +139,7 @@ export const tenantBrandingRelations = relations(tenantBranding, ({ one }) => ({
     fields: [tenantBranding.tenantId],
     references: [tenants.id],
   }),
-});
+}));
 
 export const tenantDomainsRelations = relations(tenantDomains, ({ one }) => ({
   tenant: one(tenants, {

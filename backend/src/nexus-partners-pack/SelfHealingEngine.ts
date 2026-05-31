@@ -298,8 +298,8 @@ export class NexusSelfHealingEngine extends EventEmitter {
 
   constructor(
     private healingPolicy: HealingPolicy,
-    actionHandlers: Map<string, (input: Record<string, unknown>) => Promise<Record<string, unknown>> = new Map(),
-    compensationHandlers: Map<string, (input: Record<string, unknown>) => Promise<void> = new Map()
+    actionHandlers: Map<string, (input: Record<string, unknown>) => Promise<Record<string, unknown>>> = new Map(),
+    compensationHandlers: Map<string, (input: Record<string, unknown>) => Promise<void>> = new Map()
   ) {
     super();
 

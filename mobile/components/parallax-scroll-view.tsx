@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from "react";
-import { View } from "react-native";
+import { View, type ViewStyle } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -33,20 +33,18 @@ export default function ParallaxScrollView({
 
   const headerHeight = HEADER_HEIGHT + insets.top;
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: interpolate(
-          scrollOffset.value,
-          [-headerHeight, 0, headerHeight],
-          [-headerHeight / 2, 0, headerHeight * 0.75],
-        ),
-      },
-      {
-        scale: interpolate(scrollOffset.value, [-headerHeight, 0, headerHeight], [2, 1, 1]),
-      },
-    ],
-  }));
+  const headerAnimatedStyle = useAnimatedStyle<ViewStyle>(() => {
+    const translateY = interpolate(
+      scrollOffset.value,
+      [-headerHeight, 0, headerHeight],
+      [-headerHeight / 2, 0, headerHeight * 0.75],
+    );
+    const scale = interpolate(scrollOffset.value, [-headerHeight, 0, headerHeight], [2, 1, 1]);
+
+    return {
+      transform: [{ translateY }, { scale }],
+    } as unknown as ViewStyle;
+  });
 
   return (
     <Animated.ScrollView

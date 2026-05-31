@@ -15,7 +15,7 @@ import { SchemeColors, type ColorScheme } from "@/lib/_core/theme";
 import { useColors } from "@/hooks/use-colors";
 import { useThemeContext } from "@/lib/theme-provider";
 
-type PaletteName = keyof typeof SchemeColors.light;
+type PaletteName = Extract<keyof typeof SchemeColors.light, string>;
 
 const paletteNames: PaletteName[] = Object.keys(
   SchemeColors.light,

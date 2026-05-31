@@ -1,17 +1,40 @@
-import { trpc } from '../lib/trpc';
+type HookCommissionStatus = "pending" | "approved" | "paid";
+
+type HookCommission = {
+  id: string;
+  amount: number;
+  date: string;
+  status: HookCommissionStatus;
+  source: string;
+};
 
 export const useCommissions = () => {
-  // Exemplo de uso do tRPC para buscar comissões
-  // const commissionsQuery = trpc.getCommissions.useQuery();
-  
-  // Mock de dados enquanto o tRPC não está totalmente configurado
-  const data = [
-    { id: '1', amount: 150.00, date: '2026-05-10', status: 'paid' },
-    { id: '2', amount: 75.50, date: '2026-05-12', status: 'pending' },
+  const commissions: HookCommission[] = [
+    {
+      id: "1",
+      amount: 150.0,
+      date: "2026-05-10",
+      status: "paid",
+      source: "Venda direta · Pack Nexus Start",
+    },
+    {
+      id: "2",
+      amount: 75.5,
+      date: "2026-05-12",
+      status: "pending",
+      source: "Indicação ativa · Upgrade de carreira",
+    },
+    {
+      id: "3",
+      amount: 98.9,
+      date: "2026-05-18",
+      status: "approved",
+      source: "Marketplace · Skill social-seller",
+    },
   ];
 
   return {
-    commissions: data,
+    commissions,
     isLoading: false,
     error: null,
   };

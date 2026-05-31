@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { trpc } from "../components/trpc";
 import { useAuth } from "../contexts/AuthContext";
 
 // Ícones SVG inline para evitar dependências externas

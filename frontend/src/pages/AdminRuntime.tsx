@@ -377,7 +377,6 @@ export default function AdminRuntime() {
     void refresh();
     const interval = window.setInterval(() => void refresh(), 30000);
     return () => window.clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const totalHandlers = handlers.length;

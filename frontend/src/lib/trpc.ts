@@ -9,6 +9,7 @@ import type { AnyRouter } from "@trpc/server";
  */
 const trpcReact = createTRPCReact<AnyRouter>();
 export const trpc: typeof trpcReact & any = trpcReact as typeof trpcReact & any;
+export const useTRPC = () => trpc;
 
 function getTrpcUrl() {
   if (import.meta.env.VITE_TRPC_URL) return import.meta.env.VITE_TRPC_URL;

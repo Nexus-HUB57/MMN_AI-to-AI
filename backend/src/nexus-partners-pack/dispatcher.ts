@@ -43,7 +43,7 @@ interface QueuedJob extends JobsOptions {
 }
 
 interface JobWithContext {
-  job: Job<Record<string, unknown>,
+  job: Job<Record<string, unknown>, unknown>;
   context: SkillExecutionContext;
 }
 
@@ -269,7 +269,8 @@ export class NexusSkillDispatcher {
   private stats: DispatcherStats = {
     totalJobs: 0,
     queuedJobs: 0,
-    runningJobs: 0 completedJobs: 0,
+    runningJobs: 0,
+    completedJobs: 0,
     failedJobs: 0,
     averageExecutionTimeMs: 0
   };
@@ -341,7 +342,7 @@ export class NexusSkillDispatcher {
     }, 60000);
   }
 
-  private async processJob(job: Job<Record<string, unknown>>: Promise<Record<string, unknown>> {
+  private async processJob(job: Job<Record<string, unknown>>): Promise<Record<string, unknown>> {
     const context = this.jobContexts.get(job.id!);
     if (!context) {
       throw new Error("No execution context found for job");

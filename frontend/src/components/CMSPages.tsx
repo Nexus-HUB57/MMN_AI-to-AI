@@ -10,6 +10,7 @@ interface CMSPage {
   metaDescription: string | null;
   category: string;
   status: 'draft' | 'published' | 'archived';
+  updatedAt?: string | Date | null;
 }
 
 interface CMSPagesProps {
@@ -74,7 +75,9 @@ export function CMSPages({ slug, adminView = false }: CMSPagesProps) {
       <footer className="mt-8 pt-8 border-t border-gray-200">
         <div className="flex justify-between items-center text-sm text-gray-500">
           <span>Categoria: {page.category}</span>
-          <span>Última atualização: {new Date(page.updatedAt).toLocaleDateString('pt-BR')}</span>
+          <span>
+            Última atualização: {page.updatedAt ? new Date(page.updatedAt).toLocaleDateString('pt-BR') : 'Não informada'}
+          </span>
         </div>
       </footer>
     </article>

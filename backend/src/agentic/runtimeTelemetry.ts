@@ -32,7 +32,6 @@ function tryPersist(record: RuntimeExecutionRecord): void {
   // DATABASE_URL está configurado, grava na tabela `agent_telemetry`; caso
   // contrário é no-op silencioso.
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const repo = require("./telemetryRepository");
     if (typeof repo?.persistTelemetry === "function") {
       Promise.resolve(repo.persistTelemetry(record)).catch(() => undefined);

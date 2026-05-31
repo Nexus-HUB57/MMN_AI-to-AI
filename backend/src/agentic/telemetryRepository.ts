@@ -25,7 +25,6 @@ function loadDb(): any | null {
     return null;
   }
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const drizzleClient = require("../../../database/schemas/db");
     if (typeof drizzleClient?.db === "object" && drizzleClient?.db) {
       cachedDb = drizzleClient.db;
@@ -40,7 +39,6 @@ function loadDb(): any | null {
 
 function loadSchema(): any | null {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require("../../../database/schemas/agentTelemetry");
   } catch {
     return null;

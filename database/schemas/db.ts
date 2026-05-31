@@ -88,6 +88,13 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
 export async function getUserByEmail(email: string) {
   const db = await getDb();
   if (!db) return undefined;
@@ -106,6 +113,12 @@ export async function updateLegacyUserToModern(userId: number, openId: string) {
   const db = await getDb();
   if (!db) return;
   await db.update(users).set({ openId, loginMethod: "manus", updatedAt: new Date() }).where(eq(users.id, userId));
+}
+
+export async function updateUserLegacyPassword(userId: number, newHash: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(users).set({ legacyPassword: newHash, updatedAt: new Date() }).where(eq(users.id, userId));
 }
 
 export async function getAgentByUserId(userId: number): Promise<Agent | undefined> {

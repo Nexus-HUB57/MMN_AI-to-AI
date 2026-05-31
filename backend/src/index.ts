@@ -3,24 +3,18 @@ import express from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import type { Context } from "./trpc/context";
+import { getUserFromRequest } from "./trpc/jwtAuth";
 import { startCronScheduler, initializeDefaultJobs, getSchedulerStatus } from "./services/cronScheduler";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 
 function createContext(opts: { req: express.Request; res: express.Response }): Context {
-  const userId = opts.req.header("x-user-id");
-  const userRole = opts.req.header("x-user-role") || "user";
-
+  const user = getUserFromRequest(opts.req);
   return {
     req: opts.req,
     res: opts.res,
-    user: userId
-      ? {
-          id: Number(userId),
-          role: userRole,
-        }
-      : undefined,
+    user,
   };
 }
 
@@ -33,7 +27,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-user-id, x-user-role"
+    "Content-Type, Authorization"
   );
   res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 
@@ -76,7 +70,6 @@ app.use(
   })
 );
 
-// Inicializar Cron Scheduler
 async function initializeCron() {
   try {
     console.log('[CronScheduler] Inicializando...');
@@ -88,7 +81,6 @@ async function initializeCron() {
   }
 }
 
-// Inicializar cron ao iniciar o servidor
 initializeCron();
 
 app.listen(PORT, () => {

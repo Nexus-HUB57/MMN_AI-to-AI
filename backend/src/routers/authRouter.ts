@@ -3,6 +3,8 @@ import { z } from "zod";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "../trpc/trpc";
 import * as db from "../../../database/schemas/db";
 import crypto from "crypto";
+import { signAccessToken } from "../trpc/jwtAuth";
+import { verifyLegacyPassword, hashPassword, verifyPassword } from "../trpc/passwordUtils";
 
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
 const REFRESH_TOKEN_ID_LENGTH = 32;
@@ -25,7 +27,7 @@ export const authRouter = router({
   // Get current user
   me: publicProcedure.query(({ ctx }) => ctx.user ?? null),
 
-  // Legacy login (existing functionality)
+  // Legacy login com migração automática MD5 → bcrypt
   legacyLogin: publicProcedure
     .input(z.object({
       email: z.string().email(),
@@ -41,30 +43,42 @@ export const authRouter = router({
         });
       }
 
-      // In legacy PHP, passwords are MD5
-      const hashedInput = crypto.createHash("md5").update(input.password).digest("hex");
+      const { valid, needsMigration } = await verifyLegacyPassword(
+        input.password,
+        user.legacyPassword
+      );
 
-      if (hashedInput !== user.legacyPassword) {
+      if (!valid) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Senha incorreta."
         });
       }
 
-      // Log session audit
+      // Migração automática: substitui MD5 por bcrypt no primeiro login bem-sucedido
+      if (needsMigration) {
+        const bcryptHash = await hashPassword(input.password);
+        await db.updateUserLegacyPassword(user.id, bcryptHash);
+        console.log(`[Auth] Senha do usuário ${user.id} migrada de MD5 para bcrypt`);
+      }
+
+      const accessToken = signAccessToken(user.id, user.role);
+      const sessionId = crypto.randomBytes(16).toString("hex");
+
       await db.createSessionAudit({
         id: crypto.randomBytes(16).toString("hex"),
         userId: user.id,
-        sessionId: crypto.randomBytes(16).toString("hex"),
+        sessionId,
         action: "login",
         ipAddress: (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress),
         userAgent: ctx.req?.headers["user-agent"],
-        metadata: { method: "legacy" },
+        metadata: { method: "legacy", migrated: needsMigration },
         createdAt: new Date(),
       });
 
       return {
         success: true,
+        accessToken,
         user: {
           id: user.id,
           name: user.name,
@@ -74,7 +88,7 @@ export const authRouter = router({
       };
     }),
 
-  // Login with refresh tokens (AG-16)
+  // Login com JWT + refresh token rotation
   login: publicProcedure
     .input(z.object({
       email: z.string().email(),
@@ -91,15 +105,21 @@ export const authRouter = router({
         });
       }
 
-      // Verify password (assuming bcrypt hash in openId field for new users)
-      // For legacy users, openId contains the legacy identifier
-      // This is a simplified version - production would need proper password verification
+      // Verificar senha bcrypt (campo openId armazena hash para usuários novos)
+      const passwordHash = user.legacyPassword || user.openId || "";
+      const passwordValid = await verifyPassword(input.password, passwordHash).catch(() => false);
+
+      if (!passwordValid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Credenciais inválidas."
+        });
+      }
 
       const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || (ctx.req?.socket?.remoteAddress) || "unknown";
       const userAgent = ctx.req?.headers["user-agent"] || "unknown";
       const sessionId = crypto.randomBytes(16).toString("hex");
 
-      // Create refresh token
       const tokenId = generateRefreshTokenId();
       const rawToken = crypto.randomBytes(32).toString("hex");
       const tokenHash = hashToken(rawToken);
@@ -116,7 +136,6 @@ export const authRouter = router({
         createdAt: new Date(),
       });
 
-      // Log session audit
       await db.createSessionAudit({
         id: crypto.randomBytes(16).toString("hex"),
         userId: user.id,
@@ -128,8 +147,13 @@ export const authRouter = router({
         createdAt: new Date(),
       });
 
+      const accessToken = signAccessToken(user.id, user.role);
+
       return {
         success: true,
+        accessToken,
+        refreshTokenId: tokenId,
+        refreshToken: rawToken,
         user: {
           id: user.id,
           name: user.name,
@@ -137,8 +161,6 @@ export const authRouter = router({
           role: user.role
         },
         sessionId,
-        // In production, return JWT access token here
-        // refreshToken is stored server-side, client receives session identifier
       };
     }),
 
@@ -215,10 +237,17 @@ export const authRouter = router({
         createdAt: new Date(),
       });
 
+      // Buscar dados do usuário para emitir novo JWT
+      const user = await db.getUserById(storedToken.userId);
+      const accessToken = user
+        ? signAccessToken(user.id, user.role)
+        : signAccessToken(storedToken.userId, "user");
+
       return {
         success: true,
+        accessToken,
         tokenId: newTokenId,
-        // In production, return new JWT access token here
+        refreshToken: newRawToken,
       };
     }),
 

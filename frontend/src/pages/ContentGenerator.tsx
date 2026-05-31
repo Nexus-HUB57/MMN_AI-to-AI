@@ -7,20 +7,55 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Loader2, Copy, RefreshCw } from 'lucide-react';
+import { Loader2, Copy } from 'lucide-react';
 
 interface ContentGeneratorProps {
   agent: Agent;
 }
 
+type ContentType = 'text' | 'image' | 'video';
+type UiPlatform = 'whatsapp' | 'instagram' | 'facebook' | 'twitter' | 'linkedin';
+type BackendPlatform = 'whatsapp' | 'instagram' | 'facebook';
+type Tone = 'professional' | 'casual' | 'persuasive' | 'humorous';
+
+const platformRouteMap: Record<UiPlatform, BackendPlatform> = {
+  whatsapp: 'whatsapp',
+  instagram: 'instagram',
+  facebook: 'facebook',
+  twitter: 'facebook',
+  linkedin: 'facebook',
+};
+
+const toneByPlatform: Record<UiPlatform, Tone> = {
+  whatsapp: 'casual',
+  instagram: 'casual',
+  facebook: 'persuasive',
+  twitter: 'humorous',
+  linkedin: 'professional',
+};
+
 export default function ContentGenerator({ agent }: ContentGeneratorProps) {
-  const [contentType, setContentType] = useState<'text' | 'image' | 'video'>('text');
-  const [platform, setPlatform] = useState('instagram');
+  const [contentType, setContentType] = useState<ContentType>('text');
+  const [platform, setPlatform] = useState<UiPlatform>('instagram');
   const [prompt, setPrompt] = useState('');
   const [generatedContent, setGeneratedContent] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
 
+  const generateTextMutation = trpc.content.generateText.useMutation();
   const createContentMutation = trpc.agents.createGeneratedContent.useMutation();
+
+  const buildTopic = () => {
+    const cleanPrompt = prompt.trim();
+
+    if (contentType === 'image') {
+      return `Crie um briefing de imagem promocional para ${platform}. Contexto do agente: ${agent.specialization}. Pedido: ${cleanPrompt}`;
+    }
+
+    if (contentType === 'video') {
+      return `Crie um roteiro curto de vídeo promocional para ${platform}, com gancho, desenvolvimento e CTA. Contexto do agente: ${agent.specialization}. Pedido: ${cleanPrompt}`;
+    }
+
+    return cleanPrompt;
+  };
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -28,26 +63,32 @@ export default function ContentGenerator({ agent }: ContentGeneratorProps) {
       return;
     }
 
-    setIsGenerating(true);
     try {
-      // Simulate LLM generation - in production, this would call your backend LLM service
-      const mockContent = `Conteúdo gerado para ${platform}:\n\n${prompt}\n\n✨ Otimizado para ${agent.specialization}\n\n#${agent.specialization.replace(/\s+/g, '')} #IA #Marketing`;
-      
-      setGeneratedContent(mockContent);
+      const result = await generateTextMutation.mutateAsync({
+        platform: platformRouteMap[platform],
+        topic: buildTopic(),
+        tone: toneByPlatform[platform],
+        maxLength: contentType === 'video' ? 560 : 320,
+      });
 
-      // Save to database
+      setGeneratedContent(result.content);
+
       await createContentMutation.mutateAsync({
         contentType,
         prompt,
-        content: mockContent,
+        content: result.content,
         platform,
       });
 
-      toast.success('Conteúdo gerado com sucesso');
+      toast.success(
+        contentType === 'text'
+          ? 'Conteúdo gerado com sucesso'
+          : contentType === 'image'
+            ? 'Briefing visual gerado com sucesso'
+            : 'Roteiro de vídeo gerado com sucesso',
+      );
     } catch (error) {
       toast.error('Erro ao gerar conteúdo');
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -56,36 +97,35 @@ export default function ContentGenerator({ agent }: ContentGeneratorProps) {
     toast.success('Conteúdo copiado para a área de transferência');
   };
 
+  const isGenerating = generateTextMutation.isPending || createContentMutation.isPending;
+
   return (
     <div className="space-y-6">
-      {/* Generator Form */}
       <Card>
         <CardHeader>
           <CardTitle>Gerar Conteúdo</CardTitle>
           <CardDescription>
-            Use IA para gerar conteúdo otimizado para suas plataformas
+            Usa o backend real de geração para criar texto, briefing visual ou roteiro curto para suas plataformas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Content Type */}
           <div>
             <Label>Tipo de Conteúdo</Label>
-            <Select value={contentType} onValueChange={(value: any) => setContentType(value)}>
+            <Select value={contentType} onValueChange={(value: ContentType) => setContentType(value)}>
               <SelectTrigger className="mt-1">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="text">Texto</SelectItem>
-                <SelectItem value="image">Imagem</SelectItem>
-                <SelectItem value="video">Vídeo</SelectItem>
+                <SelectItem value="image">Briefing de imagem</SelectItem>
+                <SelectItem value="video">Roteiro de vídeo</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Platform */}
           <div>
             <Label>Plataforma de Destino</Label>
-            <Select value={platform} onValueChange={setPlatform}>
+            <Select value={platform} onValueChange={(value: UiPlatform) => setPlatform(value)}>
               <SelectTrigger className="mt-1">
                 <SelectValue />
               </SelectTrigger>
@@ -99,20 +139,18 @@ export default function ContentGenerator({ agent }: ContentGeneratorProps) {
             </Select>
           </div>
 
-          {/* Prompt */}
           <div>
             <Label htmlFor="prompt">Prompt</Label>
             <Textarea
               id="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder={`Ex: Crie um post sobre ${agent.specialization} que seja viral e engajador`}
+              placeholder={`Ex: Crie um ${contentType === 'text' ? 'post' : contentType === 'image' ? 'conceito visual' : 'roteiro'} sobre ${agent.specialization}`}
               rows={4}
               className="mt-1 resize-none"
             />
           </div>
 
-          {/* Generate Button */}
           <Button
             onClick={handleGenerate}
             disabled={isGenerating || !prompt.trim()}
@@ -124,14 +162,21 @@ export default function ContentGenerator({ agent }: ContentGeneratorProps) {
         </CardContent>
       </Card>
 
-      {/* Generated Content Preview */}
       {generatedContent && (
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Conteúdo Gerado</CardTitle>
-                <CardDescription>Revise e customize o conteúdo gerado</CardDescription>
+                <CardTitle>
+                  {contentType === 'text'
+                    ? 'Conteúdo Gerado'
+                    : contentType === 'image'
+                      ? 'Briefing Visual Gerado'
+                      : 'Roteiro Gerado'}
+                </CardTitle>
+                <CardDescription>
+                  Revise, edite e use o resultado no seu fluxo de publicação.
+                </CardDescription>
               </div>
               <Button
                 variant="outline"
@@ -152,16 +197,15 @@ export default function ContentGenerator({ agent }: ContentGeneratorProps) {
         </Card>
       )}
 
-      {/* Tips */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Dicas para Melhores Resultados</CardTitle>
+          <CardTitle className="text-base">Como o gerador está funcionando agora</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-slate-600">
-          <p>✓ Seja específico sobre o tipo de conteúdo que deseja</p>
-          <p>✓ Mencione o público-alvo ou tom desejado</p>
-          <p>✓ Inclua palavras-chave relevantes para SEO</p>
-          <p>✓ Especifique a plataforma para otimização correta</p>
+          <p>✓ Texto usa a rota real <code>content.generateText</code></p>
+          <p>✓ Briefing de imagem gera uma descrição visual reutilizável</p>
+          <p>✓ Roteiro de vídeo gera uma estrutura curta com CTA</p>
+          <p>✓ Todo resultado continua sendo persistido no domínio do agente</p>
         </CardContent>
       </Card>
     </div>

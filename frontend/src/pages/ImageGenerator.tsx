@@ -4,9 +4,10 @@ import { trpc } from '@/lib/trpc';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Loader2, Download, Copy, Wand2 } from 'lucide-react';
+import { Loader2, Download, Copy, ImagePlus } from 'lucide-react';
 
 interface ImageGeneratorProps {
   agent: Agent;
@@ -14,7 +15,8 @@ interface ImageGeneratorProps {
 
 export default function ImageGenerator({ agent }: ImageGeneratorProps) {
   const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
 
   const { data: images = [], refetch } = trpc.agents.getGeneratedImages.useQuery(undefined, {
@@ -23,48 +25,48 @@ export default function ImageGenerator({ agent }: ImageGeneratorProps) {
 
   const createImageMutation = trpc.agents.createGeneratedImage.useMutation();
 
-  const handleGenerate = async () => {
+  const handleSaveImage = async () => {
     if (!prompt.trim()) {
-      toast.error('Por favor, insira um prompt para gerar a imagem');
+      toast.error('Por favor, descreva a imagem');
       return;
     }
 
-    setIsGenerating(true);
-    try {
-      // Simulate image generation - in production, this would call your image generation service
-      // For now, we'll use a placeholder image service
-      const mockImageUrl = `https://via.placeholder.com/512x512?text=${encodeURIComponent(prompt.substring(0, 20))}`;
+    if (!imageUrl.trim()) {
+      toast.error('Por favor, informe a URL da imagem');
+      return;
+    }
 
+    setIsSaving(true);
+    try {
       const newImage: GeneratedImage = {
         id: Date.now(),
         agentId: agent.agentId,
         prompt,
-        imageUrl: mockImageUrl,
+        imageUrl,
         storageKey: null,
         createdAt: new Date(),
       };
 
       setGeneratedImage(newImage);
 
-      // Save to database
       await createImageMutation.mutateAsync({
         prompt,
-        imageUrl: mockImageUrl,
+        imageUrl,
         storageKey: undefined,
       });
 
       await refetch();
-      toast.success('Imagem gerada com sucesso');
+      toast.success('Imagem salva na galeria do agente');
     } catch (error) {
-      toast.error('Erro ao gerar imagem');
+      toast.error('Erro ao salvar imagem');
     } finally {
-      setIsGenerating(false);
+      setIsSaving(false);
     }
   };
 
-  const handleDownload = async (imageUrl: string) => {
+  const handleDownload = async (targetUrl: string) => {
     try {
-      const response = await fetch(imageUrl);
+      const response = await fetch(targetUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -87,51 +89,60 @@ export default function ImageGenerator({ agent }: ImageGeneratorProps) {
 
   return (
     <div className="space-y-6">
-      {/* Generator Form */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Wand2 className="w-5 h-5" />
-            Gerar Imagem com IA
+            <ImagePlus className="w-5 h-5" />
+            Registrar Imagem do Agente
           </CardTitle>
           <CardDescription>
-            Crie imagens personalizadas para seu conteúdo usando inteligência artificial
+            Enquanto a geração visual nativa do backend é finalizada, você já pode salvar na galeria imagens geradas externamente com seu prompt.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="prompt">Descrição da Imagem</Label>
+            <Label htmlFor="prompt">Descrição / Prompt</Label>
             <Textarea
               id="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder={`Ex: Uma imagem moderna de um agente de IA trabalhando com ${agent.specialization}`}
+              placeholder={`Ex: Uma peça promocional moderna para ${agent.specialization}`}
               rows={4}
               className="mt-1 resize-none"
             />
           </div>
 
+          <div>
+            <Label htmlFor="imageUrl">URL da Imagem</Label>
+            <Input
+              id="imageUrl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://exemplo.com/imagem-gerada.png"
+              className="mt-1"
+            />
+          </div>
+
           <Button
-            onClick={handleGenerate}
-            disabled={isGenerating || !prompt.trim()}
+            onClick={handleSaveImage}
+            disabled={isSaving || !prompt.trim() || !imageUrl.trim()}
             className="w-full gap-2"
           >
-            {isGenerating && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isGenerating ? 'Gerando Imagem...' : 'Gerar Imagem'}
+            {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
+            {isSaving ? 'Salvando...' : 'Salvar Imagem na Galeria'}
           </Button>
         </CardContent>
       </Card>
 
-      {/* Generated Image Preview */}
       {generatedImage && (
         <Card>
           <CardHeader>
-            <CardTitle>Imagem Gerada</CardTitle>
+            <CardTitle>Pré-visualização</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <img
               src={generatedImage.imageUrl}
-              alt="Generated"
+              alt={generatedImage.prompt}
               className="w-full rounded-lg max-h-96 object-cover"
             />
 
@@ -161,12 +172,11 @@ export default function ImageGenerator({ agent }: ImageGeneratorProps) {
         </Card>
       )}
 
-      {/* Generated Images Gallery */}
       {images.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Galeria de Imagens Geradas</CardTitle>
-            <CardDescription>Imagens geradas anteriormente</CardDescription>
+            <CardTitle>Galeria de Imagens</CardTitle>
+            <CardDescription>Histórico persistido das imagens do agente</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -205,16 +215,14 @@ export default function ImageGenerator({ agent }: ImageGeneratorProps) {
         </Card>
       )}
 
-      {/* Tips */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Dicas para Melhores Resultados</CardTitle>
+          <CardTitle className="text-base">Estado atual da feature</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-slate-600">
-          <p>✓ Seja descritivo e específico sobre o que deseja</p>
-          <p>✓ Inclua detalhes de estilo, cores e composição</p>
-          <p>✓ Mencione o contexto ou tema da imagem</p>
-          <p>✓ Use palavras-chave relevantes para melhor resultado</p>
+          <p>✓ Removido o placeholder automático que simulava geração visual</p>
+          <p>✓ Mantida a persistência real da galeria via <code>agents.createGeneratedImage</code></p>
+          <p>✓ Fluxo agora registra apenas imagens reais fornecidas pelo usuário</p>
         </CardContent>
       </Card>
     </div>

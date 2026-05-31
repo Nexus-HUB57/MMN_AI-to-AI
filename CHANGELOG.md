@@ -1,5 +1,38 @@
 # Changelog MMN AI-to-AI
 
+## 2026-06-01 — v1.3.0 Nexus Partners Pack
+
+### `feat(nexus-partners)` — Módulo de Parceiros Estratégicos
+
+- **Nova Documentação**: Criado `packs/NEXUS_PARTNERS_PACK.md` com especificação completa
+  - Arquitetura modular de parceiros
+  - Sistema de tiers (Silver, Gold, Platinum, Diamond)
+  - API endpoints para parceiros e parcerias
+  - Configuração YAML para diferentes níveis
+  - Métricas de sucesso (NPS, Retention Rate, Revenue per Partner)
+
+### `feat(frontend)` — Dashboard de Parceiros
+
+- **Novo Componente**: `PartnersDashboard.tsx`
+  - Visualização de estatísticas de parceiros
+  - Grid de tiers com ícones e cores distintivas
+  - Lista de parceiros com filtros por nível
+  - Top performers com rankings
+  - Ações rápidas para convite, comissões, analytics
+
+- **Nova Página**: `PartnersDashboardPage.tsx`
+  - Rota `/partners` integrada ao App.tsx
+  - Wrapper para o componente de dashboard
+  - Interface responsiva com tema Obsidian/Quantum
+
+### `docs(packs)` — Atualização PAKS_FASE5
+
+- Adicionada referência ao novo Nexus Partners Pack
+- Documentação de integração com sistema MMN
+- Especificações de segurança e auditoria
+
+---
+
 ## 2026-05-28 — v1.2.9 Repositório Analisado e Preparado para Fase 10
 
 ### `analysis(repository)` — Análise Completa do Repositório

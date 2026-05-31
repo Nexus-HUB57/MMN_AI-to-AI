@@ -37,6 +37,7 @@ const Agents = lazy(() => import("@/pages/Agents"));
 const AgentsSync = lazy(() => import("@/pages/AgentsSync"));
 const OrchestratorDashboard = lazy(() => import("@/pages/OrchestratorDashboard"));
 const SocialAccounts = lazy(() => import("@/pages/SocialAccounts"));
+const PartnersDashboardPage = lazy(() => import("@/pages/PartnersDashboardPage"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function PageFallback() {
@@ -77,6 +78,7 @@ function Router() {
         <Route path="/agents" component={Agents} />
         <Route path="/agents/sync" component={AgentsSync} />
         <Route path="/orchestrator" component={OrchestratorDashboard} />
+        <Route path="/partners" component={PartnersDashboardPage} />
         <Route path="/content-hub" component={ContentHub} />
         <Route path="/content/calendar" component={ContentCalendar} />
         <Route path="/marketing/materials" component={MarketingMaterials} />

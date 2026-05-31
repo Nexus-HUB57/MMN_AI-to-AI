@@ -23,6 +23,8 @@ import { complianceAuditorHandler } from "./complianceAuditor";
 import { roiAttributorHandler } from "./roiAttributor";
 import { coldEmailerHandler } from "./coldEmailer";
 import { upsellStrategistHandler } from "./upsellStrategist";
+import { socialSellerHandler } from "./socialSeller";
+import { webinarEngineHandler } from "./webinarEngine";
 import type {
   SkillExecutionContext,
   SkillExecutionResult,
@@ -65,6 +67,8 @@ const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [roiAttributorHandler.slug]: roiAttributorHandler,
   [coldEmailerHandler.slug]: coldEmailerHandler,
   [upsellStrategistHandler.slug]: upsellStrategistHandler,
+  [socialSellerHandler.slug]: socialSellerHandler,
+  [webinarEngineHandler.slug]: webinarEngineHandler,
 };
 
 export function listRegisteredSkillHandlers(): Array<{

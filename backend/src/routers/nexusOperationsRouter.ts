@@ -15,7 +15,7 @@
  */
 
 import { z } from 'zod';
-import { router, publicProcedure, authenticatedProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../config/trpc';
 import {
   skillRegistry,
   nexusSkillExecutor,
@@ -226,7 +226,7 @@ export const nexusOperationsRouter = router({
   /**
    * Executa skill via API (para testes e integração)
    */
-  executeSkill: authenticatedProcedure
+  executeSkill: protectedProcedure
     .input(ExecuteSkillSchema)
     .mutation(async ({ ctx, input }) => {
       const context = {
@@ -258,7 +258,7 @@ export const nexusOperationsRouter = router({
   /**
    * Lista todos os tenants
    */
-  listTenants: authenticatedProcedure
+  listTenants: protectedProcedure
     .input(z.object({
       activeOnly: z.boolean().optional(),
     }).optional())
@@ -273,7 +273,7 @@ export const nexusOperationsRouter = router({
   /**
    * Registra novo tenant
    */
-  registerTenant: authenticatedProcedure
+  registerTenant: protectedProcedure
     .input(TenantSchema)
     .mutation(({ input }) => {
       const state = tenantStateStore.register(input.tenantId);
@@ -297,7 +297,7 @@ export const nexusOperationsRouter = router({
   /**
    * Status detalhado de tenant
    */
-  getTenantStatus: authenticatedProcedure
+  getTenantStatus: protectedProcedure
     .input(z.object({ tenantId: z.string() }))
     .query(({ input }) => {
       const state = tenantStateStore.get(input.tenantId);
@@ -311,7 +311,7 @@ export const nexusOperationsRouter = router({
   /**
    * Reset circuit breaker de tenant
    */
-  resetTenantCircuitBreaker: authenticatedProcedure
+  resetTenantCircuitBreaker: protectedProcedure
     .input(z.object({ tenantId: z.string() }))
     .mutation(({ input }) => {
       tenantStateStore.resetCircuitBreaker(input.tenantId);
@@ -329,7 +329,7 @@ export const nexusOperationsRouter = router({
   /**
    * Lista sagas (opcionalmente filtradas)
    */
-  listSagas: authenticatedProcedure
+  listSagas: protectedProcedure
     .input(z.object({
       tenantId: z.string().optional(),
       state: z.enum(['pending', 'in_progress', 'compensating', 'completed', 'failed']).optional(),
@@ -354,7 +354,7 @@ export const nexusOperationsRouter = router({
   /**
    * Detalhes de saga específica
    */
-  getSaga: authenticatedProcedure
+  getSaga: protectedProcedure
     .input(z.object({ sagaId: z.string() }))
     .query(({ input }) => {
       const saga = sagaStore.get(input.sagaId);
@@ -384,7 +384,7 @@ export const nexusOperationsRouter = router({
   /**
    * Lista jobs em queue
    */
-  listJobs: authenticatedProcedure
+  listJobs: protectedProcedure
     .input(z.object({
       status: z.enum(['queued', 'running', 'completed', 'failed']).optional(),
       limit: z.number().optional(),

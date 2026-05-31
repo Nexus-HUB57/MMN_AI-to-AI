@@ -1,9 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
@@ -13,6 +14,7 @@ import {
   formatCurrency,
   getLevelLabel,
   getLevelSubtitle,
+  getMarketplaceEbooks,
   getOperationalInventory,
   getPackAccess,
   getProgressSnapshot,
@@ -42,6 +44,7 @@ import {
   Zap,
   Bot,
   Globe,
+  Search,
   TrendingUp,
 } from "lucide-react";
 
@@ -130,9 +133,53 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const activeCount = packStates.filter((pack) => pack.access.status === "active").length;
   const activeEbooks = ebookBundles.filter((bundle) => bundle.status === "active").length;
   const activeSkills = skillBundles.filter((bundle) => bundle.status === "active").length;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [storefrontFilter, setStorefrontFilter] = useState<"all" | "packs" | "ebooks">("all");
   const stockItems = useMemo(() => getOperationalInventory(displayProfile), [displayProfile]);
+  const marketplaceEbooks = useMemo(() => getMarketplaceEbooks(displayProfile), [displayProfile]);
   const heroPacks = (isPublicView ? packStates.slice(0, 3) : availableNow.slice(0, 3));
   const featuredChannels = EXTERNAL_MARKETPLACES.slice(0, 4);
+  const storefrontItems = useMemo(() => {
+    const packItems = packStates.map((pack) => ({
+      id: `pack-${pack.slug}`,
+      type: "packs" as const,
+      title: pack.name,
+      subtitle: pack.shortName,
+      category: pack.stage.toUpperCase(),
+      description: pack.description,
+      badge: pack.access.status === "active" ? "Ativo" : pack.access.status === "available" ? "Disponível" : "Bloqueado",
+      priceLabel: formatCurrency(pack.priceCents),
+      ctaLabel: isPublicView ? "Entrar para adquirir" : "Comprar pack",
+      href: isPublicView
+        ? `/login?from=${encodeURIComponent(buildMarketplaceCheckoutUrl({ source: "marketplaces", type: "pack", slug: pack.slug, name: pack.name, amountCents: pack.priceCents, description: pack.description }))}`
+        : buildMarketplaceCheckoutUrl({ source: "marketplaces", type: "pack", slug: pack.slug, name: pack.name, amountCents: pack.priceCents, description: pack.description }),
+      accent: pack.access.status === "active" ? "text-emerald-300" : "text-quantum-cyan",
+      detail: pack.highlights[0] ?? `${pack.xpGranted.toLocaleString("pt-BR")} XP liberados`,
+    }));
+
+    const ebookItems = marketplaceEbooks.slice(0, 8).map((ebook) => ({
+      id: `ebook-${ebook.slug}`,
+      type: "ebooks" as const,
+      title: ebook.title,
+      subtitle: ebook.category,
+      category: ebook.category,
+      description: ebook.description,
+      badge: ebook.status === "active" ? "Liberado" : "Revenda",
+      priceLabel: `Revenda ${formatCurrency(ebook.resalePriceCents)}`,
+      ctaLabel: isPublicView ? "Entrar para ver biblioteca" : "Abrir catálogo",
+      href: isPublicView ? `/login?from=${encodeURIComponent("/marketplaces/ebooks")}` : "/marketplaces/ebooks",
+      accent: ebook.status === "active" ? "text-quantum-lime" : "text-quantum-purple",
+      detail: `${ebook.pages} páginas · custo ${formatCurrency(ebook.costCents)}`,
+    }));
+
+    const source = [...packItems, ...ebookItems];
+    return source.filter((item) => {
+      const matchesType = storefrontFilter === "all" || item.type === storefrontFilter;
+      const q = searchTerm.trim().toLowerCase();
+      const matchesQuery = q.length === 0 || `${item.title} ${item.subtitle} ${item.description} ${item.category}`.toLowerCase().includes(q);
+      return matchesType && matchesQuery;
+    });
+  }, [isPublicView, marketplaceEbooks, packStates, searchTerm, storefrontFilter]);
 
   return (
     <div className="space-y-8 pb-8">
@@ -375,6 +422,81 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
             </CardContent>
           </Card>
         ))}
+      </section>
+
+      <section className="space-y-4 rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.12),transparent_30%),rgba(255,255,255,0.03)] p-6 shadow-2xl shadow-black/20">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <Badge className="border border-white/10 bg-white/5 text-slate-200">Storefront Nexus Storie</Badge>
+            <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">Pesquise produtos, packs e bibliotecas em um só lugar</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+              Uma vitrine filtrável para acelerar descoberta de packs e e-books antes de entrar no checkout.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { value: "all", label: "Tudo" },
+              { value: "packs", label: "Packs" },
+              { value: "ebooks", label: "E-books" },
+            ].map((filter) => (
+              <button
+                key={filter.value}
+                type="button"
+                onClick={() => setStorefrontFilter(filter.value as "all" | "packs" | "ebooks")}
+                className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                  storefrontFilter === filter.value
+                    ? "border-quantum-cyan/60 bg-quantum-cyan/15 text-quantum-cyan"
+                    : "border-white/10 bg-white/5 text-slate-300 hover:border-white/20"
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative max-w-xl">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Input
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Buscar por nome, categoria ou descrição"
+            className="h-12 border-white/10 bg-black/25 pl-11 text-white placeholder:text-slate-500"
+          />
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          {storefrontItems.slice(0, 9).map((item) => (
+            <div key={item.id} className="group rounded-[28px] border border-white/10 bg-black/25 p-5 transition hover:-translate-y-1 hover:border-white/20">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="border border-white/10 bg-white/5 text-slate-200">{item.subtitle}</Badge>
+                    <Badge className={`border border-white/10 bg-white/5 ${item.accent}`}>{item.badge}</Badge>
+                  </div>
+                  <p className="mt-3 text-xl font-bold text-white">{item.title}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.description}</p>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-300">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.category}</span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.detail}</span>
+              </div>
+              <div className="mt-5 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.28em] text-slate-500">oferta</p>
+                  <p className="mt-2 text-2xl font-black text-white">{item.priceLabel}</p>
+                </div>
+                <Link href={item.href}>
+                  <Button className="gradient-btn h-11 px-5 text-sm font-semibold">
+                    {item.ctaLabel}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* VITRINE DE PACKS */}

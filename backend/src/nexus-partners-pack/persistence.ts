@@ -405,12 +405,3 @@ class TenantStateStore {
 // Instância singleton
 export const tenantStateStore = new TenantStateStore();
 
-// ============================================
-// EXPORTS
-// ============================================
-
-export {
-  sagaStore,
-  jobQueueStore,
-  tenantStateStore,
-};

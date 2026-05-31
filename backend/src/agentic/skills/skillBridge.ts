@@ -453,14 +453,3 @@ export const SKILL_CATALOG: Array<{
   { slug: 'market-sentiment-tracker', title: 'Market Sentiment Tracker', category: 'analytics', status: 'planned', version: '0.0.1', description: 'Rastrea sentimento do mercado', capabilities: ['sentiment_analysis'] },
 ];
 
-// ============================================
-// EXPORTS
-// ============================================
-
-export {
-  adaptToNexusContext,
-  adaptFromNexusResult,
-  skillRegistry,
-  nexusSkillExecutor,
-  SKILL_CATALOG,
-};

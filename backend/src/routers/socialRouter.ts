@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, adminProcedure, router } from "../config/trpc";
 import { createNotification, getDb } from "../../../database/schemas/db";
+import { affiliates } from "../../../database/schemas/schema-final";
 import {
   socialAccounts,
   contentCalendar,
@@ -133,7 +134,7 @@ export const socialRouter = router({
 
       await db
         .update(socialAccounts)
-        .set({ status: input.status })
+        .set({ status: input.status, updatedAt: new Date() })
         .where(
           and(
             eq(socialAccounts.id, input.accountId),
@@ -492,6 +493,45 @@ export const socialRouter = router({
     }),
 
   /**
+   * Remover link de rastreamento
+   */
+  deleteTrackingLink: protectedProcedure
+    .input(z.object({ linkId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
+      }
+
+      const affiliate = await db
+        .select()
+        .from(affiliates)
+        .where(eq(affiliates.userId, ctx.user.id))
+        .limit(1);
+
+      if (affiliate.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Affiliate profile not found",
+        });
+      }
+
+      await db
+        .delete(trackingLinks)
+        .where(
+          and(
+            eq(trackingLinks.id, input.linkId),
+            eq(trackingLinks.affiliateId, affiliate[0].id)
+          )
+        );
+
+      return { success: true };
+    }),
+
+  /**
    * Obter métricas de um link
    */
   getLinkMetrics: protectedProcedure
@@ -581,12 +621,35 @@ export const socialRouter = router({
 
       await db.insert(conversionEvents).values(newEvent);
 
+      const isClick = input.eventType === "click";
+      const isConversion = ["purchase", "signup", "lead"].includes(input.eventType);
+      const revenueCents =
+        input.eventType === "purchase" && typeof input.metadata?.revenueCents === "number"
+          ? Number(input.metadata.revenueCents)
+          : input.eventType === "purchase" && typeof input.metadata?.revenue === "number"
+            ? Math.round(Number(input.metadata.revenue) * 100)
+            : 0;
+
+      const nextClickCount = isClick ? link[0].clickCount + 1 : link[0].clickCount;
+      const nextUniqueClickCount = isClick && input.visitorId
+        ? link[0].uniqueClickCount + 1
+        : link[0].uniqueClickCount;
+      const nextConversionCount = isConversion ? link[0].conversionCount + 1 : link[0].conversionCount;
+      const nextTotalRevenue = link[0].totalRevenue + Math.max(0, revenueCents);
+      const nextConversionRate = nextClickCount > 0
+        ? ((nextConversionCount / nextClickCount) * 100).toFixed(2)
+        : "0.00";
+
       // Atualizar contadores do link
       await db
         .update(trackingLinks)
         .set({
-          clickCount: link[0].clickCount + 1,
-          uniqueClickCount: input.visitorId ? link[0].uniqueClickCount + 1 : link[0].uniqueClickCount,
+          clickCount: nextClickCount,
+          uniqueClickCount: nextUniqueClickCount,
+          conversionCount: nextConversionCount,
+          totalRevenue: nextTotalRevenue,
+          conversionRate: nextConversionRate,
+          updatedAt: new Date(),
         })
         .where(eq(trackingLinks.id, input.trackingLinkId));
 

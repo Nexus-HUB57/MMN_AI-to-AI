@@ -1,254 +1,151 @@
-import { useParams, useLocation } from 'wouter';
-import { trpc } from '@/lib/trpc';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, ArrowLeft, Package, CheckCircle2, Clock, AlertCircle, Truck, Home } from 'lucide-react';
+import DashboardLayout from "@/components/DashboardLayout";
+import { useLocation, useParams } from "wouter";
+import { trpc } from "@/lib/trpc";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, CheckCircle2, Clock, Home, Loader2, Package, Truck, XCircle } from "lucide-react";
 
-const STATUS_ORDER = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'refunded'] as const;
-
-const STATUS_CONFIG: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  pending: { icon: <Clock className="w-6 h-6" />, label: 'Pendente', color: 'text-yellow-600' },
-  confirmed: { icon: <CheckCircle2 className="w-6 h-6" />, label: 'Confirmado', color: 'text-blue-600' },
-  shipped: { icon: <Truck className="w-6 h-6" />, label: 'Enviado', color: 'text-purple-600' },
-  delivered: { icon: <Home className="w-6 h-6" />, label: 'Entregue', color: 'text-green-600' },
-  cancelled: { icon: <AlertCircle className="w-6 h-6" />, label: 'Cancelado', color: 'text-red-600' },
-  refunded: { icon: <AlertCircle className="w-6 h-6" />, label: 'Reembolsado', color: 'text-orange-600' },
+const STATUS_CONFIG: Record<string, { label: string; className: string; icon: React.ElementType }> = {
+  pending: { label: "Pendente", className: "border-amber-400/30 bg-amber-400/10 text-amber-200", icon: Clock },
+  confirmed: { label: "Confirmado", className: "border-sky-400/30 bg-sky-400/10 text-sky-200", icon: CheckCircle2 },
+  shipped: { label: "Enviado", className: "border-violet-400/30 bg-violet-400/10 text-violet-200", icon: Truck },
+  delivered: { label: "Entregue", className: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200", icon: Home },
+  cancelled: { label: "Cancelado", className: "border-rose-400/30 bg-rose-400/10 text-rose-200", icon: XCircle },
+  refunded: { label: "Reembolsado", className: "border-orange-400/30 bg-orange-400/10 text-orange-200", icon: XCircle },
 };
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value || 0));
+}
 
 export default function OrderTracking() {
   const { orderId } = useParams<{ orderId: string }>();
   const [, navigate] = useLocation();
 
-  const { data: order, isLoading } = trpc.dropshipping.getOrderDetails.useQuery(
-    { orderId: parseInt(orderId || '0') },
-    { enabled: !!orderId }
+  const { data: order, isLoading, error } = trpc.dropshipping.getOrderDetails.useQuery(
+    { orderId: Number(orderId) },
+    { enabled: Boolean(orderId) && !Number.isNaN(Number(orderId)) },
   );
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
-      </div>
-    );
-  }
-
-  if (!order) {
-    return (
-      <div className="space-y-6">
-        <Button variant="outline" onClick={() => navigate('/dropshipping')}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
-        </Button>
-        <Card>
-          <CardContent className="text-center py-12 text-slate-500">
-            <Package className="w-12 h-12 mx-auto mb-2 opacity-50" />
-            <p>Pedido não encontrado</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const currentStatusIndex = STATUS_ORDER.indexOf(order.status as any);
-  const completedStatuses = STATUS_ORDER.slice(0, currentStatusIndex + 1);
+  const status = STATUS_CONFIG[order?.status || "pending"] || STATUS_CONFIG.pending;
+  const StatusIcon = status.icon;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" onClick={() => navigate('/dropshipping')}>
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Rastreamento do Pedido</h1>
-          <p className="text-slate-600">Pedido #{order.id} - {order.externalOrderId}</p>
-        </div>
-      </div>
-
-      {/* Current Status Card */}
-      <Card className="border-2 border-blue-200 bg-blue-50">
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-            <div className={`${STATUS_CONFIG[order.status].color}`}>
-              {STATUS_CONFIG[order.status].icon}
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">Status Atual</p>
-              <h2 className="text-2xl font-bold text-slate-900">
-                {STATUS_CONFIG[order.status].label}
-              </h2>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Histórico de Atualizações</CardTitle>
-          <CardDescription>Acompanhe todas as mudanças de status</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {STATUS_ORDER.map((status, index) => {
-              const isCompleted = completedStatuses.includes(status);
-              const isCurrent = status === order.status;
-              const historyEntry = order.statusHistory?.find(h => h.newStatus === status);
-
-              return (
-                <div key={status} className="flex gap-4">
-                  {/* Timeline Line */}
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        isCompleted
-                          ? 'bg-green-100 text-green-700'
-                          : isCurrent
-                          ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-300'
-                          : 'bg-gray-100 text-gray-400'
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <CheckCircle2 className="w-6 h-6" />
-                      ) : (
-                        STATUS_CONFIG[status].icon
-                      )}
-                    </div>
-                    {index < STATUS_ORDER.length - 1 && (
-                      <div
-                        className={`w-1 h-12 ${
-                          isCompleted ? 'bg-green-300' : 'bg-gray-200'
-                        }`}
-                      />
-                    )}
-                  </div>
-
-                  {/* Status Info */}
-                  <div className="pb-6">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-slate-900">
-                        {STATUS_CONFIG[status].label}
-                      </h3>
-                      {isCurrent && (
-                        <Badge className="bg-blue-100 text-blue-800">Atual</Badge>
-                      )}
-                      {isCompleted && !isCurrent && (
-                        <Badge className="bg-green-100 text-green-800">Concluído</Badge>
-                      )}
-                    </div>
-                    {historyEntry && (
-                      <p className="text-sm text-slate-600 mt-1">
-                        {new Date(historyEntry.changedAt).toLocaleDateString('pt-BR', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Order Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Customer Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Informações do Cliente</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <p className="text-sm text-slate-600">Nome</p>
-              <p className="font-semibold text-slate-900">{order.customerName}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">Email</p>
-              <p className="font-semibold text-slate-900">{order.customerEmail}</p>
-            </div>
-            <div>
-              <p className="text-sm text-slate-600">Endereço de Entrega</p>
-              <p className="font-semibold text-slate-900 whitespace-pre-wrap">
-                {order.shippingAddress}
+    <DashboardLayout>
+      <div className="space-y-8 pb-8">
+        <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.15),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(124,255,178,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Rastreamento de pedido</Badge>
+              <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">Acompanhe o status do pedido</h1>
+              <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+                Consulte o estágio atual do pedido, dados do cliente e detalhes do produto vinculado à operação de dropshipping.
               </p>
             </div>
-            {order.trackingNumber && (
-              <div>
-                <p className="text-sm text-slate-600">Número de Rastreamento</p>
-                <p className="font-semibold text-slate-900">{order.trackingNumber}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Product Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Informações do Produto</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {order.product ? (
-              <>
-                {order.product.imageUrl && (
-                  <div className="w-full h-32 bg-slate-100 rounded overflow-hidden">
-                    <img
-                      src={order.product.imageUrl}
-                      alt={order.product.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm text-slate-600">Produto</p>
-                  <p className="font-semibold text-slate-900">{order.product.title}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-600">Preço</p>
-                  <p className="font-semibold text-slate-900">R$ {order.product.price.toFixed(2)}</p>
-                </div>
-              </>
-            ) : (
-              <p className="text-slate-500">Produto não disponível</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Order Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Resumo do Pedido</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-200">
-              <span className="text-slate-600">Valor do Pedido:</span>
-              <span className="font-semibold text-slate-900">R$ {order.amount.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between items-center pb-3 border-b border-slate-200">
-              <span className="text-slate-600">Comissão:</span>
-              <span className="font-semibold text-green-600">R$ {order.commissionAmount.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600">Marketplace:</span>
-              <Badge variant="outline">{order.marketplace}</Badge>
-            </div>
-            <div className="flex justify-between items-center pt-3 border-t border-slate-200">
-              <span className="text-slate-600">Data de Criação:</span>
-              <span className="font-semibold text-slate-900">
-                {new Date(order.createdAt).toLocaleDateString('pt-BR')}
-              </span>
-            </div>
+            <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10" onClick={() => navigate("/dropshipping/orders")}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar para pedidos
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </section>
+
+        {isLoading ? (
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardContent className="flex items-center justify-center py-14 text-slate-400">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </CardContent>
+          </Card>
+        ) : error || !order ? (
+          <Card className="border-white/10 bg-white/5 backdrop-blur">
+            <CardContent className="flex flex-col items-center justify-center gap-3 py-14 text-center text-slate-400">
+              <Package className="h-12 w-12 opacity-30" />
+              <p>Pedido não encontrado ou indisponível para o afiliado logado.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-white">
+                    <StatusIcon className="h-5 w-5 text-quantum-cyan" />
+                    Status atual do pedido #{order.id}
+                  </CardTitle>
+                  <CardDescription className="text-slate-400">Código externo {order.externalOrderId}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge className={`border ${status.className}`}>{status.label}</Badge>
+                    <Badge className="border border-white/10 bg-white/5 text-slate-200">Marketplace {order.marketplace}</Badge>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <Metric label="Valor do pedido" value={formatCurrency(order.amount)} />
+                    <Metric label="Comissão" value={formatCurrency(order.commissionAmount)} />
+                    <Metric label="Criado em" value={new Date(order.createdAt).toLocaleDateString("pt-BR")} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white">Produto vinculado</CardTitle>
+                  <CardDescription className="text-slate-400">Informações do catálogo associado ao pedido.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {order.product ? (
+                    <>
+                      <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                        <p className="text-lg font-semibold text-white">{order.product.title}</p>
+                        <p className="mt-2 text-sm text-slate-400">Marketplace {order.product.marketplace}</p>
+                      </div>
+                      <Metric label="Preço do produto" value={formatCurrency(order.product.price)} />
+                    </>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-5 text-sm text-slate-400">
+                      Produto original não localizado na base atual.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </section>
+
+            <section className="grid gap-4 md:grid-cols-2">
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white">Cliente</CardTitle>
+                  <CardDescription className="text-slate-400">Dados de contato usados no registro do pedido.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Metric label="Nome" value={order.customerName || "—"} />
+                  <Metric label="Email" value={order.customerEmail || "—"} />
+                </CardContent>
+              </Card>
+
+              <Card className="border-white/10 bg-white/5 backdrop-blur">
+                <CardHeader>
+                  <CardTitle className="text-white">Entrega</CardTitle>
+                  <CardDescription className="text-slate-400">Endereço informado no momento da criação.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-slate-300 whitespace-pre-wrap">
+                    {order.shippingAddress || "Endereço não informado."}
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          </>
+        )}
+      </div>
+    </DashboardLayout>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+      <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">{label}</p>
+      <p className="mt-2 text-base font-semibold text-white break-all">{value}</p>
     </div>
   );
 }

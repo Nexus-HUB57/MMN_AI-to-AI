@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
-import { isFirebaseConfigured } from "@/lib/firebase";
 import {
   useAuth,
   ADMIN_ACCESS_LABEL,
@@ -30,7 +29,21 @@ interface SocialLoginButtonsProps {
 function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [socialError, setSocialError] = useState<string | null>(null);
-  const firebaseReady = isFirebaseConfigured();
+  const [firebaseReady, setFirebaseReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    import("@/lib/firebase")
+      .then((mod) => {
+        if (!cancelled) setFirebaseReady(mod.isFirebaseConfigured());
+      })
+      .catch(() => {
+        if (!cancelled) setFirebaseReady(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!socialError) return;

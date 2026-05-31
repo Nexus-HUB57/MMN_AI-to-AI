@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Copy, Download, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Loader2, Copy, Sparkles, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ContentGeneration() {
@@ -47,11 +47,10 @@ export default function ContentGeneration() {
   const [productPlatform, setProductPlatform] = useState<"instagram" | "facebook" | "whatsapp">("instagram");
   const [productDescription, setProductDescription] = useState<string | null>(null);
 
-  // Image Generation State (Coming Soon)
+  // Image Brief State
   const [imagePrompt, setImagePrompt] = useState("");
   const [originalImageUrl, setOriginalImageUrl] = useState("");
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
-  const [imageSectionEnabled, setImageSectionEnabled] = useState(false); // Disabled until backend supports it
+  const [generatedImageBrief, setGeneratedImageBrief] = useState<string | null>(null);
 
   // Mutations
   const { mutate: generateText, isPending: textLoading } = trpc.content.generateText.useMutation({
@@ -96,7 +95,7 @@ export default function ContentGeneration() {
 
   const { mutate: generateProductDesc, isPending: productLoading } = trpc.content.generateProductDescription.useMutation({
     onSuccess: (result) => {
-      setProductDescription(typeof result.description === 'string' ? result.description : null);
+      setProductDescription(typeof result.description === "string" ? result.description : null);
       toast.success("Product description generated successfully");
     },
     onError: () => {
@@ -104,8 +103,15 @@ export default function ContentGeneration() {
     },
   });
 
-  // Note: trpc.content.generateImage is not implemented in backend yet
-  // The image generation feature is marked as "Coming Soon"
+  const imageBriefMutation = trpc.content.generateText.useMutation({
+    onSuccess: (result) => {
+      setGeneratedImageBrief(result.content);
+      toast.success("Image brief generated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to generate image brief");
+    },
+  });
 
   if (authLoading) {
     return (
@@ -143,6 +149,20 @@ export default function ContentGeneration() {
     neutral: "bg-gray-100 text-gray-800",
   };
 
+  const handleGenerateImageBrief = () => {
+    imageBriefMutation.mutate({
+      platform: "instagram",
+      tone: "persuasive",
+      maxLength: 480,
+      topic: [
+        "Create a promotional visual brief in Portuguese.",
+        `Main objective: ${imagePrompt}`,
+        originalImageUrl ? `Reference image URL: ${originalImageUrl}` : "No reference image provided.",
+        "Return a practical brief with scene, composition, lighting, text overlay suggestion, CTA, colors, and dimensions.",
+      ].join(" "),
+    });
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div>
@@ -159,7 +179,6 @@ export default function ContentGeneration() {
           <TabsTrigger value="product">Product</TabsTrigger>
         </TabsList>
 
-        {/* Generate Text Tab */}
         <TabsContent value="text" className="space-y-4">
           <Card>
             <CardHeader>
@@ -259,7 +278,6 @@ export default function ContentGeneration() {
           </Card>
         </TabsContent>
 
-        {/* Generate Variations Tab */}
         <TabsContent value="variations" className="space-y-4">
           <Card>
             <CardHeader>
@@ -354,7 +372,6 @@ export default function ContentGeneration() {
           </Card>
         </TabsContent>
 
-        {/* Generate Hashtags Tab */}
         <TabsContent value="hashtags" className="space-y-4">
           <Card>
             <CardHeader>
@@ -447,7 +464,6 @@ export default function ContentGeneration() {
           </Card>
         </TabsContent>
 
-        {/* Sentiment Analysis Tab */}
         <TabsContent value="sentiment" className="space-y-4">
           <Card>
             <CardHeader>
@@ -514,7 +530,6 @@ export default function ContentGeneration() {
           </Card>
         </TabsContent>
 
-        {/* Product Description Tab */}
         <TabsContent value="product" className="space-y-4">
           <Card>
             <CardHeader>
@@ -624,63 +639,73 @@ export default function ContentGeneration() {
         </TabsContent>
       </Tabs>
 
-      {/* Image Generation Section - Coming Soon */}
       <Card className="bg-gray-50 border-gray-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ImageIcon className="h-5 w-5" />
-            Generate Promotional Images
-            <Badge variant="outline" className="ml-2 bg-yellow-100 text-yellow-800">Coming Soon</Badge>
+            Generate Promotional Image Brief
           </CardTitle>
-          <CardDescription>Create AI-powered images for your marketing campaigns</CardDescription>
+          <CardDescription>
+            Instead of a fake “coming soon” block, this section now creates a real visual brief using the content backend.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="image-prompt">Image Description</Label>
+            <Label htmlFor="image-prompt">Image Objective</Label>
             <Textarea
               id="image-prompt"
               value={imagePrompt}
               onChange={(e) => setImagePrompt(e.target.value)}
-              placeholder="Describe the image you want to generate..."
+              placeholder="Describe the campaign image you need..."
               rows={3}
-              disabled
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="original-image">Original Image URL (optional)</Label>
+            <Label htmlFor="original-image">Reference Image URL (optional)</Label>
             <Input
               id="original-image"
               value={originalImageUrl}
               onChange={(e) => setOriginalImageUrl(e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              disabled
+              placeholder="https://example.com/reference-image.jpg"
             />
-            <p className="text-xs text-gray-500">Use this to edit an existing image</p>
+            <p className="text-xs text-gray-500">Use this when you want the brief to consider an existing composition or style reference.</p>
           </div>
 
           <Button
-            disabled
+            onClick={handleGenerateImageBrief}
+            disabled={imageBriefMutation.isPending || !imagePrompt.trim()}
             className="w-full"
           >
-            <ImageIcon className="mr-2 h-4 w-4" />
-            Generate Image - Coming Soon
+            {imageBriefMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating Brief...
+              </>
+            ) : (
+              <>
+                <ImageIcon className="mr-2 h-4 w-4" />
+                Generate Image Brief
+              </>
+            )}
           </Button>
 
-          <p className="text-sm text-gray-500 text-center py-4">
-            Image generation will be available soon. Stay tuned for updates!
-          </p>
-
-          {generatedImageUrl && (
+          {generatedImageBrief && (
             <Card className="bg-gray-50">
-              <CardContent className="pt-6">
-                <img src={generatedImageUrl} alt="Generated" className="w-full rounded-lg mb-4" />
-                <a href={generatedImageUrl} download className="block">
-                  <Button variant="outline" className="w-full">
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Image
-                  </Button>
-                </a>
+              <CardContent className="pt-6 space-y-4">
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">Generated Visual Brief</p>
+                  <div className="rounded-lg bg-white p-4 text-sm whitespace-pre-wrap text-slate-700 border">
+                    {generatedImageBrief}
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => copyToClipboard(generatedImageBrief, "image-brief")}
+                >
+                  {copiedId === "image-brief" ? "Copied!" : "Copy Brief"}
+                </Button>
               </CardContent>
             </Card>
           )}

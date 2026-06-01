@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../config/trpc";
 import { TRPCError } from "@trpc/server";
+import { and, desc, eq } from "drizzle-orm";
+import { scheduledPosts } from "../../../database/schemas";
 import {
   generateContent,
   getAvailableModels,
@@ -27,6 +29,41 @@ import sentimentService from "../services/sentiment-analysis-service";
  * Router para funcionalidades avançadas do IA Content Hub (Sprint 4)
  * Inclui: Seleção de modelos, templates, agendamento e analytics
  */
+
+type ScheduledPostStatus = "scheduled" | "published" | "failed" | "cancelled";
+
+interface ScheduledPostRecord {
+  id: string;
+  userId: number;
+  title?: string | null;
+  content: string;
+  platforms: string[];
+  scheduledFor: Date;
+  status: ScheduledPostStatus;
+  mediaUrls?: string[] | null;
+  createdAt: Date;
+  publishedAt?: Date | null;
+}
+
+const inMemoryScheduledPosts = new Map<number, ScheduledPostRecord[]>();
+
+async function resolveDb() {
+  try {
+    const databaseModule = await import("../../../database/schemas/db");
+    return await databaseModule.getDb();
+  } catch {
+    return null;
+  }
+}
+
+function getFallbackScheduledPosts(userId: number): ScheduledPostRecord[] {
+  return inMemoryScheduledPosts.get(userId) ?? [];
+}
+
+function saveFallbackScheduledPost(post: ScheduledPostRecord) {
+  const current = getFallbackScheduledPosts(post.userId);
+  inMemoryScheduledPosts.set(post.userId, [post, ...current]);
+}
 
 export const aiContentHubRouter = router({
   /**
@@ -363,11 +400,10 @@ export const aiContentHubRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
+        const userId = ctx.user?.id || 0;
+
         // Rate Limiting
-        const rateLimit = await rateLimitMiddleware(
-          ctx.user?.id || 0,
-          "schedulePost"
-        );
+        const rateLimit = await rateLimitMiddleware(userId, "schedulePost");
         if (!rateLimit.allowed) {
           throw new TRPCError({
             code: "TOO_MANY_REQUESTS",
@@ -375,18 +411,52 @@ export const aiContentHubRouter = router({
           });
         }
 
+        const postPayload: ScheduledPostRecord = {
+          id: `post_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          userId,
+          title: input.title,
+          content: input.content,
+          platforms: input.platforms,
+          scheduledFor: input.scheduledFor,
+          status: "scheduled",
+          mediaUrls: input.mediaUrls,
+          createdAt: new Date(),
+          publishedAt: null,
+        };
+
+        const db = await resolveDb();
+        let post = postPayload;
+
+        if (db) {
+          const [savedPost] = await db.insert(scheduledPosts).values({
+            id: postPayload.id,
+            userId: postPayload.userId,
+            title: postPayload.title ?? null,
+            content: postPayload.content,
+            platforms: postPayload.platforms,
+            scheduledFor: postPayload.scheduledFor,
+            status: postPayload.status,
+            mediaUrls: postPayload.mediaUrls ?? null,
+            createdAt: postPayload.createdAt,
+            publishedAt: postPayload.publishedAt,
+          }).returning();
+          if (savedPost) {
+            post = {
+              ...savedPost,
+              platforms: Array.isArray(savedPost.platforms) ? savedPost.platforms : [],
+              mediaUrls: Array.isArray(savedPost.mediaUrls) ? savedPost.mediaUrls : undefined,
+            } as ScheduledPostRecord;
+          }
+        } else {
+          saveFallbackScheduledPost(postPayload);
+        }
+
         // TODO: Adicionar à fila de agendamento (BullMQ)
-        // Invalidação de cache após agendamento
-        await invalidateCachePattern(CACHE_KEYS.POSTS_PATTERN(ctx.user?.id || 0));
+        await invalidateCachePattern(CACHE_KEYS.POSTS_PATTERN(userId));
 
         return {
           success: true,
-          post: {
-            id: `post_${Date.now()}`,
-            ...input,
-            status: "scheduled",
-            createdAt: new Date(),
-          },
+          post,
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
@@ -410,26 +480,61 @@ export const aiContentHubRouter = router({
           .optional(),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        // TODO: Buscar posts agendados do banco de dados com paginação
+        const userId = ctx.user?.id || 0;
+        const db = await resolveDb();
+
+        if (db) {
+          const conditions = [eq(scheduledPosts.userId, userId)];
+          if (input.status) {
+            conditions.push(eq(scheduledPosts.status, input.status));
+          }
+
+          const allPosts = await db
+            .select()
+            .from(scheduledPosts)
+            .where(and(...conditions))
+            .orderBy(desc(scheduledPosts.scheduledFor));
+
+          const paginatedPosts = allPosts.slice(input.offset, input.offset + input.limit).map((post) => ({
+            ...post,
+            platforms: Array.isArray(post.platforms) ? post.platforms : [],
+            mediaUrls: Array.isArray(post.mediaUrls) ? post.mediaUrls : undefined,
+          }));
+
+          return {
+            success: true,
+            posts: paginatedPosts,
+            pagination: {
+              limit: input.limit,
+              offset: input.offset,
+              total: allPosts.length,
+            },
+          };
+        }
+
+        const posts = getFallbackScheduledPosts(userId)
+          .filter((post) => !input.status || post.status === input.status)
+          .sort((a, b) => b.scheduledFor.getTime() - a.scheduledFor.getTime());
+
         return {
           success: true,
-          posts: [],
+          posts: posts.slice(input.offset, input.offset + input.limit),
           pagination: {
             limit: input.limit,
             offset: input.offset,
-            total: 0,
+            total: posts.length,
           },
         };
       } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Erro ao listar posts agendados",
-      });
-    }
-  }),
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao listar posts agendados",
+        });
+      }
+    }),
 
   /**
    * Obter analytics de conteúdo

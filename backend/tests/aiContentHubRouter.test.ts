@@ -409,9 +409,21 @@ describe("aiContentHubRouter", () => {
 
   describe("listScheduledPosts", () => {
     it("should return list of scheduled posts", async () => {
+      const scheduledFor = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+      await caller.schedulePost({
+        content: "Scheduled through test",
+        platforms: ["instagram"],
+        scheduledFor,
+        title: "Teste de listagem",
+      });
+
       const result = await caller.listScheduledPosts();
       expect(result.success).toBe(true);
       expect(Array.isArray(result.posts)).toBe(true);
+      expect(result.posts.length).toBeGreaterThan(0);
+      expect(result.posts[0]).toHaveProperty("content");
+      expect(result.pagination).toHaveProperty("total");
     });
   });
 

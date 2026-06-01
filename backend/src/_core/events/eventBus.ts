@@ -66,7 +66,10 @@ export enum DomainEventType {
   // System Events
   SYSTEM_ALERT = 'SystemAlert',
   SLA_BREACH = 'SLABreach',
-  SECURITY_EVENT = 'SecurityEvent'
+  SECURITY_EVENT = 'SecurityEvent',
+
+  // Governance Events
+  PARTNER_HIGH_VALUE_PROMOTION = 'PartnerHighValuePromotion'
 }
 
 // ============================================================================
@@ -160,6 +163,16 @@ export interface PartnerTierPromotedPayload {
   totalVolume: number;
   newCommissionRate: number;
   triggeredBy: 'volume_threshold' | 'admin_action' | 'algorithm';
+}
+
+export interface PartnerHighValuePromotionPayload {
+  partnerId: string;
+  userId: number;
+  newTier: 'platinum' | 'diamond';
+  triggeredBy: 'volume_threshold' | 'admin_action' | 'algorithm';
+  correlationId?: string;
+  causationId?: string;
+  sourceEventType: DomainEventType;
 }
 
 export interface PartnerVolumeRegisteredPayload {

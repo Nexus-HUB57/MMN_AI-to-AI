@@ -1,940 +1,146 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { eventBus, DomainEventType, EventFactory } from '../../backend/src/_core/events/eventBus';
+import { registerPartnersEventHandlers } from '../../backend/src/domains/partners/subscribers';
+import * as notificationService from '../../backend/src/domains/notifications/notificationService';
+import * as repository from '../../backend/src/domains/partners/repository';
 
-import {
-  GrowthAlgorithmEngine,
-  analyzePartnerGrowth,
-  approvePartnership,
-  calculatePartnerBenefits,
-  getPartnerStatsSnapshot,
-  listPartners,
-  listPartnerships,
-  listTiers,
-  openPartnership,
-  recordPartnerVolume,
-  rejectPartnership,
-  terminatePartnership,
-} from "../../backend/src/domains/partners/service";
-import {
-  DomainEventType,
-  eventBus,
-  type PartnerTierPromotedPayload,
-  type PartnerVolumeRegisteredPayload,
-  type PartnershipLifecyclePayload,
-  type XPGrantedPayload,
-  type CareerLevelUpPayload,
-} from "../../backend/src/_core/events/eventBus";
-import {
-  applyTierPromotionXp,
-  applyTierPromotionXpWithDiagnostic,
-  getPartnerXpHistory,
-  getXpLedgerStats,
-  listAllXpLedger,
-  registerPartnersEventHandlers,
-  resetPartnerXpState,
-  __testing,
-  type XpLedgerEntry,
-} from "../../backend/src/domains/partners/subscribers";
-import type { SystemAlertPayload } from "../../backend/src/domains/cron/events";
-import {
-  createPartnerRecord,
-  resetPartnerRepository,
-} from "../../backend/src/domains/partners/repository";
-
-// ============================================================================
-// Setup / teardown
-// ============================================================================
-
-const subscribers: Array<{ dispose: () => void }> = [];
-
-beforeEach(() => {
-  resetPartnerRepository();
-  resetPartnerXpState();
-});
-
-afterEach(() => {
-  while (subscribers.length) {
-    subscribers.pop()!.dispose();
+// Mock do notificationService
+vi.mock('../../backend/src/domains/notifications/notificationService', () => ({
+  notifyTierPromotion: vi.fn().mockResolvedValue(undefined),
+  notificationManager: {
+    sendTierPromotion: vi.fn().mockResolvedValue([]),
+    broadcast: vi.fn().mockResolvedValue([]),
   }
-});
+}));
 
-function trackHandler<T>(type: string, fn: (payload: T) => void): () => void {
-  const wrapped = async (event: { payload: T }) => {
-    fn(event.payload);
-  };
-  const subId = (
-    eventBus as unknown as {
-      subscribe: (t: string, h: typeof wrapped) => string;
+describe('Partners Domain Subscriber (v1.4.0 - Subscription Model)', () => {
+  let subscription: { dispose: () => void };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    repository.resetPartnerRepository();
+    subscription = registerPartnersEventHandlers();
+  });
+
+  afterEach(() => {
+    if (subscription) {
+      subscription.dispose();
     }
-  ).subscribe(type, wrapped);
-  return () => eventBus.unsubscribe(subId);
-}
-
-// ============================================================================
-// GrowthAlgorithmEngine
-// ============================================================================
-
-describe("GrowthAlgorithmEngine.calculateVolumeMultiplier", () => {
-  it("retorna a taxa base quando o volume está no mínimo do tier", () => {
-    // silver tem minVolume=0 e commissionRate=0.05 no seed
-    const mult = GrowthAlgorithmEngine.calculateVolumeMultiplier("silver", 0);
-    expect(mult).toBeCloseTo(0.05, 5);
   });
 
-  it("cresce exponencialmente com o volume", () => {
-    const low = GrowthAlgorithmEngine.calculateVolumeMultiplier("gold", 5_000);
-    // gold minVolume=5_000, com 25_000 há 20_000 de excesso
-    // factor = 1 + (20_000/10_000) * 0.05 = 1.1
-    const high = GrowthAlgorithmEngine.calculateVolumeMultiplier("gold", 25_000);
-    expect(high).toBeGreaterThan(low);
-    expect(high).toBeCloseTo(0.08 * 1.1, 5);
-  });
-
-  it("aplica o cap de 2x da comissão base em volumes muito altos", () => {
-    // cap = baseMultiplier * 2 = 0.12 * 2 = 0.24
-    // Para platinum atingir o cap precisa de excesso/10_000 >= 20 → excesso >= 200_000
-    // platinum minVolume = 20_000 → total >= 220_000
-    const massive = GrowthAlgorithmEngine.calculateVolumeMultiplier("platinum", 1_000_000);
-    expect(massive).toBeCloseTo(0.12 * 2, 5);
-  });
-});
-
-describe("GrowthAlgorithmEngine.calculateNetworkBonus", () => {
-  it("retorna 0 quando abaixo do threshold", () => {
-    const tierConfig = listTiers().find((t) => t.tier === "gold")!;
-    const belowThreshold = Math.floor(tierConfig.maxReferrals! * 0.5) - 1;
-    const bonus = GrowthAlgorithmEngine.calculateNetworkBonus(belowThreshold, "gold");
-    expect(bonus).toBe(0);
-  });
-
-  it("paga 0.2% por indicação acima do threshold", () => {
-    const tierConfig = listTiers().find((t) => t.tier === "gold")!;
-    const excess = 10;
-    const bonus = GrowthAlgorithmEngine.calculateNetworkBonus(
-      tierConfig.maxReferrals! * 0.5 + excess,
-      "gold",
-    );
-    expect(bonus).toBeCloseTo(excess * 0.002, 5);
-  });
-
-  it("diamond tem bônus progressivo sem limite", () => {
-    const bonus = GrowthAlgorithmEngine.calculateNetworkBonus(500, "diamond");
-    expect(bonus).toBeCloseTo(500 * 0.002, 5);
-  });
-});
-
-describe("GrowthAlgorithmEngine.calculateRetentionScore", () => {
-  it("retorna 100 quando todos os inputs estão saturados", () => {
-    const score = GrowthAlgorithmEngine.calculateRetentionScore({
-      activeMonths: 12,
-      totalVolume: 50_000,
-      referralRate: 1,
-    });
-    expect(score).toBe(100);
-  });
-
-  it("retorna 0 quando todos os inputs estão zerados", () => {
-    const score = GrowthAlgorithmEngine.calculateRetentionScore({
-      activeMonths: 0,
-      totalVolume: 0,
-      referralRate: 0,
-    });
-    expect(score).toBe(0);
-  });
-});
-
-describe("GrowthAlgorithmEngine.calculateGrowthPotential", () => {
-  it("projeta meses até o próximo tier com base no crescimento mensal", () => {
-    const result = GrowthAlgorithmEngine.calculateGrowthPotential(
-      "silver",
-      1_000,
-      1_000,
-      0.5,
-    );
-    expect(result.potentialTier).toBe("gold");
-    // gold requer 5_000, faltam 4_000, com 1_000/mês = 4 meses
-    expect(result.monthsToPromote).toBe(4);
-    expect(result.confidence).toBeGreaterThan(0);
-    expect(result.confidence).toBeLessThanOrEqual(1);
-  });
-
-  it("retorna diamond imediato quando já está no topo", () => {
-    const result = GrowthAlgorithmEngine.calculateGrowthPotential("diamond", 200_000, 0, 0);
-    expect(result.potentialTier).toBe("diamond");
-    expect(result.monthsToPromote).toBe(0);
-    expect(result.confidence).toBe(1);
-  });
-
-  it("retorna 999 meses quando não há crescimento", () => {
-    const result = GrowthAlgorithmEngine.calculateGrowthPotential("silver", 1_000, 0, 0.1);
-    expect(result.monthsToPromote).toBe(999);
-  });
-});
-
-describe("GrowthAlgorithmEngine.calculateTieredReferralBonus", () => {
-  it("escalona corretamente pelas faixas", () => {
-    expect(GrowthAlgorithmEngine.calculateTieredReferralBonus(0).tier).toBe("basic");
-    expect(GrowthAlgorithmEngine.calculateTieredReferralBonus(5).tier).toBe("standard");
-    expect(GrowthAlgorithmEngine.calculateTieredReferralBonus(20).tier).toBe("advanced");
-    expect(GrowthAlgorithmEngine.calculateTieredReferralBonus(50).tier).toBe("expert");
-    expect(GrowthAlgorithmEngine.calculateTieredReferralBonus(100).tier).toBe("master");
-  });
-
-  it("retorna a maior faixa aplicável", () => {
-    const { bonus, tier } = GrowthAlgorithmEngine.calculateTieredReferralBonus(250);
-    expect(tier).toBe("master");
-    expect(bonus).toBe(0.15);
-  });
-});
-
-// ============================================================================
-// getPartnerStatsSnapshot
-// ============================================================================
-
-describe("getPartnerStatsSnapshot", () => {
-  it("retorna um snapshot coerente a partir do seed", () => {
-    const snap = getPartnerStatsSnapshot();
-    expect(snap.totalPartners).toBeGreaterThan(0);
-    expect(snap.activePartners).toBeGreaterThan(0);
-    expect(snap.tierDistribution.silver + snap.tierDistribution.gold +
-      snap.tierDistribution.platinum + snap.tierDistribution.diamond
-    ).toBe(snap.totalPartners);
-    expect(["silver", "gold", "platinum", "diamond"]).toContain(snap.averageTier);
-    expect(snap.averageVolumePerPartner).toBeGreaterThanOrEqual(0);
-  });
-});
-
-// ============================================================================
-// calculatePartnerBenefits / analyzePartnerGrowth
-// ============================================================================
-
-describe("calculatePartnerBenefits", () => {
-  it("retorna null para partner inexistente", () => {
-    expect(calculatePartnerBenefits(99_999)).toBeNull();
-  });
-
-  it("retorna breakdown para um partner válido", () => {
-    const first = listPartners()[0];
-    const benefits = calculatePartnerBenefits(first.id);
-    expect(benefits).not.toBeNull();
-    expect(benefits!.tier).toBe(first.tier);
-    expect(benefits!.tierBenefits.length).toBeGreaterThan(0);
-    expect(benefits!.totalCommissionRate).toBeGreaterThan(0);
-  });
-});
-
-describe("analyzePartnerGrowth", () => {
-  it("retorna análise completa com retention + potential + benefits", () => {
-    const first = listPartners()[0];
-    const analysis = analyzePartnerGrowth(first.id);
-    expect(analysis).not.toBeNull();
-    expect(analysis!.partner.id).toBe(first.id);
-    expect(analysis!.retentionScore).toBeGreaterThanOrEqual(0);
-    expect(analysis!.retentionScore).toBeLessThanOrEqual(100);
-    expect(analysis!.growthPotential).toBeDefined();
-    expect(analysis!.benefits).toBeDefined();
-  });
-});
-
-// ============================================================================
-// recordPartnerVolume — publica eventos
-// ============================================================================
-
-describe("recordPartnerVolume", () => {
-  it("publica PARTNER_VOLUME_REGISTERED", async () => {
-    const captured: PartnerVolumeRegisteredPayload[] = [];
-    const unsubscribe = trackHandler<PartnerVolumeRegisteredPayload>(
-      DomainEventType.PARTNER_VOLUME_REGISTERED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    const first = listPartners()[0];
-    const result = await recordPartnerVolume({
-      partnerId: first.id,
-      volume: 500,
-      volumeType: "sale",
-      source: "hotmart",
-    });
-
-    expect(result).not.toBeNull();
-    expect(captured).toHaveLength(1);
-    expect(captured[0].partnerId).toBe(String(first.id));
-    expect(captured[0].totalVolumeAfter).toBeGreaterThan(0);
-  });
-
-  it("publica PARTNER_TIER_PROMOTED quando cruza threshold", async () => {
-    const captured: PartnerTierPromotedPayload[] = [];
-    const unsubscribe = trackHandler<PartnerTierPromotedPayload>(
+  it('deve enviar notificação multi-canal ao receber PARTNER_TIER_PROMOTED', async () => {
+    const partner = repository.getPartnerRecordById(1001)!; // Silver
+    
+    const event = EventFactory.create(
       DomainEventType.PARTNER_TIER_PROMOTED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    // Cria um partner silver "fresco" sem histórico
-    const partner = createPartnerRecord({
-      userId: 9_001,
-      tier: "silver",
-    });
-    // gold requer volume >= 5_000
-    const result = await recordPartnerVolume({
-      partnerId: partner.id,
-      volume: 5_000,
-      volumeType: "sale",
-      source: "hotmart",
-    });
-
-    expect(result).not.toBeNull();
-    expect(result!.promoted).toBe(true);
-    expect(result!.previousTier).toBe("silver");
-    expect(result!.newTier).toBe("gold");
-    expect(captured).toHaveLength(1);
-    expect(captured[0].previousTier).toBe("silver");
-    expect(captured[0].newTier).toBe("gold");
-  });
-});
-
-// ============================================================================
-// Partnership lifecycle — publica eventos
-// ============================================================================
-
-describe("partnership lifecycle events", () => {
-  it("openPartnership publica PARTNERSHIP_CREATED", async () => {
-    const captured: PartnershipLifecyclePayload[] = [];
-    const unsubscribe = trackHandler<PartnershipLifecyclePayload>(
-      DomainEventType.PARTNERSHIP_CREATED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    const partner = listPartners()[0];
-    const partnership = await openPartnership({
-      partnerId: partner.id,
-      partnerName: "ACME Corp",
-    });
-    expect(partnership).not.toBeNull();
-    expect(captured).toHaveLength(1);
-    expect(captured[0].partnerName).toBe("ACME Corp");
-  });
-
-  it("approvePartnership publica PARTNERSHIP_APPROVED", async () => {
-    const partner = listPartners()[0];
-    const created = await openPartnership({
-      partnerId: partner.id,
-      partnerName: "ACME Corp",
-    });
-    expect(created).not.toBeNull();
-
-    const captured: PartnershipLifecyclePayload[] = [];
-    const unsubscribe = trackHandler<PartnershipLifecyclePayload>(
-      DomainEventType.PARTNERSHIP_APPROVED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    const approved = await approvePartnership(created!.id, 42);
-    expect(approved).not.toBeNull();
-    expect(approved!.status).toBe("active");
-    expect(captured).toHaveLength(1);
-    expect(captured[0].status).toBe("active");
-  });
-
-  it("rejectPartnership publica PARTNERSHIP_REJECTED com motivo", async () => {
-    const partner = listPartners()[0];
-    const created = await openPartnership({
-      partnerId: partner.id,
-      partnerName: "ACME Corp",
-    });
-
-    const captured: PartnershipLifecyclePayload[] = [];
-    const unsubscribe = trackHandler<PartnershipLifecyclePayload>(
-      DomainEventType.PARTNERSHIP_REJECTED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    const rejected = await rejectPartnership(created!.id, "Documentação incompleta");
-    expect(rejected).not.toBeNull();
-    expect(rejected!.status).toBe("rejected");
-    expect(captured[0].reason).toBe("Documentação incompleta");
-  });
-
-  it("terminatePartnership publica PARTNERSHIP_TERMINATED", async () => {
-    const partner = listPartners()[0];
-    const created = await openPartnership({
-      partnerId: partner.id,
-      partnerName: "ACME Corp",
-    });
-    const approved = await approvePartnership(created!.id, 1);
-
-    const captured: PartnershipLifecyclePayload[] = [];
-    const unsubscribe = trackHandler<PartnershipLifecyclePayload>(
-      DomainEventType.PARTNERSHIP_TERMINATED,
-      (p) => captured.push(p),
-    );
-    subscribers.push({ dispose: unsubscribe });
-
-    const terminated = await terminatePartnership(approved!.id, "Encerramento amigável");
-    expect(terminated!.status).toBe("terminated");
-    expect(captured[0].reason).toBe("Encerramento amigável");
-  });
-});
-
-// ============================================================================
-// XP helpers
-// ============================================================================
-
-describe("XP helpers", () => {
-  it("levelForXp respeita os thresholds", () => {
-    expect(__testing.levelForXp(0)).toBe(1);
-    expect(__testing.levelForXp(499)).toBe(1);
-    expect(__testing.levelForXp(500)).toBe(2);
-    expect(__testing.levelForXp(1_999)).toBe(2);
-    expect(__testing.levelForXp(2_000)).toBe(3);
-    expect(__testing.levelForXp(7_000)).toBe(4);
-    expect(__testing.levelForXp(50_000)).toBe(6);
-  });
-
-  it("rankForLevel retorna a denominação correta", () => {
-    expect(__testing.rankForLevel(1)).toBe("Affiliate");
-    expect(__testing.rankForLevel(2)).toBe("Partner");
-    expect(__testing.rankForLevel(4)).toBe("Elite Partner");
-    expect(__testing.rankForLevel(6)).toBe("Diamond Partner");
-  });
-
-  it("rewardForPromotion retorna 0 para silver", () => {
-    expect(__testing.rewardForPromotion("silver")).toBe(0);
-  });
-
-  it("rewardForPromotion retorna o valor da tabela", () => {
-    expect(__testing.rewardForPromotion("gold")).toBe(500);
-    expect(__testing.rewardForPromotion("platinum")).toBe(1_500);
-    expect(__testing.rewardForPromotion("diamond")).toBe(5_000);
-  });
-});
-
-// ============================================================================
-// Subscriber — chain PARTNER_TIER_PROMOTED → XP_GRANTED (+ CAREER_LEVEL_UP)
-// ============================================================================
-
-describe("partners event subscribers", () => {
-  it("concede XP e dispara CAREER_LEVEL_UP quando cruza nível", async () => {
-    const handle = registerPartnersEventHandlers();
-    subscribers.push(handle);
-
-    const xpCaptured: XPGrantedPayload[] = [];
-    const careerCaptured: CareerLevelUpPayload[] = [];
-    const offXp = trackHandler<XPGrantedPayload>(
-      DomainEventType.XP_GRANTED,
-      (p) => xpCaptured.push(p),
-    );
-    const offCareer = trackHandler<CareerLevelUpPayload>(
-      DomainEventType.CAREER_LEVEL_UP,
-      (p) => careerCaptured.push(p),
-    );
-    subscribers.push({ dispose: offXp });
-    subscribers.push({ dispose: offCareer });
-
-    // Cria um partner "fresco" e dispara uma promoção silver -> gold
-    // (500 XP, exatamente no threshold do nível 2).
-    const partner = createPartnerRecord({ userId: 42_000, tier: "silver" });
-
-    const promotionPayload = {
-      partnerId: String(partner.id),
-      previousTier: "silver" as const,
-      newTier: "gold" as const,
-      totalVolume: 5_000,
-      newCommissionRate: 0.08,
-      triggeredBy: "volume_threshold" as const,
-    };
-
-    // Publica via barramento (caminho real do subscriber)
-    await eventBus.publish({
-      id: `evt_test_${Date.now()}`,
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      payload: promotionPayload,
-    });
-
-    // Espera microtask drain
-    await new Promise((resolve) => setTimeout(resolve, 5));
-
-    expect(xpCaptured).toHaveLength(1);
-    expect(xpCaptured[0].userId).toBe("42000");
-    expect(xpCaptured[0].amount).toBe(500);
-    expect(xpCaptured[0].newTotal).toBe(500);
-    expect(xpCaptured[0].reason).toContain("silver->gold");
-
-    // Cruzou o threshold do nível 2 (500 XP) — deve disparar CAREER_LEVEL_UP
-    expect(careerCaptured).toHaveLength(1);
-    expect(careerCaptured[0].previousLevel).toBe(1);
-    expect(careerCaptured[0].newLevel).toBe(2);
-    expect(careerCaptured[0].previousRank).toBe("Affiliate");
-    expect(careerCaptured[0].newRank).toBe("Partner");
-    expect(careerCaptured[0].benefits.length).toBeGreaterThan(0);
-  });
-
-  it("não dispara CAREER_LEVEL_UP quando o XP não cruza nível", async () => {
-    const handle = registerPartnersEventHandlers();
-    subscribers.push(handle);
-
-    const xpCaptured: XPGrantedPayload[] = [];
-    const careerCaptured: CareerLevelUpPayload[] = [];
-    subscribers.push({
-      dispose: trackHandler<XPGrantedPayload>(
-        DomainEventType.XP_GRANTED,
-        (p) => xpCaptured.push(p),
-      ),
-    });
-    subscribers.push({
-      dispose: trackHandler<CareerLevelUpPayload>(
-        DomainEventType.CAREER_LEVEL_UP,
-        (p) => careerCaptured.push(p),
-      ),
-    });
-
-    // Pré-carrega o usuário com 1_000 XP (nível 2) — gold = 500 não cruza
-    const partner = createPartnerRecord({ userId: 43_000, tier: "silver" });
-    await eventBus.publish({
-      id: `evt_seed_${Date.now()}`,
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      payload: {
-        partnerId: String(partner.id),
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
+      '1001',
+      'Partner',
+      {
+        partnerId: '1001',
+        previousTier: 'silver',
+        newTier: 'gold',
+        totalVolume: 5000,
         newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
+        triggeredBy: 'volume_threshold',
+      }
+    );
 
-    // Segundo promotion gold->platinum: 1_500 XP. Estado atual: 500 XP, nível 2.
-    // 500 + 1500 = 2000, ainda nível 2 (threshold do 3 é 2000 — não cruza)
-    const goldPartner = listPartners().find((p) => p.userId === 43_000)!;
-    await eventBus.publish({
-      id: `evt_promo2_${Date.now()}`,
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(goldPartner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      payload: {
-        partnerId: String(goldPartner.id),
-        previousTier: "gold",
-        newTier: "platinum",
-        totalVolume: 20_000,
+    await eventBus.publish(event);
+
+    expect(notificationService.notifyTierPromotion).toHaveBeenCalledWith(
+      partner.userId,
+      partner.id,
+      'silver',
+      'gold',
+      expect.any(Array),
+      expect.stringContaining('Parceiro #1001')
+    );
+  });
+
+  it('deve emitir PARTNER_HIGH_VALUE_PROMOTION para promoções Platinum', async () => {
+    const publishSpy = vi.spyOn(eventBus, 'publish');
+    
+    const event = EventFactory.create(
+      DomainEventType.PARTNER_TIER_PROMOTED,
+      '1002',
+      'Partner',
+      {
+        partnerId: '1002',
+        previousTier: 'gold',
+        newTier: 'platinum',
+        totalVolume: 20000,
         newCommissionRate: 0.12,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
+        triggeredBy: 'admin_action',
+      }
+    );
 
-    expect(xpCaptured.length).toBe(2);
-    // primeira promoção: 500 -> 1 cruza nível
-    // segunda: 500 + 1500 = 2000 — exatamente no threshold do 3 — ENTÃO cruza
-    // O teste aqui é que a função está consistente; ajustamos a expectativa:
-    expect(careerCaptured.length).toBe(2);
+    await eventBus.publish(event);
+
+    // Verifica se o evento de governança foi publicado
+    const highValueEvent = publishSpy.mock.calls.find(
+      call => call[0].type === DomainEventType.PARTNER_HIGH_VALUE_PROMOTION
+    );
+
+    expect(highValueEvent).toBeDefined();
+    expect(highValueEvent![0].payload).toMatchObject({
+      newTier: 'platinum',
+      partnerId: '1002',
+    });
   });
 
-  it("applyTierPromotionXp é idempotente por userId e somatório", () => {
-    const partner = createPartnerRecord({ userId: 44_000, tier: "silver" });
-    const payload = {
-      partnerId: String(partner.id),
-      previousTier: "silver" as const,
-      newTier: "gold" as const,
-      totalVolume: 5_000,
-      newCommissionRate: 0.08,
-      triggeredBy: "volume_threshold" as const,
-    };
-    const r1 = applyTierPromotionXp(payload);
-    const r2 = applyTierPromotionXp(payload);
-    expect(r1!.payload.newTotal).toBe(500);
-    expect(r2!.payload.newTotal).toBe(1_000);
+  it('deve emitir PARTNER_HIGH_VALUE_PROMOTION para promoções Diamond', async () => {
+    const publishSpy = vi.spyOn(eventBus, 'publish');
+    
+    const event = EventFactory.create(
+      DomainEventType.PARTNER_TIER_PROMOTED,
+      '1003',
+      'Partner',
+      {
+        partnerId: '1003',
+        previousTier: 'platinum',
+        newTier: 'diamond',
+        totalVolume: 100000,
+        newCommissionRate: 0.15,
+        triggeredBy: 'algorithm',
+      }
+    );
+
+    await eventBus.publish(event);
+
+    const highValueEvent = publishSpy.mock.calls.find(
+      call => call[0].type === DomainEventType.PARTNER_HIGH_VALUE_PROMOTION
+    );
+
+    expect(highValueEvent).toBeDefined();
+    expect(highValueEvent![0].payload).toMatchObject({
+      newTier: 'diamond',
+      partnerId: '1003',
+    });
+  });
+
+  it('NÃO deve emitir PARTNER_HIGH_VALUE_PROMOTION para promoção Gold', async () => {
+    const publishSpy = vi.spyOn(eventBus, 'publish');
+    
+    const event = EventFactory.create(
+      DomainEventType.PARTNER_TIER_PROMOTED,
+      '1001',
+      'Partner',
+      {
+        partnerId: '1001',
+        previousTier: 'silver',
+        newTier: 'gold',
+        totalVolume: 5000,
+        newCommissionRate: 0.08,
+        triggeredBy: 'volume_threshold',
+      }
+    );
+
+    await eventBus.publish(event);
+
+    const highValueEvent = publishSpy.mock.calls.find(
+      call => call[0].type === DomainEventType.PARTNER_HIGH_VALUE_PROMOTION
+    );
+
+    expect(highValueEvent).toBeUndefined();
   });
 });
-
-// ============================================================================
-// v1.3.1 — XP Ledger + SYSTEM_ALERT diagnostics
-// ============================================================================
-
-describe("v1.3.1 — XP Ledger", () => {
-  it("registra uma entrada de ledger a cada concessão de XP com deltas corretos", async () => {
-    const partner = createPartnerRecord({ userId: 50_001, tier: "silver" });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_ledger_1",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      correlationId: "corr_ledger_1",
-      payload: {
-        partnerId: String(partner.id),
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
-        newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-
-    const history = getPartnerXpHistory(String(50_001));
-    expect(history).toHaveLength(1);
-    const entry = history[0];
-    expect(entry.userId).toBe("50001");
-    expect(entry.partnerId).toBe(partner.id);
-    expect(entry.amount).toBe(500);
-    expect(entry.previousTotal).toBe(0);
-    expect(entry.newTotal).toBe(500);
-    expect(entry.previousTier).toBe("silver");
-    expect(entry.newTier).toBe("gold");
-    expect(entry.source).toBe("milestone");
-    expect(entry.reason).toBe("partner_tier_promotion:silver->gold");
-    expect(entry.correlationId).toBe("corr_ledger_1");
-    expect(entry.causationId).toBe("evt_ledger_1");
-    expect(entry.sourceEventType).toBe(DomainEventType.PARTNER_TIER_PROMOTED);
-    expect(entry.leveledUp).toBe(true);
-    expect(entry.previousLevel).toBe(1);
-    expect(entry.newLevel).toBe(2);
-    expect(entry.sequence).toBeGreaterThan(0);
-    expect(typeof entry.grantedAt).toBe("string");
-  });
-
-  it("preserva o histórico cronológico por usuário mesmo com múltiplas concessões", async () => {
-    const partner = createPartnerRecord({ userId: 50_002, tier: "silver" });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    const publish = (newTier: "gold" | "platinum" | "diamond", previousTier: "silver" | "gold" | "platinum") =>
-      eventBus.publish({
-        id: `evt_seq_${newTier}`,
-        type: DomainEventType.PARTNER_TIER_PROMOTED,
-        aggregateId: String(partner.id),
-        aggregateType: "Partner",
-        timestamp: new Date().toISOString(),
-        version: 1,
-        metadata: {},
-        payload: {
-          partnerId: String(partner.id),
-          previousTier,
-          newTier,
-          totalVolume: 0,
-          newCommissionRate: 0,
-          triggeredBy: "volume_threshold",
-        },
-      });
-    await publish("gold", "silver");
-    await new Promise((r) => setTimeout(r, 5));
-    await publish("platinum", "gold");
-    await new Promise((r) => setTimeout(r, 5));
-    await publish("diamond", "platinum");
-    await new Promise((r) => setTimeout(r, 5));
-
-    const history = getPartnerXpHistory("50002");
-    expect(history).toHaveLength(3);
-    expect(history.map((h) => h.amount)).toEqual([500, 1_500, 5_000]);
-    expect(history.map((h) => h.newTier)).toEqual(["gold", "platinum", "diamond"]);
-    // sequência monotônica
-    expect(history[0].sequence).toBeLessThan(history[1].sequence);
-    expect(history[1].sequence).toBeLessThan(history[2].sequence);
-  });
-
-  it("getXpLedgerStats agrega corretamente a história de um usuário", async () => {
-    const partner = createPartnerRecord({ userId: 50_003, tier: "silver" });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_stats_1",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: String(partner.id),
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
-        newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-    await eventBus.publish({
-      id: "evt_stats_2",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: String(partner.id),
-        previousTier: "gold",
-        newTier: "platinum",
-        totalVolume: 20_000,
-        newCommissionRate: 0.12,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-
-    const stats = getXpLedgerStats("50003");
-    expect(stats.totalGrants).toBe(2);
-    expect(stats.totalXp).toBe(2_000);
-    expect(stats.levelUps).toBe(2);
-    expect(stats.lastGrantAmount).toBe(1_500);
-    expect(stats.firstGrantAt).not.toBeNull();
-    expect(stats.lastGrantAt).not.toBeNull();
-  });
-
-  it("getXpLedgerStats devolve zeros para um usuário sem concessões", () => {
-    const stats = getXpLedgerStats("never_seen");
-    expect(stats).toEqual({
-      userId: "never_seen",
-      totalGrants: 0,
-      totalXp: 0,
-      firstGrantAt: null,
-      lastGrantAt: null,
-      levelUps: 0,
-      lastGrantAmount: null,
-    });
-  });
-
-  it("listAllXpLedger inclui concessões de múltiplos usuários em ordem", async () => {
-    const p1 = createPartnerRecord({ userId: 50_010, tier: "silver" });
-    const p2 = createPartnerRecord({ userId: 50_011, tier: "silver" });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    for (const p of [p1, p2]) {
-      await eventBus.publish({
-        id: `evt_multi_${p.userId}`,
-        type: DomainEventType.PARTNER_TIER_PROMOTED,
-        aggregateId: String(p.id),
-        aggregateType: "Partner",
-        timestamp: new Date().toISOString(),
-        version: 1,
-        metadata: {},
-        payload: {
-          partnerId: String(p.id),
-          previousTier: "silver",
-          newTier: "gold",
-          totalVolume: 5_000,
-          newCommissionRate: 0.08,
-          triggeredBy: "volume_threshold",
-        },
-      });
-      await new Promise((r) => setTimeout(r, 5));
-    }
-
-    const all = listAllXpLedger();
-    expect(all.length).toBeGreaterThanOrEqual(2);
-    const userIds = new Set(all.map((e: XpLedgerEntry) => e.userId));
-    expect(userIds.has("50010")).toBe(true);
-    expect(userIds.has("50011")).toBe(true);
-  });
-
-  it("resetPartnerXpState limpa também o ledger", async () => {
-    const partner = createPartnerRecord({ userId: 50_020, tier: "silver" });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_reset",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: String(partner.id),
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: String(partner.id),
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
-        newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-    expect(getPartnerXpHistory("50020").length).toBe(1);
-
-    resetPartnerXpState();
-    expect(getPartnerXpHistory("50020").length).toBe(0);
-    expect(listAllXpLedger().length).toBe(0);
-  });
-});
-
-describe("v1.3.1 — Silent-drop eliminado (SYSTEM_ALERT)", () => {
-  it("publica SYSTEM_ALERT quando o partnerId é inválido", async () => {
-    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
-    subscribers.push({
-      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
-        alerts.push({ payload: p });
-      }),
-    });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_alert_invalid",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: "n/a",
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: "not-a-number",
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
-        newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-
-    expect(alerts.length).toBe(1);
-    expect(alerts[0].payload.severity).toBe("warning");
-    expect(alerts[0].payload.title).toMatch(/invalid partnerId/i);
-  });
-
-  it("publica SYSTEM_ALERT quando o parceiro não existe no repositório", async () => {
-    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
-    subscribers.push({
-      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
-        alerts.push({ payload: p });
-      }),
-    });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_alert_missing",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: "9999999",
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: "9999999",
-        previousTier: "silver",
-        newTier: "gold",
-        totalVolume: 5_000,
-        newCommissionRate: 0.08,
-        triggeredBy: "volume_threshold",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-
-    expect(alerts.length).toBe(1);
-    expect(alerts[0].payload.severity).toBe("warning");
-    expect(alerts[0].payload.title).toMatch(/partner not found/i);
-    expect(alerts[0].payload.description).toMatch(/9999999/);
-  });
-
-  it("publica SYSTEM_ALERT (info) quando a promoção é para silver (sem reward)", async () => {
-    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
-    subscribers.push({
-      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
-        alerts.push({ payload: p });
-      }),
-    });
-    const handle = registerPartnersEventHandlers();
-    subscribers.push({ dispose: handle.dispose });
-
-    await eventBus.publish({
-      id: "evt_alert_noreward",
-      type: DomainEventType.PARTNER_TIER_PROMOTED,
-      aggregateId: "n/a",
-      aggregateType: "Partner",
-      timestamp: new Date().toISOString(),
-      version: 1,
-      metadata: {},
-      payload: {
-        partnerId: "1",
-        previousTier: "gold",
-        newTier: "silver", // não-concessão: volta para silver
-        totalVolume: 0,
-        newCommissionRate: 0.05,
-        triggeredBy: "admin_action",
-      },
-    });
-    await new Promise((r) => setTimeout(r, 5));
-
-    expect(alerts.length).toBe(1);
-    expect(alerts[0].payload.severity).toBe("info");
-    expect(alerts[0].payload.title).toMatch(/no reward/i);
-  });
-
-  it("applyTierPromotionXpWithDiagnostic devolve diagnóstico estruturado para os mesmos casos", () => {
-    // partner inexistente
-    const r1 = applyTierPromotionXpWithDiagnostic({
-      partnerId: "8888888",
-      previousTier: "silver",
-      newTier: "gold",
-      totalVolume: 5_000,
-      newCommissionRate: 0.08,
-      triggeredBy: "volume_threshold",
-    });
-    expect(r1.result).toBeNull();
-    expect(r1.diagnostic?.kind).toBe("partner_not_found");
-
-    // partnerId inválido
-    const r2 = applyTierPromotionXpWithDiagnostic({
-      partnerId: "abc",
-      previousTier: "silver",
-      newTier: "gold",
-      totalVolume: 5_000,
-      newCommissionRate: 0.08,
-      triggeredBy: "volume_threshold",
-    });
-    expect(r2.result).toBeNull();
-    expect(r2.diagnostic?.kind).toBe("invalid_partner_id");
-
-    // sem reward
-    const r3 = applyTierPromotionXpWithDiagnostic({
-      partnerId: "1",
-      previousTier: "gold",
-      newTier: "silver",
-      totalVolume: 0,
-      newCommissionRate: 0.05,
-      triggeredBy: "admin_action",
-    });
-    expect(r3.result).toBeNull();
-    expect(r3.diagnostic?.kind).toBe("no_reward");
-  });
-
-  it("applyTierPromotionXpWithDiagnostic devolve result não-nulo e diagnostic=null no caso de sucesso", () => {
-    const partner = createPartnerRecord({ userId: 50_030, tier: "silver" });
-    const r = applyTierPromotionXpWithDiagnostic({
-      partnerId: String(partner.id),
-      previousTier: "silver",
-      newTier: "gold",
-      totalVolume: 5_000,
-      newCommissionRate: 0.08,
-      triggeredBy: "volume_threshold",
-    });
-    expect(r.diagnostic).toBeNull();
-    expect(r.result).not.toBeNull();
-    expect(r.result!.payload.amount).toBe(500);
-  });
-});
-

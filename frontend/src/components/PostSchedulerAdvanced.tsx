@@ -1,7 +1,7 @@
 /**
  * PostSchedulerAdvanced - Agendador avançado de posts
  * Sprint 4: IA Content Hub Avançado
- * 
+ *
  * Features:
  * - Agendamento de posts para múltiplas plataformas
  * - Integração com sistema de filas BullMQ
@@ -10,7 +10,8 @@
  * - Análise de melhor horário para publicação
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +61,14 @@ interface FormData {
   time: string;
 }
 
-const PLATFORMS = ["Instagram", "TikTok", "Twitter", "LinkedIn", "Facebook", "WhatsApp"];
+const PLATFORMS = [
+  { label: "Instagram", value: "instagram" },
+  { label: "TikTok", value: "tiktok" },
+  { label: "Twitter/X", value: "twitter" },
+  { label: "LinkedIn", value: "linkedin" },
+  { label: "Blog", value: "blog" },
+  { label: "WhatsApp", value: "whatsapp" },
+] as const;
 
 const BEST_TIMES = [
   { time: "10:00", label: "10:00 AM - Manhã" },
@@ -69,10 +77,44 @@ const BEST_TIMES = [
   { time: "20:00", label: "20:00 (8:00 PM) - Noite Tardia" },
 ];
 
+type ApiPlatform = (typeof PLATFORMS)[number]["value"];
+
+const PLATFORM_LABELS: Record<ApiPlatform, string> = {
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  twitter: "Twitter/X",
+  linkedin: "LinkedIn",
+  blog: "Blog",
+  whatsapp: "WhatsApp",
+};
+
+function formatScheduledFor(value: string | Date) {
+  const parsed = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(parsed.getTime())) return String(value);
+  return parsed.toLocaleString("pt-BR");
+}
+
+function normalizeScheduledPost(post: any): ScheduledPost {
+  return {
+    id: String(post.id),
+    title: post.title?.trim() || "Post sem título",
+    content: String(post.content ?? ""),
+    platforms: Array.isArray(post.platforms)
+      ? post.platforms.map((platform: string) => PLATFORM_LABELS[platform as ApiPlatform] ?? platform)
+      : [],
+    scheduledFor: formatScheduledFor(post.scheduledFor),
+    status: post.status ?? "scheduled",
+    createdAt: post.createdAt ? new Date(post.createdAt) : new Date(),
+    mediaUrls: Array.isArray(post.mediaUrls) ? post.mediaUrls : [],
+    engagement: typeof post.engagement === "number" ? post.engagement : undefined,
+    views: typeof post.views === "number" ? post.views : undefined,
+  };
+}
+
 export default function PostSchedulerAdvanced() {
-  const [posts, setPosts] = useState<ScheduledPost[]>([]);
+  const [sessionPosts, setSessionPosts] = useState<ScheduledPost[]>([]);
+  const [dismissedPostIds, setDismissedPostIds] = useState<string[]>([]);
   const [showNewPost, setShowNewPost] = useState(false);
-  const [isScheduling, setIsScheduling] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     title: "",
@@ -82,7 +124,32 @@ export default function PostSchedulerAdvanced() {
     time: "14:00",
   });
 
-  const togglePlatform = (platform: string) => {
+  const scheduledPostsQuery = trpc.aiContentHub.listScheduledPosts.useQuery({
+    limit: 50,
+    offset: 0,
+  });
+
+  const schedulePostMutation = trpc.aiContentHub.schedulePost.useMutation();
+
+  const posts = useMemo(() => {
+    const remotePosts = Array.isArray(scheduledPostsQuery.data?.posts)
+      ? scheduledPostsQuery.data.posts.map(normalizeScheduledPost)
+      : [];
+
+    const deduped = new Map<string, ScheduledPost>();
+
+    for (const post of [...sessionPosts, ...remotePosts]) {
+      if (!dismissedPostIds.includes(post.id)) {
+        deduped.set(post.id, post);
+      }
+    }
+
+    return Array.from(deduped.values()).sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    );
+  }, [dismissedPostIds, scheduledPostsQuery.data?.posts, sessionPosts]);
+
+  const togglePlatform = (platform: ApiPlatform) => {
     setFormData((prev) => ({
       ...prev,
       platforms: prev.platforms.includes(platform)
@@ -97,23 +164,37 @@ export default function PostSchedulerAdvanced() {
       return;
     }
 
-    setIsScheduling(true);
+    const scheduledFor = new Date(`${formData.date}T${formData.time}:00`);
+
+    if (Number.isNaN(scheduledFor.getTime())) {
+      toast.error("Data ou hora inválida para agendamento");
+      return;
+    }
+
     try {
-      // Simular chamada ao backend
-      // TODO: Substituir por chamada real ao backend
-      // const response = await trpc.aiContentHub.schedulePost.mutate({...});
+      const response = await schedulePostMutation.mutateAsync({
+        title: formData.title.trim(),
+        content: formData.content.trim(),
+        platforms: formData.platforms as ApiPlatform[],
+        scheduledFor,
+      });
 
-      const newPost: ScheduledPost = {
-        id: `post_${Date.now()}`,
-        title: formData.title,
-        content: formData.content,
-        platforms: formData.platforms,
-        scheduledFor: `${formData.date} ${formData.time}`,
-        status: "scheduled",
-        createdAt: new Date(),
-      };
+      const newPost = normalizeScheduledPost(
+        response?.post ?? {
+          id: `post_${Date.now()}`,
+          title: formData.title,
+          content: formData.content,
+          platforms: formData.platforms,
+          scheduledFor,
+          status: "scheduled",
+          createdAt: new Date(),
+        },
+      );
 
-      setPosts([newPost, ...posts]);
+      setSessionPosts((current) => [newPost, ...current.filter((post) => post.id !== newPost.id)]);
+      setDismissedPostIds((current) => current.filter((id) => id !== newPost.id));
+      await scheduledPostsQuery.refetch();
+
       setFormData({
         title: "",
         content: "",
@@ -126,14 +207,12 @@ export default function PostSchedulerAdvanced() {
     } catch (error) {
       console.error("Erro ao agendar post:", error);
       toast.error("Erro ao agendar post");
-    } finally {
-      setIsScheduling(false);
     }
   };
 
   const deletePost = (id: string) => {
-    setPosts(posts.filter((p) => p.id !== id));
-    toast.success("Post removido");
+    setDismissedPostIds((current) => [...current, id]);
+    toast.success("Post removido da visualização");
   };
 
   const getStatusColor = (status: string) => {
@@ -270,15 +349,16 @@ export default function PostSchedulerAdvanced() {
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((platform) => (
                   <button
-                    key={platform}
-                    onClick={() => togglePlatform(platform)}
+                    key={platform.value}
+                    type="button"
+                    onClick={() => togglePlatform(platform.value)}
                     className={`px-3 py-2 rounded text-sm transition-colors ${
-                      formData.platforms.includes(platform)
+                      formData.platforms.includes(platform.value)
                         ? "bg-cyan-600 text-white"
                         : "bg-slate-700 text-gray-300 hover:bg-slate-600"
                     }`}
                   >
-                    {platform}
+                    {platform.label}
                   </button>
                 ))}
               </div>
@@ -314,10 +394,10 @@ export default function PostSchedulerAdvanced() {
             <div className="flex gap-2">
               <Button
                 onClick={handleAddPost}
-                disabled={isScheduling}
+                disabled={schedulePostMutation.isPending}
                 className="flex-1 flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 rounded-lg transition-colors"
               >
-                {isScheduling ? (
+                {schedulePostMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Agendando...
@@ -349,7 +429,12 @@ export default function PostSchedulerAdvanced() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {posts.length === 0 ? (
+          {scheduledPostsQuery.isLoading && posts.length === 0 ? (
+            <div className="text-center py-8">
+              <Loader2 className="w-12 h-12 text-slate-600 mx-auto mb-3 animate-spin" />
+              <p className="text-slate-400">Carregando posts agendados...</p>
+            </div>
+          ) : posts.length === 0 ? (
             <div className="text-center py-8">
               <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-3" />
               <p className="text-slate-400">Nenhum post agendado</p>
@@ -367,10 +452,15 @@ export default function PostSchedulerAdvanced() {
                       <p className="text-xs text-gray-400 mt-1 line-clamp-2">{post.content}</p>
                     </div>
                     <div className="flex gap-1 ml-2">
-                      <button className="p-1 hover:bg-slate-600 rounded transition-colors">
+                      <button
+                        type="button"
+                        onClick={() => setEditingId(post.id)}
+                        className="p-1 hover:bg-slate-600 rounded transition-colors"
+                      >
                         <Edit2 className="w-4 h-4 text-blue-400" />
                       </button>
                       <button
+                        type="button"
                         onClick={() => deletePost(post.id)}
                         className="p-1 hover:bg-slate-600 rounded transition-colors"
                       >
@@ -390,6 +480,11 @@ export default function PostSchedulerAdvanced() {
                         {post.scheduledFor}
                       </span>
                     </div>
+                    {editingId === post.id && (
+                      <span className="text-cyan-300 text-[11px]">
+                        Edição será conectada na próxima etapa
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-3">

@@ -31,6 +31,19 @@ import sentimentService from "../services/sentiment-analysis-service";
  */
 
 type ScheduledPostStatus = "scheduled" | "published" | "failed" | "cancelled";
+type TemplatePlatform = "instagram" | "tiktok" | "twitter" | "linkedin" | "blog" | "whatsapp";
+
+interface ContentTemplateRecord {
+  id: string;
+  userId: number;
+  name: string;
+  description: string;
+  category: string;
+  content: string;
+  variables?: string[];
+  platform?: TemplatePlatform;
+  createdAt: Date;
+}
 
 interface ScheduledPostRecord {
   id: string;
@@ -45,6 +58,7 @@ interface ScheduledPostRecord {
   publishedAt?: Date | null;
 }
 
+const inMemoryTemplates = new Map<number, ContentTemplateRecord[]>();
 const inMemoryScheduledPosts = new Map<number, ScheduledPostRecord[]>();
 
 async function resolveDb() {
@@ -54,6 +68,15 @@ async function resolveDb() {
   } catch {
     return null;
   }
+}
+
+function getFallbackTemplates(userId: number): ContentTemplateRecord[] {
+  return inMemoryTemplates.get(userId) ?? [];
+}
+
+function saveFallbackTemplate(template: ContentTemplateRecord) {
+  const current = getFallbackTemplates(template.userId);
+  inMemoryTemplates.set(template.userId, [template, ...current]);
 }
 
 function getFallbackScheduledPosts(userId: number): ScheduledPostRecord[] {
@@ -331,16 +354,22 @@ export const aiContentHubRouter = router({
           .optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
-        // TODO: Salvar template no banco de dados
+        const userId = ctx.user?.id || 0;
+        const template: ContentTemplateRecord = {
+          id: `tpl_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          userId,
+          ...input,
+          createdAt: new Date(),
+        };
+
+        saveFallbackTemplate(template);
+        await invalidateCachePattern(CACHE_KEYS.TEMPLATES_PATTERN(userId));
+
         return {
           success: true,
-          template: {
-            id: `tpl_${Date.now()}`,
-            ...input,
-            createdAt: new Date(),
-          },
+          template,
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
@@ -360,28 +389,37 @@ export const aiContentHubRouter = router({
         limit: z.number().min(1).max(100).default(10),
         offset: z.number().min(0).default(0),
         category: z.string().optional(),
-      })
+      }).optional()
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        // TODO: Buscar templates do banco de dados com paginação
+        const resolvedInput = {
+          limit: input?.limit ?? 10,
+          offset: input?.offset ?? 0,
+          category: input?.category,
+        };
+        const userId = ctx.user?.id || 0;
+        const templates = getFallbackTemplates(userId)
+          .filter((template) => !resolvedInput.category || template.category === resolvedInput.category)
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
         return {
           success: true,
-          templates: [],
+          templates: templates.slice(resolvedInput.offset, resolvedInput.offset + resolvedInput.limit),
           pagination: {
-            limit: input.limit,
-            offset: input.offset,
-            total: 0,
+            limit: resolvedInput.limit,
+            offset: resolvedInput.offset,
+            total: templates.length,
           },
         };
       } catch (error) {
-      if (error instanceof TRPCError) throw error;
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Erro ao listar templates",
-      });
-    }
-  }),
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao listar templates",
+        });
+      }
+    }),
 
   /**
    * Agendar post para publicação
@@ -478,17 +516,22 @@ export const aiContentHubRouter = router({
         status: z
           .enum(["scheduled", "published", "failed", "cancelled"])
           .optional(),
-      })
+      }).optional()
     )
     .query(async ({ input, ctx }) => {
       try {
+        const resolvedInput = {
+          limit: input?.limit ?? 10,
+          offset: input?.offset ?? 0,
+          status: input?.status,
+        };
         const userId = ctx.user?.id || 0;
         const db = await resolveDb();
 
         if (db) {
           const conditions = [eq(scheduledPosts.userId, userId)];
-          if (input.status) {
-            conditions.push(eq(scheduledPosts.status, input.status));
+          if (resolvedInput.status) {
+            conditions.push(eq(scheduledPosts.status, resolvedInput.status));
           }
 
           const allPosts = await db
@@ -497,7 +540,7 @@ export const aiContentHubRouter = router({
             .where(and(...conditions))
             .orderBy(desc(scheduledPosts.scheduledFor));
 
-          const paginatedPosts = allPosts.slice(input.offset, input.offset + input.limit).map((post) => ({
+          const paginatedPosts = allPosts.slice(resolvedInput.offset, resolvedInput.offset + resolvedInput.limit).map((post) => ({
             ...post,
             platforms: Array.isArray(post.platforms) ? post.platforms : [],
             mediaUrls: Array.isArray(post.mediaUrls) ? post.mediaUrls : undefined,
@@ -507,23 +550,23 @@ export const aiContentHubRouter = router({
             success: true,
             posts: paginatedPosts,
             pagination: {
-              limit: input.limit,
-              offset: input.offset,
+              limit: resolvedInput.limit,
+              offset: resolvedInput.offset,
               total: allPosts.length,
             },
           };
         }
 
         const posts = getFallbackScheduledPosts(userId)
-          .filter((post) => !input.status || post.status === input.status)
+          .filter((post) => !resolvedInput.status || post.status === resolvedInput.status)
           .sort((a, b) => b.scheduledFor.getTime() - a.scheduledFor.getTime());
 
         return {
           success: true,
-          posts: posts.slice(input.offset, input.offset + input.limit),
+          posts: posts.slice(resolvedInput.offset, resolvedInput.offset + resolvedInput.limit),
           pagination: {
-            limit: input.limit,
-            offset: input.offset,
+            limit: resolvedInput.limit,
+            offset: resolvedInput.offset,
             total: posts.length,
           },
         };

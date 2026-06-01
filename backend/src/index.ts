@@ -11,6 +11,7 @@ import {
   getSchedulerStatus,
 } from "./services/cronScheduler";
 import { registerAuditSubscribers } from "./_core/events/auditSubscribers";
+import { registerPartnersEventHandlers } from "./domains/partners/subscribers";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
 
@@ -164,6 +165,7 @@ async function initializeCron() {
 }
 
 registerAuditSubscribers();
+registerPartnersEventHandlers();
 initializeCron();
 
 app.listen(PORT, () => {

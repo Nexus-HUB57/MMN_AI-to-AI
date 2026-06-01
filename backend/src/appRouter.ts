@@ -35,6 +35,7 @@ import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
+import { subscriptionsRouter } from "./domains/subscriptions/router";
 import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
@@ -148,6 +149,7 @@ export const appRouter = router({
         agentSkillsRuntime: true,
         pix: true,
         nexus: true,
+        subscriptions: true,
       },
     })),
   }),
@@ -174,6 +176,7 @@ export const appRouter = router({
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
+  subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,
   billing: billingRouter,

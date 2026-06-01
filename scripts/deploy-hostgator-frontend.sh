@@ -99,6 +99,7 @@ log_info "Sincronizando $DIST_DIR/  →  $HOSTGATOR_HOST:$HOSTGATOR_REMOTE_PATH"
 
 LFTP_CMDS="
 set ssl:verify-certificate yes
+set ssl:check-hostname no
 set ftp:ssl-allow yes
 set ftp:ssl-protect-data yes
 open -u $HOSTGATOR_USER,$HOSTGATOR_PASS $HOSTGATOR_HOST

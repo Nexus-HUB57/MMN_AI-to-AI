@@ -14,6 +14,10 @@
 #   ./scripts/deploy-hostgator-frontend.sh            # apenas sync (assume dist/ pronto)
 #   ./scripts/deploy-hostgator-frontend.sh --build    # roda npm run build:frontend antes
 #   ./scripts/deploy-hostgator-frontend.sh --dry-run  # apenas mostra o que seria enviado
+#
+# Observação:
+#   - O arquivo frontend/public/.htaccess é versionado e será copiado para
+#     frontend/dist/.htaccess durante o build do Vite.
 # =============================================================================
 
 set -euo pipefail
@@ -79,6 +83,11 @@ if [[ ! -f "$DIST_DIR/index.html" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$DIST_DIR/.htaccess" ]]; then
+  log_warn "$DIST_DIR/.htaccess ausente. O portal ainda pode funcionar, mas rotas SPA em Apache podem quebrar."
+  log_warn "Garanta que frontend/public/.htaccess exista antes do build."
+fi
+
 DIST_SIZE=$(du -sh "$DIST_DIR" | awk '{print $1}')
 FILE_COUNT=$(find "$DIST_DIR" -type f | wc -l | tr -d ' ')
 log_ok "Build pronto: $FILE_COUNT arquivos, $DIST_SIZE."
@@ -97,12 +106,12 @@ cd $HOSTGATOR_REMOTE_PATH
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   LFTP_CMDS+="
-mirror --reverse --delete --verbose --dry-run --exclude-glob .htaccess
+mirror --reverse --delete --verbose --dry-run
 "
   log_warn "Executando em modo DRY-RUN (nenhuma alteração será aplicada)."
 else
   LFTP_CMDS+="
-mirror --reverse --delete --parallel=4 --verbose --exclude-glob .htaccess
+mirror --reverse --delete --parallel=4 --verbose
 "
 fi
 

@@ -1,0 +1,63 @@
+name: Production Smoke Tests
+
+on:
+  workflow_run:
+    workflows: [Deploy Frontend to HostGator]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: smoke-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Validar portal e API em produção
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+
+    steps:
+      - name: Verificar portal raiz
+        run: |
+          code=$(curl -s -o /tmp/root.html -w "%{http_code}" https://oneverso.com.br)
+          echo "HTTP root: $code"
+          test "$code" = "200"
+          grep -qi '<html' /tmp/root.html
+
+      - name: Verificar SPA fallback /login
+        run: |
+          code=$(curl -s -o /tmp/login.html -w "%{http_code}" https://oneverso.com.br/login)
+          echo "HTTP /login: $code"
+          test "$code" = "200"
+          grep -qi '<html' /tmp/login.html
+
+      - name: Verificar asset principal carregado no HTML
+        run: |
+          asset=$(grep -oE 'src="/assets/index-[A-Za-z0-9_-]+\.js"' /tmp/root.html | head -1 | sed 's/src="//' | sed 's/"//')
+          echo "Asset detectado: $asset"
+          test -n "$asset"
+          curl -fsSI "https://oneverso.com.br$asset" >/dev/null
+
+      - name: Verificar health da API
+        run: |
+          code=$(curl -s -o /tmp/api-health.json -w "%{http_code}" https://api.oneverso.com.br/health)
+          echo "HTTP api /health: $code"
+          test "$code" = "200"
+          grep -Eqi 'ok|healthy|status' /tmp/api-health.json
+
+      - name: Resumo dos smoke tests
+        if: always()
+        run: |
+          {
+            echo "## 🧪 Production Smoke Tests"
+            echo
+            echo "- Portal raiz: https://oneverso.com.br"
+            echo "- SPA fallback: https://oneverso.com.br/login"
+            echo "- API health: https://api.oneverso.com.br/health"
+            echo
+            echo "Status final: ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"

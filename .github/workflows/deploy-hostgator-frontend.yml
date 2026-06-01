@@ -1,0 +1,87 @@
+name: Deploy Frontend to HostGator
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-hostgator-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  FORCE_COLOR: "1"
+  NODE_OPTIONS: --max-old-space-size=4096
+
+jobs:
+  deploy-frontend:
+    name: Build e publicar frontend em oneverso.com.br
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Validar secrets obrigatórios
+        run: |
+          missing=0
+          for secret_name in HOSTGATOR_USER HOSTGATOR_PASS; do
+            if [ -z "${!secret_name}" ]; then
+              echo "Secret ausente: $secret_name"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Configure HOSTGATOR_USER e HOSTGATOR_PASS no repositório antes do deploy."
+            exit 1
+          fi
+        env:
+          HOSTGATOR_USER: ${{ secrets.HOSTGATOR_USER }}
+          HOSTGATOR_PASS: ${{ secrets.HOSTGATOR_PASS }}
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+
+      - name: Instalar lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Build do frontend
+        run: npm run build:frontend
+
+      - name: Publicar via FTPS na HostGator
+        run: ./scripts/deploy-hostgator-frontend.sh
+        env:
+          HOSTGATOR_HOST: ${{ secrets.HOSTGATOR_HOST }}
+          HOSTGATOR_USER: ${{ secrets.HOSTGATOR_USER }}
+          HOSTGATOR_PASS: ${{ secrets.HOSTGATOR_PASS }}
+          HOSTGATOR_REMOTE_PATH: ${{ secrets.HOSTGATOR_REMOTE_PATH }}
+
+      - name: Resumo do deploy
+        if: always()
+        run: |
+          {
+            echo "## 🌐 Deploy Frontend HostGator"
+            echo
+            if [ "${{ job.status }}" = "success" ]; then
+              echo "### ✅ Publicação concluída"
+              echo "- Portal: https://oneverso.com.br"
+              echo "- API: https://api.oneverso.com.br"
+            else
+              echo "### ❌ Falha na publicação"
+              echo "Verifique os secrets HOSTGATOR_* e os logs do job."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

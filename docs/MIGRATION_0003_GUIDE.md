@@ -17,8 +17,8 @@ Cria as quatro tabelas necessárias para suportar os endpoints novos do `agentsR
 | `agent_evolution_history` | Trilha de auditoria das mudanças de skill | `agents.getEvolutionHistory` |
 
 > Compatível com Postgres (que é o SGBD declarado em `.env.example`).
-> ⚠️ O arquivo `infra/drizzle.config.ts` ainda declara `dialect: "mysql"` — discrepância
-> com o restante do projeto. Recomendado abrir issue dedicada para conciliar.
+> ✅ O `infra/drizzle.config.ts` foi alinhado para reutilizar o `drizzle.config.ts` raiz,
+> eliminando a discrepância anterior de dialect.
 
 ---
 

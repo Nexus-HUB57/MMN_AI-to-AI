@@ -76,8 +76,19 @@ export HOSTGATOR_REMOTE_PATH="/public_html"
 O script:
 1. Roda `npm run build:frontend` se a flag `--build` for usada.
 2. Sincroniza `frontend/dist/` ↔ `public_html` via `lftp mirror`.
-3. Faz dry-run primeiro e pede confirmação.
-4. Mantém `.htaccess` legado quando existir.
+3. Pode ser executado primeiro com `--dry-run`.
+4. Publica o `.htaccess` versionado em `frontend/public/.htaccess` para garantir SPA fallback.
+
+### 3.2.1 Deploy automatizado via GitHub Actions
+
+Crie os seguintes secrets no repositório:
+
+- `HOSTGATOR_USER`
+- `HOSTGATOR_PASS`
+- `HOSTGATOR_HOST` (opcional, default `ftp.oneverso.com.br`)
+- `HOSTGATOR_REMOTE_PATH` (opcional, default `/public_html`)
+
+Depois disso, o workflow **Deploy Frontend to HostGator** poderá publicar automaticamente o frontend após o CI passar em `main`.
 
 #### Opção B — cPanel File Manager (manual)
 
@@ -142,8 +153,9 @@ Embora o backend não esteja na HostGator, é parte do mesmo deploy:
 - [ ] Migration `0003_agent_extras.sql` aplicada (ver `docs/MIGRATION_0003_GUIDE.md`).
 - [ ] Variáveis de ambiente revisadas:
   - `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `ALLOWED_ORIGIN=https://oneverso.com.br`
-- [ ] Deploy automático: o workflow `.github/workflows/deploy.yml` aciona o Replit Hook após o CI passar.
-- [ ] Testes pós-deploy: `tests/unit/agents.persistence.test.ts` validam o contrato; smoke test via curl confirma o runtime.
+- [ ] Deploy automático do frontend: configurar os secrets `HOSTGATOR_*` para habilitar o workflow `.github/workflows/deploy-hostgator-frontend.yml`.
+- [ ] Smoke tests pós-deploy: o workflow `.github/workflows/smoke-tests.yml` valida portal, SPA fallback e `/health` da API.
+- [ ] Testes de contrato/persistência: `tests/unit/agents.persistence.test.ts` validam o domínio de agentes antes da publicação.
 
 ---
 

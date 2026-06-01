@@ -10,3 +10,4 @@ export * from "./agentic";
 export * from "./agentTelemetry";
 export * from "./schema-cron";
 export * from "./schema-agent-extras";
+export * from "./schema-partners";

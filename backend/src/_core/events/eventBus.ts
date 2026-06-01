@@ -54,6 +54,15 @@ export enum DomainEventType {
   RANK_ACHIEVED = 'RankAchieved',
   BONUS_UNLOCKED = 'BonusUnlocked',
 
+  // Partner Events (Nexus Partners Pack)
+  PARTNER_REGISTERED = 'PartnerRegistered',
+  PARTNER_TIER_PROMOTED = 'PartnerTierPromoted',
+  PARTNER_VOLUME_REGISTERED = 'PartnerVolumeRegistered',
+  PARTNERSHIP_CREATED = 'PartnershipCreated',
+  PARTNERSHIP_APPROVED = 'PartnershipApproved',
+  PARTNERSHIP_REJECTED = 'PartnershipRejected',
+  PARTNERSHIP_TERMINATED = 'PartnershipTerminated',
+
   // System Events
   SYSTEM_ALERT = 'SystemAlert',
   SLA_BREACH = 'SLABreach',
@@ -134,6 +143,41 @@ export interface CareerLevelUpPayload {
   previousRank: string;
   newRank: string;
   benefits: string[];
+}
+
+export interface PartnerRegisteredPayload {
+  partnerId: string;
+  userId: number;
+  tier: 'silver' | 'gold' | 'platinum' | 'diamond';
+  referralCode: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface PartnerTierPromotedPayload {
+  partnerId: string;
+  previousTier: 'silver' | 'gold' | 'platinum' | 'diamond';
+  newTier: 'silver' | 'gold' | 'platinum' | 'diamond';
+  totalVolume: number;
+  newCommissionRate: number;
+  triggeredBy: 'volume_threshold' | 'admin_action' | 'algorithm';
+}
+
+export interface PartnerVolumeRegisteredPayload {
+  partnerId: string;
+  volume: number;
+  volumeType: 'sale' | 'commission' | 'referral' | 'bonus';
+  totalVolumeAfter: number;
+  source?: string;
+  triggeredPromotion?: boolean;
+}
+
+export interface PartnershipLifecyclePayload {
+  partnershipId: string;
+  partnerId: string;
+  partnerName: string;
+  status: 'pending' | 'active' | 'suspended' | 'terminated' | 'rejected';
+  reason?: string;
+  approvedBy?: number;
 }
 
 // ============================================================================

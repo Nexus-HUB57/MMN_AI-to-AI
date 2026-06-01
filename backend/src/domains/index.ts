@@ -13,4 +13,5 @@ export * as billing from "./billing";
 export * as cron from "./cron";
 export * as xp from "./xp";
 export * as auth from "./auth";
+export * as partners from "./partners";
 export * as shared from "./shared";

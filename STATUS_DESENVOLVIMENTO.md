@@ -1,7 +1,7 @@
 # Nexus Partners Pack - Status Consolidado de Desenvolvimento
 
 **Data:** 2026-06-01
-**Versão Atual:** v1.3.0
+**Versão Atual:** v1.3.0 (Partners Pack: v1.2.0)
 **Branch:** main
 
 ---
@@ -41,7 +41,7 @@ O backend implementa uma **arquitetura modular orientada a domínio** com 50+ ar
 | `commissions` | Cálculo e gestão de comissões | ✅ Implementado | events, index, repository, router, service, types |
 | `cron` | Agendamento de tarefas | ✅ Implementado | events, index, repository, router, service, types |
 | `marketplace` | Marketplace de produtos | ✅ Implementado | events, index, repository, router, service |
-| `partners` | Programa de parceiros | ✅ Implementado | Rotas e serviços |
+| `partners` | Programa de parceiros (DCI) | ✅ **Migrado v1.2.0** | events, index, repository, router, service, types |
 | `shared` | Componentes compartilhados | ✅ Implementado | Utilitários |
 | `webhooks` | Sistema de webhooks | 🆕 **Implementado** | webhookService.ts |
 | `whitelabel` | Multi-inquilino white-label | ✅ Implementado | Configuração de tenants |
@@ -318,6 +318,40 @@ ANALYTICS_CRON_HOURS=6
 ---
 
 ## 12. Atualizações Recentes (2026-06-01)
+
+### ✅ Commit 4: Nexus Partners Pack v1.2.0 — Migração DCI + Event-Driven
+
+**Arquivos criados:**
+- `backend/src/domains/partners/events.ts` (publishers)
+- `backend/src/domains/partners/repository.ts` (facade in-memory + seed)
+- `backend/src/domains/partners/service.ts` (lógica + `GrowthAlgorithmEngine`)
+- `backend/src/domains/partners/router.ts` (anti-corruption layer)
+- `backend/src/domains/partners/index.ts` (barrel)
+- `database/migrations/0004_partners_pack.sql` (8 tabelas + 2 seeds)
+- `NEXUS_PARTNERS_PACK_v1.2.0.md` (release notes)
+
+**Arquivos modificados:**
+- `backend/src/_core/events/eventBus.ts` (+7 `DomainEventType`,
+  +4 payloads tipados para Partner/Partnership)
+- `backend/src/domains/index.ts` (exporta `partners`)
+- `database/schemas/index.ts` (exporta `schema-partners`)
+
+**Funcionalidades:**
+- Domínio Partners alinhado com a arquitetura DCI dos demais
+  domínios (commissions, billing, marketplace, …).
+- `GrowthAlgorithmEngine` extraído como funções puras testáveis
+  (volume multiplier, network bonus, retention, growth potential,
+  tiered referral).
+- 7 eventos de domínio novos no `EventBus`:
+  `PARTNER_REGISTERED`, `PARTNER_TIER_PROMOTED`,
+  `PARTNER_VOLUME_REGISTERED`, `PARTNERSHIP_CREATED`,
+  `PARTNERSHIP_APPROVED`, `PARTNERSHIP_REJECTED`,
+  `PARTNERSHIP_TERMINATED`.
+- Migration Postgres cria 8 tabelas + seeds de tiers e algoritmos
+  de crescimento.
+- Repository in-memory com seed determinístico (4 parceiros, 4
+  parcerias, 5 entradas de volume) para jobs, webhooks e modo
+  degradado.
 
 ### ✅ Commit 1: Sistema de Webhooks Enterprise (6f4a206)
 

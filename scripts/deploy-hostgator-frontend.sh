@@ -34,6 +34,8 @@ log_error()   { echo -e "${RED}[ERROR]${NC}   $*"; }
 HOSTGATOR_HOST="${HOSTGATOR_HOST:-ftp.oneverso.com.br}"
 HOSTGATOR_REMOTE_PATH="${HOSTGATOR_REMOTE_PATH:-/public_html}"
 DIST_DIR="frontend/dist"
+BROWSER_UA="${BROWSER_UA:-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36}"
+HTML_ACCEPT="${HTML_ACCEPT:-text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8}"
 
 BUILD=0
 DRY_RUN=0
@@ -134,10 +136,16 @@ log_ok "Sync concluído."
 # ---- Smoke test ----
 if [[ "$DRY_RUN" -eq 0 ]]; then
   log_info "Validando deploy via HTTPS..."
-  if curl -fsSI "https://oneverso.com.br" >/dev/null 2>&1; then
-    log_ok "https://oneverso.com.br respondendo 2xx."
+  if curl -fsSIL -A "$BROWSER_UA" -H "Accept: $HTML_ACCEPT" "https://oneverso.com.br" >/dev/null 2>&1; then
+    log_ok "https://oneverso.com.br respondendo 2xx com cabeçalhos de navegador."
   else
-    log_warn "Não foi possível validar https://oneverso.com.br via curl. Verifique manualmente."
+    log_warn "Não foi possível validar https://oneverso.com.br com user-agent de navegador. Verifique ModSecurity/allowlist manualmente."
+  fi
+
+  if curl -fsSIL -A "$BROWSER_UA" -H "Accept: $HTML_ACCEPT" "https://oneverso.com.br/login" >/dev/null 2>&1; then
+    log_ok "SPA fallback /login respondendo 2xx."
+  else
+    log_warn "Não foi possível validar o fallback SPA em /login."
   fi
 fi
 

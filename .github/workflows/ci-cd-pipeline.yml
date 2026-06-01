@@ -19,6 +19,8 @@ env:
   CI: "true"
   FORCE_COLOR: "1"
   NODE_OPTIONS: --max-old-space-size=4096
+  BROWSER_UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36
+  HTML_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 
 jobs:
   lint:
@@ -240,17 +242,32 @@ jobs:
     steps:
       - name: Verificar portal raiz
         run: |
-          code=$(curl -s -o /tmp/root.html -w "%{http_code}" https://oneverso.com.br)
+          code=$(curl -sL -A "$BROWSER_UA" -H "Accept: $HTML_ACCEPT" -o /tmp/root.html -w "%{http_code}" https://oneverso.com.br)
           echo "HTTP root: $code"
           test "$code" = "200"
           grep -qi '<html' /tmp/root.html
+          if grep -qi 'Not Acceptable' /tmp/root.html; then
+            echo "ModSecurity bloqueou a resposta HTML do portal." >&2
+            exit 1
+          fi
 
       - name: Verificar SPA fallback /login
         run: |
-          code=$(curl -s -o /tmp/login.html -w "%{http_code}" https://oneverso.com.br/login)
+          code=$(curl -sL -A "$BROWSER_UA" -H "Accept: $HTML_ACCEPT" -o /tmp/login.html -w "%{http_code}" https://oneverso.com.br/login)
           echo "HTTP /login: $code"
           test "$code" = "200"
           grep -qi '<html' /tmp/login.html
+          if grep -qi 'Not Acceptable' /tmp/login.html; then
+            echo "ModSecurity bloqueou o fallback SPA em /login." >&2
+            exit 1
+          fi
+
+      - name: Verificar asset principal do portal
+        run: |
+          asset=$(grep -oE 'src="/assets/index-[A-Za-z0-9_-]+\.js"' /tmp/root.html | head -1 | sed 's/src="//' | sed 's/"//')
+          echo "Asset detectado: $asset"
+          test -n "$asset"
+          curl -fsSIL -A "$BROWSER_UA" -H 'Accept: */*' "https://oneverso.com.br$asset" >/dev/null
 
       - name: Verificar health da API
         run: |

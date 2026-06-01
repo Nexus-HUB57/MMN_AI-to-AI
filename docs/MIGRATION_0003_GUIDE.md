@@ -39,20 +39,34 @@ Saída esperada: as 4 tabelas listadas com seus respectivos owners.
 
 ---
 
-## 3. Aplicar via Drizzle (push)
+## 3. Aplicar via script operacional (recomendado)
 
-Atualmente bloqueado porque o `drizzle.config.ts` aponta para dialect MySQL.
-Antes de usar `npm run db:push`, ajustar o dialect para `postgresql`.
+O repositório já contém um script dedicado para execução segura desta migration em produção:
 
 ```bash
-# Após corrigir o dialect no infra/drizzle.config.ts
 export DATABASE_URL="postgres://..."
-npm run db:push --workspace . --silent
+./scripts/apply-production-migration-0003.sh
+```
+
+O script:
+- valida a presença de `DATABASE_URL`;
+- aplica `database/migrations/0003_agent_extras.sql` via `psql`;
+- confirma a existência das 4 tabelas;
+- falha cedo se `psql` não estiver instalado.
+
+## 4. Aplicar via Drizzle (push)
+
+O `infra/drizzle.config.ts` foi alinhado para reutilizar a configuração raiz em Postgres.
+Se preferir fluxo Drizzle:
+
+```bash
+export DATABASE_URL="postgres://..."
+npm run db:push --silent
 ```
 
 ---
 
-## 4. Rollback
+## 5. Rollback
 
 ```sql
 DROP TABLE IF EXISTS "agent_evolution_history";
@@ -63,7 +77,7 @@ DROP TABLE IF EXISTS "generated_images";
 
 ---
 
-## 5. Validação pós-migration
+## 6. Validação pós-migration
 
 ```bash
 # Testes que cobrem os endpoints novos (independem do DB real)
@@ -81,8 +95,8 @@ curl -X POST "$API_URL/api/trpc/agents.getRecommendedProducts" \
 
 ---
 
-## 6. Próximos passos sugeridos
+## 7. Próximos passos sugeridos
 
-1. Conciliar `drizzle.config.ts` (mysql → postgresql) para alinhar com o `.env.example`.
+1. Executar a migration com `DATABASE_URL` do ambiente de produção.
 2. Adicionar seed inicial com 2-3 produtos recomendados de exemplo.
 3. Habilitar índices adicionais conforme o uso real (ex.: filtro por `marketplace` + `relevanceScore`).

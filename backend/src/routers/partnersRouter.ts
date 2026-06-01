@@ -5,9 +5,9 @@
  */
 
 import { z } from "zod";
-import { router, protectedProcedure, adminProcedure } from "@/config/trpc";
+import { router, protectedProcedure, adminProcedure } from "../config/trpc";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/database";
+import { getDb } from "../db";
 import {
   partners,
   partnerships,
@@ -19,8 +19,19 @@ import {
   TIER_BENEFITS,
   type PartnerTier,
   type PartnershipStatus
-} from "@/database/schemas/schema-partners";
+} from "../../../database/schemas/schema-partners";
 import { eq, and, gte, lte, desc, asc, sql, or, like } from "drizzle-orm";
+
+async function getDbOrThrow() {
+  const db = await getDb();
+  if (!db) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Database not available",
+    });
+  }
+  return db;
+}
 
 /**
  * Schemas de validação
@@ -183,6 +194,7 @@ export const partnersRouter = router({
     .input(partnerFiltersSchema)
     .query(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const { tier, status, search, page, limit } = input;
         const offset = (page - 1) * limit;
 
@@ -234,6 +246,7 @@ export const partnersRouter = router({
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const partner = await db.select().from(partners).where(eq(partners.id, input.id)).limit(1);
 
         if (!partner[0]) {
@@ -279,6 +292,7 @@ export const partnersRouter = router({
     .input(createPartnerSchema)
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const referralCode = input.referralCode || `NEXUS-${input.tier.toUpperCase()}-${Date.now()}`;
         const benefits = TIER_BENEFITS[input.tier as PartnerTier] || [];
 
@@ -310,6 +324,7 @@ export const partnersRouter = router({
     .input(updatePartnerSchema)
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const updateData: any = { updatedAt: new Date() };
         if (input.tier) updateData.tier = input.tier;
         if (input.status) updateData.status = input.status;
@@ -345,6 +360,7 @@ export const partnersRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         await db.update(partners)
           .set({ status: 'inactive', updatedAt: new Date() })
           .where(eq(partners.id, input.id));
@@ -364,6 +380,7 @@ export const partnersRouter = router({
    */
   stats: protectedProcedure.query(async () => {
     try {
+      const db = await getDbOrThrow();
       const [partnersList, totalPartners] = await Promise.all([
         db.select().from(partners),
         db.select({ count: sql<number>`count(*)` }).from(partners),
@@ -425,6 +442,7 @@ export const partnersRouter = router({
     .input(partnershipFiltersSchema)
     .query(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const { partnerId, status, search, page, limit } = input;
         const offset = (page - 1) * limit;
 
@@ -474,6 +492,7 @@ export const partnersRouter = router({
     .input(createPartnershipSchema)
     .mutation(async ({ ctx, input }) => {
       try {
+        const db = await getDbOrThrow();
         const [newPartnership] = await db.insert(partnerships).values({
           partnerId: input.partnerId,
           partnerName: input.partnerName,
@@ -503,6 +522,7 @@ export const partnersRouter = router({
     .input(updatePartnershipSchema)
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const updateData: any = { updatedAt: new Date() };
         if (input.status) updateData.status = input.status;
         if (input.commissionRate) updateData.commissionRate = input.commissionRate;
@@ -539,6 +559,7 @@ export const partnersRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       try {
+        const db = await getDbOrThrow();
         const [approved] = await db.update(partnerships)
           .set({
             status: 'active',
@@ -574,6 +595,7 @@ export const partnersRouter = router({
     .input(z.object({ id: z.number(), reason: z.string().optional() }))
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const [rejected] = await db.update(partnerships)
           .set({
             status: 'terminated',
@@ -609,6 +631,7 @@ export const partnersRouter = router({
     .input(z.object({ id: z.number(), reason: z.string().optional() }))
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const [terminated] = await db.update(partnerships)
           .set({
             status: 'terminated',
@@ -644,6 +667,7 @@ export const partnersRouter = router({
     .input(z.object({ partnerId: z.number() }))
     .query(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const partner = await db.select().from(partners).where(eq(partners.id, input.partnerId)).limit(1);
 
         if (!partner[0]) {
@@ -710,6 +734,7 @@ export const partnersRouter = router({
     }))
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const [historyEntry] = await db.insert(partnerVolumeHistory).values({
           partnerId: input.partnerId,
           volume: input.volume,
@@ -771,6 +796,7 @@ export const partnersRouter = router({
     }))
     .query(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const { partnerId, period, limit } = input;
 
         // Calcular data de início baseado no período
@@ -833,6 +859,7 @@ export const partnersRouter = router({
    */
   listTierConfigs: protectedProcedure.query(async () => {
     try {
+      const db = await getDbOrThrow();
       const configs = await db.select().from(partnerTierConfigs)
         .where(eq(partnerTierConfigs.isActive, true))
         .orderBy(asc(partnerTierConfigs.sortOrder));
@@ -861,6 +888,7 @@ export const partnersRouter = router({
     }))
     .mutation(async ({ input }) => {
       try {
+        const db = await getDbOrThrow();
         const updateData: any = { updatedAt: new Date() };
         if (input.minVolume !== undefined) updateData.minVolume = input.minVolume;
         if (input.commissionRate !== undefined) updateData.commissionRate = input.commissionRate;

@@ -1,7 +1,7 @@
 # Nexus Partners Pack - Status Consolidado de Desenvolvimento
 
 **Data:** 2026-06-01
-**Versão Atual:** v1.3.0 (Partners Pack: v1.2.0)
+**Versão Atual:** v1.3.0 (Partners Pack: v1.3.0)
 **Branch:** main
 
 ---
@@ -318,6 +318,47 @@ ANALYTICS_CRON_HOURS=6
 ---
 
 ## 12. Atualizações Recentes (2026-06-01)
+
+### ✅ Commit 5: Nexus Partners Pack v1.3.0 — Chain event-driven + Tests
+
+**Arquivos criados:**
+- `backend/src/domains/partners/subscribers.ts` (chain
+  `PARTNER_TIER_PROMOTED` → `XP_GRANTED` + `CAREER_LEVEL_UP`)
+- `tests/unit/partnersDomainService.test.ts` (30 testes — todos
+  passando)
+- `NEXUS_PARTNERS_PACK_v1.3.0.md` (release notes)
+
+**Arquivos modificados:**
+- `backend/src/domains/partners/repository.ts`
+  (+`resetPartnerRepository()`, snapshots de seed, helper de reviver
+  datas)
+- `backend/src/domains/partners/index.ts` (exporta `subscribers`)
+- `CHANGELOG.md` (entrada da sub-v1.3.0 do Partners Pack)
+
+**Funcionalidades entregues:**
+- Tabela de XP por promoção: 500 / 1.500 / 5.000 para
+  silver→gold / gold→platinum / platinum→diamond.
+- Curva de níveis 1–6 (Affiliate → Diamond Partner) com cálculo
+  automático de rank anterior/novo e benefícios.
+- `registerPartnersEventHandlers()` para wiring no boot, retornando
+  `dispose()` para graceful shutdown.
+- Cobertura de testes do domínio Partners: 0 → 30 testes
+  (GrowthAlgorithmEngine, casos de uso, eventos publicados,
+  subscriber end-to-end, idempotência por `userId`).
+
+**Decisão de design:**
+Estado de XP mantido em memória (consistente com o resto do domínio
+Partners). Migração para DB prevista para v1.4.0, **sem alteração
+nos eventos publicados** (eles são a API estável).
+
+**Próximos passos (v1.4.0):**
+- Migrar `routers/partnersRouter.ts` para consumir o service (hoje
+  há dois `GrowthAlgorithmEngine`).
+- Persistência real (Drizzle) no service.
+- Persistir XP em DB e derivar `xpStateByUserId` daí.
+- Endpoints REST para white-label.
+
+---
 
 ### ✅ Commit 4: Nexus Partners Pack v1.2.0 — Migração DCI + Event-Driven
 

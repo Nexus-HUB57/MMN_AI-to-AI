@@ -2,6 +2,16 @@
 
 ## 2026-06-01 — v1.3.0 Nexus Partners Pack
 
+### `feat(nexus-partners-pack)` — Cadeia event-driven Partners → XP → Career (sub-v1.3.0)
+
+- **Subscriber de domínio**: `domains/partners/subscribers.ts` — nova camada que assina `PARTNER_TIER_PROMOTED` e publica `XP_GRANTED` (+ `CAREER_LEVEL_UP` quando o XP cruza um threshold de nível).
+- **Tabela de XP por promoção**: silver→gold = 500, gold→platinum = 1.500, platinum→diamond = 5.000. Configurável em código.
+- **Curva de níveis**: 6 níveis cumulativos (Affiliate → Partner → Pro Partner → Elite Partner → Master Partner → Diamond Partner).
+- **API**: `registerPartnersEventHandlers()` retorna `{ dispose }` para wiring no boot/shutdown. Estado de XP exposto via `getPartnerXpState` / `resetPartnerXpState`.
+- **Cobertura de testes**: novo `tests/unit/partnersDomainService.test.ts` com 30 testes unitários e de integração — todos passando. Cobre `GrowthAlgorithmEngine`, casos de uso, eventos publicados e o subscriber end-to-end.
+- **`resetPartnerRepository()`** exposto para isolar estado entre testes.
+- **Documentação**: `NEXUS_PARTNERS_PACK_v1.3.0.md` com release notes completas, decisões de design e backlog para v1.4.0.
+
 ### `feat(nexus-partners)` — Módulo de Parceiros Estratégicos
 
 - **Nova Documentação**: Criado `packs/NEXUS_PARTNERS_PACK.md` com especificação completa

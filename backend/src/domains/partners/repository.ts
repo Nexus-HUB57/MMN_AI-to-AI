@@ -355,6 +355,57 @@ const mockVolumeHistory: PartnerVolumeHistoryEntry[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Snapshots de seed — usados por `resetPartnerRepository` para que
+// testes possam restaurar o estado determinístico a cada caso.
+// ---------------------------------------------------------------------------
+
+const REVIVE_KEYS = ["createdAt", "updatedAt", "startedAt", "endedAt", "approvedAt"] as const;
+function reviveDates(_key: string, value: unknown) {
+  if (typeof value === "string" && REVIVE_KEYS.includes(_key as (typeof REVIVE_KEYS)[number])) {
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+  }
+  return value;
+}
+
+const initialPartnersSnapshot: PartnerRecord[] = JSON.parse(
+  JSON.stringify(mockPartners),
+  reviveDates,
+);
+const initialPartnershipsSnapshot: PartnershipRecord[] = JSON.parse(
+  JSON.stringify(mockPartnerships),
+  reviveDates,
+);
+const initialVolumeHistorySnapshot: PartnerVolumeHistoryEntry[] = JSON.parse(
+  JSON.stringify(mockVolumeHistory),
+  reviveDates,
+);
+
+/**
+ * Restaura os arrays in-memory ao estado de seed e zera os
+ * contadores de ID. Útil para testes e para jobs de reconciliação
+ * que precisem reiniciar o estado.
+ */
+export function resetPartnerRepository(): void {
+  mockPartners.length = 0;
+  mockPartners.push(...JSON.parse(JSON.stringify(initialPartnersSnapshot), reviveDates));
+
+  mockPartnerships.length = 0;
+  mockPartnerships.push(
+    ...JSON.parse(JSON.stringify(initialPartnershipsSnapshot), reviveDates),
+  );
+
+  mockVolumeHistory.length = 0;
+  mockVolumeHistory.push(
+    ...JSON.parse(JSON.stringify(initialVolumeHistorySnapshot), reviveDates),
+  );
+
+  nextPartnerId = 100_000;
+  nextPartnershipId = 100_000;
+  nextVolumeId = 100_000;
+}
+
+// ---------------------------------------------------------------------------
 // Funções de leitura
 // ---------------------------------------------------------------------------
 

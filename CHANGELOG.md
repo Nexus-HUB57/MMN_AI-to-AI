@@ -1,5 +1,50 @@
 # Changelog MMN AI-to-AI
 
+## 2026-06-01 — v1.3.1 Nexus Partners Pack (correções e observabilidade)
+
+### `fix(nexus-partners-pack)` — XP Ledger + Silent-drop eliminado (sub-v1.3.1)
+
+Esta é uma sub-release **incremental e estável** da v1.3.0. Não introduz novas
+funcionalidades de negócio; entrega duas correções/adições que tornam o
+event chain `PARTNER_TIER_PROMOTED → XP_GRANTED + CAREER_LEVEL_UP` observável
+e auditável. Compatível 100% com a v1.3.0 (nenhum evento removido, nenhuma
+rota renomeada, nenhum schema Drizzle alterado).
+
+- **XP Ledger (audit trail)**: cada concessão de XP é registrada num
+  ledger global em memória, com `sequence` monotônico, deltas
+  (`previousTotal`/`newTotal`/`previousLevel`/`newLevel`),
+  `correlationId` / `causationId` propagados e
+  `sourceEventType`. Helpers exportados:
+  - `getPartnerXpHistory(userId)` — história de um usuário
+  - `listAllXpLedger()` — snapshot global (read-only)
+  - `getXpLedgerStats(userId)` — agregado (totalGrants, totalXp,
+    levelUps, first/last grant timestamps, lastGrantAmount)
+  - `XpLedgerEntry` e `XpLedgerStats` — tipos públicos
+- **Silent-drop eliminado**: quando o subscriber de
+  `PARTNER_TIER_PROMOTED` não consegue processar um evento
+  (parceiro inexistente, `partnerId` inválido, ou promoção sem
+  reward), ele **publica um `SYSTEM_ALERT`** com
+  `severity: "info" | "warning"`, `sourceDomain: "partners"` e o
+  `diagnostic` estruturado no metadata. O alerta inclui o
+  `correlationId` / `causationId` do evento original, mantendo a
+  cadeia de tracing.
+- **Nova função diagnóstica**: `applyTierPromotionXpWithDiagnostic()`
+  devolve `{ result, diagnostic: null }` no sucesso ou
+  `{ result: null, diagnostic: { kind, ... } }` no erro. Útil para
+  a próxima camada tRPC expor erros estruturados e para testes
+  unitários.
+- **API mantida**: `applyTierPromotionXp`, `registerPartnersEventHandlers`,
+  `resetPartnerXpState`, `getPartnerXpState` e `__testing` — todas com
+  a mesma assinatura da v1.3.0. `resetPartnerXpState()` agora também
+  limpa o ledger (consistência).
+- **Testes**: `tests/unit/partnersDomainService.test.ts` ganhou 11 novos
+  casos (6 para o XP Ledger, 5 para o SYSTEM_ALERT e diagnóstico).
+  Total: **41/41 ✓** (`vitest run tests/unit/partnersDomainService.test.ts`).
+- **Documentação**: `NEXUS_PARTNERS_PACK_v1.3.1.md` com release notes
+  completas, decisões de design e backlog para v1.4.0.
+
+---
+
 ## 2026-06-01 — v1.3.0 Nexus Partners Pack
 
 ### `feat(nexus-partners-pack)` — Cadeia event-driven Partners → XP → Career (sub-v1.3.0)

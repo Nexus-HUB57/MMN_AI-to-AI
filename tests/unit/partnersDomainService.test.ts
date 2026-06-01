@@ -25,10 +25,16 @@ import {
 } from "../../backend/src/_core/events/eventBus";
 import {
   applyTierPromotionXp,
+  applyTierPromotionXpWithDiagnostic,
+  getPartnerXpHistory,
+  getXpLedgerStats,
+  listAllXpLedger,
   registerPartnersEventHandlers,
   resetPartnerXpState,
   __testing,
+  type XpLedgerEntry,
 } from "../../backend/src/domains/partners/subscribers";
+import type { SystemAlertPayload } from "../../backend/src/domains/cron/events";
 import {
   createPartnerRecord,
   resetPartnerRepository,
@@ -553,3 +559,382 @@ describe("partners event subscribers", () => {
     expect(r2!.payload.newTotal).toBe(1_000);
   });
 });
+
+// ============================================================================
+// v1.3.1 — XP Ledger + SYSTEM_ALERT diagnostics
+// ============================================================================
+
+describe("v1.3.1 — XP Ledger", () => {
+  it("registra uma entrada de ledger a cada concessão de XP com deltas corretos", async () => {
+    const partner = createPartnerRecord({ userId: 50_001, tier: "silver" });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_ledger_1",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: String(partner.id),
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      correlationId: "corr_ledger_1",
+      payload: {
+        partnerId: String(partner.id),
+        previousTier: "silver",
+        newTier: "gold",
+        totalVolume: 5_000,
+        newCommissionRate: 0.08,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+
+    const history = getPartnerXpHistory(String(50_001));
+    expect(history).toHaveLength(1);
+    const entry = history[0];
+    expect(entry.userId).toBe("50001");
+    expect(entry.partnerId).toBe(partner.id);
+    expect(entry.amount).toBe(500);
+    expect(entry.previousTotal).toBe(0);
+    expect(entry.newTotal).toBe(500);
+    expect(entry.previousTier).toBe("silver");
+    expect(entry.newTier).toBe("gold");
+    expect(entry.source).toBe("milestone");
+    expect(entry.reason).toBe("partner_tier_promotion:silver->gold");
+    expect(entry.correlationId).toBe("corr_ledger_1");
+    expect(entry.causationId).toBe("evt_ledger_1");
+    expect(entry.sourceEventType).toBe(DomainEventType.PARTNER_TIER_PROMOTED);
+    expect(entry.leveledUp).toBe(true);
+    expect(entry.previousLevel).toBe(1);
+    expect(entry.newLevel).toBe(2);
+    expect(entry.sequence).toBeGreaterThan(0);
+    expect(typeof entry.grantedAt).toBe("string");
+  });
+
+  it("preserva o histórico cronológico por usuário mesmo com múltiplas concessões", async () => {
+    const partner = createPartnerRecord({ userId: 50_002, tier: "silver" });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    const publish = (newTier: "gold" | "platinum" | "diamond", previousTier: "silver" | "gold" | "platinum") =>
+      eventBus.publish({
+        id: `evt_seq_${newTier}`,
+        type: DomainEventType.PARTNER_TIER_PROMOTED,
+        aggregateId: String(partner.id),
+        aggregateType: "Partner",
+        timestamp: new Date().toISOString(),
+        version: 1,
+        metadata: {},
+        payload: {
+          partnerId: String(partner.id),
+          previousTier,
+          newTier,
+          totalVolume: 0,
+          newCommissionRate: 0,
+          triggeredBy: "volume_threshold",
+        },
+      });
+    await publish("gold", "silver");
+    await new Promise((r) => setTimeout(r, 5));
+    await publish("platinum", "gold");
+    await new Promise((r) => setTimeout(r, 5));
+    await publish("diamond", "platinum");
+    await new Promise((r) => setTimeout(r, 5));
+
+    const history = getPartnerXpHistory("50002");
+    expect(history).toHaveLength(3);
+    expect(history.map((h) => h.amount)).toEqual([500, 1_500, 5_000]);
+    expect(history.map((h) => h.newTier)).toEqual(["gold", "platinum", "diamond"]);
+    // sequência monotônica
+    expect(history[0].sequence).toBeLessThan(history[1].sequence);
+    expect(history[1].sequence).toBeLessThan(history[2].sequence);
+  });
+
+  it("getXpLedgerStats agrega corretamente a história de um usuário", async () => {
+    const partner = createPartnerRecord({ userId: 50_003, tier: "silver" });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_stats_1",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: String(partner.id),
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: String(partner.id),
+        previousTier: "silver",
+        newTier: "gold",
+        totalVolume: 5_000,
+        newCommissionRate: 0.08,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+    await eventBus.publish({
+      id: "evt_stats_2",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: String(partner.id),
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: String(partner.id),
+        previousTier: "gold",
+        newTier: "platinum",
+        totalVolume: 20_000,
+        newCommissionRate: 0.12,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+
+    const stats = getXpLedgerStats("50003");
+    expect(stats.totalGrants).toBe(2);
+    expect(stats.totalXp).toBe(2_000);
+    expect(stats.levelUps).toBe(2);
+    expect(stats.lastGrantAmount).toBe(1_500);
+    expect(stats.firstGrantAt).not.toBeNull();
+    expect(stats.lastGrantAt).not.toBeNull();
+  });
+
+  it("getXpLedgerStats devolve zeros para um usuário sem concessões", () => {
+    const stats = getXpLedgerStats("never_seen");
+    expect(stats).toEqual({
+      userId: "never_seen",
+      totalGrants: 0,
+      totalXp: 0,
+      firstGrantAt: null,
+      lastGrantAt: null,
+      levelUps: 0,
+      lastGrantAmount: null,
+    });
+  });
+
+  it("listAllXpLedger inclui concessões de múltiplos usuários em ordem", async () => {
+    const p1 = createPartnerRecord({ userId: 50_010, tier: "silver" });
+    const p2 = createPartnerRecord({ userId: 50_011, tier: "silver" });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    for (const p of [p1, p2]) {
+      await eventBus.publish({
+        id: `evt_multi_${p.userId}`,
+        type: DomainEventType.PARTNER_TIER_PROMOTED,
+        aggregateId: String(p.id),
+        aggregateType: "Partner",
+        timestamp: new Date().toISOString(),
+        version: 1,
+        metadata: {},
+        payload: {
+          partnerId: String(p.id),
+          previousTier: "silver",
+          newTier: "gold",
+          totalVolume: 5_000,
+          newCommissionRate: 0.08,
+          triggeredBy: "volume_threshold",
+        },
+      });
+      await new Promise((r) => setTimeout(r, 5));
+    }
+
+    const all = listAllXpLedger();
+    expect(all.length).toBeGreaterThanOrEqual(2);
+    const userIds = new Set(all.map((e: XpLedgerEntry) => e.userId));
+    expect(userIds.has("50010")).toBe(true);
+    expect(userIds.has("50011")).toBe(true);
+  });
+
+  it("resetPartnerXpState limpa também o ledger", async () => {
+    const partner = createPartnerRecord({ userId: 50_020, tier: "silver" });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_reset",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: String(partner.id),
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: String(partner.id),
+        previousTier: "silver",
+        newTier: "gold",
+        totalVolume: 5_000,
+        newCommissionRate: 0.08,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+    expect(getPartnerXpHistory("50020").length).toBe(1);
+
+    resetPartnerXpState();
+    expect(getPartnerXpHistory("50020").length).toBe(0);
+    expect(listAllXpLedger().length).toBe(0);
+  });
+});
+
+describe("v1.3.1 — Silent-drop eliminado (SYSTEM_ALERT)", () => {
+  it("publica SYSTEM_ALERT quando o partnerId é inválido", async () => {
+    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
+    subscribers.push({
+      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
+        alerts.push({ payload: p });
+      }),
+    });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_alert_invalid",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: "n/a",
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: "not-a-number",
+        previousTier: "silver",
+        newTier: "gold",
+        totalVolume: 5_000,
+        newCommissionRate: 0.08,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+
+    expect(alerts.length).toBe(1);
+    expect(alerts[0].payload.severity).toBe("warning");
+    expect(alerts[0].payload.title).toMatch(/invalid partnerId/i);
+  });
+
+  it("publica SYSTEM_ALERT quando o parceiro não existe no repositório", async () => {
+    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
+    subscribers.push({
+      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
+        alerts.push({ payload: p });
+      }),
+    });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_alert_missing",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: "9999999",
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: "9999999",
+        previousTier: "silver",
+        newTier: "gold",
+        totalVolume: 5_000,
+        newCommissionRate: 0.08,
+        triggeredBy: "volume_threshold",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+
+    expect(alerts.length).toBe(1);
+    expect(alerts[0].payload.severity).toBe("warning");
+    expect(alerts[0].payload.title).toMatch(/partner not found/i);
+    expect(alerts[0].payload.description).toMatch(/9999999/);
+  });
+
+  it("publica SYSTEM_ALERT (info) quando a promoção é para silver (sem reward)", async () => {
+    const alerts: Array<{ payload: SystemAlertPayload; metadata?: Record<string, unknown> }> = [];
+    subscribers.push({
+      dispose: trackHandler<SystemAlertPayload>(DomainEventType.SYSTEM_ALERT, (p) => {
+        alerts.push({ payload: p });
+      }),
+    });
+    const handle = registerPartnersEventHandlers();
+    subscribers.push({ dispose: handle.dispose });
+
+    await eventBus.publish({
+      id: "evt_alert_noreward",
+      type: DomainEventType.PARTNER_TIER_PROMOTED,
+      aggregateId: "n/a",
+      aggregateType: "Partner",
+      timestamp: new Date().toISOString(),
+      version: 1,
+      metadata: {},
+      payload: {
+        partnerId: "1",
+        previousTier: "gold",
+        newTier: "silver", // não-concessão: volta para silver
+        totalVolume: 0,
+        newCommissionRate: 0.05,
+        triggeredBy: "admin_action",
+      },
+    });
+    await new Promise((r) => setTimeout(r, 5));
+
+    expect(alerts.length).toBe(1);
+    expect(alerts[0].payload.severity).toBe("info");
+    expect(alerts[0].payload.title).toMatch(/no reward/i);
+  });
+
+  it("applyTierPromotionXpWithDiagnostic devolve diagnóstico estruturado para os mesmos casos", () => {
+    // partner inexistente
+    const r1 = applyTierPromotionXpWithDiagnostic({
+      partnerId: "8888888",
+      previousTier: "silver",
+      newTier: "gold",
+      totalVolume: 5_000,
+      newCommissionRate: 0.08,
+      triggeredBy: "volume_threshold",
+    });
+    expect(r1.result).toBeNull();
+    expect(r1.diagnostic?.kind).toBe("partner_not_found");
+
+    // partnerId inválido
+    const r2 = applyTierPromotionXpWithDiagnostic({
+      partnerId: "abc",
+      previousTier: "silver",
+      newTier: "gold",
+      totalVolume: 5_000,
+      newCommissionRate: 0.08,
+      triggeredBy: "volume_threshold",
+    });
+    expect(r2.result).toBeNull();
+    expect(r2.diagnostic?.kind).toBe("invalid_partner_id");
+
+    // sem reward
+    const r3 = applyTierPromotionXpWithDiagnostic({
+      partnerId: "1",
+      previousTier: "gold",
+      newTier: "silver",
+      totalVolume: 0,
+      newCommissionRate: 0.05,
+      triggeredBy: "admin_action",
+    });
+    expect(r3.result).toBeNull();
+    expect(r3.diagnostic?.kind).toBe("no_reward");
+  });
+
+  it("applyTierPromotionXpWithDiagnostic devolve result não-nulo e diagnostic=null no caso de sucesso", () => {
+    const partner = createPartnerRecord({ userId: 50_030, tier: "silver" });
+    const r = applyTierPromotionXpWithDiagnostic({
+      partnerId: String(partner.id),
+      previousTier: "silver",
+      newTier: "gold",
+      totalVolume: 5_000,
+      newCommissionRate: 0.08,
+      triggeredBy: "volume_threshold",
+    });
+    expect(r.diagnostic).toBeNull();
+    expect(r.result).not.toBeNull();
+    expect(r.result!.payload.amount).toBe(500);
+  });
+});
+

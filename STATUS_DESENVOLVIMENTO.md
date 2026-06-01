@@ -1,7 +1,7 @@
 # Nexus Partners Pack - Status Consolidado de Desenvolvimento
 
 **Data:** 2026-06-01
-**Versão Atual:** v1.3.0 (Partners Pack: v1.3.0)
+**Versão Atual:** v1.3.0 (Partners Pack: v1.3.1)
 **Branch:** main
 
 ---
@@ -318,6 +318,29 @@ ANALYTICS_CRON_HOURS=6
 ---
 
 ## 12. Atualizações Recentes (2026-06-01)
+
+### ✅ Commit 5b: Nexus Partners Pack v1.3.1 — XP Ledger + Silent-drop eliminado (2026-06-01)
+
+Sub-release incremental compatível com v1.3.0. Adiciona:
+
+- **XP Ledger (audit trail)** em `subscribers.ts` — cada concessão de XP
+  é registrada com `sequence`, deltas, `correlationId`/`causationId`,
+  `sourceEventType`. Helpers: `getPartnerXpHistory`, `listAllXpLedger`,
+  `getXpLedgerStats`, `XpLedgerEntry`/`XpLedgerStats`.
+- **Silent-drop eliminado** — quando o subscriber não consegue
+  processar um `PARTNER_TIER_PROMOTED` (parceiro inexistente,
+  `partnerId` inválido, ou promoção sem reward), um `SYSTEM_ALERT`
+  é publicado ao invés de descartar o evento.
+- **`applyTierPromotionXpWithDiagnostic()`** — variante diagnóstica
+  que devolve `{ result, diagnostic: null }` ou
+  `{ result: null, diagnostic: { kind, ... } }`.
+- **11 testes novos** em `tests/unit/partnersDomainService.test.ts`:
+  6 para o Ledger, 5 para o Silent-drop. Total: **41/41 ✓**.
+- **Documentação**: `NEXUS_PARTNERS_PACK_v1.3.1.md` (release notes).
+
+Compatibilidade: API pública do domínio Partners 100% preservada.
+Nenhum evento existente foi removido/renomeado. Nenhuma rota tRPC
+tocada. Nenhum schema Drizzle alterado.
 
 ### ✅ Commit 5: Nexus Partners Pack v1.3.0 — Chain event-driven + Tests
 

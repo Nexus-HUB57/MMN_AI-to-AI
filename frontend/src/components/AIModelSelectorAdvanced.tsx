@@ -10,7 +10,8 @@
  * - Histórico de uso
  */
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -69,113 +70,60 @@ interface ModelStats {
 
 export default function AIModelSelectorAdvanced() {
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [aiModels, setAiModels] = useState<AIModel[]>([]);
-  const [modelStats, setModelStats] = useState<ModelStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(2000);
 
-  // Simulação de carregamento de modelos
+  const modelsQuery = trpc.aiContentHub.listModels.useQuery(undefined, {
+    staleTime: 60_000,
+    retry: 1,
+  });
+  const statsQuery = trpc.aiContentHub.getModelStats.useQuery(undefined, {
+    staleTime: 60_000,
+    retry: 1,
+  });
+
+  const aiModels: AIModel[] = modelsQuery.data?.models ?? [];
+  const modelStats: ModelStats = statsQuery.data?.stats ?? {
+    totalModels: aiModels.length,
+    activeModels: aiModels.filter((model) => model.isActive).length,
+    providers: {
+      google: aiModels.filter((model) => model.provider === "google").length,
+      openai: aiModels.filter((model) => model.provider === "openai").length,
+      proprietary: aiModels.filter((model) => model.provider === "proprietary").length,
+    },
+    models: aiModels.map((model) => ({
+      id: model.id,
+      name: model.name,
+      provider: model.provider,
+      isActive: model.isActive,
+    })),
+  };
+  const isLoading = modelsQuery.isLoading || statsQuery.isLoading;
+
   useEffect(() => {
-    const loadModels = async () => {
-      setIsLoading(true);
-      try {
-        // TODO: Substituir por chamada real ao backend
-        // const response = await trpc.aiContentHub.listModels.query();
-        
-        // Dados mockados para demonstração
-        const mockModels: AIModel[] = [
-          {
-            id: "gemini-2.0-flash",
-            name: "Gemini 2.0 Flash",
-            provider: "google",
-            description: "Modelo rápido e eficiente do Google",
-            capabilities: ["text", "image", "video", "multimodal"],
-            costPerRequest: 0.0001,
-            responseTime: "< 500ms",
-            isActive: true,
-            maxTokens: 8192,
-            temperature: 0.7,
-            usageCount: 245,
-            lastUsed: new Date(Date.now() - 3600000),
-          },
-          {
-            id: "gemini-1.5-pro",
-            name: "Gemini 1.5 Pro",
-            provider: "google",
-            description: "Modelo avançado com contexto longo",
-            capabilities: ["text", "image", "video", "multimodal", "code"],
-            costPerRequest: 0.0005,
-            responseTime: "< 1s",
-            isActive: true,
-            maxTokens: 100000,
-            temperature: 0.7,
-            usageCount: 128,
-            lastUsed: new Date(Date.now() - 7200000),
-          },
-          {
-            id: "gpt-4.1-mini",
-            name: "GPT-4 Mini",
-            provider: "openai",
-            description: "Modelo compacto da OpenAI",
-            capabilities: ["text", "code", "analysis"],
-            costPerRequest: 0.00015,
-            responseTime: "< 800ms",
-            isActive: true,
-            maxTokens: 4096,
-            temperature: 0.7,
-            usageCount: 312,
-            lastUsed: new Date(),
-          },
-          {
-            id: "mmn-copywriting-v1",
-            name: "MMN Copywriting V1",
-            provider: "proprietary",
-            description: "Fine-tuned para copywriting MMN",
-            capabilities: ["text", "marketing", "copywriting"],
-            costPerRequest: 0.0002,
-            responseTime: "< 600ms",
-            isActive: false,
-            maxTokens: 2048,
-            temperature: 0.8,
-            usageCount: 0,
-          },
-        ];
+    if (!selectedModel && aiModels.length > 0) {
+      setSelectedModel(aiModels[0].id);
+      setTemperature(aiModels[0].temperature ?? 0.7);
+      setMaxTokens(aiModels[0].maxTokens ?? 2000);
+    }
+  }, [aiModels, selectedModel]);
 
-        setAiModels(mockModels);
-        setSelectedModel(mockModels[0].id);
-
-        // Simular stats
-        const stats: ModelStats = {
-          totalModels: mockModels.length,
-          activeModels: mockModels.filter((m) => m.isActive).length,
-          providers: {
-            google: mockModels.filter((m) => m.provider === "google").length,
-            openai: mockModels.filter((m) => m.provider === "openai").length,
-            proprietary: mockModels.filter((m) => m.provider === "proprietary").length,
-          },
-          models: mockModels.map((m) => ({
-            id: m.id,
-            name: m.name,
-            provider: m.provider,
-            isActive: m.isActive,
-          })),
-        };
-        setModelStats(stats);
-      } catch (error) {
-        console.error("Erro ao carregar modelos:", error);
-        toast.error("Erro ao carregar modelos de IA");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadModels();
-  }, []);
+  useEffect(() => {
+    if (modelsQuery.error || statsQuery.error) {
+      console.error("Erro ao carregar modelos de IA:", modelsQuery.error ?? statsQuery.error);
+      toast.error("Erro ao carregar modelos de IA");
+    }
+  }, [modelsQuery.error, statsQuery.error]);
 
   const currentModel = aiModels.find((m) => m.id === selectedModel);
+
+  useEffect(() => {
+    if (currentModel) {
+      setTemperature(currentModel.temperature ?? 0.7);
+      setMaxTokens(currentModel.maxTokens ?? 2000);
+    }
+  }, [currentModel?.id]);
 
   const getProviderColor = (provider: string) => {
     switch (provider) {
@@ -218,7 +166,7 @@ export default function AIModelSelectorAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">Total de Modelos</p>
-                <p className="text-2xl font-bold text-white">{modelStats?.totalModels}</p>
+                <p className="text-2xl font-bold text-white">{modelStats.totalModels}</p>
               </div>
               <Database className="w-8 h-8 text-cyan-500" />
             </div>
@@ -230,7 +178,7 @@ export default function AIModelSelectorAdvanced() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">Modelos Ativos</p>
-                <p className="text-2xl font-bold text-white">{modelStats?.activeModels}</p>
+                <p className="text-2xl font-bold text-white">{modelStats.activeModels}</p>
               </div>
               <Check className="w-8 h-8 text-green-500" />
             </div>
@@ -243,7 +191,7 @@ export default function AIModelSelectorAdvanced() {
               <div>
                 <p className="text-slate-400 text-sm">Provedores</p>
                 <p className="text-2xl font-bold text-white">
-                  {modelStats?.providers.google || 0}G + {modelStats?.providers.openai || 0}O + {modelStats?.providers.proprietary || 0}P
+                  {modelStats.providers.google || 0}G + {modelStats.providers.openai || 0}O + {modelStats.providers.proprietary || 0}P
                 </p>
               </div>
               <TrendingUp className="w-8 h-8 text-purple-500" />
@@ -257,9 +205,11 @@ export default function AIModelSelectorAdvanced() {
               <div>
                 <p className="text-slate-400 text-sm">Custo Médio</p>
                 <p className="text-2xl font-bold text-white">
-                  ${(
-                    aiModels.reduce((sum, m) => sum + m.costPerRequest, 0) / aiModels.length
-                  ).toFixed(4)}
+                  ${aiModels.length > 0
+                    ? (
+                        aiModels.reduce((sum, m) => sum + m.costPerRequest, 0) / aiModels.length
+                      ).toFixed(4)
+                    : "0.0000"}
                 </p>
               </div>
               <DollarSign className="w-8 h-8 text-yellow-500" />
@@ -511,13 +461,21 @@ export default function AIModelSelectorAdvanced() {
               </div>
 
               <div className="flex gap-2">
-                <Button className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold">
+                <Button
+                  className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold"
+                  onClick={() => toast.success(`Configurações aplicadas ao modelo ${currentModel?.name ?? "selecionado"}`)}
+                >
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Salvar Configurações
+                  Aplicar Configurações
                 </Button>
                 <Button
                   variant="outline"
                   className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                  onClick={() => {
+                    setTemperature(currentModel?.temperature ?? 0.7);
+                    setMaxTokens(currentModel?.maxTokens ?? 2000);
+                    toast.success("Configurações padrão restauradas");
+                  }}
                 >
                   Restaurar Padrões
                 </Button>
@@ -528,7 +486,11 @@ export default function AIModelSelectorAdvanced() {
       </Tabs>
 
       {/* Botão de ação principal */}
-      <Button className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold py-6 text-lg">
+      <Button
+        className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-slate-950 font-semibold py-6 text-lg"
+        onClick={() => toast.success(`Modelo ${currentModel?.name ?? "selecionado"} pronto para uso`)}
+        disabled={!currentModel}
+      >
         <Sparkles className="w-5 h-5 mr-2" />
         Usar Modelo Selecionado
       </Button>

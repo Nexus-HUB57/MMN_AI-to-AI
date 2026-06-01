@@ -302,5 +302,4 @@ export const socialSellerHandler: SkillHandler<SocialSellerInput, SocialSellerOu
 // EXPORTS
 // ============================================
 
-export { socialSellerInputSchema };
-export type { SocialSellerInput, SocialSellerOutput };
+// Tipos e schema já são exportados nas declarações acima.

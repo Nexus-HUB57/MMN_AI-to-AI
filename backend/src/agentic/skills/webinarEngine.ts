@@ -691,5 +691,4 @@ export const webinarEngineHandler: SkillHandler<WebinarEngineInput, WebinarEngin
 // EXPORTS
 // ============================================
 
-export { webinarEngineInputSchema };
-export type { WebinarEngineInput, WebinarEngineOutput };
+// Tipos e schema já são exportados nas declarações acima.

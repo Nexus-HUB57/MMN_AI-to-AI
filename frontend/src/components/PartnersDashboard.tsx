@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import {
   Users,
@@ -78,21 +77,17 @@ export function PartnersDashboard() {
   const [selectedTier, setSelectedTier] = useState<string>("all");
 
   // Buscar estatísticas via tRPC
-  const { data: stats, isLoading: statsLoading } = useQuery(
-    trpc.partners.stats.queryOptions()
-  );
+  const { data: stats, isLoading: statsLoading } = trpc.partners.stats.useQuery();
 
   // Buscar lista de parceiros via tRPC
-  const { data: partnersData, isLoading: partnersLoading } = useQuery(
-    trpc.partners.list.queryOptions({
-      tier: selectedTier === "all" ? undefined : selectedTier as any,
-      page: 1,
-      limit: 50,
-    })
-  );
+  const { data: partnersData, isLoading: partnersLoading } = trpc.partners.list.useQuery({
+    tier: selectedTier === "all" ? undefined : selectedTier as any,
+    page: 1,
+    limit: 50,
+  });
 
   // Mapear dados da API para o formato esperado pelo componente
-  const partners: Partner[] = (partnersData?.partners || []).map((p: any) => ({
+  const partners: Partner[] = (partnersData?.partners ?? []).map((p) => ({
     id: p.id,
     name: `Parceiro ${p.id}`,
     tier: p.tier,
@@ -102,7 +97,7 @@ export function PartnersDashboard() {
     status: "active" as const,
   }));
 
-  const currentStats: PartnerStats = stats || {
+  const currentStats: PartnerStats = stats ?? {
     totalPartners: 0,
     activePartners: 0,
     totalVolume: 0,

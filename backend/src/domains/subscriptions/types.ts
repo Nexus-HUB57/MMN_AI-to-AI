@@ -1,16 +1,8 @@
 /**
  * Subscriptions domain — types.
  *
- * Modelo de Assinatura Comercial do Nexus Affil'IA'te (v1.4.0).
- *
- * Cada parceiro do Nexus Partners Pack assina um dos 3 packs comerciais:
- *  - Pack A²  (entrada gratuita / R$ 10,00) — ativa 1 Agente IA, 10 e-books, painel
- *  - Pack AG  (profissional / R$ 250,00)  — agente preditivo, 250 e-books, multinível
- *  - Pack AA  (elite / sob consulta)       — camada estratégica, participação especial
- *
- * Este módulo é a fonte de verdade da camada comercial que substitui o antigo
- * sistema de XP/níveis. Toda promoção de tier do domínio Partners passa a ser
- * resultado de upgrade de assinatura, não mais de progressão por XP.
+ * Modelo comercial do Nexus Partners Pack apresentado como produto
+ * exclusivamente por assinatura dentro do Nexus Store / Nexus Marketplace.
  */
 
 import { z } from "zod";
@@ -27,15 +19,18 @@ export const subscriptionStatuses = [
 ] as const;
 export type SubscriptionStatus = (typeof subscriptionStatuses)[number];
 
-export const billingCycles = ["monthly", "yearly", "one_time", "on_request"] as const;
+export const billingCycles = ["monthly", "yearly", "on_request"] as const;
 export type BillingCycle = (typeof billingCycles)[number];
+
+export const subscriptionTermMonths = [6, 12, 24, 36, 48] as const;
+export type SubscriptionTermMonths = (typeof subscriptionTermMonths)[number];
 
 export interface SubscriptionPlan {
   id: SubscriptionPlanId;
   shortName: string;
   fullName: string;
   tagline: string;
-  priceCents: number | null; // null = sob consulta
+  priceCents: number | null;
   currency: "BRL";
   billingCycle: BillingCycle;
   partnerTier: "silver" | "gold" | "platinum" | "diamond";
@@ -52,6 +47,13 @@ export interface SubscriptionPlan {
     requiresAdminContact: boolean;
     highValue: boolean;
   };
+  storefront: {
+    subscriptionOnly: true;
+    defaultTermMonths: SubscriptionTermMonths;
+    availableTermsMonths: SubscriptionTermMonths[];
+    licenseLabel: string;
+    ctaLabel: string;
+  };
 }
 
 export interface Subscription {
@@ -59,6 +61,7 @@ export interface Subscription {
   userId: number;
   planId: SubscriptionPlanId;
   status: SubscriptionStatus;
+  termMonths: SubscriptionTermMonths;
   startedAt: Date;
   activatedAt: Date | null;
   renewsAt: Date | null;
@@ -83,19 +86,26 @@ export interface SubscriptionEventLog {
   triggeredBy: "user" | "admin" | "system" | "billing_webhook";
   occurredAt: Date;
   notes?: string;
+  payload?: Record<string, unknown>;
 }
-
-// ------------------------------------------------------------------
-// Schemas Zod
-// ------------------------------------------------------------------
 
 export const subscriptionPlanIdSchema = z.enum(subscriptionPlanIds);
 export const subscriptionStatusSchema = z.enum(subscriptionStatuses);
 export const billingCycleSchema = z.enum(billingCycles);
+export const subscriptionTermMonthsSchema = z.union(
+  subscriptionTermMonths.map((term) => z.literal(term)) as [
+    z.ZodLiteral<6>,
+    z.ZodLiteral<12>,
+    z.ZodLiteral<24>,
+    z.ZodLiteral<36>,
+    z.ZodLiteral<48>,
+  ],
+);
 
 export const startSubscriptionInputSchema = z.object({
   userId: z.number().int().positive(),
   planId: subscriptionPlanIdSchema,
+  termMonths: subscriptionTermMonthsSchema.default(12),
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 

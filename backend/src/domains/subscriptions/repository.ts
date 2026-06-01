@@ -1,16 +1,25 @@
 /**
  * Subscriptions domain — repository.
  *
- * Armazenamento in-memory determinístico, alinhado ao padrão dos demais
- * domínios (partners, billing). Pronto para ser substituído por persistência
- * Drizzle quando a migration `0004_subscriptions.sql` for criada.
+ * Estratégia híbrida:
+ *  - Postgres/Drizzle quando DATABASE_URL estiver disponível.
+ *  - fallback determinístico in-memory para testes e ambientes locais mínimos.
  */
 
+import { desc, eq } from "drizzle-orm";
+import { getDb } from "../../../../database/schemas/db";
+import {
+  subscriptionEvents as subscriptionEventsTable,
+  subscriptions as subscriptionsTable,
+} from "../../../../database/schemas/schema-subscriptions";
+import { getSubscriptionPlan } from "./catalog";
 import type {
+  BillingCycle,
   Subscription,
   SubscriptionEventLog,
   SubscriptionPlanId,
   SubscriptionStatus,
+  SubscriptionTermMonths,
 } from "./types";
 
 interface SubscriptionState {
@@ -32,33 +41,62 @@ function emptyState(): SubscriptionState {
 const state: SubscriptionState = emptyState();
 
 function nextSubscriptionId(): string {
-  const id = `sub_${Date.now().toString(36)}_${state.nextSubscriptionSeq
-    .toString(36)
-    .padStart(3, "0")}`;
+  const id = `sub_${Date.now().toString(36)}_${state.nextSubscriptionSeq.toString(36).padStart(3, "0")}`;
   state.nextSubscriptionSeq++;
   return id;
 }
 
 function nextEventId(): string {
-  const id = `subev_${Date.now().toString(36)}_${state.nextEventSeq
-    .toString(36)
-    .padStart(3, "0")}`;
+  const id = `subev_${Date.now().toString(36)}_${state.nextEventSeq.toString(36).padStart(3, "0")}`;
   state.nextEventSeq++;
   return id;
 }
 
-// ------------------------------------------------------------------
-// Subscriptions
-// ------------------------------------------------------------------
+function normalizeMetadata(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return value as Record<string, unknown>;
+}
+
+function fromDbSubscription(row: typeof subscriptionsTable.$inferSelect): Subscription {
+  return {
+    id: row.id,
+    userId: row.userId,
+    planId: row.planId as SubscriptionPlanId,
+    status: row.status as SubscriptionStatus,
+    termMonths: row.termMonths as SubscriptionTermMonths,
+    startedAt: row.startedAt,
+    activatedAt: row.activatedAt ?? null,
+    renewsAt: row.renewsAt ?? null,
+    cancelledAt: row.cancelledAt ?? null,
+    pricePaidCents: row.pricePaidCents ?? null,
+    metadata: normalizeMetadata(row.metadata),
+  };
+}
+
+function fromDbEvent(row: typeof subscriptionEventsTable.$inferSelect): SubscriptionEventLog {
+  return {
+    id: row.id,
+    subscriptionId: row.subscriptionId,
+    type: row.type as SubscriptionEventLog["type"],
+    fromPlanId: (row.fromPlanId as SubscriptionPlanId | null) ?? null,
+    toPlanId: (row.toPlanId as SubscriptionPlanId | null) ?? null,
+    triggeredBy: row.triggeredBy as SubscriptionEventLog["triggeredBy"],
+    occurredAt: row.occurredAt,
+    notes: row.notes ?? undefined,
+    payload: normalizeMetadata(row.payload),
+  };
+}
 
 export interface CreateSubscriptionInput {
   userId: number;
   planId: SubscriptionPlanId;
+  billingCycle: BillingCycle;
+  termMonths: SubscriptionTermMonths;
   pricePaidCents: number | null;
   metadata?: Record<string, unknown>;
 }
 
-export function createSubscription(input: CreateSubscriptionInput): Subscription {
+export async function createSubscription(input: CreateSubscriptionInput): Promise<Subscription> {
   const id = nextSubscriptionId();
   const now = new Date();
   const subscription: Subscription = {
@@ -66,6 +104,7 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
     userId: input.userId,
     planId: input.planId,
     status: "pending_activation",
+    termMonths: input.termMonths,
     startedAt: now,
     activatedAt: null,
     renewsAt: null,
@@ -73,44 +112,105 @@ export function createSubscription(input: CreateSubscriptionInput): Subscription
     pricePaidCents: input.pricePaidCents,
     metadata: input.metadata ?? {},
   };
+
   state.subscriptions.set(id, subscription);
+
+  const db = await getDb();
+  if (db) {
+    await db.insert(subscriptionsTable).values({
+      id: subscription.id,
+      userId: subscription.userId,
+      planId: subscription.planId,
+      status: subscription.status,
+      billingCycle: input.billingCycle,
+      termMonths: subscription.termMonths,
+      startedAt: subscription.startedAt,
+      activatedAt: subscription.activatedAt,
+      renewsAt: subscription.renewsAt,
+      cancelledAt: subscription.cancelledAt,
+      pricePaidCents: subscription.pricePaidCents,
+      metadata: subscription.metadata,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
   return subscription;
 }
 
-export function getSubscription(id: string): Subscription | undefined {
+export async function getSubscription(id: string): Promise<Subscription | undefined> {
+  const db = await getDb();
+  if (db) {
+    const [row] = await db.select().from(subscriptionsTable).where(eq(subscriptionsTable.id, id)).limit(1);
+    if (row) return fromDbSubscription(row);
+  }
   return state.subscriptions.get(id);
 }
 
-export function updateSubscriptionStatus(
+export async function updateSubscriptionStatus(
   id: string,
   status: SubscriptionStatus,
   patch: Partial<Pick<Subscription, "activatedAt" | "renewsAt" | "cancelledAt" | "metadata">> = {},
-): Subscription | undefined {
-  const current = state.subscriptions.get(id);
+): Promise<Subscription | undefined> {
+  const current = await getSubscription(id);
   if (!current) return undefined;
+
   const next: Subscription = {
     ...current,
     status,
     ...patch,
     metadata: { ...current.metadata, ...(patch.metadata ?? {}) },
   };
+
   state.subscriptions.set(id, next);
+
+  const db = await getDb();
+  if (db) {
+    await db
+      .update(subscriptionsTable)
+      .set({
+        status: next.status,
+        activatedAt: next.activatedAt,
+        renewsAt: next.renewsAt,
+        cancelledAt: next.cancelledAt,
+        metadata: next.metadata,
+        updatedAt: new Date(),
+      })
+      .where(eq(subscriptionsTable.id, id));
+  }
+
   return next;
 }
 
-export function updateSubscriptionPlan(
+export async function updateSubscriptionPlan(
   id: string,
   planId: SubscriptionPlanId,
   pricePaidCents: number | null,
-): Subscription | undefined {
-  const current = state.subscriptions.get(id);
+): Promise<Subscription | undefined> {
+  const current = await getSubscription(id);
   if (!current) return undefined;
+
   const next: Subscription = {
     ...current,
     planId,
     pricePaidCents,
   };
+
   state.subscriptions.set(id, next);
+
+  const db = await getDb();
+  if (db) {
+    await db
+      .update(subscriptionsTable)
+      .set({
+        planId: next.planId,
+        pricePaidCents: next.pricePaidCents,
+        billingCycle: getSubscriptionPlan(next.planId).billingCycle,
+        updatedAt: new Date(),
+      })
+      .where(eq(subscriptionsTable.id, id));
+  }
+
   return next;
 }
 
@@ -122,43 +222,65 @@ export interface ListSubscriptionsFilter {
   offset: number;
 }
 
-export function listSubscriptions(filter: ListSubscriptionsFilter): {
+export async function listSubscriptions(filter: ListSubscriptionsFilter): Promise<{
   items: Subscription[];
   total: number;
-} {
-  const all = Array.from(state.subscriptions.values())
+}> {
+  const db = await getDb();
+  const source = db
+    ? (await db.select().from(subscriptionsTable).orderBy(desc(subscriptionsTable.startedAt))).map(fromDbSubscription)
+    : Array.from(state.subscriptions.values()).sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+
+  const all = source
     .filter((sub) => (filter.userId ? sub.userId === filter.userId : true))
     .filter((sub) => (filter.status ? sub.status === filter.status : true))
-    .filter((sub) => (filter.planId ? sub.planId === filter.planId : true))
-    .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+    .filter((sub) => (filter.planId ? sub.planId === filter.planId : true));
+
   return {
     items: all.slice(filter.offset, filter.offset + filter.limit),
     total: all.length,
   };
 }
 
-// ------------------------------------------------------------------
-// Event logs (audit trail leve no domínio)
-// ------------------------------------------------------------------
-
-export function appendSubscriptionEvent(
+export async function appendSubscriptionEvent(
   event: Omit<SubscriptionEventLog, "id">,
-): SubscriptionEventLog {
-  const id = nextEventId();
-  const stored: SubscriptionEventLog = { id, ...event };
+): Promise<SubscriptionEventLog> {
+  const stored: SubscriptionEventLog = { id: nextEventId(), ...event };
   state.events.push(stored);
+
+  const db = await getDb();
+  if (db) {
+    await db.insert(subscriptionEventsTable).values({
+      id: stored.id,
+      subscriptionId: stored.subscriptionId,
+      type: stored.type,
+      fromPlanId: stored.fromPlanId,
+      toPlanId: stored.toPlanId,
+      triggeredBy: stored.triggeredBy,
+      occurredAt: stored.occurredAt,
+      notes: stored.notes,
+      payload: stored.payload ?? {},
+    });
+  }
+
   return stored;
 }
 
-export function listSubscriptionEvents(subscriptionId: string): SubscriptionEventLog[] {
+export async function listSubscriptionEvents(subscriptionId: string): Promise<SubscriptionEventLog[]> {
+  const db = await getDb();
+  if (db) {
+    const rows = await db
+      .select()
+      .from(subscriptionEventsTable)
+      .where(eq(subscriptionEventsTable.subscriptionId, subscriptionId))
+      .orderBy(desc(subscriptionEventsTable.occurredAt));
+    return rows.map(fromDbEvent);
+  }
+
   return state.events
     .filter((event) => event.subscriptionId === subscriptionId)
     .sort((a, b) => b.occurredAt.getTime() - a.occurredAt.getTime());
 }
-
-// ------------------------------------------------------------------
-// Stats
-// ------------------------------------------------------------------
 
 export interface SubscriptionMetricsSnapshot {
   totalSubscriptions: number;
@@ -167,8 +289,8 @@ export interface SubscriptionMetricsSnapshot {
   activeMRRCents: number;
 }
 
-export function computeSubscriptionMetrics(): SubscriptionMetricsSnapshot {
-  const subs = Array.from(state.subscriptions.values());
+export async function computeSubscriptionMetrics(): Promise<SubscriptionMetricsSnapshot> {
+  const subs = (await listSubscriptions({ limit: 10000, offset: 0 })).items;
   const byStatus = {
     pending_activation: 0,
     active: 0,
@@ -186,9 +308,8 @@ export function computeSubscriptionMetrics(): SubscriptionMetricsSnapshot {
   for (const sub of subs) {
     byStatus[sub.status]++;
     byPlan[sub.planId]++;
-    if (sub.status === "active" && sub.pricePaidCents) {
-      // Aproximação inicial: planos one_time não contam para MRR.
-      // Em produção será resolvido pelo billing service consolidado.
+    const plan = getSubscriptionPlan(sub.planId);
+    if (sub.status === "active" && sub.pricePaidCents && plan.billingCycle === "monthly") {
       activeMRRCents += sub.pricePaidCents;
     }
   }
@@ -200,10 +321,6 @@ export function computeSubscriptionMetrics(): SubscriptionMetricsSnapshot {
     activeMRRCents,
   };
 }
-
-// ------------------------------------------------------------------
-// Utilitário para testes
-// ------------------------------------------------------------------
 
 export function __resetSubscriptionsForTests(): void {
   state.subscriptions = new Map();

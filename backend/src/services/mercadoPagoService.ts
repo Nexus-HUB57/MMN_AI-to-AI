@@ -122,6 +122,26 @@ export async function createMercadoPagoCheckoutPreference(input: MercadoPagoChec
   });
 }
 
+export async function getMercadoPagoPayment(paymentId: string | number) {
+  return mercadoPagoRequest<{
+    id: number;
+    status?: string;
+    status_detail?: string;
+    external_reference?: string;
+    date_approved?: string;
+    date_created?: string;
+    metadata?: Record<string, unknown>;
+    point_of_interaction?: {
+      type?: string;
+      transaction_data?: {
+        qr_code?: string;
+        qr_code_base64?: string;
+        ticket_url?: string;
+      };
+    };
+  }>(`/v1/payments/${paymentId}`);
+}
+
 export async function createMercadoPagoPixPayment(input: MercadoPagoPixPaymentInput) {
   const payload = {
     transaction_amount: Number(input.amount.toFixed(2)),

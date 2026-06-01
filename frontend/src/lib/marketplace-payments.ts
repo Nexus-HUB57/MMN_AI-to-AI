@@ -1,6 +1,6 @@
-type MarketplaceCheckoutSource = "estoque" | "minisite" | "packs" | "marketplaces" | "checkout-manual" | string;
+type MarketplaceCheckoutSource = "estoque" | "minisite" | "packs" | "marketplaces" | "subscriptions" | "checkout-manual" | string;
 
-type MarketplaceCheckoutType = "produto" | "pack" | string;
+type MarketplaceCheckoutType = "produto" | "pack" | "subscription" | string;
 
 export interface MarketplaceCheckoutIntent {
   source?: MarketplaceCheckoutSource;
@@ -9,6 +9,8 @@ export interface MarketplaceCheckoutIntent {
   name?: string;
   amountCents?: number;
   description?: string;
+  subscriptionId?: string;
+  termMonths?: number;
 }
 
 export const MARKETPLACE_CHECKOUT_STORAGE_KEY = "nexus-marketplace-checkout-intent";
@@ -46,6 +48,8 @@ function normalizeIntent(intent: MarketplaceCheckoutIntent): MarketplaceCheckout
     name: intent.name ?? "Pagamento Nexus",
     amountCents: typeof intent.amountCents === "number" ? Math.max(0, Math.round(intent.amountCents)) : undefined,
     description: intent.description ?? undefined,
+    subscriptionId: intent.subscriptionId ?? undefined,
+    termMonths: typeof intent.termMonths === "number" ? intent.termMonths : undefined,
   };
 }
 
@@ -107,6 +111,8 @@ export function getMarketplaceReturnUrl(source?: MarketplaceCheckoutSource) {
       return "/packs";
     case "marketplaces":
       return "/marketplaces";
+    case "subscriptions":
+      return "/subscriptions";
     default:
       return "/dashboard";
   }

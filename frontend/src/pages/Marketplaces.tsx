@@ -194,6 +194,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 <Sparkles className="mr-1.5 h-3 w-3" />
                 Nexus Storie Marketplace
               </Badge>
+              <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                Nexus Partners · assinatura exclusiva
+              </Badge>
               <Badge className="border border-white/10 bg-white/5 text-slate-200">Pix · Mercado Pago</Badge>
               <Badge className="border border-white/10 bg-white/5 text-slate-200">Entrega digital imediata</Badge>
               {isPublicView && (
@@ -210,8 +213,8 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
               </h1>
               <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
                 O Nexus Storie Marketplace reúne todos os produtos, packs de evolução, bibliotecas de e-books e canais
-                parceiros em um único lugar. Compre, ative seu agente e comece a revender — tudo com checkout
-                integrado e entrega automática.
+                parceiros em um único lugar. O produto principal agora é o Nexus Partners, apresentado em formato
+                exclusivamente por assinatura, com checkout integrado e ativação operacional contínua.
               </p>
             </div>
 
@@ -259,15 +262,15 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 </>
               ) : (
                 <>
-                  <Link href="/estoque">
+                  <Link href="/subscriptions">
                     <Button className="gradient-btn h-12 px-6 text-sm font-semibold">
-                      Abrir meu estoque
+                      Assinar Nexus Partners
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
-                  <Link href="/packs">
+                  <Link href="/estoque">
                     <Button variant="outline" className="h-12 border-white/15 bg-white/5 px-6 text-sm text-white hover:bg-white/10">
-                      Ver packs e planos
+                      Abrir meu estoque
                     </Button>
                   </Link>
                 </>
@@ -436,7 +439,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           <div className="flex flex-wrap gap-2">
             {[
               { value: "all", label: "Tudo" },
-              { value: "packs", label: "Packs" },
+              { value: "packs", label: "Packs / Assinaturas" },
               { value: "ebooks", label: "E-books" },
             ].map((filter) => (
               <button

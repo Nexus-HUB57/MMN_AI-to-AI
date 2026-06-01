@@ -323,7 +323,7 @@ export const pixRouter = router({
     .input(
       z.object({
         source: z.string().max(40).optional(),
-        type: z.enum(["pack", "produto", "ebook", "skill"]),
+        type: z.enum(["pack", "produto", "ebook", "skill", "subscription"]),
         slug: z.string().min(1).max(120),
         name: z.string().min(1).max(140),
         description: z.string().max(240).optional(),
@@ -332,6 +332,8 @@ export const pixRouter = router({
         payerEmail: z.string().email().optional(),
         payerName: z.string().max(120).optional(),
         payerDocument: z.string().max(18).optional(),
+        subscriptionId: z.string().min(1).optional(),
+        termMonths: z.number().int().min(6).max(48).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -353,7 +355,9 @@ export const pixRouter = router({
         warnings.push("Documento do pagador inválido para o Mercado Pago. O checkout continuará com fallback PIX manual.");
       }
 
-      const externalReference = `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
+      const externalReference = input.subscriptionId
+        ? `subscription:${input.subscriptionId}:${runtimeUser.id}:${Date.now()}`
+        : `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
       const fallbackPix = {
         pixKey: MARKETPLACE_PIX_KEY,
         keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
@@ -411,6 +415,8 @@ export const pixRouter = router({
             type: input.type,
             slug: input.slug,
             userId: runtimeUser.id,
+            subscriptionId: input.subscriptionId,
+            termMonths: input.termMonths,
           },
         });
 
@@ -442,6 +448,8 @@ export const pixRouter = router({
             type: input.type,
             slug: input.slug,
             userId: runtimeUser.id,
+            subscriptionId: input.subscriptionId,
+            termMonths: input.termMonths,
           },
         });
 

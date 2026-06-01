@@ -138,6 +138,8 @@ export default function PixCheckout() {
       slug: checkoutIntent?.slug ?? "checkout-manual",
       name: checkoutIntent?.name ?? "Pagamento Nexus",
       description: description || checkoutIntent?.description || checkoutIntent?.name || "Pagamento Nexus",
+      subscriptionId: checkoutIntent?.subscriptionId,
+      termMonths: checkoutIntent?.termMonths,
     }),
     [checkoutIntent, description],
   );
@@ -154,9 +156,16 @@ export default function PixCheckout() {
   const pixBase64 = hasRequestedCheckout ? checkoutSession?.pix.qrCodeBase64 || null : null;
   const hasMercadoPagoLink = Boolean(checkoutSession?.mercadoPago.initPoint);
 
-  const title = checkoutIntent ? "Área de pagamentos do Marketplace" : "Checkout PIX";
+  const isSubscriptionCheckout = checkoutIntent?.type === "subscription";
+  const title = checkoutIntent
+    ? isSubscriptionCheckout
+      ? "Assinatura Nexus Partners"
+      : "Área de pagamentos do Marketplace"
+    : "Checkout PIX";
   const subtitle = checkoutIntent
-    ? "Revise o item, gere o checkout seguro no servidor e pague por QR Code PIX ou código copia e cola."
+    ? isSubscriptionCheckout
+      ? "Revise a licença contratual, gere o checkout seguro no servidor e conclua a ativação da assinatura do Nexus Partners."
+      : "Revise o item, gere o checkout seguro no servidor e pague por QR Code PIX ou código copia e cola."
     : "Use este checkout para cobranças avulsas do ecossistema Nexus com geração segura de PIX.";
 
   const handleGenerateCheckout = async () => {
@@ -180,6 +189,8 @@ export default function PixCheckout() {
         payerEmail: payerEmail || undefined,
         payerName: user?.name || undefined,
         payerDocument: payerDocument || undefined,
+        subscriptionId: paymentContext.subscriptionId,
+        termMonths: paymentContext.termMonths,
       })) as MarketplaceCheckoutSession;
 
       setCheckoutSession(session);
@@ -213,7 +224,7 @@ export default function PixCheckout() {
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                  {checkoutIntent ? "Compra originada do Marketplace" : "Checkout avulso"}
+                  {checkoutIntent ? (isSubscriptionCheckout ? "Assinatura originada do Marketplace" : "Compra originada do Marketplace") : "Checkout avulso"}
                 </Badge>
                 <Badge className="border border-amber-400/30 bg-amber-400/10 text-amber-200">
                   PIX + Mercado Pago

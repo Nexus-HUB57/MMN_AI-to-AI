@@ -12,6 +12,10 @@ import {
 } from "./services/cronScheduler";
 import { registerAuditSubscribers } from "./_core/events/auditSubscribers";
 import { registerPartnersEventHandlers } from "./domains/partners/subscribers";
+import {
+  processHotmartSubscriptionWebhook,
+  processMercadoPagoSubscriptionWebhook,
+} from "./domains/subscriptions/billingWebhook";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
 
@@ -121,6 +125,37 @@ app.get("/cron/status", (_req, res) => {
 });
 
 app.get("/metrics", metricsHandler);
+
+app.post("/webhooks/mercadopago", async (req, res) => {
+  try {
+    const result = await processMercadoPagoSubscriptionWebhook({
+      body: (req.body ?? {}) as Record<string, unknown>,
+      query: req.query as Record<string, unknown>,
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      provider: "mercado_pago",
+      action: "ignored",
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
+
+app.post("/webhooks/hotmart", async (req, res) => {
+  try {
+    const result = await processHotmartSubscriptionWebhook((req.body ?? {}) as Record<string, unknown>);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      provider: "hotmart",
+      action: "ignored",
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
 
 app.use("/trpc", trpcMiddleware);
 app.use("/api/trpc", trpcMiddleware);

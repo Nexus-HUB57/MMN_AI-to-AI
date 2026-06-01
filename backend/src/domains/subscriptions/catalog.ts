@@ -1,36 +1,39 @@
 /**
  * Subscriptions domain — catálogo comercial.
  *
- * Catálogo oficial dos packs do Nexus Affil'IA'te (v1.4.0).
- * Espelha o que o frontend público apresenta em /, /login e /marketplaces.
- *
- * Mantido em arquivo dedicado para permitir, no futuro próximo, a migração para
- * uma tabela `subscription_plans` no Postgres sem alterar consumidores.
+ * Catálogo oficial do Nexus Partners no Nexus Store / Nexus Marketplace.
+ * O produto é apresentado como licença SaaS exclusivamente por assinatura.
  */
 
-import type { SubscriptionPlan, SubscriptionPlanId } from "./types";
+import type {
+  SubscriptionPlan,
+  SubscriptionPlanId,
+  SubscriptionTermMonths,
+} from "./types";
+
+const LICENSE_TERMS: SubscriptionTermMonths[] = [6, 12, 24, 36, 48];
 
 export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = {
   "pack-a2": {
     id: "pack-a2",
-    shortName: "Pack A²",
-    fullName: "Pack Agente Afiliado A² · Nível I",
-    tagline: "Ativação do Agente IA e porta de entrada operacional",
+    shortName: "Nexus Partners Start",
+    fullName: "Nexus Partners · Start License",
+    tagline: "Entrada operacional para creators, parceiros e afiliados com licença SaaS recorrente",
     priceCents: 1000,
     currency: "BRL",
-    billingCycle: "one_time",
+    billingCycle: "monthly",
     partnerTier: "silver",
     commissionRate: 0.05,
     features: [
-      "1 Agente IA ativado",
-      "10 e-books para revenda",
-      "Painel comercial liberado",
-      "2 skills iniciais",
+      "Rastreamento ponta a ponta de parceiros e afiliados",
+      "1 agente IA operacional ativado",
+      "8 skills em runtime com replay consultável",
+      "Dashboard comercial e trilha auditável",
     ],
     capacity: {
       aiAgents: 1,
       ebooks: 10,
-      skills: 2,
+      skills: 8,
       referralLevels: 2,
     },
     governance: {
@@ -38,22 +41,29 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       requiresAdminContact: false,
       highValue: false,
     },
+    storefront: {
+      subscriptionOnly: true,
+      defaultTermMonths: 12,
+      availableTermsMonths: LICENSE_TERMS,
+      licenseLabel: "Licença mensal com fidelização de 6 a 48 meses",
+      ctaLabel: "Assinar Start",
+    },
   },
   "pack-ag": {
     id: "pack-ag",
-    shortName: "Pack AG",
-    fullName: "Pack Agente Preditivo AG · Nível I",
-    tagline: "Operação preditiva e expansão de rede",
+    shortName: "Nexus Partners Growth",
+    fullName: "Nexus Partners · Growth License",
+    tagline: "Escala comercial recorrente com governança, analytics e expansão multicanal",
     priceCents: 25000,
     currency: "BRL",
     billingCycle: "monthly",
     partnerTier: "gold",
     commissionRate: 0.08,
     features: [
-      "Agente em nível profissional",
-      "250 e-books para ampliar a vitrine",
-      "Comissão em mais níveis da rede",
-      "5 cotas extras de expansão",
+      "Comissionamento dinâmico com atribuição customizável",
+      "ROI por canal e LTV por parceiro em tempo real",
+      "Mais níveis de rede e governança de aprovações",
+      "250 e-books + operação assistida por IA",
     ],
     capacity: {
       aiAgents: 3,
@@ -66,22 +76,29 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       requiresAdminContact: false,
       highValue: false,
     },
+    storefront: {
+      subscriptionOnly: true,
+      defaultTermMonths: 12,
+      availableTermsMonths: LICENSE_TERMS,
+      licenseLabel: "Licença mensal com planos de 6, 12, 24, 36 e 48 meses",
+      ctaLabel: "Assinar Growth",
+    },
   },
   "pack-aa": {
     id: "pack-aa",
-    shortName: "Pack AA",
-    fullName: "Pack Liderança Estratégica AA · Nível I",
-    tagline: "Camada estratégica com participação em receitas especiais",
+    shortName: "Nexus Partners Enterprise",
+    fullName: "Nexus Partners · Enterprise License",
+    tagline: "Camada estratégica enterprise com governança high-value e desenho sob consulta",
     priceCents: null,
     currency: "BRL",
     billingCycle: "on_request",
     partnerTier: "platinum",
     commissionRate: 0.12,
     features: [
-      "Benefícios estratégicos exclusivos",
-      "Participação em receitas especiais",
-      "Apoio a novos projetos",
-      "Acesso total às capacidades do agente",
+      "Governança comercial granular enterprise",
+      "Participação em receitas especiais e desenho dedicado",
+      "Acesso expandido à operação IA e integrações sob demanda",
+      "Suporte estratégico para expansão de canais e parceiros",
     ],
     capacity: {
       aiAgents: 10,
@@ -93,6 +110,13 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       requiresApproval: true,
       requiresAdminContact: true,
       highValue: true,
+    },
+    storefront: {
+      subscriptionOnly: true,
+      defaultTermMonths: 24,
+      availableTermsMonths: LICENSE_TERMS,
+      licenseLabel: "Contrato enterprise sob consulta com janela de 6 a 48 meses",
+      ctaLabel: "Solicitar proposta",
     },
   },
 };
@@ -109,10 +133,6 @@ export function getSubscriptionPlan(planId: SubscriptionPlanId): SubscriptionPla
   return plan;
 }
 
-/**
- * Determina se um movimento entre planos é um upgrade, downgrade ou lateral.
- * Usado pelo service ao mudar a assinatura e pelo billing para definir cobrança.
- */
 export function compareSubscriptionPlans(
   from: SubscriptionPlanId,
   to: SubscriptionPlanId,

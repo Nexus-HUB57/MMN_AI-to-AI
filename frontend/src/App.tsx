@@ -38,6 +38,7 @@ const AgentsSync = lazy(() => import("@/pages/AgentsSync"));
 const OrchestratorDashboard = lazy(() => import("@/pages/OrchestratorDashboard"));
 const SocialAccounts = lazy(() => import("@/pages/SocialAccounts"));
 const PartnersDashboardPage = lazy(() => import("@/pages/PartnersDashboardPage"));
+const Subscriptions = lazy(() => import("@/pages/Subscriptions"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function PageFallback() {
@@ -79,6 +80,7 @@ function Router() {
         <Route path="/agents/sync" component={AgentsSync} />
         <Route path="/orchestrator" component={OrchestratorDashboard} />
         <Route path="/partners" component={PartnersDashboardPage} />
+        <Route path="/subscriptions" component={Subscriptions} />
         <Route path="/content-hub" component={ContentHub} />
         <Route path="/content/calendar" component={ContentCalendar} />
         <Route path="/marketing/materials" component={MarketingMaterials} />

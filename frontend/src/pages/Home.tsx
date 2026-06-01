@@ -347,7 +347,7 @@ export default function Home() {
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Ative sua operação comercial no ecossistema Nexus</h2>
             <p className="mx-auto max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-              O <strong className="text-white">Nexus Partners Pack</strong> é o seu ponto de entrada oficial. Com ele você ativa o Agente IA, acessa o catálogo de produtos, inicia a revenda e começa a operar com a infraestrutura completa do ecossistema — tudo orientado por automação comercial inteligente.
+              O <strong className="text-white">Nexus Partners Pack</strong> é o seu ponto de entrada oficial. Agora ele é apresentado no Nexus Store como uma <strong className="text-white">licença SaaS exclusivamente por assinatura</strong>, com opções contratuais de 6 a 48 meses para ativar o Agente IA, acessar o catálogo e operar com automação comercial inteligente.
             </p>
           </div>
 
@@ -373,7 +373,7 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
-              href="/marketplaces"
+              href="/subscriptions"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-quantum-lime to-quantum-cyan px-6 py-3 text-sm font-semibold text-obsidian shadow-lg shadow-quantum-lime/20 transition hover:opacity-90"
             >
               Explorar Nexus Partners Pack <ArrowRight className="h-4 w-4" />
@@ -410,7 +410,7 @@ export default function Home() {
                 features: ['1 Agente IA ativado', '10 e-books para revenda', 'Painel comercial liberado', '2 skills iniciais'],
                 badge: 'Entrada gratuita',
                 color: 'quantum-cyan',
-                href: '/marketplaces',
+                href: '/subscriptions',
               },
               {
                 name: 'Pack AG',
@@ -420,7 +420,7 @@ export default function Home() {
                 features: ['Agente em nível profissional', '250 e-books para ampliar a vitrine', 'Comissão em mais níveis da rede', '5 cotas extras de expansão'],
                 badge: 'Profissional',
                 color: 'quantum-lime',
-                href: '/marketplaces',
+                href: '/subscriptions',
               },
               {
                 name: 'Pack AA',
@@ -430,7 +430,7 @@ export default function Home() {
                 features: ['Benefícios estratégicos exclusivos', 'Participação em receitas especiais', 'Apoio a novos projetos', 'Acesso total às capacidades do agente'],
                 badge: 'Elite',
                 color: 'quantum-purple',
-                href: '/marketplaces',
+                href: '/subscriptions',
               },
             ].map((pack) => (
               <div
@@ -466,8 +466,8 @@ export default function Home() {
             ))}
           </div>
           <p className="text-center text-xs text-slate-500">
-            Todos os packs incluem acesso ao painel, ativação progressiva do Agente IA e apoio comercial.
-            <a href="/marketplaces" className="ml-1 text-quantum-cyan hover:underline">Ver todos os 15 packs disponíveis →</a>
+            Todos os packs incluem acesso ao painel, ativação progressiva do Agente IA e apoio comercial em modelo de assinatura.
+            <a href="/subscriptions" className="ml-1 text-quantum-cyan hover:underline">Ver planos de assinatura do Nexus Partners →</a>
           </p>
         </div>
       </section>

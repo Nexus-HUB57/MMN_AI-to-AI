@@ -1,14 +1,7 @@
 /**
  * Subscriptions domain — service.
  *
- * Casos de uso comerciais do modelo de Assinatura (v1.4.0).
- *
- * Regras de negócio principais:
- *  - Pack A² ativa automaticamente após confirmação de pagamento (R$ 10).
- *  - Pack AG entra como pending_activation até o billing webhook confirmar.
- *  - Pack AA exige aprovação de admin (governança highValue).
- *  - Upgrade entre packs gera evento dedicado e ajusta o tier do parceiro
- *    via publishPartnerTierPromoted (lá quem reage é o subscriber Partners).
+ * Casos de uso comerciais do modelo de assinatura do Nexus Partners.
  */
 
 import {
@@ -33,23 +26,21 @@ import type {
   Subscription,
   SubscriptionEventLog,
   SubscriptionPlanId,
+  SubscriptionTermMonths,
 } from "./types";
-
-// ------------------------------------------------------------------
-// Catálogo
-// ------------------------------------------------------------------
 
 export function getCatalog() {
   return {
     plans: listSubscriptionPlans(),
-    version: "1.4.0",
+    version: "1.5.0",
     pivot: "subscription-commercial",
+    storefront: {
+      productName: "Nexus Partners",
+      presentation: "subscription-only",
+      termOptionsMonths: [6, 12, 24, 36, 48],
+    },
   };
 }
-
-// ------------------------------------------------------------------
-// Início e ativação
-// ------------------------------------------------------------------
 
 export interface StartSubscriptionResult {
   subscription: Subscription;
@@ -64,24 +55,35 @@ export interface StartSubscriptionResult {
 export async function startSubscription(input: {
   userId: number;
   planId: SubscriptionPlanId;
+  termMonths: SubscriptionTermMonths;
   metadata?: Record<string, unknown>;
 }): Promise<StartSubscriptionResult> {
   const plan = getSubscriptionPlan(input.planId);
 
-  const subscription = createSubscription({
+  const subscription = await createSubscription({
     userId: input.userId,
     planId: plan.id,
+    billingCycle: plan.billingCycle,
+    termMonths: input.termMonths,
     pricePaidCents: plan.priceCents,
-    metadata: input.metadata,
+    metadata: {
+      ...input.metadata,
+      commercialModel: "subscription-only",
+      termMonths: input.termMonths,
+    },
   });
 
-  appendSubscriptionEvent({
+  await appendSubscriptionEvent({
     subscriptionId: subscription.id,
     type: "subscription_started",
     fromPlanId: null,
     toPlanId: plan.id,
     triggeredBy: "user",
     occurredAt: new Date(),
+    payload: {
+      termMonths: input.termMonths,
+      commercialModel: "subscription-only",
+    },
   });
 
   if (plan.governance.requiresAdminContact) {
@@ -108,25 +110,33 @@ export async function confirmSubscriptionPayment(
   subscriptionId: string,
   triggeredBy: "user" | "admin" | "system" | "billing_webhook" = "billing_webhook",
 ): Promise<Subscription | null> {
-  const current = getSubscription(subscriptionId);
+  const current = await getSubscription(subscriptionId);
   if (!current) return null;
+  if (current.status === "active") return current;
 
   const now = new Date();
   const renewsAt = computeNextRenewal(current.planId, now);
 
-  const updated = updateSubscriptionStatus(subscriptionId, "active", {
-    activatedAt: now,
+  const updated = await updateSubscriptionStatus(subscriptionId, "active", {
+    activatedAt: current.activatedAt ?? now,
     renewsAt,
+    metadata: {
+      lastPaymentConfirmedAt: now.toISOString(),
+      activatedBy: triggeredBy,
+    },
   });
   if (!updated) return null;
 
-  appendSubscriptionEvent({
+  await appendSubscriptionEvent({
     subscriptionId,
     type: "subscription_activated",
     fromPlanId: null,
     toPlanId: updated.planId,
     triggeredBy,
     occurredAt: now,
+    payload: {
+      renewsAt: renewsAt?.toISOString() ?? null,
+    },
   });
 
   return updated;
@@ -134,18 +144,63 @@ export async function confirmSubscriptionPayment(
 
 function computeNextRenewal(planId: SubscriptionPlanId, anchor: Date): Date | null {
   const plan = getSubscriptionPlan(planId);
-  if (plan.billingCycle === "one_time" || plan.billingCycle === "on_request") {
-    return null;
-  }
+  if (plan.billingCycle === "on_request") return null;
   const next = new Date(anchor);
   if (plan.billingCycle === "monthly") next.setMonth(next.getMonth() + 1);
   if (plan.billingCycle === "yearly") next.setFullYear(next.getFullYear() + 1);
   return next;
 }
 
-// ------------------------------------------------------------------
-// Upgrade / downgrade
-// ------------------------------------------------------------------
+export async function handleSubscriptionInvoicePaid(input: {
+  subscriptionId: string;
+  invoiceId?: string | null;
+  paidAt?: string | Date | null;
+  provider: "mercado_pago" | "hotmart" | "manual" | "system";
+  externalReference?: string | null;
+}): Promise<Subscription | null> {
+  const current = await getSubscription(input.subscriptionId);
+  if (!current) return null;
+
+  const paidAt = input.paidAt ? new Date(input.paidAt) : new Date();
+  if (Number.isNaN(paidAt.getTime())) {
+    throw new Error("Data de pagamento inválida para a assinatura.");
+  }
+
+  if (current.status === "pending_activation") {
+    return confirmSubscriptionPayment(current.id, "billing_webhook");
+  }
+
+  const renewalAnchor = current.renewsAt && current.renewsAt > paidAt ? current.renewsAt : paidAt;
+  const renewsAt = computeNextRenewal(current.planId, renewalAnchor);
+
+  const updated = await updateSubscriptionStatus(current.id, "active", {
+    renewsAt,
+    metadata: {
+      lastInvoiceId: input.invoiceId ?? undefined,
+      lastInvoicePaidAt: paidAt.toISOString(),
+      lastPaymentProvider: input.provider,
+      lastExternalReference: input.externalReference ?? undefined,
+    },
+  });
+  if (!updated) return null;
+
+  await appendSubscriptionEvent({
+    subscriptionId: current.id,
+    type: "subscription_renewed",
+    fromPlanId: current.planId,
+    toPlanId: current.planId,
+    triggeredBy: "billing_webhook",
+    occurredAt: paidAt,
+    notes: input.invoiceId ? `Fatura ${input.invoiceId} paga` : "Fatura paga",
+    payload: {
+      provider: input.provider,
+      externalReference: input.externalReference ?? null,
+      renewsAt: renewsAt?.toISOString() ?? null,
+    },
+  });
+
+  return updated;
+}
 
 export interface ChangeSubscriptionResult {
   subscription: Subscription;
@@ -158,7 +213,7 @@ export async function changeSubscriptionPlan(input: {
   triggeredBy: "user" | "admin" | "system" | "billing_webhook";
   notes?: string;
 }): Promise<ChangeSubscriptionResult | null> {
-  const current = getSubscription(input.subscriptionId);
+  const current = await getSubscription(input.subscriptionId);
   if (!current) return null;
 
   const fromPlan = getSubscriptionPlan(current.planId);
@@ -166,10 +221,10 @@ export async function changeSubscriptionPlan(input: {
   const movement = compareSubscriptionPlans(fromPlan.id, toPlan.id);
   const now = new Date();
 
-  const updated = updateSubscriptionPlan(input.subscriptionId, toPlan.id, toPlan.priceCents);
+  const updated = await updateSubscriptionPlan(input.subscriptionId, toPlan.id, toPlan.priceCents);
   if (!updated) return null;
 
-  appendSubscriptionEvent({
+  await appendSubscriptionEvent({
     subscriptionId: input.subscriptionId,
     type: "subscription_upgraded",
     fromPlanId: fromPlan.id,
@@ -177,13 +232,10 @@ export async function changeSubscriptionPlan(input: {
     triggeredBy: input.triggeredBy,
     occurredAt: now,
     notes: input.notes,
+    payload: { movement },
   });
 
   if (movement === "upgrade") {
-    // Dispara evento de promoção do parceiro associado.
-    // O subscriber Partners é responsável por:
-    //   - enviar notificação multi-canal (notifyTierPromotion);
-    //   - emitir PARTNER_HIGH_VALUE_PROMOTION quando aplicável.
     await publishPartnerTierPromoted({
       partnerId: String(updated.userId),
       previousTier: fromPlan.partnerTier,
@@ -197,24 +249,24 @@ export async function changeSubscriptionPlan(input: {
   return { subscription: updated, movement };
 }
 
-// ------------------------------------------------------------------
-// Cancelamento / suspensão
-// ------------------------------------------------------------------
-
 export async function cancelSubscription(input: {
   subscriptionId: string;
   reason?: string;
   triggeredBy?: "user" | "admin" | "system" | "billing_webhook";
 }): Promise<Subscription | null> {
-  const current = getSubscription(input.subscriptionId);
+  const current = await getSubscription(input.subscriptionId);
   if (!current) return null;
   const now = new Date();
-  const updated = updateSubscriptionStatus(input.subscriptionId, "cancelled", {
+
+  const updated = await updateSubscriptionStatus(input.subscriptionId, "cancelled", {
     cancelledAt: now,
+    metadata: {
+      cancellationReason: input.reason ?? undefined,
+    },
   });
   if (!updated) return null;
 
-  appendSubscriptionEvent({
+  await appendSubscriptionEvent({
     subscriptionId: input.subscriptionId,
     type: "subscription_cancelled",
     fromPlanId: current.planId,
@@ -228,12 +280,18 @@ export async function cancelSubscription(input: {
 }
 
 export async function markSubscriptionPastDue(subscriptionId: string): Promise<Subscription | null> {
-  const current = getSubscription(subscriptionId);
+  const current = await getSubscription(subscriptionId);
   if (!current) return null;
   const now = new Date();
-  const updated = updateSubscriptionStatus(subscriptionId, "past_due");
+
+  const updated = await updateSubscriptionStatus(subscriptionId, "past_due", {
+    metadata: {
+      lastPastDueAt: now.toISOString(),
+    },
+  });
   if (!updated) return null;
-  appendSubscriptionEvent({
+
+  await appendSubscriptionEvent({
     subscriptionId,
     type: "subscription_past_due",
     fromPlanId: current.planId,
@@ -241,12 +299,9 @@ export async function markSubscriptionPastDue(subscriptionId: string): Promise<S
     triggeredBy: "billing_webhook",
     occurredAt: now,
   });
+
   return updated;
 }
-
-// ------------------------------------------------------------------
-// Queries
-// ------------------------------------------------------------------
 
 export interface SubscriptionOverview {
   metrics: SubscriptionMetricsSnapshot;
@@ -254,32 +309,32 @@ export interface SubscriptionOverview {
   plans: ReturnType<typeof listSubscriptionPlans>;
 }
 
-export function getSubscriptionsOverview(): SubscriptionOverview {
+export async function getSubscriptionsOverview(): Promise<SubscriptionOverview> {
   return {
-    metrics: computeSubscriptionMetrics(),
-    catalogVersion: "1.4.0",
+    metrics: await computeSubscriptionMetrics(),
+    catalogVersion: "1.5.0",
     plans: listSubscriptionPlans(),
   };
 }
 
-export function getSubscriptionDetails(id: string): {
+export async function getSubscriptionDetails(id: string): Promise<{
   subscription: Subscription;
   plan: ReturnType<typeof getSubscriptionPlan>;
   events: SubscriptionEventLog[];
-} | null {
-  const subscription = getSubscription(id);
+} | null> {
+  const subscription = await getSubscription(id);
   if (!subscription) return null;
   return {
     subscription,
     plan: getSubscriptionPlan(subscription.planId),
-    events: listSubscriptionEvents(id),
+    events: await listSubscriptionEvents(id),
   };
 }
 
-export function listSubscriptionsForUser(userId: number) {
+export async function listSubscriptionsForUser(userId: number) {
   return listSubscriptions({ userId, limit: 100, offset: 0 });
 }
 
-export function searchSubscriptions(filter: ListSubscriptionsFilter) {
+export async function searchSubscriptions(filter: ListSubscriptionsFilter) {
   return listSubscriptions(filter);
 }

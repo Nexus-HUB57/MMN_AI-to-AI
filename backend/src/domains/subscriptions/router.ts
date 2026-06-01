@@ -1,19 +1,5 @@
 /**
  * Subscriptions domain — tRPC router.
- *
- * Endpoints expostos:
- *  - subscriptions.catalog        : lista os 3 packs (público para frontend)
- *  - subscriptions.overview       : snapshot agregado (admin)
- *  - subscriptions.list           : busca paginada (admin)
- *  - subscriptions.start          : usuário inicia assinatura (auth)
- *  - subscriptions.confirmPayment : confirma pagamento (admin/webhook)
- *  - subscriptions.changePlan     : upgrade / downgrade (auth)
- *  - subscriptions.cancel         : cancela assinatura (auth)
- *  - subscriptions.markPastDue    : marca past_due (admin/webhook)
- *  - subscriptions.detail         : detalhes + event log (auth)
- *
- * Toda mutation registra evento no log interno e, quando relevante,
- * publica eventos de domínio Partners (tier promotion).
  */
 
 import { z } from "zod";
@@ -31,6 +17,7 @@ import {
   getCatalog,
   getSubscriptionDetails,
   getSubscriptionsOverview,
+  handleSubscriptionInvoicePaid,
   listSubscriptionsForUser,
   markSubscriptionPastDue,
   searchSubscriptions,
@@ -46,13 +33,13 @@ import {
 export const subscriptionsRouter = router({
   catalog: publicProcedure.query(() => getCatalog()),
 
-  overview: adminProcedure.query(() => getSubscriptionsOverview()),
+  overview: adminProcedure.query(async () => getSubscriptionsOverview()),
 
   list: adminProcedure
     .input(subscriptionListInputSchema)
-    .query(({ input }) => searchSubscriptions(input)),
+    .query(async ({ input }) => searchSubscriptions(input)),
 
-  mine: protectedProcedure.query(({ ctx }) => {
+  mine: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user?.id;
     if (!userId) {
       throw new TRPCError({ code: "UNAUTHORIZED", message: "Sessão necessária" });
@@ -62,8 +49,8 @@ export const subscriptionsRouter = router({
 
   detail: protectedProcedure
     .input(z.object({ subscriptionId: z.string().min(1) }))
-    .query(({ input }) => {
-      const result = getSubscriptionDetails(input.subscriptionId);
+    .query(async ({ input }) => {
+      const result = await getSubscriptionDetails(input.subscriptionId);
       if (!result) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura não encontrada" });
       }
@@ -80,6 +67,7 @@ export const subscriptionsRouter = router({
       return startSubscription({
         userId,
         planId: input.planId,
+        termMonths: input.termMonths,
         metadata: input.metadata,
       });
     }),
@@ -88,6 +76,24 @@ export const subscriptionsRouter = router({
     .input(z.object({ subscriptionId: z.string().min(1) }))
     .mutation(async ({ input }) => {
       const updated = await confirmSubscriptionPayment(input.subscriptionId, "admin");
+      if (!updated) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura não encontrada" });
+      }
+      return updated;
+    }),
+
+  invoicePaid: adminProcedure
+    .input(
+      z.object({
+        subscriptionId: z.string().min(1),
+        invoiceId: z.string().optional(),
+        paidAt: z.string().optional(),
+        provider: z.enum(["mercado_pago", "hotmart", "manual", "system"]),
+        externalReference: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const updated = await handleSubscriptionInvoicePaid(input);
       if (!updated) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Assinatura não encontrada" });
       }

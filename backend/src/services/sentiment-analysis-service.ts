@@ -21,9 +21,27 @@ interface SentimentAnalysisRequest {
 }
 
 let openaiClientPromise: Promise<any | null> | null = null;
+let hasLoggedRemoteFailure = false;
+
+function shouldUseRemoteSentiment() {
+  if (!process.env.OPENAI_API_KEY) {
+    return false;
+  }
+
+  if (
+    process.env.NODE_ENV === "test" ||
+    process.env.VITEST === "true" ||
+    Boolean(process.env.VITEST_WORKER_ID) ||
+    process.env.DISABLE_REMOTE_SENTIMENT === "true"
+  ) {
+    return false;
+  }
+
+  return true;
+}
 
 async function getOpenAIClient() {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!shouldUseRemoteSentiment()) {
     return null;
   }
 
@@ -158,7 +176,10 @@ Idioma: ${request.language || "português"}`;
         typeof result.confidence === "number" ? Math.max(0, Math.min(1, result.confidence)) : fallback.confidence,
     };
   } catch (error) {
-    console.error("[SentimentAnalysis] Falha na análise remota; usando fallback:", error);
+    if (!hasLoggedRemoteFailure) {
+      console.warn("[SentimentAnalysis] Falha na análise remota; usando fallback heurístico.");
+      hasLoggedRemoteFailure = true;
+    }
     return fallback;
   }
 }

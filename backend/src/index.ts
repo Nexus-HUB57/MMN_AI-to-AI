@@ -22,6 +22,13 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   .filter(Boolean);
 const PUBLIC_DIR = process.env.PUBLIC_DIR || path.resolve(__dirname, "../../public");
 const HAS_PUBLIC_BUNDLE = fs.existsSync(path.join(PUBLIC_DIR, "index.html"));
+const APP_VERSION = process.env.APP_VERSION || process.env.npm_package_version || "1.0.0";
+const APP_COMMIT_SHA =
+  process.env.RENDER_GIT_COMMIT ||
+  process.env.GITHUB_SHA ||
+  process.env.COMMIT_SHA ||
+  process.env.SOURCE_VERSION ||
+  null;
 
 function resolveOrigin(origin?: string) {
   if (!origin) return ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
@@ -91,6 +98,8 @@ app.get("/health", (_req, res) => {
     ok: true,
     service: "mmn-ai-to-ai-backend",
     mode: "full",
+    version: APP_VERSION,
+    commit: APP_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });
@@ -100,6 +109,8 @@ app.get("/api/health", (_req, res) => {
     ok: true,
     service: "mmn-ai-to-ai-backend",
     mode: "full",
+    version: APP_VERSION,
+    commit: APP_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });

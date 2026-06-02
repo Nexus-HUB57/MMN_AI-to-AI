@@ -18,6 +18,7 @@ import {
 } from "./domains/subscriptions/billingWebhook";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
+import { createNexusOpenApiRouter } from "./open-api/routes";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -57,6 +58,7 @@ function createContext(opts: { req: express.Request; res: express.Response }): C
 }
 
 const app = express();
+const nexusOpenApiRouter = createNexusOpenApiRouter();
 const trpcMiddleware = createExpressMiddleware({
   router: appRouter,
   createContext,
@@ -75,7 +77,11 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-user-id, x-user-role",
+    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role",
+  );
+  res.header(
+    "Access-Control-Expose-Headers",
+    "X-Request-Id, X-RateLimit-Key, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-Idempotency-Status, Retry-After",
   );
   res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 
@@ -93,6 +99,7 @@ app.get("/api", (_req, res) => {
     service: "backend",
     mode: "full",
     trpc: "/api/trpc",
+    openApi: "/api/v1",
     health: "/api/health",
     publicBundle: HAS_PUBLIC_BUNDLE,
   });
@@ -157,6 +164,7 @@ app.post("/webhooks/hotmart", async (req, res) => {
   }
 });
 
+app.use("/api/v1", nexusOpenApiRouter);
 app.use("/trpc", trpcMiddleware);
 app.use("/api/trpc", trpcMiddleware);
 

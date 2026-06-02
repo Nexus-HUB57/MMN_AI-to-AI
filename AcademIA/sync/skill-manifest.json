@@ -1,0 +1,163 @@
+{
+  "manifest_version": "1.0.0",
+  "last_updated": "2026-06-02",
+  "description": "Manifesto de skills do marketplace Nexus, com linkage explícito às trilhas da Academ'IA. Usado pelo runtime para validar quais skills um afiliado pode ativar dado seu nível de conhecimento.",
+  "total_skills": 45,
+  "operational": 27,
+  "planned": 18,
+  "skills": [
+    {
+      "slug": "copywriter-persuasivo",
+      "name": "Copywriter Persuasivo",
+      "category": "copy",
+      "level": "basic",
+      "price_brl": 24,
+      "trilha_academia": "fundamental",
+      "course_anchor": "cursos/fundamental/03-painel-afiliado.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/copywriterPersuasivo.ts"
+    },
+    {
+      "slug": "analytics-reporter",
+      "name": "Analytics Reporter",
+      "category": "analytics",
+      "level": "basic",
+      "price_brl": 18,
+      "trilha_academia": "fundamental",
+      "course_anchor": "cursos/fundamental/03-painel-afiliado.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/analyticsReporter.ts"
+    },
+    {
+      "slug": "audience-segmenter",
+      "name": "Audience Segmenter",
+      "category": "marketing",
+      "level": "intermediary",
+      "price_brl": 48,
+      "trilha_academia": "agente",
+      "course_anchor": "cursos/agente/01-skills-essenciais.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/audienceSegmenter.ts"
+    },
+    {
+      "slug": "judge-revisor",
+      "name": "Judge Revisor",
+      "category": "quality",
+      "level": "intermediary",
+      "price_brl": 36,
+      "trilha_academia": "agente",
+      "course_anchor": "cursos/agente/03-judge-revisor.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/judgeRevisor.ts"
+    },
+    {
+      "slug": "auto-publisher",
+      "name": "Auto Publisher (WhatsApp + Email)",
+      "category": "automation",
+      "level": "intermediary",
+      "price_brl": 56,
+      "trilha_academia": "agente",
+      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/autoPublisher.ts"
+    },
+    {
+      "slug": "follow-up-strategist",
+      "name": "Follow-up Strategist",
+      "category": "marketing",
+      "level": "intermediary",
+      "price_brl": 42,
+      "trilha_academia": "agente",
+      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/followUpStrategist.ts"
+    },
+    {
+      "slug": "funnel-architect",
+      "name": "Funnel Architect",
+      "category": "marketing",
+      "level": "advanced",
+      "price_brl": 89,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/funnelArchitect.ts"
+    },
+    {
+      "slug": "lifecycle-orchestrator",
+      "name": "Lifecycle Orchestrator",
+      "category": "automation",
+      "level": "advanced",
+      "price_brl": 120,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/01-funis-lifecycle.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/lifecycleOrchestrator.ts"
+    },
+    {
+      "slug": "ab-test-designer",
+      "name": "A/B Test Designer",
+      "category": "analytics",
+      "level": "advanced",
+      "price_brl": 95,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/02-ab-test-judge.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/abTestDesigner.ts"
+    },
+    {
+      "slug": "roi-attributor",
+      "name": "ROI Multi-touch Attributor",
+      "category": "analytics",
+      "level": "advanced",
+      "price_brl": 110,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/roiAttributor.ts"
+    },
+    {
+      "slug": "pricing-optimizer",
+      "name": "Pricing Optimizer",
+      "category": "marketing",
+      "level": "advanced",
+      "price_brl": 135,
+      "trilha_academia": "master",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/pricingOptimizer.ts"
+    },
+    {
+      "slug": "cohort-analyzer",
+      "name": "Cohort Analyzer",
+      "category": "analytics",
+      "level": "advanced",
+      "price_brl": 105,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/03-coortes-churn.md",
+      "operational": false,
+      "planned_release": "Q3-2026"
+    },
+    {
+      "slug": "white-label-sync",
+      "name": "White-label Sync",
+      "category": "infrastructure",
+      "level": "advanced",
+      "price_brl": 189,
+      "trilha_academia": "elite",
+      "course_anchor": "cursos/elite/01-multi-tenant-whitelabel.md",
+      "operational": true,
+      "code_path": "fase7/whiteLabelSync.ts"
+    },
+    {
+      "slug": "federation-gate",
+      "name": "Federation Gate (PII + mTLS)",
+      "category": "infrastructure",
+      "level": "advanced",
+      "price_brl": 189,
+      "trilha_academia": "elite",
+      "course_anchor": "cursos/elite/02-federacao-agentes.md",
+      "operational": true,
+      "code_path": "fase8/federation/gate.ts"
+    }
+  ]
+}

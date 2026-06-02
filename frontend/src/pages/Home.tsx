@@ -62,7 +62,7 @@ const PARTNERS_PACK_CARDS = [
     icon: Zap,
     title: "Escala por capacidade contratada",
     pill: "Growth & Enterprise",
-    text: "A evolução entre Start, Growth e Enterprise representa apenas ampliação contratual de capacidades, skills, governança e operação do produto assinado.",
+    text: "A evolução entre Start, Growth e Enterprise representa apenas ampliação contratual de capacidades, skills, governança e operação do produto assinado, com comissionamento mensal recorrente para afiliados elegíveis conforme o prazo efetivado.",
   },
 ];
 
@@ -347,7 +347,7 @@ export default function Home() {
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Ative sua operação comercial no ecossistema Nexus</h2>
             <p className="mx-auto max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-              O <strong className="text-white">Nexus Partners Pack</strong> é uma ferramenta SaaS contratável, complementar ao ecossistema Nexus, mas <strong className="text-white">independente da progressão do Nexus Affil'IA'te</strong>. Ele pode ser assinado por terceiros ou pelos próprios afiliados, sempre como produto comercial autônomo em contratos de 6 a 48 meses.
+              O <strong className="text-white">Nexus Partners Pack</strong> é uma ferramenta SaaS contratável, complementar ao ecossistema Nexus, mas <strong className="text-white">independente da progressão do Nexus Affil'IA'te</strong>. Ele pode ser assinado por terceiros ou pelos próprios afiliados, sempre como produto comercial autônomo em contratos de 6 a 48 meses, com modalidades de 6, 12, 18, 24, 30, 36 e 48 meses.
             </p>
           </div>
 
@@ -405,9 +405,9 @@ export default function Home() {
               {
                 name: 'Start',
                 subtitle: 'Plano inicial Nexus Partners Pack',
-                price: 'R$ 10,00/mês',
-                highlight: 'Assinatura SaaS inicial',
-                features: ['1 agente IA operacional', '10 ativos digitais para operação inicial', 'Painel comercial liberado', '8 skills comerciais ativas'],
+                price: 'R$ 100,00/mês',
+                highlight: 'Assinatura SaaS inicial + comissão recorrente elegível',
+                features: ['1 agente IA operacional', '10 ativos digitais para operação inicial', 'Painel comercial liberado', '8 skills comerciais ativas', 'Comissão mensal recorrente de 5% a 10% conforme prazo contratado'],
                 badge: 'Assinatura',
                 color: 'quantum-cyan',
                 href: '/subscriptions',
@@ -417,7 +417,7 @@ export default function Home() {
                 subtitle: 'Plano de escala Nexus Partners',
                 price: 'R$ 250,00/mês',
                 highlight: 'Escala operacional e analytics',
-                features: ['3 agentes IA em operação', 'Biblioteca operacional ampliada', 'Governança comercial com regras customizáveis', 'Analytics de ROI e LTV em tempo real'],
+                features: ['3 agentes IA em operação', 'Biblioteca operacional ampliada', 'Governança comercial com regras customizáveis', 'Analytics de ROI e LTV em tempo real', 'Comissão mensal recorrente de 5% a 10% conforme prazo contratado'],
                 badge: 'Assinatura',
                 color: 'quantum-lime',
                 href: '/subscriptions',
@@ -427,7 +427,7 @@ export default function Home() {
                 subtitle: 'Plano enterprise Nexus Partners',
                 price: 'Sob consulta',
                 highlight: 'Desenho sob demanda',
-                features: ['Governança enterprise dedicada', 'Integrações e operação sob demanda', 'Onboarding consultivo', 'Expansão estratégica de canais e squads'],
+                features: ['Governança enterprise dedicada', 'Integrações e operação sob demanda', 'Onboarding consultivo', 'Expansão estratégica de canais e squads', 'Comissão mensal recorrente de 7% a 15% conforme prazo contratado'],
                 badge: 'Enterprise',
                 color: 'quantum-purple',
                 href: '/subscriptions',
@@ -466,7 +466,7 @@ export default function Home() {
             ))}
           </div>
           <p className="text-center text-xs text-slate-500">
-            Todos os planos representam a contratação do software Nexus Partners Pack por assinatura, sem vínculo com a escada de carreira do Nexus Affil'IA'te.
+            Todos os planos representam a contratação do software Nexus Partners Pack por assinatura, sem vínculo com a escada de carreira do Nexus Affil'IA'te, com remuneração mensal recorrente para afiliados elegíveis conforme prazo e modalidade contratada.
             <a href="/subscriptions" className="ml-1 text-quantum-cyan hover:underline">Ver planos contratuais do Nexus Partners Pack →</a>
           </p>
         </div>

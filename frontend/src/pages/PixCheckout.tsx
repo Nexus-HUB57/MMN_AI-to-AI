@@ -107,6 +107,9 @@ export default function PixCheckout() {
   const [hasRequestedCheckout, setHasRequestedCheckout] = useState(false);
 
   const createCheckoutMutation = trpc.pix.createMarketplaceCheckout.useMutation();
+  const catalogQuery = trpc.subscriptions.catalog.useQuery(undefined, {
+    staleTime: 1000 * 60 * 5,
+  });
 
   useEffect(() => {
     if (user?.email) setPayerEmail((current) => current || user.email);
@@ -157,6 +160,30 @@ export default function PixCheckout() {
   const hasMercadoPagoLink = Boolean(checkoutSession?.mercadoPago.initPoint);
 
   const isSubscriptionCheckout = checkoutIntent?.type === "subscription";
+  const subscriptionCommissionPreview = useMemo(() => {
+    if (!isSubscriptionCheckout || !checkoutIntent?.slug || !checkoutIntent?.termMonths) return null;
+
+    const plans = (catalogQuery.data?.plans ?? []) as Array<{
+      id: string;
+      priceCents: number | null;
+      commissionRate: number;
+      commissionModel?: {
+        eligibility: string;
+        byTerm: Record<number, number>;
+      };
+    }>;
+    const plan = plans.find((item) => item.id === checkoutIntent.slug);
+    if (!plan) return null;
+
+    const rate = plan.commissionModel?.byTerm?.[checkoutIntent.termMonths] ?? plan.commissionRate;
+    const amountCents = plan.priceCents == null ? null : Math.round(plan.priceCents * rate);
+
+    return {
+      rate,
+      amountCents,
+      eligibility: plan.commissionModel?.eligibility ?? "Afiliados elegíveis do Nexus Partners Pack",
+    };
+  }, [catalogQuery.data?.plans, checkoutIntent?.slug, checkoutIntent?.termMonths, isSubscriptionCheckout]);
   const title = checkoutIntent
     ? isSubscriptionCheckout
       ? "Assinatura do Nexus Partners Pack"
@@ -164,7 +191,7 @@ export default function PixCheckout() {
     : "Checkout PIX";
   const subtitle = checkoutIntent
     ? isSubscriptionCheckout
-      ? "Confirme a modalidade contratada (Start, Growth ou Enterprise), revise a janela contratual e finalize a assinatura do Nexus Partners Pack — produto SaaS independente, sem vínculo com packs do Nexus Affil'IA'te."
+      ? "Confirme a modalidade contratada (Start, Growth ou Enterprise), revise a janela contratual e finalize a assinatura do Nexus Partners Pack — produto SaaS independente, sem vínculo com packs do Nexus Affil'IA'te, com política de comissão mensal recorrente para afiliados elegíveis."
       : "Revise o item, gere o checkout seguro no servidor e pague por QR Code PIX ou código copia e cola."
     : "Use este checkout para cobranças avulsas do ecossistema Nexus com geração segura de PIX.";
 
@@ -321,6 +348,18 @@ export default function PixCheckout() {
                           </p>
                         </div>
                       </div>
+                      {isSubscriptionCheckout && subscriptionCommissionPreview ? (
+                        <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4">
+                          <p className="text-xs uppercase tracking-[0.25em] text-emerald-200/70">Comissão mensal elegível</p>
+                          <p className="mt-2 text-sm font-medium text-white">
+                            {`${(subscriptionCommissionPreview.rate * 100).toFixed(0).replace(".", ",")}%`}
+                            {subscriptionCommissionPreview.amountCents != null ? ` · ${formatCurrencyFromCents(subscriptionCommissionPreview.amountCents)}/mês` : " · sob proposta"}
+                          </p>
+                          <p className="mt-2 text-xs leading-5 text-slate-300">
+                            {subscriptionCommissionPreview.eligibility}. O cálculo considera a modalidade selecionada e o prazo contratual informado.
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-100">
@@ -349,7 +388,7 @@ export default function PixCheckout() {
                       <Label htmlFor="description">Descrição</Label>
                       <Input
                         id="description"
-                        placeholder="Ex: Plano Nexus Partners Star"
+                        placeholder="Ex: Plano Nexus Partners Start"
                         maxLength={72}
                         className="border-white/10 bg-white/5 text-white"
                         value={description}

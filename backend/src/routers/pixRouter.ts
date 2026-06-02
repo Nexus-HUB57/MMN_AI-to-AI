@@ -333,7 +333,15 @@ export const pixRouter = router({
         payerName: z.string().max(120).optional(),
         payerDocument: z.string().max(18).optional(),
         subscriptionId: z.string().min(1).optional(),
-        termMonths: z.number().int().min(6).max(48).optional(),
+        termMonths: z.union([
+          z.literal(6),
+          z.literal(12),
+          z.literal(18),
+          z.literal(24),
+          z.literal(30),
+          z.literal(36),
+          z.literal(48),
+        ]).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

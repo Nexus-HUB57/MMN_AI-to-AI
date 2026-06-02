@@ -5,9 +5,11 @@
  */
 
 import {
+  calculateSubscriptionCommissionAmount,
   compareSubscriptionPlans,
   getSubscriptionPlan,
   listSubscriptionPlans,
+  resolveSubscriptionCommissionRate,
 } from "./catalog";
 import {
   appendSubscriptionEvent,
@@ -32,12 +34,12 @@ import type {
 export function getCatalog() {
   return {
     plans: listSubscriptionPlans(),
-    version: "1.6.0",
+    version: "1.7.0",
     pivot: "subscription-commercial",
     storefront: {
       productName: "Nexus Partners Pack",
       presentation: "subscription-only",
-      termOptionsMonths: [6, 12, 24, 36, 48],
+      termOptionsMonths: [6, 12, 18, 24, 30, 36, 48],
     },
   };
 }
@@ -50,6 +52,12 @@ export interface StartSubscriptionResult {
     method: "pix" | "card" | "on_request";
     amountCents: number | null;
   };
+  commissionPreview?: {
+    cadence: "monthly";
+    rate: number;
+    amountCents: number | null;
+    eligibility: string;
+  };
 }
 
 export async function startSubscription(input: {
@@ -59,6 +67,8 @@ export async function startSubscription(input: {
   metadata?: Record<string, unknown>;
 }): Promise<StartSubscriptionResult> {
   const plan = getSubscriptionPlan(input.planId);
+  const commissionRate = resolveSubscriptionCommissionRate(plan.id, input.termMonths);
+  const commissionAmountCents = calculateSubscriptionCommissionAmount(plan.id, input.termMonths, plan.priceCents);
 
   const subscription = await createSubscription({
     userId: input.userId,
@@ -70,6 +80,10 @@ export async function startSubscription(input: {
       ...input.metadata,
       commercialModel: "subscription-only",
       termMonths: input.termMonths,
+      affiliateCommissionModel: "monthly_recurring",
+      affiliateCommissionRate: commissionRate,
+      affiliateCommissionAmountCents: commissionAmountCents,
+      affiliateCommissionEligibility: plan.commissionModel.eligibility,
     },
   });
 
@@ -83,6 +97,8 @@ export async function startSubscription(input: {
     payload: {
       termMonths: input.termMonths,
       commercialModel: "subscription-only",
+      affiliateCommissionRate: commissionRate,
+      affiliateCommissionAmountCents: commissionAmountCents,
     },
   });
 
@@ -92,6 +108,12 @@ export async function startSubscription(input: {
       requiresPayment: false,
       requiresAdminApproval: true,
       paymentInstructions: { method: "on_request", amountCents: null },
+      commissionPreview: {
+        cadence: "monthly",
+        rate: commissionRate,
+        amountCents: commissionAmountCents,
+        eligibility: plan.commissionModel.eligibility,
+      },
     };
   }
 
@@ -102,6 +124,12 @@ export async function startSubscription(input: {
     paymentInstructions: {
       method: plan.priceCents && plan.priceCents > 0 ? "pix" : "card",
       amountCents: plan.priceCents,
+    },
+    commissionPreview: {
+      cadence: "monthly",
+      rate: commissionRate,
+      amountCents: commissionAmountCents,
+      eligibility: plan.commissionModel.eligibility,
     },
   };
 }
@@ -123,6 +151,12 @@ export async function confirmSubscriptionPayment(
     metadata: {
       lastPaymentConfirmedAt: now.toISOString(),
       activatedBy: triggeredBy,
+      recurringAffiliateCommissionRate: resolveSubscriptionCommissionRate(current.planId, current.termMonths),
+      recurringAffiliateCommissionAmountCents: calculateSubscriptionCommissionAmount(
+        current.planId,
+        current.termMonths,
+        current.pricePaidCents,
+      ),
     },
   });
   if (!updated) return null;
@@ -136,6 +170,12 @@ export async function confirmSubscriptionPayment(
     occurredAt: now,
     payload: {
       renewsAt: renewsAt?.toISOString() ?? null,
+      recurringAffiliateCommissionRate: resolveSubscriptionCommissionRate(current.planId, current.termMonths),
+      recurringAffiliateCommissionAmountCents: calculateSubscriptionCommissionAmount(
+        current.planId,
+        current.termMonths,
+        current.pricePaidCents,
+      ),
     },
   });
 
@@ -180,6 +220,12 @@ export async function handleSubscriptionInvoicePaid(input: {
       lastInvoicePaidAt: paidAt.toISOString(),
       lastPaymentProvider: input.provider,
       lastExternalReference: input.externalReference ?? undefined,
+      recurringAffiliateCommissionRate: resolveSubscriptionCommissionRate(current.planId, current.termMonths),
+      recurringAffiliateCommissionAmountCents: calculateSubscriptionCommissionAmount(
+        current.planId,
+        current.termMonths,
+        current.pricePaidCents,
+      ),
     },
   });
   if (!updated) return null;
@@ -196,6 +242,12 @@ export async function handleSubscriptionInvoicePaid(input: {
       provider: input.provider,
       externalReference: input.externalReference ?? null,
       renewsAt: renewsAt?.toISOString() ?? null,
+      recurringAffiliateCommissionRate: resolveSubscriptionCommissionRate(current.planId, current.termMonths),
+      recurringAffiliateCommissionAmountCents: calculateSubscriptionCommissionAmount(
+        current.planId,
+        current.termMonths,
+        current.pricePaidCents,
+      ),
     },
   });
 
@@ -241,7 +293,7 @@ export async function changeSubscriptionPlan(input: {
       previousTier: fromPlan.partnerTier,
       newTier: toPlan.partnerTier,
       totalVolume: 0,
-      newCommissionRate: toPlan.commissionRate,
+      newCommissionRate: resolveSubscriptionCommissionRate(toPlan.id, current.termMonths),
       triggeredBy: "subscription_upgrade",
     });
   }
@@ -312,7 +364,7 @@ export interface SubscriptionOverview {
 export async function getSubscriptionsOverview(): Promise<SubscriptionOverview> {
   return {
     metrics: await computeSubscriptionMetrics(),
-    catalogVersion: "1.5.0",
+    catalogVersion: "1.7.0",
     plans: listSubscriptionPlans(),
   };
 }

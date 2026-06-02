@@ -54,6 +54,10 @@ function formatCurrency(value: number | string | null | undefined) {
   }).format(num);
 }
 
+function formatPercentage(value: number) {
+  return `${(value * 100).toFixed(0).replace(".", ",")}%`;
+}
+
 export default function Commissions() {
   const [statusFilter, setStatusFilter] = useState<CommissionStatus | "all">("all");
   const [page, setPage] = useState(1);
@@ -65,6 +69,9 @@ export default function Commissions() {
   });
 
   const statsQuery = trpc.commissions.getStats.useQuery();
+  const catalogQuery = trpc.subscriptions.catalog.useQuery(undefined, {
+    staleTime: 1000 * 60 * 5,
+  });
 
   const commissions = commissionsQuery.data?.commissions ?? [];
   const pagination = commissionsQuery.data?.pagination;
@@ -113,6 +120,35 @@ export default function Commissions() {
             Acompanhe suas comissões por nível, status e performance
           </p>
         </div>
+
+        {catalogQuery.data?.plans?.length ? (
+          <div className="grid gap-4 lg:grid-cols-3">
+            {(catalogQuery.data.plans as Array<any>).map((plan) => (
+              <Card key={plan.id} className="p-5 border-border/60 bg-card/70">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.24em] text-text-muted">Nexus Partners Pack</p>
+                    <h2 className="mt-2 text-lg font-semibold text-foreground">{plan.fullName}</h2>
+                  </div>
+                  <Badge variant="outline">Comissão mensal</Badge>
+                </div>
+                <p className="mt-3 text-sm text-text-secondary">
+                  {plan.commissionModel?.eligibility ?? "Afiliados elegíveis do Nexus Partners Pack"}
+                </p>
+                <div className="mt-4 grid gap-2">
+                  {Object.entries(plan.commissionModel?.byTerm ?? {})
+                    .sort((a, b) => Number(a[0]) - Number(b[0]))
+                    .map(([term, rate]) => (
+                      <div key={`${plan.id}-${term}`} className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/40 px-3 py-2 text-sm">
+                        <span className="text-text-secondary">{term} meses</span>
+                        <span className="font-semibold text-emerald-400">{formatPercentage(Number(rate))}</span>
+                      </div>
+                    ))}
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : null}
 
         {/* Stats Cards */}
         {statsQuery.isLoading ? (

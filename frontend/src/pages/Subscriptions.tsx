@@ -27,6 +27,11 @@ type CatalogPlan = {
   priceCents: number | null;
   billingCycle: "monthly" | "yearly" | "on_request";
   commissionRate: number;
+  commissionModel: {
+    cadence: "monthly_recurring";
+    eligibility: string;
+    byTerm: Record<number, number>;
+  };
   features: string[];
   capacity: {
     aiAgents: number;
@@ -61,6 +66,16 @@ function priceCaption(plan: CatalogPlan) {
   return formatBRL(plan.priceCents);
 }
 
+function formatPercentage(rate: number) {
+  return `${(rate * 100).toFixed(Number.isInteger(rate * 100) ? 0 : 2).replace(".", ",")}%`;
+}
+
+function getCommissionPreview(plan: CatalogPlan, termMonths: number) {
+  const rate = plan.commissionModel.byTerm[termMonths] ?? plan.commissionRate;
+  const amountCents = plan.priceCents == null ? null : Math.round(plan.priceCents * rate);
+  return { rate, amountCents };
+}
+
 const planIcons = {
   "nexus-start": Bot,
   "nexus-growth": Activity,
@@ -92,8 +107,8 @@ export default function Subscriptions() {
 
   const autonomyFacts = [
     "Produto SaaS autônomo, sem vínculo com a jornada de packs do Nexus Affil'IA'te",
-    "Contratação por assinatura mensal com janela contratual de 6 a 48 meses",
-    "Start, Growth e Enterprise são modalidades do mesmo produto-base, com skills agregadas",
+    "Contratação por assinatura mensal com janela contratual de 6, 12, 18, 24, 30, 36 e 48 meses",
+    "Comissão mensal recorrente para afiliados entre 5% e 15%, conforme plano contratado e prazo efetivado",
   ];
 
   async function handleSubscribe(plan: CatalogPlan) {
@@ -148,7 +163,7 @@ export default function Subscriptions() {
               <div className="flex flex-wrap gap-2">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Nexus Partners Pack · produto SaaS independente</Badge>
                 <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">Contratação exclusivamente por assinatura</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">Janela contratual 6 a 48 meses</Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">Modalidades de 6, 12, 18, 24, 30, 36 e 48 meses</Badge>
               </div>
 
               <div className="space-y-4">
@@ -162,7 +177,8 @@ export default function Subscriptions() {
                 </p>
                 <p className="max-w-4xl text-sm leading-7 text-slate-400 md:text-base">
                   Os planos Start, Growth e Enterprise são apenas modalidades contratuais do mesmo produto, variando por capacidade
-                  operacional, skills agregadas, governança e suporte. Toda contratação acontece em janela de 6, 12, 24, 36 ou 48 meses.
+                  operacional, skills agregadas, governança e suporte. Toda contratação acontece em janela de 6, 12, 18, 24, 30, 36 ou 48 meses,
+                  com política de comissão mensal recorrente para afiliados que indicarem, comercializarem e efetivarem o contrato.
                 </p>
               </div>
 
@@ -196,7 +212,7 @@ export default function Subscriptions() {
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
                   <div className="mb-2 flex items-center gap-2 text-white"><BarChart3 className="h-4 w-4 text-quantum-lime" /> Apenas por assinatura</div>
-                  <p>Comercialização exclusivamente por assinatura, com contrato de 6, 12, 24, 36 ou 48 meses e renovação contínua.</p>
+                  <p>Comercialização exclusivamente por assinatura, com contrato de 6, 12, 18, 24, 30, 36 ou 48 meses e renovação contínua.</p>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
                   <div className="mb-2 flex items-center gap-2 text-white"><ShieldCheck className="h-4 w-4 text-amber-300" /> Modalidades contratuais</div>
@@ -233,6 +249,7 @@ export default function Subscriptions() {
                 const Icon = planIcons[plan.id as keyof typeof planIcons] ?? Sparkles;
                 const myPlan = mySubscriptions.get(plan.id);
                 const selectedTerm = selectedTerms[plan.id] ?? plan.storefront.defaultTermMonths;
+                const commissionPreview = getCommissionPreview(plan, selectedTerm);
 
                 return (
                   <Card key={plan.id} className="overflow-hidden border border-white/10 bg-white/5 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
@@ -273,6 +290,17 @@ export default function Subscriptions() {
                           <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Biblioteca / operação</p>
                           <p className="mt-2 text-lg font-bold text-white">{plan.capacity.ebooks} ativos · {plan.governance.highValue ? "escopo enterprise" : "operação padronizada"}</p>
                         </div>
+                      </div>
+
+                      <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4">
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-emerald-200/70">Comissão mensal elegível</p>
+                        <p className="mt-2 text-lg font-bold text-white">
+                          {formatPercentage(commissionPreview.rate)}
+                          {commissionPreview.amountCents != null ? ` · ${formatBRL(commissionPreview.amountCents)}/mês` : " · sob proposta"}
+                        </p>
+                        <p className="mt-2 text-xs leading-5 text-slate-300">
+                          {plan.commissionModel.eligibility}. Para contratos de {selectedTerm} meses nesta modalidade.
+                        </p>
                       </div>
 
                       <div className="space-y-2">
@@ -325,7 +353,8 @@ export default function Subscriptions() {
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
                 O Nexus Partners Pack é listado no Nexus Marketplace como produto SaaS independente, comercializado apenas por
                 assinatura. As modalidades Start, Growth e Enterprise são contratos do mesmo produto-base e não devem ser confundidas
-                com packs, níveis ou etapas da jornada principal do Nexus Affil'IA'te.
+                com packs, níveis ou etapas da jornada principal do Nexus Affil'IA'te. Afiliados elegíveis recebem comissão mensal
+                recorrente conforme o prazo efetivado do contrato.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

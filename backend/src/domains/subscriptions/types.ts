@@ -22,8 +22,14 @@ export type SubscriptionStatus = (typeof subscriptionStatuses)[number];
 export const billingCycles = ["monthly", "yearly", "on_request"] as const;
 export type BillingCycle = (typeof billingCycles)[number];
 
-export const subscriptionTermMonths = [6, 12, 24, 36, 48] as const;
+export const subscriptionTermMonths = [6, 12, 18, 24, 30, 36, 48] as const;
 export type SubscriptionTermMonths = (typeof subscriptionTermMonths)[number];
+
+export interface SubscriptionCommissionModel {
+  cadence: "monthly_recurring";
+  eligibility: string;
+  byTerm: Record<SubscriptionTermMonths, number>;
+}
 
 export interface SubscriptionPlan {
   id: SubscriptionPlanId;
@@ -35,6 +41,7 @@ export interface SubscriptionPlan {
   billingCycle: BillingCycle;
   partnerTier: "silver" | "gold" | "platinum" | "diamond";
   commissionRate: number;
+  commissionModel: SubscriptionCommissionModel;
   features: string[];
   capacity: {
     aiAgents: number;
@@ -96,7 +103,9 @@ export const subscriptionTermMonthsSchema = z.union(
   subscriptionTermMonths.map((term) => z.literal(term)) as [
     z.ZodLiteral<6>,
     z.ZodLiteral<12>,
+    z.ZodLiteral<18>,
     z.ZodLiteral<24>,
+    z.ZodLiteral<30>,
     z.ZodLiteral<36>,
     z.ZodLiteral<48>,
   ],

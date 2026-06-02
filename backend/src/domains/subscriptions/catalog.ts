@@ -12,7 +12,10 @@ import type {
   SubscriptionTermMonths,
 } from "./types";
 
-const LICENSE_TERMS: SubscriptionTermMonths[] = [6, 12, 24, 36, 48];
+const LICENSE_TERMS: SubscriptionTermMonths[] = [6, 12, 18, 24, 30, 36, 48];
+
+const PARTNERS_COMMISSION_ELIGIBILITY =
+  "Afiliados que indicarem, comercializarem e efetivarem contratos ativos do Nexus Partners Pack";
 
 export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = {
   "nexus-start": {
@@ -20,11 +23,24 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     shortName: "Nexus Partners Start",
     fullName: "Nexus Partners · Start",
     tagline: "Plano inicial do Nexus Partners Pack, contratado por assinatura como produto independente",
-    priceCents: 1000,
+    priceCents: 10000,
     currency: "BRL",
     billingCycle: "monthly",
     partnerTier: "silver",
     commissionRate: 0.05,
+    commissionModel: {
+      cadence: "monthly_recurring",
+      eligibility: PARTNERS_COMMISSION_ELIGIBILITY,
+      byTerm: {
+        6: 0.05,
+        12: 0.06,
+        18: 0.07,
+        24: 0.08,
+        30: 0.09,
+        36: 0.1,
+        48: 0.1,
+      },
+    },
     features: [
       "Rastreamento ponta a ponta de parceiros, creators e afiliados",
       "1 agente IA operacional ativado",
@@ -46,7 +62,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 12,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Assinatura mensal com contratação de 6 a 48 meses",
+      licenseLabel: "Assinatura mensal com contratação entre 6 e 48 meses",
       ctaLabel: "Assinar Start",
     },
   },
@@ -59,7 +75,20 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     currency: "BRL",
     billingCycle: "monthly",
     partnerTier: "gold",
-    commissionRate: 0.08,
+    commissionRate: 0.05,
+    commissionModel: {
+      cadence: "monthly_recurring",
+      eligibility: PARTNERS_COMMISSION_ELIGIBILITY,
+      byTerm: {
+        6: 0.05,
+        12: 0.06,
+        18: 0.07,
+        24: 0.08,
+        30: 0.09,
+        36: 0.1,
+        48: 0.1,
+      },
+    },
     features: [
       "Comissionamento dinâmico com regras customizáveis",
       "ROI por canal e LTV por parceiro em tempo real",
@@ -81,7 +110,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 12,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Assinatura mensal disponível em 6, 12, 24, 36 e 48 meses",
+      licenseLabel: "Assinatura mensal disponível em 6, 12, 18, 24, 30, 36 e 48 meses",
       ctaLabel: "Assinar Growth",
     },
   },
@@ -94,7 +123,20 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     currency: "BRL",
     billingCycle: "on_request",
     partnerTier: "platinum",
-    commissionRate: 0.12,
+    commissionRate: 0.07,
+    commissionModel: {
+      cadence: "monthly_recurring",
+      eligibility: PARTNERS_COMMISSION_ELIGIBILITY,
+      byTerm: {
+        6: 0.07,
+        12: 0.08,
+        18: 0.09,
+        24: 0.1,
+        30: 0.11,
+        36: 0.15,
+        48: 0.15,
+      },
+    },
     features: [
       "Governança comercial granular enterprise",
       "Desenho dedicado da operação e onboarding consultivo",
@@ -116,7 +158,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 24,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Contrato enterprise sob consulta com janela contratual de 6 a 48 meses",
+      licenseLabel: "Contrato enterprise sob consulta com janela entre 6 e 48 meses",
       ctaLabel: "Solicitar proposta",
     },
   },
@@ -132,6 +174,22 @@ export function getSubscriptionPlan(planId: SubscriptionPlanId): SubscriptionPla
     throw new Error(`Plano de assinatura desconhecido: ${planId}`);
   }
   return plan;
+}
+
+export function resolveSubscriptionCommissionRate(
+  planId: SubscriptionPlanId,
+  termMonths: SubscriptionTermMonths,
+): number {
+  return getSubscriptionPlan(planId).commissionModel.byTerm[termMonths];
+}
+
+export function calculateSubscriptionCommissionAmount(
+  planId: SubscriptionPlanId,
+  termMonths: SubscriptionTermMonths,
+  monthlyAmountCents: number | null,
+): number | null {
+  if (monthlyAmountCents == null) return null;
+  return Math.round(monthlyAmountCents * resolveSubscriptionCommissionRate(planId, termMonths));
 }
 
 export function compareSubscriptionPlans(

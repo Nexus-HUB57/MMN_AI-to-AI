@@ -3,10 +3,26 @@
 # Arquivo versionado e copiado pelo Vite para frontend/dist/.htaccess
 # =============================================================================
 
+Options -MultiViews
+
 # Forçar HTTPS
 RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Garantir MIME types corretos dos assets estáticos
+<IfModule mod_mime.c>
+  AddType text/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+</IfModule>
+
+# Nunca reescrever assets versionados e artefatos estáticos
+RewriteRule ^assets/ - [L]
+RewriteRule ^favicon\.ico$ - [L]
+RewriteRule ^favicon\.svg$ - [L]
+RewriteRule ^robots\.txt$ - [L]
+RewriteRule ^manifest\.webmanifest$ - [L]
 
 # SPA fallback — todas as rotas client-side caem no index.html
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -18,13 +34,14 @@ RewriteRule . /index.html [L]
   ExpiresActive On
   ExpiresByType text/css                "access plus 1 year"
   ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType text/javascript         "access plus 1 year"
   ExpiresByType image/svg+xml           "access plus 1 month"
   ExpiresDefault                        "access plus 1 hour"
 </IfModule>
 
 # Compressão
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json
 </IfModule>
 
 # Headers de segurança

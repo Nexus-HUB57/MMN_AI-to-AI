@@ -20,5 +20,6 @@ export default defineConfig({
   },
   build: {
     reportCompressedSize: false,
+    cssCodeSplit: false,
   },
 });

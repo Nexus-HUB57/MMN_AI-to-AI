@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
+import { getCached, setCached, deleteCached } from "../services/cache-service";
 import { getNexusApiContext } from "./auth";
 
 interface CachedResponse {
@@ -15,17 +16,8 @@ interface PendingEntry {
   response?: CachedResponse;
 }
 
-const idempotencyStore = new Map<string, PendingEntry>();
 const IDEMPOTENCY_TTL_MS = Number(process.env.NEXUS_OPEN_API_IDEMPOTENCY_TTL_MS || 24 * 60 * 60 * 1000);
-
-function cleanupExpiredEntries() {
-  const timestamp = Date.now();
-  for (const [key, entry] of idempotencyStore.entries()) {
-    if (timestamp - entry.createdAt > IDEMPOTENCY_TTL_MS) {
-      idempotencyStore.delete(key);
-    }
-  }
-}
+const IDEMPOTENCY_TTL_SECONDS = Math.max(60, Math.ceil(IDEMPOTENCY_TTL_MS / 1000));
 
 function buildFingerprint(req: Request, tenantId: string | null | undefined) {
   return createHash("sha256")
@@ -44,7 +36,11 @@ function shouldRequireIdempotencyKey(req: Request) {
   return ["POST", "PUT", "PATCH", "DELETE"].includes(req.method.toUpperCase());
 }
 
-export function requireIdempotencyKey(req: Request, res: Response, next: NextFunction) {
+function buildStoreKey(tenantId: string | null | undefined, idempotencyKey: string) {
+  return `nexus:openapi:idempotency:${tenantId ?? "public"}:${idempotencyKey}`;
+}
+
+export async function requireIdempotencyKey(req: Request, res: Response, next: NextFunction) {
   if (!shouldRequireIdempotencyKey(req)) {
     next();
     return;
@@ -61,12 +57,10 @@ export function requireIdempotencyKey(req: Request, res: Response, next: NextFun
     return;
   }
 
-  cleanupExpiredEntries();
-
   const tenantId = getNexusApiContext(res)?.tenantId ?? null;
-  const scopedKey = `${tenantId ?? "public"}:${idempotencyKey}`;
+  const storeKey = buildStoreKey(tenantId, idempotencyKey);
   const fingerprint = buildFingerprint(req, tenantId);
-  const existing = idempotencyStore.get(scopedKey);
+  const existing = await getCached<PendingEntry>(storeKey);
 
   if (existing) {
     if (existing.fingerprint !== fingerprint) {
@@ -96,24 +90,36 @@ export function requireIdempotencyKey(req: Request, res: Response, next: NextFun
     return;
   }
 
-  idempotencyStore.set(scopedKey, {
-    fingerprint,
-    createdAt: Date.now(),
-    completed: false,
-  });
+  await setCached<PendingEntry>(
+    storeKey,
+    {
+      fingerprint,
+      createdAt: Date.now(),
+      completed: false,
+    },
+    IDEMPOTENCY_TTL_SECONDS,
+  );
 
   const originalJson = res.json.bind(res);
   res.json = ((body: unknown) => {
-    const current = idempotencyStore.get(scopedKey);
-    if (current) {
-      current.completed = true;
-      current.response = {
+    if (res.statusCode >= 500) {
+      void deleteCached(storeKey);
+      res.setHeader("X-Idempotency-Status", "released");
+      return originalJson(body);
+    }
+
+    const entry: PendingEntry = {
+      fingerprint,
+      createdAt: Date.now(),
+      completed: true,
+      response: {
         statusCode: res.statusCode,
         body,
         createdAt: Date.now(),
-      };
-      idempotencyStore.set(scopedKey, current);
-    }
+      },
+    };
+
+    void setCached(storeKey, entry, IDEMPOTENCY_TTL_SECONDS);
     res.setHeader("X-Idempotency-Status", "created");
     return originalJson(body);
   }) as Response["json"];

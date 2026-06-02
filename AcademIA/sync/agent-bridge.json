@@ -21,10 +21,10 @@
         "maxDailyMessages": 50
       },
       "courses_completed_required": [
-        "cursos/fundamental/00-boas-vindas.md",
-        "cursos/fundamental/01-entendendo-ioaid.md",
-        "cursos/fundamental/02-sistema-sho.md",
-        "cursos/fundamental/03-painel-afiliado.md"
+        "AcademIA/cursos/fundamental/00-boas-vindas.md",
+        "AcademIA/cursos/fundamental/01-entendendo-ioaid.md",
+        "AcademIA/cursos/fundamental/02-sistema-sho.md",
+        "AcademIA/cursos/fundamental/03-painel-afiliado.md"
       ]
     },
     "agente": {
@@ -43,10 +43,10 @@
         "maxDailyMessages": 500
       },
       "courses_completed_required": [
-        "cursos/agente/00-primeiro-agente.md",
-        "cursos/agente/01-skills-essenciais.md",
-        "cursos/agente/02-disparo-whatsapp.md",
-        "cursos/agente/03-judge-revisor.md"
+        "AcademIA/cursos/agente/00-primeiro-agente.md",
+        "AcademIA/cursos/agente/01-skills-essenciais.md",
+        "AcademIA/cursos/agente/02-disparo-whatsapp.md",
+        "AcademIA/cursos/agente/03-judge-revisor.md"
       ]
     },
     "master": {
@@ -67,10 +67,10 @@
         "maxDailyMessages": 5000
       },
       "courses_completed_required": [
-        "cursos/master/00-otimizacao-conversao.md",
-        "cursos/master/01-funis-lifecycle.md",
-        "cursos/master/02-ab-test-judge.md",
-        "cursos/master/03-coortes-churn.md"
+        "AcademIA/cursos/master/00-otimizacao-conversao.md",
+        "AcademIA/cursos/master/01-funis-lifecycle.md",
+        "AcademIA/cursos/master/02-ab-test-judge.md",
+        "AcademIA/cursos/master/03-coortes-churn.md"
       ]
     },
     "elite": {
@@ -90,9 +90,9 @@
         "maxDailyMessages": 50000
       },
       "courses_completed_required": [
-        "cursos/elite/00-blueprints-elite.md",
-        "cursos/elite/01-multi-tenant-whitelabel.md",
-        "cursos/elite/02-federacao-agentes.md"
+        "AcademIA/cursos/elite/00-blueprints-elite.md",
+        "AcademIA/cursos/elite/01-multi-tenant-whitelabel.md",
+        "AcademIA/cursos/elite/02-federacao-agentes.md"
       ],
       "additional_requirements": [
         "NDA_assigned: true",
@@ -102,18 +102,18 @@
     }
   },
   "lab_nexus_to_skill_mapping": {
-    "Lab-Nexus/tools/copy/01-headline-persuasiva.md": "copywriter-persuasivo",
-    "Lab-Nexus/tools/copy/02-email-frio.md": "cold-emailer",
-    "Lab-Nexus/tools/copy/04-whatsapp-persuasivo.md": "copywriter-persuasivo",
-    "Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md": "sms-conversacional",
-    "Lab-Nexus/tools/marketing/01-planejador-editorial.md": "auto-publisher",
-    "Lab-Nexus/tools/marketing/02-segmentacao-rfm.md": "audience-segmenter",
-    "Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md": "plano-conteudo-90d",
-    "Lab-Nexus/tools/analytics/02-comparador-taxas-conversao.md": "roi-attributor",
-    "Lab-Nexus/tools/analytics/04-atribuicao-multitouch.md": "roi-attributor",
-    "Lab-Nexus/tools/analytics/05-coorte-churn.md": "cohort-analyzer",
-    "Lab-Nexus/tools/automation/01-webhooks-payload.md": "webhook-router",
-    "Lab-Nexus/tools/automation/05-backup-criptografado.md": "backup-encryption"
+    "AcademIA/Lab-Nexus/tools/copy/01-headline-persuasiva.md": "copywriter-persuasivo",
+    "AcademIA/Lab-Nexus/tools/copy/02-email-frio.md": "cold-emailer",
+    "AcademIA/Lab-Nexus/tools/copy/04-whatsapp-persuasivo.md": "copywriter-persuasivo",
+    "AcademIA/Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md": "sms-conversacional",
+    "AcademIA/Lab-Nexus/tools/marketing/01-planejador-editorial.md": "auto-publisher",
+    "AcademIA/Lab-Nexus/tools/marketing/02-segmentacao-rfm.md": "audience-segmenter",
+    "AcademIA/Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md": "plano-conteudo-90d",
+    "AcademIA/Lab-Nexus/tools/analytics/02-comparador-taxas-conversao.md": "roi-attributor",
+    "AcademIA/Lab-Nexus/tools/analytics/04-atribuicao-multitouch.md": "roi-attributor",
+    "AcademIA/Lab-Nexus/tools/analytics/05-coorte-churn.md": "cohort-analyzer",
+    "AcademIA/Lab-Nexus/tools/automation/01-webhooks-payload.md": "webhook-router",
+    "AcademIA/Lab-Nexus/tools/automation/05-backup-criptografado.md": "backup-encryption"
   },
   "sync_events": {
     "on_course_completed": "agents.skills_entitlement += level_up",

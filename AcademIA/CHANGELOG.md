@@ -2,13 +2,53 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.1.0
+version: 1.1.1
 last_updated: 2026-06-02
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.1.1] — 2026-06-02 · "Integridade de manifestos"
+
+### 🩹 Correções
+
+- **2 skills reclassificadas** de operacional → planned (handlers `.ts` ainda não implementados):
+  - `sms-conversacional` → `planned_release: Q3-2026`
+  - `plano-conteudo-90d` → `planned_release: Q3-2026`
+- **3 skills adicionadas ao manifesto** que já existiam como handlers `.ts` no monorepo mas estavam órfãs:
+  - `cold-emailer` (handler `coldEmailer.ts` existe)
+  - `webhook-router` (handler `webhookRouter.ts` existe)
+  - `backup-encryption` (planned, `Q4-2026` — handler ainda não existe)
+- **`types.ts`** adicionado à `operational_skills_audit.handlers` (estava listado em disco mas ausente do audit)
+- **Todos os `course_anchor` do manifesto** prefixados com `AcademIA/` (resolve paths relativos ambíguos)
+- **`lab_nexus_to_skill_mapping` do agent-bridge** — todos os paths prefixados com `AcademIA/`
+- **`trirf_mapping.courses_completed_required` do agent-bridge** — todos os paths prefixados com `AcademIA/`
+
+### 🛠️ Tooling
+
+- **Novo GitHub Action** `checks/skill-manifest-integrity.yml`:
+  - Roda em PR e push que tocam manifesto, bridge, cursos, lab ou handlers
+  - Valida schema, contadores (`total_skills`/`operational`/`planned`), slugs únicos kebab-case, whitelists (`category`, `level`, `trilha_academia`)
+  - Valida paths de skills (`code_path`, `spec_path`, `lab_path`, `course_anchor`)
+  - Valida `lab_nexus_to_skill_mapping` (paths existem + slugs batem com manifesto)
+  - Valida `trirf_mapping.courses_completed_required` (paths existem)
+  - Sanity check do `operational_skills_audit` (handlers declarados vs handlers em disco)
+  - Exit code != 0 falha o CI; report legível com erros categorizados
+- **Validador Python standalone** `checks/lib/validate_manifest.py` (sem deps externas, Python 3.11+)
+
+### 📊 Métricas
+
+| | v1.1.0 | v1.1.1 |
+|---|---|---|
+| `manifest_version` | 1.1.0 | 1.1.1 |
+| `total_skills` | 16 | 19 |
+| `operational` | 15 | 15 |
+| `planned` | 1 | 4 |
+| `operational_skills_audit.total_handlers` | 27 | 28 |
 
 ---
 

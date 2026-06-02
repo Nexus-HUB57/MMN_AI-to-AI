@@ -1,0 +1,70 @@
+name: Skill Manifest Integrity
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "AcademIA/sync/skill-manifest.json"
+      - "AcademIA/sync/agent-bridge.json"
+      - "AcademIA/cursos/**"
+      - "Lab-Nexus/**"
+      - "backend/src/agentic/skills/**"
+      - "Lib-Nexus/agents-specs/**"
+      - "checks/skill-manifest-integrity.yml"
+      - "checks/lib/validate_manifest.py"
+  pull_request:
+    branches: [main]
+    paths:
+      - "AcademIA/sync/skill-manifest.json"
+      - "AcademIA/sync/agent-bridge.json"
+      - "AcademIA/cursos/**"
+      - "Lab-Nexus/**"
+      - "backend/src/agentic/skills/**"
+      - "Lib-Nexus/agents-specs/**"
+      - "checks/skill-manifest-integrity.yml"
+      - "checks/lib/validate_manifest.py"
+  workflow_dispatch:
+
+concurrency:
+  group: skill-manifest-integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  MANIFEST_PATH: AcademIA/sync/skill-manifest.json
+  BRIDGE_PATH: AcademIA/sync/agent-bridge.json
+
+jobs:
+  validate:
+    name: Validar skill-manifest + agent-bridge
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Rodar validador
+        run: |
+          python3 checks/lib/validate_manifest.py \
+            --manifest "$MANIFEST_PATH" \
+            --bridge   "$BRIDGE_PATH" \
+            --repo-root .
+
+      - name: Resumo
+        if: always()
+        run: |
+          {
+            echo "## 🧬 Skill Manifest Integrity"
+            echo
+            echo "- Manifesto: \`${{ env.MANIFEST_PATH }}\`"
+            echo "- Bridge:    \`${{ env.BRIDGE_PATH }}\`"
+            echo "- Status:    ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"

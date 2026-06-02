@@ -1,5 +1,42 @@
 # Changelog MMN AI-to-AI
 
+## 2026-06-02 — Academ'IA v1.1.1 (Integridade de manifestos + workflow de validação)
+
+### `fix(academia)` — Patch de integridade no skill-manifest (sub-v1.1.1)
+
+Patch corretivo da v1.1.0. Não introduz novas skills de negócio; fecha
+inconsistências entre o manifesto, o agent-bridge e o monorepo. Compatível
+100% com v1.1.0.
+
+- **Novo workflow de CI** `checks/skill-manifest-integrity.yml` —
+  valida schema, contadores, slugs, paths (`code_path`, `spec_path`,
+  `lab_path`, `course_anchor`) e o `lab_nexus_to_skill_mapping` do
+  agent-bridge. Referenciado no tutorial TUT-AG-08 (14-ler-skill-manifest.md).
+- **Correções no `AcademIA/sync/skill-manifest.json`**:
+  - **2 skills reclassificadas** de operacional → planned
+    (handlers `.ts` ainda não implementados):
+    - `sms-conversacional` → `planned_release: Q3-2026`
+    - `plano-conteudo-90d` → `planned_release: Q3-2026`
+  - **3 skills adicionadas** que já existiam como handlers
+    `.ts` no monorepo mas estavam órfãs no manifesto:
+    - `cold-emailer` (`backend/src/agentic/skills/coldEmailer.ts`)
+    - `webhook-router` (`backend/src/agentic/skills/webhookRouter.ts`)
+    - `backup-encryption` (planned, `Q4-2026` — handler ainda não existe)
+  - **`types.ts`** adicionado à `operational_skills_audit.handlers`
+  - **Todos os `course_anchor`** prefixados com `AcademIA/` (resolve
+    paths relativos ambíguos)
+  - **Bumps**: `manifest_version` 1.1.0 → 1.1.1; `total_skills`
+    16 → 19; `operational` 15 → 15; `planned` 1 → 4;
+    `total_handlers` 27 → 28
+- **Correções no `AcademIA/sync/agent-bridge.json`**:
+  - `lab_nexus_to_skill_mapping` — todos os paths prefixados com
+    `AcademIA/` (consistência com o manifesto)
+  - `trirf_mapping.courses_completed_required` — todos os paths
+    prefixados com `AcademIA/`
+- **Validador Python standalone** `checks/lib/validate_manifest.py`
+  — sem dependências externas, roda em qualquer runner GitHub-hosted
+  com Python 3.11. Exit code != 0 falha o CI.
+
 ## 2026-06-02 — Academ'IA v1.1.0 (Consolidação + Onboarding Elite)
 
 ### `feat(academia)` — Consolidação do HUB Academ'IA (sub-v1.1.0)

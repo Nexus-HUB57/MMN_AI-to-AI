@@ -1,10 +1,10 @@
 {
-  "manifest_version": "1.1.0",
+  "manifest_version": "1.1.1",
   "last_updated": "2026-06-02",
   "description": "Manifesto de skills do marketplace Nexus, com linkage explícito às trilhas da Academ'IA. Usado pelo runtime para validar quais skills um afiliado pode ativar dado seu nível de conhecimento.",
-  "total_skills": 16,
+  "total_skills": 19,
   "operational": 15,
-  "planned": 1,
+  "planned": 4,
   "skills": [
     {
       "slug": "copywriter-persuasivo",
@@ -13,7 +13,7 @@
       "level": "basic",
       "price_brl": 24,
       "trilha_academia": "fundamental",
-      "course_anchor": "cursos/fundamental/03-painel-afiliado.md",
+      "course_anchor": "AcademIA/cursos/fundamental/03-painel-afiliado.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/copywriterPersuasivo.ts"
     },
@@ -24,7 +24,7 @@
       "level": "basic",
       "price_brl": 18,
       "trilha_academia": "fundamental",
-      "course_anchor": "cursos/fundamental/03-painel-afiliado.md",
+      "course_anchor": "AcademIA/cursos/fundamental/03-painel-afiliado.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/analyticsReporter.ts"
     },
@@ -35,9 +35,10 @@
       "level": "intermediary",
       "price_brl": 32,
       "trilha_academia": "agente",
-      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
-      "operational": true,
-      "lab_path": "Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md"
+      "course_anchor": "AcademIA/cursos/agente/02-disparo-whatsapp.md",
+      "operational": false,
+      "planned_release": "Q3-2026",
+      "lab_path": "AcademIA/Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md"
     },
     {
       "slug": "audience-segmenter",
@@ -46,7 +47,7 @@
       "level": "intermediary",
       "price_brl": 48,
       "trilha_academia": "agente",
-      "course_anchor": "cursos/agente/01-skills-essenciais.md",
+      "course_anchor": "AcademIA/cursos/agente/01-skills-essenciais.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/audienceSegmenter.ts"
     },
@@ -57,7 +58,7 @@
       "level": "intermediary",
       "price_brl": 36,
       "trilha_academia": "agente",
-      "course_anchor": "cursos/agente/03-judge-revisor.md",
+      "course_anchor": "AcademIA/cursos/agente/03-judge-revisor.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/judgeRevisor.ts"
     },
@@ -68,7 +69,7 @@
       "level": "intermediary",
       "price_brl": 56,
       "trilha_academia": "agente",
-      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
+      "course_anchor": "AcademIA/cursos/agente/02-disparo-whatsapp.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/autoPublisher.ts"
     },
@@ -79,7 +80,7 @@
       "level": "intermediary",
       "price_brl": 42,
       "trilha_academia": "agente",
-      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
+      "course_anchor": "AcademIA/cursos/agente/02-disparo-whatsapp.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/followUpStrategist.ts"
     },
@@ -90,7 +91,7 @@
       "level": "advanced",
       "price_brl": 89,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
+      "course_anchor": "AcademIA/cursos/master/00-otimizacao-conversao.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/funnelArchitect.ts"
     },
@@ -101,9 +102,10 @@
       "level": "advanced",
       "price_brl": 78,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/01-funis-lifecycle.md",
-      "operational": true,
-      "lab_path": "Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md"
+      "course_anchor": "AcademIA/cursos/master/01-funis-lifecycle.md",
+      "operational": false,
+      "planned_release": "Q3-2026",
+      "lab_path": "AcademIA/Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md"
     },
     {
       "slug": "lifecycle-orchestrator",
@@ -112,7 +114,7 @@
       "level": "advanced",
       "price_brl": 120,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/01-funis-lifecycle.md",
+      "course_anchor": "AcademIA/cursos/master/01-funis-lifecycle.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/lifecycleOrchestrator.ts"
     },
@@ -123,7 +125,7 @@
       "level": "advanced",
       "price_brl": 95,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/02-ab-test-judge.md",
+      "course_anchor": "AcademIA/cursos/master/02-ab-test-judge.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/abTestDesigner.ts"
     },
@@ -134,7 +136,7 @@
       "level": "advanced",
       "price_brl": 110,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
+      "course_anchor": "AcademIA/cursos/master/00-otimizacao-conversao.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/roiAttributor.ts"
     },
@@ -145,7 +147,7 @@
       "level": "advanced",
       "price_brl": 135,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
+      "course_anchor": "AcademIA/cursos/master/00-otimizacao-conversao.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/pricingOptimizer.ts"
     },
@@ -156,7 +158,7 @@
       "level": "advanced",
       "price_brl": 105,
       "trilha_academia": "master",
-      "course_anchor": "cursos/master/03-coortes-churn.md",
+      "course_anchor": "AcademIA/cursos/master/03-coortes-churn.md",
       "operational": false,
       "planned_release": "Q3-2026"
     },
@@ -167,7 +169,7 @@
       "level": "advanced",
       "price_brl": 189,
       "trilha_academia": "elite",
-      "course_anchor": "cursos/elite/01-multi-tenant-whitelabel.md",
+      "course_anchor": "AcademIA/cursos/elite/01-multi-tenant-whitelabel.md",
       "operational": true,
       "code_path": "backend/src/domains/whitelabel/index.ts"
     },
@@ -178,16 +180,49 @@
       "level": "advanced",
       "price_brl": 189,
       "trilha_academia": "elite",
-      "course_anchor": "cursos/elite/02-federacao-agentes.md",
+      "course_anchor": "AcademIA/cursos/elite/02-federacao-agentes.md",
       "operational": true,
-      "spec_path": "Lib-Nexus/agents-specs/03-federation-gate.md",
+      "spec_path": "AcademIA/Lib-Nexus/agents-specs/03-federation-gate.md",
       "spec_only": true
+    },
+    {
+      "slug": "cold-emailer",
+      "name": "Cold Emailer",
+      "category": "sales",
+      "level": "intermediary",
+      "price_brl": 28,
+      "trilha_academia": "agente",
+      "course_anchor": "AcademIA/cursos/agente/01-skills-essenciais.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/coldEmailer.ts"
+    },
+    {
+      "slug": "webhook-router",
+      "name": "Webhook Router",
+      "category": "automation",
+      "level": "intermediary",
+      "price_brl": 38,
+      "trilha_academia": "agente",
+      "course_anchor": "AcademIA/cursos/agente/02-disparo-whatsapp.md",
+      "operational": true,
+      "code_path": "backend/src/agentic/skills/webhookRouter.ts"
+    },
+    {
+      "slug": "backup-encryption",
+      "name": "Backup Encryption",
+      "category": "infrastructure",
+      "level": "advanced",
+      "price_brl": 95,
+      "trilha_academia": "elite",
+      "course_anchor": "AcademIA/cursos/elite/00-blueprints-elite.md",
+      "operational": false,
+      "planned_release": "Q4-2026"
     }
   ],
   "operational_skills_audit": {
     "description": "Lista plana de handlers .ts validados no monorepo em 2026-06-02. Usado para auditoria do CI em checks/skill-manifest-integrity.yml.",
     "monorepo_root_skills_dir": "backend/src/agentic/skills/",
-    "total_handlers": 27,
+    "total_handlers": 28,
     "handlers": [
       "abTestDesigner.ts",
       "analyticsReporter.ts",
@@ -213,6 +248,7 @@
       "roiAttributor.ts",
       "skillBridge.ts",
       "socialSeller.ts",
+      "types.ts",
       "upsellStrategist.ts",
       "webhookRouter.ts",
       "webinarEngine.ts"

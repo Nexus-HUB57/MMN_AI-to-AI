@@ -1,5 +1,5 @@
 {
-  "academia_version": "1.0.0",
+  "academia_version": "1.1.0",
   "schema_version": "1.0",
   "last_updated": "2026-06-02",
   "description": "Manifesto de sincronização entre a Academ'IA e o runtime dos agentes. Mapeia níveis de conhecimento → bundle de skills → permissões SHO. Carregado pelo CentralOrchestrator durante o bootstrap.",
@@ -105,8 +105,10 @@
     "Lab-Nexus/tools/copy/01-headline-persuasiva.md": "copywriter-persuasivo",
     "Lab-Nexus/tools/copy/02-email-frio.md": "cold-emailer",
     "Lab-Nexus/tools/copy/04-whatsapp-persuasivo.md": "copywriter-persuasivo",
+    "Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md": "sms-conversacional",
     "Lab-Nexus/tools/marketing/01-planejador-editorial.md": "auto-publisher",
     "Lab-Nexus/tools/marketing/02-segmentacao-rfm.md": "audience-segmenter",
+    "Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md": "plano-conteudo-90d",
     "Lab-Nexus/tools/analytics/02-comparador-taxas-conversao.md": "roi-attributor",
     "Lab-Nexus/tools/analytics/04-atribuicao-multitouch.md": "roi-attributor",
     "Lab-Nexus/tools/analytics/05-coorte-churn.md": "cohort-analyzer",

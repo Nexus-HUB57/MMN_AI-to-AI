@@ -16,8 +16,8 @@ O Lab Nexus é o **HUB Central de Ferramentas IA** da Academ'IA. Ele centraliza 
 
 | Categoria | O que tem | Quem usa |
 |---|---|---|
-| 📣 `tools/marketing/` | Calendário, segmentação, jornada, funil | Estrategista |
-| ✍️ `tools/copy/` | Headlines, e-mails, scripts, copies | Copywriter |
+| 📣 `tools/marketing/` | Calendário, segmentação, jornada, funil, plano 90d | Estrategista |
+| ✍️ `tools/copy/` | Headlines, e-mails, scripts, copies, SMS | Copywriter |
 | 📊 `tools/analytics/` | Dashboards, KPIs, funis, coortes | Estrategista |
 | 🤖 `tools/automation/` | Bots, webhooks, integrações | Agente |
 | 🎨 `tools/design/` | Briefings, prompts visuais | Design |
@@ -28,26 +28,26 @@ O Lab Nexus é o **HUB Central de Ferramentas IA** da Academ'IA. Ele centraliza 
 
 ```
 Lab-Nexus/
-├── tools/                          # 38 ferramentas categorizadas
-│   ├── marketing/                  # 8 ferramentas — Estrategista
-│   ├── copy/                       # 12 ferramentas — Copywriter
+├── tools/                          # 40 ferramentas categorizadas
+│   ├── marketing/                  # 9 ferramentas — Estrategista
+│   ├── copy/                       # 13 ferramentas — Copywriter
 │   ├── analytics/                  # 6 ferramentas — Estrategista
 │   ├── automation/                 # 7 ferramentas — Agente
 │   └── design/                     # 5 ferramentas — Design
 ├── prompts/                        # Biblioteca de prompts testados
 │   ├── copywriting/                # 2 prompts
-│   ├── analise/                    # 2 prompts
-│   └── estrategia/                 # 2 prompts
+│   ├── analise/                    # 3 prompts
+│   └── estrategia/                 # 3 prompts
 ├── templates/                      # Templates editáveis
-│   ├── email/                      # 1 template
-│   ├── landing/                    # 1 template
+│   ├── email/                      # 3 templates
+│   ├── landing/                    # 2 templates
 │   └── social/                     # 1 template
 └── workflows/                      # Blueprints de automação
     ├── n8n/                        # 2 workflows
     └── make/                       # 1 workflow
 ```
 
-**Total:** 38 ferramentas + 6 prompts + 3 templates + 3 workflows = **50 assets**.
+**Total:** 40 ferramentas + 8 prompts + 6 templates + 3 workflows = **57 assets**.
 
 ## 🔄 Sincronização com agentes
 
@@ -132,4 +132,4 @@ Toda contribuição passa por **PR + revisão de 1 mentor**.
 
 ---
 
-**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus
+**Versão 1.1** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

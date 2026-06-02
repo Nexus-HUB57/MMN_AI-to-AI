@@ -1,10 +1,10 @@
 {
-  "manifest_version": "1.0.0",
+  "manifest_version": "1.1.0",
   "last_updated": "2026-06-02",
   "description": "Manifesto de skills do marketplace Nexus, com linkage explícito às trilhas da Academ'IA. Usado pelo runtime para validar quais skills um afiliado pode ativar dado seu nível de conhecimento.",
-  "total_skills": 45,
-  "operational": 27,
-  "planned": 18,
+  "total_skills": 16,
+  "operational": 15,
+  "planned": 1,
   "skills": [
     {
       "slug": "copywriter-persuasivo",
@@ -27,6 +27,17 @@
       "course_anchor": "cursos/fundamental/03-painel-afiliado.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/analyticsReporter.ts"
+    },
+    {
+      "slug": "sms-conversacional",
+      "name": "SMS Conversacional",
+      "category": "copy",
+      "level": "intermediary",
+      "price_brl": 32,
+      "trilha_academia": "agente",
+      "course_anchor": "cursos/agente/02-disparo-whatsapp.md",
+      "operational": true,
+      "lab_path": "Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md"
     },
     {
       "slug": "audience-segmenter",
@@ -84,6 +95,17 @@
       "code_path": "backend/src/agentic/skills/funnelArchitect.ts"
     },
     {
+      "slug": "plano-conteudo-90d",
+      "name": "Plano de Conteúdo 90 Dias",
+      "category": "marketing",
+      "level": "advanced",
+      "price_brl": 78,
+      "trilha_academia": "master",
+      "course_anchor": "cursos/master/01-funis-lifecycle.md",
+      "operational": true,
+      "lab_path": "Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md"
+    },
+    {
       "slug": "lifecycle-orchestrator",
       "name": "Lifecycle Orchestrator",
       "category": "automation",
@@ -123,6 +145,7 @@
       "level": "advanced",
       "price_brl": 135,
       "trilha_academia": "master",
+      "course_anchor": "cursos/master/00-otimizacao-conversao.md",
       "operational": true,
       "code_path": "backend/src/agentic/skills/pricingOptimizer.ts"
     },
@@ -146,7 +169,7 @@
       "trilha_academia": "elite",
       "course_anchor": "cursos/elite/01-multi-tenant-whitelabel.md",
       "operational": true,
-      "code_path": "fase7/whiteLabelSync.ts"
+      "code_path": "backend/src/domains/whitelabel/index.ts"
     },
     {
       "slug": "federation-gate",
@@ -157,7 +180,42 @@
       "trilha_academia": "elite",
       "course_anchor": "cursos/elite/02-federacao-agentes.md",
       "operational": true,
-      "code_path": "fase8/federation/gate.ts"
+      "spec_path": "Lib-Nexus/agents-specs/03-federation-gate.md",
+      "spec_only": true
     }
-  ]
+  ],
+  "operational_skills_audit": {
+    "description": "Lista plana de handlers .ts validados no monorepo em 2026-06-02. Usado para auditoria do CI em checks/skill-manifest-integrity.yml.",
+    "monorepo_root_skills_dir": "backend/src/agentic/skills/",
+    "total_handlers": 27,
+    "handlers": [
+      "abTestDesigner.ts",
+      "analyticsReporter.ts",
+      "audienceSegmenter.ts",
+      "autoPublisher.ts",
+      "coldEmailer.ts",
+      "commissionCalculator.ts",
+      "complianceAuditor.ts",
+      "contentTranslator.ts",
+      "copywriterPersuasivo.ts",
+      "creatorMatcher.ts",
+      "detectorTendencias.ts",
+      "dispatcher.ts",
+      "followUpStrategist.ts",
+      "fraudDetector.ts",
+      "funnelArchitect.ts",
+      "judgeRevisor.ts",
+      "leadEnricher.ts",
+      "lifecycleOrchestrator.ts",
+      "objectionHandler.ts",
+      "pricingOptimizer.ts",
+      "prospeccaoOutbound.ts",
+      "roiAttributor.ts",
+      "skillBridge.ts",
+      "socialSeller.ts",
+      "upsellStrategist.ts",
+      "webhookRouter.ts",
+      "webinarEngine.ts"
+    ]
+  }
 }

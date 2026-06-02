@@ -1,5 +1,39 @@
 # Changelog MMN AI-to-AI
 
+## 2026-06-02 — Academ'IA v1.1.0 (Consolidação + Onboarding Elite)
+
+### `feat(academia)` — Consolidação do HUB Academ'IA (sub-v1.1.0)
+
+Esta é uma sub-release da **Academ'IA** (HUB de Conhecimento) com novos
+tutoriais, ferramentas, prompts, webinar agendado e documentos de governança.
+Compatível 100% com v1.0.0 — apenas adições, sem breaking change.
+
+- **2 tutoriais novos**:
+  - `AcademIA/tutoriais/13-federação-3-nos-mtls-pinned.md` — escalando federação para 3+ nós (Nível Elite)
+  - `AcademIA/tutoriais/14-ler-skill-manifest.md` — bridge runtime ↔ Academ'IA (Nível Agente)
+- **2 ferramentas novas no Lab-Nexus**:
+  - `tools/marketing/09-plano-conteudo-90-dias.md` — planejamento trimestral de conteúdo (Nível Master)
+  - `tools/copy/13-disparo-sms-conversacional.md` — SMS transacional/relacional com compliance ANATEL (Nível Agente)
+- **2 prompts novos** (fechando lacunas do INDEX):
+  - `prompts/analise/03-diagnostico-funil-completo.md`
+  - `prompts/estrategia/03-posicionamento-competitivo.md`
+- **1 webinar novo**: `webinars/WB-2026-03-academia-open-house.md` (🟡 15/06/2026)
+- **2 documentos de governança**: `AcademIA/RESUMO_EXECUTIVO.md` (TL;DR 1 página) + `AcademIA/CHANGELOG.md` (este)
+- **Correções de integridade em `sync/skill-manifest.json`**:
+  - `white-label-sync`: `fase7/whiteLabelSync.ts` (não existe) → `backend/src/domains/whitelabel/index.ts`
+  - `federation-gate`: `fase8/federation/gate.ts` (não existe) → `AcademIA/Lib-Nexus/agents-specs/03-federation-gate.md` (com `spec_only: true`)
+  - Adicionada seção `operational_skills_audit` com 27 handlers validados
+  - Adicionadas 2 skills novas: `plano-conteudo-90d` (master) e `sms-conversacional` (agente)
+- **Bump de versão**:
+  - `AcademIA/sync/skill-manifest.json`: `manifest_version` 1.0.0 → 1.1.0
+  - `AcademIA/sync/agent-bridge.json`: `academia_version` 1.0.0 → 1.1.0
+  - Adicionados 2 mapeamentos em `lab_nexus_to_skill_mapping` (sms-conversacional + plano-conteudo-90d)
+- **READMEs atualizados**: `tutoriais/README.md` (12 → 14), `webinars/README.md` (3 webinars), `Lab-Nexus/README.md` (50 → 57 assets), `AcademIA/INDEX.md` (contagens novas)
+
+Detalhes completos em `AcademIA/CHANGELOG.md`.
+
+---
+
 ## 2026-06-01 — v1.3.1 Nexus Partners Pack (correções e observabilidade)
 
 ### `fix(nexus-partners-pack)` — XP Ledger + Silent-drop eliminado (sub-v1.3.1)

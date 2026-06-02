@@ -45,4 +45,4 @@ Discord → `#academy-master` → canal de sugestões.
 
 ---
 
-**Versão 1.0** · Atualizado 2026-06-02
+**Versão 1.1** · Atualizado 2026-06-02

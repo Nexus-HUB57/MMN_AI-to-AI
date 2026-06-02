@@ -2,13 +2,18 @@
 title: "INDEX · Academ'IA"
 description: "Índice semântico e mapeamento de habilidades transversais"
 tags: [index, knowledge-map, transversal-skills]
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-06-02
 ---
 
 # 📑 ÍNDICE · Academ'IA
 
 > **Mapa completo do HUB.** Use `Ctrl/Cmd+F` para busca rápida ou tags transversais para correlação semântica via Obsidian.
+
+> **Versão 1.1.0** · Última atualização 2026-06-02 · 15 cursos · 40 tools · 8 prompts · 14 tutoriais · 7 playbooks · 3 webinars
+> 
+> 👉 **Novo?** Leia primeiro o [`RESUMO_EXECUTIVO.md`](RESUMO_EXECUTIVO.md) (TL;DR de 1 página).
+> 👉 **Histórico de versões:** [`CHANGELOG.md`](CHANGELOG.md)
 
 ## 🧭 Atalhos de Onboarding
 
@@ -71,13 +76,17 @@ Para Top 10% — blueprints internos e operação avançada.
 
 - **WB-2026-01** — Lançamento do IOAID
 - **WB-2026-02** — SHO em produção
+- **WB-2026-03** — Academ'IA Open House (🟡 15/06/2026)
 
-## ⚡ [`tutoriais/`](tutoriais/) — How-to rápidos
+## ⚡ [`tutoriais/`](tutoriais/) — How-to rápidos (14 tutoriais)
 
 - Como criar seu primeiro agente
 - Como aprovar uma sugestão do judge
 - Como ler o relatório de autonomia
 - Como convidar um afiliado para a rede
+- Como configurar federação entre 2 nós
+- Como escalar federação para 3+ nós com mTLS pinned
+- Como ler e usar o skill-manifest.json
 
 ## 📕 [`playbooks/`](playbooks/) — Manuais de operação
 
@@ -87,17 +96,17 @@ Para Top 10% — blueprints internos e operação avançada.
 
 ## 🧪 [`Lab-Nexus/`](Lab-Nexus/) — HUB de Ferramentas IA
 
-### `tools/` — 38 Ferramentas categorizadas
-- [`marketing/`](Lab-Nexus/tools/marketing/) — 8 ferramentas
-- [`copy/`](Lab-Nexus/tools/copy/) — 12 ferramentas
+### `tools/` — 40 Ferramentas categorizadas
+- [`marketing/`](Lab-Nexus/tools/marketing/) — 9 ferramentas
+- [`copy/`](Lab-Nexus/tools/copy/) — 13 ferramentas (inclui SMS)
 - [`analytics/`](Lab-Nexus/tools/analytics/) — 6 ferramentas
 - [`automation/`](Lab-Nexus/tools/automation/) — 7 ferramentas
 - [`design/`](Lab-Nexus/tools/design/) — 5 ferramentas
 
-### `prompts/`
-- `copywriting/` — Prompts para geração de copy
-- `analise/` — Prompts para análise de dados
-- `estrategia/` — Prompts para planejamento estratégico
+### `prompts/` — 8 prompts testados
+- `copywriting/` — 2 prompts para geração de copy
+- `analise/` — 3 prompts para análise de dados
+- `estrategia/` — 3 prompts para planejamento estratégico
 
 ### `templates/`
 - `email/` — Templates HTML editáveis
@@ -127,4 +136,4 @@ Para Top 10% — blueprints internos e operação avançada.
 
 ---
 
-**Versão 1.0.0** · Atualizado em 2026-06-02
+**Versão 1.1.0** · Atualizado em 2026-06-02

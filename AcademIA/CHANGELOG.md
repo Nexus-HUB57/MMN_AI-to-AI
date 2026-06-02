@@ -1,0 +1,135 @@
+---
+title: "CHANGELOG · Academ'IA"
+description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
+tags: [changelog, versionamento, historico, academia]
+version: 1.1.0
+last_updated: 2026-06-02
+---
+
+# 📜 CHANGELOG · Academ'IA
+
+> Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.1.0] — 2026-06-02 · "Consolidação + Onboarding Elite"
+
+### ✨ Adicionado
+
+- 📕 **2 tutoriais novos**:
+  - `tutoriais/13-federação-3-nos-mtls-pinned.md` — escalando federação para 3+ nós com mTLS pinned, capacidades e TTL de aprovação (Nível Elite)
+  - `tutoriais/14-ler-skill-manifest.md` — como ler e contribuir no `skill-manifest.json` (Nível Agente)
+
+- 🧪 **2 ferramentas novas no Lab-Nexus**:
+  - `tools/marketing/09-plano-conteudo-90-dias.md` — planejamento trimestral de conteúdo com funil integrado (Nível Master)
+  - `tools/copy/13-disparo-sms-conversacional.md` — templates + prompt para SMS transacional/relacional (Nível Agente)
+
+- 💡 **2 prompts novos** (fechando lacunas do INDEX):
+  - `prompts/analise/03-diagnostico-funil-completo.md`
+  - `prompts/estrategia/03-posicionamento-competitivo.md`
+
+- 📡 **1 webinar novo** (anúncio + preparação):
+  - `webinars/WB-2026-03-academia-open-house.md` — Open House de 2026-06-15 (🟡 agendado)
+
+- 📑 **Novos documentos de governança**:
+  - `RESUMO_EXECUTIVO.md` — TL;DR de 1 página (entrada única)
+  - `CHANGELOG.md` (este arquivo)
+
+### 🩹 Correções
+
+- `sync/skill-manifest.json`:
+  - `code_path` de `white-label-sync` corrigido: `fase7/whiteLabelSync.ts` (inexistente) → `backend/src/domains/whitelabel/index.ts`
+  - `code_path` de `federation-gate` corrigido: `fase8/federation/gate.ts` (inexistente) → `AcademIA/Lib-Nexus/agents-specs/03-federation-gate.md` (com flag `spec_only: true`)
+  - Adicionada seção `operational_skills_audit` com 27 paths validados no monorepo
+  - Adicionadas 2 skills novas: `plano-conteudo-90d` e `sms-conversacional`
+
+- `sync/agent-bridge.json`:
+  - Adicionados 2 mapeamentos novos em `lab_nexus_to_skill_mapping` (plano-conteudo-90d + sms-conversacional)
+  - Bump de `academia_version` para `1.1.0`
+
+### 🔄 Modificado
+
+- `tutoriais/README.md` — catálogo agora lista 14 tutoriais (era 12)
+- `INDEX.md` — contagens atualizadas (40 tools, 8 prompts, 3 webinars) e links para os 2 tutoriais novos
+- `Lab-Nexus/README.md` — contagem de assets ajustada (50 → 54) e menção aos novos arquivos
+
+---
+
+## [1.0.0] — 2026-06-02 · "Lançamento oficial do HUB"
+
+### 🎉 Release inicial
+
+- 🎓 **3 camadas estruturadas**:
+  - **Cursos** — 4 trilhas (Fundamental, Agente, Master, Elite) com 15 cursos curados
+  - **Lab-Nexus** — 38 ferramentas categorizadas + 6 prompts + 3 templates HTML + 3 workflows JSON
+  - **Lib-Nexus** — 15 documentos canônicos (glossário, IOAID, specs de agentes, API docs, best practices)
+
+- 📕 **Pastas auxiliares**:
+  - `treinamentos/` — 3 workshops práticos
+  - `webinars/` — 2 webinars realizados + calendário 2026
+  - `certificacoes/` — 3 certificações progressivas (CON, CEN, CEN+) + modelo de avaliação
+  - `playbooks/` — 7 playbooks de operação (rotina, lançamento, crise, LGPD)
+  - `tutoriais/` — 12 tutoriais how-to rápidos
+
+- 🔄 **Sistema de sync entre Academ'IA e Runtime**:
+  - `sync/agent-bridge.json` — mapeamento trilhas → skills → SHO (4 níveis)
+  - `sync/skill-manifest.json` — catálogo de 14 skills com linkage à trilha
+  - `sync/MCP-CONFIG.md` — 4 servidores MCP configurados
+
+- 🛡️ **Governança**:
+  - LGPD-safe em todos os exemplos
+  - Code-first (exemplos > prosa)
+  - Cross-linked com tags transversais
+  - Obsidian-ready (frontmatter YAML)
+
+- 📐 **Padrão de qualidade** (Lab-Quality-Standard) para tools, prompts, templates, workflows
+
+---
+
+## 🎯 Próximas versões (roadmap público)
+
+### [1.2.0] — Previsto Q3-2026
+
+- 🎬 Adicionar 2 workshops novos: `WS-04` Operação SHO Avançado, `WS-05` Federação de Agentes (hands-on)
+- 🧪 Adicionar 4 ferramentas operacionais no Lab:
+  - `tools/analytics/07-comparador-creators.md`
+  - `tools/automation/08-rate-limiter-pausa-inteligente.md`
+  - `tools/design/06-prompt-visual-carrossel-v2.md`
+  - `tools/marketing/10-icp-detector.md`
+- 📊 Adicionar 3 templates: `templates/social/02-template-stories-sequencia.html`, `templates/landing/03-template-otimizado-conversao.html`, `templates/email/04-template-carrinho-abandonado.html`
+- 🔄 Adicionar `sync/audit-log-schema.md` — schema do log de auditoria MCP
+
+### [2.0.0] — Previsto Q4-2026
+
+- 💎 Migração do conteúdo Elite para formato interativo (com simuladores embedded)
+- 🌐 i18n: versão em inglês (EN-US) das 4 trilhas de curso
+- 🧠 Skill auto-tuning integrado ao Academ'IA (prompts do Lab-Nexus alimentam o Judge)
+- 📦 Empacotamento do Academ'IA como MCP server oficial instalável via `npx`
+
+---
+
+## 📊 Métricas de Crescimento
+
+| Versão | Data | Cursos | Tools | Prompts | Templates | Workflows | Tutoriais | Playbooks |
+|---|---|---|---|---|---|---|---|---|
+| 1.0.0 | 2026-06-02 | 15 | 38 | 6 | 3 | 3 | 12 | 7 |
+| **1.1.0** | **2026-06-02** | **15** | **40** | **8** | **3** | **3** | **14** | **7** |
+| 1.2.0 (meta) | Q3-2026 | 15 | 44 | 8 | 6 | 4 | 16 | 8 |
+| 2.0.0 (meta) | Q4-2026 | 15 + EN | 50+ | 12+ | 8+ | 6+ | 20+ | 10+ |
+
+---
+
+## 🤝 Como Contribuir
+
+1. Abra PR descrevendo a mudança
+2. Revisão por 1 mantenedor da área
+3. (Para Lib-Nexus) Revisão por 2 contribuidores Elite
+4. Merge + bump de versão automático
+
+Toda contribuição precisa seguir o **Lab-Quality-Standard** (spec + playbook + asset + métricas + riscos).
+
+---
+
+**Mantido por:** Equipe Nexus Affil'IA'te
+**Contato:** equipenexus@oneverso.com.br
+**Repositório:** https://github.com/Nexus-HUB57/MMN_AI-to-AI

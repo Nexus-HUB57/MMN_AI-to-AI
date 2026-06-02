@@ -1,7 +1,7 @@
 # Nexus Partners Pack - Status Consolidado de Desenvolvimento
 
-**Data:** 2026-06-01
-**Versão Atual:** v1.3.0 (Partners Pack: v1.3.1)
+**Data:** 2026-06-02
+**Versão Atual:** v1.3.0 (Partners Pack: v1.3.1) · **Academ'IA v1.1.0**
 **Branch:** main
 
 ---
@@ -523,4 +523,54 @@ ANALYTICS_CRON_HOURS=6
 
 ---
 
-*Nexus Partners Pack - Autonomous Operational Intelligence*
+## 16. Academ'IA — HUB de Conhecimento (atualização 2026-06-02)
+
+Status do **HUB Academ'IA** (sub-v1.1.0) — independente da versão do Partners Pack, mas
+consumido pelo runtime via `sync/skill-manifest.json` + `sync/agent-bridge.json`.
+
+### 16.1 Conteúdo
+
+| Categoria | v1.0.0 (2026-06-02) | v1.1.0 (2026-06-02) | Δ |
+|---|---|---|---|
+| Cursos (4 trilhas) | 15 | 15 | — |
+| Ferramentas Lab-Nexus | 38 | 40 | +2 (SMS + Plano 90d) |
+| Prompts | 6 | 8 | +2 (funil + posicionamento) |
+| Templates | 3 | 3 | — |
+| Workflows JSON | 3 | 3 | — |
+| Tutoriais | 12 | 14 | +2 (federação 3+ + skill-manifest) |
+| Playbooks | 7 | 7 | — |
+| Workshops | 3 | 3 | — |
+| Webinars | 2 | 3 (1 agendado) | +1 (WB-2026-03) |
+| Docs Lib-Nexus | 15 | 15 | — |
+| Certificações | 3 | 3 | — |
+| **Total assets** | **120** | **125** | **+5** |
+
+### 16.2 Skills & Runtime
+
+- 15 skills operacionais no `skill-manifest.json` (1 planejada: `cohort-analyzer`, Q3-2026)
+- 27 handlers `.ts` validados em `backend/src/agentic/skills/`
+- 4 servidores MCP configurados (academia-courses, lab-nexus-tools, lib-nexus-specs, sync-bridge)
+- Auditoria: `operational_skills_audit` agora lista 27 paths planos para o CI
+
+### 16.3 Governança (novo)
+
+- `AcademIA/CHANGELOG.md` (v1.1.0) — versionamento semântico próprio
+- `AcademIA/RESUMO_EXECUTIVO.md` (v1.1.0) — TL;DR de 1 página
+- Compliance: ANATEL + LGPD cobrados em tools transacionais (ex: SMS)
+- Code-first mantido: spec + playbook + asset + métricas + riscos em cada tool
+
+### 16.4 Próximos passos (Academ'IA)
+
+- v1.2.0 (Q3-2026): WS-04 + WS-05 workshops, 4 tools operacionais, 3 templates
+- v2.0.0 (Q4-2026): versão EN-US, simuladores Elite, MCP server oficial instalável via `npx`
+
+---
+
+**Documento gerado em:** 2026-06-01 04:36
+**Última atualização:** 2026-06-02 13:50 (Academ'IA v1.1.0)
+**Commits realizados:** 3 (Partners Pack) + 1 (Academ'IA v1.1.0)
+**Total de linhas adicionadas:** ~3000+ (Partners Pack) + ~2500 (Academ'IA)
+
+---
+
+*Nexus Partners Pack - Autonomous Operational Intelligence · Academ'IA v1.1.0*

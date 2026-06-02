@@ -35,6 +35,11 @@ last_updated: 2026-06-02
 
 - [Como subir 1 instância multi-tenant](11-instancia-multitenant.md)
 - [Como configurar federação entre 2 nós](12-federação-2-nos.md)
+- [Como escalar federação para 3+ nós com mTLS pinned](13-federação-3-nos-mtls-pinned.md)
+
+### 🧬 Agente — Bridge com o Runtime
+
+- [Como ler e usar o skill-manifest.json](14-ler-skill-manifest.md)
 
 ## 🎯 Padrão dos Tutoriais
 
@@ -62,4 +67,4 @@ Cada tutorial segue este template:
 
 ---
 
-**Versão 1.0** · Atualizado 2026-06-02
+**Versão 1.1** · Atualizado 2026-06-02

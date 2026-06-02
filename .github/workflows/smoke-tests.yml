@@ -61,6 +61,46 @@ jobs:
           test "$code" = "200"
           grep -Eqi 'ok|healthy|status' /tmp/api-health.json
 
+      - name: Validar separacao Nexus Partners Pack x Nexus Affil'IA'te
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/chunks
+          # Extrai todos os chunks de pagina do bundle principal
+          asset=$(grep -oE 'src="/assets/index-[A-Za-z0-9_-]+\.js"' /tmp/root.html | head -1 | sed 's/src="//' | sed 's/"//')
+          curl -fsSL -A "$BROWSER_UA" "https://oneverso.com.br$asset" -o /tmp/chunks/main.js
+          echo "Inspecionando chunks de Subscriptions, PixCheckout, Marketplaces e Home..."
+          violations=0
+          for page in Subscriptions PixCheckout Marketplaces Home; do
+            chunk=$(grep -oE "\"assets/${page}-[A-Za-z0-9_-]+\.js\"" /tmp/chunks/main.js | head -1 | tr -d '"')
+            if [ -z "$chunk" ]; then
+              echo "::warning::Chunk $page nao encontrado no bundle (lazy chunk pode ter mudado de formato)"
+              continue
+            fi
+            echo "Baixando /$chunk"
+            curl -fsSL -A "$BROWSER_UA" "https://oneverso.com.br/$chunk" -o "/tmp/chunks/${page}.js"
+            # IDs legados do Nexus Partners Pack (pack-a2/ag/aa SEM sufixo II/III, e sem o prefixo pack-a2ii)
+            # devem ter sumido das paginas do produto. A jornada do Affil'IA'te (pack-a2ii, pack-agii, etc) continua valida.
+            if grep -qE '"(pack-a2|pack-ag|pack-aa)"' "/tmp/chunks/${page}.js"; then
+              # Permite somente se vier no contexto da jornada Affil'IA'te (Marketplaces.tsx referencia NEXUS_PACKS)
+              if [ "$page" = "Marketplaces" ]; then
+                echo "::notice::$page contem IDs pack-* (esperado: jornada Affil'IA'te)"
+              else
+                echo "::error::Pagina $page ainda contem identificadores legados pack-a2/ag/aa do Nexus Partners Pack"
+                violations=$((violations+1))
+              fi
+            fi
+          done
+          # Subscriptions DEVE conter os novos IDs
+          if ! grep -qE 'nexus-(start|growth|enterprise)' /tmp/chunks/Subscriptions.js 2>/dev/null; then
+            echo "::error::Chunk Subscriptions nao contem os novos IDs nexus-start/growth/enterprise"
+            violations=$((violations+1))
+          fi
+          if [ "$violations" -gt 0 ]; then
+            echo "$violations violacoes encontradas. Falhando o smoke test."
+            exit 1
+          fi
+          echo "OK: separacao Nexus Partners Pack x Nexus Affil'IA'te validada em producao."
+
       - name: Resumo dos smoke tests
         if: always()
         run: |

@@ -18,6 +18,7 @@ import {
 } from "./domains/subscriptions/billingWebhook";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
+import { createNexusOpenApiRouter } from "./open-api/routes";
 
 const PORT = Number(process.env.PORT || 3000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
@@ -57,6 +58,7 @@ function createContext(opts: { req: express.Request; res: express.Response }): C
 }
 
 const app = express();
+const nexusOpenApiRouter = createNexusOpenApiRouter();
 const trpcMiddleware = createExpressMiddleware({
   router: appRouter,
   createContext,
@@ -93,6 +95,7 @@ app.get("/api", (_req, res) => {
     service: "backend",
     mode: "full",
     trpc: "/api/trpc",
+    openApi: "/api/v1",
     health: "/api/health",
     publicBundle: HAS_PUBLIC_BUNDLE,
   });
@@ -157,6 +160,7 @@ app.post("/webhooks/hotmart", async (req, res) => {
   }
 });
 
+app.use("/api/v1", nexusOpenApiRouter);
 app.use("/trpc", trpcMiddleware);
 app.use("/api/trpc", trpcMiddleware);
 

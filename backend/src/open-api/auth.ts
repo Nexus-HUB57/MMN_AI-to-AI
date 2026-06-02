@@ -1,11 +1,32 @@
 import type { NextFunction, Request, Response } from "express";
+import { sql } from "drizzle-orm";
+import { getDb } from "../db";
+
+export interface NexusApiPermissions {
+  read?: boolean;
+  write?: boolean;
+  admin?: boolean;
+  modules?: string[];
+}
 
 export interface NexusApiContext {
   tenantId: string;
   apiKey: string;
+  keyId: string | null;
+  permissions: NexusApiPermissions | null;
   authScheme: "bearer";
-  source: "env_registry" | "single_env";
+  source: "tenant_api_keys" | "env_registry" | "single_env";
 }
+
+interface ApiKeyValidationResult {
+  valid: boolean;
+  tenantId?: string;
+  keyId?: string | null;
+  permissions?: NexusApiPermissions | null;
+  source?: NexusApiContext["source"];
+}
+
+let tenantApiKeysUnavailableLogged = false;
 
 function extractBearerToken(authorizationHeader?: string): string | null {
   if (!authorizationHeader) return null;
@@ -30,11 +51,105 @@ function parseApiKeyRegistry() {
     .filter((entry): entry is { tenantId: string; apiKey: string } => Boolean(entry));
 }
 
-function validateApiKeyFromEnv(apiKey: string): { valid: boolean; tenantId?: string; source?: NexusApiContext["source"] } {
+function normalizePermissions(value: unknown): NexusApiPermissions | null {
+  if (!value) return null;
+  if (typeof value === "string") {
+    try {
+      return normalizePermissions(JSON.parse(value));
+    } catch {
+      return null;
+    }
+  }
+
+  if (typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  return {
+    read: record.read === undefined ? undefined : Boolean(record.read),
+    write: record.write === undefined ? undefined : Boolean(record.write),
+    admin: record.admin === undefined ? undefined : Boolean(record.admin),
+    modules: Array.isArray(record.modules)
+      ? record.modules.filter((item): item is string => typeof item === "string")
+      : undefined,
+  };
+}
+
+async function validateApiKeyFromTenantTable(apiKey: string): Promise<ApiKeyValidationResult> {
+  const db = await getDb();
+  if (!db) {
+    return { valid: false };
+  }
+
+  try {
+    const result = await (db as any).execute(sql`
+      select id, tenant_id, permissions, is_active, expires_at
+      from tenant_api_keys
+      where api_key = ${apiKey}
+      limit 1
+    `);
+
+    const rows = Array.isArray(result?.rows) ? result.rows : [];
+    const row = rows[0] as
+      | {
+          id?: string;
+          tenant_id?: string;
+          permissions?: unknown;
+          is_active?: boolean;
+          expires_at?: string | Date | null;
+        }
+      | undefined;
+
+    if (!row?.tenant_id || row.is_active === false) {
+      return { valid: false };
+    }
+
+    const expiresAt = row.expires_at ? new Date(row.expires_at) : null;
+    if (expiresAt && !Number.isNaN(expiresAt.getTime()) && expiresAt.getTime() < Date.now()) {
+      return { valid: false };
+    }
+
+    void (db as any).execute(sql`
+      update tenant_api_keys
+      set last_used_at = now()
+      where id = ${row.id ?? ""}
+    `);
+
+    void (db as any).execute(sql`
+      update tenant_billing
+      set api_calls_used = coalesce(api_calls_used, 0) + 1,
+          updated_at = now()
+      where tenant_id = ${row.tenant_id}
+    `).catch(() => undefined);
+
+    return {
+      valid: true,
+      tenantId: row.tenant_id,
+      keyId: row.id ?? null,
+      permissions: normalizePermissions(row.permissions),
+      source: "tenant_api_keys",
+    };
+  } catch (error) {
+    if (!tenantApiKeysUnavailableLogged) {
+      tenantApiKeysUnavailableLogged = true;
+      console.warn(
+        "[NexusOpenAPI] tenant_api_keys indisponível; autenticação seguirá com fallback em variáveis de ambiente.",
+        error,
+      );
+    }
+    return { valid: false };
+  }
+}
+
+function validateApiKeyFromEnv(apiKey: string): ApiKeyValidationResult {
   const registry = parseApiKeyRegistry();
   const registryMatch = registry.find((entry) => entry.apiKey === apiKey);
   if (registryMatch) {
-    return { valid: true, tenantId: registryMatch.tenantId, source: "env_registry" };
+    return {
+      valid: true,
+      tenantId: registryMatch.tenantId,
+      keyId: null,
+      permissions: null,
+      source: "env_registry",
+    };
   }
 
   const singleApiKey = process.env.NEXUS_OPEN_API_KEY?.trim();
@@ -42,6 +157,8 @@ function validateApiKeyFromEnv(apiKey: string): { valid: boolean; tenantId?: str
     return {
       valid: true,
       tenantId: process.env.NEXUS_OPEN_API_TENANT_ID?.trim() || "default-tenant",
+      keyId: null,
+      permissions: null,
       source: "single_env",
     };
   }
@@ -67,13 +184,15 @@ export async function requireNexusApiKey(req: Request, res: Response, next: Next
       return;
     }
 
-    const validation = validateApiKeyFromEnv(apiKey);
+    const tenantValidation = await validateApiKeyFromTenantTable(apiKey);
+    const validation = tenantValidation.valid ? tenantValidation : validateApiKeyFromEnv(apiKey);
+
     if (!validation.valid || !validation.tenantId || !validation.source) {
       res.status(401).json({
         error: {
           code: "invalid_api_key",
           message:
-            "API key inválida ou não registrada nas variáveis NEXUS_OPEN_API_KEYS / NEXUS_OPEN_API_KEY.",
+            "API key inválida ou não registrada na tenant_api_keys / variáveis NEXUS_OPEN_API_KEYS / NEXUS_OPEN_API_KEY.",
         },
       });
       return;
@@ -82,6 +201,8 @@ export async function requireNexusApiKey(req: Request, res: Response, next: Next
     res.locals.nexusApi = {
       tenantId: validation.tenantId,
       apiKey,
+      keyId: validation.keyId ?? null,
+      permissions: validation.permissions ?? null,
       authScheme: "bearer",
       source: validation.source,
     } satisfies NexusApiContext;

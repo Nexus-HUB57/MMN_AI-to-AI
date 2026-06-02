@@ -1,5 +1,6 @@
 import { randomUUID, createHash } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
+import { getCached, setCached } from "../services/cache-service";
 import { getNexusApiContext } from "./auth";
 
 export interface NexusOpenApiAuditRecord {
@@ -21,7 +22,10 @@ export interface NexusOpenApiAuditRecord {
 }
 
 const AUDIT_LIMIT = Number(process.env.NEXUS_OPEN_API_AUDIT_BUFFER_SIZE || 500);
-const auditBuffer: NexusOpenApiAuditRecord[] = [];
+const AUDIT_TTL_SECONDS = Math.max(
+  300,
+  Math.ceil(Number(process.env.NEXUS_OPEN_API_AUDIT_TTL_MS || 7 * 24 * 60 * 60 * 1000) / 1000),
+);
 
 function readNumberHeader(value: unknown): number | null {
   if (value === undefined || value === null) return null;
@@ -29,17 +33,33 @@ function readNumberHeader(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function pushAuditRecord(record: NexusOpenApiAuditRecord) {
-  auditBuffer.unshift(record);
-  if (auditBuffer.length > AUDIT_LIMIT) {
-    auditBuffer.length = AUDIT_LIMIT;
-  }
+function buildAuditKey(tenantId?: string | null) {
+  return tenantId ? `nexus:openapi:audit:tenant:${tenantId}` : "nexus:openapi:audit:global";
 }
 
-export function listRecentOpenApiAuditRecords(tenantId?: string | null, limit = 50) {
-  return auditBuffer
-    .filter((record) => (tenantId ? record.tenantId === tenantId : true))
-    .slice(0, Math.max(1, Math.min(limit, 200)));
+async function persistAuditRecord(record: NexusOpenApiAuditRecord) {
+  const globalKey = buildAuditKey();
+  const tenantKey = buildAuditKey(record.tenantId);
+
+  const [globalRecords, tenantRecords] = await Promise.all([
+    getCached<NexusOpenApiAuditRecord[]>(globalKey),
+    record.tenantId ? getCached<NexusOpenApiAuditRecord[]>(tenantKey) : Promise.resolve(null),
+  ]);
+
+  const nextGlobal = [record, ...(globalRecords ?? [])].slice(0, AUDIT_LIMIT);
+  const nextTenant = record.tenantId
+    ? [record, ...((tenantRecords as NexusOpenApiAuditRecord[] | null) ?? [])].slice(0, AUDIT_LIMIT)
+    : null;
+
+  await Promise.all([
+    setCached(globalKey, nextGlobal, AUDIT_TTL_SECONDS),
+    record.tenantId && nextTenant ? setCached(tenantKey, nextTenant, AUDIT_TTL_SECONDS) : Promise.resolve(true),
+  ]);
+}
+
+export async function listRecentOpenApiAuditRecords(tenantId?: string | null, limit = 50) {
+  const records = (await getCached<NexusOpenApiAuditRecord[]>(buildAuditKey(tenantId))) ?? [];
+  return records.slice(0, Math.max(1, Math.min(limit, 200)));
 }
 
 export function getOpenApiRequestId(res: Response): string | null {
@@ -75,7 +95,10 @@ export function createOpenApiAuditMiddleware() {
         rateLimitRemaining: readNumberHeader(res.getHeader("X-RateLimit-Remaining")),
       };
 
-      pushAuditRecord(record);
+      void persistAuditRecord(record).catch((error) => {
+        console.warn("[NexusOpenAPI] Falha ao persistir audit trail.", error);
+      });
+
       console.log(
         JSON.stringify({
           level: "info",

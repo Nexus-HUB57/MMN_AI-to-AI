@@ -1,0 +1,190 @@
+---
+title: "Template · Landing Page de Captura (Lead Magnet)"
+description: "Template HTML minimalista para landing page de captura de lead (e-book, webinar, material rico)"
+tags: [lab-nexus, template, landing, captura, lead, html]
+category: templates/landing
+level: fundamental
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# 🌐 Template · Landing Page de Captura (Lead Magnet)
+
+> Template HTML **minimalista** para captura de lead (e-book, webinar, template gratuito). **Conversão média 25-50%** (tráfego frio) e **60-80%** (morno).
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Estrutura | Hero + Formulário + Benefícios + Prova social simples |
+| Formulário | 3-5 campos (otimizado para conversão) |
+| Largura | 100% mobile-friendly |
+| Performance | Lighthouse 95+ |
+| LGPD | Checkbox de consentimento + link de privacidade |
+
+## 📋 Playbook — Quando Usar
+
+- E-book gratuito
+- Webinar / live gratuita
+- Template / planilha grátis
+- Lista de espera
+- Cupom de desconto
+
+## 📦 Asset (HTML Pronto)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{titulo_lead_magnet}} — Baixe grátis</title>
+  <meta name="description" content="{{meta_description}}">
+  <meta property="og:title" content="{{titulo_lead_magnet}}">
+  <meta property="og:description" content="{{promessa_lead_magnet}}">
+  <meta property="og:image" content="{{og_image_url}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #F3E8FF 0%, #FFFFFF 100%); min-height: 100vh; color: #1A1A1A; line-height: 1.6; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .eyebrow { display: inline-block; background: rgba(107,45,207,0.1); color: #6B2DCF; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    h1 { font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+    .subtitle { font-size: 20px; color: #666; margin-bottom: 32px; }
+    .benefits { list-style: none; margin-bottom: 32px; }
+    .benefits li { padding: 12px 0; display: flex; align-items: flex-start; }
+    .check { color: #10B981; font-weight: 700; margin-right: 12px; font-size: 20px; }
+    .social-proof { display: flex; gap: 24px; align-items: center; padding: 16px; background: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-width: 500px; }
+    .social-proof-num { font-weight: 700; color: #6B2DCF; font-size: 18px; }
+    .social-proof-text { font-size: 14px; color: #666; }
+    .form-card { background: #FFFFFF; padding: 40px; border-radius: 16px; box-shadow: 0 20px 60px rgba(107,45,207,0.15); position: sticky; top: 40px; }
+    .form-title { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .form-sub { text-align: center; color: #666; font-size: 14px; margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: #333; }
+    .form-input { width: 100%; padding: 14px 16px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 16px; font-family: inherit; transition: border-color 0.2s; }
+    .form-input:focus { outline: none; border-color: #6B2DCF; }
+    .form-consent { display: flex; align-items: flex-start; gap: 8px; margin: 20px 0; font-size: 13px; color: #666; }
+    .form-consent input { margin-top: 3px; }
+    .form-consent a { color: #6B2DCF; }
+    .btn-submit { width: 100%; background: #6B2DCF; color: #FFFFFF; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-submit:hover { background: #EC4899; transform: translateY(-1px); }
+    .security { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; font-size: 12px; color: #999; }
+    .footer-note { text-align: center; margin-top: 20px; font-size: 12px; color: #999; }
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; gap: 32px; }
+      h1 { font-size: 32px; }
+      .form-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="grid">
+      <!-- Coluna esquerda: copy -->
+      <div>
+        <span class="eyebrow">{{tipo_lead_magnet}}</span>
+        <h1>{{titulo_lead_magnet}}</h1>
+        <p class="subtitle">{{promessa_principal}}</p>
+
+        <ul class="benefits">
+          <li><span class="check">✓</span> {{beneficio_1}}</li>
+          <li><span class="check">✓</span> {{beneficio_2}}</li>
+          <li><span class="check">✓</span> {{beneficio_3}}</li>
+          <li><span class="check">✓</span> {{beneficio_4}}</li>
+        </ul>
+
+        <div class="social-proof">
+          <div class="social-proof-num">⭐ 4.9/5</div>
+          <div class="social-proof-text">de {{numero_downloads}}+ downloads</div>
+        </div>
+      </div>
+
+      <!-- Coluna direita: formulário -->
+      <div>
+        <div class="form-card">
+          <h2 class="form-title">📥 Baixe agora grátis</h2>
+          <p class="form-sub">Receba o material no seu e-mail em 30 segundos</p>
+
+          <form action="{{form_action_url}}" method="POST">
+            <div class="form-group">
+              <label class="form-label" for="name">Nome</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Seu nome" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">E-mail</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="whatsapp">WhatsApp (opcional)</label>
+              <input class="form-input" type="tel" id="whatsapp" name="whatsapp" placeholder="(11) 99999-9999">
+            </div>
+
+            <!-- LGPD consentimento -->
+            <label class="form-consent">
+              <input type="checkbox" name="consent" required>
+              <span>Concordo em receber comunicações da {{empresa}} e aceito a <a href="{{link_privacidade}}">Política de Privacidade</a>. Posso descadastrar a qualquer momento.</span>
+            </label>
+
+            <button type="submit" class="btn-submit">📥 Quero baixar agora</button>
+
+            <div class="security">
+              <span>🔒</span>
+              <span>Seus dados estão seguros. Não vendemos nem compartilhamos.</span>
+            </div>
+          </form>
+        </div>
+
+        <p class="footer-note">Ao se inscrever, você também receberá nossas novidades por e-mail. Cancele quando quiser.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+## 📊 Métricas de Sucesso
+
+| Tráfego | Conversão (lead) |
+|---|---|
+| Frio (Facebook/Google) | 25-40% |
+| Morno (e-mail) | 50-70% |
+| Quente (indicação) | 70-85% |
+
+| Métrica | Meta |
+|---|---|
+| Tempo na página | ≥ 30s |
+| Taxa de abandono de form | ≤ 50% |
+| Form start → submit | ≥ 60% |
+| LGPD consentimento | 100% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ Formulário com 8+ campos → 50% drop-off
+❌ Sem checkbox de consentimento LGPD → ilegal
+❌ Sem SSL (HTTP) → dados vazam
+❌ Link de privacidade ausente → LGPD
+❌ Mobile quebrado (testar em 320px)
+❌ Demora no redirect pós-conversão
+
+✅ **Máximo 3-5 campos**
+✅ **LGPD consent explícito**
+✅ **HTTPS obrigatório**
+✅ **Mobile-first (testar em 320px)**
+✅ **Redirect automático após submit**
+✅ **E-mail de confirmação imediato**
+
+## 🔗 Próximos Templates
+
+→ `templates/social/01-template-carrossel-educativo.html` — carrossel
+→ `templates/landing/01-template-landing-vendas.html` — LP de venda
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

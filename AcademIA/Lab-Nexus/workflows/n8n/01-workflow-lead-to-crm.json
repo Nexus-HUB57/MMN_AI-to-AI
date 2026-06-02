@@ -1,0 +1,265 @@
+---
+title: "Workflow · Lead → CRM (n8n)"
+description: "Workflow n8n para capturar lead via webhook, validar, enviar para CRM e notificar time"
+tags: [lab-nexus, workflow, n8n, lead, crm, automacao]
+category: workflows/n8n
+level: agente
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# ⚙️ Workflow · Lead → CRM (n8n)
+
+> Workflow **n8n completo** para capturar lead via webhook, validar, salvar no CRM, enviar e-mail de boas-vindas e notificar o time no Slack.
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Trigger | Webhook POST |
+| Validação | Schema + dedup + LGPD |
+| Ações | CRM + E-mail + Slack + Tag |
+| Tempo de execução | < 5s |
+| Idempotência | Sim (por email) |
+
+## 📋 Playbook — Quando Usar
+
+Quando quiser:
+
+- Capturar lead de landing page e mandar para o CRM automaticamente
+- Enviar e-mail de boas-vindas imediato
+- Notificar o time de vendas no Slack/Discord
+- Adicionar tags de segmentação
+- Disparar sequência de nutrição
+
+## 📦 Asset (Workflow JSON — Importável no n8n)
+
+```json
+{
+  "name": "Lead → CRM + E-mail + Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-capture",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "lead-capture-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validação e normalização\nconst body = items[0].json.body || items[0].json;\n\n// Campos obrigatórios\nconst required = ['name', 'email'];\nfor (const field of required) {\n  if (!body[field]) {\n    throw new Error(`Campo obrigatório ausente: ${field}`);\n  }\n}\n\n// Validação de email\nconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nif (!emailRegex.test(body.email)) {\n  throw new Error('Email inválido');\n}\n\n// LGPD consent\nif (!body.consent) {\n  throw new Error('Consentimento LGPD ausente');\n}\n\n// Normalização\nconst normalized = {\n  name: String(body.name).trim(),\n  email: String(body.email).toLowerCase().trim(),\n  phone: body.phone ? String(body.phone).replace(/\\D/g, '') : null,\n  utm_source: body.utm_source || 'direct',\n  utm_campaign: body.utm_campaign || null,\n  utm_medium: body.utm_medium || null,\n  source: body.source || 'landing_page',\n  consent: body.consent === true || body.consent === 'true',\n  consent_at: new Date().toISOString(),\n  ip: items[0].json.headers?.['x-forwarded-for'] || null,\n  user_agent: items[0].json.headers?.['user-agent'] || null\n};\n\nreturn [{ json: normalized }];"
+      },
+      "id": "function-1",
+      "name": "Validar + Normalizar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [
+            {
+              "leftValue": "={{$json.email}}",
+              "rightValue": "",
+              "operator": {"type": "string", "operation": "exists", "singleValue": true}
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-1",
+      "name": "Email válido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, created_at FROM leads WHERE email = $1 LIMIT 1",
+        "options": {"queryParams": "={{[$json.email]}}"}
+      },
+      "id": "postgres-1",
+      "name": "Verificar duplicado",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "table": "leads",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{$json.email}}",
+            "name": "={{$json.name}}",
+            "phone": "={{$json.phone}}",
+            "utm_source": "={{$json.utm_source}}",
+            "utm_campaign": "={{$json.utm_campaign}}",
+            "utm_medium": "={{$json.utm_medium}}",
+            "source": "={{$json.source}}",
+            "consent_at": "={{$json.consent_at}}",
+            "ip": "={{$json.ip}}",
+            "user_agent": "={{$json.user_agent}}",
+            "updated_at": "={{new Date().toISOString()}}"
+          }
+        },
+        "options": {
+          "upsert": {"onConflict": "email"}
+        }
+      },
+      "id": "postgres-2",
+      "name": "Salvar no CRM",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "table": "lead_tags",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{$json.email}}",
+            "tag": "novo-lead",
+            "added_at": "={{new Date().toISOString()}}"
+          }
+        }
+      },
+      "id": "postgres-3",
+      "name": "Tag 'novo-lead'",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "fromEmail": "boas-vindas@nexus.com.br",
+        "toEmail": "={{$json.email}}",
+        "subject": "Bem-vindo(a) ao Nexus! 🎉",
+        "html": "<h1>Oi {{$json.name}}!</h1><p>Recebemos seu cadastro. Em 5 minutos, você recebe o material prometido.</p><p>Enquanto isso, que tal seguir nossas redes?</p><p>— Equipe Nexus</p>",
+        "options": {}
+      },
+      "id": "email-1",
+      "name": "Enviar boas-vindas",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "channel": "#leads-novos",
+        "text": "🎯 *Novo lead capturado!*\n\n*Nome:* {{$json.name}}\n*Email:* {{$json.email}}\n*Telefone:* {{$json.phone || 'N/A'}}\n*Origem:* {{$json.utm_source}} / {{$json.utm_campaign}}\n*Quando:* {{new Date().toLocaleString('pt-BR')}}",
+        "otherOptions": {}
+      },
+      "id": "slack-1",
+      "name": "Notificar Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\": \"ok\", \"message\": \"Lead capturado com sucesso\"}",
+        "options": {"responseCode": 200}
+      },
+      "id": "respond-1",
+      "name": "Response OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2000, 200]
+    }
+  ],
+  "connections": {
+    "Webhook Lead": {"main": [[{"node": "Validar + Normalizar", "type": "main", "index": 0}]]},
+    "Validar + Normalizar": {"main": [[{"node": "Email válido?", "type": "main", "index": 0}]]},
+    "Email válido?": {"main": [[{"node": "Verificar duplicado", "type": "main", "index": 0}]]},
+    "Verificar duplicado": {"main": [[{"node": "Salvar no CRM", "type": "main", "index": 0}]]},
+    "Salvar no CRM": {"main": [[{"node": "Tag 'novo-lead'", "type": "main", "index": 0}]]},
+    "Tag 'novo-lead'": {"main": [[{"node": "Enviar boas-vindas", "type": "main", "index": 0}]]},
+    "Enviar boas-vindas": {"main": [[{"node": "Notificar Slack", "type": "main", "index": 0}]]},
+    "Notificar Slack": {"main": [[{"node": "Response OK", "type": "main", "index": 0}]]}
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": null,
+  "versionId": "1.0.0"
+}
+```
+
+## 📋 Como Importar no n8n
+
+1. Abra o n8n (https://app.n8n.cloud ou self-hosted)
+2. Clique em **Workflows** → **Import from JSON**
+3. Cole o JSON acima
+4. Configure as **credenciais** necessárias:
+   - PostgreSQL (banco do CRM)
+   - SMTP (e-mail)
+   - Slack (webhook)
+5. **Ative** o workflow
+6. Copie a URL do webhook (ex: `https://seu-n8n.com/webhook/lead-capture`)
+
+## 📋 Variáveis de Ambiente Necessárias
+
+```bash
+POSTGRES_HOST=db.nexus.com.br
+POSTGRES_DB=nexus_crm
+POSTGRES_USER=n8n_user
+POSTGRES_PASSWORD=senha_segura
+
+SMTP_HOST=smtp.resend.com
+SMTP_PORT=587
+SMTP_USER=resend
+SMTP_PASSWORD=re_xxxxx
+
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/xxxxx
+```
+
+## 📊 Métricas de Sucesso
+
+| Métrica | Meta |
+|---|---|
+| Taxa de execução | ≥ 99% |
+| Tempo de resposta (p95) | ≤ 3s |
+| Idempotência | 100% |
+| LGPD compliance | 100% |
+| Uptime do workflow | ≥ 99.5% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ Sem validação → spam/injection
+❌ Sem dedup → leads duplicados
+❌ Sem consent LGPD → ilegal
+❌ Sem try/catch → falha de 1 nó para tudo
+❌ Salvar PII em logs (IP, user-agent completo) → LGPD
+❌ Endpoint sem HTTPS → dado vaza
+
+✅ **Sempre validar + normalizar**
+✅ **Verificar duplicado por email**
+✅ **Consent LGPD explícito**
+✅ **Try/catch em cada nó**
+✅ **Logs sem PII**
+
+## 🔗 Próximos Workflows
+
+→ `workflows/n8n/02-workflow-carrinho-abandonado.json` — recovery
+→ `workflows/make/01-workflow-onboarding-cliente.json` — Make alternativo
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

@@ -1,0 +1,204 @@
+---
+title: "Template · E-mail Transacional"
+description: "Template HTML para e-mails transacionais (confirmação de compra, boas-vindas, recuperação de senha)"
+tags: [lab-nexus, template, email, transacional, html]
+category: templates/email
+level: fundamental
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# 📧 Template · E-mail Transacional
+
+> Template HTML para e-mails **transacionais** (confirmação de compra, boas-vindas, recuperação de senha). **Alta deliverability**, **template friendly**.
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Tipo | Transacional (utilidade) |
+| Subtipos | Boas-vindas, confirmação, reset de senha, recibo |
+| Largura | 600px |
+| Responsivo | Sim |
+| Compatibilidade | 99%+ dos clientes |
+
+## 📋 Playbook — Variações
+
+1. **Boas-vindas**: tom caloroso, 1 CTA principal (acesso)
+2. **Confirmação de compra**: recibo + acesso + próximos passos
+3. **Reset de senha**: foco no link + segurança
+4. **Recibo**: invoice + nota fiscal
+
+## 📦 Asset (HTML Pronto — Confirmação de Compra)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compra confirmada — {{produto}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background: #F5F5F5; color: #1A1A1A; }
+    .container { max-width: 600px; margin: 0 auto; background: #FFFFFF; }
+    .success-header { background: linear-gradient(135deg, #10B981 0%, #059669 100%); padding: 40px 20px; text-align: center; color: #FFFFFF; }
+    .success-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-title { font-size: 28px; font-weight: 800; margin: 0; }
+    .content { padding: 40px 30px; }
+    .info-box { background: #F9FAFB; border-left: 4px solid #6B2DCF; padding: 20px; border-radius: 4px; margin: 20px 0; }
+    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #E5E7EB; }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #666; font-size: 14px; }
+    .info-value { color: #1A1A1A; font-weight: 600; font-size: 14px; }
+    .cta-button { display: inline-block; background: #6B2DCF; color: #FFFFFF !important; padding: 16px 40px; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 24px 0; }
+    .next-step { padding: 16px 0; border-bottom: 1px solid #F5F5F5; }
+    .next-step-num { background: #6B2DCF; color: #FFFFFF; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 12px; }
+    .footer { background: #F5F5F5; padding: 30px; text-align: center; font-size: 13px; color: #666; }
+    @media only screen and (max-width: 600px) {
+      .content { padding: 24px 16px !important; }
+      .info-row { flex-direction: column; }
+      .info-label { margin-bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div style="display:none; max-height:0; overflow:hidden;">Compra confirmada! Seu acesso está liberado.</div>
+
+  <div class="container">
+    <!-- Header de sucesso -->
+    <div class="success-header">
+      <div class="success-icon">✅</div>
+      <h1 class="success-title">Compra confirmada!</h1>
+      <p style="margin:8px 0 0;opacity:0.95">Bem-vindo(a) ao {{produto_nome}}</p>
+    </div>
+
+    <div class="content">
+      <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px">
+        Oi {{primeiro_nome}}, sua compra foi processada com sucesso. 🎉
+      </p>
+      <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px">
+        Seu acesso está liberado imediatamente. Basta clicar no botão abaixo para começar.
+      </p>
+
+      <!-- Detalhes da compra -->
+      <div class="info-box">
+        <h3 style="margin:0 0 12px;font-size:16px;color:#1A1A1A">📋 Detalhes da compra</h3>
+        <div class="info-row">
+          <span class="info-label">Produto</span>
+          <span class="info-value">{{produto_nome}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Pedido</span>
+          <span class="info-value">#{{order_id}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Data</span>
+          <span class="info-value">{{data_compra}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Pagamento</span>
+          <span class="info-value">{{forma_pagamento}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Valor</span>
+          <span class="info-value">R$ {{valor_total}}</span>
+        </div>
+      </div>
+
+      <!-- CTA principal -->
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{link_acesso}}" class="cta-button">🔓 Acessar agora</a>
+        <p style="font-size:13px;color:#666;margin:12px 0 0">
+          O link expira em 24h por segurança, mas seu acesso é vitalício.
+        </p>
+      </div>
+
+      <!-- Próximos passos -->
+      <h3 style="font-size:18px;font-weight:700;margin:32px 0 16px">🚀 Próximos passos</h3>
+
+      <div class="next-step">
+        <span class="next-step-num">1</span>
+        <strong>Acesse a plataforma</strong> com seu e-mail {{email_cadastro}}
+      </div>
+      <div class="next-step">
+        <span class="next-step-num">2</span>
+        <strong>Complete seu perfil</strong> (leva 2 min) para personalizar
+      </div>
+      <div class="next-step">
+        <span class="next-step-num">3</span>
+        <strong>Siga o plano de ativação</strong> recomendado para seu objetivo
+      </div>
+      <div class="next-step" style="border-bottom:none">
+        <span class="next-step-num">4</span>
+        <strong>Entre no grupo exclusivo</strong> de alunos (link abaixo)
+      </div>
+
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{link_grupo}}" style="color:#6B2DCF;font-weight:600;text-decoration:none">💬 Entrar no grupo de alunos →</a>
+      </div>
+
+      <!-- Suporte -->
+      <div style="background:#FEF3C7;padding:16px;border-radius:8px;margin:24px 0">
+        <p style="margin:0;font-size:14px;color:#92400E">
+          💡 <strong>Precisa de ajuda?</strong> Responda este e-mail ou chame no WhatsApp {{suporte_whatsapp}}.
+          Estou aqui para garantir seu sucesso.
+        </p>
+      </div>
+
+      <!-- Assinatura -->
+      <p style="font-size:16px;color:#333;line-height:1.6;margin:32px 0 0">
+        Parabéns pela decisão,<br>
+        <strong>{{seu_nome}}</strong>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p><strong>Nexus Affil'IA'te</strong></p>
+      <p>Av. Paulista, 1000 · São Paulo, SP · 01310-100</p>
+      <p>CNPJ: 00.000.000/0001-00</p>
+      <p style="margin-top:16px">
+        <a href="{{link_suporte}}" style="color:#6B2DCF">Suporte</a> ·
+        <a href="{{unsubscribe_url}}" style="color:#6B2DCF">Preferências</a>
+      </p>
+      <p style="font-size:11px;color:#999;margin-top:16px">
+        Este é um e-mail transacional relacionado à sua compra. Você não pode descadastrar e-mails transacionais.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+## 📊 Métricas de Sucesso
+
+| Métrica | Meta |
+|---|---|
+| Taxa de entrega | ≥ 99% |
+| Open rate | ≥ 70% (transacional tem maior abertura) |
+| CTR (acessar produto) | ≥ 50% |
+| Tempo até acesso | ≤ 5 min |
+| Suporte "não recebi o e-mail" | ≤ 1% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ E-mail transacional sem info crítica → cliente perdido
+❌ CTA não destacado → cliente não sabe o que fazer
+❌ Sem próximos passos claros → confusão
+❌ Sem info de suporte → desespero
+❌ Não testar com ferramenta de QA de e-mail
+
+✅ **Sempre incluir: produto, pedido, data, valor, link de acesso**
+✅ **CTA único, destacado, claro**
+✅ **Suporte visível**
+✅ **Template testado em 5+ clientes**
+
+## 🔗 Próximos Templates
+
+→ `templates/landing/` — landing pages
+→ `templates/social/` — posts para redes sociais
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

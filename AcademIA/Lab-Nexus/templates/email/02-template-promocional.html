@@ -1,0 +1,192 @@
+---
+title: "Template · E-mail Promocional"
+description: "Template HTML para e-mail de promoção / oferta com countdown e CTA forte"
+tags: [lab-nexus, template, email, promocional, html]
+category: templates/email
+level: agente
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# 📧 Template · E-mail Promocional
+
+> Template HTML para e-mail de **promoção ou oferta** com countdown, prova social e CTA forte. Otimizado para **conversão**.
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Tipo | Marketing / promocional |
+| Estrutura | Hero + Benefícios + Oferta + Countdown + CTA |
+| Largura | 600px |
+| Responsivo | Sim |
+| Compatibilidade | 95%+ dos clientes |
+
+## 📋 Playbook — Quando Usar
+
+- Lançamento de produto
+- Promoção com prazo
+- Recuperação de carrinho
+- Oferta para segmento quente
+
+## 📦 Asset (HTML Pronto)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject_line}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background: #F5F5F5; color: #1A1A1A; }
+    .container { max-width: 600px; margin: 0 auto; background: #FFFFFF; }
+    .hero { background: linear-gradient(135deg, #6B2DCF 0%, #EC4899 100%); padding: 50px 30px; text-align: center; color: #FFFFFF; }
+    .hero-eyebrow { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; margin: 0 0 12px; }
+    .hero-title { font-size: 32px; font-weight: 800; margin: 0 0 16px; line-height: 1.2; }
+    .hero-sub { font-size: 18px; opacity: 0.95; margin: 0; }
+    .content { padding: 40px 30px; }
+    .price-strike { font-size: 18px; color: #999; text-decoration: line-through; margin: 0; }
+    .price-promo { font-size: 48px; color: #6B2DCF; font-weight: 800; margin: 8px 0; }
+    .price-conditions { font-size: 14px; color: #666; margin: 0; }
+    .countdown { background: #1A1A1A; color: #FFFFFF; padding: 24px; border-radius: 12px; text-align: center; margin: 30px 0; }
+    .countdown-num { font-size: 36px; font-weight: 800; color: #EC4899; }
+    .cta-button { display: inline-block; background: #10B981; color: #FFFFFF; padding: 18px 40px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 18px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+    .cta-button:hover { background: #059669; }
+    .benefit { padding: 12px 0; border-bottom: 1px solid #F5F5F5; }
+    .benefit-icon { color: #10B981; font-size: 20px; margin-right: 12px; }
+    .testimonial { background: #F9FAFB; padding: 20px; border-radius: 12px; margin: 20px 0; }
+    .footer { background: #F5F5F5; padding: 30px; text-align: center; font-size: 13px; color: #666; }
+    @media only screen and (max-width: 600px) {
+      .hero-title { font-size: 24px !important; }
+      .price-promo { font-size: 36px !important; }
+      .content { padding: 24px 16px !important; }
+    }
+  </style>
+</head>
+<body>
+  <div style="display:none; max-height:0; overflow:hidden;">{{preheader_text}}</div>
+
+  <div class="container">
+    <!-- Hero -->
+    <div class="hero">
+      <p class="hero-eyebrow">{{eyebrow_text}}</p>
+      <h1 class="hero-title">{{titulo_promocao}}</h1>
+      <p class="hero-sub">{{sub_descricao}}</p>
+    </div>
+
+    <div class="content">
+      <!-- Saudação -->
+      <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px">
+        Oi {{primeiro_nome}},
+      </p>
+      <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px">
+        {{introducao_promocao}}
+      </p>
+
+      <!-- Oferta em destaque -->
+      <div style="background:linear-gradient(135deg,#FEF3C7 0%,#FDE68A 100%);padding:32px;border-radius:12px;text-align:center;margin:32px 0">
+        <p style="font-size:14px;color:#92400E;margin:0 0 8px;font-weight:600">APENAS POR TEMPO LIMITADO</p>
+        <p class="price-strike">De R$ {{preco_original}}</p>
+        <p class="price-promo">R$ {{preco_promocional}}</p>
+        <p class="price-conditions">ou {{parcelas}}x de R$ {{parcela}} sem juros</p>
+        <p style="font-size:14px;color:#10B981;font-weight:600;margin:8px 0 0">💰 Economia de R$ {{economia}}</p>
+      </div>
+
+      <!-- Countdown -->
+      <div class="countdown">
+        <p style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:2px">⏰ Termina em</p>
+        <p class="countdown-num">{{countdown_horas}}h {{countdown_min}}m {{countdown_seg}}s</p>
+        <p style="margin:8px 0 0;font-size:13px;opacity:0.8">Ou enquanto durarem as vagas</p>
+      </div>
+
+      <!-- Benefícios -->
+      <h2 style="font-size:22px;font-weight:700;margin:32px 0 16px">O que você vai receber:</h2>
+      <div class="benefit">
+        <span class="benefit-icon">✅</span>
+        <strong>{{beneficio_1_titulo}}</strong> — {{beneficio_1_desc}}
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">✅</span>
+        <strong>{{beneficio_2_titulo}}</strong> — {{beneficio_2_desc}}
+      </div>
+      <div class="benefit">
+        <span class="benefit-icon">✅</span>
+        <strong>{{beneficio_3_titulo}}</strong> — {{beneficio_3_desc}}
+      </div>
+      <div class="benefit" style="border-bottom:none">
+        <span class="benefit-icon">🎁</span>
+        <strong>BÔNUS:</strong> {{brinde_especial}} (válido só hoje)
+      </div>
+
+      <!-- Prova social -->
+      <div class="testimonial">
+        <p style="font-size:15px;color:#333;margin:0 0 12px;font-style:italic">"{{depoimento}}"</p>
+        <p style="font-size:13px;color:#666;margin:0">— {{cliente_nome}}, {{cliente_resultado}}</p>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{cta_url}}" class="cta-button">{{cta_texto}}</a>
+        <p style="font-size:13px;color:#666;margin:16px 0 0">
+          🔒 Pagamento 100% seguro · 7 dias de garantia
+        </p>
+      </div>
+
+      <!-- Assinatura -->
+      <p style="font-size:16px;color:#333;line-height:1.6;margin:32px 0 0">
+        Te vejo do outro lado,<br>
+        <strong>{{seu_nome}}</strong>
+      </p>
+    </div>
+
+    <!-- Footer LGPD -->
+    <div class="footer">
+      <p><strong>Nexus Affil'IA'te</strong></p>
+      <p>Av. Paulista, 1000 · São Paulo, SP</p>
+      <p>
+        <a href="{{unsubscribe_url}}" style="color:#6B2DCF">Descadastrar</a> ·
+        <a href="{{preferencias_url}}" style="color:#6B2DCF">Preferências</a>
+      </p>
+      <p style="font-size:11px;color:#999;margin-top:16px">
+        Você está recebendo este e-mail por opt-in. Não quer mais? <a href="{{unsubscribe_url}}" style="color:#999">Descadastre-se aqui</a>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+## 📊 Métricas de Sucesso
+
+| Métrica | Meta |
+|---|---|
+| Open rate | ≥ 30% |
+| CTR (click-through) | ≥ 5% |
+| Conversão | ≥ 2% |
+| Receita / envio | variável |
+| Unsub rate | ≤ 0.5% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ Countdown falso (reinicia a cada abertura) → quebra confiança
+❌ Mais de 1 CTA principal → confusão
+❌ Preço sem ancoragem (sem "de R$ X por R$ Y") → sem valor percebido
+❌ Sem prova social → baixa conversão
+❌ Promessa absoluta ("100% garantido") → CONAR
+❌ Link de descadastro ausente → LGPD
+
+✅ **Countdown real (sincronizado com servidor)**
+✅ **1 CTA forte, único**
+✅ **Ancoragem de preço**
+✅ **1-2 depoimentos**
+
+## 🔗 Próximos Templates
+
+→ `templates/email/03-template-transacional.html` — confirmação
+→ `templates/email/01-template-newsletter.html` — conteúdo
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

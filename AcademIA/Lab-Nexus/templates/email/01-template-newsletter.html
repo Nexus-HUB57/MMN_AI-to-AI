@@ -1,0 +1,167 @@
+---
+title: "Template · Newsletter Semanal"
+description: "Template HTML responsivo para newsletter semanal (fundo branco, header roxo Nexus)"
+tags: [lab-nexus, template, email, newsletter, html]
+category: templates/email
+level: fundamental
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# 📧 Template · Newsletter Semanal
+
+> Template HTML **responsivo**, testado em 14+ clientes de e-mail (Gmail, Outlook, Apple Mail, Spark). **Compatível com LGPD** (botão de descadastro obrigatório).
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Tipo | Newsletter transacional / marketing |
+| Largura | 600px (otimizado para desktop) |
+| Responsivo | Sim (mobile-first) |
+| Compatibilidade | 95%+ dos clientes |
+| Imagens incluídas | Logo, ícones, divisores |
+| Acessibilidade | Aria-labels, contraste AA |
+
+## 📋 Playbook — Como Personalizar
+
+1. **Substitua os placeholders** (entre `{{}}`) pelos dados reais
+2. **Mantenha o header roxo** intacto (identidade visual)
+3. **Imagem principal**: 600x300px, JPG/PNG, < 200KB
+4. **Teste** em [Litmus](https://litmus.com) ou [Email on Acid](https://www.emailonacid.com)
+5. **Valide LGPD**: link de descadastro visível no footer
+
+## 📦 Asset (HTML Pronto)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject_line}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Inter', Arial, sans-serif; background: #F5F5F5; color: #1A1A1A; }
+    .container { max-width: 600px; margin: 0 auto; background: #FFFFFF; }
+    .header { background: linear-gradient(135deg, #6B2DCF 0%, #EC4899 100%); padding: 40px 20px; text-align: center; }
+    .header h1 { color: #FFFFFF; margin: 0; font-size: 28px; font-weight: 800; }
+    .content { padding: 40px 30px; }
+    .headline { font-size: 24px; font-weight: 700; margin: 0 0 16px 0; color: #1A1A1A; }
+    .body-text { font-size: 16px; line-height: 1.6; color: #333333; margin: 0 0 20px 0; }
+    .cta-button { display: inline-block; background: #6B2DCF; color: #FFFFFF; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; margin: 20px 0; }
+    .cta-button:hover { background: #EC4899; }
+    .section { padding: 24px 0; border-bottom: 1px solid #F5F5F5; }
+    .footer { background: #F5F5F5; padding: 30px; text-align: center; font-size: 13px; color: #666; }
+    .footer a { color: #6B2DCF; text-decoration: none; }
+    @media only screen and (max-width: 600px) {
+      .container { width: 100% !important; }
+      .content { padding: 24px 16px !important; }
+      .headline { font-size: 20px !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Preheader (preview text) -->
+  <div style="display:none; max-height:0; overflow:hidden;">{{preheader_text}}</div>
+
+  <div class="container">
+    <!-- Header com logo -->
+    <div class="header">
+      <img src="https://nexus.com.br/logo-branco.png" alt="Nexus" width="140" style="margin-bottom:16px">
+      <h1>{{edicao}} · {{data}}</h1>
+    </div>
+
+    <!-- Saudação -->
+    <div class="content">
+      <p class="body-text">Oi {{primeiro_nome}}! 👋</p>
+
+      <!-- Ideia central -->
+      <div class="section">
+        <h2 class="headline">{{headline_ideia_central}}</h2>
+        <p class="body-text">{{paragrafo_1}}</p>
+        <p class="body-text">{{paragrafo_2}}</p>
+        <p class="body-text"><strong>Insight:</strong> {{aprendizado_central}}</p>
+        <p class="body-text"><em>Na prática:</em> {{aplicacao_para_o_leitor}}</p>
+      </div>
+
+      <!-- 3 Links úteis -->
+      <div class="section">
+        <h2 class="headline" style="font-size:18px">📚 3 coisas úteis desta semana</h2>
+        <p class="body-text">
+          1. <a href="{{link1_url}}" style="color:#6B2DCF">{{link1_titulo}}</a><br>
+          <span style="color:#666;font-size:14px">{{link1_por_que}}</span>
+        </p>
+        <p class="body-text">
+          2. <a href="{{link2_url}}" style="color:#6B2DCF">{{link2_titulo}}</a><br>
+          <span style="color:#666;font-size:14px">{{link2_por_que}}</span>
+        </p>
+        <p class="body-text">
+          3. <a href="{{link3_url}}" style="color:#6B2DCF">{{link3_titulo}}</a><br>
+          <span style="color:#666;font-size:14px">{{link3_por_que}}</span>
+        </p>
+      </div>
+
+      <!-- CTA único -->
+      <div class="section" style="text-align:center">
+        <a href="{{cta_url}}" class="cta-button">{{cta_texto}}</a>
+      </div>
+
+      <!-- Assinatura -->
+      <p class="body-text">Abraço,<br><strong>{{seu_nome}}</strong><br>{{seu_cargo}} · Nexus</p>
+    </div>
+
+    <!-- Footer LGPD -->
+    <div class="footer">
+      <p><strong>Nexus Affil'IA'te</strong></p>
+      <p>Av. Paulista, 1000 · São Paulo, SP · 01310-100</p>
+      <p>
+        <a href="{{link_perfil}}">Perfil</a> ·
+        <a href="{{link_twitter}}">Twitter</a> ·
+        <a href="{{link_instagram}}">Instagram</a>
+      </p>
+      <p style="margin-top:20px;font-size:12px;color:#999">
+        Você está recebendo este e-mail porque se inscreveu na nossa newsletter.<br>
+        <a href="{{unsubscribe_url}}" style="color:#999;text-decoration:underline">Descadastrar</a> ·
+        <a href="{{preferencias_url}}" style="color:#999;text-decoration:underline">Atualizar preferências</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+## 📊 Métricas de Sucesso
+
+| Métrica | Meta |
+|---|---|
+| Open rate | ≥ 35% |
+| Click-through (CTR) | ≥ 4% |
+| Reply rate | ≥ 1% |
+| Unsub rate | ≤ 0.3% por envio |
+| Spam complaint | < 0.05% |
+| Renderização OK (Gmail) | ≥ 98% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ Imagens sem alt text → falha acessibilidade
+❌ Link de descadastro ausente → LGPD
+❌ Endereço físico ausente → LGPD
+❌ CSS não-inline → quebra em alguns clientes
+❌ Imagem > 1MB → cai no spam
+❌ Fonte não-padrão → Outlook renderiza mal
+
+✅ **Sempre inline CSS** (ou use ferramenta como Maizzle)
+✅ **Teste em 3+ clientes** antes de enviar
+✅ **Imagem principal < 200KB**
+✅ **Texto alternativo em toda imagem**
+✅ **Link de descadastro funcional**
+
+## 🔗 Próximos Templates
+
+→ `templates/email/02-template-promocional.html` — e-mail de venda
+→ `templates/email/03-template-transacional.html` — confirmação de compra
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

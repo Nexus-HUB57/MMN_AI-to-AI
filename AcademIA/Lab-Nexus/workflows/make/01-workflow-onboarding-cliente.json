@@ -1,0 +1,268 @@
+---
+title: "Workflow · Onboarding de Cliente (Make)"
+description: "Workflow Make para onboarding de novos clientes: boas-vindas, acesso, grupo, sequência 5 e-mails"
+tags: [lab-nexus, workflow, make, onboarding, cliente, automacao]
+category: workflows/make
+level: agente
+author: "Equipe Nexus"
+version: "1.0"
+last_review: "2026-06-02"
+---
+
+# 👋 Workflow · Onboarding de Cliente (Make)
+
+> Workflow **Make (Integromat)** completo para fazer onboarding de novos clientes: e-mail de boas-vindas, envio de acesso, adição a grupo, sequência de ativação.
+
+## 🎯 Spec
+
+| Atributo | Valor |
+|---|---|
+| Trigger | Webhook (compra aprovada) |
+| Canais | E-mail + WhatsApp + Telegram + Sheets |
+| Etapas | 8 (imediato + D+1, D+3, D+7, D+14) |
+| Tempo total | 14 dias |
+| Personalização | Por produto + perfil |
+
+## 📦 Asset (Cenário Make — Blueprint)
+
+```json
+{
+  "name": "Onboarding Cliente — Nexus",
+  "flow": [
+    {
+      "module": "webhook:customWebhook",
+      "mapper": {
+        "hook": "compra-aprovada",
+        "data": {
+          "order_id": "{{1.order_id}}",
+          "customer_email": "{{1.customer.email}}",
+          "customer_name": "{{1.customer.name}}",
+          "customer_phone": "{{1.customer.phone}}",
+          "product_id": "{{1.product.id}}",
+          "product_name": "{{1.product.name}}",
+          "product_url": "{{1.product.access_url}}",
+          "value": "{{1.value}}",
+          "affiliate_id": "{{1.affiliate.id}}"
+        }
+      },
+      "metadata": {"designer": {"x": 0, "y": 0}}
+    },
+    {
+      "module": "builtin:basicFilter",
+      "filter": {
+        "condition": "{{1.product_id}} != null AND {{1.customer_email}} != null"
+      },
+      "metadata": {"designer": {"x": 280, "y": 0}}
+    },
+    {
+      "module": "json:parseJson",
+      "mapper": {
+        "json": "{{1}}"
+      },
+      "metadata": {"designer": {"x": 560, "y": 0}}
+    },
+    {
+      "module": "google-sheets:addRow",
+      "mapper": {
+        "spreadsheetId": "{{sheets_id}}",
+        "sheetName": "Clientes",
+        "values": {
+          "order_id": "{{1.order_id}}",
+          "email": "{{1.customer_email}}",
+          "name": "{{1.customer_name}}",
+          "phone": "{{1.customer_phone}}",
+          "product": "{{1.product_name}}",
+          "value": "{{1.value}}",
+          "affiliate": "{{1.affiliate_id}}",
+          "status": "novo",
+          "onboarding_step": 0,
+          "created_at": "{{now}}"
+        }
+      },
+      "metadata": {"designer": {"x": 840, "y": 0}}
+    },
+    {
+      "module": "sendgrid:sendEmail",
+      "mapper": {
+        "from": {"email": "boas-vindas@nexus.com.br", "name": "Nexus"},
+        "to": [{"email": "{{1.customer_email}}", "name": "{{1.customer_name}}"}],
+        "subject": "🎉 Bem-vindo(a) ao {{1.product_name}}!",
+        "html": "<h1>Oi {{1.customer_name}}!</h1><p>Sua compra foi aprovada. Acesso liberado:</p><p><a href='{{1.product_url}}' style='background:#6B2DCF;color:#FFFFFF;padding:16px 32px;border-radius:8px;text-decoration:none;display:inline-block'>🔓 Acessar agora</a></p><p>Em 24h te envio o plano de ativação personalizado.</p><p>— Equipe Nexus</p>",
+        "categories": ["onboarding", "{{1.product_id}}"]
+      },
+      "metadata": {"designer": {"x": 1120, "y": 0}}
+    },
+    {
+      "module": "telegram:sendMessage",
+      "mapper": {
+        "chat_id": "{{telegram_group_clientes_id}}",
+        "text": "🎉 *Novo cliente!*\n\n*Nome:* {{1.customer_name}}\n*Produto:* {{1.product_name}}\n*Valor:* R$ {{1.value}}\n*Afiliado:* {{1.affiliate_id}}",
+        "parse_mode": "Markdown"
+      },
+      "metadata": {"designer": {"x": 1120, "y": 200}}
+    },
+    {
+      "module": "whatsapp-business:sendMessage",
+      "mapper": {
+        "to": "{{1.customer_phone}}",
+        "type": "template",
+        "template": {
+          "name": "boas_vindas_cliente",
+          "language": "pt_BR",
+          "components": [
+            {
+              "type": "body",
+              "parameters": [
+                {"type": "text", "text": "{{1.customer_name}}"},
+                {"type": "text", "text": "{{1.product_name}}"},
+                {"type": "text", "text": "{{1.product_url}}"}
+              ]
+            }
+          ]
+        }
+      },
+      "metadata": {"designer": {"x": 1120, "y": 400}}
+    },
+    {
+      "module": "builtin:sleep",
+      "mapper": {"delay": 86400},
+      "metadata": {"designer": {"x": 1400, "y": 0}}
+    },
+    {
+      "module": "sendgrid:sendEmail",
+      "mapper": {
+        "from": {"email": "ativacao@nexus.com.br", "name": "Nexus"},
+        "to": [{"email": "{{1.customer_email}}"}],
+        "subject": "{{1.customer_name}}, conseguiu acessar?",
+        "html": "<h1>Oi {{1.customer_name}}!</h1><p>Passaram 24h desde sua compra. Conseguiu acessar <strong>{{1.product_name}}</strong>?</p><p>Aqui está seu plano de ativação:</p><ol><li>Complete seu perfil (2 min)</li><li>Assista a 1ª aula (10 min)</li><li>Entre no grupo exclusivo</li></ol><p>Responde esse e-mail se tiver alguma dúvida.</p><p>— Equipe Nexus</p>",
+        "categories": ["onboarding-d1", "{{1.product_id}}"]
+      },
+      "metadata": {"designer": {"x": 1680, "y": 0}}
+    },
+    {
+      "module": "google-sheets:updateRow",
+      "mapper": {
+        "spreadsheetId": "{{sheets_id}}",
+        "sheetName": "Clientes",
+        "searchBy": "order_id",
+        "searchValue": "{{1.order_id}}",
+        "update": {
+          "onboarding_step": 1,
+          "last_email_sent": "{{now}}"
+        }
+      },
+      "metadata": {"designer": {"x": 1680, "y": 200}}
+    },
+    {
+      "module": "builtin:sleep",
+      "mapper": {"delay": 172800},
+      "metadata": {"designer": {"x": 1960, "y": 0}}
+    },
+    {
+      "module": "sendgrid:sendEmail",
+      "mapper": {
+        "from": {"email": "cases@nexus.com.br", "name": "Nexus"},
+        "to": [{"email": "{{1.customer_email}}"}],
+        "subject": "Como o {{cliente_destaque_nome}} conseguiu {{resultado}}",
+        "html": "<h1>{{1.customer_name}},</h1><p>Quero te contar uma história rápida.</p><p><strong>{{cliente_destaque_nome}}</strong> estava exatamente onde você está agora. Em {{prazo}}, ele/ela conseguiu <strong>{{resultado}}</strong>.</p><p>3 coisas que ele/ela fez diferente:</p><ul><li>{{dica_1}}</li><li>{{dica_2}}</li><li>{{dica_3}}</li></ul><p>— Equipe Nexus</p>",
+        "categories": ["onboarding-d3", "case-study"]
+      },
+      "metadata": {"designer": {"x": 2240, "y": 0}}
+    },
+    {
+      "module": "builtin:sleep",
+      "mapper": {"delay": 345600},
+      "metadata": {"designer": {"x": 2520, "y": 0}}
+    },
+    {
+      "module": "sendgrid:sendEmail",
+      "mapper": {
+        "from": {"email": "suporte@nexus.com.br", "name": "Nexus"},
+        "to": [{"email": "{{1.customer_email}}"}],
+        "subject": "Posso te ajudar? (15 min)",
+        "html": "<h1>{{1.customer_name}},</h1><p>Percebi que você ainda não chegou no seu primeiro {{resultado_minimo}}.</p><p>Quero te oferecer 15 min de conversa 1:1 para entender o que está travando.</p><p>Responde esse e-mail com 2-3 horários e eu agendo.</p><p>— Equipe Nexus</p>",
+        "categories": ["onboarding-d7", "check-in"]
+      },
+      "metadata": {"designer": {"x": 2800, "y": 0}}
+    },
+    {
+      "module": "builtin:sleep",
+      "mapper": {"delay": 604800},
+      "metadata": {"designer": {"x": 3080, "y": 0}}
+    },
+    {
+      "module": "sendgrid:sendEmail",
+      "mapper": {
+        "from": {"email": "ultimo@nexus.com.br", "name": "Nexus"},
+        "to": [{"email": "{{1.customer_email}}"}],
+        "subject": "Última comunicação, {{1.customer_name}}",
+        "html": "<h1>{{1.customer_name}},</h1><p>Esse é meu último e-mail da sequência de boas-vindas.</p><p>Se você decidir não continuar, entendo 100%. Mas antes de ir, quero te dar <strong>{{brinde_despedida}}</strong>.</p><p>Se um dia quiser voltar, estarei aqui.</p><p>Sucesso sempre,</p><p>— Equipe Nexus</p>",
+        "categories": ["onboarding-d14", "last-touch"]
+      },
+      "metadata": {"designer": {"x": 3360, "y": 0}}
+    },
+    {
+      "module": "google-sheets:updateRow",
+      "mapper": {
+        "spreadsheetId": "{{sheets_id}}",
+        "sheetName": "Clientes",
+        "searchBy": "order_id",
+        "searchValue": "{{1.order_id}}",
+        "update": {
+          "onboarding_step": 5,
+          "completed_at": "{{now}}"
+        }
+      },
+      "metadata": {"designer": {"x": 3640, "y": 0}}
+    }
+  ]
+}
+```
+
+## 📋 Como Importar no Make
+
+1. Acesse [make.com](https://make.com)
+2. Crie um novo cenário
+3. Clique em **⋯** → **Import Blueprint**
+4. Cole o JSON acima
+5. Configure as conexões:
+   - **Webhook** (entrada do gateway)
+   - **Google Sheets** (CRM simples)
+   - **SendGrid** (e-mail)
+   - **Telegram Bot** (notificações)
+   - **WhatsApp Business** (mensagem)
+6. **Ative** o cenário
+
+## 📊 Métricas de Sucesso
+
+| Métrica | Meta |
+|---|---|
+| E-mail 1 (D+0) open rate | ≥ 80% |
+| E-mail 2 (D+1) open rate | ≥ 60% |
+| E-mail 3 (D+3) open rate | ≥ 50% |
+| E-mail 4 (D+7) reply rate | ≥ 5% |
+| Atingem o "aha moment" em 7 dias | ≥ 40% |
+| Retenção D+14 | ≥ 25% |
+
+## ⚠️ Riscos & Anti-patterns
+
+❌ Sem opt-in WhatsApp → ban
+❌ Enviar sem testar template → falha de envio
+❌ Mais de 5 e-mails → fadiga
+❌ Sem saída condicional (cliente engajado recebe) → irritante
+❌ WhatsApp sem opt-in duplo → LGPD
+
+✅ **Opt-in duplo WhatsApp**
+✅ **Testar template antes**
+✅ **5 e-mails é o sweet spot**
+✅ **Saída se atinge o "aha moment"**
+✅ **Personalizar por produto + perfil**
+
+## 🔗 Próximos Workflows
+
+→ `workflows/n8n/01-workflow-lead-to-crm.json` — captação
+→ `workflows/n8n/02-workflow-carrinho-abandonado.json` — recovery
+
+---
+
+**Versão 1.0** · Atualizado 2026-06-02 · Mantido pela Equipe Nexus

@@ -42,7 +42,7 @@ import { createOpenApiAuditMiddleware, listRecentOpenApiAuditRecords } from "./a
 import { requireIdempotencyKey } from "./idempotency";
 import { createPublicOpenApiRateLimiter, createTenantOpenApiRateLimiter } from "./rate-limit";
 
-const OPEN_API_STAGE = "sprint-4";
+const OPEN_API_STAGE = "sprint-5";
 const commissionStatusSchema = z.enum(["pending", "confirmed", "paid", "cancelled"]);
 const partnerRecordStatusSchema = z.enum(["active", "inactive", "suspended"]);
 
@@ -261,6 +261,30 @@ function createOpenApiSpec() {
           responses: { 200: { description: "Plan catalog" } },
         },
       },
+      "/sdk/javascript": {
+        get: {
+          summary: "Metadados do SDK JavaScript",
+          responses: { 200: { description: "JavaScript SDK metadata" } },
+        },
+      },
+      "/sdk/python": {
+        get: {
+          summary: "Metadados do SDK Python",
+          responses: { 200: { description: "Python SDK metadata" } },
+        },
+      },
+      "/webhooks/events": {
+        get: {
+          summary: "Catálogo público de eventos outbound",
+          responses: { 200: { description: "Webhook events catalog" } },
+        },
+      },
+      "/webhooks/examples": {
+        get: {
+          summary: "Exemplos de payloads de webhooks",
+          responses: { 200: { description: "Webhook payload examples" } },
+        },
+      },
       "/audit/recent": {
         get: {
           summary: "Trilha recente da tenant autenticada",
@@ -441,6 +465,10 @@ export function createNexusOpenApiRouter() {
       endpoints: {
         openApiSpec: "/api/v1/openapi.json",
         catalog: "/api/v1/catalog/plans",
+        sdkJavascript: "/api/v1/sdk/javascript",
+        sdkPython: "/api/v1/sdk/python",
+        webhookEvents: "/api/v1/webhooks/events",
+        webhookExamples: "/api/v1/webhooks/examples",
         subscriptions: "/api/v1/subscriptions",
         subscriptionDetail: "/api/v1/subscriptions/:id",
         confirmPayment: "/api/v1/subscriptions/:id/confirm-payment",
@@ -462,6 +490,72 @@ export function createNexusOpenApiRouter() {
 
   router.get("/catalog/plans", (_req, res) => {
     res.json(getCatalog());
+  });
+
+  router.get("/sdk/javascript", (_req, res) => {
+    res.json({
+      language: "javascript",
+      packageName: "@nexus/open-api-sdk",
+      status: "preview",
+      stage: OPEN_API_STAGE,
+      source: "/api/v1/openapi.json",
+      installation: "npm install @nexus/open-api-sdk",
+    });
+  });
+
+  router.get("/sdk/python", (_req, res) => {
+    res.json({
+      language: "python",
+      packageName: "nexus-open-api-sdk",
+      status: "preview",
+      stage: OPEN_API_STAGE,
+      source: "/api/v1/openapi.json",
+      installation: "pip install nexus-open-api-sdk",
+    });
+  });
+
+  router.get("/webhooks/events", (_req, res) => {
+    res.json({
+      stage: OPEN_API_STAGE,
+      events: [
+        "subscription.created",
+        "subscription.activated",
+        "subscription.plan_changed",
+        "subscription.cancelled",
+        "commission.created",
+        "commission.confirmed",
+        "partner.created",
+        "partner.updated",
+      ],
+    });
+  });
+
+  router.get("/webhooks/examples", (_req, res) => {
+    res.json({
+      stage: OPEN_API_STAGE,
+      examples: {
+        subscription_activated: {
+          event: "subscription.activated",
+          occurredAt: new Date().toISOString(),
+          data: {
+            subscriptionId: "sub_123",
+            userId: 101,
+            planId: "partners-pro",
+            status: "active",
+          },
+        },
+        commission_confirmed: {
+          event: "commission.confirmed",
+          occurredAt: new Date().toISOString(),
+          data: {
+            commissionId: 501,
+            affiliateId: 77,
+            status: "confirmed",
+            amount: 149.9,
+          },
+        },
+      },
+    });
   });
 
   router.use(requireNexusApiKey);

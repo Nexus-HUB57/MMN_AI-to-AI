@@ -12,6 +12,9 @@ import {
   subscriptionTermMonthsSchema,
 } from "../domains/subscriptions/types";
 import { getNexusApiContext, requireNexusApiKey } from "./auth";
+import { createOpenApiAuditMiddleware, listRecentOpenApiAuditRecords } from "./audit";
+import { requireIdempotencyKey } from "./idempotency";
+import { createPublicOpenApiRateLimiter, createTenantOpenApiRateLimiter } from "./rate-limit";
 
 const createSubscriptionApiSchema = z.object({
   userId: z.coerce.number().int().positive(),
@@ -40,7 +43,7 @@ function sendApiError(res: Response, status: number, code: string, message: stri
 
 function withApiVersionHeaders(_req: Request, res: Response, next: express.NextFunction) {
   res.header("X-Nexus-Api-Version", "v1");
-  res.header("X-Nexus-Api-Stage", "sprint-1");
+  res.header("X-Nexus-Api-Stage", "sprint-2");
   next();
 }
 
@@ -53,18 +56,21 @@ export function createNexusOpenApiRouter() {
   const router = express.Router();
 
   router.use(withApiVersionHeaders);
+  router.use(createOpenApiAuditMiddleware());
+  router.use(createPublicOpenApiRateLimiter());
 
   router.get("/", (_req, res) => {
     res.json({
       name: "Nexus Open API",
       product: "Nexus Partners Pack",
       version: "v1",
-      stage: "sprint-1",
+      stage: "sprint-2",
       authentication: "Bearer API key",
       endpoints: {
         catalog: "/api/v1/catalog/plans",
         subscriptions: "/api/v1/subscriptions",
         subscriptionDetail: "/api/v1/subscriptions/:id",
+        auditRecent: "/api/v1/audit/recent",
       },
     });
   });
@@ -74,6 +80,25 @@ export function createNexusOpenApiRouter() {
   });
 
   router.use(requireNexusApiKey);
+  router.use(createTenantOpenApiRateLimiter());
+
+  router.get("/audit/recent", (req, res) => {
+    const apiContext = getNexusApiContext(res);
+    const tenantId = apiContext?.tenantId ?? null;
+    const requestedLimit = Number(req.query.limit || 20);
+    const items = listRecentOpenApiAuditRecords(tenantId, requestedLimit);
+
+    res.json({
+      data: {
+        items,
+        total: items.length,
+      },
+      meta: {
+        tenantId,
+        limit: Math.max(1, Math.min(requestedLimit, 200)),
+      },
+    });
+  });
 
   router.get("/subscriptions", async (req, res) => {
     try {
@@ -112,7 +137,7 @@ export function createNexusOpenApiRouter() {
     }
   });
 
-  router.post("/subscriptions", async (req, res) => {
+  router.post("/subscriptions", requireIdempotencyKey, async (req, res) => {
     try {
       const input = createSubscriptionApiSchema.parse(req.body ?? {});
       const apiContext = getNexusApiContext(res);

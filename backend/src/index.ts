@@ -77,7 +77,11 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-user-id, x-user-role",
+    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role",
+  );
+  res.header(
+    "Access-Control-Expose-Headers",
+    "X-Request-Id, X-RateLimit-Key, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-Idempotency-Status, Retry-After",
   );
   res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 

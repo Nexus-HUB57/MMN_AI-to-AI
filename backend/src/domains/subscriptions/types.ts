@@ -7,7 +7,7 @@
 
 import { z } from "zod";
 
-export const subscriptionPlanIds = ["pack-a2", "pack-ag", "pack-aa"] as const;
+export const subscriptionPlanIds = ["nexus-start", "nexus-growth", "nexus-enterprise"] as const;
 export type SubscriptionPlanId = (typeof subscriptionPlanIds)[number];
 
 export const subscriptionStatuses = [

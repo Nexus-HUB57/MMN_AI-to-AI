@@ -2,7 +2,8 @@
  * Subscriptions domain — catálogo comercial.
  *
  * Catálogo oficial do Nexus Partners no Nexus Store / Nexus Marketplace.
- * O produto é apresentado como licença SaaS exclusivamente por assinatura.
+ * O produto é apresentado como software SaaS independente da jornada do Nexus Affil'IA'te
+ * e comercializado exclusivamente por assinatura.
  */
 
 import type {
@@ -14,21 +15,21 @@ import type {
 const LICENSE_TERMS: SubscriptionTermMonths[] = [6, 12, 24, 36, 48];
 
 export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = {
-  "pack-a2": {
-    id: "pack-a2",
+  "nexus-start": {
+    id: "nexus-start",
     shortName: "Nexus Partners Start",
-    fullName: "Nexus Partners · Start License",
-    tagline: "Entrada operacional para creators, parceiros e afiliados com licença SaaS recorrente",
+    fullName: "Nexus Partners · Start",
+    tagline: "Plano inicial do Nexus Partners Pack, contratado por assinatura como produto independente",
     priceCents: 1000,
     currency: "BRL",
     billingCycle: "monthly",
     partnerTier: "silver",
     commissionRate: 0.05,
     features: [
-      "Rastreamento ponta a ponta de parceiros e afiliados",
+      "Rastreamento ponta a ponta de parceiros, creators e afiliados",
       "1 agente IA operacional ativado",
-      "8 skills em runtime com replay consultável",
-      "Dashboard comercial e trilha auditável",
+      "8 skills comerciais com replay consultável",
+      "Dashboard comercial com trilha auditável",
     ],
     capacity: {
       aiAgents: 1,
@@ -45,25 +46,25 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 12,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Licença mensal com fidelização de 6 a 48 meses",
+      licenseLabel: "Assinatura mensal com contratação de 6 a 48 meses",
       ctaLabel: "Assinar Start",
     },
   },
-  "pack-ag": {
-    id: "pack-ag",
+  "nexus-growth": {
+    id: "nexus-growth",
     shortName: "Nexus Partners Growth",
-    fullName: "Nexus Partners · Growth License",
-    tagline: "Escala comercial recorrente com governança, analytics e expansão multicanal",
+    fullName: "Nexus Partners · Growth",
+    tagline: "Plano de escala operacional com analytics, governança e expansão multicanal",
     priceCents: 25000,
     currency: "BRL",
     billingCycle: "monthly",
     partnerTier: "gold",
     commissionRate: 0.08,
     features: [
-      "Comissionamento dinâmico com atribuição customizável",
+      "Comissionamento dinâmico com regras customizáveis",
       "ROI por canal e LTV por parceiro em tempo real",
-      "Mais níveis de rede e governança de aprovações",
-      "250 e-books + operação assistida por IA",
+      "Governança de aprovações e operação assistida por IA",
+      "Biblioteca operacional ampliada para acelerar implantação",
     ],
     capacity: {
       aiAgents: 3,
@@ -80,15 +81,15 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 12,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Licença mensal com planos de 6, 12, 24, 36 e 48 meses",
+      licenseLabel: "Assinatura mensal disponível em 6, 12, 24, 36 e 48 meses",
       ctaLabel: "Assinar Growth",
     },
   },
-  "pack-aa": {
-    id: "pack-aa",
+  "nexus-enterprise": {
+    id: "nexus-enterprise",
     shortName: "Nexus Partners Enterprise",
-    fullName: "Nexus Partners · Enterprise License",
-    tagline: "Camada estratégica enterprise com governança high-value e desenho sob consulta",
+    fullName: "Nexus Partners · Enterprise",
+    tagline: "Plano enterprise sob consulta para desenho dedicado, governança ampliada e integração sob demanda",
     priceCents: null,
     currency: "BRL",
     billingCycle: "on_request",
@@ -96,9 +97,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
     commissionRate: 0.12,
     features: [
       "Governança comercial granular enterprise",
-      "Participação em receitas especiais e desenho dedicado",
+      "Desenho dedicado da operação e onboarding consultivo",
       "Acesso expandido à operação IA e integrações sob demanda",
-      "Suporte estratégico para expansão de canais e parceiros",
+      "Suporte estratégico para expansão de canais, parceiros e squads",
     ],
     capacity: {
       aiAgents: 10,
@@ -115,7 +116,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionPlanId, SubscriptionPlan> = 
       subscriptionOnly: true,
       defaultTermMonths: 24,
       availableTermsMonths: LICENSE_TERMS,
-      licenseLabel: "Contrato enterprise sob consulta com janela de 6 a 48 meses",
+      licenseLabel: "Contrato enterprise sob consulta com janela contratual de 6 a 48 meses",
       ctaLabel: "Solicitar proposta",
     },
   },
@@ -137,7 +138,7 @@ export function compareSubscriptionPlans(
   from: SubscriptionPlanId,
   to: SubscriptionPlanId,
 ): "upgrade" | "downgrade" | "lateral" {
-  const order: SubscriptionPlanId[] = ["pack-a2", "pack-ag", "pack-aa"];
+  const order: SubscriptionPlanId[] = ["nexus-start", "nexus-growth", "nexus-enterprise"];
   const fromIdx = order.indexOf(from);
   const toIdx = order.indexOf(to);
   if (toIdx > fromIdx) return "upgrade";

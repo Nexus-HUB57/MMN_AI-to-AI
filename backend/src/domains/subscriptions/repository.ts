@@ -40,6 +40,19 @@ function emptyState(): SubscriptionState {
 
 const state: SubscriptionState = emptyState();
 
+function normalizePlanId(planId: string): SubscriptionPlanId {
+  switch (planId) {
+    case "pack-a2":
+      return "nexus-start";
+    case "pack-ag":
+      return "nexus-growth";
+    case "pack-aa":
+      return "nexus-enterprise";
+    default:
+      return planId as SubscriptionPlanId;
+  }
+}
+
 function nextSubscriptionId(): string {
   const id = `sub_${Date.now().toString(36)}_${state.nextSubscriptionSeq.toString(36).padStart(3, "0")}`;
   state.nextSubscriptionSeq++;
@@ -61,7 +74,7 @@ function fromDbSubscription(row: typeof subscriptionsTable.$inferSelect): Subscr
   return {
     id: row.id,
     userId: row.userId,
-    planId: row.planId as SubscriptionPlanId,
+    planId: normalizePlanId(row.planId),
     status: row.status as SubscriptionStatus,
     termMonths: row.termMonths as SubscriptionTermMonths,
     startedAt: row.startedAt,
@@ -78,8 +91,8 @@ function fromDbEvent(row: typeof subscriptionEventsTable.$inferSelect): Subscrip
     id: row.id,
     subscriptionId: row.subscriptionId,
     type: row.type as SubscriptionEventLog["type"],
-    fromPlanId: (row.fromPlanId as SubscriptionPlanId | null) ?? null,
-    toPlanId: (row.toPlanId as SubscriptionPlanId | null) ?? null,
+    fromPlanId: row.fromPlanId ? normalizePlanId(row.fromPlanId) : null,
+    toPlanId: row.toPlanId ? normalizePlanId(row.toPlanId) : null,
     triggeredBy: row.triggeredBy as SubscriptionEventLog["triggeredBy"],
     occurredAt: row.occurredAt,
     notes: row.notes ?? undefined,
@@ -299,9 +312,9 @@ export async function computeSubscriptionMetrics(): Promise<SubscriptionMetricsS
     suspended: 0,
   } as SubscriptionMetricsSnapshot["byStatus"];
   const byPlan = {
-    "pack-a2": 0,
-    "pack-ag": 0,
-    "pack-aa": 0,
+    "nexus-start": 0,
+    "nexus-growth": 0,
+    "nexus-enterprise": 0,
   } as SubscriptionMetricsSnapshot["byPlan"];
   let activeMRRCents = 0;
 

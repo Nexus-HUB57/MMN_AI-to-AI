@@ -195,7 +195,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 Nexus Storie Marketplace
               </Badge>
               <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                Nexus Partners · assinatura exclusiva
+                Nexus Partners Pack · assinatura independente
               </Badge>
               <Badge className="border border-white/10 bg-white/5 text-slate-200">Pix · Mercado Pago</Badge>
               <Badge className="border border-white/10 bg-white/5 text-slate-200">Entrega digital imediata</Badge>
@@ -212,9 +212,8 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 <span className="text-quantum-lime">produtos, packs e oportunidades</span>
               </h1>
               <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                O Nexus Storie Marketplace reúne todos os produtos, packs de evolução, bibliotecas de e-books e canais
-                parceiros em um único lugar. O produto principal agora é o Nexus Partners, apresentado em formato
-                exclusivamente por assinatura, com checkout integrado e ativação operacional contínua.
+                O Nexus Storie Marketplace reúne produtos, packs da jornada principal, bibliotecas de e-books e canais
+                parceiros em um único lugar. Dentro desse ecossistema, o Nexus Partners Pack aparece como <strong className="text-white">software contratável por assinatura</strong>, sem substituir, herdar ou representar a progressão por packs do Nexus Affil'IA'te.
               </p>
             </div>
 
@@ -264,7 +263,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 <>
                   <Link href="/subscriptions">
                     <Button className="gradient-btn h-12 px-6 text-sm font-semibold">
-                      Assinar Nexus Partners
+                      Contratar Nexus Partners Pack
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -279,7 +278,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
 
             {hasOnboardingFlag && (
               <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
-                Cadastro concluído! Seu onboarding começa aqui com o Pack A² como primeira ativação.
+                Cadastro concluído! Você já pode acessar o marketplace e, se fizer sentido para sua operação, contratar o Nexus Partners Pack como produto independente por assinatura.
               </div>
             )}
           </div>

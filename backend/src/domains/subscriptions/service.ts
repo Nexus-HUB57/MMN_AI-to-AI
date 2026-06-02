@@ -32,10 +32,10 @@ import type {
 export function getCatalog() {
   return {
     plans: listSubscriptionPlans(),
-    version: "1.5.0",
+    version: "1.6.0",
     pivot: "subscription-commercial",
     storefront: {
-      productName: "Nexus Partners",
+      productName: "Nexus Partners Pack",
       presentation: "subscription-only",
       termOptionsMonths: [6, 12, 24, 36, 48],
     },

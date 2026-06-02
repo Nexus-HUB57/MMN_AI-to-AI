@@ -159,12 +159,12 @@ export default function PixCheckout() {
   const isSubscriptionCheckout = checkoutIntent?.type === "subscription";
   const title = checkoutIntent
     ? isSubscriptionCheckout
-      ? "Assinatura Nexus Partners"
+      ? "Assinatura do Nexus Partners Pack"
       : "Área de pagamentos do Marketplace"
     : "Checkout PIX";
   const subtitle = checkoutIntent
     ? isSubscriptionCheckout
-      ? "Revise a licença contratual, gere o checkout seguro no servidor e conclua a ativação da assinatura do Nexus Partners."
+      ? "Confirme a modalidade contratada (Start, Growth ou Enterprise), revise a janela contratual e finalize a assinatura do Nexus Partners Pack — produto SaaS independente, sem vínculo com packs do Nexus Affil'IA'te."
       : "Revise o item, gere o checkout seguro no servidor e pague por QR Code PIX ou código copia e cola."
     : "Use este checkout para cobranças avulsas do ecossistema Nexus com geração segura de PIX.";
 
@@ -224,7 +224,7 @@ export default function PixCheckout() {
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
-                  {checkoutIntent ? (isSubscriptionCheckout ? "Assinatura originada do Marketplace" : "Compra originada do Marketplace") : "Checkout avulso"}
+                  {checkoutIntent ? (isSubscriptionCheckout ? "Assinatura Nexus Partners Pack · produto SaaS independente" : "Compra originada do Marketplace") : "Checkout avulso"}
                 </Badge>
                 <Badge className="border border-amber-400/30 bg-amber-400/10 text-amber-200">
                   PIX + Mercado Pago
@@ -349,7 +349,7 @@ export default function PixCheckout() {
                       <Label htmlFor="description">Descrição</Label>
                       <Input
                         id="description"
-                        placeholder="Ex: Pack Agente Afiliado A²"
+                        placeholder="Ex: Plano Nexus Partners Star"
                         maxLength={72}
                         className="border-white/10 bg-white/5 text-white"
                         value={description}

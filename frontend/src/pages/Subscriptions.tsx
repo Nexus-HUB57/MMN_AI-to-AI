@@ -62,9 +62,9 @@ function priceCaption(plan: CatalogPlan) {
 }
 
 const planIcons = {
-  "pack-a2": Bot,
-  "pack-ag": Activity,
-  "pack-aa": Crown,
+  "nexus-start": Bot,
+  "nexus-growth": Activity,
+  "nexus-enterprise": Crown,
 } as const;
 
 export default function Subscriptions() {
@@ -91,9 +91,9 @@ export default function Subscriptions() {
   }, [mineQuery.data?.items]);
 
   const autonomyFacts = [
-    "8 skill handlers em produção",
-    "Autonomy Score 0-100 em 6 dimensões ponderadas",
-    "RBAC granular com runtime:read, execute, approve, reject e rerun",
+    "Produto SaaS autônomo, sem vínculo com a jornada de packs do Nexus Affil'IA'te",
+    "Contratação por assinatura mensal com janela contratual de 6 a 48 meses",
+    "Start, Growth e Enterprise são modalidades do mesmo produto-base, com skills agregadas",
   ];
 
   async function handleSubscribe(plan: CatalogPlan) {
@@ -111,7 +111,7 @@ export default function Subscriptions() {
         termMonths,
         metadata: {
           storefront: "nexus-marketplace",
-          productName: "Nexus Partners",
+          productName: "Nexus Partners Pack",
           exclusiveModel: "subscription-only",
         },
       });
@@ -146,18 +146,23 @@ export default function Subscriptions() {
           <div className="grid gap-8 xl:grid-cols-[1.08fr_0.92fr] xl:items-center">
             <div className="space-y-5">
               <div className="flex flex-wrap gap-2">
-                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Nexus Store · assinatura exclusiva</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">oneverso.com.br</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">api.oneverso.com.br</Badge>
+                <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Nexus Partners Pack · produto SaaS independente</Badge>
+                <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">Contratação exclusivamente por assinatura</Badge>
+                <Badge className="border border-white/10 bg-white/5 text-slate-200">Janela contratual 6 a 48 meses</Badge>
               </div>
 
               <div className="space-y-4">
                 <h1 className="max-w-5xl text-4xl font-black tracking-tight text-white md:text-5xl xl:text-6xl">
-                  Nexus Partners · infraestrutura SaaS proprietária para operar creators, afiliados e parcerias com <span className="text-quantum-lime">licença exclusivamente por assinatura</span>
+                  Nexus Partners Pack · software SaaS contratado <span className="text-quantum-lime">exclusivamente por assinatura</span>
                 </h1>
                 <p className="max-w-4xl text-base leading-7 text-slate-300 md:text-lg">
-                  O Nexus Partners Pack concentra rastreamento ponta a ponta, automação inteligente, governança comercial,
-                  telemetria operacional e visão analítica em tempo real em um único produto SaaS.
+                  O Nexus Partners Pack é um produto independente, comercializado apenas por assinatura. Pode ser contratado por
+                  terceiros ou por afiliados do Nexus Affil'IA'te, sempre como solução autônoma — sem representar nível, pack ou
+                  etapa da jornada principal do ecossistema.
+                </p>
+                <p className="max-w-4xl text-sm leading-7 text-slate-400 md:text-base">
+                  Os planos Start, Growth e Enterprise são apenas modalidades contratuais do mesmo produto, variando por capacidade
+                  operacional, skills agregadas, governança e suporte. Toda contratação acontece em janela de 6, 12, 24, 36 ou 48 meses.
                 </p>
               </div>
 
@@ -179,23 +184,23 @@ export default function Subscriptions() {
 
             <Card className="border-white/10 bg-white/6 backdrop-blur">
               <CardHeader>
-                <CardTitle className="text-xl text-white">3 diferenciais centrais</CardTitle>
+                <CardTitle className="text-xl text-white">Como o Nexus Partners Pack se posiciona</CardTitle>
                 <CardDescription className="text-slate-300">
-                  Runtime operacional, autonomia mensurável e governança comercial em um só núcleo de produto.
+                  Três pilares que definem o produto como solução SaaS autônoma — não como pack ou nível do Nexus Affil'IA'te.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="rounded-3xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
-                  <div className="mb-2 flex items-center gap-2 text-white"><Zap className="h-4 w-4 text-quantum-cyan" /> Runtime IA operacional</div>
-                  <p>8 handlers ativos cobrindo conteúdo, prospecção, distribuição, analytics e replay operacional.</p>
+                  <div className="mb-2 flex items-center gap-2 text-white"><Zap className="h-4 w-4 text-quantum-cyan" /> Produto independente</div>
+                  <p>SaaS contratável por terceiros ou afiliados, sem qualquer relação com packs, escadas ou níveis do Nexus Affil'IA'te.</p>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
-                  <div className="mb-2 flex items-center gap-2 text-white"><BarChart3 className="h-4 w-4 text-quantum-lime" /> Autonomy Score contínuo</div>
-                  <p>6 dimensões ponderadas: tarefas autônomas, LLM-as-Judge, cobertura, latência, aprovação manual e canais.</p>
+                  <div className="mb-2 flex items-center gap-2 text-white"><BarChart3 className="h-4 w-4 text-quantum-lime" /> Apenas por assinatura</div>
+                  <p>Comercialização exclusivamente por assinatura, com contrato de 6, 12, 24, 36 ou 48 meses e renovação contínua.</p>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
-                  <div className="mb-2 flex items-center gap-2 text-white"><ShieldCheck className="h-4 w-4 text-amber-300" /> Governança granular</div>
-                  <p>RBAC, trilha auditável, aprovações needs_review e stack Node 22 + tRPC + Drizzle + Postgres + BullMQ/Redis.</p>
+                  <div className="mb-2 flex items-center gap-2 text-white"><ShieldCheck className="h-4 w-4 text-amber-300" /> Modalidades contratuais</div>
+                  <p>Start, Growth e Enterprise representam apenas escalas do mesmo produto-base, com skills agregadas e governança.</p>
                 </div>
               </CardContent>
             </Card>
@@ -237,7 +242,7 @@ export default function Subscriptions() {
                           <Icon className="h-5 w-5" />
                         </div>
                         <div className="flex flex-wrap justify-end gap-2">
-                          <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Assinatura</Badge>
+                          <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Modalidade de assinatura</Badge>
                           {myPlan?.status && (
                             <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">{myPlan.status}</Badge>
                           )}
@@ -265,8 +270,8 @@ export default function Subscriptions() {
                           <p className="mt-2 text-lg font-bold text-white">{plan.capacity.aiAgents} agente · {plan.capacity.skills} skills</p>
                         </div>
                         <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                          <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">E-books / rede</p>
-                          <p className="mt-2 text-lg font-bold text-white">{plan.capacity.ebooks} · {plan.capacity.referralLevels} níveis</p>
+                          <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Biblioteca / operação</p>
+                          <p className="mt-2 text-lg font-bold text-white">{plan.capacity.ebooks} ativos · {plan.governance.highValue ? "escopo enterprise" : "operação padronizada"}</p>
                         </div>
                       </div>
 
@@ -316,10 +321,11 @@ export default function Subscriptions() {
         <section className="rounded-[28px] border border-white/10 bg-white/5 p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-white">Listagem oficial no Nexus Marketplace</h3>
+              <h3 className="text-2xl font-bold text-white">Produto exclusivo do Nexus Marketplace</h3>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                O Nexus Partners passa a ser a oferta principal do ecossistema, com apresentação comercial orientada a assinatura,
-                contratos de 6 a 48 meses e checkout conectado ao backend tRPC.
+                O Nexus Partners Pack é listado no Nexus Marketplace como produto SaaS independente, comercializado apenas por
+                assinatura. As modalidades Start, Growth e Enterprise são contratos do mesmo produto-base e não devem ser confundidas
+                com packs, níveis ou etapas da jornada principal do Nexus Affil'IA'te.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

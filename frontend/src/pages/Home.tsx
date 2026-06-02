@@ -31,7 +31,7 @@ import bgHome from "@/assets/bg-home.webp";
 
 const NAV_LINKS = [
   { href: "#sobre", label: "Sobre" },
-  { href: "#vitrine", label: "Packs" },
+  { href: "#vitrine", label: "Assinaturas" },
   { href: "#diferenciais", label: "Diferenciais" },
   { href: "#cenarios", label: "Cases" },
   { href: "#metodologia", label: "Metodologia" },
@@ -48,21 +48,21 @@ const POSITIONING_PILLARS = [
 const PARTNERS_PACK_CARDS = [
   {
     icon: Briefcase,
-    title: "Ative e comece a operar",
-    pill: "Entrada oficial",
-    text: "Com o Pack A² você ativa seu Agente IA, abre sua vitrine de ofertas, entra no painel da plataforma e começa a vender com mais apoio, organização e velocidade.",
+    title: "Contrate e comece a operar",
+    pill: "Assinatura inicial",
+    text: "O plano Start ativa a operação inicial do Nexus Partners Pack com painel comercial, automação básica e contratação independente do Nexus Affil'IA'te.",
   },
   {
     icon: Database,
-    title: "Catálogo, revenda e estoque",
-    pill: "Vitrine pronta",
-    text: "Cada pack libera uma cota de e-books, produtos e conteúdos prontos para revenda. Seu mini-site recebe o catálogo automaticamente e o Agente IA trata de apresentar as ofertas para você.",
+    title: "Catálogo e operação assistida",
+    pill: "Produto SaaS",
+    text: "Cada assinatura libera capacidades operacionais, biblioteca de ativos e recursos comerciais do Nexus Partners Pack, sem qualquer vínculo com packs ou níveis da jornada principal.",
   },
   {
     icon: Zap,
-    title: "Escale com automação real",
-    pill: "Agente IA",
-    text: "O ecossistema foi construído para crescer junto com você. Conforme avança de nível, seu agente ganha novas capacidades, sua rede expande e suas comissões evoluem automaticamente.",
+    title: "Escala por capacidade contratada",
+    pill: "Growth & Enterprise",
+    text: "A evolução entre Start, Growth e Enterprise representa apenas ampliação contratual de capacidades, skills, governança e operação do produto assinado.",
   },
 ];
 
@@ -347,7 +347,7 @@ export default function Home() {
             </span>
             <h2 className="text-2xl md:text-3xl font-bold text-white">Ative sua operação comercial no ecossistema Nexus</h2>
             <p className="mx-auto max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-              O <strong className="text-white">Nexus Partners Pack</strong> é o seu ponto de entrada oficial. Agora ele é apresentado no Nexus Store como uma <strong className="text-white">licença SaaS exclusivamente por assinatura</strong>, com opções contratuais de 6 a 48 meses para ativar o Agente IA, acessar o catálogo e operar com automação comercial inteligente.
+              O <strong className="text-white">Nexus Partners Pack</strong> é uma ferramenta SaaS contratável, complementar ao ecossistema Nexus, mas <strong className="text-white">independente da progressão do Nexus Affil'IA'te</strong>. Ele pode ser assinado por terceiros ou pelos próprios afiliados, sempre como produto comercial autônomo em contratos de 6 a 48 meses.
             </p>
           </div>
 
@@ -376,7 +376,7 @@ export default function Home() {
               href="/subscriptions"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-quantum-lime to-quantum-cyan px-6 py-3 text-sm font-semibold text-obsidian shadow-lg shadow-quantum-lime/20 transition hover:opacity-90"
             >
-              Explorar Nexus Partners Pack <ArrowRight className="h-4 w-4" />
+              Explorar assinatura Nexus Partners <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/cadastro"
@@ -393,42 +393,42 @@ export default function Home() {
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-quantum-cyan/30 bg-quantum-cyan/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-cyan">
-              <Package className="h-3 w-3" /> Packs de entrada
+              <Package className="h-3 w-3" /> Planos de assinatura
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">Escolha seu pack de ativação e comece hoje</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Escolha o plano contratual do Nexus Partners Pack</h2>
             <p className="mx-auto max-w-2xl text-sm text-slate-400">
-              Cada pack libera o Agente IA, uma cota de produtos para revenda e o próximo nível da sua carreira comercial.
+              Os planos abaixo representam a contratação do software Nexus Partners Pack e não devem ser confundidos com os packs ou níveis do Nexus Affil'IA'te.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                name: 'Pack A²',
-                subtitle: 'Agente Afiliado Nível I',
-                price: 'R$ 10,00',
-                highlight: 'Ativação do Agente IA',
-                features: ['1 Agente IA ativado', '10 e-books para revenda', 'Painel comercial liberado', '2 skills iniciais'],
-                badge: 'Entrada gratuita',
+                name: 'Start',
+                subtitle: 'Plano inicial Nexus Partners Pack',
+                price: 'R$ 10,00/mês',
+                highlight: 'Assinatura SaaS inicial',
+                features: ['1 agente IA operacional', '10 ativos digitais para operação inicial', 'Painel comercial liberado', '8 skills comerciais ativas'],
+                badge: 'Assinatura',
                 color: 'quantum-cyan',
                 href: '/subscriptions',
               },
               {
-                name: 'Pack AG',
-                subtitle: 'Agente Preditivo Nível I',
-                price: 'R$ 250,00',
-                highlight: 'Operação preditiva',
-                features: ['Agente em nível profissional', '250 e-books para ampliar a vitrine', 'Comissão em mais níveis da rede', '5 cotas extras de expansão'],
-                badge: 'Profissional',
+                name: 'Growth',
+                subtitle: 'Plano de escala Nexus Partners',
+                price: 'R$ 250,00/mês',
+                highlight: 'Escala operacional e analytics',
+                features: ['3 agentes IA em operação', 'Biblioteca operacional ampliada', 'Governança comercial com regras customizáveis', 'Analytics de ROI e LTV em tempo real'],
+                badge: 'Assinatura',
                 color: 'quantum-lime',
                 href: '/subscriptions',
               },
               {
-                name: 'Pack AA',
-                subtitle: 'Liderança estratégica Nível I',
+                name: 'Enterprise',
+                subtitle: 'Plano enterprise Nexus Partners',
                 price: 'Sob consulta',
-                highlight: 'Camada estratégica',
-                features: ['Benefícios estratégicos exclusivos', 'Participação em receitas especiais', 'Apoio a novos projetos', 'Acesso total às capacidades do agente'],
-                badge: 'Elite',
+                highlight: 'Desenho sob demanda',
+                features: ['Governança enterprise dedicada', 'Integrações e operação sob demanda', 'Onboarding consultivo', 'Expansão estratégica de canais e squads'],
+                badge: 'Enterprise',
                 color: 'quantum-purple',
                 href: '/subscriptions',
               },
@@ -466,8 +466,8 @@ export default function Home() {
             ))}
           </div>
           <p className="text-center text-xs text-slate-500">
-            Todos os packs incluem acesso ao painel, ativação progressiva do Agente IA e apoio comercial em modelo de assinatura.
-            <a href="/subscriptions" className="ml-1 text-quantum-cyan hover:underline">Ver planos de assinatura do Nexus Partners →</a>
+            Todos os planos representam a contratação do software Nexus Partners Pack por assinatura, sem vínculo com a escada de carreira do Nexus Affil'IA'te.
+            <a href="/subscriptions" className="ml-1 text-quantum-cyan hover:underline">Ver planos contratuais do Nexus Partners Pack →</a>
           </p>
         </div>
       </section>

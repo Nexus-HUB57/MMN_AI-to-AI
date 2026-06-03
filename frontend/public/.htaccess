@@ -18,13 +18,18 @@ RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
 # Nunca reescrever assets versionados e artefatos estáticos
+# Asset existente é servido; asset ausente retorna 404 explícito (não cai no SPA fallback)
+RewriteCond %{REQUEST_URI} ^/assets/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . - [R=404,L]
+
 RewriteRule ^assets/ - [L]
 RewriteRule ^favicon\.ico$ - [L]
 RewriteRule ^favicon\.svg$ - [L]
 RewriteRule ^robots\.txt$ - [L]
 RewriteRule ^manifest\.webmanifest$ - [L]
 
-# SPA fallback — todas as rotas client-side caem no index.html
+# SPA fallback — apenas rotas client-side (não-asset) caem no index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]

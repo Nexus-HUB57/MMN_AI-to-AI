@@ -1,18 +1,21 @@
 import { defineConfig } from 'vitest/config';
 import path from 'path';
 
+// Vitest config dedicada ao monorepo (raiz). Importante:
+// - Não tenta carregar nenhuma vite.config dos workspaces (frontend/backend)
+//   para evitar pegar plugins como vite-tsconfig-paths que não estão instalados
+//   na raiz e causam "TypeError: __vite_ssr_import_0__ is not a function".
+// - Resolve `@/` para frontend/src manualmente.
+// - Pool em forks (mais estável para módulos com side effects que esses testes
+//   integradores trazem).
 export default defineConfig({
-  ssr: {
-    // tsconfig-paths quebra com '__vite_ssr_import_0__ is not a function'
-    // quando carregado pelo transformer SSR do Vite. Forçar inline corrige.
-    noExternal: ['tsconfig-paths'],
-  },
   test: {
     globals: true,
     environment: 'node',
-    server: {
-      deps: {
-        inline: ['tsconfig-paths'],
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
       },
     },
     coverage: {
@@ -33,8 +36,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './frontend/src'),
-      '@mmn/shared': path.resolve(__dirname, './shared'),
+      '@': path.resolve(__dirname, '../frontend/src'),
+      '@mmn/shared': path.resolve(__dirname, '../shared'),
     },
   },
 });

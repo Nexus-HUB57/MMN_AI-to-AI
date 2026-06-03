@@ -137,12 +137,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       title: "Agente IA",
       items: [
         {
-          label: "Chat Bot Lab Nexus",
-          href: "/lab/chatbot",
-          icon: <Sparkles className="w-5 h-5" />,
-          badge: "Multi-IA",
-        },
-        {
           label: "Painel do Agente",
           href: "/agents",
           icon: <Cpu className="w-5 h-5" />,

@@ -125,8 +125,8 @@ const OutputSchema = z.object({
     suggestions: z.array(z.string()),
   }),
   recommendations: z.array(z.string()),
-  reasoningTrace?: ReasoningStep[];
-  reflection?: ReflectionEntry;
+  reasoningTrace: z.array(z.any()).optional(),
+  reflection: z.any().optional(),
 });
 
 export type ColdEmailerInput = z.infer<typeof InputSchema>;

@@ -239,6 +239,11 @@ export default function LabChatbot() {
         <section className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.18),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,1))] p-6 shadow-2xl shadow-black/30 md:p-8">
           <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr] xl:items-center">
             <div className="space-y-5">
+              <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.22em] text-slate-500">
+                <Link href="/academia" className="hover:text-quantum-cyan">Nexus Academ'IA</Link>
+                <span>/</span>
+                <span className="text-slate-300">Lab Nexus</span>
+              </div>
               <div className="flex flex-wrap gap-2">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">Lab Nexus · Chat Bot Multi-IA</Badge>
                 <Badge className={`border ${tier.badgeTone}`}>{tier.label}</Badge>
@@ -249,7 +254,7 @@ export default function LabChatbot() {
                 Hub agregador de <span className="text-quantum-cyan">Inteligência Artificial</span> dentro do Lab Nexus.
               </h1>
               <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                Inspirado em <a href={INSPIRATION_HUBS[0].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">Adapta</a> e <a href={INSPIRATION_HUBS[1].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">MyHub IA</a>. Painel único para alternar entre GPT, Claude, Gemini, DeepSeek e MiniMax, com histórico persistido, templates, quota diária e governança Nexus.
+                Módulo interno da <strong className="text-white">Nexus Academ'IA</strong>, publicado dentro da trilha <strong className="text-white">Lab Nexus</strong>. Inspirado em <a href={INSPIRATION_HUBS[0].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">Adapta</a> e <a href={INSPIRATION_HUBS[1].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">MyHub IA</a>. Painel único para alternar entre GPT, Claude, Gemini, DeepSeek e MiniMax, com histórico persistido, templates, quota diária e governança Nexus.
               </p>
 
               <div className="grid gap-3 sm:grid-cols-4">
@@ -564,6 +569,9 @@ export default function LabChatbot() {
                 </a>
                 <Link href="/academia">
                   <Button className="gradient-btn">Voltar ao Academ'IA <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                </Link>
+                <Link href="/academia/lab-nexus/chatbot">
+                  <Button variant="outline" className="border-quantum-cyan/30 bg-quantum-cyan/10 text-white hover:bg-quantum-cyan/20">URL canônica do Lab Nexus</Button>
                 </Link>
               </div>
             </CardContent>

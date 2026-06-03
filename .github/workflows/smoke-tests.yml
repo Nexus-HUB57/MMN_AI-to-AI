@@ -16,6 +16,7 @@ permissions:
 env:
   BROWSER_UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36
   HTML_ACCEPT: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+  EXPECTED_DISCOVERY_STAGE: sprint-5
 
 jobs:
   smoke:
@@ -62,22 +63,30 @@ jobs:
 
       - name: Verificar health da API
         run: |
-          code=$(curl -s -o /tmp/api-health.json -w "%{http_code}" https://api.oneverso.com.br/health)
-          echo "HTTP api /health: $code"
+          code=$(curl -s -o /tmp/api-health.json -w "%{http_code}" https://api.oneverso.com.br/api/health)
+          echo "HTTP api /api/health: $code"
           test "$code" = "200"
           grep -Eqi 'ok|healthy|status' /tmp/api-health.json
 
-      - name: Validar discovery e OpenAPI da Sprint 4
+      - name: Validar discovery e OpenAPI da Sprint 5
+        env:
+          EXPECTED_DISCOVERY_STAGE: ${{ env.EXPECTED_DISCOVERY_STAGE }}
         run: |
           curl -fsSL https://api.oneverso.com.br/api/v1/ -o /tmp/openapi-discovery.json
           curl -fsSL https://api.oneverso.com.br/api/v1/openapi.json -o /tmp/openapi.json
           python3 - <<'PY'
           import json
+          import os
+
+          expected_stage = os.environ["EXPECTED_DISCOVERY_STAGE"]
           with open('/tmp/openapi-discovery.json', 'r', encoding='utf-8') as f:
               discovery = json.load(f)
           with open('/tmp/openapi.json', 'r', encoding='utf-8') as f:
               spec = json.load(f)
-          assert discovery.get('stage') == 'sprint-4', discovery
+
+          stage = discovery.get('stage')
+          assert stage == expected_stage, discovery
+
           paths = spec.get('paths', {})
           required = [
               '/commissions',
@@ -91,7 +100,7 @@ jobs:
           missing = [path for path in required if path not in paths]
           if missing:
               raise SystemExit(f'Paths ausentes na OpenAPI: {missing}')
-          print(f'OK: stage={discovery.get("stage")} paths={len(paths)}')
+          print(f'OK: stage={stage} paths={len(paths)}')
           PY
 
       - name: Validar bundle principal do portal publicado
@@ -129,9 +138,10 @@ jobs:
             echo
             echo "- Portal raiz: https://oneverso.com.br"
             echo "- SPA fallback: https://oneverso.com.br/login"
-            echo "- API health: https://api.oneverso.com.br/health"
+            echo "- API health: https://api.oneverso.com.br/api/health"
             echo "- Discovery API: https://api.oneverso.com.br/api/v1/"
             echo "- OpenAPI JSON: https://api.oneverso.com.br/api/v1/openapi.json"
+            echo "- Stage esperado: $EXPECTED_DISCOVERY_STAGE"
             echo
             echo "Status final: ${{ job.status }}"
           } >> "$GITHUB_STEP_SUMMARY"

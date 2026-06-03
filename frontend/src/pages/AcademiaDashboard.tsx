@@ -114,6 +114,7 @@ export default function AcademiaDashboard() {
                 <div className="flex flex-wrap gap-3">
                   <Link href="/skills"><Button className="gradient-btn"><Sparkles className="mr-2 h-4 w-4" /> Ver skills liberadas</Button></Link>
                   <Link href="/agents/sync"><Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10"><Brain className="mr-2 h-4 w-4 text-quantum-cyan" /> Sincronizar runtime</Button></Link>
+                  <Link href="/academia/lab-nexus/chatbot"><Button variant="outline" className="border-quantum-cyan/30 bg-quantum-cyan/10 text-white hover:bg-quantum-cyan/20"><FlaskConical className="mr-2 h-4 w-4 text-quantum-cyan" /> Abrir Lab Nexus</Button></Link>
                 </div>
               </CardContent>
             </Card>
@@ -278,7 +279,10 @@ export default function AcademiaDashboard() {
               </div>
               <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
                 <p className="font-semibold text-white">3. Aplicação em campo</p>
-                <p className="mt-2 leading-6">Use Lab Nexus, calendário social, materiais e vitrine de produtos para transformar conhecimento em rotina comercial.</p>
+                <p className="mt-2 leading-6">Use o <strong className="text-white">Lab Nexus</strong>, calendário social, materiais e vitrine de produtos para transformar conhecimento em rotina comercial.</p>
+                <div className="mt-3">
+                  <Link href="/academia/lab-nexus/chatbot"><Button variant="outline" className="border-quantum-cyan/30 bg-quantum-cyan/10 text-white hover:bg-quantum-cyan/20">Entrar no Chat Bot do Lab Nexus</Button></Link>
+                </div>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link href="/packs"><Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">Ver packs</Button></Link>

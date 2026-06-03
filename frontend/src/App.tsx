@@ -70,6 +70,8 @@ function Router() {
       <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
       <Route path="/academia" component={AcademiaDashboard} />
+      <Route path="/academia/lab-nexus" component={LabChatbot} />
+      <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />
       <Route path="/content/calendar" component={ContentCalendar} />

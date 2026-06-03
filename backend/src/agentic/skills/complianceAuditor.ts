@@ -109,8 +109,8 @@ const OutputSchema = z.object({
   approvedClaims: z.array(z.string()),
   revisedContent: z.string().optional(),
   recommendations: z.array(z.string()),
-  reasoningTrace?: ReasoningStep[];
-  reflection?: ReflectionEntry;
+  reasoningTrace: z.array(z.any()).optional(),
+  reflection: z.any().optional(),
 });
 
 export type ComplianceAuditorInput = z.infer<typeof InputSchema>;

@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { addAgentRuntimeExecutionJob, agentRuntimeExecutionQueue } from "../config/queue";
 import { agenticRepository } from "./repository";
 import type { AgentQueueJob } from "./types";
 
@@ -14,11 +15,21 @@ export class AgentRuntimeQueue {
       status: "queued",
       createdAt: now,
       updatedAt: now,
-      payload,
+      payload: {
+        ...payload,
+        brokerMode: agentRuntimeExecutionQueue ? "bullmq" : "in-memory",
+      },
     };
 
     this.jobs.set(job.id, job);
     void agenticRepository.upsertQueueJob(job);
+    void addAgentRuntimeExecutionJob({
+      jobId: job.id,
+      sessionId,
+      type,
+      payload,
+      createdAt: now,
+    });
     return job;
   }
 
@@ -67,6 +78,7 @@ export class AgentRuntimeQueue {
       completed: jobs.filter((job) => job.status === "completed").length,
       failed: jobs.filter((job) => job.status === "failed").length,
       total: jobs.length,
+      brokerEnabled: !!agentRuntimeExecutionQueue,
     };
   }
 }

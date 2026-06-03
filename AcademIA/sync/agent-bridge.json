@@ -1,7 +1,7 @@
 {
   "academia_version": "1.1.1",
   "schema_version": "1.0",
-  "last_updated": "2026-06-02",
+  "last_updated": "2026-06-03",
   "description": "Manifesto de sincronização entre a Academ'IA e o runtime dos agentes. Mapeia níveis de conhecimento → bundle de skills → permissões SHO. Carregado pelo CentralOrchestrator durante o bootstrap.",
   "agent_runtime": "backend/src/agentic",
   "skill_dispatch": "backend/src/agentic/skills/dispatcher.ts",

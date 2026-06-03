@@ -315,6 +315,18 @@ health_check() {
         log_warning "Frontend health check failed (HTTP $FRONTEND_RESPONSE)"
     fi
 
+    # Validate Open API discovery after deploy
+    if [ -x "./scripts/check_openapi_release.sh" ]; then
+        log_info "Validating Open API discovery stage..."
+        ./scripts/check_openapi_release.sh || {
+            log_error "Open API discovery validation failed after deploy"
+            exit 1
+        }
+        log_success "Open API discovery validation passed"
+    else
+        log_warning "scripts/check_openapi_release.sh not found or not executable"
+    fi
+
     # Check PM2 status
     pm2 list
 }

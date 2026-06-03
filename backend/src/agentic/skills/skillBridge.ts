@@ -20,6 +20,8 @@ import type {
   SagaLog,
   TenantHealthStatus,
 } from '../nexus-partners-pack/types';
+import { executeSkill, hasSkillHandler } from './dispatcher';
+import type { SkillExecutionResult as RuntimeSkillExecutionResult } from './types';
 
 // ============================================
 // CONTEXT ADAPTER
@@ -308,18 +310,35 @@ export class NexusSkillExecutor {
   }
 
   /**
-   * Método placeholder - será integrado com dispatcher real
+   * Executa a skill usando o dispatcher operacional real.
+   * Quando o handler ainda não existe no runtime, mantém fallback controlado
+   * para preservar compatibilidade do catálogo planejado.
    */
   private async executeSkillDirect(
     slug: string,
     input: unknown,
     context: AgenticSkillContext
   ): Promise<{ success: boolean; output: unknown; message?: string; warnings?: string[] }> {
-    // Placeholder - integração real virá com BullMQ
+    if (!hasSkillHandler(slug)) {
+      return {
+        success: false,
+        output: null,
+        message: `Skill ${slug} ainda não possui handler operacional registrado no dispatcher.`,
+        warnings: ['fallback_no_handler'],
+      };
+    }
+
+    const result = (await executeSkill({
+      slug,
+      rawInput: input,
+      context,
+    })) as RuntimeSkillExecutionResult;
+
     return {
-      success: true,
-      output: { executed: true, skill: slug },
-      message: `Skill ${slug} executada via Nexus executor`,
+      success: result.success,
+      output: result.output,
+      message: result.message,
+      warnings: result.warnings,
     };
   }
 

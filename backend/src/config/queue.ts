@@ -89,12 +89,14 @@ export const marketplaceSyncQueue = makeQueue("marketplace_sync_queue");
 export const orderProcessingQueue = makeQueue("order_processing_queue");
 export const commissionProcessingQueue = makeQueue("commission_processing_queue");
 export const withdrawalQueue = makeQueue("withdrawal_processing_queue");
+export const agentRuntimeExecutionQueue = makeQueue("agent_runtime_execution_queue");
 
 export const contentGenerationQueueEvents = makeQueueEvents("content_generation_queue");
 export const marketplaceSyncQueueEvents = makeQueueEvents("marketplace_sync_queue");
 export const orderProcessingQueueEvents = makeQueueEvents("order_processing_queue");
 export const commissionProcessingQueueEvents = makeQueueEvents("commission_processing_queue");
 export const withdrawalQueueEvents = makeQueueEvents("withdrawal_processing_queue");
+export const agentRuntimeExecutionQueueEvents = makeQueueEvents("agent_runtime_execution_queue");
 
 export interface ContentGenerationJob {
   type:
@@ -142,6 +144,14 @@ export interface WithdrawalJob {
   holderName: string;
 }
 
+export interface AgentRuntimeExecutionJob {
+  jobId: string;
+  sessionId: string;
+  type: string;
+  payload: Record<string, unknown>;
+  createdAt: string;
+}
+
 async function safeAdd(queue: Queue | null, jobName: string, job: unknown, options?: Record<string, unknown>) {
   if (!queue) {
     console.warn(`[Queue] Fila não disponível (Redis ausente) — job ${jobName} ignorado`);
@@ -174,4 +184,11 @@ export async function addCommissionProcessingJob(job: CommissionProcessingJob, o
 
 export async function addWithdrawalJob(job: WithdrawalJob, options?: Record<string, unknown>) {
   return safeAdd(withdrawalQueue, "withdrawal-processing", job, options);
+}
+
+export async function addAgentRuntimeExecutionJob(
+  job: AgentRuntimeExecutionJob,
+  options?: Record<string, unknown>,
+) {
+  return safeAdd(agentRuntimeExecutionQueue, "agent-runtime-execution", job, options);
 }

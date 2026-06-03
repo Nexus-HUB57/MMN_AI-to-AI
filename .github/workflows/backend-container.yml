@@ -70,8 +70,7 @@ jobs:
           {
             echo "## Backend container publicado"
             echo
-            echo "- Imagem: \
-`${{ steps.vars.outputs.image }}`"
+            echo "- Imagem: ${{ steps.vars.outputs.image }}"
             echo "- Tags: ${{ steps.meta.outputs.tags }}"
             echo "- Dockerfile: infra/Dockerfile"
           } >> "$GITHUB_STEP_SUMMARY"

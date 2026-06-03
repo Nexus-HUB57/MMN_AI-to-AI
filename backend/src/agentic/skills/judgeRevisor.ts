@@ -8,32 +8,12 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep } from "./agenticCore";
 
 /**
- * Handler operacional · Judge Revisor (LLM-as-Judge generalista)
+ * Handler operacional · Judge Revisor v2 (Agentic)
  * -----------------------------------------------------------------------------
- * Avalia saídas de qualquer handler downstream com base em uma rubrica
- * heurística determinística (sem LLM) ou, se OPENAI_API_KEY estiver disponível,
- * pode ser elevado a usar o LLM. Esta versão usa rubrica heurística para
- * garantir 100% de disponibilidade offline e auditabilidade.
- *
- * Rubrica (0-100):
- *  - clarity        20pts → headline curta, body com parágrafos.
- *  - intent         20pts → presença de CTA explícito + link operacional.
- *  - channelFit     20pts → respeito aos requisitos do canal (hashtags em IG,
- *                            ausência em WhatsApp/email).
- *  - compliance     20pts → ausência de risk flags críticos.
- *  - operationalFit 20pts → estrutura compatível com auto-publisher (campos
- *                            obrigatórios presentes).
- *
- * Decisão:
- *  - pass    → score ≥ 78
- *  - revise  → 55 ≤ score < 78
- *  - fail    → score < 55
- *
- * Side-effect:
- *  - chama `recordJudgeEvaluation(score)` que alimenta o snapshot de
- *    telemetria com `judgeAccuracyPct` real.
+ * Agora suporta Reasoning Trace e Feedback Loop.
  */
 
 const ContentArtifactSchema = z.object({
@@ -79,6 +59,7 @@ export interface JudgeOutput {
   rubric: JudgeRubric;
   reasoning: string;
   suggestions: string[];
+  reasoningTrace?: ReasoningStep[];
 }
 
 const CRITICAL_RISK = [
@@ -170,7 +151,7 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
   slug: "judge-revisor",
   title: "LLM-as-Judge · Revisor",
   category: "decision",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): JudgeInput => JudgeInputSchema.parse(raw),
   execute: async (
@@ -179,6 +160,12 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
   ): Promise<SkillExecutionResult<JudgeOutput>> => {
     const startedAt = Date.now();
     const artifact = input.artifact;
+
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: "Iniciando auditoria de artefato.",
+      }
+    ];
 
     const clarity = scoreClarity(artifact);
     const intent = scoreIntent(artifact);
@@ -207,6 +194,10 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
     );
     const verdict = verdictFor(score);
 
+    reasoningTrace.push({
+      thought: `Pontuação heurística calculada: ${score}/100. Veredito: ${verdict}.`,
+    });
+
     const suggestions = [
       clarity.note,
       intent.note,
@@ -222,15 +213,15 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
           ? "Artefato promissor, mas com lacunas operacionais ou de canal — recomendar ajuste antes de publicar."
           : "Artefato reprovado: risco de compliance e/ou ausência de elementos operacionais essenciais.";
 
-    // Modo elevado: se OPENAI_API_KEY estiver disponível, consulta o LLM como
-    // segunda opinião e funde a nota (média ponderada 60% heurística + 40% LLM)
-    // mantendo a rubrica heurística como ground truth auditavel.
     let finalScore = score;
     let finalVerdict = verdict;
     let finalReasoning = reasoning;
     let llmUsed = false;
 
     if (process.env.OPENAI_API_KEY) {
+      reasoningTrace.push({
+        thought: "Elevando auditoria para LLM-as-Judge para segunda opinião.",
+      });
       try {
         const response = await invokeLLM({
           modelType: "gpt-4.1-mini",
@@ -261,14 +252,26 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
             finalReasoning = `${reasoning} | LLM: ${parsed.reasoning}`;
           }
           llmUsed = true;
+          reasoningTrace.push({
+            thought: `Feedback do LLM integrado. Nova pontuação: ${finalScore}.`,
+            observation: parsed.reasoning
+          });
         }
       } catch (error) {
         console.warn("[judgeRevisor] Fallback heurístico — LLM indisponível:", error);
       }
     }
 
-    // Registra na telemetria para alimentar Autonomy Score real (judgeAccuracyPct).
     recordJudgeEvaluation(finalScore);
+
+    // Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'judge_score',
+      value: finalScore,
+      unit: 'points',
+      skillSlug: 'judge-revisor'
+    });
 
     const decision: SkillExecutionResult["decision"] =
       !context.autonomyAllowed || finalVerdict === "fail"
@@ -289,6 +292,7 @@ export const judgeRevisorHandler: SkillHandler<JudgeInput, JudgeOutput> = {
         rubric,
         reasoning: finalReasoning,
         suggestions,
+        reasoningTrace,
       },
       warnings: suggestions,
       message: `Judge ${finalVerdict.toUpperCase()} (score ${finalScore})${llmUsed ? " · LLM ativo" : " · heurístico"}.`,

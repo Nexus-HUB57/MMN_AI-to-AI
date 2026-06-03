@@ -118,7 +118,16 @@ export async function executeSkill(params: {
   }
 
   try {
-    return await handler.execute(parsedInput, params.context);
+    return await handler.execute(
+      parsedInput,
+      params.context,
+      params.context.reasoner,
+      params.context.memory,
+      params.context.planner,
+      params.context.reflector,
+      params.context.metrics,
+      params.context.tools,
+    );
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

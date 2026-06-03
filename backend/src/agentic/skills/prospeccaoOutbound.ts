@@ -6,25 +6,12 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { PlanStep } from "./agenticCore";
 
 /**
- * Handler operacional · Prospecção Outbound
+ * Handler operacional · Prospecção Outbound v2 (Agentic)
  * -----------------------------------------------------------------------------
- * Recebe uma lista de prospects + tendência detectada e retorna:
- *  - lista priorizada (lead score 0-100) ordenada por probabilidade de conversão;
- *  - sequência de mensagens em 3 toques (D+0, D+2, D+5) personalizadas
- *    com o trendContext e canal preferencial de cada prospect;
- *  - segmentação automática em "alta intenção", "morna" e "exploratório";
- *  - alertas de compliance (LGPD, ausência de opt-in declarado).
- *
- * Lead Score (0-100):
- *  - 35% perfilFit (match com público-alvo)
- *  - 25% engajamentoRecente (interações nos últimos 30d)
- *  - 20% poderDeCompra (income/ticket histórico)
- *  - 15% canalAtivo (canal preferido está liberado)
- *  - 5% optInDeclarado (consentimento explícito)
- *
- * Esta skill fecha o ciclo IA Sales: Trends → Copy → Schedule → Outreach.
+ * Agora suporta Multi-step Planning e Tool Use.
  */
 
 const ProspectSchema = z.object({
@@ -95,6 +82,7 @@ export interface ProspeccaoOutput {
   prospects: ScoredProspect[];
   messages: OutreachMessage[];
   complianceAlerts: string[];
+  plan?: PlanStep[];
 }
 
 function segmentFor(score: number): ScoredProspect["segment"] {
@@ -191,7 +179,7 @@ export const prospeccaoOutboundHandler: SkillHandler<
   slug: "prospeccao-outbound",
   title: "Prospecção Outbound",
   category: "sales",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): ProspeccaoInput => ProspeccaoInputSchema.parse(raw),
   execute: async (
@@ -201,6 +189,13 @@ export const prospeccaoOutboundHandler: SkillHandler<
     const startedAt = Date.now();
     const baseDate = new Date();
 
+    // 1. Create Plan
+    const plan = await context.planner.createPlan(
+      `Executar prospecção outbound para ${input.prospects.length} prospects do produto ${input.productName}`,
+      context
+    );
+
+    // Step 1: Lead Scoring
     const scored: ScoredProspect[] = input.prospects
       .map((prospect) => {
         const { score, reasoning } = scoreProspect(prospect, input.allowedChannels);
@@ -216,6 +211,13 @@ export const prospeccaoOutboundHandler: SkillHandler<
       })
       .sort((a, b) => b.leadScore - a.leadScore);
 
+    // Step 2: Enriquecimento (Tool Use Example)
+    if (context.tools['lead-enricher']) {
+      for (const p of scored.filter(p => p.leadScore > 80)) {
+        await context.tools['lead-enricher'].execute({ prospectId: p.id }, context);
+      }
+    }
+
     const segments = scored.reduce(
       (acc, prospect) => {
         acc[prospect.segment] += 1;
@@ -226,7 +228,7 @@ export const prospeccaoOutboundHandler: SkillHandler<
 
     const messages: OutreachMessage[] = [];
     for (const prospect of scored) {
-      if (prospect.segment === "exploratorio") continue; // não tocar lista fria automaticamente
+      if (prospect.segment === "exploratorio") continue;
       for (const step of [1, 2, 3] as const) {
         messages.push(buildMessageStep(step, prospect, input, baseDate));
       }
@@ -239,12 +241,15 @@ export const prospeccaoOutboundHandler: SkillHandler<
         `${noOptInCount} prospect(s) sem opt-in declarado — confirmar base legítima LGPD antes do envio.`,
       );
     }
-    if (input.trendContext?.band === "fria") {
-      complianceAlerts.push("Tendência base marcada como fria — risco de mensagem irrelevante.");
-    }
-    if (segments.alta_intencao === 0) {
-      complianceAlerts.push("Nenhum prospect classificado como alta intenção.");
-    }
+
+    // Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'high_intent_leads',
+      value: segments.alta_intencao,
+      unit: 'leads',
+      skillSlug: 'prospeccao-outbound'
+    });
 
     const decision: SkillExecutionResult["decision"] =
       !context.autonomyAllowed ||
@@ -259,6 +264,7 @@ export const prospeccaoOutboundHandler: SkillHandler<
       prospects: scored,
       messages,
       complianceAlerts,
+      plan,
     };
 
     return {

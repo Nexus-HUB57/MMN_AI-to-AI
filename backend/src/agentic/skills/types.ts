@@ -8,6 +8,8 @@
  *  - aplicar policies (auto vs. requer aprovação humana);
  *  - rotear para o handler correto.
  */
+import { MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
 export type SkillSlug =
   | "copywriter-persuasivo"
   | "prospeccao-outbound"
@@ -66,6 +68,13 @@ export interface SkillExecutionContext {
   autonomyAllowed: boolean;
   /** Hint de canal alvo (instagram, whatsapp, facebook, email, ...) */
   channelHint?: string;
+  // Agentic Capabilities
+  memory: MemoryManager;
+  planner: Planner;
+  reflector: Reflector;
+  metrics: MetricsTracker;
+  reasoner: ReasoningEngine;
+  tools: Record<string, AgentTool>;
 }
 
 export interface SkillExecutionResult<TOutput = unknown> {
@@ -102,5 +111,11 @@ export interface SkillHandler<TInput = unknown, TOutput = unknown> {
   execute: (
     input: TInput,
     context: SkillExecutionContext,
+    reasoning?: ReasoningEngine,
+    memory?: MemoryManager,
+    planner?: Planner,
+    reflector?: Reflector,
+    metrics?: MetricsTracker,
+    tools?: Record<string, AgentTool>,
   ) => Promise<SkillExecutionResult<TOutput>>;
 }

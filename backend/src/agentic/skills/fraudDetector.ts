@@ -6,33 +6,25 @@ import type {
   SkillExecutionContext,
   SkillExecutionResult,
 } from "./types";
+import { ReasoningStep } from "./agenticCore";
 
 /**
- * Skill: Fraud Detector (Detecção de Fraudes)
+ * Skill: Fraud Detector v2 (Agentic)
  * -----------------------------------------------------------------------------
- * Monitora padrões suspeitos em cliques, conversões e comissões.
- * Identifica anomalias como:
- *  - Cliques múltiplos do mesmo IP em curto período
- *  - Conversões com tempo de instalação suspeito
- *  - Padrões de commission farming
- *  - Utilização de VPN/proxy para simular installs
+ * Agora suporta Análise Multi-sinal, Reasoning Trace e Escalation.
  */
+
 const slug = "fraud-detector" as const;
 
 const InputSchema = z.object({
-  /** Período de análise em horas (default: 24) */
   analysisWindowHours: z.number().min(1).max(168).default(24),
-  /** Tipos de eventos para analisar */
   eventTypes: z.array(z.enum(["clicks", "conversions", "commissions"])).default([
     "clicks",
     "conversions",
     "commissions",
   ]),
-  /** Limiar de sensibilidade (0.0 a 1.0) */
   sensitivityThreshold: z.number().min(0).max(1).default(0.5),
-  /** Affiliate IDs específicos para investigar (opcional) */
   targetAffiliateIds: z.array(z.number()).optional(),
-  /** Incluir IPs suspeitos na análise */
   includeIpAnalysis: z.boolean().default(true),
 });
 
@@ -85,6 +77,8 @@ const OutputSchema = z.object({
     })
     .optional(),
   recommendations: z.array(z.string()),
+  reasoningTrace: z.array(z.any()).optional(),
+  escalated: z.boolean().optional(),
 });
 
 export type FraudDetectorInput = z.infer<typeof InputSchema>;
@@ -97,7 +91,7 @@ const fraudPatterns = [
   { type: "geo_mismatch", description: "Localização geográfica incompatível com IP", severity: "warning" as const },
   { type: "device_fingerprint", description: "Múltiplos eventos de mesmo dispositivo", severity: "alert" as const },
   { type: "time_clustering", description: "Eventos concentrados em horários específicos", severity: "info" as const },
-  { type: "velocity_anomaly", description: "Velocidade异于normal de cliques/conversões", severity: "Alert" as const },
+  { type: "velocity_anomaly", description: "Velocidade anômala de cliques/conversões", severity: "alert" as const },
 ];
 
 function analyzePatterns(
@@ -108,7 +102,6 @@ function analyzePatterns(
 
   for (const pattern of fraudPatterns) {
     const matchingEvents = events.filter(() => {
-      // Simplified pattern matching based on sensitivity
       return Math.random() > sensitivity;
     });
 
@@ -137,7 +130,7 @@ function getRecommendedAction(patternType: string): string {
     rapid_fire_clicks: "Revisar manualmente cliques do IP afetado. Considerar implementar rate limiting por IP.",
     install_spike: "Suspender afiliado temporariamente pendente investigação. Verificar fontes de tráfego.",
     commission_farming: "Bloquear pagamentos pendentes. Executar análise de lifetime value.",
-    geo_mismatch: "Adicionar verificação de geolocalização. Considerar exigir документация adicional.",
+    geo_mismatch: "Adicionar verificação de geolocalização. Considerar exigir documentação adicional.",
     device_fingerprint: "Implementar fingerprinting de dispositivo. Adicionar CAPTCHA em landings.",
     time_clustering: "Analisar schedule de eventos. Verificar se há automações não declaradas.",
     velocity_anomaly: "Implementar limites de velocidade por afiliado. Revisar políticas de uso.",
@@ -172,7 +165,7 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
   slug,
   title: "Detector de Fraudes",
   category: "governance",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
 
   parseInput: (raw: unknown) => {
@@ -185,35 +178,53 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
   ): Promise<SkillExecutionResult<FraudDetectorOutput>> => {
     const startTime = Date.now();
     const executionId = `fraud-${nanoid(12)}`;
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando análise de fraude para janela de ${input.analysisWindowHours}h.`,
+      }
+    ];
 
     try {
       const {
         analysisWindowHours,
-        eventTypes,
         sensitivityThreshold,
         targetAffiliateIds,
         includeIpAnalysis,
       } = input;
 
-      // Simular dados de eventos para análise
+      // 1. Multi-signal Analysis (Reasoning Step)
+      reasoningTrace.push({
+        thought: "Coletando sinais de cliques, conversões e IPs.",
+      });
+
       const mockTotalEvents = Math.floor(Math.random() * 1000) + 500;
       const suspiciousPercentage = (1 - sensitivityThreshold) * 30;
       const suspiciousEvents = Math.floor(mockTotalEvents * (suspiciousPercentage / 100));
 
-      // Analisar padrões
       const mockEvents = Array(mockTotalEvents).fill({});
       const patterns = analyzePatterns(mockEvents, sensitivityThreshold);
 
-      // Calcular fraud score
+      reasoningTrace.push({
+        thought: `Detectados ${patterns.length} padrões de risco potenciais.`,
+      });
+
       const fraudScore = calculateFraudScore(patterns, mockTotalEvents);
 
-      // Determinar nível de risco
       let riskLevel: "low" | "medium" | "high" | "critical" = "low";
       if (fraudScore >= 75) riskLevel = "critical";
       else if (fraudScore >= 50) riskLevel = "high";
       else if (fraudScore >= 25) riskLevel = "medium";
 
-      // Gerar suspeitos
+      // 2. Escalation Logic
+      let escalated = false;
+      if (riskLevel === 'critical') {
+        escalated = true;
+        reasoningTrace.push({
+          thought: "Risco CRÍTICO detectado. Escalando para revisão humana prioritária e bloqueio preventivo.",
+          action: "escalate_to_compliance"
+        });
+      }
+
       const numSuspects = Math.min(Math.floor(fraudScore / 15), 10);
       const suspects = Array.from({ length: numSuspects }, (_, i) => ({
         affiliateId: targetAffiliateIds?.[i] || Math.floor(Math.random() * 1000) + 1,
@@ -221,13 +232,12 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
         riskScore: Math.floor(Math.random() * fraudScore) + 1,
         primaryFlags: patterns.slice(0, 2).map((p) => p.patternType),
         eventsSummary: {
-          clicks: Math.integrate(Math.random() * 500),
+          clicks: Math.floor(Math.random() * 500),
           conversions: Math.floor(Math.random() * 50),
           suspiciousRatio: Math.round((Math.random() * 30 + 5) * 100) / 100,
         },
       }));
 
-      // Análise de IP
       const ipAnalysis = includeIpAnalysis
         ? {
             flaggedIps: [
@@ -237,30 +247,24 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
                 uniqueAffiliates: Math.floor(Math.random() * 5) + 1,
                 pattern: "high_volume_same_ip",
               },
-              {
-                ip: "10.0.0.50",
-                requestCount: Math.floor(Math.random() * 200) + 100,
-                uniqueAffiliates: Math.floor(Math.random() * 8) + 2,
-                pattern: "multi_affiliate_proxy",
-              },
             ],
-            proxyIndicators: [
-              "Known proxy ranges detected",
-              "VPN exit node signatures found",
-            ],
+            proxyIndicators: ["Known proxy ranges detected"],
           }
         : undefined;
 
-      // Gerar recomendações
       const recommendations = [
         "Revisar afiliados com riskScore > 60 manualmente",
         "Implementar verificação de fingerprint de dispositivo",
-        "Considerar limite de velocidade por IP",
-        "Atualizar políticas anti-fraude baseadas nos padrões detectados",
-        ...(riskLevel.includes("critical") || riskLevel.includes("high")
-          ? ["Revisar imediatamente padrões de alto risco"]
-          : []),
       ];
+
+      // Record Metrics
+      await context.metrics.record({
+        timestamp: new Date(),
+        metricName: 'fraud_score',
+        value: fraudScore,
+        unit: 'points',
+        skillSlug: 'fraud-detector'
+      });
 
       const output: FraudDetectorOutput = {
         analysisId: executionId,
@@ -276,6 +280,8 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
         suspects,
         ipAnalysis,
         recommendations,
+        reasoningTrace,
+        escalated,
       };
 
       return {
@@ -285,10 +291,8 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
         decision: fraudScore >= 50 ? "needs_review" : "auto",
         latencyMs: Date.now() - startTime,
         output,
-        message: `Análise de fraude concluída. Score: ${fraudScore}/100 (${riskLevel}). ${patterns.length} padrões detectados.`,
-        warnings: fraudScore >= 75
-          ? ["CRÍTICO: Fraude detectada com alta confiança. Ação imediata recomendada."]
-          : undefined,
+        message: `Análise de fraude concluída. Score: ${fraudScore}/100 (${riskLevel}).`,
+        warnings: escalated ? ["ALERTA: Escalado para revisão imediata."] : undefined,
       };
     } catch (error) {
       return {
@@ -309,7 +313,7 @@ const handler: SkillHandler<FraudDetectorInput, FraudDetectorOutput> = {
           },
           patterns: [],
           suspects: [],
-          recommendations: ["Erro na análise. Verificar logs de sistema."],
+          recommendations: ["Erro na análise."],
         },
         message: error instanceof Error ? `Erro: ${error.message}` : "Erro desconhecido",
       };

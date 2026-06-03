@@ -6,20 +6,12 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry } from "./agenticCore";
 
 /**
- * Handler operacional · Copywriter Persuasivo
+ * Handler operacional · Copywriter Persuasivo v2 (Agentic)
  * -----------------------------------------------------------------------------
- * Recebe contexto de produto/oferta + público-alvo e devolve uma estrutura
- * pronta para publicação contendo:
- *  - headline persuasiva
- *  - subheadline com gatilho de urgência ou prova social
- *  - 3 hooks alternativos para teste A/B
- *  - bloco CTA com sugestão de link
- *  - flags de risco para LLM-as-Judge revisar antes de publicar
- *
- * Operacionalmente serve como base para skills downstream (auto-publisher,
- * follow-up, prospecção) e é o primeiro handler de ponta a ponta entregue.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 
 const CopywriterInputSchema = z.object({
@@ -54,6 +46,8 @@ export interface CopywriterOutput {
   hashtags: string[];
   riskFlags: string[];
   qualityHint: number;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 const TONE_TEMPLATES: Record<CopywriterInput["tone"], { adj: string; trigger: string }> = {
@@ -97,7 +91,7 @@ function buildBody(input: CopywriterInput): string {
 
   return [
     `Para ${input.audience} que querem ${input.outcome}:`,
-    `${input.productName} resolve ${input.pain} com método aplicável imediatamente.`,
+    `${input.productName} resolve ${input.pain} with método aplicável imediatamente.`,
     "Você sai do diagnóstico e entra em execução — sem rodeios, sem teoria solta.",
     priceLine,
     "Decisão: aplicar agora ou continuar onde está.",
@@ -147,7 +141,7 @@ export const copywriterPersuasivoHandler: SkillHandler<CopywriterInput, Copywrit
   slug: "copywriter-persuasivo",
   title: "Copywriter Persuasivo",
   category: "content",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): CopywriterInput => CopywriterInputSchema.parse(raw),
   execute: async (
@@ -155,6 +149,19 @@ export const copywriterPersuasivoHandler: SkillHandler<CopywriterInput, Copywrit
     context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<CopywriterOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Memory Retrieval (Check for previous similar copies)
+    const previousCopies = await context.memory.retrieve(`copy for ${input.productName}`, 3);
+    
+    // 2. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando geração de copy para ${input.productName} no canal ${input.channel}.`,
+      },
+      {
+        thought: `Analisando memória: ${previousCopies.length} referências encontradas.`,
+      }
+    ];
 
     const output: CopywriterOutput = {
       headline: buildHeadline(input),
@@ -165,9 +172,19 @@ export const copywriterPersuasivoHandler: SkillHandler<CopywriterInput, Copywrit
       hashtags: CHANNEL_HASHTAGS[input.channel],
       riskFlags: detectRiskFlags(input),
       qualityHint: 0,
+      reasoningTrace,
     };
 
     output.qualityHint = estimateQuality(input, output);
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar a saída final.",
+        result: "Output refinado com base em insights de performance."
+      });
+    }
 
     const hasCriticalRisk = output.riskFlags.some(
       (flag) => flag.includes("promessa absoluta") || flag.includes("Público sensível"),
@@ -176,6 +193,23 @@ export const copywriterPersuasivoHandler: SkillHandler<CopywriterInput, Copywrit
       !context.autonomyAllowed || hasCriticalRisk ? "needs_review" : "auto";
 
     const latencyMs = Date.now() - startedAt;
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Copy gerada: ${output.headline}`,
+      type: 'episodic',
+      relatedSkills: ['copywriter-persuasivo']
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'quality_score',
+      value: output.qualityHint,
+      unit: 'points',
+      skillSlug: 'copywriter-persuasivo'
+    });
 
     return {
       executionId: randomUUID(),

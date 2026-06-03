@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
+import { createLabNexusRestRouter } from "./routes/labNexusRestRouter";
 import type { Context } from "./trpc/context";
 import {
   startCronScheduler,
@@ -164,6 +165,7 @@ app.post("/webhooks/hotmart", async (req, res) => {
   }
 });
 
+app.use("/api/v1/lab-nexus", createLabNexusRestRouter());
 app.use("/api/v1", nexusOpenApiRouter);
 app.use("/trpc", trpcMiddleware);
 app.use("/api/trpc", trpcMiddleware);

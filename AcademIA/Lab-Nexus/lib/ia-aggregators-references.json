@@ -1,0 +1,172 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-06-03",
+  "description": "Referências curadas de hubs agregadores de IA, frameworks de orquestração e SDKs oficiais que sustentam a engenharia do Chat Bot Lab Nexus.",
+  "inspiration_hubs": [
+    {
+      "name": "Adapta",
+      "url": "https://adapta.org/",
+      "category": "ai-aggregator",
+      "summary": "Plataforma brasileira que reúne múltiplos modelos (GPT, Claude, Gemini etc.) numa interface única com histórico, templates e geração de imagem."
+    },
+    {
+      "name": "MyHub IA",
+      "url": "https://lp.myhub.ia.br/",
+      "category": "ai-aggregator",
+      "summary": "Hub unificado de IAs para times brasileiros: chat multi-modelo, gestão de prompts, organizações e governança."
+    }
+  ],
+  "engineering_pillars": [
+    {
+      "pillar": "Integração de APIs",
+      "description": "Conecta-se aos servidores dos criadores de cada IA por meio de chaves de API, encaminhando prompts e exibindo respostas."
+    },
+    {
+      "pillar": "Interface de Gerenciamento Unificada",
+      "description": "Painel único permitindo alternar entre GPT, Claude, Gemini, DeepSeek na mesma tela com histórico e templates."
+    },
+    {
+      "pillar": "Ambientes Multimodais e Agentes",
+      "description": "Camada de orquestração com histórico de conversas, templates de prompts, assistentes automatizados e geração de imagens."
+    }
+  ],
+  "provider_catalog": [
+    {
+      "id": "openai",
+      "label": "OpenAI · GPT",
+      "default_model": "gpt-4o-mini",
+      "env_key": "OPENAI_API_KEY",
+      "rest_endpoint": "https://api.openai.com/v1/chat/completions",
+      "modalities": ["text", "vision", "image-generation"],
+      "notes": "Compatível com Chat Completions e Responses API."
+    },
+    {
+      "id": "anthropic",
+      "label": "Anthropic · Claude",
+      "default_model": "claude-3-5-sonnet-latest",
+      "env_key": "ANTHROPIC_API_KEY",
+      "rest_endpoint": "https://api.anthropic.com/v1/messages",
+      "modalities": ["text", "vision"],
+      "notes": "Suporta tool use e Claude Skills (computer use opcional)."
+    },
+    {
+      "id": "google",
+      "label": "Google · Gemini",
+      "default_model": "gemini-2.0-flash",
+      "env_key": "GOOGLE_GEMINI_API_KEY",
+      "rest_endpoint": "https://generativelanguage.googleapis.com/v1beta",
+      "modalities": ["text", "vision", "audio"],
+      "notes": "Integração via Generative Language API e Vertex AI."
+    },
+    {
+      "id": "deepseek",
+      "label": "DeepSeek",
+      "default_model": "deepseek-chat",
+      "env_key": "DEEPSEEK_API_KEY",
+      "rest_endpoint": "https://api.deepseek.com/v1/chat/completions",
+      "modalities": ["text", "code"],
+      "notes": "API compatível com formato OpenAI Chat Completions."
+    },
+    {
+      "id": "minimax",
+      "label": "MiniMax",
+      "default_model": "MiniMax-Text-01",
+      "env_key": "MINIMAX_API_KEY",
+      "rest_endpoint": "https://api.minimax.chat/v1",
+      "modalities": ["text", "audio", "video"],
+      "notes": "Hub multimodal com pesos abertos (MiniMax-01) e produtos hospedados."
+    }
+  ],
+  "reference_repositories": [
+    {
+      "slug": "chopratejas/headroom",
+      "url": "https://github.com/chopratejas/headroom",
+      "role": "aggregator-ui",
+      "why": "Front-end agregador multi-modelo (estilo Adapta) usado como inspiração de UX para o seletor de IA."
+    },
+    {
+      "slug": "pewdiepie-archdaemon/odysseus",
+      "url": "https://github.com/pewdiepie-archdaemon/odysseus",
+      "role": "agent-orchestrator",
+      "why": "Padrões de orquestração de tarefas autônomas e logs estruturados."
+    },
+    {
+      "slug": "anthropics/claude-code",
+      "url": "https://github.com/anthropics/claude-code",
+      "role": "anthropic-sdk-cli",
+      "why": "CLI oficial Anthropic — referência para integração de tool use e plug-ins de skills."
+    },
+    {
+      "slug": "ComposioHQ/awesome-claude-skills",
+      "url": "https://github.com/ComposioHQ/awesome-claude-skills",
+      "role": "skills-catalog",
+      "why": "Catálogo curado de skills Claude — base para inicializar os templates de prompt do Lab Nexus."
+    },
+    {
+      "slug": "langchain-ai/langchain",
+      "url": "https://github.com/langchain-ai/langchain",
+      "role": "orchestration-framework",
+      "why": "Camada de abstração para chains/agents — usada para tools, memória e RAG."
+    },
+    {
+      "slug": "TheoLeeCJ/llama4-computer-use",
+      "url": "https://github.com/TheoLeeCJ/llama4-computer-use",
+      "role": "computer-use-ref",
+      "why": "Implementação de Computer Use sobre Llama 4 — referência para a frente de agentes multimodais."
+    },
+    {
+      "slug": "open-webui/open-webui",
+      "url": "https://github.com/open-webui/open-webui",
+      "role": "self-hosted-chat-ui",
+      "why": "UI self-hosted reconhecida (RAG, plugins, multi-modelo) — referência de layout e componentes."
+    },
+    {
+      "slug": "google-gemini/gemini-cli",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "role": "gemini-sdk-cli",
+      "why": "CLI oficial Google Gemini — base para integração com a Generative Language API."
+    },
+    {
+      "slug": "PlexPt/awesome-chatgpt-prompts-zh",
+      "url": "https://github.com/PlexPt/awesome-chatgpt-prompts-zh",
+      "role": "prompt-library",
+      "why": "Biblioteca de prompts categorizados — alimenta o repositório inicial de templates do Lab Nexus."
+    },
+    {
+      "slug": "microsoft/JARVIS",
+      "url": "https://github.com/microsoft/JARVIS",
+      "role": "router-orchestrator",
+      "why": "Padrão de orquestração HuggingGPT — referência para o router que seleciona o modelo certo por tarefa."
+    },
+    {
+      "slug": "MiniMax-AI/MiniMax-01",
+      "url": "https://github.com/MiniMax-AI/MiniMax-01",
+      "role": "open-weights-model",
+      "why": "Pesos abertos MiniMax-01 — opção de provedor para fallback on-prem."
+    },
+    {
+      "slug": "hexdocom/lemonai",
+      "url": "https://github.com/hexdocom/lemonai",
+      "role": "agent-hub",
+      "why": "Hub de agentes IA — referência para estrutura de marketplace e categorias."
+    },
+    {
+      "slug": "affaan-m/ECC",
+      "url": "https://github.com/affaan-m/ECC",
+      "role": "experimental-control",
+      "why": "Padrões de controle experimental e auditoria — usados para o Judge Revisor de respostas IA."
+    }
+  ],
+  "lab_nexus_integration": {
+    "frontend_route": "/lab/chatbot",
+    "trpc_router": "labNexus",
+    "rest_endpoint": "/api/v1/lab-nexus/chat",
+    "permission_tiers": ["operador", "estrategista", "elite"],
+    "rate_limit": {
+      "operador": { "per_day": 50, "max_tokens": 2000 },
+      "estrategista": { "per_day": 500, "max_tokens": 8000 },
+      "elite": { "per_day": 5000, "max_tokens": 32000 }
+    },
+    "fallback_when_no_keys": "modo demo local com respostas roteirizadas"
+  }
+}

@@ -1,10 +1,3 @@
-/**
- * Handler operacional · Objection Handler
- * -----------------------------------------------------------------------------
- * Generates responses to common objections by sales vertical.
- * Uses pattern matching and configurable templates.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -13,6 +6,15 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Objection Handler v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Generates responses to common objections by sales vertical.
+ * Uses pattern matching and configurable templates.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const ObjectionHandlerInputSchema = z.object({
   objection: z.string().min(3).max(500),
@@ -41,6 +43,8 @@ export interface ObjectionHandlerOutput {
   response: ObjectionResponse;
   alternativeApproaches: string[];
   escalationTrigger: boolean;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 const OBJECTION_PATTERNS: Record<string, string[]> = {
@@ -71,17 +75,17 @@ function buildResponse(
     },
     time: {
       ack: "Tempo é o ativo mais valioso que temos.",
-      reframe: "越忙的人，效率越高. Esta solução poupará horas semanais.",
+      reframe: "Quanto mais ocupado, mais eficiente. Esta solução poupará horas semanais.",
       close: "Posso mostrar como começar em apenas 15 minutos por dia?",
     },
     trust: {
       ack: "Sua cautela é completamente válida.",
       reframe: "Temos +500 alunos satisfeitos e 30 dias de garantia incondicional.",
-      close: "Posso conectar você com alguém que já取得了 resultados？",
+      close: "Posso conectar você com alguém que já obteve resultados?",
     },
     need: {
       ack: "Nem todo produto serve para todas as pessoas, e isso é saudável.",
-      reframe: "Você mencionou que quer [outcome]. Este produto foi desenhado examente para isso.",
+      reframe: "Você mencionou que quer [outcome]. Este produto foi desenhado exatamente para isso.",
       close: "O que exatamente você está tentando alcançar?",
     },
     competition: {
@@ -108,7 +112,7 @@ function buildResponse(
       "Suporte 7 dias/semana",
     ],
     closeQuestion: r.close,
-    confidenceScore: ObjectionType === "price" ? 75 : 85,
+    confidenceScore: objectionType === "price" ? 75 : 85,
   };
 }
 
@@ -119,19 +123,94 @@ export const objectionHandlerHandler: SkillHandler<
   slug: "objection-handler",
   title: "Manipulador de Objeções",
   category: "sales",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): ObjectionHandlerInput =>
     ObjectionHandlerInputSchema.parse(raw),
   execute: async (
     input: ObjectionHandlerInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<ObjectionHandlerOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando tratamento de objeção: '${input.objection}' para a vertical de vendas '${input.vertical}'.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar objection handling)
+    const previousObjections = await context.memory.retrieve(`objection handling for '${input.objection}' in vertical '${input.vertical}'`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousObjections.length} tratamentos de objeções anteriores encontrados.`,
+    });
+
     const objectionType = classifyObjection(input.objection);
+    reasoningTrace.push({
+      thought: `Objeção classificada como do tipo '${objectionType}'.`,
+      result: `Tipo de objeção: ${objectionType}.`
+    });
+
     const response = buildResponse(objectionType, input);
+    reasoningTrace.push({
+      thought: `Resposta gerada com confiança de ${response.confidenceScore}%.`,
+      result: `Resposta gerada.`
+    });
 
     const escalationTriggers = input.objection.length > 300;
+    if (escalationTriggers) {
+      reasoningTrace.push({
+        thought: "Objeção longa, pode requerer escalonamento.",
+        result: "Alerta de objeção complexa."
+      });
+    }
+
+    const output: ObjectionHandlerOutput = {
+      objection: input.objection,
+      vertical: input.vertical,
+      response,
+      alternativeApproaches: [
+        "Oferecer garantia estendida",
+        "Demonstrar caso de sucesso similar",
+        "Propor trial reduzido",
+      ],
+      escalationTrigger: escalationTriggers,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o tratamento de objeções.",
+        result: "Tratamento de objeções refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Objeção '${input.objection}' tratada. Tipo: ${objectionType}, Confiança: ${response.confidenceScore}%.`,
+      type: 'episodic',
+      relatedSkills: ["objection-handler"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'objection_confidence_score',
+      value: response.confidenceScore,
+      unit: 'percent',
+      skillSlug: "objection-handler"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'objection_escalation_triggered',
+      value: escalationTriggers ? 1 : 0,
+      unit: 'boolean',
+      skillSlug: "objection-handler"
+    });
 
     return {
       executionId: randomUUID(),
@@ -139,18 +218,8 @@ export const objectionHandlerHandler: SkillHandler<
       success: true,
       decision: "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        objection: input.objection,
-        vertical: input.vertical,
-        response,
-        alternativeApproaches: [
-          "Oferecer garantia estendida",
-          "Demonstrar caso de sucesso similar",
-          "Propor trial reduzido",
-        ],
-        escalationTrigger: escalationTriggers,
-      },
-      message: `Resposta gerada para objeção tipo '${objectionType}' — confianca ${response.confidenceScore}%`,
+      output,
+      message: `Resposta gerada para objeção tipo '${objectionType}' — confiança ${response.confidenceScore}%`,
     };
   },
 };

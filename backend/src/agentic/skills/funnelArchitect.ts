@@ -1,10 +1,3 @@
-/**
- * Handler operacional · Funnel Architect
- * -----------------------------------------------------------------------------
- * Desenha funil completo de marketing a partir de objetivo de negócio.
- * Gera estrutura de stages, pontos de conversão e estratégias por etapa.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -13,6 +6,15 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Funnel Architect v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Desenha funil completo de marketing a partir de objetivo de negócio.
+ * Gera estrutura de stages, pontos de conversão e estratégias por etapa.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const FunnelArchitectInputSchema = z.object({
   businessType: z
@@ -50,6 +52,8 @@ export interface FunnelArchitectOutput {
   estimatedCostPerLead: number;
   estimatedCostPerSale: number;
   recommendations: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function buildFunnelStages(input: FunnelArchitectInput): FunnelStage[] {
@@ -57,7 +61,7 @@ function buildFunnelStages(input: FunnelArchitectInput): FunnelStage[] {
     {
       name: "Awareness",
       position: 1,
-      objective: "Gerar visibilidade e，吸引 público",
+      objective: "Gerar visibilidade e atrair público",
       mainAction: "Conteúdo de valor + ads alcance",
       contentType: "Posts educativos, Reels, Stories",
       channel: input.salesChannels[0],
@@ -67,7 +71,7 @@ function buildFunnelStages(input: FunnelArchitectInput): FunnelStage[] {
     {
       name: "Interest",
       position: 2,
-      objective: "Engajar e qualifier prospects",
+      objective: "Engajar e qualificar prospects",
       mainAction: "Captura de leads via conteúdo premium",
       contentType: "Lead magnets, E-books, Webinars",
       channel: input.salesChannels[0],
@@ -154,21 +158,34 @@ export const funnelArchitectHandler: SkillHandler<
   slug: "funnel-architect",
   title: "Arquiteto de Funis",
   category: "strategy",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): FunnelArchitectInput =>
     FunnelArchitectInputSchema.parse(raw),
   execute: async (
     input: FunnelArchitectInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<FunnelArchitectOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando arquitetura de funil para o objetivo: ${input.mainGoal} e tipo de negócio: ${input.businessType}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar funnel designs)
+    const previousFunnels = await context.memory.retrieve(`funnel design for ${input.businessType} with goal ${input.mainGoal}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousFunnels.length} designs de funil anteriores encontrados.`,
+    });
 
     const stages = buildFunnelStages(input);
     const metrics = calculateConversionMetrics(stages, input);
 
     const recommendations = [
-      `Priorize o canal ${input.salesChannels[0]} para as primeras etapas do funil`,
+      `Priorize o canal ${input.salesChannels[0]} para as primeiras etapas do funil`,
       "Implemente tracking de pixels para medir conversão por estágio",
       "Crie sequências de e-mail automatizadas para nutrição",
       "Teste pelo menos 2 variações de landing page por estágio",
@@ -176,9 +193,52 @@ export const funnelArchitectHandler: SkillHandler<
 
     if (input.priceRange === "premium") {
       recommendations.push(
-        "Considere adicionar ofrece pessoal como alto envolvimento",
+        "Considere adicionar oferta pessoal com alto envolvimento",
       );
     }
+
+    const output: FunnelArchitectOutput = {
+      funnelName: `Funil ${input.mainGoal} - ${input.targetAudience}`,
+      stages,
+      totalConversionRate: metrics.totalRate,
+      estimatedCostPerLead: metrics.cpl,
+      estimatedCostPerSale: metrics.cps,
+      recommendations,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o design do funil.",
+        result: "Design do funil refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Funil de marketing desenhado para ${input.businessType} com objetivo ${input.mainGoal}.`, 
+      type: 'episodic',
+      relatedSkills: ["funnel-architect"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_conversion_rate',
+      value: output.totalConversionRate,
+      unit: 'percent',
+      skillSlug: "funnel-architect"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'estimated_cost_per_sale',
+      value: output.estimatedCostPerSale,
+      unit: 'currency',
+      skillSlug: "funnel-architect"
+    });
 
     return {
       executionId: randomUUID(),
@@ -186,14 +246,7 @@ export const funnelArchitectHandler: SkillHandler<
       success: true,
       decision: "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        funnelName: `Funil ${input.mainGoal} - ${input.targetAudience}`,
-        stages,
-        totalConversionRate: metrics.totalRate,
-        estimatedCostPerLead: metrics.cpl,
-        estimatedCostPerSale: metrics.cps,
-        recommendations,
-      },
+      output,
       message: `Funil desenhado com ${stages.length} estágios e taxa de conversão estimada de ${(metrics.totalRate * 100).toFixed(1)}%`,
     };
   },

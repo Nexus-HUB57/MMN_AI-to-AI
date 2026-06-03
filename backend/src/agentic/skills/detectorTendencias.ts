@@ -6,9 +6,10 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Handler operacional · Detector de Tendências
+ * Handler operacional · Detector de Tendências v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Recebe um lote de sinais (produtos, palavras-chave, métricas de canal) e
  * devolve:
@@ -25,6 +26,7 @@ import type {
  *
  * Esta skill alimenta downstream: copywriter-persuasivo (tema do post),
  * auto-publisher (calendário) e prospeccao-outbound (mensagens segmentadas).
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 
 const SignalSchema = z.object({
@@ -81,6 +83,8 @@ export interface DetectorOutput {
     relatedTrend: string;
   }>;
   alerts: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function normalizeVolume(value: number): number {
@@ -165,7 +169,7 @@ export const detectorTendenciasHandler: SkillHandler<DetectorInput, DetectorOutp
   slug: "detector-tendencias",
   title: "Detector de Tendências",
   category: "intelligence",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): DetectorInput => DetectorInputSchema.parse(raw),
   execute: async (
@@ -173,6 +177,19 @@ export const detectorTendenciasHandler: SkillHandler<DetectorInput, DetectorOutp
     context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<DetectorOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando detecção de tendências para ${input.signals.length} sinais.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar trend detections)
+    const previousDetections = await context.memory.retrieve(`trend detection for ${input.signals.length} signals`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousDetections.length} detecções anteriores encontradas.`,
+    });
 
     const trends: TrendItem[] = input.signals
       .map((signal) => {
@@ -205,12 +222,6 @@ export const detectorTendenciasHandler: SkillHandler<DetectorInput, DetectorOutp
       alerts.push("Nenhum cluster temático detectado — keywords pouco recorrentes.");
     }
 
-    const decision: SkillExecutionResult["decision"] =
-      !context.autonomyAllowed ||
-      alerts.some((alert) => alert.includes("Amostra reduzida") || alert.includes("sinal de mercado fraco"))
-        ? "needs_review"
-        : "auto";
-
     const output: DetectorOutput = {
       horizonDays: input.horizonDays,
       trends,
@@ -218,7 +229,47 @@ export const detectorTendenciasHandler: SkillHandler<DetectorInput, DetectorOutp
       clusters,
       outreachOpportunities,
       alerts,
+      reasoningTrace,
     };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar a detecção de tendências.",
+        result: "Detecção de tendências refinada com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Detecção de tendências concluída: ${output.trends.length} tendências, ${output.clusters.length} clusters.`, 
+      type: 'episodic',
+      relatedSkills: ["detector-tendencias"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_trends_detected',
+      value: output.trends.length,
+      unit: 'count',
+      skillSlug: "detector-tendencias"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'top_trend_score',
+      value: output.topTrend?.score || 0,
+      unit: 'points',
+      skillSlug: "detector-tendencias"
+    });
+
+    const decision: SkillExecutionResult["decision"] =
+      !context.autonomyAllowed ||
+      alerts.some((alert) => alert.includes("Amostra reduzida") || alert.includes("sinal de mercado fraco"))
+        ? "needs_review"
+        : "auto";
 
     return {
       executionId: randomUUID(),

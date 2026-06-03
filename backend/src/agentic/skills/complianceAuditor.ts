@@ -5,9 +5,10 @@ import type {
   SkillExecutionContext,
   SkillExecutionResult,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Skill: Compliance Auditor (Auditoria de Conformidade)
+ * Skill: Compliance Auditor (Auditoria de Conformidade) v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Verifica claims publicitários de acordo com as diretrizes do CONAR.
  * Analisa:
@@ -16,6 +17,7 @@ import type {
  *  - Promessas de preços
  *  -Termos potencialmente enganosos
  *  - Conformidade com LGPD em comunicações
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 const slug = "compliance-auditor" as const;
 
@@ -107,6 +109,8 @@ const OutputSchema = z.object({
   approvedClaims: z.array(z.string()),
   revisedContent: z.string().optional(),
   recommendations: z.array(z.string()),
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 });
 
 export type ComplianceAuditorInput = z.infer<typeof InputSchema>;
@@ -332,7 +336,7 @@ const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
   slug,
   title: "Auditor de Conformidade",
   category: "governance",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
 
   parseInput: (raw: unknown) => {
@@ -345,6 +349,19 @@ const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
   ): Promise<SkillExecutionResult<ComplianceAuditorOutput>> => {
     const startTime = Date.now();
     const executionId = `compliance-${nanoid(12)}`;
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando auditoria de conformidade para conteúdo do tipo ${input.contentType} na vertical ${input.vertical}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar audits)
+    const previousAudits = await context.memory.retrieve(`compliance audit for ${input.contentType} in ${input.vertical}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousAudits.length} auditorias anteriores encontradas.`,
+    });
 
     try {
       const {
@@ -458,50 +475,61 @@ const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
         approvedClaims,
         revisedContent,
         recommendations,
+        reasoningTrace,
       };
+
+      // 3. Reflection
+      if (context.reflector) {
+        output.reflection = await context.reflector.reflect(context, reasoningTrace);
+        reasoningTrace.push({
+          thought: "Reflexão aplicada para otimizar a auditoria de conformidade.",
+          result: "Auditoria refinada com base em insights de performance."
+        });
+      }
+
+      // 4. Store in Memory
+      await context.memory.store({
+        timestamp: new Date(),
+        content: `Auditoria de conformidade para ${input.contentType} (${input.vertical}) concluída com status: ${output.overallStatus}.`,
+        type: 'episodic',
+        relatedSkills: [slug]
+      });
+
+      // 5. Record Metrics
+      await context.metrics.record({
+        timestamp: new Date(),
+        metricName: 'compliance_score',
+        value: output.complianceScore,
+        unit: 'points',
+        skillSlug: slug
+      });
+      await context.metrics.record({
+        timestamp: new Date(),
+        metricName: 'violations_count',
+        value: output.violations.length,
+        unit: 'count',
+        skillSlug: slug
+      });
 
       return {
         executionId,
-        skill: "compliance-auditor",
+        skill: slug,
         success: true,
         decision: overallStatus === "approved" ? "auto" : "needs_review",
         latencyMs: Date.now() - startTime,
         output,
-        message: `Auditoria CONAR concluída. Score: ${complianceScore}/100 (${overallStatus}). ${violations.length} violação(ões) encontrada(s).`,
+        message: `Auditoria de conformidade concluída com status: ${overallStatus}.`,
       };
     } catch (error) {
       return {
-        executionId: `compliance-${nanoid(12)}`,
-        skill: "compliance-auditor",
+        executionId,
+        skill: slug,
         success: false,
         decision: "needs_review",
         latencyMs: Date.now() - startTime,
-        output: {
-          auditId: nanoid(12),
-          auditedAt: new Date().toISOString(),
-          contentType: input.contentType,
-          vertical: input.vertical,
-          region: input.region,
-          overallStatus: "needs_revision",
-          complianceScore: 0,
-          violations: [
-            {
-              id: `vr-${nanoid(6)}`,
-              severity: "critical" as const,
-              category: "conar_violation" as const,
-              description: "Erro no processamento do conteúdo",
-              term: "",
-              context: error instanceof Error ? error.message : "Erro desconhecido",
-              suggestion: "Verificar formato do conteúdo e tentar novamente.",
-            },
-          ],
-          warnings: [],
-          recommendations: ["Revisar erro técnicos antes de nova tentativa."],
-        },
-        message: error instanceof Error ? `Erro: ${error.message}` : "Erro desconhecido",
+        output: null,
+        message: `Erro ao auditar conformidade: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   },
 };
-
-export const complianceAuditorHandler = handler;

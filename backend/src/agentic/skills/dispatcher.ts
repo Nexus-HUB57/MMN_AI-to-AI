@@ -1,6 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
 import { copywriterPersuasivoHandler } from "./copywriterPersuasivo";
+import { abTestDesignerHandler } from "./abTestDesigner";
+import { analyticsReporterHandler } from "./analyticsReporter";
+import { audienceSegmenterHandler } from "./audienceSegmenter";
+import { coldEmailerHandler } from "./coldEmailer";
+import { commissionCalculatorHandler } from "./commissionCalculator";
+import { contentTranslatorHandler } from "./contentTranslator";
+import { creatorMatcherHandler } from "./creatorMatcher";
 import { detectorTendenciasHandler } from "./detectorTendencias";
 import { autoPublisherHandler } from "./autoPublisher";
 import { judgeRevisorHandler } from "./judgeRevisor";
@@ -45,6 +52,13 @@ import type {
  */
 const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [copywriterPersuasivoHandler.slug]: copywriterPersuasivoHandler,
+  [abTestDesignerHandler.slug]: abTestDesignerHandler,
+  [analyticsReporterHandler.slug]: analyticsReporterHandler,
+  [audienceSegmenterHandler.slug]: audienceSegmenterHandler,
+  [coldEmailerHandler.slug]: coldEmailerHandler,
+  [commissionCalculatorHandler.slug]: commissionCalculatorHandler,
+  [contentTranslatorHandler.slug]: contentTranslatorHandler,
+  [creatorMatcherHandler.slug]: creatorMatcherHandler,
   [detectorTendenciasHandler.slug]: detectorTendenciasHandler,
   [autoPublisherHandler.slug]: autoPublisherHandler,
   [judgeRevisorHandler.slug]: judgeRevisorHandler,
@@ -68,6 +82,7 @@ const HANDLERS: Record<string, SkillHandler<any, any>> = {
   [coldEmailerHandler.slug]: coldEmailerHandler,
   [upsellStrategistHandler.slug]: upsellStrategistHandler,
   [socialSellerHandler.slug]: socialSellerHandler,
+  [webinarEngineHandler.slug]: webinarEngineHandler,
   [webinarEngineHandler.slug]: webinarEngineHandler,
 };
 
@@ -118,16 +133,20 @@ export async function executeSkill(params: {
   }
 
   try {
-    return await handler.execute(
+    const result = await handler.execute(
       parsedInput,
       params.context,
-      params.context.reasoner,
-      params.context.memory,
-      params.context.planner,
-      params.context.reflector,
-      params.context.metrics,
-      params.context.tools,
     );
+
+    // Integrar reasoningTrace na UI do operador para transparência total
+    if (result.output && (result.output as any).reasoningTrace) {
+      const ui = (params.context as any).operatorUI;
+      if (ui) {
+        ui.displayReasoning(result.executionId, (result.output as any).reasoningTrace);
+      }
+    }
+
+    return result;
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",

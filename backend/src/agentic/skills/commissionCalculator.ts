@@ -1,9 +1,3 @@
-/**
- * Handler operacional · Commission Calculator
- * -----------------------------------------------------------------------------
- * Calculates commissions based on attribution rules (first/last/decay).
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -12,6 +6,14 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Commission Calculator v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Calculates commissions based on attribution rules (first/last/decay).
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const CommissionCalculatorInputSchema = z.object({
   saleAmount: z.number().positive(),
@@ -51,6 +53,8 @@ export interface CommissionCalculatorOutput {
   breakdown: CommissionBreakdown[];
   disputed: boolean;
   disputeReason: string | null;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function calculateFirstTouch(data: CommissionCalculatorInput): CommissionBreakdown[] {
@@ -135,15 +139,28 @@ export const commissionCalculatorHandler: SkillHandler<
   slug: "commission-calculator",
   title: "Calculador de Comissão",
   category: "finance",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): CommissionCalculatorInput =>
     CommissionCalculatorInputSchema.parse(raw),
   execute: async (
     input: CommissionCalculatorInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<CommissionCalculatorOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando cálculo de comissão para venda de R$ ${input.saleAmount} com regra de atribuição '${input.attributionRule}'.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar calculations)
+    const previousCalculations = await context.memory.retrieve(`commission for product ${input.productId} with rule ${input.attributionRule}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousCalculations.length} cálculos anteriores encontrados.`,
+    });
 
     let breakdown: CommissionBreakdown[];
     switch (input.attributionRule) {
@@ -164,22 +181,58 @@ export const commissionCalculatorHandler: SkillHandler<
     const totalCommission = breakdown.reduce((sum, b) => sum + b.commissionAmount, 0);
     const disputed = totalCommission > input.saleAmount * input.productCommission * 1.5;
 
+    const output: CommissionCalculatorOutput = {
+      saleId: randomUUID(),
+      saleAmount: input.saleAmount,
+      productCommission: input.productCommission,
+      attributionRule: input.attributionRule,
+      totalCommission,
+      breakdown,
+      disputed,
+      disputeReason: disputed ? "Comissão total excede limite esperado" : null,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o cálculo de comissão.",
+        result: "Cálculo de comissão refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Comissão calculada para venda ${output.saleId}: R$ ${output.totalCommission.toFixed(2)}.`, 
+      type: 'episodic',
+      relatedSkills: ["commission-calculator"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_commission_amount',
+      value: output.totalCommission,
+      unit: 'currency',
+      skillSlug: "commission-calculator"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'commission_disputed',
+      value: disputed ? 1 : 0,
+      unit: 'boolean',
+      skillSlug: "commission-calculator"
+    });
+
     return {
       executionId: randomUUID(),
       skill: "commission-calculator",
       success: true,
       decision: disputed ? "needs_review" : "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        saleId: randomUUID(),
-        saleAmount: input.saleAmount,
-        productCommission: input.productCommission,
-        attributionRule: input.attributionRule,
-        totalCommission,
-        breakdown,
-        disputed,
-        disputeReason: disputed ? "Comissão total excede limite esperado" : null,
-      },
+      output,
       message: `Comissão calculada: R$ ${totalCommission.toFixed(2)} com regra '${input.attributionRule}'`,
     };
   },

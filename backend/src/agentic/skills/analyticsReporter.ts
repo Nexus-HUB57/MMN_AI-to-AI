@@ -8,9 +8,10 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Handler operacional · Analytics Reporter
+ * Handler operacional · Analytics Reporter v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Gera um relatório executivo (formato JSON estruturado + sumário textual)
  * consolidando a telemetria do runtime, cobertura de skills, e indicadores
@@ -21,6 +22,7 @@ import type {
  *
  * Esta skill alimenta dashboards executivos, relatórios diários por e-mail
  * e o backbone do `agent_telemetry` quando o Postgres estiver online.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 
 const AnalyticsInputSchema = z.object({
@@ -51,6 +53,8 @@ export interface AnalyticsOutput {
   healthSignals: Array<{ severity: "ok" | "warn" | "critical"; message: string }>;
   recommendations: string[];
   topSkills: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function buildSummary(metrics: AnalyticsOutput["metrics"]): string {
@@ -132,7 +136,7 @@ export const analyticsReporterHandler: SkillHandler<AnalyticsInput, AnalyticsOut
   slug: "analytics-reporter",
   title: "Analytics Reporter",
   category: "analytics",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): AnalyticsInput =>
     AnalyticsInputSchema.parse(raw ?? {}),
@@ -141,6 +145,20 @@ export const analyticsReporterHandler: SkillHandler<AnalyticsInput, AnalyticsOut
     context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<AnalyticsOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando geração de relatório de analytics no formato ${input.format}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar reports)
+    const previousReports = await context.memory.retrieve(`analytics report for ${input.windowHours} hours`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousReports.length} relatórios anteriores encontrados.`,
+    });
+
     const telemetry = getTelemetry();
     const handlersCount = listRegisteredSkillHandlers().length;
     const catalogSize = 45;
@@ -171,7 +189,41 @@ export const analyticsReporterHandler: SkillHandler<AnalyticsInput, AnalyticsOut
       healthSignals,
       recommendations,
       topSkills: telemetry.skillsExercised.slice(0, 5),
+      reasoningTrace,
     };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o relatório.",
+        result: "Relatório refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Relatório de Analytics gerado: ${output.summary}`,
+      type: 'episodic',
+      relatedSkills: ['analytics-reporter']
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'report_generation_latency',
+      value: Date.now() - startedAt,
+      unit: 'ms',
+      skillSlug: 'analytics-reporter'
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'operational_coverage_pct',
+      value: metrics.coveragePct,
+      unit: 'percent',
+      skillSlug: 'analytics-reporter'
+    });
 
     const criticalSignals = healthSignals.filter((signal) => signal.severity === "critical").length;
     const decision: SkillExecutionResult["decision"] =

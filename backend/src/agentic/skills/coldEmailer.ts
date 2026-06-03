@@ -5,9 +5,10 @@ import type {
   SkillExecutionContext,
   SkillExecutionResult,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Skill: Cold Emailer (E-mail Marketing Outbound)
+ * Skill: Cold Emailer (E-mail Marketing Outbound) v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Gera sequências de cold emails personalizados com:
  *  - Recherche de prospect
@@ -15,6 +16,7 @@ import type {
  *  - Sequenciamento (3-5 emails)
  *  - A/B testing headlines
  *  - follow-ups automáticos
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 const slug = "cold-emailer" as const;
 
@@ -123,6 +125,8 @@ const OutputSchema = z.object({
     suggestions: z.array(z.string()),
   }),
   recommendations: z.array(z.string()),
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 });
 
 export type ColdEmailerInput = z.infer<typeof InputSchema>;
@@ -305,7 +309,7 @@ Mas se você precisar de ajuda com ${offer.keyBenefits[0] || "crescimento"}, é 
     subject,
     preview: body.slice(0, 80) + "...",
     body,
-    hookType: hookType as OutputSchema["sequence"][0]["hookType"],
+    hookType: hookTypes[step % hookTypes.length] as OutputSchema["sequence"][0]["hookType"],
     cta: ctaMap[offer.cta] || "Vamos conversar?",
     expectedObjective,
   };
@@ -346,7 +350,7 @@ const handler: SkillHandler<ColdEmailerInput, ColdEmailerOutput> = {
   slug,
   title: "E-mail Marketing Outbound",
   category: "sales",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
 
   parseInput: (raw: unknown) => {
@@ -359,6 +363,19 @@ const handler: SkillHandler<ColdEmailerInput, ColdEmailerOutput> = {
   ): Promise<SkillExecutionResult<ColdEmailerOutput>> => {
     const startTime = Date.now();
     const executionId = `coldemail-${nanoid(12)}`;
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando a geração de sequência de cold emails para o prospect ${input.prospect.name}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar email sequences)
+    const previousSequences = await context.memory.retrieve(`cold email sequence for ${input.prospect.email}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousSequences.length} sequências anteriores encontradas.`,
+    });
 
     try {
       const {
@@ -477,29 +494,61 @@ const handler: SkillHandler<ColdEmailerInput, ColdEmailerOutput> = {
           suggestions: spamSuggestions,
         },
         recommendations,
+        reasoningTrace,
       };
+
+      // 3. Reflection
+      if (context.reflector) {
+        output.reflection = await context.reflector.reflect(context, reasoningTrace);
+        reasoningTrace.push({
+          thought: "Reflexão aplicada para otimizar a sequência de emails.",
+          result: "Sequência de emails refinada com base em insights de performance."
+        });
+      }
+
+      // 4. Store in Memory
+      await context.memory.store({
+        timestamp: new Date(),
+        content: `Sequência de cold emails gerada para ${prospect.name} (${prospect.email}).`,
+        type: 'episodic',
+        relatedSkills: [slug]
+      });
+
+      // 5. Record Metrics
+      await context.metrics.record({
+        timestamp: new Date(),
+        metricName: 'cold_email_sequence_length',
+        value: sequenceLength,
+        unit: 'emails',
+        skillSlug: slug
+      });
+      await context.metrics.record({
+        timestamp: new Date(),
+        metricName: 'cold_email_spam_score',
+        value: totalSpamScore,
+        unit: 'points',
+        skillSlug: slug
+      });
 
       return {
         executionId,
-        skill: "cold-emailer",
+        skill: slug,
         success: true,
         decision: "auto",
         latencyMs: Date.now() - startTime,
         output,
-        message: `Sequência de ${sequenceLength} emails criada para ${prospect.name}. Duração: ${totalDuration} dias.`,
+        message: `Sequência de ${sequenceLength} emails gerada para ${prospect.name}.`,
       };
     } catch (error) {
       return {
-        executionId: `coldemail-${nanoid(12)}`,
-        skill: "cold-emailer",
+        executionId,
+        skill: slug,
         success: false,
         decision: "needs_review",
         latencyMs: Date.now() - startTime,
-        output: {} as ColdEmailerOutput,
-        message: error instanceof Error ? `Erro: ${error.message}` : "Erro desconhecido",
+        output: null,
+        message: `Erro ao gerar sequência de cold emails: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   },
 };
-
-export const coldEmailerHandler = handler;

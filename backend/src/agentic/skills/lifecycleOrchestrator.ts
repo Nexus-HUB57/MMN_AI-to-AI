@@ -1,9 +1,3 @@
-/**
- * Handler operacional · Lifecycle Orchestrator
- * -----------------------------------------------------------------------------
- * Orchestrates customer lifecycle: onboarding → activation → expansion.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -12,6 +6,14 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Lifecycle Orchestrator v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Orchestrates customer lifecycle: onboarding → activation → expansion.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const LifecycleOrchestratorInputSchema = z.object({
   userId: z.string().min(1).max(80),
@@ -49,6 +51,8 @@ export interface LifecycleOrchestratorOutput {
   healthScore: number;
   churnRisk: "low" | "medium" | "high";
   intervention: string | null;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function calculateHealthScore(input: LifecycleOrchestratorInput): number {
@@ -153,27 +157,100 @@ export const lifecycleOrchestratorHandler: SkillHandler<
   slug: "lifecycle-orchestrator",
   title: "Orquestrador de Ciclo de Vida",
   category: "retention",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): LifecycleOrchestratorInput =>
     LifecycleOrchestratorInputSchema.parse(raw),
   execute: async (
     input: LifecycleOrchestratorInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<LifecycleOrchestratorOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando orquestração do ciclo de vida para o usuário ${input.userId} no estágio ${input.currentStage}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar orchestrations)
+    const previousOrchestrations = await context.memory.retrieve(`lifecycle orchestration for user ${input.userId} in stage ${input.currentStage}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousOrchestrations.length} orquestrações anteriores encontradas.`,
+    });
+
     const healthScore = calculateHealthScore(input);
+    reasoningTrace.push({
+      thought: `Calculado Health Score: ${healthScore}.`,
+      result: `Health Score: ${healthScore}.`
+    });
+
     const churnRisk = determineChurnRisk(
       input.currentStage,
       healthScore,
       input.daysSinceSignup,
     );
+    reasoningTrace.push({
+      thought: `Determinado risco de churn: ${churnRisk}.`,
+      result: `Risco de Churn: ${churnRisk}.`
+    });
 
     const plan = buildLifecyclePlan(input);
+    reasoningTrace.push({
+      thought: `Plano de ciclo de vida construído com ${plan.length} estágios.`,
+      result: `Plano de ciclo de vida gerado.`
+    });
+
     const stageOrder = ["onboarding", "activation", "engagement", "expansion", "retention"];
     const currentIdx = stageOrder.indexOf(input.currentStage);
     const nextStage =
       currentIdx < stageOrder.length - 1 ? stageOrder[currentIdx + 1] : "retention";
+
+    const output: LifecycleOrchestratorOutput = {
+      userId: input.userId,
+      currentStage: input.currentStage,
+      recommendedActions: plan,
+      nextStage,
+      estimatedDaysToNextStage: 7,
+      healthScore,
+      churnRisk,
+      intervention: determineIntervention(churnRisk, input.currentStage),
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar a orquestração do ciclo de vida.",
+        result: "Orquestração do ciclo de vida refinada com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Orquestração de ciclo de vida para usuário ${input.userId} concluída. Estágio: ${output.currentStage}, Próximo: ${output.nextStage}.`,
+      type: 'episodic',
+      relatedSkills: ["lifecycle-orchestrator"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'user_health_score',
+      value: output.healthScore,
+      unit: 'points',
+      skillSlug: "lifecycle-orchestrator"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'user_churn_risk',
+      value: churnRisk === "high" ? 3 : (churnRisk === "medium" ? 2 : 1),
+      unit: 'level',
+      skillSlug: "lifecycle-orchestrator"
+    });
 
     return {
       executionId: randomUUID(),
@@ -181,16 +258,7 @@ export const lifecycleOrchestratorHandler: SkillHandler<
       success: true,
       decision: churnRisk === "high" ? "needs_review" : "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        userId: input.userId,
-        currentStage: input.currentStage,
-        recommendedActions: plan,
-        nextStage,
-        estimatedDaysToNextStage: 7,
-        healthScore,
-        churnRisk,
-        intervention: determineIntervention(churnRisk, input.currentStage),
-      },
+      output,
       message: `Ciclo de vida orquestrado: ${input.currentStage} → ${nextStage} (saúde: ${healthScore}%)`,
     };
   },

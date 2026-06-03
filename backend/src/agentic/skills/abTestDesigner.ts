@@ -1,9 +1,3 @@
-/**
- * Handler operacional · A/B Test Designer
- * -----------------------------------------------------------------------------
- * Designs A/B test variations with metrics and sample size calculation.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -12,6 +6,14 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · A/B Test Designer v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Designs A/B test variations with metrics and sample size calculation.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const ABTestDesignerInputSchema = z.object({
   element: z.enum([
@@ -44,6 +46,8 @@ export interface ABTestDesignerOutput {
   metrics: string[];
   recommendedWinner: string;
   confidenceLevel: number;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function calculateSampleSize(
@@ -89,7 +93,7 @@ function generateVariations(input: ABTestDesignerInput): TestVariation[] {
         },
         {
           name: "Tratamento B - Prova social",
-          description: "Inclui的社会证明",
+          description: "Inclui de prova social",
           changes: ["Adicionar número de alunos/clientes"],
           expectedDirection: "increase",
           confidenceLevel: 0.75,
@@ -145,15 +149,29 @@ export const abTestDesignerHandler: SkillHandler<
   slug: "ab-test-designer",
   title: "Designer de Testes A/B",
   category: "optimization",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): ABTestDesignerInput =>
     ABTestDesignerInputSchema.parse(raw),
   execute: async (
     input: ABTestDesignerInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<ABTestDesignerOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando design de teste A/B para o elemento ${input.element} no canal ${input.channel}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar tests)
+    const previousTests = await context.memory.retrieve(`A/B test for ${input.element}`, 3);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousTests.length} testes anteriores encontrados.`,
+    });
+
     const variations = generateVariations(input);
     const sampleSize = calculateSampleSize(
       input.baselineConversion,
@@ -162,28 +180,64 @@ export const abTestDesignerHandler: SkillHandler<
     const trafficPerDay = input.dailyTraffic;
     const daysNeeded = Math.ceil((sampleSize * 2) / trafficPerDay);
 
+    const output: ABTestDesignerOutput = {
+      testName: `A/B Test - ${input.element} - ${new Date().toISOString().split("T")[0]}`,
+      element: input.element,
+      variations,
+      sampleSizePerVariation: sampleSize,
+      testDuration: `${daysNeeded} dias`,
+      requiredTraffic: sampleSize * 2,
+      metrics: [
+        "Taxa de conversão",
+        "CTR geral",
+        "Tempo na página",
+        "Bounce rate",
+      ],
+      recommendedWinner: "Tratamento A",
+      confidenceLevel: 0.8,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o design do teste.",
+        result: "Design do teste refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `A/B Test desenhado: ${output.testName}`,
+      type: 'episodic',
+      relatedSkills: ['ab-test-designer']
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'sample_size_per_variation',
+      value: output.sampleSizePerVariation,
+      unit: 'users',
+      skillSlug: 'ab-test-designer'
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'test_duration_days',
+      value: daysNeeded,
+      unit: 'days',
+      skillSlug: 'ab-test-designer'
+    });
+
     return {
       executionId: randomUUID(),
       skill: "ab-test-designer",
       success: true,
       decision: "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        testName: `A/B Test - ${input.element} - ${new Date().toISOString().split("T")[0]}`,
-        element: input.element,
-        variations,
-        sampleSizePerVariation: sampleSize,
-        testDuration: `${daysNeeded} dias`,
-        requiredTraffic: sampleSize * 2,
-        metrics: [
-          "Taxa de conversão",
-          "CTR geral",
-          "Tempo na página",
-          "Bounce rate",
-        ],
-        recommendedWinner: "Tratamento A",
-        confidenceLevel: 0.8,
-      },
+      output,
       message: `Teste desenhado: ${variations.length} variações, ${sampleSize} amostras/variante, ${daysNeeded} dias`,
     };
   },

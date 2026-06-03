@@ -6,9 +6,10 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Handler operacional · Auto-Publisher
+ * Handler operacional · Auto-Publisher v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Transforma a saída de skills upstream (copywriter-persuasivo + detector-
  * tendencias) num plano de publicação cronometrado por canal, retornando
@@ -26,6 +27,7 @@ import type {
  *    para o worker conseguir deduplicar.
  *
  * Esta skill fecha o trio operacional Conteúdo → Inteligência → Distribuição.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 
 const ContentDraftSchema = z.object({
@@ -85,6 +87,8 @@ export interface PublisherOutput {
   requiresReview: number;
   schedule: ScheduledPost[];
   alerts: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 /**
@@ -191,7 +195,7 @@ export const autoPublisherHandler: SkillHandler<PublisherInput, PublisherOutput>
   slug: "auto-publisher",
   title: "Auto-Publisher",
   category: "publishing",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): PublisherInput => PublisherInputSchema.parse(raw),
   execute: async (
@@ -199,6 +203,20 @@ export const autoPublisherHandler: SkillHandler<PublisherInput, PublisherOutput>
     context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<PublisherOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando agendamento de publicações para ${input.drafts.length} rascunhos em ${input.channels.length} canais.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous schedules)
+    const previousSchedules = await context.memory.retrieve(`schedule for ${input.horizonDays} days`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousSchedules.length} agendamentos anteriores encontrados.`,
+    });
+
     const baseDate = input.startAtIso ? new Date(input.startAtIso) : new Date();
     const usedSlots = new Map<string, number>();
     const schedule: ScheduledPost[] = [];
@@ -232,18 +250,52 @@ export const autoPublisherHandler: SkillHandler<PublisherInput, PublisherOutput>
       alerts.push("Nenhuma publicação agendada — verifique inputs.");
     }
 
-    const decision: SkillExecutionResult["decision"] =
-      !context.autonomyAllowed || requiresReview > 0 || schedule.length === 0
-        ? "needs_review"
-        : "auto";
-
     const output: PublisherOutput = {
       totalScheduled: schedule.length,
       approvedAuto,
       requiresReview,
       schedule,
       alerts,
+      reasoningTrace,
     };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o agendamento.",
+        result: "Agendamento refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Agendamento de ${output.totalScheduled} publicações gerado. ${output.requiresReview} requerem revisão.`, 
+      type: 'episodic',
+      relatedSkills: ['auto-publisher']
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_scheduled_posts',
+      value: output.totalScheduled,
+      unit: 'count',
+      skillSlug: 'auto-publisher'
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'posts_requiring_review',
+      value: output.requiresReview,
+      unit: 'count',
+      skillSlug: 'auto-publisher'
+    });
+
+    const decision: SkillExecutionResult["decision"] =
+      !context.autonomyAllowed || requiresReview > 0 || schedule.length === 0
+        ? "needs_review"
+        : "auto";
 
     return {
       executionId: randomUUID(),

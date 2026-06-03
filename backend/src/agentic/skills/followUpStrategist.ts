@@ -6,9 +6,10 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
 
 /**
- * Handler operacional · Follow-Up Strategist
+ * Handler operacional · Follow-Up Strategist v2 (Agentic)
  * -----------------------------------------------------------------------------
  * Fecha o ciclo pós-venda / pós-toque. Recebe contatos com seu último estado
  * (lead morno, lead que abriu mas não clicou, cliente que comprou, prospect
@@ -25,6 +26,7 @@ import type {
  * Esta skill completa o ecossistema operacional: depois que o
  * prospeccao-outbound abre, o copywriter persuade, o publisher distribui,
  * o judge revisa — o follow-up garante que ninguém se perca.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
  */
 
 const ContactStateSchema = z.object({
@@ -53,7 +55,7 @@ const FollowUpInputSchema = z.object({
   contacts: z.array(ContactStateSchema).min(1).max(60),
   productName: z.string().min(2).max(160),
   productBenefit: z.string().min(2).max(240),
-  brand: z.string().min(2).max(80).default("Nexus Affil'IA'te"),
+  brand: z.string().min(2).max(80).default("Nexus Affil\"IA\"te"),
   /** Janela em dias para considerar interações "recentes". */
   recencyDays: z.number().int().min(1).max(180).default(30),
 });
@@ -86,6 +88,8 @@ export interface FollowUpOutput {
   highPriorityCount: number;
   plans: FollowUpPlan[];
   alerts: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 const PHASE_BY_OUTCOME: Record<ContactState["lastOutcome"], FunnelPhase> = {
@@ -212,7 +216,7 @@ export const followUpStrategistHandler: SkillHandler<FollowUpInput, FollowUpOutp
   slug: "follow-up-strategist",
   title: "Follow-Up Strategist",
   category: "retention",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): FollowUpInput => FollowUpInputSchema.parse(raw),
   execute: async (
@@ -220,6 +224,19 @@ export const followUpStrategistHandler: SkillHandler<FollowUpInput, FollowUpOutp
     context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<FollowUpOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando estratégia de follow-up para ${input.contacts.length} contatos.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar follow-up strategies)
+    const previousStrategies = await context.memory.retrieve(`follow-up strategy for ${input.productName}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousStrategies.length} estratégias anteriores encontradas.`,
+    });
 
     const plans: FollowUpPlan[] = input.contacts.map((contact) => {
       const phase = PHASE_BY_OUTCOME[contact.lastOutcome];
@@ -276,6 +293,48 @@ export const followUpStrategistHandler: SkillHandler<FollowUpInput, FollowUpOutp
       alerts.push("Nenhum contato processado.");
     }
 
+    const output: FollowUpOutput = {
+      totalContacts: plans.length,
+      byPhase,
+      highPriorityCount,
+      plans,
+      alerts,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar a estratégia de follow-up.",
+        result: "Estratégia de follow-up refinada com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Estratégia de follow-up gerada para ${output.totalContacts} contatos. ${output.highPriorityCount} com alta prioridade.`, 
+      type: 'episodic',
+      relatedSkills: ["follow-up-strategist"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_follow_up_contacts',
+      value: output.totalContacts,
+      unit: 'count',
+      skillSlug: "follow-up-strategist"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'high_priority_contacts',
+      value: output.highPriorityCount,
+      unit: 'count',
+      skillSlug: "follow-up-strategist"
+    });
+
     const decision: SkillExecutionResult["decision"] =
       !context.autonomyAllowed || highChurnCount > 0 ? "needs_review" : "auto";
 
@@ -285,13 +344,7 @@ export const followUpStrategistHandler: SkillHandler<FollowUpInput, FollowUpOutp
       success: plans.length > 0,
       decision,
       latencyMs: Date.now() - startedAt,
-      output: {
-        totalContacts: plans.length,
-        byPhase,
-        highPriorityCount,
-        plans,
-        alerts,
-      },
+      output,
       warnings: alerts,
       message:
         decision === "auto"

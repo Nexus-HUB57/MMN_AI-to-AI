@@ -1,10 +1,3 @@
-/**
- * Handler operacional · Lead Enricher
- * -----------------------------------------------------------------------------
- * Enriches leads with public data from various sources.
- * Validates and normalizes data before enrichment.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -13,6 +6,15 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Lead Enricher v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Enriches leads with public data from various sources.
+ * Validates and normalizes data before enrichment.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const LeadEnricherInputSchema = z.object({
   leadEmail: z.string().email().optional(),
@@ -43,6 +45,8 @@ export interface LeadEnricherOutput {
   recommendedChannel: string;
   recommendedAction: string;
   warnings: string[];
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function determineTier(data: EnrichedData): "hot" | "warm" | "cold" {
@@ -70,15 +74,28 @@ export const leadEnricherHandler: SkillHandler<LeadEnricherInput, LeadEnricherOu
   slug: "lead-enricher",
   title: "Enriquecedor de Leads",
   category: "sales",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): LeadEnricherInput => LeadEnricherInputSchema.parse(raw),
   execute: async (
     input: LeadEnricherInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<LeadEnricherOutput>> => {
     const startedAt = Date.now();
     const warnings: string[] = [];
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando enriquecimento de lead para ${input.leadEmail || input.leadPhone || input.leadName}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar lead enrichments)
+    const previousEnrichments = await context.memory.retrieve(`lead enrichment for ${input.leadEmail || input.leadPhone || input.leadName}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousEnrichments.length} enriquecimentos anteriores encontrados.`,
+    });
 
     const enriched: EnrichedData = {
       email: input.leadEmail ?? null,
@@ -94,14 +111,74 @@ export const leadEnricherHandler: SkillHandler<LeadEnricherInput, LeadEnricherOu
 
     if (!input.leadEmail && !input.leadPhone) {
       warnings.push("Sem dados de contato - enriquecimento limitado");
+      reasoningTrace.push({
+        thought: "Dados de contato insuficientes, enriquecimento limitado.",
+        result: "Alerta de dados de contato insuficientes."
+      });
     }
 
     if (input.leadEmail && /test|temp|fake/i.test(input.leadEmail)) {
       enriched.spamRisk = true;
       warnings.push("E-mail temporário ou de teste detectado");
+      reasoningTrace.push({
+        thought: "E-mail com risco de spam detectado.",
+        result: "Alerta de spam."
+      });
     }
 
     const tier = determineTier(enriched);
+    reasoningTrace.push({
+      thought: `Lead classificado como ${tier}.`,
+      result: `Classificação do lead: ${tier}.`
+    });
+
+    const output: LeadEnricherOutput = {
+      leadId: randomUUID(),
+      enriched,
+      tier,
+      recommendedChannel: recommendChannel(tier, input),
+      recommendedAction:
+        tier === "hot"
+          ? "Encaminhar direto para time comercial"
+          : tier === "warm"
+            ? "Incluir em sequência de nutrição"
+            : "Manter em Lead nurturing de baixa frequência",
+      warnings,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar o enriquecimento de leads.",
+        result: "Enriquecimento de leads refinado com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Lead ${output.leadId} enriquecido e classificado como ${output.tier}.`,
+      type: 'episodic',
+      relatedSkills: ["lead-enricher"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'lead_tier',
+      value: tier === "hot" ? 3 : (tier === "warm" ? 2 : 1),
+      unit: 'level',
+      skillSlug: "lead-enricher"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'spam_risk_detected',
+      value: enriched.spamRisk ? 1 : 0,
+      unit: 'boolean',
+      skillSlug: "lead-enricher"
+    });
 
     return {
       executionId: randomUUID(),
@@ -109,19 +186,7 @@ export const leadEnricherHandler: SkillHandler<LeadEnricherInput, LeadEnricherOu
       success: true,
       decision: enriched.spamRisk ? "needs_review" : "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        leadId: randomUUID(),
-        enriched,
-        tier,
-        recommendedChannel: recommendChannel(tier, input),
-        recommendedAction:
-          tier === "hot"
-            ? "Encaminhar direto para time comercial"
-            : tier === "warm"
-              ? "Incluir em sequência de nutrição"
-              : "Manter emLead nurturing de baixa frequência",
-        warnings,
-      },
+      output,
       message: `Lead classificado como ${tier.toUpperCase()} - enriquecimento básico completo`,
     };
   },

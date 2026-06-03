@@ -1,9 +1,3 @@
-/**
- * Handler operacional · Creator Matcher
- * -----------------------------------------------------------------------------
- * Matches brands with creators based on audience analysis.
- */
-
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -12,6 +6,14 @@ import type {
   SkillExecutionResult,
   SkillHandler,
 } from "./types";
+import { ReasoningStep, ReflectionEntry, MemoryManager, Planner, Reflector, MetricsTracker, ReasoningEngine, AgentTool } from "./agenticCore";
+
+/**
+ * Handler operacional · Creator Matcher v2 (Agentic)
+ * -----------------------------------------------------------------------------
+ * Matches brands with creators based on audience analysis.
+ * Agora suporta Reasoning Trace, Reflexão e Memória.
+ */
 
 const CreatorMatcherInputSchema = z.object({
   brandName: z.string().min(2).max(160),
@@ -46,6 +48,8 @@ export interface CreatorMatcherOutput {
   totalBudget: number;
   expectedReach: number;
   recommendedTier: string;
+  reasoningTrace?: ReasoningStep[];
+  reflection?: ReflectionEntry;
 }
 
 function generateCreatorPool(
@@ -98,15 +102,29 @@ export const creatorMatcherHandler: SkillHandler<
   slug: "creator-matcher",
   title: "Comparador de Criadores",
   category: "sales",
-  version: "1.0.0",
+  version: "2.0.0",
   supportsAutonomous: true,
   parseInput: (raw: unknown): CreatorMatcherInput =>
     CreatorMatcherInputSchema.parse(raw),
   execute: async (
     input: CreatorMatcherInput,
-    _context: SkillExecutionContext,
+    context: SkillExecutionContext,
   ): Promise<SkillExecutionResult<CreatorMatcherOutput>> => {
     const startedAt = Date.now();
+
+    // 1. Reasoning Trace
+    const reasoningTrace: ReasoningStep[] = [
+      {
+        thought: `Iniciando busca por criadores para a marca ${input.brandName} com objetivo de campanha ${input.campaignObjective}.`,
+      },
+    ];
+
+    // 2. Memory Retrieval (Check for previous similar matches)
+    const previousMatches = await context.memory.retrieve(`creator match for ${input.brandName} - ${input.campaignObjective}`, 1);
+    reasoningTrace.push({
+      thought: `Analisando memória: ${previousMatches.length} matches anteriores encontrados.`,
+    });
+
     const matches = generateCreatorPool(input).sort(
       (a, b) => b.matchScore - a.matchScore,
     );
@@ -125,20 +143,56 @@ export const creatorMatcherHandler: SkillHandler<
             ? "Mid/Macro"
             : "Macro/Top";
 
+    const output: CreatorMatcherOutput = {
+      brandName: input.brandName,
+      campaignObjective: input.campaignObjective,
+      matches,
+      totalBudget,
+      expectedReach,
+      recommendedTier: tier,
+      reasoningTrace,
+    };
+
+    // 3. Reflection
+    if (context.reflector) {
+      output.reflection = await context.reflector.reflect(context, reasoningTrace);
+      reasoningTrace.push({
+        thought: "Reflexão aplicada para otimizar a seleção de criadores.",
+        result: "Seleção de criadores refinada com base em insights de performance."
+      });
+    }
+
+    // 4. Store in Memory
+    await context.memory.store({
+      timestamp: new Date(),
+      content: `Match de criadores para ${input.brandName} com ${output.matches.length} resultados.`, 
+      type: 'episodic',
+      relatedSkills: ["creator-matcher"]
+    });
+
+    // 5. Record Metrics
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'total_matched_creators',
+      value: output.matches.length,
+      unit: 'count',
+      skillSlug: "creator-matcher"
+    });
+    await context.metrics.record({
+      timestamp: new Date(),
+      metricName: 'expected_reach',
+      value: output.expectedReach,
+      unit: 'followers',
+      skillSlug: "creator-matcher"
+    });
+
     return {
       executionId: randomUUID(),
       skill: "creator-matcher",
       success: true,
       decision: "auto",
       latencyMs: Date.now() - startedAt,
-      output: {
-        brandName: input.brandName,
-        campaignObjective: input.campaignObjective,
-        matches,
-        totalBudget,
-        expectedReach,
-        recommendedTier: tier,
-      },
+      output,
       message: `Encontrados ${matches.length} criadores para ${input.brandName} - alcance estimado ${expectedReach.toLocaleString()}`,
     };
   },

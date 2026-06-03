@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { allocateBrlToBtc, isBtcLocked, getLevelLabel, getLevelSubtitle, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
+import { getAcademiaRuntimeSummary } from "@/lib/nexus-academia";
 
 const QUICK_ACTIONS = [
   {
@@ -86,6 +87,20 @@ const QUICK_ACTIONS = [
     description: "Skills extras para seu agente",
     icon: Sparkles,
     accent: "from-quantum-purple/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/subscriptions",
+    label: "Nexus Partners Pack",
+    description: "Produto SaaS independente com contratação por assinatura",
+    icon: Users,
+    accent: "from-amber-400/30 to-quantum-purple/10",
+  },
+  {
+    href: "/academia",
+    label: "Nexus Academ'IA",
+    description: "Trilhas, Lab Nexus, Lib Nexus e progressão educacional",
+    icon: BookOpen,
+    accent: "from-quantum-purple/30 to-quantum-cyan/10",
   },
   {
     href: "/marketplaces/ebooks",
@@ -167,6 +182,7 @@ export default function Dashboard() {
   const balance = profile.btcAllocated;
   const btcLocked = isBtcLocked(profile);
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
+  const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
 
   const displayName = user?.name || "Afiliado IOAID · SaaS";
   const displayEmail = user?.email || "usuario@demo.mmn.ai";
@@ -501,6 +517,96 @@ export default function Dashboard() {
                 <p className="mt-1 text-xs text-slate-400">{description}</p>
               </Link>
             ))}
+          </div>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-2">
+          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.14),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/20">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// NEXUS_PARTNERS_PACK</p>
+                <h2 className="mt-2 text-2xl font-bold text-white">Painel Nexus Partners Pack</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                  Produto SaaS independente da jornada PD/SCC, contratado por assinatura e com painel operacional próprio para parceiros, comissões, tiers e benefícios.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-amber-200">
+                6–48 meses · recorrência
+              </span>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Modalidades</p>
+                <p className="mt-2 text-xl font-bold text-white">Start · Growth · Enterprise</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Comissão elegível</p>
+                <p className="mt-2 text-xl font-bold text-white">5%–15% recorrente</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Painéis</p>
+                <p className="mt-2 text-xl font-bold text-white">Assinatura + Operação</p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4 text-sm text-slate-200">
+              <p className="font-semibold text-quantum-cyan">Regra de ativação aplicada</p>
+              <p className="mt-2 leading-6">O Nexus Partners Pack aparece no dashboard como produto comercial autônomo. O acesso ao catálogo e à contratação fica disponível após autenticação; a operação diária segue em painéis dedicados de assinatura e parceiros.</p>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/subscriptions" className="inline-flex items-center gap-2 rounded-lg border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-4 py-2.5 text-sm font-bold text-obsidian shadow-quantum transition-all hover:-translate-y-0.5">
+                Assinar / contratar <ArrowRight size={14} />
+              </Link>
+              <Link href="/partners" className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                Abrir painel partners
+              </Link>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.20),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/20">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-purple">// NEXUS_ACADEMIA</p>
+                <h2 className="mt-2 text-2xl font-bold text-white">Painel Nexus Academ'IA</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                  Hub educacional integrado ao runtime, com trilhas, Lab Nexus, Lib Nexus, webinars, treinamentos e entitlement refletido no agente.
+                </p>
+              </div>
+              <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-white ${academiaSummary.tier.badgeTone}`}>
+                {academiaSummary.tier.label}
+              </span>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Trilhas liberadas</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.unlockedTrackCount} / 4</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Skills mapeadas</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.unlockedSkills}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Acesso atual</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.tier.labAccess}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-quantum-purple/20 bg-quantum-purple/10 p-4 text-sm text-slate-200">
+              <p className="font-semibold text-quantum-purple">Regra de ativação aplicada</p>
+              <p className="mt-2 leading-6">A abertura da Academ'IA acompanha a evolução do afiliado no PD/SCC: Fundamental para cadastrados, trilha Agente no 1º ciclo ativo, Master após consolidação de ciclos e Elite na camada estratégica mais alta.</p>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/academia" className="inline-flex items-center gap-2 rounded-lg border border-quantum-purple/40 bg-gradient-to-r from-quantum-purple to-quantum-cyan px-4 py-2.5 text-sm font-bold text-white shadow-quantum transition-all hover:-translate-y-0.5">
+                Abrir Academ'IA <ArrowRight size={14} />
+              </Link>
+              <Link href="/skills" className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                Ver skills
+              </Link>
+            </div>
           </div>
         </section>
 

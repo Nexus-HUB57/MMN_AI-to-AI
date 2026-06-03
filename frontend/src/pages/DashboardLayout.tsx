@@ -173,6 +173,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       ],
     },
     {
+      title: "Nexus Hubs",
+      items: [
+        {
+          label: "Nexus Partners Pack",
+          href: "/subscriptions",
+          icon: <Briefcase className="w-5 h-5" />,
+          badge: "SaaS",
+        },
+        {
+          label: "Painel Partners",
+          href: "/partners",
+          icon: <Users className="w-5 h-5" />,
+          badge: "API",
+        },
+        {
+          label: "Nexus Academ'IA",
+          href: "/academia",
+          icon: <BookOpen className="w-5 h-5" />,
+          badge: "Trilhas",
+        },
+      ],
+    },
+    {
       title: "Marketing",
       items: [
         {

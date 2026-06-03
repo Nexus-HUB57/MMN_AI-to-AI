@@ -37,6 +37,7 @@ import OrchestratorDashboard from "@/pages/OrchestratorDashboard";
 import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
+import AcademiaDashboard from "@/pages/AcademiaDashboard";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
@@ -67,6 +68,7 @@ function Router() {
       <Route path="/orchestrator" component={OrchestratorDashboard} />
       <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
+      <Route path="/academia" component={AcademiaDashboard} />
       <Route path="/content-hub" component={ContentHub} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />

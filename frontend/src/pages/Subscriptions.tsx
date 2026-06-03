@@ -8,6 +8,12 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
 import {
+  createLocalSubscription,
+  getFallbackSubscriptionCatalog,
+  listLocalSubscriptions,
+  type CatalogPlan,
+} from "@/lib/nexus-partners-fallback";
+import {
   Activity,
   ArrowRight,
   BarChart3,
@@ -18,39 +24,6 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
-
-type CatalogPlan = {
-  id: string;
-  shortName: string;
-  fullName: string;
-  tagline: string;
-  priceCents: number | null;
-  billingCycle: "monthly" | "yearly" | "on_request";
-  commissionRate: number;
-  commissionModel: {
-    cadence: "monthly_recurring";
-    eligibility: string;
-    byTerm: Record<number, number>;
-  };
-  features: string[];
-  capacity: {
-    aiAgents: number;
-    ebooks: number;
-    skills: number;
-    referralLevels: number;
-  };
-  storefront: {
-    subscriptionOnly: true;
-    defaultTermMonths: number;
-    availableTermsMonths: number[];
-    licenseLabel: string;
-    ctaLabel: string;
-  };
-  governance: {
-    requiresAdminContact: boolean;
-    highValue: boolean;
-  };
-};
 
 function formatBRL(amountCents: number | null) {
   if (amountCents == null) return "Sob consulta";
@@ -87,6 +60,7 @@ export default function Subscriptions() {
   const { isAuthenticated } = useAuth();
   const [feedback, setFeedback] = useState<string | null>(null);
   const [selectedTerms, setSelectedTerms] = useState<Record<string, number>>({});
+  const [localRevision, setLocalRevision] = useState(0);
 
   const catalogQuery = trpc.subscriptions.catalog.useQuery(undefined, {
     staleTime: 1000 * 60 * 5,
@@ -98,18 +72,62 @@ export default function Subscriptions() {
   });
 
   const startMutation = trpc.subscriptions.start.useMutation();
+  const fallbackCatalog = useMemo(() => getFallbackSubscriptionCatalog(), []);
 
-  const plans = (catalogQuery.data?.plans ?? []) as CatalogPlan[];
+  const catalogOffline = catalogQuery.isError || !(catalogQuery.data?.plans?.length);
+  const runtimeOffline = catalogOffline || mineQuery.isError;
+
+  const plans = useMemo(() => {
+    if (catalogQuery.data?.plans?.length) {
+      return catalogQuery.data.plans as CatalogPlan[];
+    }
+    return fallbackCatalog.plans;
+  }, [catalogQuery.data?.plans, fallbackCatalog.plans]);
+
   const mySubscriptions = useMemo(() => {
-    const items = (mineQuery.data?.items ?? []) as Array<{ planId: string; status: string; id: string }>;
-    return new Map(items.map((item) => [item.planId, item]));
-  }, [mineQuery.data?.items]);
+    const remoteItems = (mineQuery.data?.items ?? []) as Array<{ planId: string; status: string; id: string }>;
+    if (remoteItems.length) {
+      return new Map(remoteItems.map((item) => [item.planId, item]));
+    }
+
+    const localItems = listLocalSubscriptions();
+    return new Map(localItems.map((item) => [item.planId, item]));
+  }, [mineQuery.data?.items, localRevision]);
 
   const autonomyFacts = [
     "Produto SaaS autônomo, sem vínculo com a jornada de packs do Nexus Affil'IA'te",
     "Contratação por assinatura mensal com janela contratual de 6, 12, 18, 24, 30, 36 e 48 meses",
     "Comissão mensal recorrente para afiliados entre 5% e 15%, conforme plano contratado e prazo efetivado",
   ];
+
+  function startLocalFlow(plan: CatalogPlan, termMonths: number, fromError = false) {
+    const subscription = createLocalSubscription(plan, termMonths);
+    setLocalRevision((current) => current + 1);
+
+    if (plan.priceCents == null || plan.governance.requiresAdminContact) {
+      setFeedback(
+        `${fromError ? "API indisponível. " : ""}Solicitação registrada para ${plan.fullName}. O time comercial irá tratar a proposta ${termMonths} meses.`,
+      );
+      return;
+    }
+
+    const checkoutUrl = buildMarketplaceCheckoutUrl({
+      source: "subscriptions",
+      type: "subscription",
+      slug: plan.id,
+      name: plan.fullName,
+      amountCents: plan.priceCents,
+      description: `${plan.tagline} · licença ${termMonths} meses`,
+      subscriptionId: subscription.id,
+      termMonths,
+    });
+
+    if (fromError) {
+      setFeedback("API de assinatura indisponível. Continuando em modo local seguro para o checkout.");
+    }
+
+    setLocation(checkoutUrl);
+  }
 
   async function handleSubscribe(plan: CatalogPlan) {
     const termMonths = selectedTerms[plan.id] ?? plan.storefront.defaultTermMonths;
@@ -119,10 +137,15 @@ export default function Subscriptions() {
       return;
     }
 
+    if (runtimeOffline) {
+      startLocalFlow(plan, termMonths);
+      return;
+    }
+
     try {
       const result = await startMutation.mutateAsync({
         userId: 1,
-        planId: plan.id as any,
+        planId: plan.id as never,
         termMonths,
         metadata: {
           storefront: "nexus-marketplace",
@@ -133,7 +156,7 @@ export default function Subscriptions() {
 
       if (result.requiresAdminApproval || plan.governance.requiresAdminContact || plan.priceCents == null) {
         setFeedback(`Solicitação registrada para ${plan.fullName}. O time comercial irá tratar a proposta ${termMonths} meses.`);
-        mineQuery.refetch();
+        void mineQuery.refetch();
         return;
       }
 
@@ -150,7 +173,8 @@ export default function Subscriptions() {
 
       setLocation(checkoutUrl);
     } catch (error) {
-      setFeedback(error instanceof Error ? error.message : "Não foi possível iniciar a assinatura agora.");
+      console.warn("Subscriptions runtime offline, usando fallback local.", error);
+      startLocalFlow(plan, termMonths, true);
     }
   }
 
@@ -171,14 +195,10 @@ export default function Subscriptions() {
                   Nexus Partners Pack · software SaaS contratado <span className="text-quantum-lime">exclusivamente por assinatura</span>
                 </h1>
                 <p className="max-w-4xl text-base leading-7 text-slate-300 md:text-lg">
-                  O Nexus Partners Pack é um produto independente, comercializado apenas por assinatura. Pode ser contratado por
-                  terceiros ou por afiliados do Nexus Affil'IA'te, sempre como solução autônoma — sem representar nível, pack ou
-                  etapa da jornada principal do ecossistema.
+                  O Nexus Partners Pack é um produto independente, comercializado apenas por assinatura. Pode ser contratado por terceiros ou por afiliados do Nexus Affil'IA'te, sempre como solução autônoma — sem representar nível, pack ou etapa da jornada principal do ecossistema.
                 </p>
                 <p className="max-w-4xl text-sm leading-7 text-slate-400 md:text-base">
-                  Os planos Start, Growth e Enterprise são apenas modalidades contratuais do mesmo produto, variando por capacidade
-                  operacional, skills agregadas, governança e suporte. Toda contratação acontece em janela de 6, 12, 18, 24, 30, 36 ou 48 meses,
-                  com política de comissão mensal recorrente para afiliados que indicarem, comercializarem e efetivarem o contrato.
+                  Os planos Start, Growth e Enterprise são apenas modalidades contratuais do mesmo produto, variando por capacidade operacional, skills agregadas, governança e suporte. Toda contratação acontece em janela de 6, 12, 18, 24, 30, 36 ou 48 meses, com política de comissão mensal recorrente para afiliados que indicarem, comercializarem e efetivarem o contrato.
                 </p>
               </div>
 
@@ -223,6 +243,12 @@ export default function Subscriptions() {
           </div>
         </section>
 
+        {runtimeOffline && (
+          <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
+            Runtime de assinatura indisponível no domínio atual. Exibindo catálogo espelhado do repositório e mantendo a contratação em modo local seguro até a API responder novamente.
+          </div>
+        )}
+
         {feedback && (
           <div className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 px-4 py-3 text-sm text-quantum-cyan">
             {feedback}
@@ -241,7 +267,7 @@ export default function Subscriptions() {
         </section>
 
         <section className="grid gap-6 xl:grid-cols-3">
-          {catalogQuery.isLoading
+          {catalogQuery.isLoading && !catalogOffline
             ? Array.from({ length: 3 }).map((_, idx) => (
                 <div key={idx} className="h-[420px] animate-pulse rounded-[28px] border border-white/10 bg-white/5" />
               ))
@@ -351,10 +377,7 @@ export default function Subscriptions() {
             <div>
               <h3 className="text-2xl font-bold text-white">Produto exclusivo do Nexus Marketplace</h3>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                O Nexus Partners Pack é listado no Nexus Marketplace como produto SaaS independente, comercializado apenas por
-                assinatura. As modalidades Start, Growth e Enterprise são contratos do mesmo produto-base e não devem ser confundidas
-                com packs, níveis ou etapas da jornada principal do Nexus Affil'IA'te. Afiliados elegíveis recebem comissão mensal
-                recorrente conforme o prazo efetivado do contrato.
+                O Nexus Partners Pack é listado no Nexus Marketplace como produto SaaS independente, comercializado apenas por assinatura. As modalidades Start, Growth e Enterprise são contratos do mesmo produto-base e não devem ser confundidas com packs, níveis ou etapas da jornada principal do Nexus Affil'IA'te. Afiliados elegíveis recebem comissão mensal recorrente conforme o prazo efetivado do contrato.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">

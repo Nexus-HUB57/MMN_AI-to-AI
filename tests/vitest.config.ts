@@ -2,12 +2,12 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 // Vitest config dedicada ao monorepo (raiz). Importante:
-// - Não tenta carregar nenhuma vite.config dos workspaces (frontend/backend)
-//   para evitar pegar plugins como vite-tsconfig-paths que não estão instalados
-//   na raiz e causam "TypeError: __vite_ssr_import_0__ is not a function".
-// - Resolve `@/` para frontend/src manualmente.
-// - Pool em forks (mais estável para módulos com side effects que esses testes
-//   integradores trazem).
+// - Não tenta carregar nenhuma vite.config dos workspaces.
+// - Resolve `@/` para frontend/src.
+// - Exclui agressivamente node_modules e qualquer pasta `node_modules_root/`
+//   gerada pelo workspace cruzado do backend, que multiplica testes do `zod`
+//   em infinitas pastas aninhadas e faz o vitest tentar carregar
+//   `tsconfig-paths` em cada uma → `__vite_ssr_import_0__ is not a function`.
 export default defineConfig({
   test: {
     globals: true,
@@ -33,6 +33,17 @@ export default defineConfig({
       ],
     },
     include: ['tests/**/*.test.ts', 'tests/**/*.spec.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/node_modules_root/**',
+      '**/dist/**',
+      '**/.git/**',
+      '**/Legado_PHP/**',
+      'fase8/**',
+      'frontend/**',
+      'backend/**',
+      'mobile/**',
+    ],
   },
   resolve: {
     alias: {

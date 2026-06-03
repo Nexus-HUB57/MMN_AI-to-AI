@@ -928,3 +928,6 @@ frontend/nexus-partners/
 !backend/src/lib/**
 !mobile/src/lib/
 !mobile/src/lib/**
+
+# Workspace cruzado problemático que multiplica testes via npm workspaces
+**/node_modules_root/

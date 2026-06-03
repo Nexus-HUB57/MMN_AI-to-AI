@@ -85,6 +85,15 @@ A lista completa, com papel de cada repositório e racional de adoção, vive em
 - O hub respeita `getAcademiaTier(profile)` (frontend) e o middleware
   `requireAcademiaTier('operador')` (backend) — bloqueando uso por afiliados
   ainda em tier Iniciante.
+- O endpoint REST externo de chat usa `LAB_NEXUS_PUBLIC_API_KEY` como shared key,
+  reduzindo risco de uso anônimo fora do painel autenticado.
+- O frontend persiste o workspace por afiliado/tier e exibe a quota diária
+  devolvida pelo ledger do backend.
+
+## ✅ QA e aceite
+
+A matriz operacional completa está em
+[`QA-ACCEPTANCE-MATRIX.md`](./QA-ACCEPTANCE-MATRIX.md).
 
 ---
 

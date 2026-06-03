@@ -3,7 +3,7 @@
  * --------------------------------------------------------------
  * Expõe o Chat Bot Lab Nexus ao frontend via tRPC. Mantém o segredo
  * de cada provedor exclusivamente no servidor; o cliente vê apenas
- * a lista de modelos disponíveis e a flag `configured`.
+ * a lista de modelos disponíveis, quota diária e a flag `configured`.
  */
 
 import { z } from "zod";
@@ -17,12 +17,14 @@ import {
   runLabNexusChat,
   type LabNexusRole,
 } from "../services/lab-nexus/chatService";
+import { getLabNexusUsageSnapshot } from "../services/lab-nexus/usageLedger";
 
 const providerIdSchema = z.enum(
   Object.keys(LAB_NEXUS_PROVIDERS) as [LabNexusProviderId, ...LabNexusProviderId[]],
 );
 
 const roleSchema = z.enum(["system", "user", "assistant"]) satisfies z.ZodType<LabNexusRole>;
+const tierSchema = z.enum(["iniciante", "operador", "estrategista", "elite"]);
 
 const messageSchema = z.object({
   role: roleSchema,
@@ -35,7 +37,7 @@ const chatInputSchema = z.object({
   messages: z.array(messageSchema).min(1).max(40),
   temperature: z.number().min(0).max(2).optional(),
   maxTokens: z.number().int().positive().max(32000).optional(),
-  tier: z.enum(["iniciante", "operador", "estrategista", "elite"]).optional(),
+  tier: tierSchema.optional(),
 });
 
 export const labNexusRouter = router({
@@ -43,6 +45,15 @@ export const labNexusRouter = router({
     providers: getProviderPublicSummary(),
     permissionTiers: ["operador", "estrategista", "elite"],
   })),
+
+  usage: protectedProcedure
+    .input(z.object({ tier: tierSchema.optional() }).optional())
+    .query(({ ctx, input }) => ({
+      usage: getLabNexusUsageSnapshot({
+        affiliateId: ctx.user?.id,
+        tier: input?.tier ?? "operador",
+      }),
+    })),
 
   chat: protectedProcedure
     .input(chatInputSchema)

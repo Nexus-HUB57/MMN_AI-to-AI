@@ -11,6 +11,7 @@ export type LabNexusProviderId =
   | "minimax";
 
 export type LabNexusRole = "system" | "user" | "assistant";
+export type LabNexusTier = "iniciante" | "operador" | "estrategista" | "elite";
 
 export interface LabNexusMessage {
   role: LabNexusRole;
@@ -27,6 +28,18 @@ export interface LabNexusProviderSummary {
   configured: boolean;
 }
 
+export interface LabNexusUsageSummary {
+  date: string;
+  tier: LabNexusTier;
+  subjectId: string;
+  requestLimit: number;
+  requestsToday: number;
+  requestsRemaining: number;
+  estimatedInputTokens: number;
+  tokensOut: number;
+  lastUsedAt: string | null;
+}
+
 export interface LabNexusChatResponse {
   providerId: LabNexusProviderId;
   model: string;
@@ -34,6 +47,13 @@ export interface LabNexusChatResponse {
   mode: "live" | "demo";
   tokensUsed?: number;
   latencyMs: number;
+  trace?: {
+    affiliateId: number | string | null;
+    tier: LabNexusTier;
+    ceilingTokens: number;
+    usageBefore?: LabNexusUsageSummary;
+    usageAfter?: LabNexusUsageSummary;
+  };
 }
 
 export const LAB_NEXUS_FALLBACK_PROVIDERS: LabNexusProviderSummary[] = [

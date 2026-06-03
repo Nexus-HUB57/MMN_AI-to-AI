@@ -2,9 +2,7 @@
  * Lab Nexus · REST Router
  * --------------------------------------------------------------
  * Endpoint REST simples para integrações externas e clientes não-tRPC.
- * Espelha o tRPC `labNexus.chat`. Não exige login (porta destinada a
- * widgets parceiros), mas mantém os limites por tier e nunca expõe
- * a chave de API ao cliente.
+ * O POST de chat é protegido por shared key para evitar uso anônimo.
  */
 
 import express, { type Request, type Response } from "express";
@@ -33,7 +31,23 @@ const chatBodySchema = z.object({
   temperature: z.number().min(0).max(2).optional(),
   maxTokens: z.number().int().positive().max(32000).optional(),
   tier: z.enum(["iniciante", "operador", "estrategista", "elite"]).optional(),
+  affiliateId: z.union([z.string().min(1).max(120), z.number().int().positive()]).optional(),
 });
+
+function readSharedKey() {
+  return process.env.LAB_NEXUS_PUBLIC_API_KEY?.trim() ?? "";
+}
+
+function readPresentedKey(req: Request) {
+  const fromHeader = req.header("x-lab-nexus-key")?.trim();
+  if (fromHeader) return fromHeader;
+
+  const auth = req.header("authorization") ?? "";
+  if (auth.toLowerCase().startsWith("bearer ")) {
+    return auth.slice(7).trim();
+  }
+  return "";
+}
 
 export function createLabNexusRestRouter() {
   const router = express.Router();
@@ -43,10 +57,29 @@ export function createLabNexusRestRouter() {
       stage: "lab-nexus-v1",
       providers: getProviderPublicSummary(),
       permissionTiers: ["operador", "estrategista", "elite"],
+      restChatSecurity: readSharedKey() ? "shared-key-enabled" : "shared-key-missing",
     });
   });
 
   router.post("/chat", async (req: Request, res: Response) => {
+    const sharedKey = readSharedKey();
+    if (!sharedKey) {
+      res.status(503).json({
+        error: "ServiceUnavailable",
+        message: "Integração REST do Lab Nexus desabilitada até configurar LAB_NEXUS_PUBLIC_API_KEY.",
+      });
+      return;
+    }
+
+    const presentedKey = readPresentedKey(req);
+    if (!presentedKey || presentedKey !== sharedKey) {
+      res.status(401).json({
+        error: "Unauthorized",
+        message: "Shared key inválida para o endpoint REST do Lab Nexus.",
+      });
+      return;
+    }
+
     const parsed = chatBodySchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({
@@ -61,9 +94,10 @@ export function createLabNexusRestRouter() {
       res.json(response);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      const isForbidden = message.toLowerCase().includes("acesso negado");
-      res.status(isForbidden ? 403 : 502).json({
-        error: isForbidden ? "Forbidden" : "UpstreamError",
+      const normalized = message.toLowerCase();
+      const status = normalized.includes("acesso negado") || normalized.includes("limite diário") ? 403 : 502;
+      res.status(status).json({
+        error: status === 403 ? "Forbidden" : "UpstreamError",
         message,
       });
     }

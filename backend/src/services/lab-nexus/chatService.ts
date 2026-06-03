@@ -4,8 +4,8 @@
  * Serviço unificado que encaminha mensagens do Chat Bot Lab Nexus
  * para a API oficial do provedor selecionado (OpenAI, Anthropic,
  * Google, DeepSeek, MiniMax). Mantém formato comum de entrada/saída,
- * fallback de modo demo quando nenhuma chave está configurada, e
- * registro estruturado para auditoria.
+ * fallback de modo demo quando nenhuma chave está configurada,
+ * governança por tier e ledger diário de uso.
  */
 
 import {
@@ -14,6 +14,13 @@ import {
   type LabNexusProviderId,
   isProviderConfigured,
 } from "./providerRegistry";
+import {
+  assertLabNexusUsageAvailable,
+  estimateLabNexusInputTokens,
+  recordLabNexusUsage,
+  type LabNexusTier,
+  type LabNexusUsageSnapshot,
+} from "./usageLedger";
 
 export type LabNexusRole = "system" | "user" | "assistant";
 
@@ -29,7 +36,7 @@ export interface LabNexusChatRequest {
   temperature?: number;
   maxTokens?: number;
   affiliateId?: number | string;
-  tier?: "iniciante" | "operador" | "estrategista" | "elite";
+  tier?: LabNexusTier;
 }
 
 export interface LabNexusChatResponse {
@@ -39,18 +46,23 @@ export interface LabNexusChatResponse {
   mode: "live" | "demo";
   tokensUsed?: number;
   latencyMs: number;
-  trace?: Record<string, unknown>;
+  trace?: {
+    affiliateId: number | string | null;
+    tier: LabNexusTier;
+    ceilingTokens: number;
+    usageBefore: LabNexusUsageSnapshot;
+    usageAfter: LabNexusUsageSnapshot;
+  };
 }
 
-const TIER_LIMITS: Record<NonNullable<LabNexusChatRequest["tier"]>, { maxTokens: number; perDay: number }> = {
+const TIER_LIMITS: Record<LabNexusTier, { maxTokens: number; perDay: number }> = {
   iniciante: { maxTokens: 0, perDay: 0 },
   operador: { maxTokens: 2000, perDay: 50 },
   estrategista: { maxTokens: 8000, perDay: 500 },
   elite: { maxTokens: 32000, perDay: 5000 },
 };
 
-function resolveTierLimit(tier: LabNexusChatRequest["tier"]) {
-  if (!tier) return TIER_LIMITS.operador;
+function resolveTierLimit(tier: LabNexusTier) {
   return TIER_LIMITS[tier] ?? TIER_LIMITS.operador;
 }
 
@@ -58,26 +70,6 @@ function clampMaxTokens(requested: number | undefined, ceiling: number) {
   const fallback = Math.min(1024, ceiling);
   if (!requested || requested <= 0) return fallback;
   return Math.min(requested, ceiling);
-}
-
-function asDemoResponse(provider: LabNexusProvider, request: LabNexusChatRequest, startedAt: number): LabNexusChatResponse {
-  const lastUser = [...request.messages].reverse().find((m) => m.role === "user");
-  const echo = lastUser?.content?.slice(0, 280) ?? "(sem mensagem)";
-  return {
-    providerId: provider.id,
-    model: request.model ?? provider.defaultModel,
-    mode: "demo",
-    latencyMs: Date.now() - startedAt,
-    message: {
-      role: "assistant",
-      content: [
-        `[Modo demo · ${provider.label}]`,
-        `Chave de API ainda não configurada no servidor (${provider.envKey}).`,
-        "Sua mensagem foi recebida com sucesso e seria encaminhada à API oficial assim que a credencial estiver disponível.",
-        `Eco da última mensagem: "${echo}"`,
-      ].join("\n\n"),
-    },
-  };
 }
 
 async function callOpenAILike(
@@ -203,23 +195,93 @@ async function callGemini(
   return { content, tokens: data.usageMetadata?.totalTokenCount, raw: data };
 }
 
+function buildDemoMessage(provider: LabNexusProvider, request: LabNexusChatRequest) {
+  const lastUser = [...request.messages].reverse().find((m) => m.role === "user");
+  const echo = lastUser?.content?.slice(0, 280) ?? "(sem mensagem)";
+  return {
+    role: "assistant" as const,
+    content: [
+      `[Modo demo · ${provider.label}]`,
+      `Chave de API ainda não configurada no servidor (${provider.envKey}).`,
+      "Sua mensagem foi recebida com sucesso e seria encaminhada à API oficial assim que a credencial estiver disponível.",
+      `Eco da última mensagem: \"${echo}\"`,
+    ].join("\n\n"),
+  };
+}
+
+function finalizeResponse(input: {
+  provider: LabNexusProvider;
+  request: LabNexusChatRequest;
+  tier: LabNexusTier;
+  ceiling: number;
+  usageBefore: LabNexusUsageSnapshot;
+  estimatedInputTokens: number;
+  startedAt: number;
+  mode: "live" | "demo";
+  message: LabNexusMessage;
+  tokensUsed?: number;
+}): LabNexusChatResponse {
+  const estimatedOutputTokens = input.tokensUsed
+    ? Math.max(0, input.tokensUsed - input.estimatedInputTokens)
+    : Math.max(1, Math.ceil((input.message.content?.length ?? 0) / 4));
+
+  const usageAfter = recordLabNexusUsage({
+    affiliateId: input.request.affiliateId,
+    tier: input.tier,
+    estimatedInputTokens: input.estimatedInputTokens,
+    tokensOut: estimatedOutputTokens,
+  });
+
+  return {
+    providerId: input.provider.id,
+    model: input.request.model ?? input.provider.defaultModel,
+    mode: input.mode,
+    latencyMs: Date.now() - input.startedAt,
+    tokensUsed: input.tokensUsed,
+    message: input.message,
+    trace: {
+      affiliateId: input.request.affiliateId ?? null,
+      tier: input.tier,
+      ceilingTokens: input.ceiling,
+      usageBefore: input.usageBefore,
+      usageAfter,
+    },
+  };
+}
+
 export async function runLabNexusChat(request: LabNexusChatRequest): Promise<LabNexusChatResponse> {
   const provider = LAB_NEXUS_PROVIDERS[request.providerId];
   if (!provider) {
     throw new Error(`Provedor Lab Nexus desconhecido: ${request.providerId}`);
   }
 
-  if (request.tier === "iniciante") {
+  const tier: LabNexusTier = request.tier ?? "operador";
+  if (tier === "iniciante") {
     throw new Error("Acesso negado: o Chat Bot Lab Nexus requer tier Operador ou superior (PD/SCC).");
   }
 
-  const limit = resolveTierLimit(request.tier);
+  const limit = resolveTierLimit(tier);
   const ceiling = Math.max(256, limit.maxTokens || 2000);
   const startedAt = Date.now();
+  const estimatedInputTokens = estimateLabNexusInputTokens(request.messages);
+  const usageBefore = assertLabNexusUsageAvailable({
+    affiliateId: request.affiliateId,
+    tier,
+  });
   const apiKey = process.env[provider.envKey]?.trim();
 
   if (!apiKey || !isProviderConfigured(provider.id)) {
-    return asDemoResponse(provider, request, startedAt);
+    return finalizeResponse({
+      provider,
+      request,
+      tier,
+      ceiling,
+      usageBefore,
+      estimatedInputTokens,
+      startedAt,
+      mode: "demo",
+      message: buildDemoMessage(provider, request),
+    });
   }
 
   try {
@@ -231,28 +293,41 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
     } else if (provider.id === "google") {
       result = await callGemini(provider, apiKey, request, ceiling);
     } else {
-      return asDemoResponse(provider, request, startedAt);
+      return finalizeResponse({
+        provider,
+        request,
+        tier,
+        ceiling,
+        usageBefore,
+        estimatedInputTokens,
+        startedAt,
+        mode: "demo",
+        message: buildDemoMessage(provider, request),
+      });
     }
 
-    return {
-      providerId: provider.id,
-      model: request.model ?? provider.defaultModel,
+    return finalizeResponse({
+      provider,
+      request,
+      tier,
+      ceiling,
+      usageBefore,
+      estimatedInputTokens,
+      startedAt,
       mode: "live",
-      latencyMs: Date.now() - startedAt,
       tokensUsed: result.tokens,
       message: { role: "assistant", content: result.content || "(resposta vazia)" },
-      trace: {
-        affiliateId: request.affiliateId ?? null,
-        tier: request.tier ?? "operador",
-        ceilingTokens: ceiling,
-      },
-    };
+    });
   } catch (error) {
-    return {
-      providerId: provider.id,
-      model: request.model ?? provider.defaultModel,
+    return finalizeResponse({
+      provider,
+      request,
+      tier,
+      ceiling,
+      usageBefore,
+      estimatedInputTokens,
+      startedAt,
       mode: "demo",
-      latencyMs: Date.now() - startedAt,
       message: {
         role: "assistant",
         content: [
@@ -261,6 +336,6 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
           "Retornando em modo seguro · sua sessão permanece ativa.",
         ].join("\n\n"),
       },
-    };
+    });
   }
 }

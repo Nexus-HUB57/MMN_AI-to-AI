@@ -14,21 +14,27 @@ import {
   type LabNexusMessage,
   type LabNexusProviderId,
   type LabNexusProviderSummary,
+  type LabNexusUsageSummary,
 } from "@/lib/lab-nexus-types";
 import {
   ArrowRight,
   Bot,
   BookOpen,
   ExternalLink,
+  HardDriveDownload,
   Lock,
   RefreshCw,
   Send,
+  ShieldCheck,
   Sparkles,
   Wand2,
   Zap,
 } from "lucide-react";
 
 const REPO_BASE = "https://github.com/Nexus-HUB57/MMN_AI-to-AI/blob/main";
+const SYSTEM_PROMPT_DEFAULT =
+  "Você é o Chat Bot Lab Nexus, um agregador multi-IA do ecossistema Nexus Affil'IA'te. Responda em português do Brasil, seja conciso e cite fontes quando aplicável.";
+const CHATBOT_STORAGE_PREFIX = "lab-nexus-chatbot-workspace-v1";
 
 const INSPIRATION_HUBS = [
   { label: "Adapta", url: "https://adapta.org/" },
@@ -36,32 +42,90 @@ const INSPIRATION_HUBS = [
 ];
 
 const REFERENCE_REPOS = [
-  { slug: "chopratejas/headroom", url: "https://github.com/chopratejas/headroom", role: "UI agregadora multi-modelo" },
-  { slug: "pewdiepie-archdaemon/odysseus", url: "https://github.com/pewdiepie-archdaemon/odysseus", role: "Orquestração autônoma" },
+  { slug: "chopratejas/headroom", url: "https://github.com/chopratejas/headroom", role: "Compressão de contexto e memória cross-agent" },
+  { slug: "pewdiepie-archdaemon/odysseus", url: "https://github.com/pewdiepie-archdaemon/odysseus", role: "Workspace self-hosted e agente autônomo" },
   { slug: "anthropics/claude-code", url: "https://github.com/anthropics/claude-code", role: "SDK/CLI oficial Claude" },
   { slug: "ComposioHQ/awesome-claude-skills", url: "https://github.com/ComposioHQ/awesome-claude-skills", role: "Catálogo de skills" },
-  { slug: "langchain-ai/langchain", url: "https://github.com/langchain-ai/langchain", role: "Chains, agents, memória" },
+  { slug: "langchain-ai/langchain", url: "https://github.com/langchain-ai/langchain", role: "Agents, chains e memória" },
   { slug: "TheoLeeCJ/llama4-computer-use", url: "https://github.com/TheoLeeCJ/llama4-computer-use", role: "Computer Use" },
-  { slug: "open-webui/open-webui", url: "https://github.com/open-webui/open-webui", role: "UI self-hosted multi-modelo" },
+  { slug: "open-webui/open-webui", url: "https://github.com/open-webui/open-webui", role: "UI multi-modelo self-hosted" },
   { slug: "google-gemini/gemini-cli", url: "https://github.com/google-gemini/gemini-cli", role: "CLI oficial Gemini" },
   { slug: "PlexPt/awesome-chatgpt-prompts-zh", url: "https://github.com/PlexPt/awesome-chatgpt-prompts-zh", role: "Biblioteca de prompts" },
   { slug: "microsoft/JARVIS", url: "https://github.com/microsoft/JARVIS", role: "Router HuggingGPT" },
   { slug: "MiniMax-AI/MiniMax-01", url: "https://github.com/MiniMax-AI/MiniMax-01", role: "Pesos abertos MiniMax" },
   { slug: "hexdocom/lemonai", url: "https://github.com/hexdocom/lemonai", role: "Hub de agentes" },
-  { slug: "affaan-m/ECC", url: "https://github.com/affaan-m/ECC", role: "Controle experimental / Judge" },
+  { slug: "affaan-m/ECC", url: "https://github.com/affaan-m/ECC", role: "Judge / controle experimental" },
 ];
 
-const SYSTEM_PROMPT_DEFAULT =
-  "Você é o Chat Bot Lab Nexus, um agregador multi-IA do ecossistema Nexus Affil'IA'te. Responda em português do Brasil, seja conciso e cite fontes quando aplicável.";
+interface PersistedWorkspace {
+  providerId: LabNexusProviderId;
+  model: string;
+  messages: LabNexusMessage[];
+  input: string;
+  lastMeta: LabNexusChatResponse | null;
+}
+
+function buildDefaultMessages(): LabNexusMessage[] {
+  return [{ role: "system", content: SYSTEM_PROMPT_DEFAULT }];
+}
+
+function readWorkspace(key: string): PersistedWorkspace | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PersistedWorkspace>;
+    const messages = Array.isArray(parsed.messages) && parsed.messages.length > 0
+      ? parsed.messages.filter((message): message is LabNexusMessage => {
+          return Boolean(message && typeof message.content === "string" && typeof message.role === "string");
+        })
+      : buildDefaultMessages();
+
+    return {
+      providerId: (parsed.providerId as LabNexusProviderId) ?? "openai",
+      model: typeof parsed.model === "string" ? parsed.model : "",
+      messages,
+      input: typeof parsed.input === "string" ? parsed.input : "",
+      lastMeta: parsed.lastMeta ? (parsed.lastMeta as LabNexusChatResponse) : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeWorkspace(key: string, workspace: PersistedWorkspace) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(key, JSON.stringify(workspace));
+}
+
+function removeWorkspace(key: string) {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(key);
+}
 
 export default function LabChatbot() {
   const { profile } = useMarketplaceProfile();
   const tier = getAcademiaTier(profile);
   const isLocked = tier.id === "iniciante";
+  const hydratedWorkspaceRef = useRef<string | null>(null);
+  const transcriptRef = useRef<HTMLDivElement | null>(null);
+
+  const storageKey = useMemo(() => {
+    const subject = profile.userId ?? profile.userEmail ?? "anon";
+    return `${CHATBOT_STORAGE_PREFIX}:${subject}:${tier.id}`;
+  }, [profile.userEmail, profile.userId, tier.id]);
 
   const providersQuery = trpc.labNexus.providers.useQuery(undefined, {
     staleTime: 1000 * 60 * 5,
   });
+  const usageQuery = trpc.labNexus.usage.useQuery(
+    isLocked ? undefined : { tier: tier.id },
+    {
+      enabled: !isLocked,
+      staleTime: 1000 * 30,
+      refetchOnWindowFocus: false,
+    },
+  );
   const chatMutation = trpc.labNexus.chat.useMutation();
 
   const providers = useMemo<LabNexusProviderSummary[]>(() => {
@@ -72,14 +136,44 @@ export default function LabChatbot() {
 
   const [providerId, setProviderId] = useState<LabNexusProviderId>("openai");
   const [model, setModel] = useState<string>("");
-  const [messages, setMessages] = useState<LabNexusMessage[]>([
-    { role: "system", content: SYSTEM_PROMPT_DEFAULT },
-  ]);
+  const [messages, setMessages] = useState<LabNexusMessage[]>(buildDefaultMessages);
   const [input, setInput] = useState("");
   const [lastMeta, setLastMeta] = useState<LabNexusChatResponse | null>(null);
-  const transcriptRef = useRef<HTMLDivElement | null>(null);
 
-  const selectedProvider = providers.find((p) => p.id === providerId) ?? providers[0];
+  const selectedProvider = providers.find((provider) => provider.id === providerId) ?? providers[0];
+  const usageSummary = usageQuery.data?.usage as LabNexusUsageSummary | undefined;
+  const visibleMessages = useMemo(() => messages.filter((message) => message.role !== "system"), [messages]);
+
+  useEffect(() => {
+    const saved = readWorkspace(storageKey);
+    hydratedWorkspaceRef.current = storageKey;
+
+    if (saved) {
+      setProviderId(saved.providerId);
+      setModel(saved.model);
+      setMessages(saved.messages.length > 0 ? saved.messages : buildDefaultMessages());
+      setInput(saved.input);
+      setLastMeta(saved.lastMeta);
+      return;
+    }
+
+    setProviderId("openai");
+    setModel("");
+    setMessages(buildDefaultMessages());
+    setInput("");
+    setLastMeta(null);
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (hydratedWorkspaceRef.current !== storageKey) return;
+    writeWorkspace(storageKey, {
+      providerId,
+      model,
+      messages,
+      input,
+      lastMeta,
+    });
+  }, [storageKey, providerId, model, messages, input, lastMeta]);
 
   useEffect(() => {
     if (selectedProvider && (!model || !selectedProvider.availableModels.includes(model))) {
@@ -91,8 +185,6 @@ export default function LabChatbot() {
     if (!transcriptRef.current) return;
     transcriptRef.current.scrollTop = transcriptRef.current.scrollHeight;
   }, [messages, chatMutation.isPending]);
-
-  const visibleMessages = useMemo(() => messages.filter((m) => m.role !== "system"), [messages]);
 
   function applyTemplate(promptText: string) {
     setInput(promptText);
@@ -117,6 +209,7 @@ export default function LabChatbot() {
 
       setLastMeta(response);
       setMessages((current) => [...current, response.message]);
+      void usageQuery.refetch();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Falha ao consultar o provedor de IA.";
       setMessages((current) => [
@@ -126,13 +219,18 @@ export default function LabChatbot() {
           content: `[Falha local] ${message}`,
         },
       ]);
+      void usageQuery.refetch();
     }
   }
 
   function handleReset() {
-    setMessages([{ role: "system", content: SYSTEM_PROMPT_DEFAULT }]);
+    const fresh = buildDefaultMessages();
+    setMessages(fresh);
     setInput("");
     setLastMeta(null);
+    setProviderId("openai");
+    setModel("");
+    removeWorkspace(storageKey);
   }
 
   return (
@@ -151,14 +249,14 @@ export default function LabChatbot() {
                 Hub agregador de <span className="text-quantum-cyan">Inteligência Artificial</span> dentro do Lab Nexus.
               </h1>
               <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                Inspirado em <a href={INSPIRATION_HUBS[0].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">Adapta</a> e <a href={INSPIRATION_HUBS[1].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">MyHub IA</a>. Painel único para alternar entre GPT, Claude, Gemini e DeepSeek na mesma tela, com histórico, templates e governança Nexus.
+                Inspirado em <a href={INSPIRATION_HUBS[0].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">Adapta</a> e <a href={INSPIRATION_HUBS[1].url} target="_blank" rel="noreferrer" className="text-quantum-cyan hover:underline">MyHub IA</a>. Painel único para alternar entre GPT, Claude, Gemini, DeepSeek e MiniMax, com histórico persistido, templates, quota diária e governança Nexus.
               </p>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-4">
                 <div className="rounded-3xl border border-white/10 bg-black/25 p-4">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">provedores</p>
                   <p className="mt-2 text-2xl font-bold text-white">{providers.length}</p>
-                  <p className="mt-1 text-xs text-slate-400">{providers.filter((p) => p.configured).length} ativo(s)</p>
+                  <p className="mt-1 text-xs text-slate-400">{providers.filter((provider) => provider.configured).length} ativo(s)</p>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-black/25 p-4">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">templates</p>
@@ -169,6 +267,11 @@ export default function LabChatbot() {
                   <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">acesso</p>
                   <p className="mt-2 text-2xl font-bold text-white capitalize">{tier.label}</p>
                   <p className="mt-1 text-xs text-slate-400">{isLocked ? "bloqueado" : "habilitado"}</p>
+                </div>
+                <div className="rounded-3xl border border-white/10 bg-black/25 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">quota restante</p>
+                  <p className="mt-2 text-2xl font-bold text-white">{isLocked ? "—" : usageSummary?.requestsRemaining ?? "…"}</p>
+                  <p className="mt-1 text-xs text-slate-400">{isLocked ? "upgrade necessário" : `de ${usageSummary?.requestLimit ?? 0}/dia`}</p>
                 </div>
               </div>
             </div>
@@ -187,11 +290,11 @@ export default function LabChatbot() {
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
                   <div className="mb-1 flex items-center gap-2 text-white"><Bot className="h-4 w-4 text-quantum-lime" /> Interface unificada</div>
-                  <p>Mesma tela alterna GPT, Claude, Gemini e DeepSeek sem perder o histórico.</p>
+                  <p>Mesma tela alterna GPT, Claude, Gemini e DeepSeek sem perder o histórico do workspace.</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
                   <div className="mb-1 flex items-center gap-2 text-white"><Wand2 className="h-4 w-4 text-amber-300" /> Multimodal e agentes</div>
-                  <p>Templates de prompt, assistentes automatizados e ganchos para geração de imagens/áudio.</p>
+                  <p>Templates de prompt, assistentes automatizados e hooks para imagens/áudio em cima da governança PD/SCC.</p>
                 </div>
               </CardContent>
             </Card>
@@ -237,9 +340,9 @@ export default function LabChatbot() {
                     className="mt-2 h-11 w-full rounded-2xl border border-white/10 bg-black/30 px-4 text-sm text-white"
                     disabled={isLocked || !selectedProvider}
                   >
-                    {selectedProvider?.availableModels.map((m) => (
-                      <option key={m} value={m} className="bg-slate-950 text-white">
-                        {m}
+                    {selectedProvider?.availableModels.map((entry) => (
+                      <option key={entry} value={entry} className="bg-slate-950 text-white">
+                        {entry}
                       </option>
                     ))}
                   </select>
@@ -302,7 +405,7 @@ export default function LabChatbot() {
                         {lastMeta.tokensUsed ? ` · ${lastMeta.tokensUsed} tokens` : ""}
                       </span>
                     ) : (
-                      <span>Histórico mantido localmente nesta sessão.</span>
+                      <span>Workspace persistido localmente por afiliado e tier.</span>
                     )}
                   </div>
                   <Button onClick={() => void handleSend()} disabled={isLocked || chatMutation.isPending} className="gradient-btn">
@@ -338,6 +441,40 @@ export default function LabChatbot() {
                     <p className="mt-1 text-xs text-slate-400">{template.description}</p>
                   </button>
                 ))}
+              </CardContent>
+            </Card>
+
+            <Card className="border-white/10 bg-white/5 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-white">Uso do dia e segurança</CardTitle>
+                <CardDescription className="text-slate-400">
+                  Quota operacional do seu tier e proteção da API REST externa.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-slate-300">
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-white"><ShieldCheck className="h-4 w-4 text-quantum-lime" /> Quota diária</div>
+                  {isLocked ? (
+                    <p>Sem quota disponível enquanto o chat estiver bloqueado.</p>
+                  ) : usageSummary ? (
+                    <div className="space-y-1 text-xs text-slate-300">
+                      <p>Usado hoje: <strong className="text-white">{usageSummary.requestsToday}</strong> / {usageSummary.requestLimit}</p>
+                      <p>Restante: <strong className="text-white">{usageSummary.requestsRemaining}</strong></p>
+                      <p>Input estimado: {usageSummary.estimatedInputTokens} tokens · Saída: {usageSummary.tokensOut} tokens</p>
+                      <p>Último uso: {usageSummary.lastUsedAt ? new Date(usageSummary.lastUsedAt).toLocaleString("pt-BR") : "ainda sem uso"}</p>
+                    </div>
+                  ) : (
+                    <p>Carregando telemetria do backend…</p>
+                  )}
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-white"><Lock className="h-4 w-4 text-amber-300" /> REST protegida</div>
+                  <p>Integrações externas usam shared key no backend para o endpoint REST de chat. O frontend continua via sessão protegida em tRPC.</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+                  <div className="mb-1 flex items-center gap-2 text-white"><HardDriveDownload className="h-4 w-4 text-quantum-cyan" /> Workspace persistido</div>
+                  <p>Histórico, modelo e último metadata ficam salvos no navegador por afiliado e tier para retomada rápida da conversa.</p>
+                </div>
               </CardContent>
             </Card>
 
@@ -416,11 +553,14 @@ export default function LabChatbot() {
               </div>
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
                 <div className="flex items-center gap-2 text-white"><Lock className="h-4 w-4 text-amber-300" /> Governança</div>
-                <p className="mt-1">Chaves de API ficam apenas no servidor. Cada chamada é registrada com afiliado, modelo, tokens e latência.</p>
+                <p className="mt-1">Chaves de API ficam apenas no servidor. Cada chamada é registrada com afiliado, tier, tokens e latência.</p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <a href={`${REPO_BASE}/AcademIA/Lab-Nexus/README-CHATBOT.md`} target="_blank" rel="noreferrer">
                   <Button variant="outline" className="border-white/10 bg-white/5 text-white">Ler doc do hub <ExternalLink className="ml-2 h-4 w-4" /></Button>
+                </a>
+                <a href={`${REPO_BASE}/AcademIA/Lab-Nexus/QA-ACCEPTANCE-MATRIX.md`} target="_blank" rel="noreferrer">
+                  <Button variant="outline" className="border-white/10 bg-white/5 text-white">Matriz de aceite <ExternalLink className="ml-2 h-4 w-4" /></Button>
                 </a>
                 <Link href="/academia">
                   <Button className="gradient-btn">Voltar ao Academ'IA <ArrowRight className="ml-2 h-4 w-4" /></Button>

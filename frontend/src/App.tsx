@@ -38,6 +38,7 @@ import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
 import AcademiaDashboard from "@/pages/AcademiaDashboard";
+import LabChatbot from "@/pages/LabChatbot";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
       <Route path="/academia" component={AcademiaDashboard} />
+      <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />

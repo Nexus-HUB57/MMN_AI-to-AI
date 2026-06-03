@@ -40,6 +40,7 @@ import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
+import { labNexusRouter } from "./routers/labNexusRouter";
 
 export const appRouter = router({
   system: router({
@@ -176,6 +177,7 @@ export const appRouter = router({
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
+  labNexus: labNexusRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

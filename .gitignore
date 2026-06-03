@@ -916,3 +916,15 @@
 
 # Nexus Partners sub-project (managed separately)
 frontend/nexus-partners/
+
+# =============================================================================
+# Exceções específicas do monorepo MMN_AI-to-AI
+# A regra global **/lib/ vem do template Python e estava bloqueando bibliotecas
+# de runtime do frontend/backend (TypeScript). Mantemos a regra e abrimos:
+# =============================================================================
+!frontend/src/lib/
+!frontend/src/lib/**
+!backend/src/lib/
+!backend/src/lib/**
+!mobile/src/lib/
+!mobile/src/lib/**

@@ -332,7 +332,7 @@ function checkLgpd(content: string): OutputSchema["lgpdChecks"] {
   };
 }
 
-const handler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
+export const complianceAuditorHandler: SkillHandler<ComplianceAuditorInput, ComplianceAuditorOutput> = {
   slug,
   title: "Auditor de Conformidade",
   category: "governance",

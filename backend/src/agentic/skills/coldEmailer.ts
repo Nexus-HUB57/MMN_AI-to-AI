@@ -346,7 +346,7 @@ function generateLinkedInTouchpoint(
   };
 }
 
-const handler: SkillHandler<ColdEmailerInput, ColdEmailerOutput> = {
+export const coldEmailerHandler: SkillHandler<ColdEmailerInput, ColdEmailerOutput> = {
   slug,
   title: "E-mail Marketing Outbound",
   category: "sales",

@@ -73,6 +73,26 @@ services:
         generateValue: true
       - key: OPENAI_API_KEY
         sync: false
+      - key: OPENAI_API_KEY_FALLBACK
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY_FALLBACK
+        sync: false
+      - key: GOOGLE_GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_GEMINI_API_KEY_FALLBACK
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY_FALLBACK
+        sync: false
+      - key: MINIMAX_API_KEY
+        sync: false
+      - key: MINIMAX_API_KEY_FALLBACK
+        sync: false
+      - key: LAB_NEXUS_PUBLIC_API_KEY
+        sync: false
       - key: FIREBASE_PROJECT_ID
         sync: false
       - key: FIREBASE_CLIENT_EMAIL

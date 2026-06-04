@@ -19,6 +19,7 @@ export interface LabNexusProvider {
   defaultModel: string;
   availableModels: string[];
   envKey: string;
+  envKeyFallback?: string;
   restEndpoint: string;
   modalities: Array<"text" | "vision" | "audio" | "image-generation" | "code" | "video">;
   notes: string;
@@ -31,6 +32,7 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
     defaultModel: "gpt-4o-mini",
     availableModels: ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "o4-mini"],
     envKey: "OPENAI_API_KEY",
+    envKeyFallback: "OPENAI_API_KEY_FALLBACK",
     restEndpoint: "https://api.openai.com/v1/chat/completions",
     modalities: ["text", "vision", "image-generation"],
     notes: "Compatível com Chat Completions e Responses API.",
@@ -45,6 +47,7 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
       "claude-3-opus-latest",
     ],
     envKey: "ANTHROPIC_API_KEY",
+    envKeyFallback: "ANTHROPIC_API_KEY_FALLBACK",
     restEndpoint: "https://api.anthropic.com/v1/messages",
     modalities: ["text", "vision"],
     notes: "Suporta tool use e Claude Skills.",
@@ -55,6 +58,7 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
     defaultModel: "gemini-2.0-flash",
     availableModels: ["gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"],
     envKey: "GOOGLE_GEMINI_API_KEY",
+    envKeyFallback: "GOOGLE_GEMINI_API_KEY_FALLBACK",
     restEndpoint: "https://generativelanguage.googleapis.com/v1beta",
     modalities: ["text", "vision", "audio"],
     notes: "Integração via Generative Language API.",
@@ -65,6 +69,7 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
     defaultModel: "deepseek-chat",
     availableModels: ["deepseek-chat", "deepseek-reasoner"],
     envKey: "DEEPSEEK_API_KEY",
+    envKeyFallback: "DEEPSEEK_API_KEY_FALLBACK",
     restEndpoint: "https://api.deepseek.com/v1/chat/completions",
     modalities: ["text", "code"],
     notes: "API compatível com formato OpenAI Chat Completions.",
@@ -75,6 +80,7 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
     defaultModel: "MiniMax-Text-01",
     availableModels: ["MiniMax-Text-01", "abab6.5-chat"],
     envKey: "MINIMAX_API_KEY",
+    envKeyFallback: "MINIMAX_API_KEY_FALLBACK",
     restEndpoint: "https://api.minimax.chat/v1/text/chatcompletion_v2",
     modalities: ["text", "audio", "video"],
     notes: "Hub multimodal com pesos abertos (MiniMax-01).",
@@ -88,7 +94,10 @@ export function listLabNexusProviders(): LabNexusProvider[] {
 export function isProviderConfigured(id: LabNexusProviderId): boolean {
   const provider = LAB_NEXUS_PROVIDERS[id];
   if (!provider) return false;
-  return Boolean(process.env[provider.envKey]?.trim());
+  return Boolean(
+    process.env[provider.envKey]?.trim() ||
+      (provider.envKeyFallback ? process.env[provider.envKeyFallback]?.trim() : ""),
+  );
 }
 
 export function getProviderPublicSummary() {

@@ -195,6 +195,51 @@ async function callGemini(
   return { content, tokens: data.usageMetadata?.totalTokenCount, raw: data };
 }
 
+type ProviderCredential = {
+  source: "primary" | "fallback";
+  envKey: string;
+  value: string;
+};
+
+function readProviderCredentials(provider: LabNexusProvider): ProviderCredential[] {
+  const credentials: ProviderCredential[] = [];
+  const primary = process.env[provider.envKey]?.trim();
+  if (primary) {
+    credentials.push({ source: "primary", envKey: provider.envKey, value: primary });
+  }
+
+  if (provider.envKeyFallback) {
+    const fallback = process.env[provider.envKeyFallback]?.trim();
+    if (fallback) {
+      credentials.push({ source: "fallback", envKey: provider.envKeyFallback, value: fallback });
+    }
+  }
+
+  return credentials;
+}
+
+function describeProviderCredentialKeys(provider: LabNexusProvider) {
+  return [provider.envKey, provider.envKeyFallback].filter(Boolean).join(" ou ");
+}
+
+async function executeProviderCall(
+  provider: LabNexusProvider,
+  apiKey: string,
+  request: LabNexusChatRequest,
+  ceiling: number,
+) {
+  if (provider.id === "openai" || provider.id === "deepseek" || provider.id === "minimax") {
+    return callOpenAILike(provider, apiKey, request, ceiling);
+  }
+  if (provider.id === "anthropic") {
+    return callAnthropic(provider, apiKey, request, ceiling);
+  }
+  if (provider.id === "google") {
+    return callGemini(provider, apiKey, request, ceiling);
+  }
+  throw new Error(`Provedor Lab Nexus ainda não suportado: ${provider.id}`);
+}
+
 function buildDemoMessage(provider: LabNexusProvider, request: LabNexusChatRequest) {
   const lastUser = [...request.messages].reverse().find((m) => m.role === "user");
   const echo = lastUser?.content?.slice(0, 280) ?? "(sem mensagem)";
@@ -202,7 +247,7 @@ function buildDemoMessage(provider: LabNexusProvider, request: LabNexusChatReque
     role: "assistant" as const,
     content: [
       `[Modo demo · ${provider.label}]`,
-      `Chave de API ainda não configurada no servidor (${provider.envKey}).`,
+      `Chave de API ainda não configurada no servidor (${describeProviderCredentialKeys(provider)}).`,
       "Sua mensagem foi recebida com sucesso e seria encaminhada à API oficial assim que a credencial estiver disponível.",
       `Eco da última mensagem: \"${echo}\"`,
     ].join("\n\n"),
@@ -268,9 +313,9 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
     affiliateId: request.affiliateId,
     tier,
   });
-  const apiKey = process.env[provider.envKey]?.trim();
+  const credentials = readProviderCredentials(provider);
 
-  if (!apiKey || !isProviderConfigured(provider.id)) {
+  if (!credentials.length || !isProviderConfigured(provider.id)) {
     return finalizeResponse({
       provider,
       request,
@@ -284,15 +329,11 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
     });
   }
 
-  try {
-    let result: { content: string; tokens?: number; raw: unknown };
-    if (provider.id === "openai" || provider.id === "deepseek" || provider.id === "minimax") {
-      result = await callOpenAILike(provider, apiKey, request, ceiling);
-    } else if (provider.id === "anthropic") {
-      result = await callAnthropic(provider, apiKey, request, ceiling);
-    } else if (provider.id === "google") {
-      result = await callGemini(provider, apiKey, request, ceiling);
-    } else {
+  const errors: string[] = [];
+
+  for (const credential of credentials) {
+    try {
+      const result = await executeProviderCall(provider, credential.value, request, ceiling);
       return finalizeResponse({
         provider,
         request,
@@ -301,41 +342,32 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
         usageBefore,
         estimatedInputTokens,
         startedAt,
-        mode: "demo",
-        message: buildDemoMessage(provider, request),
+        mode: "live",
+        tokensUsed: result.tokens,
+        message: { role: "assistant", content: result.content || "(resposta vazia)" },
       });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      errors.push(`${credential.source}:${credential.envKey} → ${message}`);
     }
-
-    return finalizeResponse({
-      provider,
-      request,
-      tier,
-      ceiling,
-      usageBefore,
-      estimatedInputTokens,
-      startedAt,
-      mode: "live",
-      tokensUsed: result.tokens,
-      message: { role: "assistant", content: result.content || "(resposta vazia)" },
-    });
-  } catch (error) {
-    return finalizeResponse({
-      provider,
-      request,
-      tier,
-      ceiling,
-      usageBefore,
-      estimatedInputTokens,
-      startedAt,
-      mode: "demo",
-      message: {
-        role: "assistant",
-        content: [
-          `[Falha ao contatar ${provider.label}]`,
-          error instanceof Error ? error.message : String(error),
-          "Retornando em modo seguro · sua sessão permanece ativa.",
-        ].join("\n\n"),
-      },
-    });
   }
+
+  return finalizeResponse({
+    provider,
+    request,
+    tier,
+    ceiling,
+    usageBefore,
+    estimatedInputTokens,
+    startedAt,
+    mode: "demo",
+    message: {
+      role: "assistant",
+      content: [
+        `[Falha ao contatar ${provider.label}]`,
+        ...errors,
+        "Retornando em modo seguro · sua sessão permanece ativa.",
+      ].join("\n\n"),
+    },
+  });
 }

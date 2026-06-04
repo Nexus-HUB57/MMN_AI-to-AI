@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { protectedProcedure, adminProcedure, router } from "../config/trpc";
+import { protectedProcedure, adminProcedure, publicProcedure, router } from "../config/trpc";
+import { getBtcBrlQuote } from "../services/btc-quote-service";
 import { createNotification, getDb } from "../../../database/schemas/db";
 import {
   bankAccounts,
@@ -42,6 +43,41 @@ function validateCPF(cpf: string): boolean {
 }
 
 export const bankingRouter = router({
+  // ============ BTC ⇄ BRL (Custódia Binance) — Correção #4 ============
+
+  /**
+   * Cotação BRL ⇄ BTC indicativa (cache 30s).
+   * Binânce como primária, CoinGecko como fallback.
+   * Público (sem auth) para uso em widget /payments antes do login.
+   */
+  getBtcBrlQuote: publicProcedure.query(async () => {
+    return getBtcBrlQuote();
+  }),
+
+  /**
+   * Pré-cálculo de conversão BRL → BTC ou BTC → BRL.
+   */
+  convertBrlBtc: publicProcedure
+    .input(
+      z.object({
+        direction: z.enum(["brl_to_btc", "btc_to_brl"]),
+        amount: z.number().positive().max(1_000_000_000),
+      }),
+    )
+    .query(async ({ input }) => {
+      const quote = await getBtcBrlQuote();
+      const result =
+        input.direction === "brl_to_btc"
+          ? input.amount / quote.brlPerBtc
+          : input.amount * quote.brlPerBtc;
+      return {
+        ...quote,
+        input: input.amount,
+        output: result,
+        direction: input.direction,
+      };
+    }),
+
   // ============ BANK ACCOUNTS ============
 
   /**

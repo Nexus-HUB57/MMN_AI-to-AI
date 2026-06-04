@@ -36,7 +36,9 @@
     "test:phase8": "vitest run tests/unit/dropshipping.test.ts",
     "test:watch": "vitest",
     "verify:beta-structure": "node scripts/validate-beta-structure.mjs",
-    "verify": "npm run doctor:workspaces && npm run verify:beta-structure && npm run typecheck && npm run lint && npm run build && npm run test:phase8"
+    "verify": "npm run doctor:workspaces && npm run verify:beta-structure && npm run typecheck && npm run lint && npm run build && npm run test:phase8",
+    "build:production": "npm --workspace frontend run build && npm --workspace backend run build:production",
+    "install:deploy": "npm install --workspace backend --workspace frontend --legacy-peer-deps --no-audit --no-fund"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

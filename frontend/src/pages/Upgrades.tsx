@@ -3,12 +3,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
-import { formatCurrency, NEXUS_PACKS, getPackAccess, getProgressSnapshot } from "@/lib/nexus-marketplace";
+import { formatCurrency, getPackAccess, getProgressSnapshot } from "@/lib/nexus-marketplace";
+import {
+  getAvailableUpgrades,
+  getFamilyProgress,
+} from "@/lib/family-resolver";
 import { ArrowRight, CheckCircle2, Lock, Sparkles, Trophy, Zap } from "lucide-react";
 
 export default function Upgrades() {
   const { profile, activate } = useMarketplaceProfile();
-  const upgrades = NEXUS_PACKS.filter((pack) => pack.slug !== "pack-a2").map((pack) => ({
+
+  // Correção #2 — Packs/Upgrade unificado:
+  // Só lista os Upgrades da família do nível atual. A próxima família
+  // só destrava ao concluir o último pack da família corrente.
+  const familyProgress = getFamilyProgress({ activePackSlugs: profile.activePackSlugs });
+  const upgrades = getAvailableUpgrades({
+    activePackSlugs: profile.activePackSlugs,
+  }).map((pack) => ({
     ...pack,
     access: getPackAccess(profile, pack),
   }));
@@ -20,10 +31,17 @@ export default function Upgrades() {
         <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-3">
-              <Badge className="border border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple">Upgrades oficiais do plano</Badge>
-              <h1 className="text-3xl font-bold text-white md:text-4xl">Trilha de upgrades do Marketplace Nexus</h1>
+              <Badge className="border border-quantum-purple/30 bg-quantum-purple/10 text-quantum-purple">
+                Packs / Upgrade · Família atual: {familyProgress.currentFamilyLabel}
+              </Badge>
+              <h1 className="text-3xl font-bold text-white md:text-4xl">Packs / Upgrade da sua família</h1>
               <p className="max-w-3xl text-sm leading-6 text-slate-300 md:text-base">
-                Os upgrades deixaram de ser plugins genéricos e passaram a refletir a evolução real do plano. Cada etapa só é destravada quando o afiliado conclui integralmente os critérios definidos no Age.txt.
+                Esta tela unifica os painéis Packs e Upgrade. Você vê apenas os packs da família do seu nível atual ({familyProgress.completedInCurrent}/{familyProgress.totalInCurrent} concluídos).
+                {familyProgress.isCurrentCompleted && familyProgress.nextFamilyLabel
+                  ? ` Próxima família destravada: ${familyProgress.nextFamilyLabel}.`
+                  : familyProgress.nextFamilyLabel
+                    ? ` Conclua todos os packs desta família para liberar ${familyProgress.nextFamilyLabel}.`
+                    : " Você já percorreu todas as famílias do plano."}
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">

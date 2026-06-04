@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/10_A_Revolucao_dos_Modelos_de_Linguagem.webp)
+
 **Modelos de Linguagem: A Revolução da Comunicação com IA - Domine o NLP
 e Transforme Sua Interação Digital**
 

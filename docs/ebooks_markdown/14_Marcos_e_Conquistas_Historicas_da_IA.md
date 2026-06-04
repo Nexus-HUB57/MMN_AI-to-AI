@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/14_Marcos_e_Conquistas_Historicas_da_IA.png)
+
 **Marcos e Conquistas da IA: A Linha do Tempo da Inteligência
 Artificial - Do Deep Blue ao ChatGPT**
 

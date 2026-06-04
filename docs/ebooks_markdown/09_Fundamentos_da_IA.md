@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/09_Fundamentos_da_IA.webp)
+
 **Fundamentos da Inteligência Artificial**
 
 *Do Sonho à Realidade --- História da IA, Machine Learning, Deep

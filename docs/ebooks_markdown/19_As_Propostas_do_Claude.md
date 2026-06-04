@@ -1,4 +1,4 @@
-![Capa](19_As_Propostas_do_Claude.png)
+![Capa](../../assets/ebook_covers/19_As_Propostas_do_Claude.png)
 
 ![Capa](../../assets/ebook_covers/19_As_Propostas_do_Claude.png)
 

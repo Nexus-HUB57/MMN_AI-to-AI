@@ -1,4 +1,4 @@
-![Capa](18_A_Evolucao_do_Claude.png)
+![Capa](../../assets/ebook_covers/18_A_Evolucao_do_Claude.png)
 
 ![Capa](../../assets/ebook_covers/18_A_Evolucao_do_Claude.png)
 

@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/13_Os_Modelos_que_Marcaram_Epoca.webp)
+
 **Modelos de IA: Os Gigantes que Moldaram a Era da Inteligência
 Artificial**
 

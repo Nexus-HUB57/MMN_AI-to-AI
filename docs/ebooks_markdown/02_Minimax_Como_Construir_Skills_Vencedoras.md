@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/02_Minimax_Como_Construir_Skills_Vencedoras.webp)
+
 **Minimax: Desvende o Poder das Skills e Crie Automações que Geram
 Renda**
 

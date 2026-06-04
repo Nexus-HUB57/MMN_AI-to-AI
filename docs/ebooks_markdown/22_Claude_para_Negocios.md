@@ -1,4 +1,4 @@
-![Capa](22_Claude_para_Negocios.png)
+![Capa](../../assets/ebook_covers/22_Claude_para_Negocios.png)
 
 ![Capa](../../assets/ebook_covers/22_Claude_para_Negocios.png)
 

@@ -1,4 +1,4 @@
-![Capa](24_Skills_Avancadas_com_Claude.png)
+![Capa](../../assets/ebook_covers/24_Skills_Avancadas_com_Claude.png)
 
 ![Capa](../../assets/ebook_covers/24_Skills_Avancadas_com_Claude.png)
 

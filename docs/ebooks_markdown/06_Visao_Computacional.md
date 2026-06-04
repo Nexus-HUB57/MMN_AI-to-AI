@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/06_Visao_Computacional.webp)
+
 **Visão Computacional: O Olhar da IA que Transforma Indústrias e
 Negócios**
 

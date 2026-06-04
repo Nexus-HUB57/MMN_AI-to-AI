@@ -1,4 +1,4 @@
-![Capa](16_Raizes_do_Claude.png)
+![Capa](../../assets/ebook_covers/16_Raizes_do_Claude.webp)
 
 ![Capa](../../assets/ebook_covers/16_Raizes_do_Claude.png)
 

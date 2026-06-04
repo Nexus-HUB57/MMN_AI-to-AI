@@ -1,3 +1,5 @@
+![Capa](../../assets/ebook_covers/04_Genspark_A_Super_IA.webp)
+
 **Genspark - A Super IA**
 
 *Explorando as Capacidades Extraordinárias da Plataforma Mais Avançada*

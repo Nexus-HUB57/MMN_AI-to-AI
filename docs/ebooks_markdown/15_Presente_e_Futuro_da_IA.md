@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/15_Presente_e_Futuro_da_IA.png)
+![Capa](../../assets/ebook_covers/15_Presente_e_Futuro_da_IA.webp)
 
 ![Capa](15_Presente_e_Futuro_da_IA.png)
 

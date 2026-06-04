@@ -11,10 +11,15 @@ for filename in os.listdir(ebooks_dir):
         
         # Encontrar a capa correspondente
         cover_file = None
-        for cover_name in os.listdir(covers_dir):
-            if cover_name.startswith(ebook_num) and cover_name.endswith(".png"):
-                cover_file = cover_name
-                break
+        # Prioridade para .png, depois .webp
+        possible_covers = [f for f in os.listdir(covers_dir) if f.startswith(ebook_num)]
+        png_covers = [f for f in possible_covers if f.endswith(".png")]
+        webp_covers = [f for f in possible_covers if f.endswith(".webp")]
+        
+        if png_covers:
+            cover_file = png_covers[0]
+        elif webp_covers:
+            cover_file = webp_covers[0]
         
         if cover_file:
             with open(ebook_path, 'r', encoding='utf-8') as f:

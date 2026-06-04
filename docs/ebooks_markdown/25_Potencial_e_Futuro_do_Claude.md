@@ -1,7 +1,5 @@
 ![Capa](../../assets/ebook_covers/25_Potencial_e_Futuro_do_Claude.png)
 
-![Capa](../../assets/ebook_covers/25_Potencial_e_Futuro_do_Claude.png)
-
 **O Potencial e o Futuro do Claude**
 
 *Tendências, Roadmap, Cenários e Como se Preparar para a Próxima Década

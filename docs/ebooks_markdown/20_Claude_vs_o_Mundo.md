@@ -1,7 +1,5 @@
 ![Capa](../../assets/ebook_covers/20_Claude_vs_o_Mundo.png)
 
-![Capa](../../assets/ebook_covers/20_Claude_vs_o_Mundo.png)
-
 **Claude vs. o Mundo: A Batalha dos Gigantes da IA - Quem Lidera a
 Revolução Conversacional?**
 

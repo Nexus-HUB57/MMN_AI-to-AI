@@ -1,7 +1,5 @@
 ![Capa](../../assets/ebook_covers/16_Raizes_do_Claude.png)
 
-![Capa](../../assets/ebook_covers/16_Raizes_do_Claude.png)
-
 **As Raízes do Claude**
 
 *A Anthropic e a Nova Filosofia da IA --- A História da Empresa que

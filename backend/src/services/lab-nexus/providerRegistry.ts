@@ -77,13 +77,13 @@ export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> =
   minimax: {
     id: "minimax",
     label: "MiniMax",
-    defaultModel: "MiniMax-Text-01",
-    availableModels: ["MiniMax-Text-01", "abab6.5-chat"],
+    defaultModel: "MiniMax-M2",
+    availableModels: ["MiniMax-M2", "MiniMax-M1", "MiniMax-Text-01"],
     envKey: "MINIMAX_API_KEY",
     envKeyFallback: "MINIMAX_API_KEY_FALLBACK",
-    restEndpoint: "https://api.minimax.chat/v1/text/chatcompletion_v2",
+    restEndpoint: "https://api.minimaxi.chat/v1/text/chatcompletion_v2",
     modalities: ["text", "audio", "video"],
-    notes: "Hub multimodal com pesos abertos (MiniMax-01).",
+    notes: "Hub multimodal com pesos abertos (MiniMax-M1/M2).",
   },
 };
 

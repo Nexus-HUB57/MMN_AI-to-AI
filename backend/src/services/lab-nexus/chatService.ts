@@ -100,9 +100,20 @@ async function callOpenAILike(
   }
 
   const data = (await response.json()) as {
-    choices?: Array<{ message?: { content?: string } }>;
-    usage?: { total_tokens?: number };
+    choices?: Array<{ message?: { content?: string } }> | null;
+    usage?: { total_tokens?: number } | null;
+    base_resp?: { status_code?: number; status_msg?: string };
   };
+
+  // MiniMax retorna HTTP 200 mas indica erro de plano/cota via base_resp.
+  if (data.base_resp && data.base_resp.status_code && data.base_resp.status_code !== 0) {
+    throw new Error(
+      `${provider.label} respondeu base_resp ${data.base_resp.status_code}: ${
+        data.base_resp.status_msg ?? "erro reportado pelo provedor"
+      }`,
+    );
+  }
+
   const content = data.choices?.[0]?.message?.content ?? "";
   return { content, tokens: data.usage?.total_tokens, raw: data };
 }

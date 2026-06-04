@@ -1,3 +1,5 @@
+![Capa](19_As_Propostas_do_Claude.png)
+
 ![Capa](../../assets/ebook_covers/19_As_Propostas_do_Claude.png)
 
 **Claude: As Propostas de Valor que Redefinem a Interação com a IA -

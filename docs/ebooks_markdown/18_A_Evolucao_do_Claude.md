@@ -1,3 +1,5 @@
+![Capa](18_A_Evolucao_do_Claude.png)
+
 ![Capa](../../assets/ebook_covers/18_A_Evolucao_do_Claude.png)
 
 **A Evolução do Claude: Da Gênese às Versões Mais Recentes - Uma Jornada

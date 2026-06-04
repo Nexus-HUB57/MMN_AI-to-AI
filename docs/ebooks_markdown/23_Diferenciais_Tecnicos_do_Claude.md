@@ -1,3 +1,5 @@
+![Capa](23_Diferenciais_Tecnicos_do_Claude.png)
+
 ![Capa](../../assets/ebook_covers/23_Diferenciais_Tecnicos_do_Claude.png)
 
 **Os Diferenciais Técnicos do Claude**

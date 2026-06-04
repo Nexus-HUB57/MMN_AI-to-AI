@@ -1,5 +1,7 @@
 ![Capa](../../assets/ebook_covers/15_Presente_e_Futuro_da_IA.png)
 
+![Capa](15_Presente_e_Futuro_da_IA.png)
+
 **O Presente e o Futuro da IA**
 
 *Estado da Arte em 2026 --- Capacidades Atuais, Limitações, Tendências e

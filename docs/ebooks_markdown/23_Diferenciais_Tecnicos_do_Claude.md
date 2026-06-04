@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/22_Claude_Diferenciais_Tecnicos.png)
+![Capa](../../assets/ebook_covers/23_Diferenciais_Tecnicos_do_Claude.png)
 
 **Os Diferenciais Técnicos do Claude**
 

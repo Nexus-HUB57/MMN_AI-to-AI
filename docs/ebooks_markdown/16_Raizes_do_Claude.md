@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/15_Raizes_do_Claude.png)
+![Capa](../../assets/ebook_covers/16_Raizes_do_Claude.png)
 
 **As Raízes do Claude**
 

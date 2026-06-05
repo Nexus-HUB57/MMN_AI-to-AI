@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/18_A_Evolucao_do_Claude.png)
+![Capa](../../docs/ebooks/18_A_Evolucao_do_Claude.png)
 
 **A Evolução do Claude: Da Gênese às Versões Mais Recentes - Uma Jornada
 de Inovação na IA Conversacional**

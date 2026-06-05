@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/07_IA_Generativa_Criativa.webp)
+![Capa](../../docs/ebooks/07_IA_Generativa_Criativa.webp)
 
 **IA Generativa: A Revolução Criativa - Desbloqueie Seu Potencial
 Artístico e Inovador**

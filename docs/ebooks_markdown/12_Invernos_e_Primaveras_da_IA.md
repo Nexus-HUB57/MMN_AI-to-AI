@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/12_Invernos_e_Primaveras_da_IA.webp)
+![Capa](../../docs/ebooks/12_Invernos_e_Primaveras_da_IA.webp)
 
 **Invernos e Primaveras da IA: Lições do Passado para o Futuro da
 Inteligência Artificial**

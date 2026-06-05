@@ -1,4 +1,4 @@
-![Capa](../../docs/ebooks/01_Minimax_A_IA_Revolucionaria.webp)
+![Capa](../../assets/ebook_covers/01_Minimax_A_IA_Revolucionaria.webp)
 
 **Minimax: O Código da Riqueza Digital - Domine a IA para Criar
 Liberdade Financeira em 2026**

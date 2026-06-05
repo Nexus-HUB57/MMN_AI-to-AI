@@ -1,4 +1,4 @@
-![Capa](../../docs/ebooks/09_Fundamentos_da_IA.webp)
+![Capa](../../assets/ebook_covers/09_Fundamentos_da_IA.webp)
 
 **Fundamentos da Inteligência Artificial**
 

@@ -1,4 +1,4 @@
-![Capa](../../docs/ebooks/05_Como_Fazer_Dinheiro_com_IA.webp)
+![Capa](../../assets/ebook_covers/05_Como_Fazer_Dinheiro_com_IA.webp)
 
 **O Mapa da Riqueza com IA: 20 Modelos de Negócio para Lucrar em 2026**
 

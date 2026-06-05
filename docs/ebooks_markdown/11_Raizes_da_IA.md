@@ -1,4 +1,4 @@
-![Capa](../../docs/ebooks/11_Raizes_da_IA.webp)
+![Capa](../../assets/ebook_covers/11_Raizes_da_IA.webp)
 
 **As Raízes da Inteligência Artificial**
 

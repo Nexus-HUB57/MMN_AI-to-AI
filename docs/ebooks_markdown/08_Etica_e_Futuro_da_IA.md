@@ -1,4 +1,4 @@
-![Capa](../../docs/ebooks/08_Etica_e_Futuro_da_IA.webp)
+![Capa](../../assets/ebook_covers/08_Etica_e_Futuro_da_IA.webp)
 
 **Ética e Futuro da IA: Navegando os Desafios e Oportunidades da Era da
 Inteligência Artificial**

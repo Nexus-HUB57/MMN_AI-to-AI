@@ -1,64 +1,38 @@
----
-titulo: "Governança, Compliance e Regulação em IA"
-subtitulo: "Como usar Inteligência Artificial com segurança jurídica, ética e operacional"
-colecao: "Coleção MMN_IA – Universo IA"
-volume: "Vol. 4 de 5"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
----
+![Capa](../../../assets/ebook_covers/04_governanca_compliance_regulacao_ia.webp)
 
-# ⚖️ Governança, Compliance e Regulação em IA
+**Governança, Compliance e Regulação em IA**
 
-> *"IA sem governança não é inovação. É risco em escala."*
+*Como usar Inteligência Artificial com segurança jurídica, ética e operacional*
 
----
+*Coleção MMN_IA – Universo IA • Vol. 4 de 5*
 
-## 🎯 CAPA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║   🧠  COLEÇÃO MMN_IA — UNIVERSO IA  |  Vol. 4 de 5      ║
-║                                                          ║
-║   GOVERNANÇA, COMPLIANCE                                 ║
-║   E REGULAÇÃO EM IA                                      ║
-║                                                          ║
-║   Como usar Inteligência Artificial com                  ║
-║   segurança jurídica, ética e operacional                ║
-║                                                          ║
-║   ─────────────────────────────────────────              ║
-║   Nexus HUB57 · Ecossistema MMN_IA · 2026               ║
-╚══════════════════════════════════════════════════════════╝
-```
+MMN_IA • 2026
 
-![Capa sugerida — Governança em IA](https://sspark.genspark.ai/cfimages?u1=FOW319%2BAmUQPN8iUId%2BQSVf3XLko3n0bxED6dCsGXDK5yGC5FmLh01HX%2FrtoL95EOmBhr78nfOfxRsXhh7lgj78QJhl6myauFMRR3xQ%3D&u2=OCs1Z1nZmmenJ9mj&width=2560)
+**Sobre este ebook**
 
-Fonte visual sugerida: [Ethical AI Governance Framework for Enterprises: Key Principles and Steps](https://www.ovaledge.com/blog/ethical-ai-governance-framework)
+Este volume da Coleção MMN_IA – Universo IA apresenta **Governança, Compliance e Regulação em IA** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
----
+**Sumário**
 
-## 📋 SUMÁRIO
-
-1. Manifesto: IA responsável é vantagem competitiva
-2. O que é governança de IA
-3. Por que compliance em IA virou prioridade de negócio
-4. Panorama regulatório global em 2026
-5. O AI Act europeu e seus impactos
-6. Riscos jurídicos, operacionais e reputacionais
-7. Privacidade, LGPD e uso de dados em IA
-8. Viés algorítmico, explicabilidade e transparência
-9. Deepfakes, conteúdo sintético e confiança digital
-10. Auditoria, logs e rastreabilidade
-11. Políticas internas de IA para empresas
-12. Governança aplicada ao ecossistema MMN_IA
-13. Framework de maturidade em governança de IA
-14. Como implementar um programa de IA responsável em 90 dias
-15. Tendências regulatórias 2026+
-16. Checklist de Compliance em IA
-17. Glossário jurídico-operacional
-
----
+> **•** 1. Manifesto: IA responsável é vantagem competitiva
+> **•** 2. O que é governança de IA
+> **•** 3. Por que compliance em IA virou prioridade de negócio
+> **•** 4. Panorama regulatório global em 2026
+> **•** 5. O AI Act europeu e seus impactos
+> **•** 6. Riscos jurídicos, operacionais e reputacionais
+> **•** 7. Privacidade, LGPD e uso de dados em IA
+> **•** 8. Viés algorítmico, explicabilidade e transparência
+> **•** 9. Deepfakes, conteúdo sintético e confiança digital
+> **•** 10. Auditoria, logs e rastreabilidade
+> **•** 11. Políticas internas de IA para empresas
+> **•** 12. Governança aplicada ao ecossistema MMN_IA
+> **•** 13. Framework de maturidade em governança de IA
+> **•** 14. Como implementar um programa de IA responsável em 90 dias
+> **•** 15. Tendências regulatórias 2026+
+> **•** 16. Checklist de Compliance em IA
+> **•** 17. Glossário jurídico-operacional
 
 ## 1. MANIFESTO: IA RESPONSÁVEL É VANTAGEM COMPETITIVA
 
@@ -660,4 +634,4 @@ Antes de colocar um sistema de IA em produção, valide:
 **Segregação**: separação entre dados, ambientes ou acessos.  
 **Trazabilidade/Trilha de auditoria**: histórico verificável de eventos.  
 **Validação**: teste formal antes de liberar.  
-**Versionamento**: controle de mudança de modelos, prompts e fluxos.  
+**Versionamento**: controle de mudança de modelos, prompts e fluxos.

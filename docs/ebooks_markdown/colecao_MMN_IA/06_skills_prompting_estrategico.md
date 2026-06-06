@@ -1,81 +1,39 @@
----
-titulo: "Skills de IA Vol. 1 — Prompting Estratégico"
-subtitulo: "Como pensar, estruturar e comandar sistemas de IA com clareza, contexto e intenção"
-colecao: "Coleção MMN_IA – Skills"
-volume: "Vol. 6 de 10"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/06_skills_prompting_estrategico.webp)
 
-# 🧠 Skills de IA Vol. 1 — Prompting Estratégico
+**Skills de IA Vol. 1 — Prompting Estratégico**
 
-> *"Quem sabe perguntar com precisão consegue produzir com escala."*
+*Como pensar, estruturar e comandar sistemas de IA com clareza, contexto e intenção*
 
----
+*Coleção MMN_IA – Skills • Vol. 6 de 10*
 
-## VISÃO DA COLETÂNEA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-A coletânea **Skills** foi concebida para transformar IA em competência prática. Em vez de falar apenas sobre tecnologia, esta série organiza o domínio da IA em habilidades aplicáveis ao trabalho real: comunicação com modelos, desenho de fluxos, automação, conteúdo, dados, operação, governança e escala.
+MMN_IA • 2026
 
-Este primeiro volume parte da base mais subestimada de todas: a habilidade de instruir bem.
+**Sobre este ebook**
 
----
+Este volume da Coleção MMN_IA – Skills apresenta **Skills de IA Vol. 1 — Prompting Estratégico** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
-## SUMÁRIO
+**Sumário**
 
-1. O que é prompting estratégico
-2. Por que prompts ruins geram operações ruins
-3. A anatomia de um prompt forte
-4. Clareza, contexto, restrições e formato
-5. Como pedir profundidade sem gerar ruído
-6. Prompting para negócio
-7. Prompting para marketing e conteúdo
-8. Prompting para análise e síntese
-9. Prompting para aprendizagem
-10. Prompting para times e processos
-11. Biblioteca de estruturas reutilizáveis
-12. Anti-padrões de prompting
-13. Como medir qualidade de prompts
-14. Prompt stack profissional
-15. Framework MMN_IA de prompting
-16. Glossário
-17. Checklist executivo
-18. Plano de evolução de skill
-
----
-
-## CAPÍTULO 1 — O QUE É PROMPTING ESTRATÉGICO
-
-Prompting estratégico não é “dar comandos bonitos” para uma IA. É a capacidade de converter intenção em instrução operacional. Um prompt bem construído não apenas pede algo. Ele enquadra o papel do modelo, delimita o problema, organiza o contexto, define o padrão de qualidade, controla ambiguidades e molda a saída.
-
-Na prática, prompting estratégico é uma habilidade de arquitetura cognitiva. Você cria uma ponte entre o que precisa acontecer no negócio e o que a IA consegue executar. Isso muda tudo.
-
-Quem trata prompt como improviso recebe resposta improvisada. Quem trata prompt como design recebe consistência.
-
----
-
-## CAPÍTULO 2 — POR QUE PROMPTS RUINS GERAM OPERAÇÕES RUINS
-
-Um time pode ter acesso aos melhores modelos do mercado e ainda assim produzir pouco valor se sua camada de instrução for fraca.
-
-Os sintomas aparecem rápido:
-
-- respostas genéricas demais
-- repetição de clichês
-- baixa aderência ao objetivo real
-- inconsistência entre saídas
-- excesso de retrabalho humano
-- dificuldade de transformar IA em processo
-
-Em ambientes profissionais, o custo do prompt ruim não é apenas uma resposta ruim. É perda de tempo, ruído operacional, desalinhamento de marca, risco reputacional e baixa adoção interna.
-
----
-
-## CAPÍTULO 3 — A ANATOMIA DE UM PROMPT FORTE
-
-Um prompt de alto nível costuma reunir seis camadas:
+> **•** 1. O que é prompting estratégico
+> **•** 2. Por que prompts ruins geram operações ruins
+> **•** 3. A anatomia de um prompt forte
+> **•** 4. Clareza, contexto, restrições e formato
+> **•** 5. Como pedir profundidade sem gerar ruído
+> **•** 6. Prompting para negócio
+> **•** 7. Prompting para marketing e conteúdo
+> **•** 8. Prompting para análise e síntese
+> **•** 9. Prompting para aprendizagem
+> **•** 10. Prompting para times e processos
+> **•** 11. Biblioteca de estruturas reutilizáveis
+> **•** 12. Anti-padrões de prompting
+> **•** 13. Como medir qualidade de prompts
+> **•** 14. Prompt stack profissional
+> **•** 15. Framework MMN_IA de prompting
+> **•** 16. Glossário
+> **•** 17. Checklist executivo
+> **•** 18. Plano de evolução de skill
 
 ### 1. Papel
 Quem a IA deve ser naquele contexto.

@@ -1,13 +1,46 @@
----
-titulo: "Skills de IA Vol. 5 — Dados, Decisão e Governança"
-subtitulo: "Como usar inteligência aplicada com critérios, evidência e responsabilidade"
-colecao: "Coleção MMN_IA – Skills"
-volume: "Vol. 10 de 10"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/10_skills_dados_decisao_governanca.webp)
+
+**Skills de IA Vol. 5 — Dados, Decisão e Governança**
+
+*Como usar inteligência aplicada com critérios, evidência e responsabilidade*
+
+*Coleção MMN_IA – Skills • Vol. 10 de 10*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Skills apresenta **Skills de IA Vol. 5 — Dados, Decisão e Governança** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. A skill mais madura da IA aplicada
+> **•** 2. Dados como insumo decisório
+> **•** 3. Decisão assistida vs decisão delegada
+> **•** 4. Qualidade de evidência
+> **•** 5. Skill de leitura crítica
+> **•** 6. Skill de síntese executiva
+> **•** 7. Skill de governança operacional
+> **•** 8. Skill de accountability
+> **•** 9. Indicadores e painéis
+> **•** 10. Risco e rastreabilidade
+> **•** 11. Cultura decisória
+> **•** 12. Anti-padrões
+> **•** 13. Framework MMN_IA
+> **•** 14. Checklist final
+> **•** 15. Jornada de maturidade
+> **•** 1. opinião ou hipótese
+> **•** 2. padrão observado
+> **•** 3. dado consolidado
+> **•** 4. comparação histórica
+> **•** 5. validação com resultado real
+> **•** 1. qual foi a hipótese
+> **•** 2. qual evidência foi usada
+> **•** 3. qual decisão foi tomada
+> **•** 4. qual resultado ocorreu
+> **•** 5. o que deve ser ajustado
 
 # 📊 Skills de IA Vol. 5 — Dados, Decisão e Governança
 

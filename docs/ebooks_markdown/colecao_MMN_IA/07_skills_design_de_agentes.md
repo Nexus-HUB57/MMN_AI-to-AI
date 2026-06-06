@@ -1,13 +1,50 @@
----
-titulo: "Skills de IA Vol. 2 — Design de Agentes"
-subtitulo: "Como pensar agentes, papéis, ferramentas, memória e autonomia com responsabilidade"
-colecao: "Coleção MMN_IA – Skills"
-volume: "Vol. 7 de 10"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/07_skills_design_de_agentes.webp)
+
+**Skills de IA Vol. 2 — Design de Agentes**
+
+*Como pensar agentes, papéis, ferramentas, memória e autonomia com responsabilidade*
+
+*Coleção MMN_IA – Skills • Vol. 7 de 10*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Skills apresenta **Skills de IA Vol. 2 — Design de Agentes** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. O que diferencia agente de assistente
+> **•** 2. Papéis, objetivos e limites
+> **•** 3. Ferramentas e capacidade de ação
+> **•** 4. Memória e contexto operacional
+> **•** 5. Agentes single-task e multi-task
+> **•** 6. Supervisão humana
+> **•** 7. Guardrails e segurança
+> **•** 8. Arquitetura de fluxo
+> **•** 9. Agentes para marketing
+> **•** 10. Agentes para operação
+> **•** 11. Agentes para suporte e conhecimento
+> **•** 12. Agentes para creators e afiliados
+> **•** 13. Anti-padrões de design
+> **•** 14. Framework MMN_IA de agentes
+> **•** 15. Checklist de implantação
+> **•** 16. Maturidade da skill
+> **•** 1. leitura
+> **•** 2. análise
+> **•** 3. recomendação
+> **•** 4. geração de artefato
+> **•** 5. execução controlada
+> **•** 6. execução com impacto externo
+> **•** 1. receber objetivo
+> **•** 2. interpretar contexto
+> **•** 3. planejar subtarefas
+> **•** 4. escolher ferramenta
+> **•** 5. executar
+> **•** 6. validar resultado
+> **•** 7. registrar e devolver saída
 
 # 🤖 Skills de IA Vol. 2 — Design de Agentes
 

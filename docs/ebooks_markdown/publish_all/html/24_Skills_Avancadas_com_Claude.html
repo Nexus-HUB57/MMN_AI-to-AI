@@ -1,0 +1,226 @@
+<!DOCTYPE html><html><head><meta charset='utf-8'><title>24_Skills_Avancadas_com_Claude.md</title><style>
+body { font-family: Helvetica, Arial, sans-serif; color: #202124; max-width: 800px; margin: 28px auto; padding: 0 18px; line-height: 1.6; }
+h1, h2, h3, h4 { color: #123a63; }
+h1 { font-size: 26px; border-bottom: 3px solid #123a63; padding-bottom: 8px; }
+a { color: #205493; }
+img { max-width: 100%; height: auto; border-radius: 8px; }
+blockquote { border-left: 4px solid #2a6ebb; padding-left: 12px; color: #555; }
+pre, code { background: #f5f7fb; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #d0d7de; padding: 8px; }
+th { background: #123a63; color: #fff; }
+</style></head><body><p><img src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/24_Skills_Avancadas_com_Claude.png" alt="Capa" /></p>
+
+<p><strong>Claude: Skills Avançadas - Domine a Criação de Soluções Inteligentes e
+Personalizadas com IA</strong></p>
+
+<p><em>Construa Ferramentas Poderosas, Agentes Autônomos e Produtos de IA com
+Claude</em></p>
+
+<p><em>Técnicas avançadas: tools, RAG, agents, fine-tuning e arquitetura de
+produção.</em></p>
+
+<p><strong>Por MMN AI-to-AI</strong></p>
+
+<p>MMN AI-to-AI • 2026</p>
+
+<p><strong>Sobre este ebook</strong></p>
+
+<p>Você já sabe usar Claude. Mas e construir produtos robustos em cima
+dele? E criar agentes que executam tarefas complexas autonomamente? E
+implementar sistemas de produção escaláveis? Este ebook é o mergulho
+técnico profundo que profissionais e empresas precisam. Vamos cobrir
+Skills (tools), RAG avançado, agentes, orquestração, fine-tuning,
+otimização de performance, deploy em produção, monitoramento e tudo
+mais. É um guia prático, com exemplos de código, padrões de arquitetura,
+armadilhas comuns e estratégias comprovadas. Ao final, você terá
+conhecimento para construir produtos de IA robustos, escaláveis e
+diferenciados com Claude.</p>
+
+<p><strong>Sumário</strong></p>
+
+<blockquote>
+  <p><strong>•</strong> 1. Tools e Skills: A API Completa</p>
+  
+  <p><strong>•</strong> 2. Skills Pré-Construídas e Customizadas</p>
+  
+  <p><strong>•</strong> 3. RAG Avançado com Claude</p>
+  
+  <p><strong>•</strong> 4. Agentes: O Estado da Arte</p>
+  
+  <p><strong>•</strong> 5. Claude Code: Programação Assistida por IA</p>
+  
+  <p><strong>•</strong> 6. Otimização de Custos e Performance</p>
+  
+  <p><strong>•</strong> 7. Deploy, Monitoramento e Observabilidade</p>
+  
+  <p><strong>•</strong> 8. Segurança e Guardrails</p>
+  
+  <p><strong>•</strong> 9. Casos Especiais e Limitações</p>
+  
+  <p><strong>•</strong> 10. Conclusão: Claude Como Plataforma de Inovação</p>
+</blockquote>
+
+<p><strong>1. Tools e Skills: A API Completa</strong></p>
+
+<p><strong>Como funcionam as Tools</strong></p>
+
+<p>Tools são funções que Claude pode chamar. Você define: nome, descrição,
+parâmetros. Claude decide quando usar baseado na descrição. Você
+implementa a função. É o mecanismo fundamental de extensão do modelo.</p>
+
+<p><strong>Schema de uma Tool</strong></p>
+
+<p>Formato JSON Schema. Campos: name, description, input_schema. Boas
+descrições são cruciais --- é o que Claude lê para decidir. Exemplo:
+\'Busca produtos no e-commerce por categoria e faixa de preço\'.</p>
+
+<p><strong>2. Skills Pré-Construídas e Customizadas</strong></p>
+
+<p><strong>Skills prontas para usar</strong></p>
+
+<p>Web search: Claude busca online. Code execution: roda Python. File
+reading: lê arquivos. PDF processing: processa PDFs. Computer Use: opera
+o computador. Skills disponíveis conforme evolução da plataforma.</p>
+
+<p><strong>Skills customizadas</strong></p>
+
+<p>Acesso a sua base de dados. Integração com CRM, ERP, sistema interno.
+Chamada a APIs de terceiros. Ações específicas do negócio. Com a API,
+você pode definir tools personalizadas ilimitadas.</p>
+
+<p><strong>3. RAG Avançado com Claude</strong></p>
+
+<p><strong>Embeddings e bases vetoriais</strong></p>
+
+<p>Use Voyage AI (recomendado pela Anthropic) ou alternativas. Bases:
+Pinecone, Weaviate, Qdrant, Chroma, pgvector. Chunking: divida em
+pedaços semânticos de 500-1000 tokens. Overlap: preserve contexto entre
+chunks.</p>
+
+<p><strong>Técnicas avançadas</strong></p>
+
+<p>Hybrid search: combine vetorial + keyword. Re-ranking: refine com modelo
+mais simples. Query rewriting: Claude reformula a pergunta antes de
+buscar. Citation: peça Claude para indicar fontes. Multi-hop: busca
+iterativa para perguntas complexas.</p>
+
+<p><strong>4. Agentes: O Estado da Arte</strong></p>
+
+<p><strong>Anatomia de um agente Claude</strong></p>
+
+<p>Modelo (Claude Sonnet/Opus). Tools (funções disponíveis). System prompt
+(instruções, personalidade, limites). Memória (curto e longo prazo).
+Loop de raciocínio. Guardrails (validações). Observabilidade.
+Frameworks: LangGraph, CrewAI, Claude Agent SDK.</p>
+
+<p><strong>Padrões de agentes</strong></p>
+
+<p>ReAct: loop thought-action-observation. Plan-and-Execute: planeja,
+executa. Reflexion: auto-critica. Multi-agent: vários agentes
+especializados. Hierarchical: gerente + trabalhadores.
+Human-in-the-loop: humano valida passos críticos. Cada padrão tem
+trade-offs.</p>
+
+<p><strong>5. Claude Code: Programação Assistida por IA</strong></p>
+
+<p><strong>Funcionalidades</strong></p>
+
+<p>Editor inteligente no terminal. Lê, edita, cria arquivos. Executa
+comandos. Roda testes. Debugging automatizado. Refatoração inteligente.
+Suporte a qualquer linguagem. Integração com Git. É como ter um par
+programador sênior 24/7.</p>
+
+<p><strong>Workflows avançados</strong></p>
+
+<p>Code review automatizado. Geração de testes. Documentação. Migrations.
+Bug hunting. Prototipagem rápida. Aprendizado de novas linguagens.
+Refatoração em larga escala. Com Claude Code, programadores experimentam
+aumento de 3-5x em produtividade.</p>
+
+<p><strong>6. Otimização de Custos e Performance</strong></p>
+
+<p><strong>Caching e prompt caching</strong></p>
+
+<p>Reuse contextos repetidos. Cache system prompts. Cache documentos
+grandes. Anthropic oferece prompt caching com redução de até 90% no
+custo. Fundamental para aplicações em escala.</p>
+
+<p><strong>Model routing e batching</strong></p>
+
+<p>Roteie tarefas simples para Haiku, complexas para Sonnet. Batch
+processing: agrupe tarefas. Streaming: UX melhor, custo similar.
+Compressão de prompts: prompts mais curtos. Otimização pode reduzir
+custos em 70-90%.</p>
+
+<p><strong>7. Deploy, Monitoramento e Observabilidade</strong></p>
+
+<p><strong>Deploy em produção</strong></p>
+
+<p>API Anthropic diretamente. AWS Bedrock: integração AWS, VPC. Google
+Vertex AI: Google Cloud. Self-hosted enterprise: máximo controle. Use
+CDN, load balancer, retry logic, circuit breakers. Implemente de forma
+gradual (canary, blue-green).</p>
+
+<p><strong>Monitoramento essencial</strong></p>
+
+<p>Latência: p50, p95, p99. Custo: \$ por request, \$ por usuário. Taxa de
+erro. Taxa de hallucination (amostra). Satisfação do usuário. Tool
+failures. Use LangSmith, Helicone, Datadog, ou stack custom. Monitore
+constantemente.</p>
+
+<p><strong>8. Segurança e Guardrails</strong></p>
+
+<p><strong>Defesas em camadas</strong></p>
+
+<p>Validação de input: filtre conteúdo perigoso. Validação de output:
+verifique respostas. Rate limiting. Detecção de anomalias. Auditoria de
+logs. Red team constante. Defense in depth: não dependa de uma única
+camada.</p>
+
+<p><strong>Compliance e auditoria</strong></p>
+
+<p>LGPD/GDPR: consentimento, direito ao esquecimento. HIPAA: BAA,
+criptografia. SOC2: controles, auditoria. EU AI Act: transparência,
+risco. Implemente políticas claras e auditoria regular. Claude facilita,
+mas responsabilidade é sua.</p>
+
+<p><strong>9. Casos Especiais e Limitações</strong></p>
+
+<p><strong>Quando Claude tem dificuldades</strong></p>
+
+<p>Tarefas extremamente específicas de domínio (modelo especializado pode
+ser melhor). Cálculos matemáticos complexos (considere executar código).
+Tarefas em tempo real com latência crítica (Haiku, mas limites existem).
+Tarefas que exigem conhecimento pós-treinamento (use RAG).</p>
+
+<p><strong>Estratégias para contornar limitações</strong></p>
+
+<p>Decomposição: quebre em tarefas menores. RAG para conhecimento atual.
+Code execution para cálculos. Human-in-the-loop para decisões críticas.
+Multi-model: use Claude + outros. Conjugar técnicas é mais poderoso que
+depender de uma só.</p>
+
+<p><strong>10. Conclusão: Claude Como Plataforma de Inovação</strong></p>
+
+<p><strong>O poder está nas suas mãos</strong></p>
+
+<p>Em 2026, qualquer desenvolvedor com conhecimento e criatividade pode
+construir produtos de IA que antes exigiriam equipes inteiras. Claude é
+a plataforma. Skills, agentes, RAG, Claude Code, tools --- todas as
+peças estão disponíveis. O que você constrói com elas depende da sua
+visão. Comece pequeno, experimente, construa em escala. O futuro está
+nas suas mãos.</p>
+
+<p><strong>Seu Império Começa Agora!</strong></p>
+
+<p><em>O conhecimento sem ação é apenas entretenimento. Você acaba de receber
+o mapa para dominar a inteligência artificial e multiplicar seus
+resultados. O próximo passo é seu: aplique as estratégias, construa suas
+soluções e assuma a liderança no seu mercado. A revolução não espera por
+ninguém. Vá e construa o seu futuro!</em></p>
+
+<p>Skills Avançadas com Claude --- Por MMN AI-to-AI</p>
+
+<p><em>MMN AI-to-AI • 2026 • Todos os direitos reservados</em></p>
+</body></html>

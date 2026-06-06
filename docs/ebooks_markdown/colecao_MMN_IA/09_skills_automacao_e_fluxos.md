@@ -1,13 +1,44 @@
----
-titulo: "Skills de IA Vol. 4 — Automação e Fluxos"
-subtitulo: "Como transformar tarefas repetitivas em sistemas operacionais inteligentes"
-colecao: "Coleção MMN_IA – Skills"
-volume: "Vol. 9 de 10"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/09_skills_automacao_e_fluxos.webp)
+
+**Skills de IA Vol. 4 — Automação e Fluxos**
+
+*Como transformar tarefas repetitivas em sistemas operacionais inteligentes*
+
+*Coleção MMN_IA – Skills • Vol. 9 de 10*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Skills apresenta **Skills de IA Vol. 4 — Automação e Fluxos** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. O que automatizar primeiro
+> **•** 2. Diferença entre automação simples e fluxo inteligente
+> **•** 3. Mapear entradas, decisões e saídas
+> **•** 4. Skill de desenho de processo
+> **•** 5. Skill de priorização
+> **•** 6. Skill de integração
+> **•** 7. Skill de monitoramento
+> **•** 8. Skill de rollback
+> **•** 9. Automação para operação
+> **•** 10. Automação para conteúdo
+> **•** 11. Automação para vendas e suporte
+> **•** 12. Anti-padrões
+> **•** 13. Framework MMN_IA
+> **•** 14. Checklist
+> **•** 15. Maturidade operacional
+> **•** 1. gatilho
+> **•** 2. coleta de insumo
+> **•** 3. validação
+> **•** 4. processamento
+> **•** 5. decisão
+> **•** 6. ação
+> **•** 7. registro
+> **•** 8. exceção
 
 # ⚙️ Skills de IA Vol. 4 — Automação e Fluxos
 

@@ -1,13 +1,54 @@
----
-titulo: "Ecossistema IA Vol. 2 — Dados, Infraestrutura e Interoperabilidade"
-subtitulo: "A espinha dorsal invisível que determina escala, contexto e resiliência em IA"
-colecao: "Coleção MMN_IA – Ecossistema IA"
-volume: "Vol. 12 de 15"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/12_ecossistema_ia_dados_infraestrutura_interoperabilidade.webp)
+
+**Ecossistema IA Vol. 2 — Dados, Infraestrutura e Interoperabilidade**
+
+*A espinha dorsal invisível que determina escala, contexto e resiliência em IA*
+
+*Coleção MMN_IA – Ecossistema IA • Vol. 12 de 15*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Ecossistema IA apresenta **Ecossistema IA Vol. 2 — Dados, Infraestrutura e Interoperabilidade** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. A infraestrutura esquecida da IA
+> **•** 2. O papel central dos dados
+> **•** 3. Qualidade, contexto e disponibilidade
+> **•** 4. A nova infraestrutura de IA
+> **•** 5. Edge, cloud e ambientes híbridos
+> **•** 6. AI gateways e interoperabilidade
+> **•** 7. Padronização e portabilidade
+> **•** 8. Data products no ecossistema de IA
+> **•** 9. Segurança e controle de acesso
+> **•** 10. Observabilidade de pipeline
+> **•** 11. Custos ocultos da má arquitetura
+> **•** 12. Escalabilidade real
+> **•** 13. Infraestrutura como estratégia
+> **•** 14. Framework MMN_IA
+> **•** 15. Checklist executivo
+> **•** 16. Conclusão
+> **•** 17. Fontes-base
+> **•** 1. **Inferência gerenciada vs self-hosted:** comece gerenciado, migre para self-hosted apenas quando volume e privacidade justifiquem.
+> **•** 2. **CPU vs GPU vs aceleradores:** GPUs para treino e modelos grandes; CPUs para embeddings, classificação leve e RAG.
+> **•** 3. **Edge vs cloud:** edge para latência ultrabaixa, privacidade e offline; cloud para escala e modelos grandes.
+> **•** 4. **Multi-cloud vs single-cloud:** multi-cloud para resiliência regulatória; single-cloud para velocidade.
+> **•** 1. **Mapear** as 5 entidades de dado mais críticas do negócio.
+> **•** 2. **Padronizar** schemas e contratos para essas entidades.
+> **•** 3. **Centralizar** ingestão e qualidade em um pipeline único.
+> **•** 4. **Vetorizar** o conteúdo não estruturado relevante.
+> **•** 5. **Expor** via API para modelos e agentes.
+> **•** 6. **Monitorar** qualidade, custo e drift continuamente.
+> **•** 7. **Auditar** lineage e acessos trimestralmente.
+> **•** 8. **Evoluir** infraestrutura conforme o uso real, não conforme hype.
+> **•** 1. Guarde prompts e fluxos fora da plataforma do vendor.
+> **•** 2. Versione contratos de entrada e saída.
+> **•** 3. Mantenha camada de abstração para provedores críticos.
+> **•** 4. Preserve seus dados e embeddings sob seu domínio.
 
 # 🧩 Ecossistema IA Vol. 2 — Dados, Infraestrutura e Interoperabilidade
 
@@ -348,3 +389,59 @@ Dados e infraestrutura são o **chassi invisível** do ecossistema de IA. Modelo
 
 **Coleção MMN_IA · Universo Ecossistema IA · Vol. 12 de 15**  
 Versão 1.0.0 · Atualizado em 2026-06-06
+---
+
+## Capítulo 11 — Segurança da infraestrutura de IA
+
+A infraestrutura de IA precisa ser protegida em 4 planos simultâneos: **identidade**, **rede**, **dados** e **execução**. O erro mais comum é tratar IA como apenas mais uma aplicação web. Não é. Ela concentra dados sensíveis, lógica crítica e automação com capacidade de agir.
+
+### 11.1. Controles mínimos
+
+- MFA para todos os acessos administrativos.
+- Segregação de ambientes (dev, staging, prod).
+- Cofre de segredos para chaves e tokens.
+- Rate limiting em APIs de inferência.
+- Monitoramento de anomalias e exfiltração.
+
+### 11.2. Hardening operacional
+
+A camada de hardening inclui políticas de expiração de credenciais, rotação de segredos, logs imutáveis e validação de dependências. Em IA, bibliotecas e modelos de terceiros ampliam a superfície de risco. Portanto, cada novo componente deve ser tratado como risco potencial.
+
+## Capítulo 12 — Estratégia de portabilidade
+
+O lock-in em IA acontece em três níveis: modelo, plataforma e dado. A saída não é tentar evitar qualquer lock-in, mas reduzir o lock-in ruim e aceitar o lock-in produtivo quando ele acelera o negócio.
+
+### 12.1. Regras práticas
+
+1. Guarde prompts e fluxos fora da plataforma do vendor.
+2. Versione contratos de entrada e saída.
+3. Mantenha camada de abstração para provedores críticos.
+4. Preserve seus dados e embeddings sob seu domínio.
+
+## Apêndice — Checklist de arquitetura
+
+- [ ] Dados estruturados e não estruturados mapeados.
+- [ ] Política de retenção definida.
+- [ ] Catálogo de dados com responsáveis por domínio.
+- [ ] Vetorização auditável.
+- [ ] Custos monitorados por carga e por caso de uso.
+- [ ] Estratégia de portabilidade documentada.
+
+## Glossário rápido
+
+- **Lakehouse:** arquitetura unificada entre data lake e warehouse.
+- **CDC:** captura de mudanças em tempo real.
+- **Embedding:** representação vetorial de conteúdo.
+- **Lineage:** rastreabilidade do dado ao longo do pipeline.
+- **Vendor lock-in:** dependência estrutural de um fornecedor.
+
+## FAQ executivo
+
+**Qual é o erro estrutural mais caro em dados para IA?**  
+Construir casos de uso sem preparar qualidade, contrato e acesso ao dado.
+
+**Toda empresa precisa de banco vetorial dedicado?**  
+Não. Em muitos casos, pgvector resolve a etapa inicial com simplicidade e custo menor.
+
+**Quando migrar para arquitetura mais sofisticada?**  
+Quando latência, escala, segurança ou multi-equipe exigirem segmentação mais robusta.

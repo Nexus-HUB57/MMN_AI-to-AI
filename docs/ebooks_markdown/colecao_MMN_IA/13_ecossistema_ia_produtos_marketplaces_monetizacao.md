@@ -1,13 +1,60 @@
----
-titulo: "Ecossistema IA Vol. 3 — Produtos, Marketplaces e Monetização"
-subtitulo: "Como valor, distribuição e captura econômica se reorganizam no mercado de IA"
-colecao: "Coleção MMN_IA – Ecossistema IA"
-volume: "Vol. 13 de 15"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/13_ecossistema_ia_produtos_marketplaces_monetizacao.webp)
+
+**Ecossistema IA Vol. 3 — Produtos, Marketplaces e Monetização**
+
+*Como valor, distribuição e captura econômica se reorganizam no mercado de IA*
+
+*Coleção MMN_IA – Ecossistema IA • Vol. 13 de 15*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Ecossistema IA apresenta **Ecossistema IA Vol. 3 — Produtos, Marketplaces e Monetização** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. O nascimento da economia de IA
+> **•** 2. Produto de IA não é só feature
+> **•** 3. Plataformas e marketplaces
+> **•** 4. Modelos de monetização
+> **•** 5. Dados como ativo econômico
+> **•** 6. APIs, agentes e serviços
+> **•** 7. Marketplaces de prompts, agentes e apps
+> **•** 8. Distribuição e descoberta
+> **•** 9. Produto horizontal vs vertical
+> **•** 10. Bundling e camadas de valor
+> **•** 11. Economia do ecossistema
+> **•** 12. Monetização responsável
+> **•** 13. Risco de commoditização
+> **•** 14. Framework MMN_IA
+> **•** 15. Checklist estratégico
+> **•** 16. Conclusão
+> **•** 17. Fontes-base
+> **•** 1. **Produtos verticais de IA** (SaaS especializados por nicho).
+> **•** 2. **Marketplaces de agentes, prompts e templates** (economia de criadores).
+> **•** 3. **Serviços de implementação e operação** (consultoria, integração, ops).
+> **•** 1. **Assinatura SaaS** (mensal/anual por usuário ou empresa).
+> **•** 2. **Pay-per-use** (por chamada, por tarefa, por token).
+> **•** 3. **Pay-per-result** (por lead gerado, por contrato fechado, por hora poupada).
+> **•** 4. **Licenciamento** (white-label, on-prem).
+> **•** 5. **Marketplace fee** (take rate sobre transação).
+> **•** 6. **Serviços** (implementação, customização, treinamento).
+> **•** 7. **Dados/insights** (vender dado agregado, anônimo, contextualizado).
+> **•** 1. **Definir** dor mensurável e recorrente.
+> **•** 2. **Validar** disposição a pagar com 10 conversas reais.
+> **•** 3. **Construir** MVP em até 4 semanas com TTV < 7 dias.
+> **•** 4. **Vender** manualmente para os primeiros 10 clientes.
+> **•** 5. **Codificar** o que funcionou em produto repetível.
+> **•** 6. **Adicionar** segunda fonte de receita (serviços, marketplace, educação).
+> **•** 7. **Medir** NRR, margem bruta e CAC payback.
+> **•** 8. **Escalar** canais somente após unit economics positivos.
+> **•** 1. Estime o valor econômico gerado ao cliente.
+> **•** 2. Capture entre 5% e 20% desse valor, dependendo da maturidade.
+> **•** 3. Use mínimo mensal para garantir previsibilidade.
+> **•** 4. Adicione camada variável quando houver performance.
 
 # 💸 Ecossistema IA Vol. 3 — Produtos, Marketplaces e Monetização
 
@@ -356,3 +403,50 @@ A monetização de IA em 2026 não é sobre vender modelo — é sobre vender **
 
 **Coleção MMN_IA · Universo Ecossistema IA · Vol. 13 de 15**  
 Versão 1.0.0 · Atualizado em 2026-06-06
+---
+
+## Capítulo 11 — Pricing de produtos de IA
+
+Preço em IA não pode ser decidido apenas por benchmark. É preciso olhar para **valor percebido**, **economia gerada**, **substituição de trabalho** e **risco assumido** pelo fornecedor.
+
+### 11.1. Três abordagens de pricing
+
+- **Baseado em custo:** simples, mas limita margem.
+- **Baseado em mercado:** útil para não fugir da faixa competitiva.
+- **Baseado em valor:** o mais poderoso quando há prova de ROI.
+
+### 11.2. Como precificar no MMN_IA
+
+1. Estime o valor econômico gerado ao cliente.
+2. Capture entre 5% e 20% desse valor, dependendo da maturidade.
+3. Use mínimo mensal para garantir previsibilidade.
+4. Adicione camada variável quando houver performance.
+
+## Capítulo 12 — Go-to-market para ofertas de IA
+
+Produtos de IA vendem melhor quando o mercado entende **o problema**, não quando entende **a tecnologia**. A narrativa de venda deve começar na dor, passar pela oportunidade e só depois mencionar IA.
+
+### 12.1. Estrutura de GTM
+
+- ICP bem definido.
+- Oferta principal simples.
+- Caso real ou piloto demonstrável.
+- Canal principal de aquisição.
+- Prova econômica clara.
+
+## Apêndice — Scorecard de monetização
+
+- [ ] Dor recorrente confirmada.
+- [ ] ICP validado com clientes pagantes.
+- [ ] Modelo de receita escolhido conscientemente.
+- [ ] Margem bruta positiva mesmo com inferência.
+- [ ] Canal principal de aquisição funcionando.
+- [ ] Caso de sucesso documentado.
+
+## Glossário rápido
+
+- **ICP:** perfil de cliente ideal.
+- **Take rate:** percentual capturado por uma plataforma.
+- **ARR:** receita recorrente anual.
+- **NRR:** expansão líquida da base atual.
+- **Payback CAC:** tempo para recuperar o custo de aquisição.

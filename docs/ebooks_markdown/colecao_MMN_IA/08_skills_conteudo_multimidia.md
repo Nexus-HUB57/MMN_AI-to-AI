@@ -1,13 +1,52 @@
----
-titulo: "Skills de IA Vol. 3 — Conteúdo Multimídia"
-subtitulo: "Da ideia à distribuição: como operar texto, imagem, áudio e vídeo com inteligência aplicada"
-colecao: "Coleção MMN_IA – Skills"
-volume: "Vol. 8 de 10"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/08_skills_conteudo_multimidia.webp)
+
+**Skills de IA Vol. 3 — Conteúdo Multimídia**
+
+*Da ideia à distribuição: como operar texto, imagem, áudio e vídeo com inteligência aplicada*
+
+*Coleção MMN_IA – Skills • Vol. 8 de 10*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Skills apresenta **Skills de IA Vol. 3 — Conteúdo Multimídia** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. A evolução do conteúdo na era multimodal
+> **•** 2. Skill de briefing criativo
+> **•** 3. Skill de roteiro e narrativa
+> **•** 4. Skill de imagem e direção visual
+> **•** 5. Skill de áudio e voz
+> **•** 6. Skill de vídeo e adaptação
+> **•** 7. Skill de reaproveitamento de ativos
+> **•** 8. Skill de coerência de marca
+> **•** 9. Skill de conteúdo educacional
+> **•** 10. Skill de conteúdo de venda
+> **•** 11. Operação multimídia em equipes pequenas
+> **•** 12. Biblioteca de processos
+> **•** 13. Métricas de qualidade
+> **•** 14. Anti-padrões
+> **•** 15. Framework MMN_IA
+> **•** 16. Checklist operacional
+> **•** 1. palestra
+> **•** 2. transcrição
+> **•** 3. artigo
+> **•** 4. resumo executivo
+> **•** 5. carrossel
+> **•** 6. roteiro curto
+> **•** 7. newsletter
+> **•** 8. ebook
+> **•** 1. tema central
+> **•** 2. insight principal
+> **•** 3. peça-matriz
+> **•** 4. desdobramentos
+> **•** 5. revisão
+> **•** 6. distribuição
+> **•** 7. análise de resposta
 
 # 🎬 Skills de IA Vol. 3 — Conteúdo Multimídia
 

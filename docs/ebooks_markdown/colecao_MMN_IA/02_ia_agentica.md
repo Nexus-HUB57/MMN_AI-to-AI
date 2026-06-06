@@ -1,66 +1,38 @@
----
-titulo: "IA Agêntica: Como Agentes Inteligentes Estão Redefinindo Negócios"
-subtitulo: "Da automação de tarefas à autonomia real — entenda, construa e implante sistemas de agentes de IA"
-colecao: "Coleção MMN_IA – Universo IA"
-volume: "Vol. 2 de 5"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
----
+![Capa](../../../assets/ebook_covers/02_ia_agentica.webp)
 
-# 🤖 IA Agêntica: Como Agentes Inteligentes Estão Redefinindo Negócios
+**IA Agêntica: Como Agentes Inteligentes Estão Redefinindo Negócios**
 
-> *"Um agente de IA não responde à sua pergunta. Ele resolve o seu problema."*
+*Da automação de tarefas à autonomia real — entenda, construa e implante sistemas de agentes de IA*
 
----
+*Coleção MMN_IA – Universo IA • Vol. 2 de 5*
 
-## 🎯 CAPA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║   🧠  COLEÇÃO MMN_IA — UNIVERSO IA  |  Vol. 2 de 5      ║
-║                                                          ║
-║   IA AGÊNTICA:                                           ║
-║   COMO AGENTES INTELIGENTES ESTÃO                        ║
-║   REDEFININDO NEGÓCIOS                                   ║
-║                                                          ║
-║   Da automação ao Full Autonomous Runtime                ║
-║                                                          ║
-║   ─────────────────────────────────────────              ║
-║   Nexus HUB57 · Ecossistema MMN_IA · 2026               ║
-╚══════════════════════════════════════════════════════════╝
-```
+MMN_IA • 2026
 
----
+**Sobre este ebook**
 
-![Capa sugerida — IA Agêntica](https://sspark.genspark.ai/cfimages?u1=ti0LAvXkLgDIkHXMMJXpV3bYUnd9857kduiKKfBgEeIa72iZN10Efb8w8RhVuuf5fNkpvWJAzTYe6QwKPrUYAvzuhf1aAdiNzapZPpkrGp0uYmha3Esn5pBwL%2BHFbVAjMSRpvBvsRnpgT%2B9D%2BMXXyEP%2BHdpJNDlePg%3D%3D&u2=INRJrGxXm%2FOBeI72&width=2560)
+Este volume da Coleção MMN_IA – Universo IA apresenta **IA Agêntica: Como Agentes Inteligentes Estão Redefinindo Negócios** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
-Fonte visual sugerida: [Futuristic AI Technology: Advanced Robotics & Holographic Interfaces](https://easy-peasy.ai/ai-image-generator/images/futuristic-ai-technology-advancements-robotics-holographic-interfaces)
+**Sumário**
 
----
-
-## 📋 SUMÁRIO
-
-1. Manifesto: A era dos agentes chegou
-2. O que é IA Agêntica — definição técnica e prática
-3. Chatbot vs Copiloto vs Agente — a diferença real
-4. Anatomia de um agente de IA
-5. Tipos de agentes: do simples ao orquestrado
-6. Como agentes percebem, planejam e executam
-7. Memória, contexto e persistência nos agentes
-8. Multi-agentes e orquestração
-9. Casos de uso reais: vendas, marketing, suporte, operações
-10. O Ecossistema MMN_IA e a arquitetura SHO
-11. Riscos, limites e supervisão humana
-12. Como construir seu primeiro agente
-13. Frameworks e ferramentas de IA agêntica
-14. Métricas de autonomia
-15. Tendências: rumo ao AOI (Autonomous Operational Intelligence)
-16. Checklist do Arquiteto de Agentes
-17. Glossário técnico de IA Agêntica
-
----
+> **•** 1. Manifesto: A era dos agentes chegou
+> **•** 2. O que é IA Agêntica — definição técnica e prática
+> **•** 3. Chatbot vs Copiloto vs Agente — a diferença real
+> **•** 4. Anatomia de um agente de IA
+> **•** 5. Tipos de agentes: do simples ao orquestrado
+> **•** 6. Como agentes percebem, planejam e executam
+> **•** 7. Memória, contexto e persistência nos agentes
+> **•** 8. Multi-agentes e orquestração
+> **•** 9. Casos de uso reais: vendas, marketing, suporte, operações
+> **•** 10. O Ecossistema MMN_IA e a arquitetura SHO
+> **•** 11. Riscos, limites e supervisão humana
+> **•** 12. Como construir seu primeiro agente
+> **•** 13. Frameworks e ferramentas de IA agêntica
+> **•** 14. Métricas de autonomia
+> **•** 15. Tendências: rumo ao AOI (Autonomous Operational Intelligence)
+> **•** 16. Checklist do Arquiteto de Agentes
+> **•** 17. Glossário técnico de IA Agêntica
 
 ## 1. MANIFESTO: A ERA DOS AGENTES CHEGOU
 

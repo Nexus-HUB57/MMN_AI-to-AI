@@ -1,66 +1,38 @@
----
-titulo: "IA para Empresas: Da Experimentação ao Lucro"
-subtitulo: "O guia definitivo para líderes, operadores digitais e afiliados que querem resultado real com Inteligência Artificial"
-colecao: "Coleção MMN_IA – Universo IA"
-volume: "Vol. 1 de 5"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
----
+![Capa](../../../assets/ebook_covers/01_ia_para_empresas.webp)
 
-# 📘 IA para Empresas: Da Experimentação ao Lucro
+**IA para Empresas: Da Experimentação ao Lucro**
 
-> *"A maioria das empresas não está atrasada em IA porque não tem tecnologia. Está atrasada porque não sabe onde aplicar."*
+*O guia definitivo para líderes, operadores digitais e afiliados que querem resultado real com Inteligência Artificial*
 
----
+*Coleção MMN_IA – Universo IA • Vol. 1 de 5*
 
-## 🎯 CAPA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║   🧠  COLEÇÃO MMN_IA — UNIVERSO IA  |  Vol. 1 de 5      ║
-║                                                          ║
-║   IA PARA EMPRESAS:                                      ║
-║   DA EXPERIMENTAÇÃO AO LUCRO                             ║
-║                                                          ║
-║   O guia definitivo para transformar projetos            ║
-║   piloto em resultados mensuráveis                       ║
-║                                                          ║
-║   ─────────────────────────────────────────              ║
-║   Nexus HUB57 · Ecossistema MMN_IA · 2026               ║
-╚══════════════════════════════════════════════════════════╝
-```
+MMN_IA • 2026
 
----
+**Sobre este ebook**
 
-![Capa sugerida — IA para Empresas](https://sspark.genspark.ai/cfimages?u1=r81iLezL9F%2B19X8MJFdOP24rNkvUvmShVxeLBUxyltsLpQKvPZhXvgot%2FzRsSCXTbjHyEZ3Jjor%2BxwyJ8KznA2AedF0AMuvDyy6n6eIVfy6LQUPPRn4w&u2=42Rf%2FPv1IaCDKnxx&width=2560)
+Este volume da Coleção MMN_IA – Universo IA apresenta **IA para Empresas: Da Experimentação ao Lucro** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
-Fonte visual sugerida: [Aprimo: AI-Powered DAM for Smarter Marketing Decisions](https://www.aprimo.com/blog/leveraging-ai-powered-marketing-for-smart-decisions-in-digital-asset-management)
+**Sumário**
 
----
-
-## 📋 SUMÁRIO
-
-1. Manifesto: Por que este ebook existe
-2. O paradoxo da adoção de IA
-3. Fundamentos — o que IA pode e o que não pode (ainda)
-4. Framework de Seleção de Casos de Uso
-5. IA em Marketing e Conteúdo
-6. IA em Vendas e Atendimento
-7. IA em Operações e Processos
-8. IA em Analytics e Decisão
-9. Os 7 erros mais caros nos projetos de IA
-10. Montar o time certo
-11. Stack e ferramentas por porte de empresa
-12. Métricas que importam: ROI de IA
-13. Roadmap de implantação em 90 dias
-14. Tendências 2026 que moldam o mercado
-15. Checklist final do gestor de IA
-16. Glossário
-17. Call to Action — Ecossistema MMN_IA
-
----
+> **•** 1. Manifesto: Por que este ebook existe
+> **•** 2. O paradoxo da adoção de IA
+> **•** 3. Fundamentos — o que IA pode e o que não pode (ainda)
+> **•** 4. Framework de Seleção de Casos de Uso
+> **•** 5. IA em Marketing e Conteúdo
+> **•** 6. IA em Vendas e Atendimento
+> **•** 7. IA em Operações e Processos
+> **•** 8. IA em Analytics e Decisão
+> **•** 9. Os 7 erros mais caros nos projetos de IA
+> **•** 10. Montar o time certo
+> **•** 11. Stack e ferramentas por porte de empresa
+> **•** 12. Métricas que importam: ROI de IA
+> **•** 13. Roadmap de implantação em 90 dias
+> **•** 14. Tendências 2026 que moldam o mercado
+> **•** 15. Checklist final do gestor de IA
+> **•** 16. Glossário
+> **•** 17. Call to Action — Ecossistema MMN_IA
 
 ## 1. MANIFESTO: POR QUE ESTE EBOOK EXISTE
 
@@ -579,4 +551,3 @@ Acesse **oneverso.com.br** para conhecer o ecossistema completo de agentes, skil
 
 *© 2026 Nexus HUB57 · Ecossistema MMN_IA · Todos os direitos reservados*
 *Versão 1.0.0 · Junho 2026 · Coleção MMN_IA — Universo IA, Vol. 1 de 5*
-

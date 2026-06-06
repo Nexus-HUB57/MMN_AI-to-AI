@@ -1,66 +1,38 @@
----
-titulo: "Multimodalidade e RAG: O Novo Cérebro da IA Aplicada"
-subtitulo: "Como construir IA que vê, ouve, lê e responde com contexto real"
-colecao: "Coleção MMN_IA – Universo IA"
-volume: "Vol. 3 de 5"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
----
+![Capa](../../../assets/ebook_covers/03_multimodalidade_rag.webp)
 
-# 🧬 Multimodalidade e RAG: O Novo Cérebro da IA Aplicada
+**Multimodalidade e RAG: O Novo Cérebro da IA Aplicada**
 
-> *"Uma IA que não conhece seu negócio não pode servir seu negócio. RAG é a ponte entre o conhecimento universal dos LLMs e o conhecimento específico de cada organização."*
+*Como construir IA que vê, ouve, lê e responde com contexto real*
 
----
+*Coleção MMN_IA – Universo IA • Vol. 3 de 5*
 
-## 🎯 CAPA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║   🧠  COLEÇÃO MMN_IA — UNIVERSO IA  |  Vol. 3 de 5      ║
-║                                                          ║
-║   MULTIMODALIDADE E RAG:                                 ║
-║   O NOVO CÉREBRO DA IA APLICADA                          ║
-║                                                          ║
-║   Como construir IA que vê, ouve, lê e responde          ║
-║   com contexto real                                      ║
-║                                                          ║
-║   ─────────────────────────────────────────              ║
-║   Nexus HUB57 · Ecossistema MMN_IA · 2026               ║
-╚══════════════════════════════════════════════════════════╝
-```
+MMN_IA • 2026
 
----
+**Sobre este ebook**
 
-![Capa sugerida — Multimodalidade e RAG](https://sspark.genspark.ai/cfimages?u1=FemEO%2BHKYENeCLtV90dh5hSWrrqs%2F0B%2F8GEfNGb%2B19e8Fl1qlSAaQdKaIRZnOgZbEvwMYcPdIwq23gmVgMABlDzWUOaIWEaqJvhuhPz3NKoorYdvx6Hvv3DAE0FgCs4cq9jAymufAVCQQ8uwwmzMOKi5ILsKsslklclcLbEbBDpD9CDq1ONseg%3D%3D&u2=hyIRgxNLsxE9ufE8&width=2560)
+Este volume da Coleção MMN_IA – Universo IA apresenta **Multimodalidade e RAG: O Novo Cérebro da IA Aplicada** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
-Fonte visual sugerida: [The Multimodal AI Guide: Vision, Voice, Text, and Beyond - KDnuggets](https://www.kdnuggets.com/the-multimodal-ai-guide-vision-voice-text-and-beyond)
+**Sumário**
 
----
-
-## 📋 SUMÁRIO
-
-1. Manifesto: IA contextualizada muda tudo
-2. O que é IA Multimodal — ver, ouvir e ler
-3. Modelos de linguagem visual (VLMs)
-4. IA com áudio e voz
-5. O problema das alucinações e sua solução
-6. O que é RAG — Retrieval-Augmented Generation
-7. Anatomia técnica de um sistema RAG
-8. Embeddings e busca semântica
-9. Tipos de RAG: simples, avançado e multimodal
-10. RAG vs Fine-tuning vs Agentes — quando usar cada um
-11. Construindo uma base de conhecimento empresarial
-12. Casos de uso reais de RAG multimodal
-13. Avaliação de qualidade em sistemas RAG
-14. RAG em produção: latência, custo e escalabilidade
-15. Tendências: RAG + Agentes + Multimodalidade
-16. Checklist do Arquiteto de RAG
-17. Glossário de Multimodalidade e RAG
-
----
+> **•** 1. Manifesto: IA contextualizada muda tudo
+> **•** 2. O que é IA Multimodal — ver, ouvir e ler
+> **•** 3. Modelos de linguagem visual (VLMs)
+> **•** 4. IA com áudio e voz
+> **•** 5. O problema das alucinações e sua solução
+> **•** 6. O que é RAG — Retrieval-Augmented Generation
+> **•** 7. Anatomia técnica de um sistema RAG
+> **•** 8. Embeddings e busca semântica
+> **•** 9. Tipos de RAG: simples, avançado e multimodal
+> **•** 10. RAG vs Fine-tuning vs Agentes — quando usar cada um
+> **•** 11. Construindo uma base de conhecimento empresarial
+> **•** 12. Casos de uso reais de RAG multimodal
+> **•** 13. Avaliação de qualidade em sistemas RAG
+> **•** 14. RAG em produção: latência, custo e escalabilidade
+> **•** 15. Tendências: RAG + Agentes + Multimodalidade
+> **•** 16. Checklist do Arquiteto de RAG
+> **•** 17. Glossário de Multimodalidade e RAG
 
 ## 1. MANIFESTO: IA CONTEXTUALIZADA MUDA TUDO
 

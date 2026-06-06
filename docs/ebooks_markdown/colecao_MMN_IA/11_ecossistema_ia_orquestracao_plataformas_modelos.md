@@ -1,13 +1,61 @@
----
-titulo: "Ecossistema IA Vol. 1 — Orquestração, Plataformas e Modelos"
-subtitulo: "Como entender as camadas que compõem um ecossistema de IA moderno e competitivo"
-colecao: "Coleção MMN_IA – Ecossistema IA"
-volume: "Vol. 11 de 15"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
-status: "Desenvolvimento inicial robusto"
----
+![Capa](../../../assets/ebook_covers/11_ecossistema_ia_orquestracao_plataformas_modelos.webp)
+
+**Ecossistema IA Vol. 1 — Orquestração, Plataformas e Modelos**
+
+*Como entender as camadas que compõem um ecossistema de IA moderno e competitivo*
+
+*Coleção MMN_IA – Ecossistema IA • Vol. 11 de 15*
+
+**Por Nexus HUB57 · Ecossistema MMN_IA**
+
+MMN_IA • 2026
+
+**Sobre este ebook**
+
+Este volume da Coleção MMN_IA – Ecossistema IA apresenta **Ecossistema IA Vol. 1 — Orquestração, Plataformas e Modelos** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
+
+**Sumário**
+
+> **•** 1. O que é um ecossistema de IA
+> **•** 2. Por que o mercado deixou de ser só sobre modelos
+> **•** 3. A camada dos modelos fundacionais
+> **•** 4. A camada das plataformas
+> **•** 5. A camada da orquestração
+> **•** 6. A camada dos dados e contexto
+> **•** 7. A camada da aplicação
+> **•** 8. A camada da governança
+> **•** 9. Ecossistemas fechados vs abertos
+> **•** 10. O papel da interoperabilidade
+> **•** 11. Como empresas escolhem seu stack
+> **•** 12. O risco do lock-in
+> **•** 13. Orquestração como vantagem competitiva
+> **•** 14. Ecossistemas agentic
+> **•** 15. O papel das integrações
+> **•** 16. Framework MMN_IA
+> **•** 17. Checklist executivo
+> **•** 18. Tendências do ecossistema
+> **•** 19. Conclusão estratégica
+> **•** 1. **Centralizar ou distribuir?** Operações maduras adotam **híbrido**: control plane central + data planes setoriais.
+> **•** 2. **Modelo único ou multi-modelo?** Multi-modelo vence em custo e robustez — desde que haja um roteador inteligente.
+> **•** 3. **Síncrono ou assíncrono?** Tudo que dura >2s deve ser assíncrono com callback/queue.
+> **•** 4. **Stateful ou stateless?** Stateful para jornadas longas (suporte, vendas), stateless para tarefas pontuais.
+> **•** 1. **Camada de triagem:** modelo pequeno e barato classifica intenção e complexidade.
+> **•** 2. **Camada de execução:** roteia para o modelo certo (pequeno, médio, grande, especializado).
+> **•** 3. **Camada de verificação:** auditor leve revisa saída crítica antes de devolver ao usuário.
+> **•** 1. **Qualidade da saída** (avaliação automática + amostragem humana).
+> **•** 2. **Custo unitário** (por chamada, por jornada, por cliente).
+> **•** 3. **Drift** (mudança no comportamento do modelo ou nos dados).
+> **•** 4. **Segurança** (tentativas de jailbreak, vazamento de PII, prompt injection).
+> **•** 1. **Mapear jornadas críticas** (clientes, operações, decisões).
+> **•** 2. **Identificar onde IA gera valor mensurável** (não onde é "legal").
+> **•** 3. **Escolher 2 a 3 casos âncora** com KPIs claros.
+> **•** 4. **Montar stack mínima** (1 orquestrador + 2 modelos + 1 memória + 1 observabilidade).
+> **•** 5. **Lançar piloto controlado** (30 a 60 dias, escopo fechado).
+> **•** 6. **Medir impacto vs baseline.**
+> **•** 7. **Padronizar** o que funcionou (templates, guardrails, prompts versionados).
+> **•** 8. **Escalar horizontalmente** (mais casos) antes de verticalmente (mais complexidade).
+> **•** 9. **Instalar governança** (políticas, comitê, auditoria, logs).
+> **•** 10. **Iterar trimestralmente** com novos modelos e novas integrações.
 
 # 🌐 Ecossistema IA Vol. 1 — Orquestração, Plataformas e Modelos
 
@@ -428,3 +476,33 @@ O ecossistema de IA não é uma coleção de ferramentas — é uma **arquitetur
 
 **Coleção MMN_IA · Universo Ecossistema IA · Vol. 11 de 15**  
 Versão 1.0.0 · Atualizado em 2026-06-06
+---
+
+## Apêndice A — Perguntas de implementação
+
+**Qual o primeiro sinal de que a orquestração está madura?**  
+Quando uma nova capacidade pode ser adicionada sem reescrever o sistema inteiro.
+
+**Quando vale usar múltiplos modelos?**  
+Quando há diferença relevante de custo, latência ou especialização entre tarefas.
+
+**Como evitar caos entre agentes?**  
+Defina contratos, limites de autonomia, telemetria e fallback humano.
+
+**Qual risco mais subestimado?**  
+Escalar agentes sem medir custo por jornada e sem política de rollback.
+
+## Apêndice B — Sprint de 30 dias
+
+**Semana 1:** mapear jornadas, escolher stack mínima e definir KPIs.  
+**Semana 2:** implementar roteamento básico e observabilidade.  
+**Semana 3:** publicar primeiro caso âncora em piloto.  
+**Semana 4:** revisar custo, qualidade e plano de escala.
+
+## Glossário rápido
+
+- **Control plane:** camada de coordenação e política.
+- **Data plane:** camada onde a execução acontece.
+- **Fallback:** caminho alternativo quando um modelo ou agente falha.
+- **Canary deploy:** liberação progressiva e controlada.
+- **AI Mesh:** malha de agentes e serviços conectados.

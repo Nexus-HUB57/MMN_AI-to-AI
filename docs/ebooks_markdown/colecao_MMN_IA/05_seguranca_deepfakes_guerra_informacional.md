@@ -1,64 +1,38 @@
----
-titulo: "Segurança, Deepfakes e Guerra Informacional na Era da IA"
-subtitulo: "Como proteger identidade, confiança e operação no novo cenário de risco digital"
-colecao: "Coleção MMN_IA – Universo IA"
-volume: "Vol. 5 de 5"
-versao: "1.0.0"
-data: "2026-06-06"
-autoria: "Nexus HUB57 · Ecossistema MMN_IA"
----
+![Capa](../../../assets/ebook_covers/05_seguranca_deepfakes_guerra_informacional.webp)
 
-# 🛡️ Segurança, Deepfakes e Guerra Informacional na Era da IA
+**Segurança, Deepfakes e Guerra Informacional na Era da IA**
 
-> *"Na era da IA, proteger sistemas não basta. É preciso proteger percepção, identidade e confiança."*
+*Como proteger identidade, confiança e operação no novo cenário de risco digital*
 
----
+*Coleção MMN_IA – Universo IA • Vol. 5 de 5*
 
-## 🎯 CAPA
+**Por Nexus HUB57 · Ecossistema MMN_IA**
 
-```
-╔══════════════════════════════════════════════════════════╗
-║                                                          ║
-║   🧠  COLEÇÃO MMN_IA — UNIVERSO IA  |  Vol. 5 de 5      ║
-║                                                          ║
-║   SEGURANÇA, DEEPFAKES                                   ║
-║   E GUERRA INFORMACIONAL                                 ║
-║                                                          ║
-║   Como proteger identidade, confiança                    ║
-║   e operação no novo cenário de risco digital            ║
-║                                                          ║
-║   ─────────────────────────────────────────              ║
-║   Nexus HUB57 · Ecossistema MMN_IA · 2026               ║
-╚══════════════════════════════════════════════════════════╝
-```
+MMN_IA • 2026
 
-![Capa sugerida — Deepfake e Cibersegurança](https://sspark.genspark.ai/cfimages?u1=QhzHaPhxaPLpMrSViVtffLOsTMGBF9W%2BB0yAoraPG0UB9eobxnnN4X3A0%2BNd%2FhGoVZ0NYkgYofjR07zyPbqULipd7kZrm0b27iA246VlG4RQOlU%2FkOCey8ZwyKXdCItomR3QNd30CA3kDDBJoFMTCNm1ISohgMP8gtHXALM%3D&u2=h92KCam9Drc96S9W&width=2560)
+**Sobre este ebook**
 
-Fonte visual sugerida: [Deepfake AI and Cybersecurity: Safeguarding Digital Trust in the AI Era](https://www.fortinet.com/resources/cyberglossary/deepfake-ai)
+Este volume da Coleção MMN_IA – Universo IA apresenta **Segurança, Deepfakes e Guerra Informacional na Era da IA** de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.
 
----
+**Sumário**
 
-## 📋 SUMÁRIO
-
-1. Manifesto: a segurança da percepção
-2. A nova superfície de ataque criada pela IA
-3. O que são deepfakes e por que importam
-4. Tipos de fraude com IA generativa
-5. Voice cloning, impersonação e identidade digital
-6. Guerra informacional e manipulação cognitiva
-7. Segurança ofensiva vs segurança defensiva com IA
-8. Como empresas devem se proteger
-9. Políticas de autenticação e verificação
-10. Treinamento de times contra engenharia social sintética
-11. Risco para marcas, afiliados e ecossistemas digitais
-12. O papel da IA na detecção de deepfakes
-13. Framework operacional de resposta a incidentes
-14. Tendências 2026+
-15. Checklist de defesa contra deepfakes
-16. Glossário de risco digital
-17. Encerramento: confiança como infraestrutura
-
----
+> **•** 1. Manifesto: a segurança da percepção
+> **•** 2. A nova superfície de ataque criada pela IA
+> **•** 3. O que são deepfakes e por que importam
+> **•** 4. Tipos de fraude com IA generativa
+> **•** 5. Voice cloning, impersonação e identidade digital
+> **•** 6. Guerra informacional e manipulação cognitiva
+> **•** 7. Segurança ofensiva vs segurança defensiva com IA
+> **•** 8. Como empresas devem se proteger
+> **•** 9. Políticas de autenticação e verificação
+> **•** 10. Treinamento de times contra engenharia social sintética
+> **•** 11. Risco para marcas, afiliados e ecossistemas digitais
+> **•** 12. O papel da IA na detecção de deepfakes
+> **•** 13. Framework operacional de resposta a incidentes
+> **•** 14. Tendências 2026+
+> **•** 15. Checklist de defesa contra deepfakes
+> **•** 16. Glossário de risco digital
+> **•** 17. Encerramento: confiança como infraestrutura
 
 ## 1. MANIFESTO: A SEGURANÇA DA PERCEPÇÃO
 

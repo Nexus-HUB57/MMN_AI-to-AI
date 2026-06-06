@@ -1,0 +1,602 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>07_skills_design_de_agentes</title><style>
+body { font-family: Helvetica, Arial, sans-serif; color: #222; max-width: 720px; margin: 24px auto; padding: 0 16px; line-height: 1.55; }
+h1 { color: #0f2c4d; border-bottom: 3px solid #0f2c4d; padding-bottom: 8px; font-size: 22pt; }
+h2 { color: #1c4276; margin-top: 28px; font-size: 16pt; }
+h3 { color: #2a5a99; font-size: 13pt; }
+code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; font-size: 9pt; }
+pre { background: #f4f4f4; padding: 10px; border-left: 3px solid #2a5a99; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; font-size: 9pt; }
+th { background: #0f2c4d; color: #fff; }
+a { color: #2a5a99; text-decoration: none; }
+hr { border: 0; border-top: 1px solid #ddd; margin: 18px 0; }
+blockquote { border-left: 4px solid #2a5a99; padding-left: 12px; color: #555; }
+.cover { text-align: center; padding: 40px 0; }
+</style></head><body><h1 id="skills-de-ia-vol-2-design-de-agentes">🤖 Skills de IA Vol. 2 — Design de Agentes</h1>
+
+<blockquote>
+  <p><em>"O futuro não pertence a quem usa IA. Pertence a quem sabe orquestrar capacidades."</em></p>
+</blockquote>
+
+<hr />
+
+<h2 id="sumario">SUMÁRIO</h2>
+
+<ol>
+<li>O que diferencia agente de assistente</li>
+<li>Papéis, objetivos e limites</li>
+<li>Ferramentas e capacidade de ação</li>
+<li>Memória e contexto operacional</li>
+<li>Agentes single-task e multi-task</li>
+<li>Supervisão humana</li>
+<li>Guardrails e segurança</li>
+<li>Arquitetura de fluxo</li>
+<li>Agentes para marketing</li>
+<li>Agentes para operação</li>
+<li>Agentes para suporte e conhecimento</li>
+<li>Agentes para creators e afiliados</li>
+<li>Anti-padrões de design</li>
+<li>Framework MMN_IA de agentes</li>
+<li>Checklist de implantação</li>
+<li>Maturidade da skill</li>
+</ol>
+
+<hr />
+
+<h2 id="capitulo-1-o-que-diferencia-agente-de-assistente">CAPÍTULO 1 — O QUE DIFERENCIA AGENTE DE ASSISTENTE</h2>
+
+<p>Um assistente responde. Um agente percebe objetivo, consulta contexto, usa recursos, executa etapas e tenta produzir resultado. A diferença não está apenas no modelo, mas na arquitetura de ação.</p>
+
+<p>Quando o mercado chama tudo de “agente”, confunde autonomia com interface conversacional. Design de agentes exige muito mais do que chat. Exige objetivo, ferramenta, decisão, monitoramento, fallback e responsabilidade.</p>
+
+<hr />
+
+<h2 id="capitulo-2-papeis-objetivos-e-limites">CAPÍTULO 2 — PAPÉIS, OBJETIVOS E LIMITES</h2>
+
+<p>Todo agente precisa de um contrato operacional.</p>
+
+<p>Ele deve responder claramente:</p>
+
+<ul>
+<li>quem ele é</li>
+<li>o que ele faz</li>
+<li>o que ele não faz</li>
+<li>quais sinais prioriza</li>
+<li>quando pede ajuda humana</li>
+<li>quando encerra a tarefa</li>
+</ul>
+
+<p>Agentes fracassam quando recebem autonomia maior do que sua maturidade permite.</p>
+
+<hr />
+
+<h2 id="capitulo-3-ferramentas-e-capacidade-de-acao">CAPÍTULO 3 — FERRAMENTAS E CAPACIDADE DE AÇÃO</h2>
+
+<p>Um agente sem ferramentas é apenas um raciocinador textual. Um agente com ferramentas pode consultar, criar, editar, buscar, registrar, disparar e integrar.</p>
+
+<p>Mas toda ferramenta adiciona poder e risco. Por isso, capacidade de ação deve ser desenhada por níveis.</p>
+
+<h3 id="niveis-de-capacidade">Níveis de capacidade</h3>
+
+<ol>
+<li>leitura</li>
+<li>análise</li>
+<li>recomendação</li>
+<li>geração de artefato</li>
+<li>execução controlada</li>
+<li>execução com impacto externo</li>
+</ol>
+
+<p>Quanto mais alto o nível, maior a exigência de guardrails.</p>
+
+<hr />
+
+<h2 id="capitulo-4-memoria-e-contexto-operacional">CAPÍTULO 4 — MEMÓRIA E CONTEXTO OPERACIONAL</h2>
+
+<p>Agentes úteis não operam no vácuo. Eles precisam lembrar regras, histórico, preferências, estado atual da tarefa e contexto do ambiente.</p>
+
+<h3 id="tipos-de-memoria">Tipos de memória</h3>
+
+<ul>
+<li>memória de sessão</li>
+<li>memória de tarefa</li>
+<li>memória de usuário</li>
+<li>memória documental</li>
+<li>memória de políticas</li>
+</ul>
+
+<p>O desafio é equilibrar memória útil com privacidade, custo e governança.</p>
+
+<hr />
+
+<h2 id="capitulo-5-agentes-single-task-e-multi-task">CAPÍTULO 5 — AGENTES SINGLE-TASK E MULTI-TASK</h2>
+
+<p>Agentes single-task são mais simples, previsíveis e fáceis de validar. Agentes multi-task prometem versatilidade, mas podem crescer em complexidade, custo e erro.</p>
+
+<p>A estratégia madura geralmente começa com agentes focados em uma missão clara:</p>
+
+<ul>
+<li>qualificar leads</li>
+<li>organizar documentos</li>
+<li>responder base de conhecimento</li>
+<li>revisar textos</li>
+<li>gerar relatórios</li>
+</ul>
+
+<p>Escala começa com precisão, não com ambição excessiva.</p>
+
+<hr />
+
+<h2 id="capitulo-6-supervisao-humana">CAPÍTULO 6 — SUPERVISÃO HUMANA</h2>
+
+<p>Quanto maior o impacto, maior deve ser o papel humano.</p>
+
+<p>Supervisão não é derrota da automação. É arquitetura de confiança.</p>
+
+<h3 id="quando-supervisionar-obrigatoriamente">Quando supervisionar obrigatoriamente</h3>
+
+<ul>
+<li>decisões financeiras</li>
+<li>conteúdo jurídico</li>
+<li>comunicação sensível</li>
+<li>ações com clientes</li>
+<li>classificação de risco</li>
+<li>mudanças irreversíveis em sistemas</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-7-guardrails-e-seguranca">CAPÍTULO 7 — GUARDRAILS E SEGURANÇA</h2>
+
+<p>Guardrails são as trilhas que mantêm o agente útil sem deixá-lo perigoso.</p>
+
+<p>Exemplos:</p>
+
+<ul>
+<li>escopo de ferramenta limitado</li>
+<li>regras de recusa</li>
+<li>filtros por sensibilidade de dados</li>
+<li>limites de custo</li>
+<li>confirmação dupla</li>
+<li>logs de ação</li>
+<li>versionamento de comportamento</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-8-arquitetura-de-fluxo">CAPÍTULO 8 — ARQUITETURA DE FLUXO</h2>
+
+<p>Pensar em agentes é pensar em fluxo.</p>
+
+<h3 id="fluxo-minimo">Fluxo mínimo</h3>
+
+<ol>
+<li>receber objetivo</li>
+<li>interpretar contexto</li>
+<li>planejar subtarefas</li>
+<li>escolher ferramenta</li>
+<li>executar</li>
+<li>validar resultado</li>
+<li>registrar e devolver saída</li>
+</ol>
+
+<p>A maior parte dos erros nasce entre os passos 3 e 6.</p>
+
+<hr />
+
+<h2 id="capitulo-9-agentes-para-marketing">CAPÍTULO 9 — AGENTES PARA MARKETING</h2>
+
+<p>Casos úteis:</p>
+
+<ul>
+<li>pesquisa de pauta</li>
+<li>organização de calendário editorial</li>
+<li>geração de variações de copy</li>
+<li>revisão de landing pages</li>
+<li>síntese de concorrentes</li>
+<li>classificação de feedback de campanha</li>
+</ul>
+
+<p>O segredo é não substituir estratégia humana, mas aumentar velocidade de produção e crítica.</p>
+
+<hr />
+
+<h2 id="capitulo-10-agentes-para-operacao">CAPÍTULO 10 — AGENTES PARA OPERAÇÃO</h2>
+
+<p>Na operação, agentes geram valor quando reduzem latência, erro e sobrecarga.</p>
+
+<p>Exemplos:</p>
+
+<ul>
+<li>triagem de tickets</li>
+<li>consolidação de atualizações</li>
+<li>elaboração de runbooks</li>
+<li>resumo de incidentes</li>
+<li>checagem de conformidade documental</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-11-agentes-para-suporte-e-conhecimento">CAPÍTULO 11 — AGENTES PARA SUPORTE E CONHECIMENTO</h2>
+
+<p>Agentes baseados em documentação podem elevar drasticamente a capacidade de resposta, desde que trabalhem com contexto confiável e regras claras de limite.</p>
+
+<p>Boas práticas:</p>
+
+<ul>
+<li>separar FAQ de política crítica</li>
+<li>citar fonte interna quando possível</li>
+<li>declarar incerteza quando necessário</li>
+<li>escalar para humano quando confiança for baixa</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-12-agentes-para-creators-e-afiliados">CAPÍTULO 12 — AGENTES PARA CREATORS E AFILIADOS</h2>
+
+<p>No ecossistema de creators, agentes podem apoiar:</p>
+
+<ul>
+<li>roteirização</li>
+<li>calendário de conteúdo</li>
+<li>pesquisa de oferta</li>
+<li>análise de comentários</li>
+<li>variações de headline</li>
+<li>documentação de campanha</li>
+</ul>
+
+<p>Já para afiliados, podem atuar em:</p>
+
+<ul>
+<li>organização de materiais</li>
+<li>resposta a objeções</li>
+<li>estruturação de follow-up</li>
+<li>análise de performance narrativa</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-13-anti-padroes-de-design">CAPÍTULO 13 — ANTI-PADRÕES DE DESIGN</h2>
+
+<ul>
+<li>tentar resolver tudo com um agente só</li>
+<li>liberar ferramentas demais cedo demais</li>
+<li>não definir critério de interrupção</li>
+<li>misturar papéis incompatíveis</li>
+<li>ignorar logs e observabilidade</li>
+<li>prometer autonomia total sem testes</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-14-framework-mmn_ia-de-agentes">CAPÍTULO 14 — FRAMEWORK MMN_IA DE AGENTES</h2>
+
+<h3 id="missao">Missão</h3>
+
+<p>Qual resultado o agente precisa produzir.</p>
+
+<h3 id="mecanismo">Mecanismo</h3>
+
+<p>Quais ferramentas, regras e etapas usa.</p>
+
+<h3 id="nivel-de-autonomia">Nível de autonomia</h3>
+
+<p>Até onde pode agir sozinho.</p>
+
+<h3 id="intervencao-humana">Intervenção humana</h3>
+
+<p>Quando precisa parar, pedir revisão ou escalar.</p>
+
+<h3 id="auditoria">Auditoria</h3>
+
+<p>Como registrar tudo para monitorar e melhorar.</p>
+
+<hr />
+
+<h2 id="capitulo-15-checklist-de-implantacao">CAPÍTULO 15 — CHECKLIST DE IMPLANTAÇÃO</h2>
+
+<ul>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> objetivo delimitado</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> público e contexto mapeados</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> ferramentas necessárias definidas</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> limites de ação documentados</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> supervisão humana configurada</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> logs habilitados</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> plano de rollback existente</li>
+<li><input type="checkbox" class="task-list-item-checkbox" disabled> teste em ambiente controlado realizado</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-16-maturidade-da-skill">CAPÍTULO 16 — MATURIDADE DA SKILL</h2>
+
+<h3 id="nivel-1">Nível 1</h3>
+
+<p>Usa IA apenas como chat.</p>
+
+<h3 id="nivel-2">Nível 2</h3>
+
+<p>Encadeia instruções com intenção.</p>
+
+<h3 id="nivel-3">Nível 3</h3>
+
+<p>Projeta agentes focados.</p>
+
+<h3 id="nivel-4">Nível 4</h3>
+
+<p>Opera múltiplos agentes por processo.</p>
+
+<h3 id="nivel-5">Nível 5</h3>
+
+<p>Constrói ecossistemas agentic governados e mensuráveis.</p>
+
+<hr />
+
+<h2 id="fechamento">FECHAMENTO</h2>
+
+<p>Design de agentes é a skill que transforma IA em capacidade operacional. Ele exige ambição, mas também disciplina. O objetivo não é parecer futurista. É produzir resultado confiável.</p>
+
+<hr />
+
+<h2 id="capitulo-17-desenhando-agentes-com-papeis-claros">CAPÍTULO 17 — DESENHANDO AGENTES COM PAPÉIS CLAROS</h2>
+
+<p>A maior causa de falha em projetos agentic é a confusão de papéis. Um agente deveria ser responsável por uma missão inteligível, e não por uma mistura indefinida de pesquisa, escrita, decisão, integração e monitoramento sem fronteiras.</p>
+
+<h3 id="perguntas-obrigatorias">Perguntas obrigatórias</h3>
+
+<ul>
+<li>Qual tarefa este agente executa melhor do que um fluxo estático?</li>
+<li>Em que condição ele deve parar?</li>
+<li>O que acontece quando ele não encontra evidência suficiente?</li>
+<li>Quais são seus limites legais, operacionais e reputacionais?</li>
+</ul>
+
+<p>Sem essa clareza, o agente vira uma promessa vaga com comportamento instável.</p>
+
+<hr />
+
+<h2 id="capitulo-18-o-desenho-da-autonomia-gradual">CAPÍTULO 18 — O DESENHO DA AUTONOMIA GRADUAL</h2>
+
+<p>Autonomia é algo que se ganha por camadas.</p>
+
+<h3 id="estagio-1-leitura">Estágio 1 — Leitura</h3>
+
+<p>O agente consulta dados e devolve observações.</p>
+
+<h3 id="estagio-2-proposta">Estágio 2 — Proposta</h3>
+
+<p>O agente sugere ações, mas não executa.</p>
+
+<h3 id="estagio-3-execucao-assistida">Estágio 3 — Execução assistida</h3>
+
+<p>O agente executa com aprovação humana.</p>
+
+<h3 id="estagio-4-execucao-delimitada">Estágio 4 — Execução delimitada</h3>
+
+<p>O agente age sozinho dentro de regras rígidas.</p>
+
+<h3 id="estagio-5-orquestracao-governada">Estágio 5 — Orquestração governada</h3>
+
+<p>O agente opera em rede com monitoramento e rollback.</p>
+
+<p>O erro está em tentar começar do estágio 5.</p>
+
+<hr />
+
+<h2 id="capitulo-19-agentes-com-memoria-util-nao-memoria-caotica">CAPÍTULO 19 — AGENTES COM MEMÓRIA ÚTIL, NÃO MEMÓRIA CAÓTICA</h2>
+
+<p>Memória mal desenhada vira acúmulo de ruído. O agente passa a recuperar informação demais, informação irrelevante ou informação que deveria ter expirado.</p>
+
+<h3 id="principios-praticos">Princípios práticos</h3>
+
+<ul>
+<li>armazenar apenas o necessário</li>
+<li>separar memória transitória de memória persistente</li>
+<li>expirar contexto obsoleto</li>
+<li>registrar origem do que foi lembrado</li>
+<li>permitir auditoria do que influenciou a decisão</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-20-como-escolher-ferramentas-para-um-agente">CAPÍTULO 20 — COMO ESCOLHER FERRAMENTAS PARA UM AGENTE</h2>
+
+<p>Nem toda integração melhora um agente. Algumas o tornam mais poderoso; outras só o tornam mais frágil.</p>
+
+<h3 id="criterios-de-selecao">Critérios de seleção</h3>
+
+<ul>
+<li>relevância para a missão</li>
+<li>confiabilidade da ferramenta</li>
+<li>impacto do erro</li>
+<li>necessidade de autenticação</li>
+<li>possibilidade de rastreamento</li>
+<li>facilidade de contenção</li>
+</ul>
+
+<p>Um bom agente usa poucas ferramentas, mas usa as certas.</p>
+
+<hr />
+
+<h2 id="capitulo-21-agentes-para-pesquisa-e-analise">CAPÍTULO 21 — AGENTES PARA PESQUISA E ANÁLISE</h2>
+
+<p>Agentes de pesquisa são úteis quando conseguem:</p>
+
+<ul>
+<li>levantar fontes</li>
+<li>organizar hipóteses</li>
+<li>comparar versões</li>
+<li>sintetizar achados</li>
+<li>apontar lacunas</li>
+<li>produzir briefing acionável</li>
+</ul>
+
+<p>Mas eles não devem fingir certeza onde existe ambiguidade. Um bom agente analítico é claro sobre confiança, limitação e necessidade de validação humana.</p>
+
+<hr />
+
+<h2 id="capitulo-22-agentes-para-suporte-interno">CAPÍTULO 22 — AGENTES PARA SUPORTE INTERNO</h2>
+
+<p>Uma das aplicações mais valiosas está no suporte ao time.</p>
+
+<h3 id="casos-comuns">Casos comuns</h3>
+
+<ul>
+<li>localizar políticas internas</li>
+<li>resumir procedimentos</li>
+<li>orientar onboarding</li>
+<li>responder dúvidas sobre processos</li>
+<li>consolidar conhecimento disperso</li>
+</ul>
+
+<p>O segredo é conectá-los a bases confiáveis e dar critérios claros de escalonamento.</p>
+
+<hr />
+
+<h2 id="capitulo-23-agentes-para-comercial-e-relacionamento">CAPÍTULO 23 — AGENTES PARA COMERCIAL E RELACIONAMENTO</h2>
+
+<p>Agentes comerciais podem apoiar muito sem substituir o julgamento humano.</p>
+
+<h3 id="bons-usos">Bons usos</h3>
+
+<ul>
+<li>organizar notas de reunião</li>
+<li>sintetizar objeções</li>
+<li>sugerir follow-up</li>
+<li>classificar interesse</li>
+<li>priorizar oportunidades</li>
+</ul>
+
+<h3 id="maus-usos">Maus usos</h3>
+
+<ul>
+<li>prometer condições sem aprovação</li>
+<li>negociar autonomamente sem limite</li>
+<li>responder clientes sensíveis sem revisão</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-24-multiagentes-quando-faz-sentido">CAPÍTULO 24 — MULTIAGENTES: QUANDO FAZ SENTIDO</h2>
+
+<p>Arquiteturas multiagentes podem ser excelentes quando o problema exige especialização.</p>
+
+<h3 id="exemplo-de-divisao">Exemplo de divisão</h3>
+
+<ul>
+<li>agente pesquisador</li>
+<li>agente crítico</li>
+<li>agente redator</li>
+<li>agente verificador</li>
+<li>agente orquestrador</li>
+</ul>
+
+<p>A vantagem não está em ter muitos agentes, mas em separar funções de forma lógica.</p>
+
+<hr />
+
+<h2 id="capitulo-25-observabilidade-e-logs">CAPÍTULO 25 — OBSERVABILIDADE E LOGS</h2>
+
+<p>Se você não consegue reconstruir o que o agente fez, não consegue melhorar nem defender sua operação.</p>
+
+<h3 id="itens-minimos-de-log">Itens mínimos de log</h3>
+
+<ul>
+<li>entrada recebida</li>
+<li>contexto usado</li>
+<li>ferramentas acionadas</li>
+<li>resultados intermediários</li>
+<li>decisão tomada</li>
+<li>falhas ocorridas</li>
+<li>intervenção humana realizada</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-26-testes-de-validacao-antes-da-producao">CAPÍTULO 26 — TESTES DE VALIDAÇÃO ANTES DA PRODUÇÃO</h2>
+
+<p>Antes de liberar um agente, ele precisa falhar em ambiente controlado.</p>
+
+<h3 id="tipos-de-teste">Tipos de teste</h3>
+
+<ul>
+<li>input incompleto</li>
+<li>dado conflitante</li>
+<li>ferramenta indisponível</li>
+<li>contexto enganoso</li>
+<li>instrução ambígua</li>
+<li>tentativa de extrapolação de escopo</li>
+</ul>
+
+<p>Esses testes revelam se o agente sabe parar ou se insiste em agir sem segurança.</p>
+
+<hr />
+
+<h2 id="capitulo-27-o-papel-do-humano-em-ambientes-agentic">CAPÍTULO 27 — O PAPEL DO HUMANO EM AMBIENTES AGENTIC</h2>
+
+<p>Quanto mais sofisticado o ecossistema, mais importante se torna a inteligência humana de supervisão.</p>
+
+<p>O humano deixa de ser executor de cada microtarefa e passa a ser:</p>
+
+<ul>
+<li>arquiteto do fluxo</li>
+<li>revisor de exceções</li>
+<li>curador de políticas</li>
+<li>avaliador de performance</li>
+<li>decisor em situações de alto impacto</li>
+</ul>
+
+<hr />
+
+<h2 id="capitulo-28-framework-de-implantacao-em-90-dias">CAPÍTULO 28 — FRAMEWORK DE IMPLANTAÇÃO EM 90 DIAS</h2>
+
+<h3 id="fase-1-descoberta">Fase 1 — Descoberta</h3>
+
+<p>Escolha um caso de uso claro e mapeie riscos.</p>
+
+<h3 id="fase-2-prototipo">Fase 2 — Protótipo</h3>
+
+<p>Desenhe agente mínimo com baixa autonomia.</p>
+
+<h3 id="fase-3-testes">Fase 3 — Testes</h3>
+
+<p>Simule falhas, refine instruções e valide guardrails.</p>
+
+<h3 id="fase-4-operacao-assistida">Fase 4 — Operação assistida</h3>
+
+<p>Rode em ambiente real com supervisão humana.</p>
+
+<h3 id="fase-5-escala-controlada">Fase 5 — Escala controlada</h3>
+
+<p>Expanda apenas se métricas e confiabilidade sustentarem.</p>
+
+<hr />
+
+<h2 id="capitulo-29-matriz-de-maturidade-em-design-de-agentes">CAPÍTULO 29 — MATRIZ DE MATURIDADE EM DESIGN DE AGENTES</h2>
+
+<h3 id="iniciante">Iniciante</h3>
+
+<p>Usa chat como se fosse agente.</p>
+
+<h3 id="intermediario">Intermediário</h3>
+
+<p>Cria papéis e fluxos básicos.</p>
+
+<h3 id="avancado">Avançado</h3>
+
+<p>Integra ferramentas e supervisão.</p>
+
+<h3 id="especialista">Especialista</h3>
+
+<p>Opera agentes governados e auditáveis.</p>
+
+<h3 id="estrategico">Estratégico</h3>
+
+<p>Transforma agentes em capacidade organizacional.</p>
+
+<hr />
+
+<h2 id="capitulo-30-o-futuro-dos-agentes">CAPÍTULO 30 — O FUTURO DOS AGENTES</h2>
+
+<p>O futuro dos agentes não está em prometer autonomia absoluta. Está em entregar autonomia proporcional ao risco, alinhada a contexto, dados e responsabilidade. Agentes fortes serão menos teatrais e mais úteis.</p>
+</body></html>

@@ -1,0 +1,127 @@
+{
+  "collection": "MMN_IA",
+  "total_volumes": 15,
+  "generated_at": "2026-06-06",
+  "volumes": [
+    {
+      "id": "01_ia_para_empresas",
+      "markdown": "01_ia_para_empresas.md",
+      "html": "01_ia_para_empresas.html",
+      "pdf": "01_ia_para_empresas.pdf",
+      "lines": 582,
+      "size_bytes": 24297
+    },
+    {
+      "id": "02_ia_agentica",
+      "markdown": "02_ia_agentica.md",
+      "html": "02_ia_agentica.html",
+      "pdf": "02_ia_agentica.pdf",
+      "lines": 681,
+      "size_bytes": 26516
+    },
+    {
+      "id": "03_multimodalidade_rag",
+      "markdown": "03_multimodalidade_rag.md",
+      "html": "03_multimodalidade_rag.html",
+      "pdf": "03_multimodalidade_rag.pdf",
+      "lines": 696,
+      "size_bytes": 25451
+    },
+    {
+      "id": "04_governanca_compliance_regulacao_ia",
+      "markdown": "04_governanca_compliance_regulacao_ia.md",
+      "html": "04_governanca_compliance_regulacao_ia.html",
+      "pdf": "04_governanca_compliance_regulacao_ia.pdf",
+      "lines": 663,
+      "size_bytes": 24372
+    },
+    {
+      "id": "05_seguranca_deepfakes_guerra_informacional",
+      "markdown": "05_seguranca_deepfakes_guerra_informacional.md",
+      "html": "05_seguranca_deepfakes_guerra_informacional.html",
+      "pdf": "05_seguranca_deepfakes_guerra_informacional.pdf",
+      "lines": 636,
+      "size_bytes": 21451
+    },
+    {
+      "id": "06_skills_prompting_estrategico",
+      "markdown": "06_skills_prompting_estrategico.md",
+      "html": "06_skills_prompting_estrategico.html",
+      "pdf": "06_skills_prompting_estrategico.pdf",
+      "lines": 541,
+      "size_bytes": 16581
+    },
+    {
+      "id": "07_skills_design_de_agentes",
+      "markdown": "07_skills_design_de_agentes.md",
+      "html": "07_skills_design_de_agentes.html",
+      "pdf": "07_skills_design_de_agentes.pdf",
+      "lines": 519,
+      "size_bytes": 13099
+    },
+    {
+      "id": "08_skills_conteudo_multimidia",
+      "markdown": "08_skills_conteudo_multimidia.md",
+      "html": "08_skills_conteudo_multimidia.html",
+      "pdf": "08_skills_conteudo_multimidia.pdf",
+      "lines": 509,
+      "size_bytes": 12887
+    },
+    {
+      "id": "09_skills_automacao_e_fluxos",
+      "markdown": "09_skills_automacao_e_fluxos.md",
+      "html": "09_skills_automacao_e_fluxos.html",
+      "pdf": "09_skills_automacao_e_fluxos.pdf",
+      "lines": 500,
+      "size_bytes": 11358
+    },
+    {
+      "id": "10_skills_dados_decisao_governanca",
+      "markdown": "10_skills_dados_decisao_governanca.md",
+      "html": "10_skills_dados_decisao_governanca.html",
+      "pdf": "10_skills_dados_decisao_governanca.pdf",
+      "lines": 465,
+      "size_bytes": 11900
+    },
+    {
+      "id": "11_ecossistema_ia_orquestracao_plataformas_modelos",
+      "markdown": "11_ecossistema_ia_orquestracao_plataformas_modelos.md",
+      "html": "11_ecossistema_ia_orquestracao_plataformas_modelos.html",
+      "pdf": "11_ecossistema_ia_orquestracao_plataformas_modelos.pdf",
+      "lines": 430,
+      "size_bytes": 16264
+    },
+    {
+      "id": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade",
+      "markdown": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade.md",
+      "html": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade.html",
+      "pdf": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade.pdf",
+      "lines": 350,
+      "size_bytes": 13503
+    },
+    {
+      "id": "13_ecossistema_ia_produtos_marketplaces_monetizacao",
+      "markdown": "13_ecossistema_ia_produtos_marketplaces_monetizacao.md",
+      "html": "13_ecossistema_ia_produtos_marketplaces_monetizacao.html",
+      "pdf": "13_ecossistema_ia_produtos_marketplaces_monetizacao.pdf",
+      "lines": 358,
+      "size_bytes": 13535
+    },
+    {
+      "id": "14_ecossistema_ia_comunidades_educacao_distribuicao",
+      "markdown": "14_ecossistema_ia_comunidades_educacao_distribuicao.md",
+      "html": "14_ecossistema_ia_comunidades_educacao_distribuicao.html",
+      "pdf": "14_ecossistema_ia_comunidades_educacao_distribuicao.pdf",
+      "lines": 339,
+      "size_bytes": 12396
+    },
+    {
+      "id": "15_ecossistema_ia_governanca_parcerias_vantagem",
+      "markdown": "15_ecossistema_ia_governanca_parcerias_vantagem.md",
+      "html": "15_ecossistema_ia_governanca_parcerias_vantagem.html",
+      "pdf": "15_ecossistema_ia_governanca_parcerias_vantagem.pdf",
+      "lines": 347,
+      "size_bytes": 13992
+    }
+  ]
+}

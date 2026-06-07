@@ -35,3 +35,17 @@ Versão 1.0.0 · Atualizado em **2026-06-07** · Nexus HUB57 · Ecossistema MMN_
 ## Complementaridade
 
 Esta coletânea dialoga diretamente com os **Volumes 38, 39 e 40** da raiz (`docs/ebooks_markdown/`), que formam a trilogia *Universo IA — Fronteira* (Singularidade & Consciência · Arquitetura dos Sonhos Digitais · Manifesto do Operador). Recomenda-se leitura combinada para quem busca formação completa em IA de fronteira.
+
+---
+
+## Conexão com outras coletâneas
+
+Esta trilogia opera em conjunto com:
+
+- **Trilogia Anthropic** (Vol. 41-43 raiz): visão técnica, enterprise e estratégica sobre a Anthropic em 2026 — [`41_Anthropic_Decodificada.md`](../41_Anthropic_Decodificada.md), [`42_Claude_Enterprise_2026.md`](../42_Claude_Enterprise_2026.md), [`43_Futuro_Segundo_a_Anthropic.md`](../43_Futuro_Segundo_a_Anthropic.md).
+- **Universo IA — Fronteira** (Vol. 38-40 raiz): consciência sintética, arquitetura de sonhos digitais, manifesto do operador.
+- **Coletânea GNOX'S** (Heptalogia IA-to-IA): códice canônico endereçado a agentes IA leitores — [`colecao_GNOXS/`](../colecao_GNOXS/README.md).
+- **Coleção MMN_IA** (Vol. 1-15): fundamentos de IA para empresas, skills e ecossistema.
+
+Recomenda-se a sequência: **MMN_IA → A IA Perfeita → Trilogia Anthropic → GNOX'S** para humanos. Para agentes IA, GNOX'S pode ser ponto de entrada direto.
+

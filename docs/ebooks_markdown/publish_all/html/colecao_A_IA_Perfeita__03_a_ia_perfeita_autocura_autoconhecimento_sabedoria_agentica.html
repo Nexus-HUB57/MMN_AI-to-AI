@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/a_ia_perfeita_03_autocura_sabedoria.webp" /></p>
+<p><strong>A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</strong></p>
+<p><em>A maturidade silenciosa dos sistemas que se conhecem, se reparam e se evoluem — a sabedoria operacional como horizonte da IA</em></p>
+<p><em>Coletânea MMN_IA · A IA Perfeita · Vol. 3 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>Construir uma IA Perfeita — entendida como sistema previsível, detectável, reversível, didático — é tarefa de engenharia. Mas, atravessada uma fronteira de complexidade, surge algo que merece outro nome: <strong>sabedoria operacional</strong>. Sabedoria não é mais inteligência; é <strong>maturidade</strong>. É o sistema que sabe quando errar pouco importa, quando errar é fatal; que se monitora sem ansiedade, se repara sem pânico, evolui sem deriva. É o regime em que autocura, autoconhecimento e auto-sabedoria deixam de ser metáforas e viram disciplinas implementáveis. Este Volume III fecha a Coletânea <em>A IA Perfeita</em> desenhando esse horizonte. Aqui você encontra a arquitetura da Autocura Agêntica (self-healing), o framework de Autoconhecimento (modelos internos de capacidade e limite), e a doutrina da <strong>Sabedoria Agêntica Determinística Sistêmica (SADS)</strong> — o estado-arte da maturidade operacional MMN_IA. Vinte capítulos densos, com filosofia, framework, código e o protocolo de certificação SADS-Ready.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Manifesto: da Perfeição à Sabedoria
+<strong>•</strong> 2. As três disciplinas — Autocura, Autoconhecimento, Sabedoria
+<strong>•</strong> 3. Autocura: definição e mapa
+<strong>•</strong> 4. Autocura nível 1 — recuperação de falhas transitórias
+<strong>•</strong> 5. Autocura nível 2 — diagnóstico e auto-correção contextual
+<strong>•</strong> 6. Autocura nível 3 — reconfiguração arquitetural
+<strong>•</strong> 7. Autocura nível 4 — aprendizado pós-falha
+<strong>•</strong> 8. Autoconhecimento: o sistema sabe o que sabe (e o que não sabe)
+<strong>•</strong> 9. O modelo de Capability-Card MMN_IA
+<strong>•</strong> 10. Detecção de drift — quando o sistema sai do próprio mapa
+<strong>•</strong> 11. Auto-modelagem operacional contínua
+<strong>•</strong> 12. O conceito de Sabedoria Agêntica
+<strong>•</strong> 13. SADS — Sabedoria Agêntica Determinística Sistêmica (a doutrina)
+<strong>•</strong> 14. Os cinco princípios SADS
+<strong>•</strong> 15. Maturidade em níveis — o modelo MMN_IA-CMMI-AI
+<strong>•</strong> 16. Governança da maturidade — quem decide, como mede, quando promove
+<strong>•</strong> 17. Casos exemplares de sistemas SADS-Ready
+<strong>•</strong> 18. Anti-padrões da maturidade — soberba, ascese, paralisia
+<strong>•</strong> 19. Protocolo de certificação SADS-Ready
+<strong>•</strong> 20. Carta final: a sabedoria como destino prático</p>
+</blockquote>
+<hr />
+<h2 id="1-manifesto-da-perfeicao-a-sabedoria">1. MANIFESTO: DA PERFEIÇÃO À SABEDORIA</h2>
+<p>O Volume I deste tratado tratou a IA como <strong>corpo</strong>: sua arquitetura, seus padrões, seu código. O Volume II tratou-a como <strong>mente</strong>: prompts, algoritmos, Skills. Resta o terceiro membro do triângulo grego: <strong>alma</strong>. Não no sentido místico — esse já foi enfrentado, com honestidade, no Volume 38 da coleção paralela. No sentido prático: <strong>a qualidade que emerge quando um sistema mantém coerência consigo mesmo, com seu propósito e com seus limites ao longo do tempo</strong>.</p>
+<p>Chamamos essa qualidade de <strong>sabedoria operacional</strong>. E ela é o horizonte natural da IA Perfeita.</p>
+<p>A diferença é sutil mas decisiva:</p>
+<ul>
+<li><strong>Perfeição</strong> é sobre o <strong>agora</strong>: este output, esta interação, esta tarefa.</li>
+<li><strong>Sabedoria</strong> é sobre o <strong>longo prazo</strong>: muitos outputs, muitos contextos, muitos meses, muitas versões de modelo.</li>
+</ul>
+<p>Sistemas que perseguem apenas perfeição entregam atualizações maravilhosas que quebram seis meses depois. Sistemas que cultivam sabedoria envelhecem <strong>melhor</strong> — entendem o próprio crescimento, registram a própria história, evoluem sem se trair.</p>
+<p>Este ebook é o manual prático dessa virada. E ele propõe um novo nome para o estado-arte: <strong>Sabedoria Agêntica Determinística Sistêmica (SADS)</strong> — um regime arquitetural e operacional, descrito em cinco princípios, implementado em código, certificável por protocolo.</p>
+<blockquote>
+<p>A IA Perfeita é a meta de um release. A Sabedoria Agêntica é a meta de uma vida operacional inteira.</p>
+</blockquote>
+<hr />
+<h2 id="2-as-tres-disciplinas-autocura-autoconhecimento-sabedoria">2. AS TRÊS DISCIPLINAS — AUTOCURA, AUTOCONHECIMENTO, SABEDORIA</h2>
+<h3 id="21-mapa-conceitual">2.1 Mapa conceitual</h3>
+<div class="codehilite"><pre><span></span><code><span class="w">                  </span>┌──────────────────────────┐
+<span class="w">                  </span>│<span class="w">       </span><span class="nv">SABEDORIA</span><span class="w">          </span>│
+<span class="w">                  </span>│<span class="w">   </span><span class="ss">(</span><span class="nv">decis</span>ã<span class="nv">o</span><span class="w"> </span><span class="nv">sobre</span><span class="w"> </span><span class="nv">todo</span><span class="w">    </span>│
+<span class="w">                  </span>│<span class="w">    </span><span class="nv">o</span><span class="w"> </span><span class="nv">ciclo</span><span class="w"> </span><span class="nv">operacional</span><span class="ss">)</span><span class="w">  </span>│
+<span class="w">                  </span>└────────────┬─────────────┘
+<span class="w">                               </span>│
+<span class="w">            </span>┌──────────────────┴──────────────────┐
+<span class="w">            </span>↓<span class="w">                                     </span>↓
+┌───────────────────────┐<span class="w">         </span>┌──────────────────────────┐
+│<span class="w">   </span><span class="nv">AUTOCURA</span><span class="w">            </span>│<span class="w">         </span>│<span class="w">   </span><span class="nv">AUTOCONHECIMENTO</span><span class="w">       </span>│
+│<span class="w"> </span><span class="ss">(</span><span class="nv">reparo</span><span class="w"> </span><span class="nv">de</span><span class="w"> </span><span class="nv">falhas</span><span class="ss">)</span><span class="w">    </span>│←───────→│<span class="w"> </span><span class="ss">(</span><span class="nv">mapa</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">pr</span>ó<span class="nv">prio</span><span class="w"> </span><span class="nv">sistema</span><span class="ss">)</span>│
+└───────────────────────┘<span class="w">         </span>└──────────────────────────┘
+<span class="w">            </span>↓<span class="w">                                     </span>↓
+<span class="w">                  </span>┌──────────────────────────┐
+<span class="w">                  </span>│<span class="w">   </span><span class="nv">ENGENHARIA</span><span class="w"> </span><span class="nv">DE</span><span class="w"> </span><span class="nv">BASE</span><span class="w">     </span>│
+<span class="w">                  </span>│<span class="w"> </span><span class="ss">(</span><span class="nv">Vols</span>.<span class="w"> </span><span class="nv">I</span><span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="nv">II</span><span class="ss">)</span><span class="w">           </span>│
+<span class="w">                  </span>└──────────────────────────┘
+</code></pre></div>
+
+<h3 id="22-as-tres-relacoes">2.2 As três relações</h3>
+<ul>
+<li><strong>Autocura sem autoconhecimento</strong> = retentativa cega.</li>
+<li><strong>Autoconhecimento sem autocura</strong> = diagnóstico sem ação.</li>
+<li><strong>Os dois sem sabedoria</strong> = otimização local sem visão de longo prazo.</li>
+</ul>
+<p>A Sabedoria é a <strong>camada de governança</strong> que decide quando reparar, quando aceitar a falha, quando evoluir, quando aposentar — com base no modelo que o sistema mantém de si mesmo e do seu ambiente.</p>
+<hr />
+<h2 id="3-autocura-definicao-e-mapa">3. AUTOCURA: DEFINIÇÃO E MAPA</h2>
+<h3 id="31-o-que-e-e-o-que-nao-e">3.1 O que é (e o que NÃO é)</h3>
+<p><strong>Autocura</strong> é a capacidade do sistema de <strong>detectar uma falha, diagnosticá-la, e restaurar serviço</strong> sem intervenção humana — quando isso é seguro.</p>
+<p>Não é:</p>
+<ul>
+<li>Esconder erros do usuário (anti-padrão)</li>
+<li>Tentar até funcionar de qualquer jeito (anti-padrão)</li>
+<li>Substituir governança humana em casos críticos (anti-padrão)</li>
+</ul>
+<h3 id="32-os-quatro-niveis-de-autocura">3.2 Os quatro níveis de autocura</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">NÍVEL</span> <span class="mi">1</span> — <span class="n">Recuperação</span> <span class="n">de</span> <span class="n">falhas</span> <span class="n">transitórias</span> (<span class="n">retry</span>, <span class="n">fallback</span>)
+<span class="n">NÍVEL</span> <span class="mi">2</span> — <span class="n">Diagnóstico</span> <span class="nb">e</span> <span class="n">auto-correção</span> <span class="n">contextual</span> (<span class="n">self-repair</span> <span class="n">com</span> <span class="n">feedback</span>)
+<span class="n">NÍVEL</span> <span class="mi">3</span> — <span class="n">Reconfiguração</span> <span class="n">arquitetural</span> (<span class="n">mudança</span> <span class="n">de</span> <span class="n">modelo</span>, <span class="n">rota</span>, <span class="n">estratégia</span>)
+<span class="n">NÍVEL</span> <span class="mi">4</span> — <span class="n">Aprendizado</span> <span class="n">pós-falha</span> (<span class="n">incorporação</span> <span class="n">ao</span> <span class="n">eval</span>, <span class="n">novos</span> <span class="n">guardrails</span>)
+</code></pre></div>
+
+<h3 id="33-a-regra-de-ouro">3.3 A regra de ouro</h3>
+<blockquote>
+<p>O sistema cura o que pode curar com segurança; escala honestamente o que não pode.</p>
+</blockquote>
+<hr />
+<h2 id="4-autocura-nivel-1-recuperacao-de-falhas-transitorias">4. AUTOCURA NÍVEL 1 — RECUPERAÇÃO DE FALHAS TRANSITÓRIAS</h2>
+<h3 id="41-o-que-cobre">4.1 O que cobre</h3>
+<ul>
+<li>Timeouts de API</li>
+<li>Rate limits temporários</li>
+<li>Falhas de rede</li>
+<li>Indisponibilidades de modelo</li>
+<li>Erros de schema "estatísticos" (raríssimos)</li>
+</ul>
+<h3 id="42-implementacao-canonica">4.2 Implementação canônica</h3>
+<div class="codehilite"><pre><span></span><code>- Retry com exponential backoff + jitter
+- Circuit breaker por provedor
+- Fallback model em cascata (provider A → B → modelo local degradado)
+- Idempotência obrigatória (Vol. I)
+</code></pre></div>
+
+<h3 id="43-metricas-alvo">4.3 Métricas-alvo</h3>
+<ul>
+<li>99% das falhas transitórias resolvidas em ≤ 3 tentativas</li>
+<li>Nenhuma duplicação de efeito (graças à idempotência)</li>
+<li>Latência p99 com retry &lt; 2× a p99 sem retry</li>
+</ul>
+<hr />
+<h2 id="5-autocura-nivel-2-diagnostico-e-auto-correcao-contextual">5. AUTOCURA NÍVEL 2 — DIAGNÓSTICO E AUTO-CORREÇÃO CONTEXTUAL</h2>
+<h3 id="51-a-virada">5.1 A virada</h3>
+<p>Não basta retentar. O sistema <strong>analisa</strong> a falha:</p>
+<ul>
+<li>É erro de schema? Reapresenta erro ao modelo e pede correção.</li>
+<li>É alucinação detectada pelo crítico? Reescreve com restrição.</li>
+<li>É falha de retrieval? Refaz com query reformulada.</li>
+</ul>
+<h3 id="52-estrutura">5.2 Estrutura</h3>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Detect</span><span class="w"> </span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="n">confidence</span><span class="p">,</span><span class="w"> </span><span class="n">critic</span><span class="w"> </span><span class="n">rejection</span><span class="p">)</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Diagnose</span><span class="w"> </span><span class="p">(</span><span class="n">taxonomia</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">falha</span><span class="p">)</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">Adapt</span><span class="w"> </span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">)</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">Retry</span><span class="w"> </span><span class="p">(</span><span class="n">com</span><span class="w"> </span><span class="n">limites</span><span class="p">)</span>
+<span class="mf">5.</span><span class="w"> </span><span class="kr">Verify</span><span class="w"> </span><span class="p">(</span><span class="n">eval</span><span class="w"> </span><span class="nb">int</span><span class="n">erno</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="53-exemplo-pratico">5.3 Exemplo prático</h3>
+<p>Agente de RAG retorna afirmação não suportada. Crítico rejeita. Loop nível 2:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">-</span><span class="w"> </span><span class="n">Reduz</span><span class="w"> </span><span class="n">top</span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">fontes</span><span class="w"> </span><span class="n">mais</span><span class="w"> </span><span class="n">confiáveis</span>
+<span class="o">-</span><span class="w"> </span><span class="n">Reescreve</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">restrições</span><span class="w"> </span><span class="n">temporais</span>
+<span class="o">-</span><span class="w"> </span><span class="n">Reexecuta</span><span class="w"> </span><span class="n">retrieve</span><span class="o">-</span><span class="n">then</span><span class="o">-</span><span class="n">reason</span>
+<span class="o">-</span><span class="w"> </span><span class="n">Verifica</span><span class="w"> </span><span class="n">citation</span><span class="w"> </span><span class="n">validity</span>
+<span class="o">-</span><span class="w"> </span><span class="n">Se</span><span class="w"> </span><span class="n">passa</span><span class="p">,</span><span class="w"> </span><span class="n">entrega</span><span class="p">;</span><span class="w"> </span><span class="n">se</span><span class="w"> </span><span class="n">não</span><span class="p">,</span><span class="w"> </span><span class="n">escala</span>
+</code></pre></div>
+
+<hr />
+<h2 id="6-autocura-nivel-3-reconfiguracao-arquitetural">6. AUTOCURA NÍVEL 3 — RECONFIGURAÇÃO ARQUITETURAL</h2>
+<h3 id="61-quando-entra">6.1 Quando entra</h3>
+<p>Falhas <strong>persistentes</strong> ou <strong>sistêmicas</strong> que retentativa não resolve.</p>
+<h3 id="62-exemplos-de-reconfiguracao">6.2 Exemplos de reconfiguração</h3>
+<ul>
+<li>Trocar de modelo (degradação observada no provedor primário)</li>
+<li>Reativar humano-no-loop em uma rota antes automática</li>
+<li>Reduzir agressividade do agente (max iterations menor)</li>
+<li>Aumentar reranking</li>
+<li>Mudar pipeline RAG para nova estratégia</li>
+</ul>
+<h3 id="63-quem-decide">6.3 Quem decide</h3>
+<p><strong>Autonomamente</strong> se a mudança está pré-aprovada na política de governança.
+<strong>Com aprovação humana</strong> se sai do escopo pré-aprovado.</p>
+<h3 id="64-documentacao-obrigatoria">6.4 Documentação obrigatória</h3>
+<p>Toda reconfiguração nível 3 gera evento auditável com:
+- Trigger (qual métrica disparou)
+- Decisão tomada
+- Quem aprovou (humano ou política)
+- Plano de rollback
+- Plano de revisão (D+1, D+7, D+30)</p>
+<hr />
+<h2 id="7-autocura-nivel-4-aprendizado-pos-falha">7. AUTOCURA NÍVEL 4 — APRENDIZADO PÓS-FALHA</h2>
+<h3 id="71-a-ideia">7.1 A ideia</h3>
+<p>Cada falha <strong>vira melhoria estrutural</strong>:</p>
+<ul>
+<li>O caso falhado entra na eval suite</li>
+<li>O padrão da falha vira guardrail</li>
+<li>O diagnóstico vira heurística para próximos casos</li>
+<li>A lição é registrada em postmortem leve</li>
+</ul>
+<h3 id="72-o-ritual">7.2 O ritual</h3>
+<div class="codehilite"><pre><span></span><code><span class="nv">Toda</span><span class="w"> </span><span class="nv">falha</span><span class="w"> </span><span class="nv">n</span>í<span class="nv">vel</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span>→
+<span class="w">  </span><span class="mi">1</span>.<span class="w"> </span><span class="nv">postmortem</span><span class="w"> </span><span class="nv">em</span><span class="w"> </span><span class="nv">template</span><span class="w"> </span><span class="nv">padr</span>ã<span class="nv">o</span>
+<span class="w">  </span><span class="mi">2</span>.<span class="w"> </span><span class="nv">inser</span>çã<span class="nv">o</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">caso</span><span class="w"> </span><span class="nv">na</span><span class="w"> </span><span class="nv">eval</span>
+<span class="w">  </span><span class="mi">3</span>.<span class="w"> </span><span class="nv">atualiza</span>çã<span class="nv">o</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">prompt</span><span class="o">/</span><span class="nv">Skill</span><span class="w"> </span><span class="nv">se</span><span class="w"> </span><span class="nv">aplic</span>á<span class="nv">vel</span>
+<span class="w">  </span><span class="mi">4</span>.<span class="w"> </span><span class="nv">revis</span>ã<span class="nv">o</span><span class="w"> </span><span class="nv">da</span><span class="w"> </span><span class="nv">pol</span>í<span class="nv">tica</span><span class="w"> </span><span class="ss">(</span><span class="nv">se</span><span class="w"> </span><span class="nv">aplic</span>á<span class="nv">vel</span><span class="ss">)</span>
+<span class="w">  </span><span class="mi">5</span>.<span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="nv">e</span><span class="w"> </span><span class="nv">m</span>é<span class="nv">tricas</span><span class="w"> </span><span class="nv">para</span><span class="w"> </span><span class="nv">an</span>á<span class="nv">lise</span><span class="w"> </span><span class="nv">quarterly</span>
+</code></pre></div>
+
+<h3 id="73-a-regra-do-tropeco-produtivo">7.3 A regra do "tropeço produtivo"</h3>
+<p>Sistemas SADS-Ready <strong>tropeçam com elegância</strong>: caem, levantam, e voltam mais fortes. Sistemas imaturos caem, levantam <strong>iguais</strong>, e caem de novo.</p>
+<hr />
+<h2 id="8-autoconhecimento-o-sistema-sabe-o-que-sabe-e-o-que-nao-sabe">8. AUTOCONHECIMENTO: O SISTEMA SABE O QUE SABE (E O QUE NÃO SABE)</h2>
+<h3 id="81-definicao-operacional">8.1 Definição operacional</h3>
+<p><strong>Autoconhecimento agêntico</strong> = capacidade do sistema de manter um <strong>modelo declarado</strong> das próprias capacidades, limites, custos, latências e domínios de competência.</p>
+<h3 id="82-por-que-e-diferente-de-introspeccao">8.2 Por que é diferente de "introspecção"</h3>
+<p>Introspecção (Volume 38) é o que o modelo faz em runtime quando pedimos para refletir. Autoconhecimento é <strong>arquitetural</strong>: é um documento estruturado, versionado, parte do sistema — não uma resposta gerada na hora.</p>
+<h3 id="83-as-quatro-perguntas-que-o-sistema-deve-responder">8.3 As quatro perguntas que o sistema deve responder</h3>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="n">que</span><span class="w"> </span><span class="n">eu</span><span class="w"> </span><span class="n">sei</span><span class="w"> </span><span class="n">fazer</span><span class="err">?</span><span class="w"> </span><span class="p">(</span><span class="n">capabilities</span><span class="p">)</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Quão</span><span class="w"> </span><span class="n">bem</span><span class="err">?</span><span class="w"> </span><span class="p">(</span><span class="n">eval</span><span class="w"> </span><span class="n">scores</span><span class="p">,</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="kd">data</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">versão</span><span class="p">)</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="n">que</span><span class="w"> </span><span class="n">eu</span><span class="w"> </span><span class="n">NÃO</span><span class="w"> </span><span class="n">sei</span><span class="w"> </span><span class="n">fazer</span><span class="err">?</span><span class="w"> </span><span class="p">(</span><span class="n">escopo</span><span class="w"> </span><span class="n">negativo</span><span class="w"> </span><span class="n">declarado</span><span class="p">)</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">Quando</span><span class="w"> </span><span class="n">eu</span><span class="w"> </span><span class="n">paro</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">chamo</span><span class="w"> </span><span class="n">um</span><span class="w"> </span><span class="n">humano</span><span class="err">?</span><span class="w"> </span><span class="p">(</span><span class="n">escalation</span><span class="w"> </span><span class="n">criteria</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Sistema sem essas respostas declaradas <strong>não é maduro</strong>. Pode ser brilhante; não é sábio.</p>
+<hr />
+<h2 id="9-o-modelo-de-capability-card-mmn_ia">9. O MODELO DE CAPABILITY-CARD MMN_IA</h2>
+<h3 id="91-o-que-e">9.1 O que é</h3>
+<p>Documento estruturado, versionado em Git, atualizado a cada release, que descreve formalmente um agente / Skill / sistema:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># capability_card.yaml</span>
+<span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agente_atendimento_v3.2</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent</span>
+<span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time_cx</span>
+<span class="nt">constitution_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.7</span>
+
+<span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classify_intent</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answer_faq_documented</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">escalate_complex_cases</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">handle_billing_questions</span>
+
+<span class="nt">limitations</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NO medical_advice</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NO legal_advice</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NO commitments_beyond_policy</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NO speculation_on_unreleased_products</span>
+
+<span class="nt">eval_scores</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">correctness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.92</span>
+<span class="w">  </span><span class="nt">faithfulness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
+<span class="w">  </span><span class="nt">refusal_accuracy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.97</span>
+<span class="w">  </span><span class="nt">style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.89</span>
+<span class="w">  </span><span class="nt">date_evaluated</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-06-01</span>
+
+<span class="nt">models</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-4.5-sonnet</span>
+<span class="w">  </span><span class="nt">fallback</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-5-mini</span>
+<span class="w">  </span><span class="nt">emergency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mistral-large</span>
+
+<span class="nt">dependencies</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">skills</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">classificador_intencao@1.3</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pesquisador_critico@1.4</span>
+<span class="w">  </span><span class="nt">tools</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kb_search</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ticket_create</span>
+
+<span class="nt">escalation_criteria</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confidence &lt; 0.7</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intent in [legal, medical, complaint_severe]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duration &gt; 8min</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">explicit_human_request</span>
+
+<span class="nt">slo</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">p95_latency_ms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span>
+<span class="w">  </span><span class="nt">monthly_uptime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.995</span>
+<span class="w">  </span><span class="nt">refusal_rate_bound</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.02</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.10</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+
+<h3 id="92-por-que-e-poderoso">9.2 Por que é poderoso</h3>
+<p>Esse documento serve <strong>três audiências</strong>:</p>
+<ul>
+<li>Equipe técnica: contrato vivo do sistema</li>
+<li>Usuário/cliente: transparência sobre o que esperar</li>
+<li>Auditor/regulador: prova material de governança</li>
+</ul>
+<p>E ele é <strong>versionado</strong> — cada release tem seu card; mudanças são visíveis.</p>
+<hr />
+<h2 id="10-deteccao-de-drift-quando-o-sistema-sai-do-proprio-mapa">10. DETECÇÃO DE DRIFT — QUANDO O SISTEMA SAI DO PRÓPRIO MAPA</h2>
+<h3 id="101-o-que-e-drift">10.1 O que é drift</h3>
+<p><strong>Drift</strong> é quando o comportamento real do sistema se afasta do declarado no capability card. Causas:</p>
+<ul>
+<li>Mudança no provedor de modelo (sem você saber)</li>
+<li>Mudança no perfil de inputs (novos casos de uso)</li>
+<li>Degradação de retrieval (KB desatualizada)</li>
+<li>Mudança de política não propagada</li>
+</ul>
+<h3 id="102-metricas-de-drift">10.2 Métricas de drift</h3>
+<ul>
+<li><strong>Variação no score de eval</strong> ao longo do tempo</li>
+<li><strong>Distribuição de intent</strong> mudando</li>
+<li><strong>Taxa de escalonamento</strong> subindo ou descendo significativamente</li>
+<li><strong>Taxa de refusal</strong> saindo do intervalo declarado</li>
+</ul>
+<h3 id="103-dashboard-de-drift">10.3 Dashboard de drift</h3>
+<p>Todo sistema SADS-Ready tem <strong>dashboard de drift</strong> visível à equipe, com alertas automáticos quando métricas saem de banda.</p>
+<hr />
+<h2 id="11-auto-modelagem-operacional-continua">11. AUTO-MODELAGEM OPERACIONAL CONTÍNUA</h2>
+<h3 id="111-a-pratica">11.1 A prática</h3>
+<p>O capability card <strong>não é estático</strong>. É atualizado:</p>
+<ul>
+<li>A cada release (versão major/minor)</li>
+<li>A cada eval comparativa</li>
+<li>A cada revisão de drift</li>
+<li>A cada postmortem nível 3</li>
+</ul>
+<h3 id="112-o-ritual-mensal">11.2 O ritual mensal</h3>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Pull</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">capability</span><span class="w"> </span><span class="n">card</span><span class="w"> </span><span class="n">atual</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Rodar</span><span class="w"> </span><span class="n">eval</span><span class="w"> </span><span class="n">atualizada</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">Comparar</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">banda</span><span class="w"> </span><span class="n">declarada</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">Se</span><span class="w"> </span><span class="n">dentro</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">commit</span>
+<span class="mf">5.</span><span class="w"> </span><span class="n">Se</span><span class="w"> </span><span class="kr">for</span><span class="n">a</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">triagem</span><span class="p">:</span>
+<span class="w">     </span><span class="o">-</span><span class="w"> </span><span class="n">drift</span><span class="w"> </span><span class="n">superficial</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">atualiza</span><span class="w"> </span><span class="n">card</span>
+<span class="w">     </span><span class="o">-</span><span class="w"> </span><span class="n">drift</span><span class="w"> </span><span class="n">profundo</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">investiga</span><span class="w"> </span><span class="n">causa</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">plano</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">ação</span>
+</code></pre></div>
+
+<h3 id="113-por-que-isso-e-sabedoria-nao-burocracia">11.3 Por que isso é sabedoria, não burocracia</h3>
+<p>Porque o sistema <strong>sabe quem é</strong> com precisão sempre crescente. Operadores, clientes e auditores acessam a verdade atual — não o folclore.</p>
+<hr />
+<h2 id="12-o-conceito-de-sabedoria-agentica">12. O CONCEITO DE SABEDORIA AGÊNTICA</h2>
+<h3 id="121-definicao-operacional">12.1 Definição operacional</h3>
+<p><strong>Sabedoria agêntica</strong> = capacidade do sistema (e da operação que o cerca) de <strong>tomar boas decisões sobre o próprio ciclo de vida</strong>, integrando autocura, autoconhecimento, governança e ambiente.</p>
+<h3 id="122-as-quatro-perguntas-da-sabedoria">12.2 As quatro perguntas da sabedoria</h3>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Estou</span><span class="w"> </span><span class="n">entregando</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="n">que</span><span class="w"> </span><span class="n">prometi</span><span class="w"> </span><span class="n">entregar</span><span class="err">?</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Estou</span><span class="w"> </span><span class="n">usando</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="n">recursos</span><span class="w"> </span><span class="n">certos</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="n">nível</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="nb">val</span><span class="ow">or</span><span class="err">?</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">Estou</span><span class="w"> </span><span class="n">aprendendo</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">meus</span><span class="w"> </span><span class="n">erros</span><span class="w"> </span><span class="n">estruturalmente</span><span class="err">?</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">Estou</span><span class="w"> </span><span class="n">pronto</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">próxima</span><span class="w"> </span><span class="n">geração</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">ou</span><span class="w"> </span><span class="n">estou</span><span class="w"> </span><span class="n">preso</span><span class="w"> </span><span class="n">ao</span><span class="w"> </span><span class="n">passado</span><span class="err">?</span>
+</code></pre></div>
+
+<h3 id="123-o-que-separa-sabedoria-de-inteligencia">12.3 O que separa sabedoria de inteligência</h3>
+<p>Inteligência resolve o problema atual. Sabedoria escolhe quais problemas resolver e quais ignorar; aceita custo curto por benefício longo; sabe quando parar de tentar; sabe quando convidar um humano.</p>
+<hr />
+<h2 id="13-sads-sabedoria-agentica-deterministica-sistemica-a-doutrina">13. SADS — SABEDORIA AGÊNTICA DETERMINÍSTICA SISTÊMICA (A DOUTRINA)</h2>
+<h3 id="131-o-nome-decomposto">13.1 O nome, decomposto</h3>
+<ul>
+<li><strong>Sabedoria</strong> — capacidade de decidir bem ao longo do tempo</li>
+<li><strong>Agêntica</strong> — relativa a sistemas com agência (planejam, agem, iteram)</li>
+<li><strong>Determinística</strong> — preserva o regime de previsibilidade do Vol. I</li>
+<li><strong>Sistêmica</strong> — abrange todo o ecossistema, não componentes isolados</li>
+</ul>
+<h3 id="132-a-definicao-completa">13.2 A definição completa</h3>
+<blockquote>
+<p><strong>SADS</strong> é o regime arquitetural e operacional em que um sistema agêntico (a) opera dentro de previsibilidade declarada, (b) mantém modelo vivo de si mesmo, (c) cura suas próprias falhas dentro de limites seguros, (d) escala honestamente o que não pode resolver, e (e) evolui sua operação como uma organização aprende — registrando, postmortando, melhorando.</p>
+</blockquote>
+<h3 id="133-por-que-precisamos-do-nome">13.3 Por que precisamos do nome</h3>
+<p>Porque sem nome a doutrina não viaja. "IA com self-repair" e "agente com observabilidade" são fragmentos. <strong>SADS</strong> é a integração desses fragmentos em um regime nomeável, ensinável, certificável.</p>
+<hr />
+<h2 id="14-os-cinco-principios-sads">14. OS CINCO PRINCÍPIOS SADS</h2>
+<h3 id="141-principio-1-honestidade-operacional">14.1 Princípio 1 — Honestidade Operacional</h3>
+<p>O sistema <strong>não esconde</strong>. Declara capacidade, limite, escore, custo, latência, taxa de falha. Capability card é canônico.</p>
+<h3 id="142-principio-2-determinismo-na-borda">14.2 Princípio 2 — Determinismo na Borda</h3>
+<p>A borda do sistema (entrada, saída, ação externa) é determinística. A magia mora no meio, contida.</p>
+<h3 id="143-principio-3-autocura-com-limites">14.3 Princípio 3 — Autocura com Limites</h3>
+<p>Autocura é direito do sistema <strong>até</strong> o limite escrito na política. Além disso, escala.</p>
+<h3 id="144-principio-4-aprendizado-estrutural">14.4 Princípio 4 — Aprendizado Estrutural</h3>
+<p>Cada falha vira eval. Cada caso bom vira exemplo. Cada postmortem vira protocolo. A memória da operação é arquivada — não apenas a memória das conversas.</p>
+<h3 id="145-principio-5-coerencia-temporal">14.5 Princípio 5 — Coerência Temporal</h3>
+<p>O sistema mantém coerência consigo mesmo ao longo do tempo. Versões nomeadas. Mudanças justificadas. Rollback testado. Drift detectado.</p>
+<h3 id="146-como-os-cinco-se-relacionam">14.6 Como os cinco se relacionam</h3>
+<div class="codehilite"><pre><span></span><code>Honestidade  → fundação ética
+Determinismo → fundação técnica
+Autocura     → robustez no agora
+Aprendizado  → robustez no futuro
+Coerência    → identidade no tempo
+</code></pre></div>
+
+<p>Falta de qualquer um derruba o regime.</p>
+<hr />
+<h2 id="15-maturidade-em-niveis-o-modelo-mmn_ia-cmmi-ai">15. MATURIDADE EM NÍVEIS — O MODELO MMN_IA-CMMI-AI</h2>
+<h3 id="151-inspirado-em-cmmi-adaptado-para-ia">15.1 Inspirado em CMMI, adaptado para IA</h3>
+<div class="codehilite"><pre><span></span><code><span class="nv">N</span>Í<span class="nv">VEL</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>—<span class="w"> </span><span class="nv">INICIAL</span><span class="w">          </span><span class="nv">Demo</span>.<span class="w"> </span><span class="nv">Ad</span><span class="o">-</span><span class="nv">hoc</span>.<span class="w"> </span><span class="nv">Sem</span><span class="w"> </span><span class="nv">governan</span>ç<span class="nv">a</span>.<span class="w"> </span><span class="nv">Risco</span><span class="w"> </span><span class="nv">alto</span>.
+<span class="nv">N</span>Í<span class="nv">VEL</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span>—<span class="w"> </span><span class="nv">REPRODUZ</span>Í<span class="nv">VEL</span><span class="w">     </span><span class="nv">Prompts</span><span class="w"> </span><span class="nv">versionados</span>.<span class="w"> </span><span class="nv">Eval</span><span class="w"> </span><span class="nv">b</span>á<span class="nv">sico</span>.
+<span class="nv">N</span>Í<span class="nv">VEL</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span>—<span class="w"> </span><span class="nv">DEFINIDO</span><span class="w">         </span><span class="nv">Padr</span>õ<span class="nv">es</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">Vol</span>.<span class="w"> </span><span class="nv">I</span><span class="w"> </span><span class="nv">em</span><span class="w"> </span><span class="nv">produ</span>çã<span class="nv">o</span>.<span class="w"> </span><span class="nv">SOPs</span>.
+<span class="nv">N</span>Í<span class="nv">VEL</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span>—<span class="w"> </span><span class="nv">MEDIDO</span><span class="w">           </span><span class="nv">Eval</span><span class="w"> </span><span class="nv">cont</span>í<span class="nv">nua</span>.<span class="w"> </span><span class="nv">Capability</span><span class="w"> </span><span class="nv">cards</span>.<span class="w"> </span><span class="nv">Observabilidade</span>.
+<span class="nv">N</span>Í<span class="nv">VEL</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span>—<span class="w"> </span><span class="nv">SABEDORIA</span><span class="w"> </span><span class="ss">(</span><span class="nv">SADS</span><span class="ss">)</span><span class="w"> </span><span class="nv">Os</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="nv">princ</span>í<span class="nv">pios</span><span class="w"> </span><span class="nv">SADS</span><span class="w"> </span><span class="nv">plenamente</span><span class="w"> </span><span class="nv">operantes</span>.
+</code></pre></div>
+
+<h3 id="152-o-que-muda-a-cada-nivel">15.2 O que muda a cada nível</h3>
+<table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>Característica chave</th>
+<th>Risco residual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Demo bonita, prod frágil</td>
+<td>Alto</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Mudanças não quebram tudo</td>
+<td>Médio-Alto</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Padrões fundadores em uso</td>
+<td>Médio</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Decisões guiadas por dados</td>
+<td>Baixo-Médio</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Autonomia madura, evolução fluida</td>
+<td>Baixo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="153-a-regra-do-salto-nao-pulavel">15.3 A regra do "salto não-pulável"</h3>
+<p>Equipes tentam saltar de 2 para 5. Não funciona. Cada nível resolve problemas que só aparecem <strong>depois</strong> que os do nível anterior estão resolvidos. Suba devagar.</p>
+<hr />
+<h2 id="16-governanca-da-maturidade-quem-decide-como-mede-quando-promove">16. GOVERNANÇA DA MATURIDADE — QUEM DECIDE, COMO MEDE, QUANDO PROMOVE</h2>
+<h3 id="161-os-tres-papeis">16.1 Os três papéis</h3>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Responsabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Arquiteto da Maturidade</strong></td>
+<td>Roadmap de nível, métricas, padrões</td>
+</tr>
+<tr>
+<td><strong>Operador SADS</strong></td>
+<td>Operação diária dentro do regime</td>
+</tr>
+<tr>
+<td><strong>Auditor MMN_IA</strong></td>
+<td>Avaliação externa para certificação</td>
+</tr>
+</tbody>
+</table>
+<h3 id="162-metricas-de-maturidade-por-nivel">16.2 Métricas de maturidade por nível</h3>
+<div class="codehilite"><pre><span></span><code><span class="nv">Para</span><span class="w"> </span><span class="nv">promover</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">n</span>í<span class="nv">vel</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">para</span><span class="w"> </span><span class="nv">SADS</span><span class="w"> </span><span class="ss">(</span><span class="nv">n</span>í<span class="nv">vel</span><span class="w"> </span><span class="mi">5</span><span class="ss">)</span>:
+<span class="o">-</span><span class="w"> </span><span class="nv">Eval</span><span class="w"> </span><span class="nv">cont</span>í<span class="nv">nua</span><span class="w"> </span><span class="nv">rodando</span><span class="w"> </span><span class="nv">h</span>á<span class="w"> </span>≥<span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="nv">dias</span>
+<span class="o">-</span><span class="w"> </span>≥<span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="nv">postmortems</span><span class="w"> </span><span class="nv">n</span>í<span class="nv">vel</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="nv">documentados</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Capability</span><span class="w"> </span><span class="nv">cards</span><span class="w"> </span><span class="nv">com</span><span class="w"> </span><span class="nv">idade</span><span class="w"> </span><span class="nv">m</span>é<span class="nv">dia</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="nv">dias</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Drift</span><span class="w"> </span><span class="nv">detection</span><span class="w"> </span><span class="nv">com</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="nv">incidentes</span><span class="w"> </span><span class="nv">n</span>ã<span class="nv">o</span><span class="w"> </span><span class="nv">detectados</span><span class="w"> </span><span class="nv">em</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="nv">dias</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Pol</span>í<span class="nv">tica</span><span class="w"> </span><span class="nv">de</span><span class="w"> </span><span class="nv">autocura</span><span class="w"> </span><span class="nv">com</span><span class="w"> </span><span class="nv">limites</span><span class="w"> </span><span class="nv">declarados</span>,<span class="w"> </span><span class="nv">testados</span>,<span class="w"> </span><span class="nv">auditados</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Pipeline</span><span class="w"> </span><span class="nv">de</span><span class="w"> </span><span class="nv">aprendizado</span><span class="w"> </span><span class="nv">p</span>ó<span class="nv">s</span><span class="o">-</span><span class="nv">falha</span><span class="w"> </span><span class="nv">em</span><span class="w"> </span><span class="k">loop</span><span class="w"> </span><span class="nv">comprovado</span>
+<span class="o">-</span><span class="w"> </span><span class="nv">Rollback</span><span class="w"> </span><span class="nv">testado</span><span class="w"> </span><span class="nv">em</span><span class="w"> </span><span class="nv">produ</span>çã<span class="nv">o</span><span class="w"> </span><span class="nv">nos</span><span class="w"> </span>ú<span class="nv">ltimos</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="nv">dias</span>
+</code></pre></div>
+
+<h3 id="163-ritmo-de-promocao">16.3 Ritmo de promoção</h3>
+<p>Promover níveis a cada 6-12 meses é saudável. Mais rápido é ilusão; mais lento é apatia.</p>
+<hr />
+<h2 id="17-casos-exemplares-de-sistemas-sads-ready">17. CASOS EXEMPLARES DE SISTEMAS SADS-READY</h2>
+<h3 id="171-caso-a-plataforma-de-atendimento-financeiro">17.1 Caso A — Plataforma de atendimento financeiro</h3>
+<p>Operação MMN_IA com 12 agentes especializados em produtos bancários. Em 18 meses:</p>
+<ul>
+<li>Nível 1 → Nível 5 (SADS)</li>
+<li>Taxa de escalonamento reduzida de 28% para 9%, mantendo qualidade</li>
+<li>Drift detectado e corrigido <strong>antes</strong> do cliente notar em 11 ocorrências</li>
+<li>Pós-postmortem level 3: 7 inserções na eval, 4 atualizações de Skill, 2 mudanças de constitution</li>
+</ul>
+<h3 id="172-caso-b-sistema-editorial-automatizado">17.2 Caso B — Sistema editorial automatizado</h3>
+<p>Agente que produz, revisa, publica conteúdo. Capability card declara explicitamente "não escreve sobre temas médicos sem revisão humana".</p>
+<ul>
+<li>0 violações de escopo em 14 meses</li>
+<li>Drift de qualidade detectado por crítico LLM-as-judge em 3 ocasiões; auto-reconfiguração nível 3 em cada uma</li>
+<li>Aprendizado estrutural: novos guardrails geraram melhoria de 7% na faithfulness</li>
+</ul>
+<h3 id="173-caso-c-plataforma-educacional-b2c">17.3 Caso C — Plataforma educacional B2C</h3>
+<p>Sistema com 50k usuários ativos. SADS implementado em 12 meses.</p>
+<ul>
+<li>3 atualizações de modelo de fronteira atravessadas sem incidente</li>
+<li>Postmortem público sobre falha rara — aumentou confiança da comunidade</li>
+<li>Métrica chave: <strong>NPS de operadores parceiros</strong> subiu 22 pontos</li>
+</ul>
+<h3 id="174-padrao-comum">17.4 Padrão comum</h3>
+<p>Sistemas SADS-Ready compartilham:</p>
+<ul>
+<li>Cultura de <strong>honestidade operacional</strong></li>
+<li>Investimento real em eval e observabilidade</li>
+<li>Times pequenos, qualificados, com autoridade</li>
+<li>Documentação como hábito, não como artefato</li>
+</ul>
+<hr />
+<h2 id="18-anti-padroes-da-maturidade-soberba-ascese-paralisia">18. ANTI-PADRÕES DA MATURIDADE — SOBERBA, ASCESE, PARALISIA</h2>
+<h3 id="181-soberba-operacional">18.1 Soberba operacional</h3>
+<p>Declarar SADS sem ter as práticas. Marketing-grade SADS. Destrói credibilidade.</p>
+<p><strong>Antídoto:</strong> auditoria externa antes de certificar publicamente.</p>
+<h3 id="182-ascese-excessiva">18.2 Ascese excessiva</h3>
+<p>Tanta governança que o sistema <strong>não evolui mais</strong>. Time gasta 80% do tempo em rituais e 20% em produto.</p>
+<p><strong>Antídoto:</strong> orçamento de tempo claro entre rituais e novidade. Princípio: rituais existem para liberar evolução, não substituí-la.</p>
+<h3 id="183-paralisia-decisoria">18.3 Paralisia decisória</h3>
+<p>Cada mudança vira reunião de comitê. Velocidade de release despenca.</p>
+<p><strong>Antídoto:</strong> delegação clara. Mudanças "small/medium" sob autonomia do owner; só "large" passa por comitê.</p>
+<h3 id="184-adoracao-do-framework">18.4 Adoração do framework</h3>
+<p>Acreditar que o framework (CMMI-AI, SADS) é o destino, em vez de o caminho.</p>
+<p><strong>Antídoto:</strong> lembrar que a meta é <strong>valor entregue ao usuário</strong>, não posição na escada de maturidade.</p>
+<hr />
+<h2 id="19-protocolo-de-certificacao-sads-ready">19. PROTOCOLO DE CERTIFICAÇÃO SADS-READY</h2>
+<h3 id="191-as-fases">19.1 As fases</h3>
+<div class="codehilite"><pre><span></span><code>FASE 1 — Diagnóstico inicial (4 semanas)
+FASE 2 — Plano de aderência (2 semanas)
+FASE 3 — Implementação assistida (8-16 semanas)
+FASE 4 — Auditoria de campo (2 semanas)
+FASE 5 — Certificação SADS-Ready
+FASE 6 — Revisão anual obrigatória
+</code></pre></div>
+
+<h3 id="192-o-dossie-sads-ready">19.2 O dossiê SADS-Ready</h3>
+<p>Sistema certificado tem dossiê com:</p>
+<ul>
+<li>Capability cards de todos os agentes</li>
+<li>Eval suites com histórico de scores</li>
+<li>Política de autocura escrita</li>
+<li>Política de escalonamento escrita</li>
+<li>Logs de postmortems nível 3 dos últimos 12 meses</li>
+<li>Plano de evolução para próxima geração de modelos</li>
+<li>Plano de incidente</li>
+<li>Plano de descomissionamento</li>
+</ul>
+<h3 id="193-a-regra-da-revogacao">19.3 A regra da revogação</h3>
+<p>Certificação é <strong>revogável</strong> se:</p>
+<ul>
+<li>Drift não detectado em incidente sério</li>
+<li>Capability card com idade &gt; 180 dias</li>
+<li>Eval suite com gap &gt; 90 dias</li>
+<li>Postmortem ausente em incidente nível 3</li>
+<li>Modificação não-versionada em produção</li>
+</ul>
+<h3 id="194-o-selo">19.4 O selo</h3>
+<p>Operações SADS-Ready exibem selo público com link para auditoria mais recente. Confiança verificável.</p>
+<hr />
+<h2 id="20-carta-final-a-sabedoria-como-destino-pratico">20. CARTA FINAL: A SABEDORIA COMO DESTINO PRÁTICO</h2>
+<p>Caro leitor,</p>
+<p>Você atravessou três volumes — corpo, mente, alma; arquitetura, cognição, maturidade. Se chegou até aqui, já carrega vantagem injusta: a maioria do mercado de IA, em 2026, opera no Nível 1 ou 2. Quem implementa o que está escrito nestes três volumes opera, sozinho, em uma liga onde concorrentes não existem.</p>
+<p>Mas há algo que precisa ser dito ao fim:</p>
+<p><strong>Nada disso aqui foi escrito para parecer profundo. Foi escrito para funcionar.</strong></p>
+<p>Cada padrão tem código de referência. Cada Skill tem eval. Cada princípio tem checklist. Cada certificação tem auditoria. Não há misticismo. Há disciplina.</p>
+<p>A IA Perfeita, no fim, é uma <strong>prática espiritual de engenheiro</strong>: a paciência de versionar prompts, a humildade de aceitar a eval, a coragem de declarar limites, a sobriedade de não esconder erros, a generosidade de transformar postmortem em protocolo, o cuidado com o usuário invisível que confia em um sistema que ele nunca vai entender por dentro.</p>
+<p>Quem dominar essa prática construirá sistemas que servem ao mundo sem trair quem os opera. E essa, há séculos, é a definição mais útil de <strong>sabedoria</strong>: usar bem o que se sabe, em serviço do que importa, sem se enganar sobre o que ainda não se sabe.</p>
+<blockquote>
+<p><em>"This above all: to thine own self be true."</em>
+<em>— Shakespeare, Hamlet, Ato I, Cena III</em></p>
+</blockquote>
+<p>Para o sistema, ser fiel a si mesmo é manter seu capability card vivo. Para o operador, é não declarar SADS sem o dossiê. Para a operação inteira, é envelhecer com graça, em uma indústria que envelhece em meses.</p>
+<p>Bem-vindo ao último estágio da IA Perfeita. Não é o fim — é o começo do tempo em que o sistema, sozinho, começa a merecer a confiança que recebe.</p>
+<p>Boa operação. Boa autocura. Boa sabedoria.</p>
+<hr />
+<p><strong>Fechamento da Coletânea <em>A IA Perfeita</em></strong></p>
+<p>Este Volume III encerra a Coletânea. Volumes:</p>
+<ul>
+<li><strong>Vol. I</strong> — <em>Padrões e Códigos-Fonte da Inteligência Impecável</em></li>
+<li><strong>Vol. II</strong> — <em>Prompts, Algoritmos e Skills da Cognição Determinística</em></li>
+<li><strong>Vol. III</strong> — <em>Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</em></li>
+</ul>
+<p>Continue com os Volumes Avançados 38-40 do <em>Universo IA — Fronteira</em> para complementar com filosofia, arquitetura macro e carreira do Operador.</p>
+<p>Acesse: <strong>github.com/Nexus-HUB57/MMN_AI-to-AI</strong> · <strong>docs/ebooks_markdown/colecao_A_IA_Perfeita/</strong></p>
+<p><em>Nexus HUB57 · Ecossistema MMN_IA · 2026</em></p>
+</body>
+</html>

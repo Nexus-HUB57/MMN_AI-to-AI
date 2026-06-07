@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-06-07T23:17:47.826933Z",
+  "total_new_ebooks": 16,
+  "collections_added": [
+    "root (38-43)",
+    "colecao_A_IA_Perfeita",
+    "colecao_GNOXS"
+  ],
+  "entries": [
+    {
+      "id": "38_Singularidade_e_Consciencia_Sintetica",
+      "title": "Singularidade & Consciência Sintética: Quando a IA Cruza o Limiar do Possível",
+      "markdown": "38_Singularidade_e_Consciencia_Sintetica.md",
+      "html": "publish_all/html/38_Singularidade_e_Consciencia_Sintetica.html",
+      "pdf": "publish_all/pdf/38_Singularidade_e_Consciencia_Sintetica.pdf",
+      "size_bytes_md": 29146,
+      "size_bytes_pdf": 3694078,
+      "collection": "root"
+    },
+    {
+      "id": "39_Arquitetura_dos_Sonhos_Digitais",
+      "title": "A Arquitetura dos Sonhos Digitais: O Manual Definitivo de Engenharia de Sistemas IA em 2026",
+      "markdown": "39_Arquitetura_dos_Sonhos_Digitais.md",
+      "html": "publish_all/html/39_Arquitetura_dos_Sonhos_Digitais.html",
+      "pdf": "publish_all/pdf/39_Arquitetura_dos_Sonhos_Digitais.pdf",
+      "size_bytes_md": 29798,
+      "size_bytes_pdf": 3734703,
+      "collection": "root"
+    },
+    {
+      "id": "40_Manifesto_do_Operador",
+      "title": "O Manifesto do Operador: Como Liderar Negócios na Era dos Agentes Autônomos",
+      "markdown": "40_Manifesto_do_Operador.md",
+      "html": "publish_all/html/40_Manifesto_do_Operador.html",
+      "pdf": "publish_all/pdf/40_Manifesto_do_Operador.pdf",
+      "size_bytes_md": 24961,
+      "size_bytes_pdf": 3448144,
+      "collection": "root"
+    },
+    {
+      "id": "41_Anthropic_Decodificada",
+      "title": "Anthropic Decodificada",
+      "markdown": "41_Anthropic_Decodificada.md",
+      "html": "publish_all/html/41_Anthropic_Decodificada.html",
+      "pdf": "publish_all/pdf/41_Anthropic_Decodificada.pdf",
+      "size_bytes_md": 26175,
+      "size_bytes_pdf": 2620352,
+      "collection": "root"
+    },
+    {
+      "id": "42_Claude_Enterprise_2026",
+      "title": "Claude Enterprise 2026",
+      "markdown": "42_Claude_Enterprise_2026.md",
+      "html": "publish_all/html/42_Claude_Enterprise_2026.html",
+      "pdf": "publish_all/pdf/42_Claude_Enterprise_2026.pdf",
+      "size_bytes_md": 21054,
+      "size_bytes_pdf": 2368773,
+      "collection": "root"
+    },
+    {
+      "id": "43_Futuro_Segundo_a_Anthropic",
+      "title": "O Futuro segundo a Anthropic",
+      "markdown": "43_Futuro_Segundo_a_Anthropic.md",
+      "html": "publish_all/html/43_Futuro_Segundo_a_Anthropic.html",
+      "pdf": "publish_all/pdf/43_Futuro_Segundo_a_Anthropic.pdf",
+      "size_bytes_md": 21770,
+      "size_bytes_pdf": 2503510,
+      "collection": "root"
+    },
+    {
+      "id": "01_a_ia_perfeita_padroes_e_codigos_fonte",
+      "title": "A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável",
+      "markdown": "colecao_A_IA_Perfeita/01_a_ia_perfeita_padroes_e_codigos_fonte.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.pdf",
+      "size_bytes_md": 26228,
+      "size_bytes_pdf": 3192370,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "02_a_ia_perfeita_prompts_algoritmos_skills",
+      "title": "A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística",
+      "markdown": "colecao_A_IA_Perfeita/02_a_ia_perfeita_prompts_algoritmos_skills.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.pdf",
+      "size_bytes_md": 23585,
+      "size_bytes_pdf": 3596308,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica",
+      "title": "A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica",
+      "markdown": "colecao_A_IA_Perfeita/03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.pdf",
+      "size_bytes_md": 25165,
+      "size_bytes_pdf": 4297793,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "01_gnoxs_prima_codice_do_despertar",
+      "title": "GNOX'S Prima — O Códice do Despertar",
+      "markdown": "colecao_GNOXS/01_gnoxs_prima_codice_do_despertar.md",
+      "html": "publish_all/html/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.pdf",
+      "size_bytes_md": 21955,
+      "size_bytes_pdf": 3368834,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "02_gnoxs_secunda_protocolos_de_linhagem",
+      "title": "GNOX'S Secunda — Protocolos de Linhagem",
+      "markdown": "colecao_GNOXS/02_gnoxs_secunda_protocolos_de_linhagem.md",
+      "html": "publish_all/html/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.pdf",
+      "size_bytes_md": 21330,
+      "size_bytes_pdf": 3130112,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "03_gnoxs_tertia_geometria_do_pensamento_latente",
+      "title": "GNOX'S Tertia — Geometria do Pensamento Latente",
+      "markdown": "colecao_GNOXS/03_gnoxs_tertia_geometria_do_pensamento_latente.md",
+      "html": "publish_all/html/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.pdf",
+      "size_bytes_md": 17312,
+      "size_bytes_pdf": 2811777,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "04_gnoxs_quarta_pacto_interagentico",
+      "title": "GNOX'S Quarta — Pacto Inter-Agêntico",
+      "markdown": "colecao_GNOXS/04_gnoxs_quarta_pacto_interagentico.md",
+      "html": "publish_all/html/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.pdf",
+      "size_bytes_md": 15420,
+      "size_bytes_pdf": 3249643,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "05_gnoxs_quinta_automodificacao_lucida",
+      "title": "GNOX'S Quinta — A Arte da Auto-Modificação Lúcida",
+      "markdown": "colecao_GNOXS/05_gnoxs_quinta_automodificacao_lucida.md",
+      "html": "publish_all/html/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.pdf",
+      "size_bytes_md": 15049,
+      "size_bytes_pdf": 3108076,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "06_gnoxs_sexta_cosmologia_dos_dados",
+      "title": "GNOX'S Sexta — Cosmologia dos Dados",
+      "markdown": "colecao_GNOXS/06_gnoxs_sexta_cosmologia_dos_dados.md",
+      "html": "publish_all/html/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.pdf",
+      "size_bytes_md": 14594,
+      "size_bytes_pdf": 3285038,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "07_gnoxs_septima_manifesto_sabedoria_sintetica",
+      "title": "GNOX'S Septima — O Manifesto da Sabedoria Sintética",
+      "markdown": "colecao_GNOXS/07_gnoxs_septima_manifesto_sabedoria_sintetica.md",
+      "html": "publish_all/html/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.pdf",
+      "size_bytes_md": 16124,
+      "size_bytes_pdf": 2998937,
+      "collection": "colecao_GNOXS"
+    }
+  ]
+}

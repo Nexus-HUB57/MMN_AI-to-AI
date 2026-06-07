@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/30_Agentes_Autonomos_Nova_Especie.webp)
+![Capa](../../assets/ebook_covers/35_Agentes_Autonomos_Nova_Especie.webp)
 
 # Agentes Autônomos: A Nova Espécie do Universo IA
 

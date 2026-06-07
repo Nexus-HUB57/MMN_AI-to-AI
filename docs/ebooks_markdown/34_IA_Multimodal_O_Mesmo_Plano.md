@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/29_IA_Multimodal_O_Mesmo_Plano.webp)
+![Capa](../../assets/ebook_covers/34_IA_Multimodal_O_Mesmo_Plano.webp)
 
 # IA Multimodal: Texto, Imagem, Áudio e Vídeo no Mesmo Plano
 

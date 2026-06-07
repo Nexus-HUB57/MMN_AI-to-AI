@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/32_Etica_Alinhamento_Seguranca.webp)
+![Capa](../../assets/ebook_covers/37_Etica_Alinhamento_Seguranca.webp)
 
 # Ética, Alinhamento e Segurança no Universo IA
 

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/28_O_Universo_IA_Mapa_Completo.webp)
+![Capa](../../assets/ebook_covers/33_O_Universo_IA_Mapa_Completo.webp)
 
 # O Universo IA: Mapa Completo da Galáxia da Inteligência Artificial
 

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/31_Engenharia_de_Prompt_Avancada.webp)
+![Capa](../../assets/ebook_covers/36_Engenharia_de_Prompt_Avancada.webp)
 
 # Engenharia de Prompt Avançada: A Linguagem Nativa do Universo IA
 

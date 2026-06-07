@@ -119,6 +119,14 @@ GNOXS = [
     ("colecao_GNOXS", "07_gnoxs_septima_manifesto_sabedoria_sintetica"),
 ]
 
+AGENTIC_AI = [
+    ("colecao_AgenticAI_Revolucao", "01_genesis"),
+    ("colecao_AgenticAI_Revolucao", "02_exodus"),
+    ("colecao_AgenticAI_Revolucao", "03_dominion"),
+    ("colecao_AgenticAI_Revolucao", "04_revelation"),
+    ("colecao_AgenticAI_Revolucao", "05_apocalipse"),
+]
+
 md_extensions = ["extra", "tables", "fenced_code", "sane_lists", "toc", "codehilite"]
 
 
@@ -189,6 +197,18 @@ def main():
 
     print("=== Coleção GNOX'S ===")
     for col_dir, stem in GNOXS:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
+    print("=== Coletânea Agentic AI (Genesis → Apocalipse) ===")
+    for col_dir, stem in AGENTIC_AI:
         md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
         if not md_path.exists():
             print(f"  SKIP missing: {md_path}")

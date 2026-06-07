@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-07T23:17:47.826933Z",
-  "total_new_ebooks": 16,
+  "generated_at": "2026-06-07T23:59:18.133228Z",
+  "total_new_ebooks": 21,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
@@ -166,6 +166,56 @@
       "size_bytes_md": 16124,
       "size_bytes_pdf": 2998937,
       "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "01_genesis",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/01_genesis.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__01_genesis.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__01_genesis.pdf",
+      "size_bytes_md": 17356,
+      "size_bytes_pdf": 2935943,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "02_exodus",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/02_exodus.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__02_exodus.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__02_exodus.pdf",
+      "size_bytes_md": 19548,
+      "size_bytes_pdf": 2994288,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "03_dominion",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/03_dominion.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__03_dominion.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__03_dominion.pdf",
+      "size_bytes_md": 16296,
+      "size_bytes_pdf": 2837396,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "04_revelation",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/04_revelation.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__04_revelation.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__04_revelation.pdf",
+      "size_bytes_md": 18646,
+      "size_bytes_pdf": 3229640,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "05_apocalipse",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/05_apocalipse.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__05_apocalipse.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__05_apocalipse.pdf",
+      "size_bytes_md": 20176,
+      "size_bytes_pdf": 3049846,
+      "collection": "colecao_AgenticAI_Revolucao"
     }
   ]
 }

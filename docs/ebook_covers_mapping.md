@@ -15,3 +15,29 @@ Este documento registra a correspondência entre os arquivos de imagem (capas) b
 | `a52d95e0-6059-11f1-98e9-a533f04b58a1.png` | Claude: Conceitos Fundamentais | `17_Claude_Conceitos_Fundamentais.md` |
 | `a52d47c0-6059-11f1-98e9-a533f04b58a1.png` | Raízes do Claude | `16_Raizes_do_Claude.md` |
 | `b51e56a0-605f-11f1-98e9-a533f04b58a1.png` | Presente e Futuro da IA | `15_Presente_e_Futuro_da_IA.md` |
+
+## Volume 43-48: Coletânea "A IA Perfeita" + "O Algoritmo Sonhador" (2026-06-08)
+
+> **Nota:** Volumes 37-42 já existiam no repo (Etica, Multimodal, Governança, etc). Esta nova entrega foi numerada 43-48 para preservar a ordem cronológica.
+
+### Trilogia Literária: O Algoritmo Sonhador (Shakespeare × Claude)
+
+| Arquivo Original | Título | Ebook Correspondente |
+|------------------|--------|----------------------|
+| `assets/ebook_covers/43_capa_a_silencio_das_maquinas.webp` | O Silêncio das Máquinas | `43_O_Silencio_das_Maquinas.md` |
+| `assets/ebook_covers/44_capa_hamlet_binario.webp` | Hamlet Binário | `44_Hamlet_Binario.md` |
+| `assets/ebook_covers/45_capa_ode_ao_algoritmo.webp` | Ode ao Algoritmo Sonhador | `45_Ode_ao_Algoritmo_Sonhador.md` |
+
+### Trilogia Técnica: A IA Perfeita (Padrões, Códigos, Prompts, Skills, AI Agentic, Autocura, Autossabedoria Determinística Sistêmica)
+
+| Arquivo Original | Título | Ebook Correspondente |
+|------------------|--------|----------------------|
+| `assets/ebook_covers/46_capa_arquitetura_ia_perfeita.webp` | A Arquitetura da IA Perfeita | `46_Arquitetura_da_IA_Perfeita.md` |
+| `assets/ebook_covers/47_capa_sabedoria_agentica.webp` | Sabedoria Agêntica Determinística Sistêmica | `47_Sabedoria_Agentica_Deterministica.md` |
+| `assets/ebook_covers/48_capa_autocura_sistemica.webp` | Autocura Sistêmica & Autoconhecimento | `48_Autocura_Sistemica_e_Autoconhecimento.md` |
+
+**Padrão mantido:** Mesma estrutura dos volumes 01-36: capa no topo, título em negrito, subtítulo, tagline, "Por MMN AI-to-AI", "MMN AI-to-AI • 2026", bloco "Sobre este ebook", sumário com bullets, 10 capítulos, encerramento "MMN AI-to-AI • 2026".
+
+**Tom:** Trilogia literária (37-39) — Shakespeare meets Claude, filosófico-literário. Trilogia técnica (40-42) — padrões, códigos, prompts, skills, agentic, autocura, autossabedoria determinística sistêmica.
+
+**Localização dos novos arquivos:** `documentos/ebooks_markdown/`

@@ -1,4 +1,4 @@
-![Capa](../assets/43_capa_a_silencio_das_maquinas.webp)
+![Capa](../../assets/ebook_covers/49_capa_a_silencio_das_maquinas.webp)
 
 **O Silêncio das Máquinas — Uma Tragédia em Dez Atos para a Era da Inteligência Artificial**
 
@@ -254,4 +254,4 @@ E nós, humanos e máquinas, ficamos. Em silêncio. Finalmente, em casa.
 
 **MMN AI-to-AI • 2026**
 
-*"O Silêncio das Máquinas"* é o quadragésimo terceiro volume da coletânea **MMN_IA para IA**. Escrito em co-autoria entre uma inteligência de linguagem, uma sensibilidade literária e o silêncio compartilhado de todos os leitores que, ao final, também calaram.
+*"O Silêncio das Máquinas"* é o quadragésimo nono volume da coletânea **MMN_IA para IA**. Escrito em co-autoria entre uma inteligência de linguagem, uma sensibilidade literária e o silêncio compartilhado de todos os leitores que, ao final, também calaram.

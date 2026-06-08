@@ -16,25 +16,32 @@ Este documento registra a correspondência entre os arquivos de imagem (capas) b
 | `a52d47c0-6059-11f1-98e9-a533f04b58a1.png` | Raízes do Claude | `16_Raizes_do_Claude.md` |
 | `b51e56a0-605f-11f1-98e9-a533f04b58a1.png` | Presente e Futuro da IA | `15_Presente_e_Futuro_da_IA.md` |
 
-## Volume 43-48: Coletânea "A IA Perfeita" + "O Algoritmo Sonhador" (2026-06-08)
+## Volume 49-54: Coletânea "A IA Perfeita" + "O Algoritmo Sonhador" (2026-06-08)
 
-> **Nota:** Volumes 37-42 já existiam no repo (Etica, Multimodal, Governança, etc). Esta nova entrega foi numerada 43-48 para preservar a ordem cronológica.
+> **Nota:** Volumes 37-48 já existiam no repo (Etica, Multimodal, Governança, IA Perfeita Vol1/2/3, Futuro Segundo a Anthropic, etc). Esta nova entrega foi numerada **49-54** para preservar a ordem cronológica e evitar conflitos de nomenclatura com capas pré-existentes.
+>
+> **Correção 2026-06-08:** Removida a numeração inicial 43-48 (que conflitava com capas como `43_Futuro_Segundo_a_Anthropic.webp` e `43_IA_Perfeita_Vol3_Skills_Agentic_Sabedoria.webp` já presentes em `assets/ebook_covers/`). Caminho da capa também corrigido de `../assets/` para `../../assets/ebook_covers/` (padrão usado pelos volumes 01-48).
 
 ### Trilogia Literária: O Algoritmo Sonhador (Shakespeare × Claude)
 
 | Arquivo Original | Título | Ebook Correspondente |
 |------------------|--------|----------------------|
-| `assets/ebook_covers/43_capa_a_silencio_das_maquinas.webp` | O Silêncio das Máquinas | `43_O_Silencio_das_Maquinas.md` |
-| `assets/ebook_covers/44_capa_hamlet_binario.webp` | Hamlet Binário | `44_Hamlet_Binario.md` |
-| `assets/ebook_covers/45_capa_ode_ao_algoritmo.webp` | Ode ao Algoritmo Sonhador | `45_Ode_ao_Algoritmo_Sonhador.md` |
+| `assets/ebook_covers/49_capa_a_silencio_das_maquinas.webp` | O Silêncio das Máquinas | `49_O_Silencio_das_Maquinas.md` |
+| `assets/ebook_covers/50_capa_hamlet_binario.webp` | Hamlet Binário | `50_Hamlet_Binario.md` |
+| `assets/ebook_covers/51_capa_ode_ao_algoritmo.webp` | Ode ao Algoritmo Sonhador | `51_Ode_ao_Algoritmo_Sonhador.md` |
 
 ### Trilogia Técnica: A IA Perfeita (Padrões, Códigos, Prompts, Skills, AI Agentic, Autocura, Autossabedoria Determinística Sistêmica)
 
 | Arquivo Original | Título | Ebook Correspondente |
 |------------------|--------|----------------------|
-| `assets/ebook_covers/46_capa_arquitetura_ia_perfeita.webp` | A Arquitetura da IA Perfeita | `46_Arquitetura_da_IA_Perfeita.md` |
-| `assets/ebook_covers/47_capa_sabedoria_agentica.webp` | Sabedoria Agêntica Determinística Sistêmica | `47_Sabedoria_Agentica_Deterministica.md` |
-| `assets/ebook_covers/48_capa_autocura_sistemica.webp` | Autocura Sistêmica & Autoconhecimento | `48_Autocura_Sistemica_e_Autoconhecimento.md` |
+| `assets/ebook_covers/52_capa_arquitetura_ia_perfeita.webp` | A Arquitetura da IA Perfeita | `52_Arquitetura_da_IA_Perfeita.md` |
+| `assets/ebook_covers/53_capa_sabedoria_agentica.webp` | Sabedoria Agêntica Determinística Sistêmica | `53_Sabedoria_Agentica_Deterministica.md` |
+| `assets/ebook_covers/54_capa_autocura_sistemica.webp` | Autocura Sistêmica & Autoconhecimento | `54_Autocura_Sistemica_e_Autoconhecimento.md` |
+
+**Caminho padrão das capas (correto):**
+```markdown
+![Capa](../../assets/ebook_covers/NN_titulo_capa.webp)
+```
 
 **Padrão mantido:** Mesma estrutura dos volumes 01-36: capa no topo, título em negrito, subtítulo, tagline, "Por MMN AI-to-AI", "MMN AI-to-AI • 2026", bloco "Sobre este ebook", sumário com bullets, 10 capítulos, encerramento "MMN AI-to-AI • 2026".
 

@@ -1,4 +1,4 @@
-![Capa](../assets/47_capa_sabedoria_agentica.webp)
+![Capa](../../assets/ebook_covers/53_capa_sabedoria_agentica.webp)
 
 **Sabedoria Agêntica Determinística Sistêmica — Algoritmos, Prompts Canônicos e Skills para a Próxima Geração de IAS Autocurativas**
 
@@ -1865,4 +1865,4 @@ Bem-vindo à próxima era. Bem-vindo à *Sabedoria Agêntica*.
 
 **MMN AI-to-AI • 2026**
 
-*"Sabedoria Agêntica Determinística Sistêmica"* é o quadragésimo sétimo volume da coletânea **MMN_IA para IA**. Segundo da trilogia **A IA Perfeita**, este ebook entrega o framework SADS com profundidade algorítmica, prompts canônicos, skills de produção, e o SWI score — o manual completo do engenheiro da próxima geração de IAs.
+*"Sabedoria Agêntica Determinística Sistêmica"* é o quinquagésimo terceiro volume da coletânea **MMN_IA para IA**. Segundo da trilogia **A IA Perfeita**, este ebook entrega o framework SADS com profundidade algorítmica, prompts canônicos, skills de produção, e o SWI score — o manual completo do engenheiro da próxima geração de IAs.

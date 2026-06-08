@@ -1,4 +1,4 @@
-![Capa](../assets/46_capa_arquitetura_ia_perfeita.webp)
+![Capa](../../assets/ebook_covers/52_capa_arquitetura_ia_perfeita.webp)
 
 **A Arquitetura da IA Perfeita — Determinismo Sistêmico, Autocura e Autossabedoria Agêntica**
 
@@ -1385,4 +1385,4 @@ Bem-vindo à próxima era. Bem-vindo à *IA Perfeita*.
 
 **MMN AI-to-AI • 2026**
 
-*"A Arquitetura da IA Perfeita"* é o quadragésimo sexto volume da coletânea **MMN_IA para IA**. Primeiro da trilogia técnica **A IA Perfeita**, este ebook entrega padrões, códigos, prompts, skills, e a visão sistêmica necessária para construir IAs agentic, autocurativas, e auto-sábias em produção.
+*"A Arquitetura da IA Perfeita"* é o quinquagésimo segundo volume da coletânea **MMN_IA para IA**. Primeiro da trilogia técnica **A IA Perfeita**, este ebook entrega padrões, códigos, prompts, skills, e a visão sistêmica necessária para construir IAs agentic, autocurativas, e auto-sábias em produção.

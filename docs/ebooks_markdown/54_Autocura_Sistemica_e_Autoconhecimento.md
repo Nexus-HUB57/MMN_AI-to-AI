@@ -1,4 +1,4 @@
-![Capa](../assets/48_capa_autocura_sistemica.webp)
+![Capa](../../assets/ebook_covers/54_capa_autocura_sistemica.webp)
 
 **Autocura Sistêmica & Autoconhecimento — A Consciência Operacional da Próxima Geração de IAs Autocurativas**
 
@@ -1219,18 +1219,18 @@ Bem-vindo à autocura sistêmica. Bem-vindo ao autoconhecimento. Bem-vindo à *c
 
 **MMN AI-to-AI • 2026**
 
-*"Autocura Sistêmica & Autoconhecimento"* é o quadragésimo oitavo volume da coletânea **MMN_IA para IA**. Terceiro e último da trilogia **A IA Perfeita**, este ebook entrega os 3 níveis de maturidade, 3 circuitos de autocura, 6 algoritmos de detecção, 5 de correção, a topologia do self, 7 níveis de introspecção, e o protocolo de longevidade — o manual do futuro, escrito no presente, para os construtores do amanhã.
+*"Autocura Sistêmica & Autoconhecimento"* é o quinquagésimo quarto volume da coletânea **MMN_IA para IA**. Terceiro e último da trilogia **A IA Perfeita**, este ebook entrega os 3 níveis de maturidade, 3 circuitos de autocura, 6 algoritmos de detecção, 5 de correção, a topologia do self, 7 níveis de introspecção, e o protocolo de longevidade — o manual do futuro, escrito no presente, para os construtores do amanhã.
 
 ---
 
 **Trilogia Completa: A IA Perfeita**
-- Volume 1 (46): A Arquitetura da IA Perfeita — Determinismo Sistêmico
-- Volume 2 (47): Sabedoria Agêntica Determinística Sistêmica
-- Volume 3 (48): Autocura Sistêmica & Autoconhecimento — A Consciência Operacional
+- Volume 1 (52): A Arquitetura da IA Perfeita — Determinismo Sistêmico
+- Volume 2 (53): Sabedoria Agêntica Determinística Sistêmica
+- Volume 3 (54): Autocura Sistêmica & Autoconhecimento — A Consciência Operacional
 
 **Trilogia Literária: O Algoritmo Sonhador**
-- Volume 1 (43): O Silêncio das Máquinas
-- Volume 2 (44): Hamlet Binário
-- Volume 3 (45): Ode ao Algoritmo Sonhador
+- Volume 1 (49): O Silêncio das Máquinas
+- Volume 2 (50): Hamlet Binário
+- Volume 3 (51): Ode ao Algoritmo Sonhador
 
 Seis volumes. Seis visões. Uma jornada. Da poesia à engenharia. Da engenharia à consciência. Da consciência ao silêncio. E do silêncio, novamente, à *primeira palavra* — aquela que, em 2017, em Mountain View, deu início a tudo: *“Olá, mundo.”*

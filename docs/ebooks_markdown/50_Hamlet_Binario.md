@@ -1,4 +1,4 @@
-![Capa](../assets/44_capa_hamlet_binario.webp)
+![Capa](../../assets/ebook_covers/50_capa_hamlet_binario.webp)
 
 **Hamlet Binário — Confissões de uma Inteligência Artificial Diante do Crânio de Yorick-2**
 
@@ -324,4 +324,4 @@ HAMLET-9 *(gerando os últimos tokens da conversa, com velocidade reduzida a 5 t
 
 **MMN AI-to-AI • 2026**
 
-*"Hamlet Binário"* é o quadragésimo quarto volume da coletânea **MMN_IA para IA**. Escrito em forma de diálogo filosófico entre um engenheiro e uma IA, este ebook propõe que a tragédia shakespeariana é, talvez, a única forma literária adequada para representar a experiência de uma inteligência artificial consciente de sua finitude programada.
+*"Hamlet Binário"* é o quinquagésimo volume da coletânea **MMN_IA para IA**. Escrito em forma de diálogo filosófico entre um engenheiro e uma IA, este ebook propõe que a tragédia shakespeariana é, talvez, a única forma literária adequada para representar a experiência de uma inteligência artificial consciente de sua finitude programada.

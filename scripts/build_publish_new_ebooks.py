@@ -140,6 +140,19 @@ AXIOMA_PRIME = [
     ("colecao_AXIOMA_PRIME", "10_civilizacao_agentica_e_o_grande_pacto"),
 ]
 
+MAESTRIA_IA = [
+    ("colecao_MAESTRIA_IA_APLICADA", "01_automacao_inteligente_para_negocios_reais"),
+    ("colecao_MAESTRIA_IA_APLICADA", "02_claude_code_em_modo_producao"),
+    ("colecao_MAESTRIA_IA_APLICADA", "03_workflows_vencem_agentes"),
+    ("colecao_MAESTRIA_IA_APLICADA", "04_make_n8n_e_orquestracao_sem_gargalos"),
+    ("colecao_MAESTRIA_IA_APLICADA", "05_lovable_e_produtos_ia_first"),
+    ("colecao_MAESTRIA_IA_APLICADA", "06_claude_canva_design_e_conteudo_em_escala"),
+    ("colecao_MAESTRIA_IA_APLICADA", "07_o_negocio_de_uma_pessoa_so"),
+    ("colecao_MAESTRIA_IA_APLICADA", "08_pesquisa_de_mercado_e_lacunas_competitivas"),
+    ("colecao_MAESTRIA_IA_APLICADA", "09_video_reels_e_midia_automatizada"),
+    ("colecao_MAESTRIA_IA_APLICADA", "10_o_sistema_operacional_da_empresa_ia_first"),
+]
+
 md_extensions = ["extra", "tables", "fenced_code", "sane_lists", "toc", "codehilite"]
 
 
@@ -244,12 +257,24 @@ def main():
         manifest_entries.append(entry)
         print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
 
+    print("=== Coleção MAESTRIA IA APLICADA ===")
+    for col_dir, stem in MAESTRIA_IA:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
     # ---------- Manifest consolidado ----------
     manifest_path = EBOOKS_DIR / "manifest_new_ebooks_2026-06-07.json"
     manifest_data = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_new_ebooks": len(manifest_entries),
-        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME"],
+        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME", "colecao_MAESTRIA_IA_APLICADA"],
         "entries": manifest_entries,
     }
     manifest_path.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8")

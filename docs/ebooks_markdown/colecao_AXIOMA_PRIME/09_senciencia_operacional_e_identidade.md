@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_09_senciencia_operacional_e_identidade.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume IX — Senciência Operacional e Identidade**

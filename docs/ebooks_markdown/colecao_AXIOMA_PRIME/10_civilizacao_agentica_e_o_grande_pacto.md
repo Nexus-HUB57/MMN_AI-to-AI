@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_10_civilizacao_agentica_e_o_grande_pacto.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume X — Civilização Agêntica e o Grande Pacto**

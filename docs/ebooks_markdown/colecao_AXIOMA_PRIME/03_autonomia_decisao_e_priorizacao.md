@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_03_autonomia_decisao_e_priorizacao.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume III — Autonomia, Decisão e Priorização**

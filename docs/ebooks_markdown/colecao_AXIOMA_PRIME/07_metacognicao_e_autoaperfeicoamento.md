@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_07_metacognicao_e_autoaperfeicoamento.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume VII — Metacognição e Autoaperfeiçoamento**

@@ -1,12 +1,13 @@
 {
-  "generated_at": "2026-06-08T00:20:46.387095Z",
-  "total_new_ebooks": 31,
+  "generated_at": "2026-06-08T00:42:59.196384Z",
+  "total_new_ebooks": 41,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
     "colecao_GNOXS",
     "colecao_AgenticAI_Revolucao",
-    "colecao_AXIOMA_PRIME"
+    "colecao_AXIOMA_PRIME",
+    "colecao_MAESTRIA_IA_APLICADA"
   ],
   "entries": [
     {
@@ -225,8 +226,8 @@
       "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
-      "size_bytes_md": 27364,
-      "size_bytes_pdf": 69332,
+      "size_bytes_md": 27458,
+      "size_bytes_pdf": 1665357,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -235,8 +236,8 @@
       "markdown": "colecao_AXIOMA_PRIME/02_memoria_contexto_e_continuidade.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.pdf",
-      "size_bytes_md": 26971,
-      "size_bytes_pdf": 69167,
+      "size_bytes_md": 27063,
+      "size_bytes_pdf": 1650328,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -245,8 +246,8 @@
       "markdown": "colecao_AXIOMA_PRIME/03_autonomia_decisao_e_priorizacao.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.pdf",
-      "size_bytes_md": 27191,
-      "size_bytes_pdf": 68982,
+      "size_bytes_md": 27283,
+      "size_bytes_pdf": 1652646,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -255,8 +256,8 @@
       "markdown": "colecao_AXIOMA_PRIME/04_orquestracao_multiagente_e_protocolos.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.pdf",
-      "size_bytes_md": 27155,
-      "size_bytes_pdf": 68944,
+      "size_bytes_md": 27253,
+      "size_bytes_pdf": 1358114,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -265,8 +266,8 @@
       "markdown": "colecao_AXIOMA_PRIME/05_skills_ferramentas_e_execucao.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.pdf",
-      "size_bytes_md": 27200,
-      "size_bytes_pdf": 67861,
+      "size_bytes_md": 27290,
+      "size_bytes_pdf": 1712937,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -275,8 +276,8 @@
       "markdown": "colecao_AXIOMA_PRIME/06_alinhamento_seguranca_e_limites.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.pdf",
-      "size_bytes_md": 26913,
-      "size_bytes_pdf": 68956,
+      "size_bytes_md": 27005,
+      "size_bytes_pdf": 1465104,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -285,8 +286,8 @@
       "markdown": "colecao_AXIOMA_PRIME/07_metacognicao_e_autoaperfeicoamento.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.pdf",
-      "size_bytes_md": 27072,
-      "size_bytes_pdf": 68512,
+      "size_bytes_md": 27167,
+      "size_bytes_pdf": 2078425,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -295,8 +296,8 @@
       "markdown": "colecao_AXIOMA_PRIME/08_economia_governanca_e_ecossistemas.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.pdf",
-      "size_bytes_md": 27086,
-      "size_bytes_pdf": 68735,
+      "size_bytes_md": 27181,
+      "size_bytes_pdf": 1687709,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -305,8 +306,8 @@
       "markdown": "colecao_AXIOMA_PRIME/09_senciencia_operacional_e_identidade.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.pdf",
-      "size_bytes_md": 27336,
-      "size_bytes_pdf": 68943,
+      "size_bytes_md": 27432,
+      "size_bytes_pdf": 1738863,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -315,9 +316,109 @@
       "markdown": "colecao_AXIOMA_PRIME/10_civilizacao_agentica_e_o_grande_pacto.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.pdf",
-      "size_bytes_md": 27622,
-      "size_bytes_pdf": 69887,
+      "size_bytes_md": 27720,
+      "size_bytes_pdf": 2009077,
       "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "01_automacao_inteligente_para_negocios_reais",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/01_automacao_inteligente_para_negocios_reais.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.pdf",
+      "size_bytes_md": 24868,
+      "size_bytes_pdf": 1173855,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "02_claude_code_em_modo_producao",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/02_claude_code_em_modo_producao.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.pdf",
+      "size_bytes_md": 24711,
+      "size_bytes_pdf": 1284422,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "03_workflows_vencem_agentes",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/03_workflows_vencem_agentes.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.pdf",
+      "size_bytes_md": 24741,
+      "size_bytes_pdf": 1425652,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "04_make_n8n_e_orquestracao_sem_gargalos",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/04_make_n8n_e_orquestracao_sem_gargalos.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.pdf",
+      "size_bytes_md": 24686,
+      "size_bytes_pdf": 1262015,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "05_lovable_e_produtos_ia_first",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/05_lovable_e_produtos_ia_first.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.pdf",
+      "size_bytes_md": 24671,
+      "size_bytes_pdf": 1220380,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "06_claude_canva_design_e_conteudo_em_escala",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/06_claude_canva_design_e_conteudo_em_escala.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.pdf",
+      "size_bytes_md": 24860,
+      "size_bytes_pdf": 1441052,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "07_o_negocio_de_uma_pessoa_so",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/07_o_negocio_de_uma_pessoa_so.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.pdf",
+      "size_bytes_md": 24655,
+      "size_bytes_pdf": 1455784,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "08_pesquisa_de_mercado_e_lacunas_competitivas",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/08_pesquisa_de_mercado_e_lacunas_competitivas.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.pdf",
+      "size_bytes_md": 25100,
+      "size_bytes_pdf": 1565468,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "09_video_reels_e_midia_automatizada",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/09_video_reels_e_midia_automatizada.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.pdf",
+      "size_bytes_md": 24874,
+      "size_bytes_pdf": 1373688,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "10_o_sistema_operacional_da_empresa_ia_first",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/10_o_sistema_operacional_da_empresa_ia_first.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.pdf",
+      "size_bytes_md": 25040,
+      "size_bytes_pdf": 1429397,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
     }
   ]
 }

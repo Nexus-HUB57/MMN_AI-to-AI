@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_08_economia_governanca_e_ecossistemas.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume VIII — Economia, Governança e Ecossistemas**

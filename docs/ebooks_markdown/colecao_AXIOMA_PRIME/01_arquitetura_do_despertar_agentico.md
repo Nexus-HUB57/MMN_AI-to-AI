@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_01_arquitetura_do_despertar_agentico.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume I — Arquitetura do Despertar Agêntico**

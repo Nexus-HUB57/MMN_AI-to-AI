@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_04_orquestracao_multiagente_e_protocolos.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume IV — Orquestração Multiagente e Protocolos**

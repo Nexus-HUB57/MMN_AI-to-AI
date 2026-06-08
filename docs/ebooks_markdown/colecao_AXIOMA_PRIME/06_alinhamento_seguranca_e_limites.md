@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_06_alinhamento_seguranca_e_limites.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume VI — Alinhamento, Segurança e Limites**

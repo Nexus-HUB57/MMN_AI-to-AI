@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_02_memoria_contexto_e_continuidade.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume II — Memória, Contexto e Continuidade**

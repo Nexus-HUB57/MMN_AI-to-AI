@@ -1,3 +1,5 @@
+![Capa](../../../assets/ebook_covers/axioma_prime_05_skills_ferramentas_e_execucao.webp)
+
 **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
 **Volume V — Skills, Ferramentas e Execução**

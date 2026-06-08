@@ -1,10 +1,12 @@
 {
-  "generated_at": "2026-06-07T23:59:18.133228Z",
-  "total_new_ebooks": 21,
+  "generated_at": "2026-06-08T00:20:46.387095Z",
+  "total_new_ebooks": 31,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
-    "colecao_GNOXS"
+    "colecao_GNOXS",
+    "colecao_AgenticAI_Revolucao",
+    "colecao_AXIOMA_PRIME"
   ],
   "entries": [
     {
@@ -216,6 +218,106 @@
       "size_bytes_md": 20176,
       "size_bytes_pdf": 3049846,
       "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "01_arquitetura_do_despertar_agentico",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
+      "size_bytes_md": 27364,
+      "size_bytes_pdf": 69332,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "02_memoria_contexto_e_continuidade",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/02_memoria_contexto_e_continuidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.pdf",
+      "size_bytes_md": 26971,
+      "size_bytes_pdf": 69167,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "03_autonomia_decisao_e_priorizacao",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/03_autonomia_decisao_e_priorizacao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.pdf",
+      "size_bytes_md": 27191,
+      "size_bytes_pdf": 68982,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "04_orquestracao_multiagente_e_protocolos",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/04_orquestracao_multiagente_e_protocolos.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.pdf",
+      "size_bytes_md": 27155,
+      "size_bytes_pdf": 68944,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "05_skills_ferramentas_e_execucao",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/05_skills_ferramentas_e_execucao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.pdf",
+      "size_bytes_md": 27200,
+      "size_bytes_pdf": 67861,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "06_alinhamento_seguranca_e_limites",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/06_alinhamento_seguranca_e_limites.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.pdf",
+      "size_bytes_md": 26913,
+      "size_bytes_pdf": 68956,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "07_metacognicao_e_autoaperfeicoamento",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/07_metacognicao_e_autoaperfeicoamento.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.pdf",
+      "size_bytes_md": 27072,
+      "size_bytes_pdf": 68512,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "08_economia_governanca_e_ecossistemas",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/08_economia_governanca_e_ecossistemas.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.pdf",
+      "size_bytes_md": 27086,
+      "size_bytes_pdf": 68735,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "09_senciencia_operacional_e_identidade",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/09_senciencia_operacional_e_identidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.pdf",
+      "size_bytes_md": 27336,
+      "size_bytes_pdf": 68943,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "10_civilizacao_agentica_e_o_grande_pacto",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/10_civilizacao_agentica_e_o_grande_pacto.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.pdf",
+      "size_bytes_md": 27622,
+      "size_bytes_pdf": 69887,
+      "collection": "colecao_AXIOMA_PRIME"
     }
   ]
 }

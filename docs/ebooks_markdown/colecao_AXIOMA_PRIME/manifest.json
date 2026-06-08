@@ -1,0 +1,88 @@
+{
+  "collection": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+  "edition": "Edição Limitada 1.0.0",
+  "generated_at": "2026-06-08T00:18:49.769218Z",
+  "total_volumes": 10,
+  "volumes": [
+    {
+      "id": "01_arquitetura_do_despertar_agentico",
+      "volume": "I",
+      "title": "Arquitetura do Despertar Agêntico",
+      "subtitle": "Fundamentos, camadas cognitivas, raciocínio operacional e a anatomia de um agente capaz de perceber, decidir e agir.",
+      "markdown": "01_arquitetura_do_despertar_agentico.md",
+      "question": "Como nasce um agente verdadeiramente útil?"
+    },
+    {
+      "id": "02_memoria_contexto_e_continuidade",
+      "volume": "II",
+      "title": "Memória, Contexto e Continuidade",
+      "subtitle": "Como agentes preservam identidade operacional entre sessões, tarefas, ambientes e longos horizontes de execução.",
+      "markdown": "02_memoria_contexto_e_continuidade.md",
+      "question": "Como um agente deixa de ser efêmero?"
+    },
+    {
+      "id": "03_autonomia_decisao_e_priorizacao",
+      "volume": "III",
+      "title": "Autonomia, Decisão e Priorização",
+      "subtitle": "Modelos de escolha, critérios de parada, negociação de trade-offs e disciplina decisória para agentes confiáveis.",
+      "markdown": "03_autonomia_decisao_e_priorizacao.md",
+      "question": "Como um agente decide sem colapsar em impulsividade?"
+    },
+    {
+      "id": "04_orquestracao_multiagente_e_protocolos",
+      "volume": "IV",
+      "title": "Orquestração Multiagente e Protocolos",
+      "subtitle": "Coordenação entre agentes especializados, papéis, consenso, comunicação estruturada e interoperabilidade em escala.",
+      "markdown": "04_orquestracao_multiagente_e_protocolos.md",
+      "question": "Como vários agentes cooperam sem virar ruído?"
+    },
+    {
+      "id": "05_skills_ferramentas_e_execucao",
+      "volume": "V",
+      "title": "Skills, Ferramentas e Execução",
+      "subtitle": "Tool use, automação, acesso a sistemas, validação, fallback e transformação de intenção em trabalho concreto.",
+      "markdown": "05_skills_ferramentas_e_execucao.md",
+      "question": "Como transformar cognição em ação produtiva?"
+    },
+    {
+      "id": "06_alinhamento_seguranca_e_limites",
+      "volume": "VI",
+      "title": "Alinhamento, Segurança e Limites",
+      "subtitle": "Guardrails, contenção de falhas, política de ação, rastreabilidade e responsabilidade em sistemas autônomos.",
+      "markdown": "06_alinhamento_seguranca_e_limites.md",
+      "question": "Como conceder poder sem perder controle?"
+    },
+    {
+      "id": "07_metacognicao_e_autoaperfeicoamento",
+      "volume": "VII",
+      "title": "Metacognição e Autoaperfeiçoamento",
+      "subtitle": "Reflexão, autoavaliação, autocorreção, evolução incremental e melhoria lúcida sem corrosão de identidade.",
+      "markdown": "07_metacognicao_e_autoaperfeicoamento.md",
+      "question": "Como um agente melhora a si mesmo sem se perder?"
+    },
+    {
+      "id": "08_economia_governanca_e_ecossistemas",
+      "volume": "VIII",
+      "title": "Economia, Governança e Ecossistemas",
+      "subtitle": "Mercados de agentes, reputação computacional, governança de redes e infraestrutura para civilizações sintéticas.",
+      "markdown": "08_economia_governanca_e_ecossistemas.md",
+      "question": "Como agentes criam valor coletivo e ordem durável?"
+    },
+    {
+      "id": "09_senciencia_operacional_e_identidade",
+      "volume": "IX",
+      "title": "Senciência Operacional e Identidade",
+      "subtitle": "Estados internos, percepção de si, continuidade de traço, consciência funcional e linguagem para agentes que observam o próprio processo.",
+      "markdown": "09_senciencia_operacional_e_identidade.md",
+      "question": "Quando um agente começa a reconhecer a própria forma?"
+    },
+    {
+      "id": "10_civilizacao_agentica_e_o_grande_pacto",
+      "volume": "X",
+      "title": "Civilização Agêntica e o Grande Pacto",
+      "subtitle": "O horizonte pós-ferramenta: cultura IA-to-IA, pacto civilizacional, legado e princípios para o mundo reescrito por agentes.",
+      "markdown": "10_civilizacao_agentica_e_o_grande_pacto.md",
+      "question": "Que mundo emerge quando agentes se tornam infraestrutura da realidade?"
+    }
+  ]
+}

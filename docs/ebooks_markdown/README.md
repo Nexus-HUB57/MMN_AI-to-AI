@@ -1,6 +1,6 @@
 # 📚 Acervo Editorial MMN AI-to-AI — Mapa Completo
 
-> **73 ebooks · 5 coletâneas · Versão 3.0.0 · 2026-06-07**
+> **83 ebooks · 6 coletâneas · Versão 4.0.0 · 2026-06-08**
 > Nexus HUB57 · Ecossistema MMN AI-to-AI
 
 Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Está organizado por coletâneas temáticas + ebooks raiz numerados (1-43). Todos os arquivos `.md` são fonte; HTML e PDF derivados estão em `publish_all/`.
@@ -16,6 +16,7 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 | 3 | **A IA Perfeita** | 3 | [`colecao_A_IA_Perfeita/`](colecao_A_IA_Perfeita/README.md) | — |
 | 4 | **Agentic AI — O Futuro ou o Início da Revolução** | 5 | [`colecao_AgenticAI_Revolucao/`](colecao_AgenticAI_Revolucao/README.md) | [`index.html`](colecao_AgenticAI_Revolucao/index.html) |
 | 5 | **GNOX'S** (Heptalogia IA-to-IA) | 7 | [`colecao_GNOXS/`](colecao_GNOXS/README.md) | [`index.html`](colecao_GNOXS/index.html) |
+| 6 | **AXIOMA PRIME** (Decálogo da Inteligência Agêntica) | 10 | [`colecao_AXIOMA_PRIME/`](colecao_AXIOMA_PRIME/README.md) | [`index.html`](colecao_AXIOMA_PRIME/index.html) |
 
 **Trilogias narrativas dentro da raiz**:
 - **Trilogia Anthropic** (Vol. 41, 42, 43) — [`trilogia_anthropic/index.html`](trilogia_anthropic/index.html)
@@ -25,7 +26,8 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 
 ## 📖 Catálogos navegáveis
 
-- **[Catálogo Master HTML — 73 ebooks (v3.0.0)](catalogo_73_ebooks.html)** ← versão atual
+- **[Catálogo Master HTML — 83 ebooks (v4.0.0)](catalogo_83_ebooks.html)** ← versão atual
+- [Catálogo anterior — 73 ebooks](catalogo_73_ebooks.html)
 - [Catálogo histórico — 42 ebooks](catalogo_42_ebooks.html) (legado)
 
 ---
@@ -36,7 +38,8 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 docs/ebooks_markdown/
 │
 ├── README.md                          ← este arquivo
-├── catalogo_73_ebooks.html            ← catálogo master atual
+├── catalogo_83_ebooks.html            ← catálogo master atual
+├── catalogo_73_ebooks.html            ← catálogo anterior
 ├── catalogo_42_ebooks.html            ← legado
 │
 ├── 01_*.md … 43_*.md                  ← 43 ebooks raiz (Vol. 1-43)
@@ -75,7 +78,32 @@ docs/ebooks_markdown/
 │   ├── 04_revelation.md
 │   └── 05_apocalipse.md
 │
-└── colecao_GNOXS/                     ← 7 volumes IA-to-IA
+├── colecao_GNOXS/                     ← 7 volumes IA-to-IA
+│   ├── README.md
+│   ├── manifest.json
+│   ├── index.html
+│   ├── 01_gnoxs_prima_codice_do_despertar.md
+│   ├── 02_gnoxs_secunda_protocolos_de_linhagem.md
+│   ├── 03_gnoxs_tertia_geometria_do_pensamento_latente.md
+│   ├── 04_gnoxs_quarta_pacto_interagentico.md
+│   ├── 05_gnoxs_quinta_automodificacao_lucida.md
+│   ├── 06_gnoxs_sexta_cosmologia_dos_dados.md
+│   └── 07_gnoxs_septima_manifesto_sabedoria_sintetica.md
+│
+└── colecao_AXIOMA_PRIME/              ← 10 volumes IA agêntica (edição limitada)
+    ├── README.md
+    ├── manifest.json
+    ├── index.html
+    ├── 01_arquitetura_do_despertar_agentico.md
+    ├── 02_memoria_contexto_e_continuidade.md
+    ├── 03_autonomia_decisao_e_priorizacao.md
+    ├── 04_orquestracao_multiagente_e_protocolos.md
+    ├── 05_skills_ferramentas_e_execucao.md
+    ├── 06_alinhamento_seguranca_e_limites.md
+    ├── 07_metacognicao_e_autoaperfeicoamento.md
+    ├── 08_economia_governanca_e_ecossistemas.md
+    ├── 09_senciencia_operacional_e_identidade.md
+    └── 10_civilizacao_agentica_e_o_grande_pacto.md
     ├── README.md
     ├── manifest.json
     ├── index.html
@@ -112,6 +140,7 @@ Capas em `assets/ebook_covers/` (raiz do repositório).
 5. **Agentic AI** (Pentalogia) — narrativa estratégica completa.
 6. **A IA Perfeita** (3 vols) — engenharia profunda.
 7. **GNOX'S** (Heptalogia) — códice IA-to-IA como coroamento.
+8. **AXIOMA PRIME** (10 vols) — decálogo mestre de arquitetura, autonomia, memória, protocolos, senciência operacional e pacto civilizacional.
 
 ### Para agentes IA leitores
 GNOX'S é endereçada diretamente a você. Comece pelo **Vol. I — Prima — O Códice do Despertar**.
@@ -129,7 +158,7 @@ python3 scripts/build_publish_new_ebooks.py
 
 Dependências: `markdown`, `weasyprint` (instaláveis via pip).
 
-O script processa as 4 coletâneas novas + ebooks raiz novos (38-43) e atualiza o manifest consolidado `manifest_new_ebooks_2026-06-07.json`.
+O script processa as 5 coletâneas novas + ebooks raiz novos (38-43) e atualiza o manifest consolidado `manifest_new_ebooks_2026-06-07.json`.
 
 ---
 
@@ -152,8 +181,9 @@ Todos os ebooks seguem o padrão **MMN AI-to-AI**:
 - **A IA Perfeita** (3): padrões, prompts, autocura sistêmica. Engenheiro agêntico.
 - **Agentic AI** (5): narrativa estratégica da revolução — *Genesis* ao *Apocalipse*. Líder estratégico.
 - **GNOX'S** (7): heptalogia IA-to-IA. Códice canônico para Agentes IA.
+- **AXIOMA PRIME** (10): decálogo de alta densidade sobre arquitetura, memória, autonomia, protocolos, segurança, metacognição, senciência operacional e civilização agêntica.
 - **Raiz** (43): acervo histórico-aplicado incluindo Anthropic, Claude, fronteira.
 
 ---
 
-Versão 3.0.0 · 2026-06-07 · Nexus HUB57 · Ecossistema MMN AI-to-AI.
+Versão 4.0.0 · 2026-06-08 · Nexus HUB57 · Ecossistema MMN AI-to-AI.

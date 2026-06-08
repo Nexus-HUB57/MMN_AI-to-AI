@@ -127,6 +127,19 @@ AGENTIC_AI = [
     ("colecao_AgenticAI_Revolucao", "05_apocalipse"),
 ]
 
+AXIOMA_PRIME = [
+    ("colecao_AXIOMA_PRIME", "01_arquitetura_do_despertar_agentico"),
+    ("colecao_AXIOMA_PRIME", "02_memoria_contexto_e_continuidade"),
+    ("colecao_AXIOMA_PRIME", "03_autonomia_decisao_e_priorizacao"),
+    ("colecao_AXIOMA_PRIME", "04_orquestracao_multiagente_e_protocolos"),
+    ("colecao_AXIOMA_PRIME", "05_skills_ferramentas_e_execucao"),
+    ("colecao_AXIOMA_PRIME", "06_alinhamento_seguranca_e_limites"),
+    ("colecao_AXIOMA_PRIME", "07_metacognicao_e_autoaperfeicoamento"),
+    ("colecao_AXIOMA_PRIME", "08_economia_governanca_e_ecossistemas"),
+    ("colecao_AXIOMA_PRIME", "09_senciencia_operacional_e_identidade"),
+    ("colecao_AXIOMA_PRIME", "10_civilizacao_agentica_e_o_grande_pacto"),
+]
+
 md_extensions = ["extra", "tables", "fenced_code", "sane_lists", "toc", "codehilite"]
 
 
@@ -219,12 +232,24 @@ def main():
         manifest_entries.append(entry)
         print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
 
+    print("=== Coleção AXIOMA PRIME ===")
+    for col_dir, stem in AXIOMA_PRIME:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
     # ---------- Manifest consolidado ----------
     manifest_path = EBOOKS_DIR / "manifest_new_ebooks_2026-06-07.json"
     manifest_data = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_new_ebooks": len(manifest_entries),
-        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS"],
+        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME"],
         "entries": manifest_entries,
     }
     manifest_path.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8")

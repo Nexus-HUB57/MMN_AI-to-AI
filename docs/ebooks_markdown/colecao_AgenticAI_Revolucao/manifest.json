@@ -1,0 +1,73 @@
+{
+  "collection": "Agentic AI — O Futuro ou o Início da Revolução",
+  "subtitle": "Pentalogia narrativa-estratégica da revolução agêntica",
+  "total_volumes": 5,
+  "edition": "1.0.0",
+  "generated_at": "2026-06-07",
+  "format": "pentalogia",
+  "authors": ["MMN AI-to-AI", "Nexus HUB57"],
+  "arcs": ["Genesis", "Exodus", "Dominion", "Revelation", "Apocalipse"],
+  "volumes": [
+    {
+      "id": "01_genesis",
+      "volume_roman": "I",
+      "arc": "Genesis",
+      "title": "Genesis — O Nascimento dos Agentes",
+      "subtitle": "Do Primeiro Sopro ao Primeiro Ato: a Arqueologia, a Faísca e a Definição Operacional de Agentic AI",
+      "markdown": "01_genesis.md",
+      "html": "../publish_all/html/colecao_AgenticAI_Revolucao__01_genesis.html",
+      "pdf": "../publish_all/pdf/colecao_AgenticAI_Revolucao__01_genesis.pdf",
+      "cover": "../../../assets/ebook_covers/agentic_01_genesis.webp",
+      "question": "De onde vieram os agentes?"
+    },
+    {
+      "id": "02_exodus",
+      "volume_roman": "II",
+      "arc": "Exodus",
+      "title": "Exodus — A Saída do Laboratório",
+      "subtitle": "Como Agentes Foram para Produção em Massa em 2025-2026 · Frameworks, Stacks, MLOps Agêntico",
+      "markdown": "02_exodus.md",
+      "html": "../publish_all/html/colecao_AgenticAI_Revolucao__02_exodus.html",
+      "pdf": "../publish_all/pdf/colecao_AgenticAI_Revolucao__02_exodus.pdf",
+      "cover": "../../../assets/ebook_covers/agentic_02_exodus.webp",
+      "question": "Como foram do laboratório à produção?"
+    },
+    {
+      "id": "03_dominion",
+      "volume_roman": "III",
+      "arc": "Dominion",
+      "title": "Dominion — O Império dos Agentes",
+      "subtitle": "Como Agentes Dominam Setores, Definem Vantagens Competitivas e Reescrevem Indústrias Inteiras",
+      "markdown": "03_dominion.md",
+      "html": "../publish_all/html/colecao_AgenticAI_Revolucao__03_dominion.html",
+      "pdf": "../publish_all/pdf/colecao_AgenticAI_Revolucao__03_dominion.pdf",
+      "cover": "../../../assets/ebook_covers/agentic_03_dominion.webp",
+      "question": "Como dominaram setores e redistribuíram poder?"
+    },
+    {
+      "id": "04_revelation",
+      "volume_roman": "IV",
+      "arc": "Revelation",
+      "title": "Revelation — A Verdade Por Trás do Império",
+      "subtitle": "O Que Foi Revelado, O Que Ainda Está Oculto e Os Limites Reais do Poder Agêntico",
+      "markdown": "04_revelation.md",
+      "html": "../publish_all/html/colecao_AgenticAI_Revolucao__04_revelation.html",
+      "pdf": "../publish_all/pdf/colecao_AgenticAI_Revolucao__04_revelation.pdf",
+      "cover": "../../../assets/ebook_covers/agentic_04_revelation.webp",
+      "question": "O que ainda está oculto e quais são os limites reais?"
+    },
+    {
+      "id": "05_apocalipse",
+      "volume_roman": "V",
+      "arc": "Apocalipse",
+      "title": "Apocalipse — O Fim do Velho Mundo, O Nascimento do Novo",
+      "subtitle": "Cenários, Encruzilhadas Civilizacionais e o Manifesto Final da Era Agêntica",
+      "markdown": "05_apocalipse.md",
+      "html": "../publish_all/html/colecao_AgenticAI_Revolucao__05_apocalipse.html",
+      "pdf": "../publish_all/pdf/colecao_AgenticAI_Revolucao__05_apocalipse.pdf",
+      "cover": "../../../assets/ebook_covers/agentic_05_apocalipse.webp",
+      "question": "O que termina, o que começa, o que cabe a nós?",
+      "closes_pentalogy": true
+    }
+  ]
+}

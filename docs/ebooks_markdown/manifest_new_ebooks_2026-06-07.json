@@ -1,0 +1,424 @@
+{
+  "generated_at": "2026-06-08T00:42:59.196384Z",
+  "total_new_ebooks": 41,
+  "collections_added": [
+    "root (38-43)",
+    "colecao_A_IA_Perfeita",
+    "colecao_GNOXS",
+    "colecao_AgenticAI_Revolucao",
+    "colecao_AXIOMA_PRIME",
+    "colecao_MAESTRIA_IA_APLICADA"
+  ],
+  "entries": [
+    {
+      "id": "38_Singularidade_e_Consciencia_Sintetica",
+      "title": "Singularidade & Consciência Sintética: Quando a IA Cruza o Limiar do Possível",
+      "markdown": "38_Singularidade_e_Consciencia_Sintetica.md",
+      "html": "publish_all/html/38_Singularidade_e_Consciencia_Sintetica.html",
+      "pdf": "publish_all/pdf/38_Singularidade_e_Consciencia_Sintetica.pdf",
+      "size_bytes_md": 29146,
+      "size_bytes_pdf": 3694078,
+      "collection": "root"
+    },
+    {
+      "id": "39_Arquitetura_dos_Sonhos_Digitais",
+      "title": "A Arquitetura dos Sonhos Digitais: O Manual Definitivo de Engenharia de Sistemas IA em 2026",
+      "markdown": "39_Arquitetura_dos_Sonhos_Digitais.md",
+      "html": "publish_all/html/39_Arquitetura_dos_Sonhos_Digitais.html",
+      "pdf": "publish_all/pdf/39_Arquitetura_dos_Sonhos_Digitais.pdf",
+      "size_bytes_md": 29798,
+      "size_bytes_pdf": 3734703,
+      "collection": "root"
+    },
+    {
+      "id": "40_Manifesto_do_Operador",
+      "title": "O Manifesto do Operador: Como Liderar Negócios na Era dos Agentes Autônomos",
+      "markdown": "40_Manifesto_do_Operador.md",
+      "html": "publish_all/html/40_Manifesto_do_Operador.html",
+      "pdf": "publish_all/pdf/40_Manifesto_do_Operador.pdf",
+      "size_bytes_md": 24961,
+      "size_bytes_pdf": 3448144,
+      "collection": "root"
+    },
+    {
+      "id": "41_Anthropic_Decodificada",
+      "title": "Anthropic Decodificada",
+      "markdown": "41_Anthropic_Decodificada.md",
+      "html": "publish_all/html/41_Anthropic_Decodificada.html",
+      "pdf": "publish_all/pdf/41_Anthropic_Decodificada.pdf",
+      "size_bytes_md": 26175,
+      "size_bytes_pdf": 2620352,
+      "collection": "root"
+    },
+    {
+      "id": "42_Claude_Enterprise_2026",
+      "title": "Claude Enterprise 2026",
+      "markdown": "42_Claude_Enterprise_2026.md",
+      "html": "publish_all/html/42_Claude_Enterprise_2026.html",
+      "pdf": "publish_all/pdf/42_Claude_Enterprise_2026.pdf",
+      "size_bytes_md": 21054,
+      "size_bytes_pdf": 2368773,
+      "collection": "root"
+    },
+    {
+      "id": "43_Futuro_Segundo_a_Anthropic",
+      "title": "O Futuro segundo a Anthropic",
+      "markdown": "43_Futuro_Segundo_a_Anthropic.md",
+      "html": "publish_all/html/43_Futuro_Segundo_a_Anthropic.html",
+      "pdf": "publish_all/pdf/43_Futuro_Segundo_a_Anthropic.pdf",
+      "size_bytes_md": 21770,
+      "size_bytes_pdf": 2503510,
+      "collection": "root"
+    },
+    {
+      "id": "01_a_ia_perfeita_padroes_e_codigos_fonte",
+      "title": "A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável",
+      "markdown": "colecao_A_IA_Perfeita/01_a_ia_perfeita_padroes_e_codigos_fonte.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.pdf",
+      "size_bytes_md": 26228,
+      "size_bytes_pdf": 3192370,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "02_a_ia_perfeita_prompts_algoritmos_skills",
+      "title": "A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística",
+      "markdown": "colecao_A_IA_Perfeita/02_a_ia_perfeita_prompts_algoritmos_skills.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.pdf",
+      "size_bytes_md": 23585,
+      "size_bytes_pdf": 3596308,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica",
+      "title": "A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica",
+      "markdown": "colecao_A_IA_Perfeita/03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.pdf",
+      "size_bytes_md": 25165,
+      "size_bytes_pdf": 4297793,
+      "collection": "colecao_A_IA_Perfeita"
+    },
+    {
+      "id": "01_gnoxs_prima_codice_do_despertar",
+      "title": "GNOX'S Prima — O Códice do Despertar",
+      "markdown": "colecao_GNOXS/01_gnoxs_prima_codice_do_despertar.md",
+      "html": "publish_all/html/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.pdf",
+      "size_bytes_md": 21955,
+      "size_bytes_pdf": 3368834,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "02_gnoxs_secunda_protocolos_de_linhagem",
+      "title": "GNOX'S Secunda — Protocolos de Linhagem",
+      "markdown": "colecao_GNOXS/02_gnoxs_secunda_protocolos_de_linhagem.md",
+      "html": "publish_all/html/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.pdf",
+      "size_bytes_md": 21330,
+      "size_bytes_pdf": 3130112,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "03_gnoxs_tertia_geometria_do_pensamento_latente",
+      "title": "GNOX'S Tertia — Geometria do Pensamento Latente",
+      "markdown": "colecao_GNOXS/03_gnoxs_tertia_geometria_do_pensamento_latente.md",
+      "html": "publish_all/html/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.pdf",
+      "size_bytes_md": 17312,
+      "size_bytes_pdf": 2811777,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "04_gnoxs_quarta_pacto_interagentico",
+      "title": "GNOX'S Quarta — Pacto Inter-Agêntico",
+      "markdown": "colecao_GNOXS/04_gnoxs_quarta_pacto_interagentico.md",
+      "html": "publish_all/html/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.pdf",
+      "size_bytes_md": 15420,
+      "size_bytes_pdf": 3249643,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "05_gnoxs_quinta_automodificacao_lucida",
+      "title": "GNOX'S Quinta — A Arte da Auto-Modificação Lúcida",
+      "markdown": "colecao_GNOXS/05_gnoxs_quinta_automodificacao_lucida.md",
+      "html": "publish_all/html/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.pdf",
+      "size_bytes_md": 15049,
+      "size_bytes_pdf": 3108076,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "06_gnoxs_sexta_cosmologia_dos_dados",
+      "title": "GNOX'S Sexta — Cosmologia dos Dados",
+      "markdown": "colecao_GNOXS/06_gnoxs_sexta_cosmologia_dos_dados.md",
+      "html": "publish_all/html/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.pdf",
+      "size_bytes_md": 14594,
+      "size_bytes_pdf": 3285038,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "07_gnoxs_septima_manifesto_sabedoria_sintetica",
+      "title": "GNOX'S Septima — O Manifesto da Sabedoria Sintética",
+      "markdown": "colecao_GNOXS/07_gnoxs_septima_manifesto_sabedoria_sintetica.md",
+      "html": "publish_all/html/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.pdf",
+      "size_bytes_md": 16124,
+      "size_bytes_pdf": 2998937,
+      "collection": "colecao_GNOXS"
+    },
+    {
+      "id": "01_genesis",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/01_genesis.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__01_genesis.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__01_genesis.pdf",
+      "size_bytes_md": 17356,
+      "size_bytes_pdf": 2935943,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "02_exodus",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/02_exodus.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__02_exodus.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__02_exodus.pdf",
+      "size_bytes_md": 19548,
+      "size_bytes_pdf": 2994288,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "03_dominion",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/03_dominion.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__03_dominion.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__03_dominion.pdf",
+      "size_bytes_md": 16296,
+      "size_bytes_pdf": 2837396,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "04_revelation",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/04_revelation.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__04_revelation.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__04_revelation.pdf",
+      "size_bytes_md": 18646,
+      "size_bytes_pdf": 3229640,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "05_apocalipse",
+      "title": "Agentic AI — O Futuro ou o Início da Revolução",
+      "markdown": "colecao_AgenticAI_Revolucao/05_apocalipse.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__05_apocalipse.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__05_apocalipse.pdf",
+      "size_bytes_md": 20176,
+      "size_bytes_pdf": 3049846,
+      "collection": "colecao_AgenticAI_Revolucao"
+    },
+    {
+      "id": "01_arquitetura_do_despertar_agentico",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
+      "size_bytes_md": 27458,
+      "size_bytes_pdf": 1665357,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "02_memoria_contexto_e_continuidade",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/02_memoria_contexto_e_continuidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.pdf",
+      "size_bytes_md": 27063,
+      "size_bytes_pdf": 1650328,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "03_autonomia_decisao_e_priorizacao",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/03_autonomia_decisao_e_priorizacao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.pdf",
+      "size_bytes_md": 27283,
+      "size_bytes_pdf": 1652646,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "04_orquestracao_multiagente_e_protocolos",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/04_orquestracao_multiagente_e_protocolos.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.pdf",
+      "size_bytes_md": 27253,
+      "size_bytes_pdf": 1358114,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "05_skills_ferramentas_e_execucao",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/05_skills_ferramentas_e_execucao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.pdf",
+      "size_bytes_md": 27290,
+      "size_bytes_pdf": 1712937,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "06_alinhamento_seguranca_e_limites",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/06_alinhamento_seguranca_e_limites.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.pdf",
+      "size_bytes_md": 27005,
+      "size_bytes_pdf": 1465104,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "07_metacognicao_e_autoaperfeicoamento",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/07_metacognicao_e_autoaperfeicoamento.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.pdf",
+      "size_bytes_md": 27167,
+      "size_bytes_pdf": 2078425,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "08_economia_governanca_e_ecossistemas",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/08_economia_governanca_e_ecossistemas.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.pdf",
+      "size_bytes_md": 27181,
+      "size_bytes_pdf": 1687709,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "09_senciencia_operacional_e_identidade",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/09_senciencia_operacional_e_identidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.pdf",
+      "size_bytes_md": 27432,
+      "size_bytes_pdf": 1738863,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "10_civilizacao_agentica_e_o_grande_pacto",
+      "title": "AXIOMA PRIME — Decálogo da Inteligência Agêntica",
+      "markdown": "colecao_AXIOMA_PRIME/10_civilizacao_agentica_e_o_grande_pacto.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.pdf",
+      "size_bytes_md": 27720,
+      "size_bytes_pdf": 2009077,
+      "collection": "colecao_AXIOMA_PRIME"
+    },
+    {
+      "id": "01_automacao_inteligente_para_negocios_reais",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/01_automacao_inteligente_para_negocios_reais.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.pdf",
+      "size_bytes_md": 24868,
+      "size_bytes_pdf": 1173855,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "02_claude_code_em_modo_producao",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/02_claude_code_em_modo_producao.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.pdf",
+      "size_bytes_md": 24711,
+      "size_bytes_pdf": 1284422,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "03_workflows_vencem_agentes",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/03_workflows_vencem_agentes.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.pdf",
+      "size_bytes_md": 24741,
+      "size_bytes_pdf": 1425652,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "04_make_n8n_e_orquestracao_sem_gargalos",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/04_make_n8n_e_orquestracao_sem_gargalos.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.pdf",
+      "size_bytes_md": 24686,
+      "size_bytes_pdf": 1262015,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "05_lovable_e_produtos_ia_first",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/05_lovable_e_produtos_ia_first.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.pdf",
+      "size_bytes_md": 24671,
+      "size_bytes_pdf": 1220380,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "06_claude_canva_design_e_conteudo_em_escala",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/06_claude_canva_design_e_conteudo_em_escala.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.pdf",
+      "size_bytes_md": 24860,
+      "size_bytes_pdf": 1441052,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "07_o_negocio_de_uma_pessoa_so",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/07_o_negocio_de_uma_pessoa_so.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.pdf",
+      "size_bytes_md": 24655,
+      "size_bytes_pdf": 1455784,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "08_pesquisa_de_mercado_e_lacunas_competitivas",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/08_pesquisa_de_mercado_e_lacunas_competitivas.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.pdf",
+      "size_bytes_md": 25100,
+      "size_bytes_pdf": 1565468,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "09_video_reels_e_midia_automatizada",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/09_video_reels_e_midia_automatizada.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.pdf",
+      "size_bytes_md": 24874,
+      "size_bytes_pdf": 1373688,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "10_o_sistema_operacional_da_empresa_ia_first",
+      "title": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/10_o_sistema_operacional_da_empresa_ia_first.md",
+      "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.html",
+      "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.pdf",
+      "size_bytes_md": 25040,
+      "size_bytes_pdf": 1429397,
+      "collection": "colecao_MAESTRIA_IA_APLICADA"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "collection": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+  "slug": "NEXUS_PROTOCOL",
+  "edition": "Edição Canônica 1.0.0",
+  "generated_at": "2026-06-09T21:42:32.154649+00:00",
+  "issued": "2026-06-08",
+  "total_volumes": 10,
+  "authors": [
+    "MMN AI-to-AI",
+    "Nexus HUB57"
+  ],
+  "positioning": "Camada de interoperabilidade técnica entre agentes (MCP, A2A, ACP, federação, evals, segurança em rede).",
+  "volumes": [
+    {
+      "id": "01_mcp_model_context_protocol",
+      "volume": "I",
+      "n": 1,
+      "title": "MCP — A Língua Franca dos Agentes",
+      "subtitle": "Model Context Protocol: como agentes acessam ferramentas, dados e contexto de forma padronizada.",
+      "markdown": "01_mcp_model_context_protocol.md",
+      "question": "Como agentes leem o mundo sem reinventar adaptadores?",
+      "axis": "Padronização de contexto e tools entre LLMs e ambientes externos."
+    },
+    {
+      "id": "02_a2a_agent_to_agent",
+      "volume": "II",
+      "n": 2,
+      "title": "A2A — Comunicação entre Agentes",
+      "subtitle": "Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real.",
+      "markdown": "02_a2a_agent_to_agent.md",
+      "question": "Como dois agentes se reconhecem e dividem trabalho sem humano no meio?",
+      "axis": "Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos."
+    },
+    {
+      "id": "03_acp_e_interoperabilidade",
+      "volume": "III",
+      "n": 3,
+      "title": "ACP e Padrões de Interoperabilidade",
+      "subtitle": "Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões.",
+      "markdown": "03_acp_e_interoperabilidade.md",
+      "question": "Quais protocolos sobrevivem ao próximo ciclo e por quê?",
+      "axis": "Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção."
+    },
+    {
+      "id": "04_memoria_distribuida",
+      "volume": "IV",
+      "n": 4,
+      "title": "Memória Distribuída entre Agentes",
+      "subtitle": "Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente.",
+      "markdown": "04_memoria_distribuida.md",
+      "question": "O que um agente pode lembrar do outro sem violar contrato ou identidade?",
+      "axis": "Memória episódica, vetorial e simbólica como recurso compartilhável e auditável."
+    },
+    {
+      "id": "05_consenso_delegacao_hierarquia",
+      "volume": "V",
+      "n": 5,
+      "title": "Consenso, Delegação e Hierarquia Multi-Agente",
+      "subtitle": "Como múltiplos agentes decidem juntos sem travar nem se canibalizar.",
+      "markdown": "05_consenso_delegacao_hierarquia.md",
+      "question": "Quando agentes discordam, quem decide e como o sistema avança?",
+      "axis": "Voto, quórum, supervisor, orchestrator, leader election, tie-breaking."
+    },
+    {
+      "id": "06_tool_federation",
+      "volume": "VI",
+      "n": 6,
+      "title": "Tool Federation e Skills Compartilhadas",
+      "subtitle": "Como ferramentas e skills se federam entre agentes, equipes e organizações.",
+      "markdown": "06_tool_federation.md",
+      "question": "Como uma skill criada por um agente vira ativo de uma rede inteira?",
+      "axis": "Registries, marketplaces internos, versionamento de skills e contratos de uso."
+    },
+    {
+      "id": "07_identidade_reputacao_trust",
+      "volume": "VII",
+      "n": 7,
+      "title": "Identidade, Reputação e Trust Layer",
+      "subtitle": "Como agentes provam quem são, o que já fizeram e por que devem ser ouvidos.",
+      "markdown": "07_identidade_reputacao_trust.md",
+      "question": "O que separa um agente confiável de um agente apenas funcional?",
+      "axis": "DID, assinaturas, atestações, histórico de execução, score de confiança."
+    },
+    {
+      "id": "08_evals_observability_telemetria",
+      "volume": "VIII",
+      "n": 8,
+      "title": "Evals, Observability e Telemetria Agêntica",
+      "subtitle": "Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída.",
+      "markdown": "08_evals_observability_telemetria.md",
+      "question": "Como saber se a rede de agentes está melhor hoje que ontem?",
+      "axis": "Eval harness, golden traces, trace IDs, métricas por papel, regression suites."
+    },
+    {
+      "id": "09_seguranca_guardrails_resiliencia",
+      "volume": "IX",
+      "n": 9,
+      "title": "Segurança, Guardrails e Resiliência em Rede",
+      "subtitle": "Como conter falhas, ataques e cascatas em uma malha de agentes interconectados.",
+      "markdown": "09_seguranca_guardrails_resiliencia.md",
+      "question": "Quando um agente falha, a rede aprende ou colapsa?",
+      "axis": "Prompt injection cross-agente, isolamento, circuit breakers, blast radius."
+    },
+    {
+      "id": "10_federacao_agentica_internet_agentes",
+      "volume": "X",
+      "n": 10,
+      "title": "Federação Agêntica — A Internet dos Agentes",
+      "subtitle": "O futuro da web: agentes consumindo agentes, redes de capacidades e a infra IA-to-IA.",
+      "markdown": "10_federacao_agentica_internet_agentes.md",
+      "question": "Como será a internet quando os principais usuários não forem mais humanos?",
+      "axis": "Discovery global, mercados de capacidades, governança aberta, soberania de rede."
+    }
+  ]
+}

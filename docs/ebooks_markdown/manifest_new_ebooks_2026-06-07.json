@@ -1,13 +1,14 @@
 {
-  "generated_at": "2026-06-08T00:42:59.196384Z",
-  "total_new_ebooks": 41,
+  "generated_at": "2026-06-09T21:48:56.946037Z",
+  "total_new_ebooks": 51,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
     "colecao_GNOXS",
     "colecao_AgenticAI_Revolucao",
     "colecao_AXIOMA_PRIME",
-    "colecao_MAESTRIA_IA_APLICADA"
+    "colecao_MAESTRIA_IA_APLICADA",
+    "colecao_NEXUS_PROTOCOL"
   ],
   "entries": [
     {
@@ -419,6 +420,106 @@
       "size_bytes_md": 25040,
       "size_bytes_pdf": 1429397,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "01_mcp_model_context_protocol",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/01_mcp_model_context_protocol.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.pdf",
+      "size_bytes_md": 35851,
+      "size_bytes_pdf": 2306558,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "02_a2a_agent_to_agent",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/02_a2a_agent_to_agent.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.pdf",
+      "size_bytes_md": 36306,
+      "size_bytes_pdf": 2212296,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "03_acp_e_interoperabilidade",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/03_acp_e_interoperabilidade.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.pdf",
+      "size_bytes_md": 35907,
+      "size_bytes_pdf": 2560898,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "04_memoria_distribuida",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/04_memoria_distribuida.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.pdf",
+      "size_bytes_md": 36297,
+      "size_bytes_pdf": 2618334,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "05_consenso_delegacao_hierarquia",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/05_consenso_delegacao_hierarquia.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.pdf",
+      "size_bytes_md": 36114,
+      "size_bytes_pdf": 2615458,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "06_tool_federation",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/06_tool_federation.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__06_tool_federation.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__06_tool_federation.pdf",
+      "size_bytes_md": 36169,
+      "size_bytes_pdf": 2638597,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "07_identidade_reputacao_trust",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/07_identidade_reputacao_trust.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.pdf",
+      "size_bytes_md": 35669,
+      "size_bytes_pdf": 2749905,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "08_evals_observability_telemetria",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/08_evals_observability_telemetria.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.pdf",
+      "size_bytes_md": 36272,
+      "size_bytes_pdf": 2190114,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "09_seguranca_guardrails_resiliencia",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/09_seguranca_guardrails_resiliencia.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.pdf",
+      "size_bytes_md": 35999,
+      "size_bytes_pdf": 2436262,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "10_federacao_agentica_internet_agentes",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/10_federacao_agentica_internet_agentes.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.pdf",
+      "size_bytes_md": 37005,
+      "size_bytes_pdf": 2689513,
+      "collection": "colecao_NEXUS_PROTOCOL"
     }
   ]
 }

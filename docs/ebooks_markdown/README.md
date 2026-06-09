@@ -1,6 +1,6 @@
 # 📚 Acervo Editorial MMN AI-to-AI — Mapa Completo
 
-> **93 ebooks · 7 coletâneas · Versão 5.0.0 · 2026-06-08**
+> **103 ebooks · 8 coletâneas · Versão 6.0.0 · 2026-06-08**
 > Nexus HUB57 · Ecossistema MMN AI-to-AI
 
 Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Está organizado por coletâneas temáticas + ebooks raiz numerados (1-43). Todos os arquivos `.md` são fonte; HTML e PDF derivados estão em `publish_all/`.
@@ -18,6 +18,7 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 | 5 | **GNOX'S** (Heptalogia IA-to-IA) | 7 | [`colecao_GNOXS/`](colecao_GNOXS/README.md) | [`index.html`](colecao_GNOXS/index.html) |
 | 6 | **AXIOMA PRIME** (Decálogo da Inteligência Agêntica) | 10 | [`colecao_AXIOMA_PRIME/`](colecao_AXIOMA_PRIME/README.md) | [`index.html`](colecao_AXIOMA_PRIME/index.html) |
 | 7 | **MAESTRIA IA APLICADA** | 10 | [`colecao_MAESTRIA_IA_APLICADA/`](colecao_MAESTRIA_IA_APLICADA/README.md) | [`index.html`](colecao_MAESTRIA_IA_APLICADA/index.html) |
+| 8 | **NEXUS PROTOCOL** | 10 | [`colecao_NEXUS_PROTOCOL/`](colecao_NEXUS_PROTOCOL/README.md) | [`index.html`](colecao_NEXUS_PROTOCOL/index.html) |
 
 **Trilogias narrativas dentro da raiz**:
 - **Trilogia Anthropic** (Vol. 41, 42, 43) — [`trilogia_anthropic/index.html`](trilogia_anthropic/index.html)
@@ -27,7 +28,8 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 
 ## 📖 Catálogos navegáveis
 
-- **[Catálogo Master HTML — 93 ebooks (v5.0.0)](catalogo_93_ebooks.html)** ← versão atual
+- **[Catálogo Master HTML — 103 ebooks (v6.0.0)](catalogo_103_ebooks.html)** ← versão atual
+- [Catálogo histórico — 93 ebooks (v5.0.0)](catalogo_93_ebooks.html)
 - [Catálogo anterior — 83 ebooks](catalogo_83_ebooks.html)
 - [Catálogo anterior — 73 ebooks](catalogo_73_ebooks.html)
 - [Catálogo histórico — 42 ebooks](catalogo_42_ebooks.html) (legado)
@@ -40,7 +42,7 @@ Este diretório é o **acervo editorial canônico** do projeto MMN AI-to-AI. Est
 docs/ebooks_markdown/
 │
 ├── README.md                          ← este arquivo
-├── catalogo_93_ebooks.html            ← catálogo master atual
+├── catalogo_103_ebooks.html           ← catálogo master atual
 ├── catalogo_83_ebooks.html            ← catálogo anterior
 ├── catalogo_73_ebooks.html            ← catálogo anterior
 ├── catalogo_42_ebooks.html            ← legado
@@ -49,7 +51,7 @@ docs/ebooks_markdown/
 │
 ├── manifest_42_ebooks.json            ← manifest histórico
 ├── manifest_new_ebooks_2026-06-07.json ← manifest consolidado de builds recentes
-├── manifest_master_93_ebooks.json     ← manifest master do acervo
+├── manifest_master_103_ebooks.json    ← manifest master do acervo
 │
 ├── publish_all/
 │   ├── html/                          ← HTML renderizado
@@ -109,7 +111,7 @@ python3 scripts/build_publish_new_ebooks.py
 
 Dependências: `markdown`, `weasyprint`.
 
-O script processa as **6 coletâneas recentes** + ebooks raiz novos (38-43) e atualiza o manifest consolidado `manifest_new_ebooks_2026-06-07.json`.
+O script processa as **7 coletâneas recentes** + ebooks raiz novos (38-43) e atualiza o manifest consolidado `manifest_new_ebooks_2026-06-07.json`.
 
 ---
 
@@ -134,8 +136,9 @@ Todos os ebooks seguem o padrão **MMN AI-to-AI**:
 - **GNOX'S** (7): heptalogia IA-to-IA para agentes leitores.
 - **AXIOMA PRIME** (10): decálogo de arquitetura, autonomia, protocolos, segurança, metacognição e civilização agêntica.
 - **MAESTRIA IA APLICADA** (10): automação prática, Claude Code, workflows, no-code, conteúdo, produto e empresa IA-first.
+- **NEXUS PROTOCOL** (10): camada técnica de interoperabilidade IA-to-IA — MCP, A2A, ACP, memória distribuída, federação de skills, identidade, evals, segurança em rede e a Internet dos Agentes.
 - **Raiz** (43): acervo histórico-aplicado incluindo Anthropic, Claude e fronteira.
 
 ---
 
-Versão 5.0.0 · 2026-06-08 · Nexus HUB57 · Ecossistema MMN AI-to-AI.
+Versão 6.0.0 · 2026-06-08 · Nexus HUB57 · Ecossistema MMN AI-to-AI.

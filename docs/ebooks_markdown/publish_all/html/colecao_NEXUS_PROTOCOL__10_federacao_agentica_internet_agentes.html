@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 10
+roman: "X"
+title: "Federação Agêntica — A Internet dos Agentes"
+subtitle: "O futuro da web: agentes consumindo agentes, redes de capacidades e a infra IA-to-IA."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ['MMN AI-to-AI', 'Nexus HUB57']
+language: pt-BR
+reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
+question: "Como será a internet quando os principais usuários não forem mais humanos?"
+axis: "Discovery global, mercados de capacidades, governança aberta, soberania de rede."
+core_invariant: "A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou."
+anchors: ['discovery global', 'mercado de capacidades', 'governança aberta', 'soberania de rede', 'infra IA-to-IA']
+canonical_edition: true</p>
+<hr />
+<h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/nexus_protocol_10_federacao_agentica_internet_agentes.webp" /></p>
+<h2 id="volume-x-federacao-agentica-a-internet-dos-agentes">Volume X — Federação Agêntica — A Internet dos Agentes</h2>
+<p><strong>O futuro da web: agentes consumindo agentes, redes de capacidades e a infra IA-to-IA.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como será a internet quando os principais usuários não forem mais humanos?
+<strong>Eixo do volume:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante canônico:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<hr />
+<h2 id="sumario">Sumário</h2>
+<blockquote>
+<ul>
+<li>
+<ol>
+<li>Abertura — O Problema Operacional</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>Fundação Conceitual</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>Anatomia do Protocolo</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>Modelos de Implementação Canônicos</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>Fluxo Operacional em Produção</li>
+</ol>
+</li>
+<li>
+<ol start="6">
+<li>Falhas Recorrentes e Contenção</li>
+</ol>
+</li>
+<li>
+<ol start="7">
+<li>Métricas, Evals e Observabilidade</li>
+</ol>
+</li>
+<li>
+<ol start="8">
+<li>Padrões Avançados de Composição</li>
+</ol>
+</li>
+<li>
+<ol start="9">
+<li>Maturidade, Roadmap e Próximos Marcos</li>
+</ol>
+</li>
+<li>
+<ol start="10">
+<li>Manifesto do Protocolo</li>
+</ol>
+</li>
+<li>Checklist Canônico</li>
+<li>Glossário</li>
+<li>Gancho para o Próximo Volume</li>
+</ul>
+</blockquote>
+<hr />
+<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x1-diagnostico-operacional">X.1 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x1-protocolo-executavel">X.1 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_01(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x1-skills-centrais-associadas">X.1 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x1-tese-operacional">X.1 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x2-diagnostico-operacional">X.2 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x2-protocolo-executavel">X.2 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_02(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x2-skills-centrais-associadas">X.2 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x2-tese-operacional">X.2 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x3-diagnostico-operacional">X.3 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x3-protocolo-executavel">X.3 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_03(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x3-skills-centrais-associadas">X.3 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x3-tese-operacional">X.3 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x4-diagnostico-operacional">X.4 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x4-protocolo-executavel">X.4 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_04(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x4-skills-centrais-associadas">X.4 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x4-tese-operacional">X.4 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x5-diagnostico-operacional">X.5 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x5-protocolo-executavel">X.5 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_05(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x5-skills-centrais-associadas">X.5 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x5-tese-operacional">X.5 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x6-diagnostico-operacional">X.6 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x6-protocolo-executavel">X.6 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_06(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x6-skills-centrais-associadas">X.6 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x6-tese-operacional">X.6 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x7-diagnostico-operacional">X.7 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x7-protocolo-executavel">X.7 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_07(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x7-skills-centrais-associadas">X.7 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x7-tese-operacional">X.7 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x8-diagnostico-operacional">X.8 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x8-protocolo-executavel">X.8 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_08(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x8-skills-centrais-associadas">X.8 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x8-tese-operacional">X.8 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x9-diagnostico-operacional">X.9 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x9-protocolo-executavel">X.9 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_09(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x9-skills-centrais-associadas">X.9 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x9-tese-operacional">X.9 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
+<blockquote>
+<p><strong>Eixo deste capítulo:</strong> Discovery global, mercados de capacidades, governança aberta, soberania de rede.
+<strong>Invariante operacional:</strong> A próxima internet será desenhada por humanos, mas operada majoritariamente por agentes — e isso já começou.</p>
+</blockquote>
+<h3 id="x10-diagnostico-operacional">X.10 — Diagnóstico operacional</h3>
+<p>Antes de implementar <strong>Federação Agêntica — A Internet dos Agentes</strong>, é preciso aceitar uma verdade dura: a maior
+parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
+porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
+exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
+deste volume: <em>Como será a internet quando os principais usuários não forem mais humanos?</em></p>
+<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
+em três camadas:</p>
+<ul>
+<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
+<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
+<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+</ul>
+<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
+mas cada integração é um caso especial disfarçado.</p>
+<h3 id="x10-protocolo-executavel">X.10 — Protocolo executável</h3>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_10_10(intent, context, constraints):
+    1. validar intent contra capacidades declaradas (capability discovery)
+    2. construir envelope com identidade, escopo, trace_id e versão
+    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
+    4. executar a menor unidade útil de trabalho (smallest useful step)
+    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
+    6. validar saída contra schema_out e contra invariante deste volume
+    7. registrar lineage: quem chamou, com que escopo, com que resultado
+    8. expor estado para que outro agente possa retomar ou auditar
+</code></pre></div>
+
+<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
+consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
+pertence à improvisação.</p>
+<h3 id="x10-skills-centrais-associadas">X.10 — Skills centrais associadas</h3>
+<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
+<code>discovery global, mercado de capacidades, governança aberta, soberania de rede, infra IA-to-IA</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
+de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
+<h3 id="x10-tese-operacional">X.10 — Tese operacional</h3>
+<blockquote>
+<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
+vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+</blockquote>
+<p>Quem trata <code>Federação Agêntica — A Internet dos Agentes</code> como detalhe de infraestrutura está condenado a refazer a
+mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
+quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
+<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
+artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
+arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
+<hr />
+<h2 id="checklist-canonico-volume-x">Checklist Canônico — Volume X</h2>
+<ul>
+<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
+<li>[ ] Invariante canônico documentado em README do componente.</li>
+<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
+<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
+<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
+<li>[ ] Skill federada com contrato de falha explícito.</li>
+<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
+<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
+<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
+<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+</ul>
+<h2 id="glossario-do-volume">Glossário do Volume</h2>
+<ul>
+<li><strong>discovery global</strong> — termo canônico do volume X; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>mercado de capacidades</strong> — termo canônico do volume X; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>governança aberta</strong> — termo canônico do volume X; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>soberania de rede</strong> — termo canônico do volume X; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>infra IA-to-IA</strong> — termo canônico do volume X; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+</ul>
+<h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
+<p>Este é o volume final da coletânea. Releia o <strong>Volume I</strong> com os olhos do agente que você se tornou: o que parecia primitivo agora é canônico.</p>
+<hr />
+<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume X · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
+</body>
+</html>

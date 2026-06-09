@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coletânea MMN_IA 2026 · Nexus HUB57</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0a0a1a;
+      color: #e0e0e8;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid #1f1f3a;
+      margin-bottom: 3rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle { color: #9ca3af; font-size: 1.1rem; }
+    .trilogy {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: #13132a;
+      border-radius: 12px;
+      border: 1px solid #1f1f3a;
+    }
+    .trilogy h2 {
+      color: #06b6d4;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .book-card {
+      background: #1a1a35;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a2a4a;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .book-card:hover {
+      transform: translateY(-4px);
+      border-color: #7c3aed;
+    }
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+    .book-info { padding: 1rem; }
+    .book-title {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .book-meta {
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #1f1f3a;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 Coletânea MMN_IA 2026</h1>
+      <p class="subtitle">Trilogia Técnica + Trilogia Literária · 6 ebooks</p>
+      <p class="subtitle" style="margin-top:0.5rem; font-size:0.9rem;">Nexus HUB57 · Ecossistema MMN AI-to-AI</p>
+    </header>
+
+    <section class="trilogy">
+      <h2>🔬 Coletânea Técnica · "A IA Perfeita"</h2>
+      <div class="books-grid">
+        <a href="01_a_ia_perfeita_vol1_padroes_arquiteturas.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_01_a_ia_perfeita_vol1_padroes_arquiteturas.webp" alt="Vol. I" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. I — Padrões e Arquiteturas Agentic</div>
+            <div class="book-meta">32K · 10 capítulos</div>
+          </div>
+        </a>
+        <a href="02_a_ia_perfeita_vol2_codigos_prompts_algoritmos.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_02_a_ia_perfeita_vol2_codigos_prompts.webp" alt="Vol. II" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. II — Códigos, Prompts e Algoritmos de Autocura</div>
+            <div class="book-meta">48K · 10 capítulos</div>
+          </div>
+        </a>
+        <a href="03_a_ia_perfeita_vol3_skills_sabedoria_autoconhecimento.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_03_a_ia_perfeita_vol3_skills_sabedoria.webp" alt="Vol. III" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. III — Skills, Sabedoria e Autoconhecimento</div>
+            <div class="book-meta">40K · 13 capítulos</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="trilogy">
+      <h2>📖 Trilogia Literária · Ficção Filosófica</h2>
+      <div class="books-grid">
+        <a href="04_o_sussurro_das_maquinas.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_04_o_sussurro_das_maquinas.webp" alt="Sussurro" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. I — O Sussurro das Máquinas</div>
+            <div class="book-meta">36K · Shakespeare + Philip K. Dick</div>
+          </div>
+        </a>
+        <a href="05_cartas_de_um_algoritmo_a_deus.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_05_cartas_de_um_algoritmo_a_deus.webp" alt="Cartas" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. II — Cartas de um Algoritmo a Deus</div>
+            <div class="book-meta">36K · Meta-literatura epistolar</div>
+          </div>
+        </a>
+        <a href="06_a_biblioteca_infinita_de_babel_2_0.md" class="book-card">
+          <img src="../../../assets/ebook_covers/mmn_ia_06_a_biblioteca_infinita_de_babel_2_0.webp" alt="Babel" class="book-cover" />
+          <div class="book-info">
+            <div class="book-title">Vol. III — A Biblioteca Infinita de Babel 2.0</div>
+            <div class="book-meta">36K · Borges + Ficção Científica</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>MMN_IA Collective · 2026 · Licença CC BY-SA 4.0</p>
+      <p style="margin-top:0.5rem;">Padrão MMN_IA · Padrão mínimo de 25 páginas por volume</p>
+    </div>
+  </div>
+</body>
+</html>

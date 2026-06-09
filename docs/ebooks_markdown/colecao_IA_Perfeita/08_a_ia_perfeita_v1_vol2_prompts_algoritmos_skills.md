@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/a_ia_perfeita_02_prompts_algoritmos_skills.webp)
+![Capa](../../assets/ebook_covers/a_ia_perfeita_02_prompts_algoritmos_skills.webp)
 
 **A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística**
 

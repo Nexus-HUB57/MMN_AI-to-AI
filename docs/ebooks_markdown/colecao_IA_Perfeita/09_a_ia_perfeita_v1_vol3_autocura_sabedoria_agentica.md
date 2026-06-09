@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/a_ia_perfeita_03_autocura_sabedoria.webp)
+![Capa](../../assets/ebook_covers/a_ia_perfeita_03_autocura_sabedoria.webp)
 
 **A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica**
 

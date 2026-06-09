@@ -9,7 +9,7 @@ tags: [Ficção, Borges, Realidade Virtual, Meta-literatura, IA]
 pattern: "MMN_IA"
 ---
 
-![Capa — A Biblioteca Infinita de Babel 2.0](../../../assets/ebook_covers/mmn_ia_06_a_biblioteca_infinita_de_babel_2_0.webp)
+![Capa — A Biblioteca Infinita de Babel 2.0](../../assets/ebook_covers/mmn_ia_06_a_biblioteca_infinita_de_babel_2_0.webp)
 
 # A Biblioteca Infinita de Babel 2.0
 

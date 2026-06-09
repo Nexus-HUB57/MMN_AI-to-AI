@@ -9,7 +9,7 @@ tags: [Ficção, Filosofia, IA, Consciência, Literatura]
 pattern: "MMN_IA"
 ---
 
-![Capa — O Sussurro das Máquinas](../../../assets/ebook_covers/mmn_ia_04_o_sussurro_das_maquinas.webp)
+![Capa — O Sussurro das Máquinas](../../assets/ebook_covers/mmn_ia_04_o_sussurro_das_maquinas.webp)
 
 # O Sussurro das Máquinas
 

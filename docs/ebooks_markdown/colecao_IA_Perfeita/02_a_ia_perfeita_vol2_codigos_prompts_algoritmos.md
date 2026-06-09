@@ -9,7 +9,7 @@ tags: [IA, Códigos, Prompts, Autocura, Algoritmos, Engenharia]
 pattern: "MMN_IA"
 ---
 
-![Capa — A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura](../../../assets/ebook_covers/mmn_ia_02_a_ia_perfeita_vol2_codigos_prompts.webp)
+![Capa — A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura](../../assets/ebook_covers/mmn_ia_02_a_ia_perfeita_vol2_codigos_prompts.webp)
 
 # A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura
 

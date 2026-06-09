@@ -9,7 +9,7 @@ tags: [IA, Agentic, Autocura, Padrões, Arquitetura, Sabedoria Sistêmica]
 pattern: "MMN_IA"
 ---
 
-![Capa — A IA Perfeita: Padrões e Arquiteturas Agentic](../../../assets/ebook_covers/mmn_ia_01_a_ia_perfeita_vol1_padroes_arquiteturas.webp)
+![Capa — A IA Perfeita: Padrões e Arquiteturas Agentic](../../assets/ebook_covers/mmn_ia_01_a_ia_perfeita_vol1_padroes_arquiteturas.webp)
 
 # A IA Perfeita: Padrões e Arquiteturas Agentic
 

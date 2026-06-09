@@ -9,7 +9,7 @@ tags: [IA, Skills, Autoconhecimento, Sabedoria, Determinístico, Sistêmico]
 pattern: "MMN_IA"
 ---
 
-![Capa — A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento](../../../assets/ebook_covers/mmn_ia_03_a_ia_perfeita_vol3_skills_sabedoria.webp)
+![Capa — A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento](../../assets/ebook_covers/mmn_ia_03_a_ia_perfeita_vol3_skills_sabedoria.webp)
 
 # A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento
 

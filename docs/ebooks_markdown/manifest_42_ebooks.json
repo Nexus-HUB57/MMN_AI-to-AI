@@ -1,0 +1,343 @@
+{
+  "project": "MMN AI-to-AI",
+  "generated_at": "2026-06-06",
+  "total_ebooks": 42,
+  "items": [
+    {
+      "name": "01_Minimax_A_IA_Revolucionaria.md",
+      "relative_path": "01_Minimax_A_IA_Revolucionaria.md",
+      "slug": "01_Minimax_A_IA_Revolucionaria",
+      "html": "publish_all/html/01_Minimax_A_IA_Revolucionaria.html",
+      "pdf": "publish_all/pdf/01_Minimax_A_IA_Revolucionaria.pdf",
+      "lines": 268
+    },
+    {
+      "name": "02_Minimax_Como_Construir_Skills_Vencedoras.md",
+      "relative_path": "02_Minimax_Como_Construir_Skills_Vencedoras.md",
+      "slug": "02_Minimax_Como_Construir_Skills_Vencedoras",
+      "html": "publish_all/html/02_Minimax_Como_Construir_Skills_Vencedoras.html",
+      "pdf": "publish_all/pdf/02_Minimax_Como_Construir_Skills_Vencedoras.pdf",
+      "lines": 215
+    },
+    {
+      "name": "03_Genspark_A_IA_Faz_Tudo.md",
+      "relative_path": "03_Genspark_A_IA_Faz_Tudo.md",
+      "slug": "03_Genspark_A_IA_Faz_Tudo",
+      "html": "publish_all/html/03_Genspark_A_IA_Faz_Tudo.html",
+      "pdf": "publish_all/pdf/03_Genspark_A_IA_Faz_Tudo.pdf",
+      "lines": 221
+    },
+    {
+      "name": "04_Genspark_A_Super_IA.md",
+      "relative_path": "04_Genspark_A_Super_IA.md",
+      "slug": "04_Genspark_A_Super_IA",
+      "html": "publish_all/html/04_Genspark_A_Super_IA.html",
+      "pdf": "publish_all/pdf/04_Genspark_A_Super_IA.pdf",
+      "lines": 212
+    },
+    {
+      "name": "05_Como_Fazer_Dinheiro_com_IA.md",
+      "relative_path": "05_Como_Fazer_Dinheiro_com_IA.md",
+      "slug": "05_Como_Fazer_Dinheiro_com_IA",
+      "html": "publish_all/html/05_Como_Fazer_Dinheiro_com_IA.html",
+      "pdf": "publish_all/pdf/05_Como_Fazer_Dinheiro_com_IA.pdf",
+      "lines": 232
+    },
+    {
+      "name": "06_Visao_Computacional.md",
+      "relative_path": "06_Visao_Computacional.md",
+      "slug": "06_Visao_Computacional",
+      "html": "publish_all/html/06_Visao_Computacional.html",
+      "pdf": "publish_all/pdf/06_Visao_Computacional.pdf",
+      "lines": 250
+    },
+    {
+      "name": "07_IA_Generativa_Criativa.md",
+      "relative_path": "07_IA_Generativa_Criativa.md",
+      "slug": "07_IA_Generativa_Criativa",
+      "html": "publish_all/html/07_IA_Generativa_Criativa.html",
+      "pdf": "publish_all/pdf/07_IA_Generativa_Criativa.pdf",
+      "lines": 225
+    },
+    {
+      "name": "08_Etica_e_Futuro_da_IA.md",
+      "relative_path": "08_Etica_e_Futuro_da_IA.md",
+      "slug": "08_Etica_e_Futuro_da_IA",
+      "html": "publish_all/html/08_Etica_e_Futuro_da_IA.html",
+      "pdf": "publish_all/pdf/08_Etica_e_Futuro_da_IA.pdf",
+      "lines": 234
+    },
+    {
+      "name": "09_Fundamentos_da_IA.md",
+      "relative_path": "09_Fundamentos_da_IA.md",
+      "slug": "09_Fundamentos_da_IA",
+      "html": "publish_all/html/09_Fundamentos_da_IA.html",
+      "pdf": "publish_all/pdf/09_Fundamentos_da_IA.pdf",
+      "lines": 233
+    },
+    {
+      "name": "10_A_Revolucao_dos_Modelos_de_Linguagem.md",
+      "relative_path": "10_A_Revolucao_dos_Modelos_de_Linguagem.md",
+      "slug": "10_A_Revolucao_dos_Modelos_de_Linguagem",
+      "html": "publish_all/html/10_A_Revolucao_dos_Modelos_de_Linguagem.html",
+      "pdf": "publish_all/pdf/10_A_Revolucao_dos_Modelos_de_Linguagem.pdf",
+      "lines": 234
+    },
+    {
+      "name": "11_Raizes_da_IA.md",
+      "relative_path": "11_Raizes_da_IA.md",
+      "slug": "11_Raizes_da_IA",
+      "html": "publish_all/html/11_Raizes_da_IA.html",
+      "pdf": "publish_all/pdf/11_Raizes_da_IA.pdf",
+      "lines": 278
+    },
+    {
+      "name": "12_Invernos_e_Primaveras_da_IA.md",
+      "relative_path": "12_Invernos_e_Primaveras_da_IA.md",
+      "slug": "12_Invernos_e_Primaveras_da_IA",
+      "html": "publish_all/html/12_Invernos_e_Primaveras_da_IA.html",
+      "pdf": "publish_all/pdf/12_Invernos_e_Primaveras_da_IA.pdf",
+      "lines": 269
+    },
+    {
+      "name": "13_Os_Modelos_que_Marcaram_Epoca.md",
+      "relative_path": "13_Os_Modelos_que_Marcaram_Epoca.md",
+      "slug": "13_Os_Modelos_que_Marcaram_Epoca",
+      "html": "publish_all/html/13_Os_Modelos_que_Marcaram_Epoca.html",
+      "pdf": "publish_all/pdf/13_Os_Modelos_que_Marcaram_Epoca.pdf",
+      "lines": 259
+    },
+    {
+      "name": "14_Marcos_e_Conquistas_Historicas_da_IA.md",
+      "relative_path": "14_Marcos_e_Conquistas_Historicas_da_IA.md",
+      "slug": "14_Marcos_e_Conquistas_Historicas_da_IA",
+      "html": "publish_all/html/14_Marcos_e_Conquistas_Historicas_da_IA.html",
+      "pdf": "publish_all/pdf/14_Marcos_e_Conquistas_Historicas_da_IA.pdf",
+      "lines": 325
+    },
+    {
+      "name": "15_Presente_e_Futuro_da_IA.md",
+      "relative_path": "15_Presente_e_Futuro_da_IA.md",
+      "slug": "15_Presente_e_Futuro_da_IA",
+      "html": "publish_all/html/15_Presente_e_Futuro_da_IA.html",
+      "pdf": "publish_all/pdf/15_Presente_e_Futuro_da_IA.pdf",
+      "lines": 269
+    },
+    {
+      "name": "16_Raizes_do_Claude.md",
+      "relative_path": "16_Raizes_do_Claude.md",
+      "slug": "16_Raizes_do_Claude",
+      "html": "publish_all/html/16_Raizes_do_Claude.html",
+      "pdf": "publish_all/pdf/16_Raizes_do_Claude.pdf",
+      "lines": 263
+    },
+    {
+      "name": "17_Claude_Conceitos_Fundamentais.md",
+      "relative_path": "17_Claude_Conceitos_Fundamentais.md",
+      "slug": "17_Claude_Conceitos_Fundamentais",
+      "html": "publish_all/html/17_Claude_Conceitos_Fundamentais.html",
+      "pdf": "publish_all/pdf/17_Claude_Conceitos_Fundamentais.pdf",
+      "lines": 247
+    },
+    {
+      "name": "18_A_Evolucao_do_Claude.md",
+      "relative_path": "18_A_Evolucao_do_Claude.md",
+      "slug": "18_A_Evolucao_do_Claude",
+      "html": "publish_all/html/18_A_Evolucao_do_Claude.html",
+      "pdf": "publish_all/pdf/18_A_Evolucao_do_Claude.pdf",
+      "lines": 215
+    },
+    {
+      "name": "19_As_Propostas_do_Claude.md",
+      "relative_path": "19_As_Propostas_do_Claude.md",
+      "slug": "19_As_Propostas_do_Claude",
+      "html": "publish_all/html/19_As_Propostas_do_Claude.html",
+      "pdf": "publish_all/pdf/19_As_Propostas_do_Claude.pdf",
+      "lines": 236
+    },
+    {
+      "name": "20_Claude_vs_o_Mundo.md",
+      "relative_path": "20_Claude_vs_o_Mundo.md",
+      "slug": "20_Claude_vs_o_Mundo",
+      "html": "publish_all/html/20_Claude_vs_o_Mundo.html",
+      "pdf": "publish_all/pdf/20_Claude_vs_o_Mundo.pdf",
+      "lines": 242
+    },
+    {
+      "name": "21_Claude_na_Pratica.md",
+      "relative_path": "21_Claude_na_Pratica.md",
+      "slug": "21_Claude_na_Pratica",
+      "html": "publish_all/html/21_Claude_na_Pratica.html",
+      "pdf": "publish_all/pdf/21_Claude_na_Pratica.pdf",
+      "lines": 225
+    },
+    {
+      "name": "22_Claude_para_Negocios.md",
+      "relative_path": "22_Claude_para_Negocios.md",
+      "slug": "22_Claude_para_Negocios",
+      "html": "publish_all/html/22_Claude_para_Negocios.html",
+      "pdf": "publish_all/pdf/22_Claude_para_Negocios.pdf",
+      "lines": 234
+    },
+    {
+      "name": "23_Diferenciais_Tecnicos_do_Claude.md",
+      "relative_path": "23_Diferenciais_Tecnicos_do_Claude.md",
+      "slug": "23_Diferenciais_Tecnicos_do_Claude",
+      "html": "publish_all/html/23_Diferenciais_Tecnicos_do_Claude.html",
+      "pdf": "publish_all/pdf/23_Diferenciais_Tecnicos_do_Claude.pdf",
+      "lines": 218
+    },
+    {
+      "name": "24_Skills_Avancadas_com_Claude.md",
+      "relative_path": "24_Skills_Avancadas_com_Claude.md",
+      "slug": "24_Skills_Avancadas_com_Claude",
+      "html": "publish_all/html/24_Skills_Avancadas_com_Claude.html",
+      "pdf": "publish_all/pdf/24_Skills_Avancadas_com_Claude.pdf",
+      "lines": 212
+    },
+    {
+      "name": "25_Potencial_e_Futuro_do_Claude.md",
+      "relative_path": "25_Potencial_e_Futuro_do_Claude.md",
+      "slug": "25_Potencial_e_Futuro_do_Claude",
+      "html": "publish_all/html/25_Potencial_e_Futuro_do_Claude.html",
+      "pdf": "publish_all/pdf/25_Potencial_e_Futuro_do_Claude.pdf",
+      "lines": 222
+    },
+    {
+      "name": "26_Agentes_IA_e_o_Novo_MMN.md",
+      "relative_path": "26_Agentes_IA_e_o_Novo_MMN.md",
+      "slug": "26_Agentes_IA_e_o_Novo_MMN",
+      "html": "publish_all/html/26_Agentes_IA_e_o_Novo_MMN.html",
+      "pdf": "publish_all/pdf/26_Agentes_IA_e_o_Novo_MMN.pdf",
+      "lines": 28
+    },
+    {
+      "name": "27_O_Ecossistema_OneVerso.md",
+      "relative_path": "27_O_Ecossistema_OneVerso.md",
+      "slug": "27_O_Ecossistema_OneVerso",
+      "html": "publish_all/html/27_O_Ecossistema_OneVerso.html",
+      "pdf": "publish_all/pdf/27_O_Ecossistema_OneVerso.pdf",
+      "lines": 27
+    },
+    {
+      "name": "01_ia_para_empresas.md",
+      "relative_path": "colecao_MMN_IA/01_ia_para_empresas.md",
+      "slug": "colecao_MMN_IA__01_ia_para_empresas",
+      "html": "publish_all/html/colecao_MMN_IA__01_ia_para_empresas.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__01_ia_para_empresas.pdf",
+      "lines": 553
+    },
+    {
+      "name": "02_ia_agentica.md",
+      "relative_path": "colecao_MMN_IA/02_ia_agentica.md",
+      "slug": "colecao_MMN_IA__02_ia_agentica",
+      "html": "publish_all/html/colecao_MMN_IA__02_ia_agentica.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__02_ia_agentica.pdf",
+      "lines": 653
+    },
+    {
+      "name": "03_multimodalidade_rag.md",
+      "relative_path": "colecao_MMN_IA/03_multimodalidade_rag.md",
+      "slug": "colecao_MMN_IA__03_multimodalidade_rag",
+      "html": "publish_all/html/colecao_MMN_IA__03_multimodalidade_rag.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__03_multimodalidade_rag.pdf",
+      "lines": 668
+    },
+    {
+      "name": "04_governanca_compliance_regulacao_ia.md",
+      "relative_path": "colecao_MMN_IA/04_governanca_compliance_regulacao_ia.md",
+      "slug": "colecao_MMN_IA__04_governanca_compliance_regulacao_ia",
+      "html": "publish_all/html/colecao_MMN_IA__04_governanca_compliance_regulacao_ia.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__04_governanca_compliance_regulacao_ia.pdf",
+      "lines": 637
+    },
+    {
+      "name": "05_seguranca_deepfakes_guerra_informacional.md",
+      "relative_path": "colecao_MMN_IA/05_seguranca_deepfakes_guerra_informacional.md",
+      "slug": "colecao_MMN_IA__05_seguranca_deepfakes_guerra_informacional",
+      "html": "publish_all/html/colecao_MMN_IA__05_seguranca_deepfakes_guerra_informacional.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__05_seguranca_deepfakes_guerra_informacional.pdf",
+      "lines": 610
+    },
+    {
+      "name": "06_skills_prompting_estrategico.md",
+      "relative_path": "colecao_MMN_IA/06_skills_prompting_estrategico.md",
+      "slug": "colecao_MMN_IA__06_skills_prompting_estrategico",
+      "html": "publish_all/html/colecao_MMN_IA__06_skills_prompting_estrategico.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__06_skills_prompting_estrategico.pdf",
+      "lines": 499
+    },
+    {
+      "name": "07_skills_design_de_agentes.md",
+      "relative_path": "colecao_MMN_IA/07_skills_design_de_agentes.md",
+      "slug": "colecao_MMN_IA__07_skills_design_de_agentes",
+      "html": "publish_all/html/colecao_MMN_IA__07_skills_design_de_agentes.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__07_skills_design_de_agentes.pdf",
+      "lines": 556
+    },
+    {
+      "name": "08_skills_conteudo_multimidia.md",
+      "relative_path": "colecao_MMN_IA/08_skills_conteudo_multimidia.md",
+      "slug": "colecao_MMN_IA__08_skills_conteudo_multimidia",
+      "html": "publish_all/html/colecao_MMN_IA__08_skills_conteudo_multimidia.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__08_skills_conteudo_multimidia.pdf",
+      "lines": 548
+    },
+    {
+      "name": "09_skills_automacao_e_fluxos.md",
+      "relative_path": "colecao_MMN_IA/09_skills_automacao_e_fluxos.md",
+      "slug": "colecao_MMN_IA__09_skills_automacao_e_fluxos",
+      "html": "publish_all/html/colecao_MMN_IA__09_skills_automacao_e_fluxos.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__09_skills_automacao_e_fluxos.pdf",
+      "lines": 531
+    },
+    {
+      "name": "10_skills_dados_decisao_governanca.md",
+      "relative_path": "colecao_MMN_IA/10_skills_dados_decisao_governanca.md",
+      "slug": "colecao_MMN_IA__10_skills_dados_decisao_governanca",
+      "html": "publish_all/html/colecao_MMN_IA__10_skills_dados_decisao_governanca.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__10_skills_dados_decisao_governanca.pdf",
+      "lines": 498
+    },
+    {
+      "name": "11_ecossistema_ia_orquestracao_plataformas_modelos.md",
+      "relative_path": "colecao_MMN_IA/11_ecossistema_ia_orquestracao_plataformas_modelos.md",
+      "slug": "colecao_MMN_IA__11_ecossistema_ia_orquestracao_plataformas_modelos",
+      "html": "publish_all/html/colecao_MMN_IA__11_ecossistema_ia_orquestracao_plataformas_modelos.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__11_ecossistema_ia_orquestracao_plataformas_modelos.pdf",
+      "lines": 508
+    },
+    {
+      "name": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade.md",
+      "relative_path": "colecao_MMN_IA/12_ecossistema_ia_dados_infraestrutura_interoperabilidade.md",
+      "slug": "colecao_MMN_IA__12_ecossistema_ia_dados_infraestrutura_interoperabilidade",
+      "html": "publish_all/html/colecao_MMN_IA__12_ecossistema_ia_dados_infraestrutura_interoperabilidade.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__12_ecossistema_ia_dados_infraestrutura_interoperabilidade.pdf",
+      "lines": 447
+    },
+    {
+      "name": "13_ecossistema_ia_produtos_marketplaces_monetizacao.md",
+      "relative_path": "colecao_MMN_IA/13_ecossistema_ia_produtos_marketplaces_monetizacao.md",
+      "slug": "colecao_MMN_IA__13_ecossistema_ia_produtos_marketplaces_monetizacao",
+      "html": "publish_all/html/colecao_MMN_IA__13_ecossistema_ia_produtos_marketplaces_monetizacao.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__13_ecossistema_ia_produtos_marketplaces_monetizacao.pdf",
+      "lines": 452
+    },
+    {
+      "name": "14_ecossistema_ia_comunidades_educacao_distribuicao.md",
+      "relative_path": "colecao_MMN_IA/14_ecossistema_ia_comunidades_educacao_distribuicao.md",
+      "slug": "colecao_MMN_IA__14_ecossistema_ia_comunidades_educacao_distribuicao",
+      "html": "publish_all/html/colecao_MMN_IA__14_ecossistema_ia_comunidades_educacao_distribuicao.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__14_ecossistema_ia_comunidades_educacao_distribuicao.pdf",
+      "lines": 437
+    },
+    {
+      "name": "15_ecossistema_ia_governanca_parcerias_vantagem.md",
+      "relative_path": "colecao_MMN_IA/15_ecossistema_ia_governanca_parcerias_vantagem.md",
+      "slug": "colecao_MMN_IA__15_ecossistema_ia_governanca_parcerias_vantagem",
+      "html": "publish_all/html/colecao_MMN_IA__15_ecossistema_ia_governanca_parcerias_vantagem.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__15_ecossistema_ia_governanca_parcerias_vantagem.pdf",
+      "lines": 444
+    }
+  ]
+}

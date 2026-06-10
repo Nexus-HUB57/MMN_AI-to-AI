@@ -2,7 +2,7 @@ import { Toaster } from "sonner";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -52,7 +52,9 @@ function Router() {
       <Route path="/marketplaces" component={Marketplaces} />
       <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />
-      <Route path="/minisite" component={AffiliateMiniSite} />
+      <Route path="/minha-loja" component={AffiliateMiniSite} />
+      {/* Rota legada /minisite — redirect 301-equivalente (90d) para /minha-loja */}
+      <Route path="/minisite">{() => <Redirect to="/minha-loja" />}</Route>
       <Route path="/afiliado/:code" component={AffiliateMiniSite} />
       <Route path="/pix/checkout" component={PixCheckout} />
       <Route path="/pix/history" component={PixHistory} />

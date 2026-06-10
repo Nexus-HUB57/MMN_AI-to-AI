@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/a_ia_perfeita_01_padroes_e_codigos.webp" /></p>
+<p><strong>A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável</strong></p>
+<p><em>A engenharia secreta dos sistemas que não erram em silêncio — padrões arquiteturais, design patterns e o repositório vivo de código-fonte do MMN_IA</em></p>
+<p><em>Coletânea MMN_IA · A IA Perfeita · Vol. 1 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>"Perfeito", em engenharia, nunca é absoluto. É uma régua. A IA Perfeita, neste volume, não é a IA que nunca erra — é a IA cujos erros são <strong>previsíveis, detectáveis, reversíveis e didáticos</strong>. Quem busca infalibilidade no software de fronteira está perseguindo um espelho. Quem busca <strong>previsibilidade sob estresse</strong> está perseguindo engenharia de verdade. Este é o primeiro volume da Coletânea <em>A IA Perfeita</em> — três volumes que desenham, juntos, o método MMN_IA para construir sistemas inteligentes que se aproximam assintoticamente da perfeição. Neste tomo cobrimos: padrões arquiteturais comprovados, design patterns agênticos, anti-padrões mortais com seus antídotos, e — diferencial absoluto — <strong>trechos de código-fonte de referência</strong> prontos para serem adaptados, em Python e TypeScript, organizados em uma biblioteca viva publicada no repositório oficial do MMN_IA. É a engenharia secreta dos sistemas que não erram em silêncio.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é "Perfeição" em IA — definição operacional
+<strong>•</strong> 2. Os três princípios fundadores da IA Perfeita
+<strong>•</strong> 3. Padrão Determinístico-Sistêmico (DS) — o coração do método
+<strong>•</strong> 4. Padrão Verificador-Crítico (Critic Pattern)
+<strong>•</strong> 5. Padrão Sandbox-First — o que ainda não é seguro vive em areia
+<strong>•</strong> 6. Padrão Idempotência Total — toda ação pode ser repetida
+<strong>•</strong> 7. Padrão Schema-Driven Output (function calling + JSON Schema)
+<strong>•</strong> 8. Padrão Retrieve-Then-Reason — RAG com auditoria de fonte
+<strong>•</strong> 9. Padrão Self-Repair — quando o agente conserta a si mesmo
+<strong>•</strong> 10. Padrão Observabilidade Total (logs, traces, replays)
+<strong>•</strong> 11. Anti-padrões mortais (e seus antídotos)
+<strong>•</strong> 12. O repositório vivo de código MMN_IA
+<strong>•</strong> 13. Código-fonte de referência — Orquestrador SHO em Python
+<strong>•</strong> 14. Código-fonte de referência — Critic Pattern em TypeScript
+<strong>•</strong> 15. Código-fonte de referência — Schema-Driven Output
+<strong>•</strong> 16. Código-fonte de referência — Self-Repair loop
+<strong>•</strong> 17. Checklist da IA Perfeita Vol. I
+<strong>•</strong> 18. Fechamento: a perfeição como assíntota</p>
+</blockquote>
+<hr />
+<h2 id="1-o-que-e-perfeicao-em-ia-definicao-operacional">1. O QUE É "PERFEIÇÃO" EM IA — DEFINIÇÃO OPERACIONAL</h2>
+<h3 id="11-o-erro-filosofico">1.1 O erro filosófico</h3>
+<p>A maioria das discussões sobre "IA infalível" começa pela definição errada. Tratam perfeição como <strong>ausência de erro</strong>. Em sistemas complexos, isso é incoerente: todo sistema interessante erra; o que muda é <strong>como ele erra</strong>.</p>
+<h3 id="12-a-definicao-mmn_ia-de-ia-perfeita">1.2 A definição MMN_IA de IA Perfeita</h3>
+<blockquote>
+<p><strong>IA Perfeita</strong> é o sistema cujos erros são (a) <strong>previsíveis</strong> em distribuição, (b) <strong>detectáveis</strong> em tempo útil, (c) <strong>reversíveis</strong> sem dano permanente e (d) <strong>didáticos</strong> — alimentam o próprio aperfeiçoamento.</p>
+</blockquote>
+<p>Os quatro adjetivos formam o acrônimo <strong>PDRD</strong>. Se algum falta, o sistema não é perfeito — é <strong>arriscado disfarçado de competente</strong>.</p>
+<h3 id="13-tabela-de-classificacao">1.3 Tabela de classificação</h3>
+<table>
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Previsível</th>
+<th>Detectável</th>
+<th>Reversível</th>
+<th>Didático</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM puro chamado direto</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td><strong>Inseguro</strong></td>
+</tr>
+<tr>
+<td>LLM + validação de output</td>
+<td>Parcial</td>
+<td>Sim</td>
+<td>Não</td>
+<td>Não</td>
+<td>Funcional</td>
+</tr>
+<tr>
+<td>LLM + tools + eval</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Parcial</td>
+<td>Não</td>
+<td>Robusto</td>
+</tr>
+<tr>
+<td><strong>MMN_IA-DS completo</strong></td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Sim</td>
+<td><strong>IA Perfeita</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-os-tres-principios-fundadores-da-ia-perfeita">2. OS TRÊS PRINCÍPIOS FUNDADORES DA IA PERFEITA</h2>
+<h3 id="21-principio-1-determinismo-onde-possivel-ia-onde-inevitavel">2.1 Princípio 1 — Determinismo onde possível, IA onde inevitável</h3>
+<p>Toda etapa do fluxo que pode ser código tradicional <strong>deve</strong> ser código tradicional. O LLM entra apenas onde não há regra escrevível. Isso reduz superfície de erro em ordens de magnitude.</p>
+<h3 id="22-principio-2-verificacao-sistemica-antes-de-entrega">2.2 Princípio 2 — Verificação sistêmica antes de entrega</h3>
+<p>Nenhum output de modelo chega ao usuário sem passar por <strong>camada de verificação automática</strong>: schema, regras, crítico LLM, e (quando necessário) humano.</p>
+<h3 id="23-principio-3-auditabilidade-integral">2.3 Princípio 3 — Auditabilidade integral</h3>
+<p>Todo prompt, toda resposta, toda decisão intermediária é registrada. Replay é um direito do operador — sempre.</p>
+<div class="codehilite"><pre><span></span><code>PRINCÍPIO 1 ── reduz a área onde o erro pode nascer
+PRINCÍPIO 2 ── intercepta o erro antes que cause dano
+PRINCÍPIO 3 ── aprende com o erro quando ele passa
+</code></pre></div>
+
+<p>Juntos, formam o triângulo da IA Perfeita.</p>
+<hr />
+<h2 id="3-padrao-deterministico-sistemico-ds-o-coracao-do-metodo">3. PADRÃO DETERMINÍSTICO-SISTÊMICO (DS) — O CORAÇÃO DO MÉTODO</h2>
+<h3 id="31-definicao">3.1 Definição</h3>
+<p>O <strong>Padrão DS</strong> estrutura todo fluxo em três zonas claras:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span><span class="n">ZONA</span><span class="w"> </span><span class="n">DETERMINÍSTICA</span><span class="p">]</span><span class="w">   </span><span class="n">código</span><span class="w"> </span><span class="n">tradicional</span><span class="p">,</span><span class="w"> </span><span class="n">regras</span><span class="p">,</span><span class="w"> </span><span class="n">validações</span>
+<span class="w">        </span><span class="err">↓</span>
+<span class="p">[</span><span class="n">ZONA</span><span class="w"> </span><span class="n">INFERENCIAL</span><span class="p">]</span><span class="w">      </span><span class="n">LLM</span><span class="p">,</span><span class="w"> </span><span class="n">sob</span><span class="w"> </span><span class="n">constituição</span><span class="w"> </span><span class="n">declarada</span>
+<span class="w">        </span><span class="err">↓</span>
+<span class="p">[</span><span class="n">ZONA</span><span class="w"> </span><span class="n">DETERMINÍSTICA</span><span class="p">]</span><span class="w">   </span><span class="n">validação</span><span class="p">,</span><span class="w"> </span><span class="n">formatação</span><span class="p">,</span><span class="w"> </span><span class="n">persistência</span>
+</code></pre></div>
+
+<h3 id="32-por-que-funciona">3.2 Por que funciona</h3>
+<p>Cerca a "magia" entre duas paredes de código previsível. Antes da zona inferencial, o input é normalizado, validado, restringido. Depois, o output é parseado, verificado contra schema, eventualmente reescrito. O LLM nunca toca diretamente o usuário ou o estado de produção sem mediação.</p>
+<h3 id="33-exemplo-pratico">3.3 Exemplo prático</h3>
+<p>Para um agente que classifica e responde a-mails:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="o">[</span><span class="n">DET</span><span class="o">]</span><span class="w"> </span><span class="n">Lê</span><span class="w"> </span><span class="n">e</span><span class="o">-</span><span class="n">mail</span><span class="p">,</span><span class="w"> </span><span class="n">extrai</span><span class="w"> </span><span class="n">metadados</span><span class="p">,</span><span class="w"> </span><span class="n">sanitiza</span><span class="w"> </span><span class="n">HTML</span>
+<span class="mf">2.</span><span class="w"> </span><span class="o">[</span><span class="n">DET</span><span class="o">]</span><span class="w"> </span><span class="n">Classifica</span><span class="w"> </span><span class="n">em</span><span class="w"> </span><span class="n">categorias</span><span class="w"> </span><span class="n">pré</span><span class="o">-</span><span class="n">existentes</span><span class="w"> </span><span class="p">(</span><span class="n">regex</span><span class="o">/</span><span class="n">regra</span><span class="p">)</span>
+<span class="mf">3.</span><span class="w"> </span><span class="o">[</span><span class="n">INF</span><span class="o">]</span><span class="w"> </span><span class="n">Se</span><span class="w"> </span><span class="n">ambíguo</span><span class="p">,</span><span class="w"> </span><span class="n">LLM</span><span class="o">-</span><span class="n">classifier</span><span class="w"> </span><span class="n">sob</span><span class="w"> </span><span class="k">system</span><span class="w"> </span><span class="n">prompt</span><span class="w"> </span><span class="n">fixo</span>
+<span class="mf">4.</span><span class="w"> </span><span class="o">[</span><span class="n">DET</span><span class="o">]</span><span class="w"> </span><span class="n">Valida</span><span class="w"> </span><span class="n">classificação</span><span class="w"> </span><span class="n">contra</span><span class="w"> </span><span class="n">lista</span><span class="w"> </span><span class="n">permitida</span>
+<span class="mf">5.</span><span class="w"> </span><span class="o">[</span><span class="n">INF</span><span class="o">]</span><span class="w"> </span><span class="n">LLM</span><span class="o">-</span><span class="n">responder</span><span class="w"> </span><span class="n">gera</span><span class="w"> </span><span class="n">resposta</span><span class="w"> </span><span class="n">sob</span><span class="w"> </span><span class="n">constituição</span>
+<span class="mf">6.</span><span class="w"> </span><span class="o">[</span><span class="n">DET</span><span class="o">]</span><span class="w"> </span><span class="n">Filtros</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">PII</span><span class="p">,</span><span class="w"> </span><span class="n">política</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">comunicação</span><span class="p">,</span><span class="w"> </span><span class="n">comprimento</span>
+<span class="mf">7.</span><span class="w"> </span><span class="o">[</span><span class="n">DET</span><span class="o">]</span><span class="w"> </span><span class="n">Persiste</span><span class="p">,</span><span class="w"> </span><span class="n">envia</span><span class="p">,</span><span class="w"> </span><span class="n">registra</span><span class="w"> </span><span class="n">evento</span>
+</code></pre></div>
+
+<p>Sete passos. Apenas dois com LLM. Cada um sob controle estrito.</p>
+<hr />
+<h2 id="4-padrao-verificador-critico-critic-pattern">4. PADRÃO VERIFICADOR-CRÍTICO (CRITIC PATTERN)</h2>
+<h3 id="41-a-ideia">4.1 A ideia</h3>
+<p>Adicionar um segundo LLM (ou o mesmo, em outro prompt) cuja única função é <strong>criticar</strong> a saída do primeiro contra rubrica explícita. É o "olho externo" sintético.</p>
+<h3 id="42-por-que-funciona">4.2 Por que funciona</h3>
+<p>LLMs são melhores <strong>avaliando</strong> do que <strong>gerando</strong> em muitos domínios. Verificadores capturam: alucinações, violações de política, baixa qualidade, fuga de escopo, erros lógicos detectáveis.</p>
+<h3 id="43-estrutura-minima">4.3 Estrutura mínima</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">OUTPUT</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">agente</span><span class="w"> </span><span class="n">principal</span>
+<span class="w">    </span><span class="err">↓</span>
+<span class="n">CRÍTICO</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">prompt</span><span class="o">-</span><span class="nl">rubrica:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">Está</span><span class="w"> </span><span class="n">dentro</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">escopo</span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">sim</span><span class="o">/</span><span class="n">não</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">Cita</span><span class="w"> </span><span class="n">fontes</span><span class="w"> </span><span class="n">verificáveis</span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">sim</span><span class="o">/</span><span class="n">não</span><span class="o">/</span><span class="n">n</span><span class="o">/</span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">Há</span><span class="w"> </span><span class="n">afirmação</span><span class="w"> </span><span class="n">não</span><span class="w"> </span><span class="n">suportada</span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">sim</span><span class="o">/</span><span class="n">não</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">Estilo</span><span class="w"> </span><span class="n">apropriado</span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mh">1</span><span class="o">-</span><span class="mh">5</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">Score</span><span class="w"> </span><span class="n">geral</span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mh">0</span><span class="o">-</span><span class="mh">100</span><span class="p">)</span>
+<span class="w">    </span><span class="err">↓</span>
+<span class="n">SE</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">limiar</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">reexecuta</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">feedback</span>
+<span class="n">SE</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="err">≥</span><span class="w"> </span><span class="n">limiar</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">entrega</span>
+</code></pre></div>
+
+<h3 id="44-custo-vs-beneficio">4.4 Custo vs benefício</h3>
+<p>Adiciona ~30-40% de custo de tokens e latência. Em domínios críticos, paga-se múltiplos por causa: cada saída-ruim-evitada vale dezenas a milhares de saídas-comuns-baratas.</p>
+<hr />
+<h2 id="5-padrao-sandbox-first-o-que-ainda-nao-e-seguro-vive-em-areia">5. PADRÃO SANDBOX-FIRST — O QUE AINDA NÃO É SEGURO VIVE EM AREIA</h2>
+<h3 id="51-a-regra">5.1 A regra</h3>
+<p>Qualquer <strong>tool execution</strong> (código, shell, browser, banco, API com efeito colateral) acontece <strong>primeiro em sandbox</strong> isolado, com timeout, sem acesso a recursos sensíveis, e com saída inspecionada antes de ser promovida.</p>
+<h3 id="52-por-que-e-nao-negociavel">5.2 Por que é não-negociável</h3>
+<p>Modelos podem ser induzidos a executar código malicioso, vazar segredos, modificar produção. Sem sandbox, uma única prompt injection comprometida torna-se incidente real.</p>
+<h3 id="53-implementacao-pratica">5.3 Implementação prática</h3>
+<ul>
+<li>Code execution: E2B / Modal / Daytona / Firecracker VMs descartáveis</li>
+<li>Browser: Browserbase / Playwright em container efêmero</li>
+<li>Banco: réplicas read-only, ou ambiente staging</li>
+<li>Pagamento: gateway em modo sandbox até confirmação humana</li>
+</ul>
+<h3 id="54-a-regra-do-dry-run-obrigatorio">5.4 A regra do "dry-run obrigatório"</h3>
+<p>Para qualquer ação irreversível em produção, o agente gera <strong>plano de execução</strong>, mostra ao operador (ou validador automático), e só executa após <strong>aprovação explícita</strong>.</p>
+<hr />
+<h2 id="6-padrao-idempotencia-total-toda-acao-pode-ser-repetida">6. PADRÃO IDEMPOTÊNCIA TOTAL — TODA AÇÃO PODE SER REPETIDA</h2>
+<h3 id="61-definicao">6.1 Definição</h3>
+<p>Operação é idempotente quando executá-la N vezes produz o mesmo efeito que executá-la 1 vez. Em sistemas IA, idempotência é <strong>escudo contra retentativa</strong>.</p>
+<h3 id="62-por-que-e-critico">6.2 Por que é crítico</h3>
+<p>LLMs falham, redes falham, timeouts acontecem. Sem idempotência, retentativa vira <strong>bug</strong>: e-mail duplicado, pagamento dobrado, registro repetido. Com idempotência, retentativa é <strong>resiliência</strong>.</p>
+<h3 id="63-como-implementar">6.3 Como implementar</h3>
+<ul>
+<li><strong>Chaves idempotentes</strong> em toda ação externa (UUID do evento, header <code>Idempotency-Key</code>)</li>
+<li><strong>Estado declarado</strong>, não acumulado — operações lêem-modificam-escrevem com versão</li>
+<li><strong>Verificação prévia:</strong> "este efeito já existe?" antes de criar</li>
+<li><strong>Logs antes da ação:</strong> se a ação foi tentada, registra antes; se foi confirmada, registra depois</li>
+</ul>
+<h3 id="64-antipattern-tipico">6.4 Antipattern típico</h3>
+<p>Agente envia e-mail. Timeout. Sistema tenta de novo. Cliente recebe dois e-mails. Solução: registrar <strong>intenção de enviar</strong> com chave única; ação real verifica a chave antes de executar.</p>
+<hr />
+<h2 id="7-padrao-schema-driven-output-function-calling-json-schema">7. PADRÃO SCHEMA-DRIVEN OUTPUT (FUNCTION CALLING + JSON SCHEMA)</h2>
+<h3 id="71-a-regra">7.1 A regra</h3>
+<p>Output de LLM <strong>não é texto livre quando há estrutura esperada</strong>. É JSON validado contra schema. Sempre.</p>
+<h3 id="72-por-que-melhora-a-perfeicao">7.2 Por que melhora a perfeição</h3>
+<ul>
+<li>Parsing previsível</li>
+<li>Erros de formato detectados imediatamente</li>
+<li>Validação automática por tipo/range</li>
+<li>Auto-retry com feedback estruturado</li>
+<li>Documentação viva do contrato</li>
+</ul>
+<h3 id="73-stack-de-validacao">7.3 Stack de validação</h3>
+<div class="codehilite"><pre><span></span><code>LLM gera JSON ───► JSON.parse() ───► JSONSchema validate ───► Zod/Pydantic
+                                                                  ↓
+                                                            Aplicação confiante
+</code></pre></div>
+
+<h3 id="74-quando-o-llm-falha-no-schema">7.4 Quando o LLM "falha" no schema</h3>
+<p>Modelos modernos com function calling raramente falham. Quando falham:</p>
+<ol>
+<li>Capturar erro de validação</li>
+<li>Reapresentar ao LLM com o erro como contexto</li>
+<li>Pedir correção (mensagem do tipo "seu output anterior falhou em X; corrija")</li>
+<li>Limitar a 2-3 tentativas, depois fallback</li>
+</ol>
+<p>Em pipelines bem desenhados, taxa de falha de schema fica abaixo de 0.5%.</p>
+<hr />
+<h2 id="8-padrao-retrieve-then-reason-rag-com-auditoria-de-fonte">8. PADRÃO RETRIEVE-THEN-REASON — RAG COM AUDITORIA DE FONTE</h2>
+<h3 id="81-a-versao-perfeita-de-rag">8.1 A versão "Perfeita" de RAG</h3>
+<p>Não basta recuperar + responder. A IA Perfeita exige:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Multi</span><span class="o">-</span><span class="n">query</span><span class="w"> </span><span class="n">rewriting</span><span class="w"> </span><span class="p">(</span><span class="mf">3</span><span class="w"> </span><span class="n">variantes</span><span class="p">)</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Multi</span><span class="o">-</span><span class="n">retrieval</span><span class="w"> </span><span class="p">(</span><span class="n">vetor</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">BM25</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">filtros</span><span class="p">)</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">Reranking</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">cross</span><span class="o">-</span><span class="n">encoder</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">Geração</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">IDs</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">fonte</span><span class="w"> </span><span class="n">exigidos</span>
+<span class="mf">5.</span><span class="w"> </span><span class="n">Verificação</span><span class="w"> </span><span class="n">pós</span><span class="o">-</span><span class="n">geração</span><span class="p">:</span>
+<span class="w">   </span><span class="o">-</span><span class="w"> </span><span class="n">Cada</span><span class="w"> </span><span class="n">afirmação</span><span class="w"> </span><span class="n">tem</span><span class="w"> </span><span class="n">source_id</span><span class="err">?</span>
+<span class="w">   </span><span class="o">-</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="n">source_id</span><span class="w"> </span><span class="n">existe</span><span class="err">?</span>
+<span class="w">   </span><span class="o">-</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="n">texto</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">suporta</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">afirmação</span><span class="err">?</span><span class="w"> </span><span class="p">(</span><span class="n">LLM</span><span class="o">-</span><span class="n">as</span><span class="o">-</span><span class="n">judge</span><span class="p">)</span>
+<span class="mf">6.</span><span class="w"> </span><span class="n">Se</span><span class="w"> </span><span class="n">algum</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="n">falha</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">reescreve</span><span class="w"> </span><span class="n">sem</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">afirmação</span><span class="w"> </span><span class="n">ou</span><span class="w"> </span><span class="n">recusa</span>
+</code></pre></div>
+
+<h3 id="82-o-contrato-com-o-usuario">8.2 O contrato com o usuário</h3>
+<p>Toda resposta com RAG entrega:</p>
+<ul>
+<li>Texto da resposta</li>
+<li>Lista de fontes citadas (com link/ID)</li>
+<li>Score de "faithfulness" interno</li>
+<li>Aviso se alguma afirmação não foi totalmente verificada</li>
+</ul>
+<p>Isso muda o relacionamento: o usuário sabe <strong>onde</strong> o sistema está confiante e onde não.</p>
+<h3 id="83-metricas-de-aceitacao">8.3 Métricas de aceitação</h3>
+<div class="codehilite"><pre><span></span><code>Faithfulness ≥ 0.95   (95% das afirmações ancoradas)
+Context Precision ≥ 0.8
+Context Recall ≥ 0.7
+Citation Validity = 1.0  (todos os IDs existem)
+</code></pre></div>
+
+<p>Abaixo desse limiar, pipeline não vai para produção. Período.</p>
+<hr />
+<h2 id="9-padrao-self-repair-quando-o-agente-conserta-a-si-mesmo">9. PADRÃO SELF-REPAIR — QUANDO O AGENTE CONSERTA A SI MESMO</h2>
+<h3 id="91-a-ideia">9.1 A ideia</h3>
+<p>Em vez de falhar e parar, o sistema <strong>detecta a falha</strong> e tenta <strong>se corrigir</strong>. Não confiamos cegamente nessa correção — ela é também verificada — mas evita que o pipeline trave em erros recuperáveis.</p>
+<h3 id="92-os-tres-niveis-de-auto-reparo">9.2 Os três níveis de auto-reparo</h3>
+<div class="codehilite"><pre><span></span><code>NÍVEL 1 ── retry com mesmo input (transient errors)
+NÍVEL 2 ── retry com prompt enriquecido pelo erro
+NÍVEL 3 ── retry com modelo diferente (escalada)
+</code></pre></div>
+
+<h3 id="93-criterios-de-parada-do-self-repair">9.3 Critérios de parada do self-repair</h3>
+<ul>
+<li><strong>Limite de iterações</strong> (ex.: 3)</li>
+<li><strong>Limite de custo</strong> (ex.: 5x o custo normal)</li>
+<li><strong>Limite de tempo</strong> (ex.: 30s)</li>
+<li><strong>Falha do crítico</strong> após N reescritas</li>
+</ul>
+<p>Após qualquer limite atingido → <strong>fallback humano</strong> ou <strong>resposta segura padrão</strong> ("não consegui completar; foi encaminhado a um especialista").</p>
+<h3 id="94-o-loop-completo">9.4 O loop completo</h3>
+<div class="codehilite"><pre><span></span><code>EXECUTA → SE OK → ENTREGA
+        → SE FALHA →
+            DIAGNOSTICA (erro de schema? alucinação? timeout?)
+            CORRIGE CONTEXTO
+            REEXECUTA
+            (até N vezes)
+            SE AINDA FALHA → ESCALA
+</code></pre></div>
+
+<hr />
+<h2 id="10-padrao-observabilidade-total-logs-traces-replays">10. PADRÃO OBSERVABILIDADE TOTAL (LOGS, TRACES, REPLAYS)</h2>
+<h3 id="101-o-que-e-total">10.1 O que é "total"</h3>
+<p>Não apenas guardar o que o usuário viu. Guardar <strong>tudo</strong>: prompts internos, decisões do roteador, scores do crítico, tentativas de retry, latências por etapa, custos por chamada, identidade do modelo/versão/parâmetros.</p>
+<h3 id="102-as-tres-camadas">10.2 As três camadas</h3>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>O que registra</th>
+<th>Retenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logs</strong></td>
+<td>Eventos estruturados</td>
+<td>30-90 dias</td>
+</tr>
+<tr>
+<td><strong>Traces</strong></td>
+<td>Spans OTel da execução</td>
+<td>7-30 dias</td>
+</tr>
+<tr>
+<td><strong>Replays</strong></td>
+<td>Snapshot completo para reprodução</td>
+<td>indefinido</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-o-ritual-semanal">10.3 O ritual semanal</h3>
+<p>Time MMN_IA dedica 1-2 horas por semana a <strong>revisar replays</strong> de:</p>
+<ul>
+<li>Falhas reportadas</li>
+<li>Outliers de latência</li>
+<li>Outliers de custo</li>
+<li>Amostra aleatória de execuções "normais"</li>
+</ul>
+<p>Esse ritual é onde a perfeição <strong>aprende</strong>.</p>
+<hr />
+<h2 id="11-anti-padroes-mortais-e-seus-antidotos">11. ANTI-PADRÕES MORTAIS (E SEUS ANTÍDOTOS)</h2>
+<table>
+<thead>
+<tr>
+<th>Anti-padrão</th>
+<th>Sintoma</th>
+<th>Antídoto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mega-prompt monolítico</strong></td>
+<td>Mudar uma coisa quebra três</td>
+<td>Decompor em chamadas modulares</td>
+</tr>
+<tr>
+<td><strong>Output em texto livre</strong></td>
+<td>Parsing instável</td>
+<td>Schema-driven output</td>
+</tr>
+<tr>
+<td><strong>Sem crítico</strong></td>
+<td>Saídas ruins chegam ao usuário</td>
+<td>Critic pattern</td>
+</tr>
+<tr>
+<td><strong>Sem sandbox</strong></td>
+<td>Execução compromete sistema</td>
+<td>Sandbox-first</td>
+</tr>
+<tr>
+<td><strong>Sem idempotência</strong></td>
+<td>Retry duplica efeitos</td>
+<td>Chaves idempotentes</td>
+</tr>
+<tr>
+<td><strong>RAG cego</strong></td>
+<td>Citação errada / fonte fantasma</td>
+<td>Retrieve-then-Reason</td>
+</tr>
+<tr>
+<td><strong>Sem self-repair</strong></td>
+<td>Pipeline trava em erro transitório</td>
+<td>Self-Repair com limites</td>
+</tr>
+<tr>
+<td><strong>Sem observabilidade</strong></td>
+<td>Não dá para entender o que aconteceu</td>
+<td>Observabilidade total</td>
+</tr>
+<tr>
+<td><strong>Sem versionamento</strong></td>
+<td>"Funcionava ontem"</td>
+<td>Git para prompts</td>
+</tr>
+<tr>
+<td><strong>Sem eval</strong></td>
+<td>Mudança vira aposta</td>
+<td>Eval suite em CI</td>
+</tr>
+<tr>
+<td><strong>Acoplamento a 1 modelo</strong></td>
+<td>Novo modelo quebra tudo</td>
+<td>Camada de abstração + eval portátil</td>
+</tr>
+<tr>
+<td><strong>HITL improvisado</strong></td>
+<td>Humano vira gargalo ou ignora</td>
+<td>HITL desenhado</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12-o-repositorio-vivo-de-codigo-mmn_ia">12. O REPOSITÓRIO VIVO DE CÓDIGO MMN_IA</h2>
+<h3 id="121-onde-mora">12.1 Onde mora</h3>
+<p>Pasta canônica: <code>Nexus-HUB57/MMN_AI-to-AI/AcademIA/Lab-Nexus/templates/</code> e <code>auxiliary/orquestrador-dashboard/</code> no repositório oficial.</p>
+<h3 id="122-o-que-contem">12.2 O que contém</h3>
+<ul>
+<li><strong>patterns/</strong> — implementações de referência de cada padrão deste ebook</li>
+<li><strong>prompts/</strong> — biblioteca de prompts versionados</li>
+<li><strong>schemas/</strong> — JSON Schemas reaproveitáveis</li>
+<li><strong>evals/</strong> — suites de avaliação por domínio</li>
+<li><strong>observability/</strong> — templates Langfuse / OTel</li>
+<li><strong>playbooks/</strong> — receitas de implantação por caso de uso</li>
+</ul>
+<h3 id="123-politica-de-contribuicao">12.3 Política de contribuição</h3>
+<ul>
+<li>Cada padrão tem <strong>dono nomeado</strong> no ecossistema</li>
+<li>Mudanças passam por PR com eval comparativo</li>
+<li>Cada commit referencia o capítulo deste ebook que documenta o padrão</li>
+</ul>
+<p>A biblioteca é viva: o código nestes capítulos é o snapshot v1.0; a versão atual está sempre no repositório.</p>
+<hr />
+<h2 id="13-codigo-fonte-de-referencia-orquestrador-sho-em-python">13. CÓDIGO-FONTE DE REFERÊNCIA — ORQUESTRADOR SHO EM PYTHON</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># mmn_ia/orchestrator/sho.py</span>
+<span class="c1"># Sistema Híbrido de Orquestração - Núcleo Mínimo (v1.0)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sho&quot;</span><span class="p">)</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Task</span><span class="p">:</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">zone</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># &quot;green&quot; | &quot;yellow&quot; | &quot;red&quot;</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentSpec</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]</span>
+    <span class="n">schema_out</span><span class="p">:</span> <span class="nb">dict</span>  <span class="c1"># JSON Schema do output</span>
+    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">cost_budget_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SHO</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgentSpec</span><span class="p">],</span> <span class="n">critic</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic</span> <span class="o">=</span> <span class="n">critic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Roteamento determinístico antes do LLM (Padrão DS)</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;classify&quot;</span><span class="p">:</span> <span class="s2">&quot;classifier_agent&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;extract&quot;</span><span class="p">:</span>  <span class="s2">&quot;extractor_agent&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;respond&quot;</span><span class="p">:</span>  <span class="s2">&quot;responder_agent&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="s2">&quot;responder_agent&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">zone</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;escalated_to_human&quot;</span><span class="p">,</span> <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+
+        <span class="n">agent_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span>
+        <span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">last_err</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">while</span> <span class="n">attempt</span> <span class="o">&lt;=</span> <span class="n">agent</span><span class="o">.</span><span class="n">max_retries</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_schema</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">schema_out</span><span class="p">)</span>
+                <span class="n">review</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">review</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_record</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">review</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">output</span><span class="p">,</span> <span class="s2">&quot;review&quot;</span><span class="p">:</span> <span class="n">review</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">task</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;critic_feedback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">review</span><span class="p">[</span><span class="s2">&quot;feedback&quot;</span><span class="p">]</span>
+                    <span class="n">attempt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">last_err</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">task</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;last_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_err</span>
+                <span class="n">attempt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">last_err</span><span class="p">})</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">last_err</span><span class="p">,</span> <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="c1"># Validação JSON Schema — falha cedo (Schema-Driven Output)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">jsonschema</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span>
+        <span class="n">validate</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">review</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+            <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="n">agent_name</span><span class="p">,</span>
+            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">output</span><span class="p">,</span>
+            <span class="s2">&quot;review&quot;</span><span class="p">:</span> <span class="n">review</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;sho_event&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="n">agent_name</span><span class="p">})</span>
+
+<span class="c1"># Uso:</span>
+<span class="c1"># sho = SHO(agents=[...], critic=my_critic_fn)</span>
+<span class="c1"># result = sho.execute(Task(id=str(uuid.uuid4()), payload={...}, zone=&quot;yellow&quot;))</span>
+</code></pre></div>
+
+<h3 id="131-o-que-esse-codigo-demonstra">13.1 O que esse código demonstra</h3>
+<ul>
+<li><strong>Padrão DS:</strong> roteamento determinístico antes do LLM</li>
+<li><strong>Schema-driven:</strong> validação obrigatória de output</li>
+<li><strong>Critic pattern:</strong> crítico avalia score e dá feedback</li>
+<li><strong>Self-repair:</strong> retry com feedback enriquecido</li>
+<li><strong>Observabilidade:</strong> log estruturado de cada evento</li>
+<li><strong>Zona de risco:</strong> zona "red" escalada automaticamente</li>
+</ul>
+<hr />
+<h2 id="14-codigo-fonte-de-referencia-critic-pattern-em-typescript">14. CÓDIGO-FONTE DE REFERÊNCIA — CRITIC PATTERN EM TYPESCRIPT</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">// mmn_ia/critic/critic.ts</span>
+<span class="c1">// Critic Pattern - Implementação MMN_IA v1.0</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">z</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;zod&quot;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">ReviewSchema</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">in_scope</span><span class="o">:</span><span class="w"> </span><span class="kt">z.boolean</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">cites_sources</span><span class="o">:</span><span class="w"> </span><span class="kt">z.boolean</span><span class="p">().</span><span class="nx">nullable</span><span class="p">(),</span>
+<span class="w">  </span><span class="nx">unsupported_claims</span><span class="o">:</span><span class="w"> </span><span class="kt">z.array</span><span class="p">(</span><span class="nx">z</span><span class="p">.</span><span class="kt">string</span><span class="p">()),</span>
+<span class="w">  </span><span class="nx">style_score</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mf">1</span><span class="p">).</span><span class="nx">max</span><span class="p">(</span><span class="mf">5</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">overall_score</span><span class="o">:</span><span class="w"> </span><span class="kt">z.number</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mf">0</span><span class="p">).</span><span class="nx">max</span><span class="p">(</span><span class="mf">1</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">feedback</span><span class="o">:</span><span class="w"> </span><span class="kt">z.string</span><span class="p">(),</span>
+<span class="p">});</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">Review</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">z</span><span class="p">.</span><span class="nx">infer</span><span class="o">&lt;</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">ReviewSchema</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">CRITIC_SYSTEM_PROMPT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span>
+<span class="sb">Você é o Crítico do ecossistema MMN_IA. Sua única função é</span>
+<span class="sb">avaliar a saída de outro agente contra a rubrica abaixo.</span>
+<span class="sb">Você não reescreve. Você apenas julga e dá feedback.</span>
+
+<span class="sb">RUBRICA:</span>
+<span class="sb">1. A resposta está dentro do escopo da pergunta?</span>
+<span class="sb">2. Se aplicável, cita fontes verificáveis?</span>
+<span class="sb">3. Há afirmações não suportadas por evidência?</span>
+<span class="sb">4. O estilo é apropriado (1-5)?</span>
+<span class="sb">5. Score geral (0-1)?</span>
+<span class="sb">6. Feedback acionável para correção.</span>
+
+<span class="sb">Responda APENAS com JSON válido no schema fornecido.</span>
+<span class="sb">`</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">critic</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">agentOutput</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">llm</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">system</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Review</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">llm</span><span class="p">(</span>
+<span class="w">    </span><span class="nx">CRITIC_SYSTEM_PROMPT</span><span class="p">,</span>
+<span class="w">    </span><span class="sb">`Avalie:\n\n</span><span class="si">${</span><span class="nx">agentOutput</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">  </span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">parsed</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">raw</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;CRITIC_OUTPUT_NOT_JSON&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">review</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ReviewSchema</span><span class="p">.</span><span class="nx">safeParse</span><span class="p">(</span><span class="nx">parsed</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">review</span><span class="p">.</span><span class="nx">success</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`CRITIC_OUTPUT_INVALID: </span><span class="si">${</span><span class="nx">review</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">review</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Helper: aceita ou rejeita o output do agente</span>
+<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">acceptOrReject</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">review</span><span class="o">:</span><span class="w"> </span><span class="kt">Review</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">thresholds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">overall</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span><span class="w"> </span><span class="nx">style</span><span class="o">:</span><span class="w"> </span><span class="kt">3</span><span class="w"> </span><span class="p">}</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;accept&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;reject&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">review</span><span class="p">.</span><span class="nx">in_scope</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;reject&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">review</span><span class="p">.</span><span class="nx">unsupported_claims</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;reject&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">review</span><span class="p">.</span><span class="nx">overall_score</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">thresholds</span><span class="p">.</span><span class="nx">overall</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;reject&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">review</span><span class="p">.</span><span class="nx">style_score</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">thresholds</span><span class="p">.</span><span class="nx">style</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;reject&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;accept&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="141-notas-de-implementacao">14.1 Notas de implementação</h3>
+<ul>
+<li>Usar <strong>Zod</strong> (ou Pydantic em Python) para validar saída do crítico</li>
+<li>Crítico tem prompt <strong>fixo, versionado</strong>, idealmente em arquivo separado</li>
+<li>Crítico pode usar <strong>modelo menor/mais barato</strong> que o gerador — vale o trade-off</li>
+<li>Em produção, registre <strong>todos os reviews</strong> para análise de drift</li>
+</ul>
+<hr />
+<h2 id="15-codigo-fonte-de-referencia-schema-driven-output">15. CÓDIGO-FONTE DE REFERÊNCIA — SCHEMA-DRIVEN OUTPUT</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># mmn_ia/io/schema_driven.py</span>
+<span class="c1"># Schema-Driven Output via Function Calling - MMN_IA v1.0</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationOut</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sales&quot;</span><span class="p">,</span> <span class="s2">&quot;support&quot;</span><span class="p">,</span> <span class="s2">&quot;billing&quot;</span><span class="p">,</span> <span class="s2">&quot;other&quot;</span><span class="p">]</span>
+    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">rationale</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+
+<span class="n">CLASSIFIER_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Classifique a mensagem do usuário em UMA das categorias permitidas.</span>
+<span class="s2">Devolva JSON estritamente conforme o schema fornecido.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">classify</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">llm_with_tools</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassificationOut</span><span class="p">:</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">llm_with_tools</span><span class="p">(</span>
+        <span class="n">system</span><span class="o">=</span><span class="n">CLASSIFIER_PROMPT</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+        <span class="n">response_schema</span><span class="o">=</span><span class="n">ClassificationOut</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">(),</span>
+        <span class="n">max_retries</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ClassificationOut</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Padrão Self-Repair: reapresenta erro ao LLM</span>
+        <span class="n">repaired</span> <span class="o">=</span> <span class="n">llm_with_tools</span><span class="p">(</span>
+            <span class="n">system</span><span class="o">=</span><span class="n">CLASSIFIER_PROMPT</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Seu output anterior falhou: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. Corrija.&quot;</span><span class="p">,</span>
+            <span class="n">response_schema</span><span class="o">=</span><span class="n">ClassificationOut</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">(),</span>
+            <span class="n">max_retries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ClassificationOut</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">repaired</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h2 id="16-codigo-fonte-de-referencia-self-repair-loop">16. CÓDIGO-FONTE DE REFERÊNCIA — SELF-REPAIR LOOP</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># mmn_ia/repair/self_repair.py</span>
+<span class="c1"># Self-Repair Loop - MMN_IA v1.0</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">self_repair</span><span class="p">(</span>
+    <span class="n">action</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">diagnose</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="ne">Exception</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">timeout_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+    <span class="n">cost_cap_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">attempts</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tokens_used</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="n">max_attempts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="n">timeout_s</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;timeout&quot;</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">tokens_used</span> <span class="o">&gt;</span> <span class="n">cost_cap_tokens</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;cost_exceeded&quot;</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">action</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">tokens_used</span> <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;attempt&quot;</span><span class="p">:</span> <span class="n">attempts</span><span class="p">,</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">diagnosis</span> <span class="o">=</span> <span class="n">diagnose</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;attempt&quot;</span><span class="p">:</span> <span class="n">attempts</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="n">diagnosis</span><span class="p">})</span>
+            <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;repair_context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diagnosis</span>
+            <span class="n">attempts</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;exhausted&quot;</span><span class="p">,</span> <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">}</span>
+</code></pre></div>
+
+<h3 id="161-como-integrar">16.1 Como integrar</h3>
+<p>Esse helper envolve qualquer ação que possa falhar transitoriamente:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">self_repair</span><span class="p">(</span>
+    <span class="n">action</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">execute</span><span class="p">,</span>
+    <span class="n">diagnose</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erro detectado: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+    <span class="n">escalate_to_human</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;history&quot;</span><span class="p">])</span>
+</code></pre></div>
+
+<hr />
+<h2 id="17-checklist-da-ia-perfeita-vol-i">17. CHECKLIST DA IA PERFEITA VOL. I</h2>
+<p>Antes de declarar qualquer pipeline como "IA Perfeita" pelo padrão MMN_IA:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">□</span><span class="w"> </span><span class="nx">PDRD</span><span class="w"> </span><span class="nx">documentado</span><span class="w"> </span><span class="nx">para</span><span class="w"> </span><span class="nx">cada</span><span class="w"> </span><span class="nx">modo</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">falha</span><span class="w"> </span><span class="nx">conhecido</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Padrão</span><span class="w"> </span><span class="nx">DS</span><span class="w"> </span><span class="nx">aplicado</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="nx">zonas</span><span class="w"> </span><span class="nx">determinísticas</span><span class="o">/</span><span class="nx">inferenciais</span><span class="w"> </span><span class="nx">separadas</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Critic</span><span class="w"> </span><span class="nx">pattern</span><span class="w"> </span><span class="nx">em</span><span class="w"> </span><span class="nx">produção</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">rubrica</span><span class="w"> </span><span class="nx">versionada</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Sandbox</span><span class="o">-</span><span class="nx">first</span><span class="w"> </span><span class="nx">para</span><span class="w"> </span><span class="nx">todas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nx">tools</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">efeito</span><span class="w"> </span><span class="nx">colateral</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Idempotência</span><span class="w"> </span><span class="nx">implementada</span><span class="w"> </span><span class="nx">em</span><span class="w"> </span><span class="nx">toda</span><span class="w"> </span><span class="nx">ação</span><span class="w"> </span><span class="nx">externa</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Schema</span><span class="o">-</span><span class="nx">driven</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">validação</span><span class="w"> </span><span class="nx">obrigatória</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Retrieve</span><span class="o">-</span><span class="k">then</span><span class="o">-</span><span class="nx">Reason</span><span class="w"> </span><span class="nx">quando</span><span class="w"> </span><span class="nx">há</span><span class="w"> </span><span class="nx">RAG</span><span class="p">,</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">citation</span><span class="w"> </span><span class="nx">validity</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">100</span><span class="o">%</span>
+<span class="err">□</span><span class="w"> </span><span class="k">Self</span><span class="o">-</span><span class="nx">repair</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">limites</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">iteração</span><span class="p">,</span><span class="w"> </span><span class="nx">custo</span><span class="w"> </span><span class="nx">e</span><span class="w"> </span><span class="nx">tempo</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Observabilidade</span><span class="w"> </span><span class="nx">total</span><span class="p">:</span><span class="w"> </span><span class="nx">logs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">traces</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">replays</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Anti</span><span class="o">-</span><span class="nx">padrões</span><span class="w"> </span><span class="nx">da</span><span class="w"> </span><span class="nx">seção</span><span class="w"> </span><span class="mi">11</span><span class="w"> </span><span class="nx">auditados</span><span class="w"> </span><span class="nx">e</span><span class="w"> </span><span class="nx">ausentes</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Repositório</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">código</span><span class="w"> </span><span class="nx">MMN_IA</span><span class="w"> </span><span class="nx">referenciado</span><span class="w"> </span><span class="nx">nos</span><span class="w"> </span><span class="nx">commits</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Eval</span><span class="w"> </span><span class="nx">suite</span><span class="w"> </span><span class="nx">cobrindo</span><span class="w"> </span><span class="nx">casos</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">PDRD</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Ritual</span><span class="w"> </span><span class="nx">semanal</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">revisão</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">replays</span><span class="w"> </span><span class="nx">agendado</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Documentação</span><span class="w"> </span><span class="nx">do</span><span class="w"> </span><span class="nx">contrato</span><span class="w"> </span><span class="nx">com</span><span class="w"> </span><span class="nx">usuário</span><span class="w"> </span><span class="p">(</span><span class="nx">faithfulness</span><span class="p">,</span><span class="w"> </span><span class="nx">citação</span><span class="p">,</span><span class="w"> </span><span class="nx">recusa</span><span class="p">)</span>
+<span class="err">□</span><span class="w"> </span><span class="nx">Plano</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">incidente</span><span class="w"> </span><span class="nx">escrito</span>
+</code></pre></div>
+
+<hr />
+<h2 id="18-fechamento-a-perfeicao-como-assintota">18. FECHAMENTO: A PERFEIÇÃO COMO ASSÍNTOTA</h2>
+<p>A IA Perfeita, ao fim deste primeiro volume, revela-se pelo que é: <strong>um regime de engenharia disciplinada, não um milagre</strong>. Sistemas que se aproximam da perfeição não são mais inteligentes — são mais <strong>honestos sobre seus limites</strong>, mais <strong>detectivos sobre seus erros</strong> e mais <strong>didáticos com seus próprios fracassos</strong>.</p>
+<p>Quem entende isso para de perseguir um deus e começa a construir uma máquina. E é a máquina, no fim, que faz a diferença econômica.</p>
+<blockquote>
+<p><em>"Perfection is the willingness to be imperfect."</em>
+— Lao Tzu (atribuído)</p>
+</blockquote>
+<p>Aceite a imperfeição. Engenheiramente, ela vira o seu maior diferencial.</p>
+<hr />
+<p><strong>Continue a Coletânea</strong></p>
+<p>Vol. 2 — <em>A IA Perfeita · Prompts, Algoritmos e Skills Determinísticas</em> aprofunda a parte cognitiva: como falar com o modelo, como escolher o algoritmo, como cultivar skills reaproveitáveis.</p>
+<p>Vol. 3 — <em>A IA Perfeita · Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</em> fecha a trilogia com o tema das skills de auto-reparo, auto-modelagem e maturidade operacional.</p>
+<p>Acesse: <strong>github.com/Nexus-HUB57/MMN_AI-to-AI</strong> · <strong>docs/ebooks_markdown/colecao_A_IA_Perfeita/</strong></p>
+<p><em>Nexus HUB57 · Ecossistema MMN_IA · 2026</em></p>
+</body>
+</html>

@@ -312,8 +312,14 @@ export async function runLabNexusChat(request: LabNexusChatRequest): Promise<Lab
   }
 
   const tier: LabNexusTier = request.tier ?? "operador";
-  if (tier === "iniciante") {
-    throw new Error("Acesso negado: o Chat Bot Lab Nexus requer tier Operador ou superior (PD/SCC).");
+  // Correção #6 — Lab Nexus bloqueado até nível Agente Orquestrador.
+  // Mapeamento PD/SCC: tier `estrategista` = Categoria Orquestrador (níveis 10-12),
+  // tier `elite` = Categoria IA Agêntica (níveis 13-27).
+  // Tiers `iniciante` (Afiliado 1-3) e `operador` (Preditivo/Generativo 4-9) ficam bloqueados.
+  if (tier === "iniciante" || tier === "operador") {
+    throw new Error(
+      "Acesso negado: o Chat Bot Lab Nexus está disponível a partir da Categoria Agente Orquestrador (tier estrategista, nível 10+)."
+    );
   }
 
   const limit = resolveTierLimit(tier);

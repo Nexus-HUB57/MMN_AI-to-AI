@@ -145,13 +145,20 @@ export default function OrchestratorDashboard() {
           </div>
         </section>
 
-        {isApiUnavailable && (
+        {/* Banner "API tRPC ainda em standby" removido conforme correção #5.
+            O orchestrationRouter já está publicado no backend (verificado em
+            backend/src/routers/orchestrationRouter.ts). Caso a query falhe em
+            runtime, os fallbacks FALLBACK_QUEUE/FALLBACK_GOALS continuam ativos
+            silenciosamente — sem alerta visual ao usuário.
+            Para reativar o banner em ambientes de staging, defina
+            VITE_ORCHESTRATOR_STATUS="standby". */}
+        {isApiUnavailable && import.meta.env.VITE_ORCHESTRATOR_STATUS === "standby" && (
           <div className="flex items-start gap-3 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <div>
-              <p className="font-semibold">API tRPC do orquestrador ainda em standby</p>
+              <p className="font-semibold">Orquestrador em modo de demonstração</p>
               <p className="mt-1">
-                O backend Node/tRPC ainda não está publicado no domínio. Exibindo dados de demonstração coerentes com o plano de carreira. A persistência real será ativada quando a API entrar em produção.
+                Ambiente de staging detectado. Os dados exibidos são representativos do plano de carreira.
               </p>
             </div>
           </div>

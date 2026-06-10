@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 2
+roman: "II"
+title: "A2A — Comunicação entre Agentes"
+subtitle: "Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/nexus_protocol_02_a2a_agent_to_agent.webp" /></p>
+<h2 id="volume-ii-a2a-comunicacao-entre-agentes">Volume II — A2A — Comunicação entre Agentes</h2>
+<p><strong>Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como dois agentes se reconhecem e dividem trabalho sem humano no meio?</p>
+</blockquote>
+<hr />
+<h2 id="sumario">Sumário</h2>
+<blockquote>
+<ol>
+<li>Por que MCP não basta: a fronteira entre tool e agente</li>
+<li>Agent Card: o "passaporte" do agente</li>
+<li>O ciclo de vida de uma Task A2A</li>
+<li>Streaming, long-running e webhooks de retorno</li>
+<li>Modalidades: texto, dados, áudio, vídeo, formulários</li>
+<li>Push notifications e operações assíncronas longas</li>
+<li>Multi-turno: como agentes mantêm conversa sem confundir contexto</li>
+<li>Composição: agente cliente, agente servidor, agente híbrido</li>
+<li>A2A vs MCP: quando escolher cada um</li>
+<li>Manifesto: o agente não é uma tool com mais tokens</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-por-que-mcp-nao-basta-a-fronteira-entre-tool-e-agente">1. Por que MCP não basta: a fronteira entre tool e agente</h2>
+<p>MCP resolve um lado da equação: o agente fala com <strong>ferramentas</strong> padronizadas.
+Mas há um problema que MCP <strong>propositalmente não resolve</strong>: e quando o outro
+lado da conexão não é uma ferramenta — é outro agente, com seu próprio LLM,
+suas próprias decisões, seu próprio estado interno?</p>
+<p>A diferença operacional é grande:</p>
+<ul>
+<li>Uma <strong>tool</strong> retorna em milissegundos, é stateless, devolve dado.</li>
+<li>Um <strong>agente</strong> pode levar minutos, mantém estado entre chamadas, pode
+  fazer perguntas de volta, pode escalar para um humano, pode falhar de
+  formas semânticas (não só sintáticas).</li>
+</ul>
+<p>Tratar agente como tool é a causa #1 de sistemas multi-agente que parecem
+funcionar no demo e desmoronam em produção. O <strong>A2A</strong> (Agent-to-Agent),
+publicado pela Google em abril de 2025 e endossado por mais de 50 parceiros,
+nasceu exatamente para preencher essa lacuna. Ele responde a quatro perguntas
+que MCP deixa em aberto:</p>
+<ol>
+<li><strong>Como descobrir</strong> que existe outro agente capaz de fazer X?</li>
+<li><strong>Como acordar</strong> o contrato da tarefa antes de iniciar?</li>
+<li><strong>Como acompanhar</strong> uma execução que dura horas?</li>
+<li><strong>Como conversar</strong> durante a execução (perguntas, follow-ups, cancelamento)?</li>
+</ol>
+<p>A2A é deliberadamente <strong>complementar a MCP</strong>, não competitivo. A regra mental:
+<em>MCP para falar com o mundo; A2A para falar com pares</em>.</p>
+<h2 id="2-agent-card-o-passaporte-do-agente">2. Agent Card: o "passaporte" do agente</h2>
+<p>Todo agente A2A publica um documento JSON em uma URL bem conhecida:
+<code>https://&lt;dominio&gt;/.well-known/agent.json</code>. Esse é o <strong>Agent Card</strong> — o
+passaporte que descreve quem o agente é, o que sabe fazer, como autenticar
+e quais modalidades aceita.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;InvoiceProcessor&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Processa faturas em PDF e extrai dados estruturados&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://invoices.example.com/a2a/v1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.4.2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;organization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Acme Corp&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://acme.example.com&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;documentationUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://invoices.example.com/docs&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;pushNotifications&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;stateTransitionHistory&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;authentication&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;schemes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bearer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;oauth2&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;defaultInputModes&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;application/pdf&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;defaultOutputModes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;application/json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;text/markdown&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;skills&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;extract-invoice-data&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Extrair dados de fatura&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Recebe um PDF e devolve JSON com campos canônicos.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;finance&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ocr&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;extraction&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;Extraia número, valor e vencimento desta fatura.&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Três decisões deliberadas do design importam:</p>
+<ul>
+<li><strong>Skills, não tools.</strong> Skills são unidades de competência, não funções.
+  Uma skill pode envolver múltiplas chamadas internas, múltiplas tools MCP,
+  múltiplos turnos com o usuário. O cliente A2A não precisa saber.</li>
+<li><strong>Capabilities declaradas.</strong> Se um agente não declara <code>streaming: true</code>,
+  o cliente não tenta SSE. Se não declara <code>pushNotifications</code>, sabe que
+  precisa fazer polling.</li>
+<li><strong>Modalidades por skill.</strong> Um agente pode aceitar PDF em uma skill e
+  só texto em outra. O Card descreve o default; a skill pode sobrescrever.</li>
+</ul>
+<h2 id="3-o-ciclo-de-vida-de-uma-task-a2a">3. O ciclo de vida de uma Task A2A</h2>
+<p>A unidade canônica de A2A não é "uma mensagem" — é uma <strong>Task</strong>. Tasks têm
+identidade, estado, histórico e podem viver minutos, horas ou dias.</p>
+<p>Os estados canônicos da máquina de estados de uma Task:</p>
+<div class="codehilite"><pre><span></span><code>        submitted
+            │
+            ▼
+        working ◄────┐
+         │ │ │       │
+         │ │ │       │ (responder ao input-required)
+         │ │ ▼       │
+         │ │ input-required ──┘
+         │ ▼
+         │ completed
+         ▼
+       failed | canceled
+</code></pre></div>
+
+<ul>
+<li><strong>submitted</strong> — task aceita, fila ou inicialização.</li>
+<li><strong>working</strong> — execução ativa, pode emitir updates.</li>
+<li><strong>input-required</strong> — agente pausou e precisa de resposta para continuar
+  (este é o que separa A2A de uma fila de jobs comum).</li>
+<li><strong>completed</strong> — sucesso, artefatos disponíveis.</li>
+<li><strong>failed</strong> — erro irrecuperável.</li>
+<li><strong>canceled</strong> — cliente solicitou cancelamento.</li>
+</ul>
+<p>Transições inválidas (ex.: <code>completed → working</code>) <strong>devem ser rejeitadas
+pelo servidor</strong>, não silenciadas. Um agente que aceita reabrir tarefas
+fechadas é um agente sem máquina de estados — e por consequência sem
+contrato auditável.</p>
+<h2 id="4-streaming-long-running-e-webhooks-de-retorno">4. Streaming, long-running e webhooks de retorno</h2>
+<p>A2A suporta três modos de execução, e escolher o errado degrada o sistema
+inteiro:</p>
+<p><strong>1. Síncrono (<code>tasks/send</code>)</strong> — para tarefas &lt;30 segundos. Cliente espera,
+recebe resultado final. Simples, mas amarra conexão.</p>
+<p><strong>2. Streaming (<code>tasks/sendSubscribe</code>, SSE)</strong> — para tarefas onde o agente
+quer mostrar progresso. O cliente abre SSE, recebe eventos de
+<code>TaskStatusUpdateEvent</code> e <code>TaskArtifactUpdateEvent</code> até <code>final: true</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">POST /a2a/v1/tasks/sendSubscribe</span>
+<span class="err">Accept: text/event-stream</span>
+<span class="err">Authorization: Bearer ...</span>
+
+<span class="err">{ &quot;id&quot;: &quot;t-7f3a&quot;, &quot;message&quot;: { ... }, &quot;sessionId&quot;: &quot;s-9e2c&quot; }</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>event: status-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;working&quot;,&quot;message&quot;:&quot;Lendo PDF...&quot;}}
+
+event: artifact-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;artifact&quot;:{&quot;name&quot;:&quot;page-1.json&quot;,&quot;parts&quot;:[...]}}
+
+event: status-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;completed&quot;},&quot;final&quot;:true}
+</code></pre></div>
+
+<p><strong>3. Push assíncrono (<code>pushNotificationConfig</code>)</strong> — para tarefas que duram
+horas ou dias. Cliente registra um webhook; agente notifica via POST quando
+houver transição. Indispensável para integrações onde o cliente não pode
+manter conexão aberta (mobile, serverless).</p>
+<p>Anti-padrão crônico: usar streaming SSE para tarefas de 6 horas. SSE não foi
+desenhado para isso; a primeira interrupção de rede e a task vira fantasma.
+Para &gt;2 minutos, use push.</p>
+<h2 id="5-modalidades-texto-dados-audio-video-formularios">5. Modalidades: texto, dados, áudio, vídeo, formulários</h2>
+<p>Mensagens A2A são compostas por <strong>Parts</strong>, e cada Part declara seu tipo.
+Esse é o ponto onde A2A se distancia mais radicalmente de protocolos baseados
+em "chat":</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Processe esta fatura:&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fatura.pdf&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mimeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/pdf&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JVBERi0xLjQK...&quot;</span><span class="w"> </span><span class="p">}},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BRL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;expectedFormat&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v2&quot;</span>
+<span class="w">    </span><span class="p">}}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Tipos canônicos de Part:</p>
+<ul>
+<li><strong>text</strong> — string simples.</li>
+<li><strong>file</strong> — binário, com bytes inline ou URI.</li>
+<li><strong>data</strong> — JSON estruturado (parâmetros, metadados, formulários).</li>
+</ul>
+<p>A inovação prática é o <code>DataPart</code>: o agente cliente pode mandar
+<strong>estruturas semânticas</strong> sem serializar em texto e torcer para o agente
+servidor parsear. E o agente servidor pode <strong>retornar formulários
+estruturados</strong> que o cliente renderiza nativamente, em vez de devolver
+markdown que o front-end precisa interpretar.</p>
+<h2 id="6-push-notifications-e-operacoes-assincronas-longas">6. Push notifications e operações assíncronas longas</h2>
+<p>Para tarefas de longa duração, o cliente registra um endpoint de callback:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">POST /a2a/v1/tasks/pushNotificationConfig</span>
+<span class="err">{</span>
+<span class="err">  &quot;taskId&quot;: &quot;t-7f3a&quot;,</span>
+<span class="err">  &quot;pushNotificationConfig&quot;: {</span>
+<span class="err">    &quot;url&quot;: &quot;https://cliente.example.com/webhooks/a2a&quot;,</span>
+<span class="err">    &quot;token&quot;: &quot;wh_secret_token_for_HMAC_validation&quot;,</span>
+<span class="err">    &quot;authentication&quot;: { &quot;schemes&quot;: [&quot;bearer&quot;] }</span>
+<span class="err">  }</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>O servidor então, a cada transição relevante, faz POST autenticado para essa
+URL. Três regras de produção que não estão no spec mas separam quem leva A2A
+a sério:</p>
+<ol>
+<li><strong>HMAC assinado por payload</strong>, não só bearer no header. Bearer pode
+   vazar; HMAC com timestamp tem janela curta de replay.</li>
+<li><strong>Idempotência via <code>eventId</code>.</strong> O cliente deve deduplicar; servidores
+   reentregam em caso de falha de rede.</li>
+<li><strong>Backoff exponencial com circuit breaker.</strong> Se o webhook do cliente
+   está caindo 5xx por 10 minutos, pare de tentar e marque a notificação
+   como <code>delivery-failed</code>, mas mantenha a task disponível para polling.</li>
+</ol>
+<h2 id="7-multi-turno-como-agentes-mantem-conversa-sem-confundir-contexto">7. Multi-turno: como agentes mantêm conversa sem confundir contexto</h2>
+<p>O conceito que muitos primeiro-implementadores quebram é o <strong>sessionId vs
+taskId</strong>. Eles <strong>não são</strong> sinônimos:</p>
+<ul>
+<li><strong>sessionId</strong> — conversa lógica entre dois agentes. Pode conter N tasks.</li>
+<li><strong>taskId</strong> — uma unidade de trabalho. Tem ciclo de vida finito.</li>
+</ul>
+<p>Exemplo: um agente de viagens recebe <code>sessionId=s-1</code>. Dentro dessa sessão,
+ele cria <code>task=t-1</code> para "achar voos", <code>task=t-2</code> para "reservar hotel",
+<code>task=t-3</code> para "gerar roteiro". Todas as três tasks compartilham contexto
+de sessão (destino, datas, perfil do viajante), mas têm artefatos e estado
+independentes.</p>
+<p>Quando uma task entra em <code>input-required</code>, o cliente deve responder com
+mensagem que <strong>referencia o taskId</strong>, não cria outra task. Criar nova task
+para responder uma pergunta é o erro mais comum em integrações iniciais —
+e quebra o histórico em pedaços não-relacionáveis.</p>
+<h2 id="8-composicao-agente-cliente-agente-servidor-agente-hibrido">8. Composição: agente cliente, agente servidor, agente híbrido</h2>
+<p>A2A é simétrico: todo agente pode ser <strong>servidor</strong> (expõe Agent Card e
+recebe tasks) e <strong>cliente</strong> (consome tasks de outros agentes). Três padrões
+de composição que se repetem em produção:</p>
+<h3 id="padrao-orchestrator">Padrão Orchestrator</h3>
+<p>Um agente "maestro" recebe a task do humano e delega sub-tasks para N
+agentes especialistas. O orchestrator agrega artefatos e devolve resultado
+único. Funciona bem quando a decomposição é estável.</p>
+<h3 id="padrao-pipeline">Padrão Pipeline</h3>
+<p>Agente A → agente B → agente C, cada um adicionando valor sobre o artefato
+do anterior. Cada link é uma task A2A separada. Robusto porque cada nó pode
+ser reescalado, substituído ou observado isoladamente.</p>
+<h3 id="padrao-marketplace">Padrão Marketplace</h3>
+<p>Um broker recebe uma necessidade, faz <strong>discovery</strong> entre Agent Cards
+indexados, escolhe o melhor agente para cada skill (por reputação, custo,
+latência) e delega. É o padrão mais ambicioso e o que mais exige
+infraestrutura adicional (registry, trust layer — ver Volume VII).</p>
+<h2 id="9-a2a-vs-mcp-quando-escolher-cada-um">9. A2A vs MCP: quando escolher cada um</h2>
+<p>Uma das confusões mais comuns: "se já uso MCP, preciso de A2A?". A resposta
+honesta exige uma matriz de decisão:</p>
+<table>
+<thead>
+<tr>
+<th>Critério</th>
+<th>Use MCP</th>
+<th>Use A2A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O outro lado tem <strong>seu próprio LLM</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Resposta esperada em <strong>&lt;1s</strong>?</td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>Há <strong>state interno</strong> persistente no outro lado?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Pode haver <strong>input-required</strong> mid-execution?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>O outro lado pode <strong>escalar para humano</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Quero <strong>descoberta dinâmica</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Quero <strong>descrever uma função estática</strong>?</td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table>
+<p>Caso real: um agente de atendimento usa <strong>MCP</strong> para falar com o CRM
+(Resource: ficha do cliente; Tool: registrar nota) e <strong>A2A</strong> para chamar o
+agente de cobrança da outra área quando precisa renegociar uma fatura.
+A regra mental: <em>MCP é integração; A2A é colaboração</em>.</p>
+<h2 id="10-manifesto-o-agente-nao-e-uma-tool-com-mais-tokens">10. Manifesto: o agente não é uma tool com mais tokens</h2>
+<p>A indústria passou 2024 inteiro tentando empurrar agentes para a abstração
+de tool-call. Foi reconfortante porque cabia no mental model existente
+(function calling) — e foi ineficaz, porque tools não têm estado, não fazem
+perguntas de volta e não negociam.</p>
+<p>A2A inverte a metáfora: o agente é um <strong>par</strong>, não um subordinado. Ele pode
+recusar, pode pedir clarificação, pode entregar parcial, pode escalar. Quem
+fala com agente como se fosse stored procedure colhe sistemas frágeis.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A arquitetura multi-agente real só começa quando
+paramos de tratar o outro agente como uma tool com mais tokens — e
+começamos a tratá-lo como uma entidade com contrato, máquina de estados e
+histórico próprio. A2A é o primeiro protocolo que opera essa virada.</p>
+</blockquote>
+<hr />
+<h2 id="checklist-canonico-a2a-em-producao">Checklist Canônico — A2A em produção</h2>
+<ul>
+<li>[ ] Agent Card publicado em <code>/.well-known/agent.json</code> e versionado.</li>
+<li>[ ] Skills com descrição clara, exemplos e tags estáveis.</li>
+<li>[ ] Máquina de estados de Task rejeita transições inválidas.</li>
+<li>[ ] Streaming usado apenas para tarefas &lt;2 min; push para o resto.</li>
+<li>[ ] Push notifications assinadas com HMAC + janela de replay curta.</li>
+<li>[ ] sessionId separado de taskId em toda a base de código.</li>
+<li>[ ] Resposta a <code>input-required</code> referencia taskId, não cria task nova.</li>
+<li>[ ] DataPart usado para dados estruturados (não serializar em texto).</li>
+<li>[ ] Cancelamento (<code>tasks/cancel</code>) testado e idempotente.</li>
+<li>[ ] Discovery (catálogo de Agent Cards) com TTL e revalidação.</li>
+</ul>
+<h2 id="glossario-do-volume">Glossário do Volume</h2>
+<ul>
+<li><strong>Agent Card</strong> — JSON em <code>/.well-known/agent.json</code> que descreve o agente.</li>
+<li><strong>Skill</strong> — unidade de competência exposta no Agent Card.</li>
+<li><strong>Task</strong> — unidade de trabalho com máquina de estados própria.</li>
+<li><strong>Session</strong> — conversa lógica que agrupa múltiplas tasks.</li>
+<li><strong>Part</strong> — pedaço tipado de uma mensagem (text, file, data).</li>
+<li><strong>input-required</strong> — estado em que a task pausa aguardando resposta do cliente.</li>
+<li><strong>Push Notification</strong> — webhook que o servidor chama para informar transições.</li>
+<li><strong>Streaming (A2A)</strong> — entrega de updates via SSE durante execução.</li>
+</ul>
+<h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
+<p>A2A resolve <strong>um agente conversando com outro</strong>. Mas a indústria não para por aí:
+a IBM publicou ACP, a OpenAI tem propostas próprias, a Microsoft empurra AutoGen
+como padrão de fato. Como escolher entre eles? Como construir camadas de
+abstração que sobrevivam à guerra de protocolos? Esse é o terreno do
+<strong>Volume III — ACP e Padrões de Interoperabilidade</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume II · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
+</body>
+</html>

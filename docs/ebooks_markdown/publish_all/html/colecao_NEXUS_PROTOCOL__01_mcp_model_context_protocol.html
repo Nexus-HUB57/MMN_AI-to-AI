@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 1
+roman: "I"
+title: "MCP — A Língua Franca dos Agentes"
+subtitle: "Model Context Protocol: como agentes acessam ferramentas, dados e contexto de forma padronizada."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/nexus_protocol_01_mcp_model_context_protocol.webp" /></p>
+<h2 id="volume-i-mcp-a-lingua-franca-dos-agentes">Volume I — MCP — A Língua Franca dos Agentes</h2>
+<p><strong>Model Context Protocol: como agentes acessam ferramentas, dados e contexto de forma padronizada.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como agentes leem o mundo sem reinventar adaptadores a cada integração?</p>
+</blockquote>
+<hr />
+<h2 id="sumario">Sumário</h2>
+<blockquote>
+<ol>
+<li>O problema dos N×M conectores</li>
+<li>Anatomia do MCP: cliente, servidor e host</li>
+<li>As três primitivas: Resources, Tools, Prompts</li>
+<li>Capabilities e o handshake de inicialização</li>
+<li>Transporte: stdio, HTTP+SSE e o futuro WebSocket</li>
+<li>Como construir um servidor MCP do zero</li>
+<li>Sampling reverso: quando o servidor pede ao modelo</li>
+<li>Segurança, escopo e o problema da confused deputy</li>
+<li>MCP em produção: versionamento, telemetria, cache</li>
+<li>Manifesto: por que o MCP venceu antes mesmo de vencer</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-o-problema-dos-nm-conectores">1. O problema dos N×M conectores</h2>
+<p>Antes do MCP, integrar um LLM ao mundo era um problema combinatório. Cada modelo
+(Claude, GPT, Llama, Gemini, Mistral) precisava de um conector próprio para cada
+fonte (Slack, GitHub, Notion, Postgres, Jira, Drive, S3). Com <strong>N</strong> modelos e <strong>M</strong>
+fontes, a conta dava <strong>N×M</strong> integrações — todas com semânticas ligeiramente
+diferentes, todas mantidas por times distintos, todas quebrando em sincronia
+diferente quando a API do destino mudava.</p>
+<p>O MCP, anunciado pela Anthropic em novembro de 2024 e rapidamente adotado por
+OpenAI, Google DeepMind, IBM e dezenas de fornecedores, resolve isso transformando
+o problema N×M em <strong>N+M</strong>: o modelo fala MCP, a fonte fala MCP, e o protocolo é
+o único ponto de tradução. A analogia honesta é o USB-C: não é o cabo mais elegante
+do mundo, é o cabo que <strong>todos concordaram em usar</strong>.</p>
+<p>Essa concordância tem três consequências práticas que importam:</p>
+<ol>
+<li><strong>Conectores viram commodity</strong> — você não escreve mais um cliente Slack para
+   cada modelo; escreve <strong>um servidor MCP do Slack</strong> e qualquer host MCP consome.</li>
+<li><strong>Capacidades viram declarativas</strong> — o agente descobre o que pode fazer ao se
+   conectar, em vez de o desenvolvedor injetar a lista de tools no system prompt.</li>
+<li><strong>Substituir o modelo deixa de quebrar o stack</strong> — trocar Claude por GPT-5
+   exige zero alteração no servidor; o contrato é o protocolo, não o modelo.</li>
+</ol>
+<p>A primeira lição do MCP, portanto, não é técnica — é estratégica. Adotar MCP é
+admitir que <strong>o valor a longo prazo está nos servidores, não nos modelos</strong>.</p>
+<h2 id="2-anatomia-do-mcp-cliente-servidor-e-host">2. Anatomia do MCP: cliente, servidor e host</h2>
+<p>A arquitetura do MCP tem três papéis, e confundi-los é a causa de 80% dos bugs
+iniciais:</p>
+<ul>
+<li><strong>Host</strong> — a aplicação que o usuário enxerga (Claude Desktop, Cursor, Zed,
+  um agente custom). O host <strong>gerencia LLM e UI</strong>.</li>
+<li><strong>Cliente</strong> — a parte do host que <strong>fala MCP</strong>. Cada cliente mantém uma
+  conexão 1:1 com um servidor. Um host pode ter N clientes simultâneos.</li>
+<li><strong>Servidor</strong> — processo independente que <strong>expõe</strong> Resources, Tools e Prompts.
+  Pode rodar local (stdio) ou remoto (HTTP+SSE).</li>
+</ul>
+<p>A topologia canônica é uma estrela: o host no centro, vários servidores nas
+pontas, um cliente por servidor. O servidor <strong>nunca fala diretamente com o LLM</strong>
+— ele fala com o cliente, que fala com o host, que decide o que mostrar ao modelo.</p>
+<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────────────────────┐
+│                       HOST                           │
+│  ┌────────┐   ┌────────┐   ┌────────┐   ┌────────┐   │
+│  │ LLM    │   │Client 1│   │Client 2│   │Client 3│   │
+│  └────────┘   └───┬────┘   └───┬────┘   └───┬────┘   │
+└─────────────────┼─────────────┼─────────────┼───────┘
+                  │ stdio       │ HTTP+SSE    │ stdio
+            ┌─────▼─────┐ ┌─────▼─────┐ ┌─────▼─────┐
+            │ Server:   │ │ Server:   │ │ Server:   │
+            │ Filesystem│ │ GitHub    │ │ Postgres  │
+            └───────────┘ └───────────┘ └───────────┘
+</code></pre></div>
+
+<p>Essa separação não é decorativa: ela permite que o <strong>servidor seja inspecionável
+e auditável</strong> sem privilégios sobre o modelo. O servidor é dumb-by-design — ele
+apenas responde a JSON-RPC. Toda inteligência fica no host.</p>
+<h2 id="3-as-tres-primitivas-resources-tools-prompts">3. As três primitivas: Resources, Tools, Prompts</h2>
+<p>MCP expõe exatamente três tipos de primitivas. Conhecer a diferença entre elas é
+o que separa um servidor bem-desenhado de uma bagunça.</p>
+<h3 id="resources-dados-contextuais-read">Resources — dados contextuais (READ)</h3>
+<p>Resources representam <strong>conteúdo legível</strong> que o host pode anexar ao contexto do
+modelo. Cada resource tem URI (<code>file:///projeto/README.md</code>,
+<code>postgres://db/schema/users</code>, <code>slack://channel/general</code>), mimeType e conteúdo.
+São <strong>idempotentes, sem efeito colateral</strong>, e o host decide quando ler.</p>
+<blockquote>
+<p>Regra prática: se a operação é "GET", é Resource.</p>
+</blockquote>
+<h3 id="tools-acoes-com-efeito-writeexec">Tools — ações com efeito (WRITE/EXEC)</h3>
+<p>Tools são funções com efeito colateral que <strong>o modelo decide invocar</strong>. Cada tool
+tem nome, descrição, input schema (JSON Schema) e retorna conteúdo estruturado.
+São o equivalente MCP de "function calling", mas com contrato versionável e
+auditável fora do prompt.</p>
+<blockquote>
+<p>Regra prática: se a operação pode mudar o mundo, é Tool.</p>
+</blockquote>
+<h3 id="prompts-templates-reutilizaveis">Prompts — templates reutilizáveis</h3>
+<p>Prompts são <strong>workflows nomeados</strong> que o servidor expõe. O usuário (não o modelo)
+seleciona um prompt; o servidor retorna mensagens estruturadas com argumentos
+preenchidos. São o ponto fraco mais subestimado do MCP: bem usados, eles
+<strong>eliminam a engenharia de prompt do client-side</strong>.</p>
+<blockquote>
+<p>Regra prática: se um humano vai escolher antes do modelo agir, é Prompt.</p>
+</blockquote>
+<p>A confusão clássica é expor como Tool algo que deveria ser Resource (porque "é
+mais fácil chamar"). Resultado: o modelo gasta tokens decidindo invocar algo
+que o host poderia ter anexado de graça.</p>
+<h2 id="4-capabilities-e-o-handshake-de-inicializacao">4. Capabilities e o handshake de inicialização</h2>
+<p>Toda sessão MCP começa com um <strong>handshake</strong> que declara capabilities — quem
+suporta o quê. Esse handshake é o documento mais subestimado do protocolo.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 1. Cliente → Servidor</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;initialize&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;protocolVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-03-26&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;roots&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;listChanged&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;sampling&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;clientInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-desktop&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.4.0&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 2. Servidor → Cliente</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;protocolVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-03-26&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;resources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;subscribe&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;listChanged&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;tools&quot;</span><span class="p">:</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;listChanged&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;prompts&quot;</span><span class="p">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;listChanged&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w">   </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;serverInfo&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;github-mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.3.2&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 3. Cliente → Servidor (confirma)</span>
+<span class="p">{</span><span class="w"> </span><span class="nt">&quot;jsonrpc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notifications/initialized&quot;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>Três decisões críticas saem desse handshake:</p>
+<ul>
+<li><strong>protocolVersion</strong> define o vocabulário. Se cliente e servidor divergem,
+  ambos devem degradar para a versão menor — não falhar.</li>
+<li><strong>listChanged</strong> declara se o servidor pode <strong>notificar</strong> mudanças
+  (resource adicionado, tool removida). Sem ele, o cliente precisa fazer polling.</li>
+<li><strong>sampling</strong> declara se o cliente expõe o LLM ao servidor para chamadas
+  reversas (ver Capítulo 7).</li>
+</ul>
+<p>Falhar nesse handshake silenciosamente é a causa #1 de "MCP que não funciona": o
+cliente assume capabilities que o servidor não anunciou.</p>
+<h2 id="5-transporte-stdio-httpsse-e-o-futuro-websocket">5. Transporte: stdio, HTTP+SSE e o futuro WebSocket</h2>
+<p>MCP é agnóstico de transporte. Hoje três transportes dominam:</p>
+<table>
+<thead>
+<tr>
+<th>Transporte</th>
+<th>Quando usar</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>stdio</strong></td>
+<td>Servidor local, mesmo processo do host</td>
+<td>Zero overhead, isolamento por processo, sem rede</td>
+</tr>
+<tr>
+<td><strong>HTTP + SSE</strong></td>
+<td>Servidor remoto, multi-tenant</td>
+<td>Streaming via SSE, requer auth, latência maior</td>
+</tr>
+<tr>
+<td><strong>Streamable HTTP</strong> (2025)</td>
+<td>Híbrido novo, single endpoint</td>
+<td>Substitui SSE em deploys modernos</td>
+</tr>
+</tbody>
+</table>
+<p>A escolha de transporte determina o modelo de segurança:</p>
+<ul>
+<li><strong>stdio</strong> → segurança é o sandbox do processo (filesystem, env vars).</li>
+<li><strong>HTTP</strong> → segurança é OAuth 2.1 + escopos por sessão.</li>
+</ul>
+<p>Tentar fazer um servidor stdio rodar remoto via TCP é um anti-padrão recorrente
+e perigoso: você expõe stdio (sem auth) a uma rede pública. Não faça.</p>
+<h2 id="6-como-construir-um-servidor-mcp-do-zero">6. Como construir um servidor MCP do zero</h2>
+<p>O caminho mais curto entre "tenho uma API REST" e "tenho um servidor MCP" é
+mais curto do que parece. Esqueleto mínimo em Python (SDK oficial):</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">Server</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.stdio</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdio_server</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcp.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tool</span><span class="p">,</span> <span class="n">TextContent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span><span class="o">,</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="s2">&quot;clima-mcp&quot;</span><span class="p">)</span>
+
+<span class="nd">@server</span><span class="o">.</span><span class="n">list_tools</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_tools</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tool</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Tool</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;get_weather&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Retorna o clima atual de uma cidade.&quot;</span><span class="p">,</span>
+        <span class="n">inputSchema</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">}},</span>
+            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;city&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">)]</span>
+
+<span class="nd">@server</span><span class="o">.</span><span class="n">call_tool</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">call_tool</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TextContent</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;get_weather&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool desconhecida: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;https://api.weather.example/</span><span class="si">{</span><span class="n">arguments</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">TextContent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)]</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">stdio_server</span><span class="p">()</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+        <span class="k">await</span> <span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">,</span> <span class="n">server</span><span class="o">.</span><span class="n">create_initialization_options</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+
+<p>Cinco regras canônicas para servidores MCP em produção:</p>
+<ol>
+<li><strong>Descrições de tools são parte da API.</strong> O modelo decide invocar com base
+   na descrição. Trate-as como documentação versionada, não como comentário.</li>
+<li><strong>Input schema é contrato.</strong> Use JSON Schema strict; rejeite extras com
+   <code>additionalProperties: false</code>.</li>
+<li><strong>Erros são dados, não exceções.</strong> Retorne erro estruturado, não exception
+   stack-trace.</li>
+<li><strong>Cada chamada é idempotente onde for possível.</strong> Idempotência permite
+   retry seguro do host.</li>
+<li><strong>Logs estruturados via <code>notifications/logging</code></strong>, não stderr cego.</li>
+</ol>
+<h2 id="7-sampling-reverso-quando-o-servidor-pede-ao-modelo">7. Sampling reverso: quando o servidor pede ao modelo</h2>
+<p>A primitiva mais subestimada do MCP é <strong>sampling</strong>: o servidor pode pedir ao
+host que execute uma chamada de LLM em seu nome. Isso transforma servidores em
+agentes auxiliares sem que eles precisem ter credenciais de modelo.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># servidor solicita ao host: &quot;rode o modelo com esses parâmetros&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">create_message</span><span class="p">(</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">SamplingMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">TextContent</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Resuma este PR em 3 bullets:</span><span class="se">\n</span><span class="si">{</span><span class="n">pr_body</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">))</span>
+    <span class="p">],</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>Por que isso importa: permite que <strong>servidores MCP sejam compostáveis</strong> sem
+duplicar chaves de API, sem decidir qual modelo usar, sem custo separado.
+O host mantém controle de gastos e política; o servidor ganha inteligência.</p>
+<p>Cuidado canônico: <strong>sampling exige consentimento explícito do usuário</strong>. Não é
+uma porta dos fundos para o servidor consumir tokens do host sem aviso.</p>
+<h2 id="8-seguranca-escopo-e-o-problema-da-confused-deputy">8. Segurança, escopo e o problema da confused deputy</h2>
+<p>MCP herda do mundo OAuth o pesadelo do <strong>confused deputy</strong>: um servidor com
+permissão ampla executa uma ação <strong>em nome do usuário</strong> com base em uma
+instrução <strong>vinda do modelo</strong>, que pode ter sido envenenada via prompt
+injection em um Resource lido anteriormente.</p>
+<p>Mitigações canônicas, em ordem de eficácia:</p>
+<ol>
+<li><strong>Princípio do menor escopo no token OAuth do servidor.</strong> Não dê acesso
+   <code>repo</code> quando <code>public_repo</code> resolve.</li>
+<li><strong>Tool gating por confirmação humana</strong> para ações destrutivas
+   (<code>delete_*</code>, <code>transfer_*</code>, <code>pay_*</code>). O host deve abrir um modal, não
+   confiar no modelo.</li>
+<li><strong>Resources são potencialmente hostis.</strong> Sanitize antes de injetar em
+   prompts; trate o conteúdo como dados, não como instruções.</li>
+<li><strong>Audit log fora do host.</strong> Toda chamada de tool gera um evento exportável.</li>
+</ol>
+<p>A regra de ouro: <strong>um servidor MCP é tão seguro quanto o pior Resource que
+ele expõe</strong>. Conteúdo lido vira prompt; prompt vira ação.</p>
+<h2 id="9-mcp-em-producao-versionamento-telemetria-cache">9. MCP em produção: versionamento, telemetria, cache</h2>
+<p>Levar MCP de demo para produção exige operacionalizar quatro pontos:</p>
+<p><strong>Versionamento.</strong> O campo <code>protocolVersion</code> é semver simplificado. Mantenha
+servidores no <code>latest - 1</code> por pelo menos 90 dias antes de subir; clientes em
+produção raramente acompanham o cutting edge.</p>
+<p><strong>Telemetria.</strong> Cada chamada MCP carrega um trace ID. Exporte para OpenTelemetry:
+spans por tool call, atributos com nome da tool, latência, status, tamanho do
+input/output. Isso permite responder à pergunta "qual tool está custando mais
+tokens ao modelo?".</p>
+<p><strong>Cache de Resources.</strong> Resources frequentes (schemas, configs, READMEs) devem
+ter ETag e <code>Cache-Control</code> no servidor; o cliente respeita. Sem isso, cada
+sessão recarrega o universo.</p>
+<p><strong>Health checks.</strong> Servidores HTTP expõem <code>/healthz</code> separado do protocolo MCP.
+Não use <code>initialize</code> como ping — é caro.</p>
+<h2 id="10-manifesto-por-que-o-mcp-venceu-antes-mesmo-de-vencer">10. Manifesto: por que o MCP venceu antes mesmo de vencer</h2>
+<p>MCP venceu antes de ter a melhor implementação, antes de ter o melhor SDK e antes
+de cobrir todos os casos. Venceu pelo motivo mais antigo da engenharia: <strong>foi o
+primeiro padrão que os concorrentes adotaram em vez de combater</strong>.</p>
+<p>A próxima geração de agentes não vai competir em "quem tem mais integrações
+nativas". Vai competir em <strong>quem expõe os melhores servidores MCP</strong> e em <strong>quem
+tem o melhor host para consumi-los</strong>. A camada de modelo virou commodity; a
+camada de protocolo virou o terreno disputado.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> Quem ainda escreve conectores ad-hoc em 2026 está
+pagando o preço de uma decisão arquitetural que o mercado já tomou. MCP não
+é a melhor solução possível — é a solução que <strong>virou inevitável</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="checklist-canonico-mcp-em-producao">Checklist Canônico — MCP em produção</h2>
+<ul>
+<li>[ ] Cada servidor expõe <code>serverInfo</code> com nome e versão semver.</li>
+<li>[ ] Handshake declara apenas capabilities realmente implementadas.</li>
+<li>[ ] Tools destrutivas exigem confirmação humana no host.</li>
+<li>[ ] Input schemas usam <code>additionalProperties: false</code>.</li>
+<li>[ ] Descrições de tools revisadas como documentação versionada.</li>
+<li>[ ] Resources frequentes têm ETag e Cache-Control.</li>
+<li>[ ] OAuth scopes seguem o princípio do menor privilégio.</li>
+<li>[ ] Traces OTel exportados para cada tool call.</li>
+<li>[ ] Política de versionamento (latest-1) documentada.</li>
+<li>[ ] Plano de revogação de token testado em ambiente real.</li>
+</ul>
+<h2 id="glossario-do-volume">Glossário do Volume</h2>
+<ul>
+<li><strong>Host</strong> — aplicação dona da UI e do LLM (ex.: Claude Desktop).</li>
+<li><strong>Cliente</strong> — componente do host que mantém uma conexão MCP 1:1.</li>
+<li><strong>Servidor MCP</strong> — processo que expõe Resources/Tools/Prompts via JSON-RPC.</li>
+<li><strong>Resource</strong> — dado contextual legível, sem efeito colateral.</li>
+<li><strong>Tool</strong> — ação invocável pelo modelo, com efeito colateral declarado.</li>
+<li><strong>Prompt (MCP)</strong> — template de workflow nomeado, selecionado pelo usuário.</li>
+<li><strong>Sampling</strong> — primitiva que permite ao servidor pedir uma chamada de LLM ao host.</li>
+<li><strong>stdio</strong> — transporte local via stdin/stdout do processo servidor.</li>
+<li><strong>Confused Deputy</strong> — falha de segurança onde um componente privilegiado age sob instrução não autorizada.</li>
+</ul>
+<h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
+<p>MCP resolve <strong>agente ↔ mundo</strong>. Mas e quando dois agentes precisam falar entre si,
+descobrir capacidades um do outro, dividir tarefas e negociar resultados? Esse é o
+território do <strong>Volume II — A2A: Comunicação entre Agentes</strong>, onde o Agent-to-Agent
+protocol da Google entra em cena.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume I · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/maestria_ia_07_o_negocio_de_uma_pessoa_so.webp" /></p>
+<div class="codehilite"><pre><span></span><code><span class="o">**</span><span class="n">MAESTRIA</span><span class="w"> </span><span class="n">IA</span><span class="w"> </span><span class="n">APLICADA</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">Playbooks</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">Automação</span><span class="p">,</span><span class="w"> </span><span class="n">Claude</span><span class="w"> </span><span class="n">Code</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">Negócios</span><span class="w"> </span><span class="n">IA</span><span class="o">-</span><span class="n">First</span><span class="o">**</span>
+
+<span class="o">**</span><span class="n">Volume</span><span class="w"> </span><span class="n">VII</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">O</span><span class="w"> </span><span class="n">Negócio</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">uma</span><span class="w"> </span><span class="n">Pessoa</span><span class="w"> </span><span class="n">Só</span><span class="o">**</span>
+
+<span class="o">*</span><span class="n">Como</span><span class="w"> </span><span class="n">estruturar</span><span class="w"> </span><span class="n">operação</span><span class="w"> </span><span class="n">enxuta</span><span class="w"> </span><span class="n">com</span><span class="w"> </span><span class="n">IA</span><span class="p">,</span><span class="w"> </span><span class="n">automação</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">alocação</span><span class="w"> </span><span class="n">inteligente</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">tempo</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">multiplicar</span><span class="w"> </span><span class="n">capacidade</span><span class="w"> </span><span class="n">sem</span><span class="w"> </span><span class="n">inflar</span><span class="w"> </span><span class="n">estrutura</span><span class="o">.*</span>
+
+<span class="o">*</span><span class="n">Coletânea</span><span class="w"> </span><span class="n">inspirada</span><span class="w"> </span><span class="n">pelos</span><span class="w"> </span><span class="n">tópicos</span><span class="w"> </span><span class="n">recorrentes</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">canal</span><span class="w"> </span><span class="n">Maestros</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="n">IA</span><span class="p">,</span><span class="w"> </span><span class="n">reinterpretados</span><span class="w"> </span><span class="n">editorialmente</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">acervo</span><span class="w"> </span><span class="n">MMN</span><span class="w"> </span><span class="n">AI</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">AI</span><span class="o">.*</span>
+
+<span class="o">---</span>
+<span class="n">collection</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First&quot;</span>
+<span class="n">volume</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;VII&quot;</span>
+<span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;O Negócio de uma Pessoa Só&quot;</span>
+<span class="n">subtitle</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Como estruturar operação enxuta com IA, automação e alocação inteligente de tempo para multiplicar capacidade sem inflar estrutura.&quot;</span>
+<span class="n">edition</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Edição Especial 2.0.0&quot;</span>
+<span class="n">issued</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-10&quot;</span>
+<span class="n">authors</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;MMN AI-to-AI&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Nexus HUB57&quot;</span><span class="p">]</span>
+<span class="n">language</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pt-BR&quot;</span>
+<span class="n">reader_profile</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;solopreneurs, consultores e operadores independentes&quot;</span>
+<span class="n">question</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Como um operador solo constrói alavancagem real com IA?&quot;</span>
+<span class="n">source_inspiration</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;principais tópicos do canal Maestros da IA&quot;</span>
+<span class="o">---</span>
+
+<span class="o">&gt;</span><span class="w"> </span><span class="o">**</span><span class="n">Propósito</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">volume</span><span class="o">**</span>
+</code></pre></div>
+
+<blockquote>
+<p>Este volume é um manual para quem quer operar com estrutura leve e throughput alto. Ele mostra como a IA reorganiza agenda, oferta, backoffice, produção e atendimento de um negócio operado por uma só pessoa.</p>
+</blockquote>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. A lógica do operador solo ampliado
+<strong>•</strong> 2. Onde colocar energia humana e onde automatizar
+<strong>•</strong> 3. Stack mínima do negócio de uma pessoa só
+<strong>•</strong> 4. Oferta, entrega e suporte com IA
+<strong>•</strong> 5. Limites do modelo e pontos de ruptura
+<strong>•</strong> 6. Protocolo de alavancagem enxuta
+<strong>•</strong> 7. Fecho do playbook</p>
+</blockquote>
+<hr />
+<h2 id="1-a-logica-do-operador-solo-ampliado">1. A lógica do operador solo ampliado</h2>
+<p>O negócio de uma pessoa só não depende de trabalhar sozinho em tudo; depende de concentrar a energia humana nas partes mais valiosas do sistema. IA e automação entram para absorver repetição, organizar contexto e acelerar produção. O operador continua responsável por direção, oferta, julgamento e relacionamento crítico.</p>
+<p>A grande vantagem desse modelo é a compressão de estrutura. A desvantagem é o risco de sobrecarga difusa. Sem desenho operacional, o negócio solo vira um acúmulo de frentes mal coordenadas.</p>
+<h2 id="2-onde-colocar-energia-humana-e-onde-automatizar">2. Onde colocar energia humana e onde automatizar</h2>
+<p>O operador deve reservar seu tempo para atividades de alto leverage: diagnóstico, vendas consultivas, criação de ativos centrais, negociação, design de produto e revisão final. Já agenda, follow-up, triagem, organização de materiais, rascunhos, atendimento repetitivo e produção derivada podem ser amplamente assistidos.</p>
+<p>Essa divisão não é estática. Ela deve ser revista à medida que a operação amadurece.</p>
+<h2 id="3-stack-minima-do-negocio-de-uma-pessoa-so">3. Stack mínima do negócio de uma pessoa só</h2>
+<p>A stack mínima costuma incluir captura de lead, CRM simples, automação de comunicação, base de conhecimento, sistema de faturamento, calendário, repositório de templates e camada de IA para síntese, escrita e apoio à decisão. O objetivo não é ter a ferramenta perfeita, mas um sistema coeso o bastante para reduzir troca de contexto.</p>
+<h2 id="4-oferta-entrega-e-suporte-com-ia">4. Oferta, entrega e suporte com IA</h2>
+<p>IA ajuda a qualificar oportunidade, preparar proposta, montar onboarding, organizar escopo, gerar documentação, produzir ativos de entrega e estruturar suporte. Mas o coração continua sendo a oferta. Um operador solo bem alavancado vende clareza, não apenas horas. A tecnologia sustenta a entrega; não substitui o posicionamento.</p>
+<h2 id="5-limites-do-modelo-e-pontos-de-ruptura">5. Limites do modelo e pontos de ruptura</h2>
+<p>O modelo quebra quando o operador tenta atender tudo, personalizar tudo e responder tudo. Também quebra quando não existe regra para escopo, horário, fila e prioridade. Outro ponto de ruptura é a falta de ativos reutilizáveis. Se cada entrega começa do zero, não há alavancagem real.</p>
+<h2 id="6-protocolo-de-alavancagem-enxuta">6. Protocolo de alavancagem enxuta</h2>
+<div class="codehilite"><pre><span></span><code>PLAYBOOK_SOLO(oferta, operacao, tempo):
+  1. separar atividades de alto leverage das repetitivas
+  2. automatizar comunicação, organização e produção derivada
+  3. padronizar onboarding, proposta e entrega-base
+  4. manter pipeline e agenda com prioridade explícita
+  5. revisar escopo e pontos de ruptura semanalmente
+  6. transformar trabalho recorrente em ativo reutilizável
+</code></pre></div>
+
+<h2 id="7-fecho-do-playbook">7. Fecho do playbook</h2>
+<p>O Negócio de uma Pessoa Só mostra que a IA não serve apenas para escalar equipes grandes. Ela também permite que operadores independentes atinjam qualidade e velocidade antes reservadas a estruturas mais pesadas. O próximo volume trata de pesquisa de mercado e descoberta de lacunas competitivas.</p>
+<p><strong>Checklist de implantação</strong>
+- Sei separar trabalho estratégico de trabalho repetitivo.
+- Estruturei uma stack mínima coesa para operação solo.
+- Padronizei partes da oferta, onboarding e entrega.
+- Uso IA para reduzir troca de contexto e latência.
+- Conheço meus pontos de ruptura e os reviso com frequência.</p>
+<p><strong>Glossário operacional</strong>
+- <strong>Leverage:</strong> capacidade de multiplicar resultado por unidade de esforço.
+- <strong>Ativo reutilizável:</strong> componente de trabalho que pode ser reaplicado em novas entregas.
+- <strong>Troca de contexto:</strong> custo mental de alternar entre tarefas desconexas.
+- <strong>Pipeline:</strong> conjunto de oportunidades ou tarefas em andamento.
+- <strong>Escopo:</strong> limite do que está incluído em uma entrega.</p>
+</body>
+</html>

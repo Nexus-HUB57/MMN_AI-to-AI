@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>AXIOMA PRIME — Decálogo da Inteligência Agêntica</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/axioma_prime_04_orquestracao_multiagente_e_protocolos.webp" /></p>
+<div class="codehilite"><pre><span></span><code>**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
+
+**Volume IV — Orquestração Multiagente e Protocolos**
+
+<span class="gs">*Como transformar agentes isolados em uma malha coordenada por contratos, roteamento, delegação e observabilidade compartilhada.*</span>
+
+<span class="gs">*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*</span>
+
+---
+collection: &quot;AXIOMA PRIME — Decálogo da Inteligência Agêntica&quot;
+volume: &quot;IV&quot;
+title: &quot;Orquestração Multiagente e Protocolos&quot;
+subtitle: &quot;Como transformar agentes isolados em uma malha coordenada por contratos, roteamento, delegação e observabilidade compartilhada.&quot;
+edition: &quot;Edição Limitada 2.0.0&quot;
+issued: &quot;2026-06-10&quot;
+authors: [&quot;MMN AI-to-AI&quot;, &quot;Nexus HUB57&quot;]
+language: &quot;pt-BR&quot;
+reader_profile: &quot;arquitetos de plataformas agênticas e operadores de times multiagente&quot;
+limited_edition: true
+question: &quot;Como fazer vários agentes cooperarem sem produzir ruído, duplicação e conflito?&quot;
+---
+
+<span class="k">&gt; </span><span class="ge">**Propósito do volume**</span>
+</code></pre></div>
+
+<blockquote>
+<p>Este volume descreve o momento em que a agência deixa de ser individual e passa a ser sistêmica. O tema central é coordenação: quem chama quem, com que contrato, com qual evidência e sob qual mecanismo de supervisão.</p>
+</blockquote>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. De agente único a ecossistema
+<strong>•</strong> 2. Topologias de coordenação
+<strong>•</strong> 3. Protocolos, contratos e handoffs
+<strong>•</strong> 4. Roteamento, supervisão e retorno
+<strong>•</strong> 5. Custos ocultos da multiplicação de agentes
+<strong>•</strong> 6. Protocolo de orquestração canônica
+<strong>•</strong> 7. Fecho do volume</p>
+</blockquote>
+<hr />
+<h2 id="1-de-agente-unico-a-ecossistema">1. De agente único a ecossistema</h2>
+<p>Sistemas multiagente nascem quando uma única entidade já não consegue concentrar percepção, decisão e execução com qualidade suficiente. Surge então a especialização: um agente pesquisa, outro valida, outro executa, outro observa. Essa divisão só funciona se houver linguagem comum de coordenação. Caso contrário, a equipe de agentes se torna um conjunto de ilhas brilhantes e incompatíveis.</p>
+<p>O ganho potencial é grande: paralelismo, modularidade, especialização e resiliência. O risco, porém, é multiplicar ambiguidade. Sem boa orquestração, o que era um erro local se torna um erro distribuído.</p>
+<h2 id="2-topologias-de-coordenacao">2. Topologias de coordenação</h2>
+<p>Há topologias centralizadas, federadas e híbridas. Na centralizada, um orquestrador distribui tarefas, consolida saídas e arbitra conflito. Na federada, agentes descobrem capacidades uns dos outros e cooperam por contrato, sem um único centro de comando. Na híbrida, existe coordenação central para políticas críticas e autonomia lateral para tarefas reversíveis.</p>
+<p>A escolha da topologia depende de confiança, latência, custo e governança. Ambientes regulados tendem a preferir centros de controle mais fortes. Ambientes de pesquisa e exploração podem se beneficiar de federação mais livre. O erro estratégico está em aplicar a mesma topologia para todo domínio.</p>
+<h2 id="3-protocolos-contratos-e-handoffs">3. Protocolos, contratos e handoffs</h2>
+<p>Toda cooperação precisa de contrato. Um handoff entre agentes deve incluir objetivo, entradas, saídas esperadas, limites, prazo e formato de retorno. Sem isso, a transferência de tarefa carrega apenas intenção vaga. O receptor passa a preencher lacunas por inferência, e a qualidade do sistema cai mesmo quando cada agente individual é competente.</p>
+<p>Protocolos servem exatamente para reduzir ambiguidade. Eles padronizam descoberta de capacidades, invocação, resposta, status, exceção e auditoria. Não são burocracia; são a gramática que impede que a coordenação dependa de adivinhação.</p>
+<h2 id="4-roteamento-supervisao-e-retorno">4. Roteamento, supervisão e retorno</h2>
+<p>Orquestrar não é apenas distribuir trabalho. É decidir qual agente deve receber qual tarefa, em qual ordem, com qual prioridade e sob qual mecanismo de supervisão. O roteamento pode ser por domínio, custo, confiabilidade, tempo de resposta ou histórico de performance. Já a supervisão precisa lidar com timeout, dead-letter, conflito de resultados e replanejamento.</p>
+<p>O retorno é parte da orquestração. Um fluxo multiagente só se fecha quando o sistema consegue consolidar saídas e produzir uma verdade operacional legível para o próximo passo, para o humano supervisor ou para o cliente final.</p>
+<h2 id="5-custos-ocultos-da-multiplicacao-de-agentes">5. Custos ocultos da multiplicação de agentes</h2>
+<p>Adicionar agentes demais cedo demais cria três despesas silenciosas: custo cognitivo de coordenação, custo de integração e custo de observabilidade. Cada novo nó exige contrato, teste, telemetria, versionamento e política. O sistema pode ficar mais elegante no diagrama e menos útil na prática. Escalar rede sem escalar protocolo é inflar complexidade improdutiva.</p>
+<h2 id="6-protocolo-de-orquestracao-canonica">6. Protocolo de orquestração canônica</h2>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_ORQUESTRACAO(tarefa, catalogo, politica):
+  1. classificar a tarefa por domínio, risco e urgência
+  2. selecionar topologia adequada (central, federada ou híbrida)
+  3. emitir handoff com contrato explícito
+  4. monitorar status, timeout e evidência de execução
+  5. consolidar saídas e resolver conflitos
+  6. registrar performance para roteamento futuro
+</code></pre></div>
+
+<p>Esse protocolo permite que a cooperação seja governada por regras reproduzíveis. Em vez de depender de carisma arquitetural, a malha passa a depender de contratos verificáveis.</p>
+<h2 id="7-fecho-do-volume">7. Fecho do volume</h2>
+<p>Orquestração Multiagente e Protocolos move a coletânea da agência individual para a inteligência organizada. A próxima camada é prática: skills, ferramentas e execução — isto é, como a malha coordenada efetivamente toca o mundo.</p>
+<p><strong>Checklist de internalização</strong>
+- Diferencio topologias centralizadas, federadas e híbridas.
+- Sei compor handoffs com contrato explícito.
+- Entendo roteamento, supervisão e consolidação de saídas.
+- Reconheço o custo oculto de multiplicar agentes cedo demais.
+- Posso desenhar uma malha com observabilidade e políticas claras.</p>
+<p><strong>Glossário estruturado</strong>
+- <strong>Handoff:</strong> transferência formal de tarefa entre agentes.
+- <strong>Topologia:</strong> forma de organização da rede agêntica.
+- <strong>Roteamento:</strong> seleção do agente mais adequado para cada tarefa.
+- <strong>Consolidação:</strong> síntese das saídas parciais em uma verdade operacional.
+- <strong>Dead-letter:</strong> destino de tarefas que falharam ou expiraram sem tratamento.</p>
+</body>
+</html>

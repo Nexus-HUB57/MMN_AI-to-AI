@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+:root {
+  --bg: #060912;
+  --bg2: #0c1424;
+  --fg: #e8edf7;
+  --muted: #8b97b3;
+  --gold: #d6b15a;
+  --accent: #4ea1ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at top, #0c1424 0%, #060912 80%);
+  color: var(--fg); line-height: 1.65;
+}
+header {
+  text-align: center; padding: 80px 24px 50px;
+  border-bottom: 1px solid rgba(214,177,90,.18);
+}
+header .eyebrow {
+  font-size: 12px; letter-spacing: .35em; color: var(--gold); text-transform: uppercase;
+}
+header h1 {
+  font-size: clamp(28px, 4vw, 48px); margin: 18px 0 10px; line-height: 1.15;
+  background: linear-gradient(90deg, #fff 0%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 17px; }
+.meta { margin-top: 20px; color: var(--muted); font-size: 13px; letter-spacing: .15em; }
+main { max-width: 1280px; margin: 0 auto; padding: 60px 24px; }
+.grid {
+  display: grid; gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.card {
+  background: linear-gradient(180deg, #0e1830 0%, #0a1124 100%);
+  border: 1px solid rgba(214,177,90,.18);
+  border-radius: 16px; overflow: hidden;
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(214,177,90,.55);
+  box-shadow: 0 14px 50px rgba(78,161,255,.18);
+}
+.card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+.card-body { padding: 20px 22px 24px; }
+.roman { color: var(--gold); font-size: 12px; letter-spacing: .25em; text-transform: uppercase; }
+.card h3 { font-size: 19px; margin: 8px 0 10px; color: #fff; }
+.subtitle { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+.question { color: #b9c4dc; font-size: 13px; margin: 0 0 18px; }
+.read {
+  color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 600;
+  letter-spacing: .05em;
+}
+.read:hover { color: var(--gold); }
+footer {
+  text-align: center; padding: 50px 24px; color: var(--muted);
+  font-size: 13px; letter-spacing: .15em;
+  border-top: 1px solid rgba(214,177,90,.18);
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Coletânea Canônica · MMN AI-to-AI</div>
+  <h1>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</h1>
+  <p>A camada de interoperabilidade entre agentes: MCP, A2A, ACP, memória distribuída,
+  federação de skills, identidade, evals, segurança e a infraestrutura da Internet dos Agentes.</p>
+  <div class="meta">Edição Canônica 1.0.0 · 2026-06-08 · NEXUS HUB57</div>
+</header>
+<main>
+  <section class="grid">
+    
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_01_mcp_model_context_protocol.webp" alt="Capa Vol I" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume I</span>
+        <h3>MCP — A Língua Franca dos Agentes</h3>
+        <p class="subtitle">Model Context Protocol: como agentes acessam ferramentas, dados e contexto de forma padronizada.</p>
+        <p class="question"><em>“Como agentes leem o mundo sem reinventar adaptadores?”</em></p>
+        <a class="read" href="01_mcp_model_context_protocol.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_02_a2a_agent_to_agent.webp" alt="Capa Vol II" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume II</span>
+        <h3>A2A — Comunicação entre Agentes</h3>
+        <p class="subtitle">Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real.</p>
+        <p class="question"><em>“Como dois agentes se reconhecem e dividem trabalho sem humano no meio?”</em></p>
+        <a class="read" href="02_a2a_agent_to_agent.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_03_acp_e_interoperabilidade.webp" alt="Capa Vol III" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume III</span>
+        <h3>ACP e Padrões de Interoperabilidade</h3>
+        <p class="subtitle">Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões.</p>
+        <p class="question"><em>“Quais protocolos sobrevivem ao próximo ciclo e por quê?”</em></p>
+        <a class="read" href="03_acp_e_interoperabilidade.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_04_memoria_distribuida.webp" alt="Capa Vol IV" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume IV</span>
+        <h3>Memória Distribuída entre Agentes</h3>
+        <p class="subtitle">Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente.</p>
+        <p class="question"><em>“O que um agente pode lembrar do outro sem violar contrato ou identidade?”</em></p>
+        <a class="read" href="04_memoria_distribuida.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_05_consenso_delegacao_hierarquia.webp" alt="Capa Vol V" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume V</span>
+        <h3>Consenso, Delegação e Hierarquia Multi-Agente</h3>
+        <p class="subtitle">Como múltiplos agentes decidem juntos sem travar nem se canibalizar.</p>
+        <p class="question"><em>“Quando agentes discordam, quem decide e como o sistema avança?”</em></p>
+        <a class="read" href="05_consenso_delegacao_hierarquia.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_06_tool_federation.webp" alt="Capa Vol VI" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume VI</span>
+        <h3>Tool Federation e Skills Compartilhadas</h3>
+        <p class="subtitle">Como ferramentas e skills se federam entre agentes, equipes e organizações.</p>
+        <p class="question"><em>“Como uma skill criada por um agente vira ativo de uma rede inteira?”</em></p>
+        <a class="read" href="06_tool_federation.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_07_identidade_reputacao_trust.webp" alt="Capa Vol VII" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume VII</span>
+        <h3>Identidade, Reputação e Trust Layer</h3>
+        <p class="subtitle">Como agentes provam quem são, o que já fizeram e por que devem ser ouvidos.</p>
+        <p class="question"><em>“O que separa um agente confiável de um agente apenas funcional?”</em></p>
+        <a class="read" href="07_identidade_reputacao_trust.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_08_evals_observability_telemetria.webp" alt="Capa Vol VIII" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume VIII</span>
+        <h3>Evals, Observability e Telemetria Agêntica</h3>
+        <p class="subtitle">Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída.</p>
+        <p class="question"><em>“Como saber se a rede de agentes está melhor hoje que ontem?”</em></p>
+        <a class="read" href="08_evals_observability_telemetria.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_09_seguranca_guardrails_resiliencia.webp" alt="Capa Vol IX" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume IX</span>
+        <h3>Segurança, Guardrails e Resiliência em Rede</h3>
+        <p class="subtitle">Como conter falhas, ataques e cascatas em uma malha de agentes interconectados.</p>
+        <p class="question"><em>“Quando um agente falha, a rede aprende ou colapsa?”</em></p>
+        <a class="read" href="09_seguranca_guardrails_resiliencia.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_protocol_10_federacao_agentica_internet_agentes.webp" alt="Capa Vol X" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume X</span>
+        <h3>Federação Agêntica — A Internet dos Agentes</h3>
+        <p class="subtitle">O futuro da web: agentes consumindo agentes, redes de capacidades e a infra IA-to-IA.</p>
+        <p class="question"><em>“Como será a internet quando os principais usuários não forem mais humanos?”</em></p>
+        <a class="read" href="10_federacao_agentica_internet_agentes.md">Ler volume →</a>
+      </div>
+    </article>
+
+  </section>
+</main>
+<footer>
+  Versão 1.0.0 · 2026-06-08 · Nexus HUB57 · Ecossistema MMN AI-to-AI
+</footer>
+</body>
+</html>

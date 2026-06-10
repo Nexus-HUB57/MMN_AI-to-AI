@@ -224,8 +224,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           icon: <Link2 className="w-5 h-5" />,
         },
         {
-          label: "Mini-site",
-          href: "/minisite",
+          label: "Minha Loja",
+          href: "/minha-loja",
           icon: <Globe className="w-5 h-5" />,
         },
       ],

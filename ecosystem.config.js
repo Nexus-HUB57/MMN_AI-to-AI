@@ -12,14 +12,14 @@ module.exports = {
       name: 'mmn-api',
       script: 'backend/dist/index.js',
       cwd: './',
-      instances: 1,
-      exec_mode: 'fork',
+      instances: 2,  // = nº de vCPUs do VPS
+      exec_mode: 'cluster',
       autorestart: true,
       watch: false,
-      max_memory_restart: '1G',
+      max_memory_restart: '700M',  // ~35% dos 2GB disponíveis após SO
       env: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3001  // Nginx proxia /api/ → 3001
       },
       error_file: './logs/api-error.log',
       out_file: './logs/api-out.log',
@@ -132,14 +132,14 @@ module.exports = {
   // ============================================
   deploy: {
     production: {
-      user: 'ssh_user',
-      host: 'your-server-ip',
-      port: 22,
+      user: 'deploy',  // usuário não-root criado no hardening
+      host: '143.95.213.237',  // VPS São Paulo
+      port: 22022,  // SSH porta não-padrão (hardening)
       ref: 'origin/main',
       repo: 'git@github.com:Nexus-HUB57/MMN_AI-to-AI.git',
-      path: '/var/www/oneverso.com.br',
+      path: '/var/www/oneverso',
       'pre-deploy-local': '',
-      'post-deploy': 'npm run build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'bash infra/03-deploy-app.sh',
       'pre-setup': ''
     }
   }

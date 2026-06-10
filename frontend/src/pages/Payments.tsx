@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { trpc } from '../lib/trpc';
 import DashboardLayout from '@/components/DashboardLayout';
+import BRLBTCConverter from '@/components/payments/BRLBTCConverter';
 import { Wallet, Plus, Trash2, Clock, CheckCircle, XCircle, AlertCircle, CreditCard, PiggyBank, ArrowUpRight, ArrowDownRight, ChevronRight, RefreshCw } from 'lucide-react';
 
 type TabType = 'balance' | 'accounts' | 'withdraw' | 'history';
@@ -189,6 +190,9 @@ export default function Payments() {
         {/* Tab Content */}
         {activeTab === 'balance' && (
           <div className="space-y-6">
+            {/* Correção #4 — Conversor BRL ⇄ BTC (Custódia Binance) visível na aba Saldo */}
+            <BRLBTCConverter />
+
             {/* Balance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gradient-to-br from-green-900/50 to-green-800/30 rounded-xl p-6 border border-green-700/50">

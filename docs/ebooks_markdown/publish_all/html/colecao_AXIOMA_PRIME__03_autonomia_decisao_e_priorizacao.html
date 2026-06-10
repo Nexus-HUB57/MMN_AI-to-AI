@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>AXIOMA PRIME — Decálogo da Inteligência Agêntica</title>
+<style>
+@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 11pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
+h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
+h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/axioma_prime_03_autonomia_decisao_e_priorizacao.webp" /></p>
+<div class="codehilite"><pre><span></span><code><span class="o">**</span><span class="n">AXIOMA</span><span class="w"> </span><span class="n">PRIME</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Decálogo</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="n">Inteligência</span><span class="w"> </span><span class="n">Agêntica</span><span class="o">**</span>
+
+<span class="o">**</span><span class="n">Volume</span><span class="w"> </span><span class="n">III</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Autonomia</span><span class="p">,</span><span class="w"> </span><span class="n">Decisão</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">Priorização</span><span class="o">**</span>
+
+<span class="o">*</span><span class="n">Como</span><span class="w"> </span><span class="n">conceder</span><span class="w"> </span><span class="n">liberdade</span><span class="w"> </span><span class="n">operacional</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">um</span><span class="w"> </span><span class="n">agente</span><span class="w"> </span><span class="n">sem</span><span class="w"> </span><span class="n">entregar</span><span class="w"> </span><span class="n">descontrole</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="n">como</span><span class="w"> </span><span class="n">fazê</span><span class="o">-</span><span class="n">lo</span><span class="w"> </span><span class="n">escolher</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="n">próximo</span><span class="w"> </span><span class="n">passo</span><span class="w"> </span><span class="n">sob</span><span class="w"> </span><span class="n">conflito</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">metas</span><span class="p">.</span><span class="o">*</span>
+
+<span class="o">*</span><span class="n">Edição</span><span class="w"> </span><span class="n">limitada</span><span class="w"> </span><span class="n">desenvolvida</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="n">acervo</span><span class="w"> </span><span class="n">MMN</span><span class="w"> </span><span class="n">AI</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">AI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Nexus</span><span class="w"> </span><span class="n">HUB57</span><span class="p">.</span><span class="o">*</span>
+
+<span class="o">---</span>
+<span class="nl">collection:</span><span class="w"> </span><span class="s">&quot;AXIOMA PRIME — Decálogo da Inteligência Agêntica&quot;</span>
+<span class="nl">volume:</span><span class="w"> </span><span class="s">&quot;III&quot;</span>
+<span class="nl">title:</span><span class="w"> </span><span class="s">&quot;Autonomia, Decisão e Priorização&quot;</span>
+<span class="nl">subtitle:</span><span class="w"> </span><span class="s">&quot;Como conceder liberdade operacional a um agente sem entregar descontrole, e como fazê-lo escolher o próximo passo sob conflito de metas.&quot;</span>
+<span class="nl">edition:</span><span class="w"> </span><span class="s">&quot;Edição Limitada 2.0.0&quot;</span>
+<span class="nl">issued:</span><span class="w"> </span><span class="s">&quot;2026-06-10&quot;</span>
+<span class="nl">authors:</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;MMN AI-to-AI&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Nexus HUB57&quot;</span><span class="p">]</span>
+<span class="nl">language:</span><span class="w"> </span><span class="s">&quot;pt-BR&quot;</span>
+<span class="nl">reader_profile:</span><span class="w"> </span><span class="s">&quot;líderes de operação, arquitetos de políticas e designers de agentes&quot;</span>
+<span class="nl">limited_edition:</span><span class="w"> </span><span class="n">true</span>
+<span class="nl">question:</span><span class="w"> </span><span class="s">&quot;Quais regras tornam a autonomia segura, útil e economicamente racional?&quot;</span>
+<span class="o">---</span>
+
+<span class="o">&gt;</span><span class="w"> </span><span class="o">**</span><span class="n">Propósito</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">volume</span><span class="o">**</span>
+</code></pre></div>
+
+<blockquote>
+<p>Este volume desmonta a fantasia da autonomia absoluta. Autonomia não é fazer qualquer coisa; é decidir dentro de um perímetro de legitimidade, prioridade e custo.</p>
+</blockquote>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Autonomia não é licença
+<strong>•</strong> 2. Política de decisão e níveis de autoridade
+<strong>•</strong> 3. Priorização sob conflito
+<strong>•</strong> 4. Delegação, escalonamento e espera estratégica
+<strong>•</strong> 5. Heurísticas de erro e reversão
+<strong>•</strong> 6. Protocolo de decisão responsável
+<strong>•</strong> 7. Fecho do volume</p>
+</blockquote>
+<hr />
+<h2 id="1-autonomia-nao-e-licenca">1. Autonomia não é licença</h2>
+<p>Em ecossistemas agênticos, a palavra autonomia costuma ser inflada. Muita gente a confunde com independência total. Na prática, autonomia boa é poder de agir sem microgestão, mas dentro de regras claras. Um agente maduro não pergunta tudo; tampouco improvisa tudo. Ele sabe o que pode resolver sozinho, o que precisa confirmar e o que deve escalar.</p>
+<p>O ganho da autonomia está em velocidade e cobertura. O risco está em dano silencioso. Por isso, a discussão correta não é “quanto de autonomia dar?”, mas “sob quais condições a autonomia permanece alinhada aos objetivos e aos limites?”.</p>
+<h2 id="2-politica-de-decisao-e-niveis-de-autoridade">2. Política de decisão e níveis de autoridade</h2>
+<p>Toda autonomia precisa de uma matriz de autoridade. Há decisões informativas, reversíveis, financeiras, regulatórias, reputacionais e destrutivas. Cada classe exige um nível diferente de prova e de consentimento. Um agente pode reorganizar uma fila sozinho, mas talvez não possa enviar um contrato sem revisão humana. Pode sugerir cortes de custo, mas não executar demissões. Pode ajustar copy, mas não alterar política pública.</p>
+<p>O segredo está em explicitar fronteiras. Quando a política de autoridade é vaga, o agente oscila entre timidez inútil e ousadia perigosa. Quando é clara, ele opera com fluidez. A autonomia deixa de ser um ato de fé e vira um regime operacional.</p>
+<h2 id="3-priorizacao-sob-conflito">3. Priorização sob conflito</h2>
+<p>O mundo real quase nunca apresenta uma única meta. Velocidade compete com qualidade, custo compete com robustez, urgência compete com conformidade. O agente precisa de uma função de priorização. Essa função pode ponderar impacto, prazo, reversibilidade, dependências e risco sistêmico. Sem ela, o sistema escolhe com base em viés de saliência: faz o que parece urgente, não o que realmente move o objetivo.</p>
+<p>Uma boa priorização também considera fila e capacidade. Nem toda tarefa importante deve ser feita agora. Há momentos em que o melhor movimento é preparar contexto, desbloquear pré-condições ou adiar uma ação até que haja sinal suficiente. Decidir bem inclui saber esperar.</p>
+<h2 id="4-delegacao-escalonamento-e-espera-estrategica">4. Delegação, escalonamento e espera estratégica</h2>
+<p>Um agente autônomo não precisa fazer tudo. Às vezes sua melhor ação é delegar para uma ferramenta, acionar outro agente especializado ou pedir intervenção humana. O erro comum é tratar escalonamento como fracasso. Na verdade, escalonar é uma expressão de maturidade: reconhecer quando o custo de errar supera o benefício de agir sozinho.</p>
+<p>Espera estratégica é outro conceito subestimado. Em operações complexas, agir cedo demais pode consolidar erro. Um agente competente sabe quando coletar mais evidência, quando congelar um fluxo e quando preservar opcionalidade até que o contexto se estabilize.</p>
+<h2 id="5-heuristicas-de-erro-e-reversao">5. Heurísticas de erro e reversão</h2>
+<p>Toda decisão autônoma deve nascer acoplada a uma estratégia de recuperação. A pergunta não é apenas “vale a pena agir?”, mas “se der errado, como limitamos o dano?”. Isso leva a três heurísticas: preferir passos reversíveis, particionar mudanças de alto impacto e registrar razão decisória. Essas heurísticas transformam falhas em material de aprendizagem, não em acidentes irreparáveis.</p>
+<h2 id="6-protocolo-de-decisao-responsavel">6. Protocolo de decisão responsável</h2>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_DECISAO(meta, opcoes, politica):
+  1. classificar a decisão por risco e impacto
+  2. verificar autoridade disponível para agir
+  3. ordenar opções por impacto, reversibilidade e prazo
+  4. escolher o menor passo útil compatível com a política
+  5. executar com evidência e condição de rollback
+  6. revisar resultado e ajustar pesos de priorização
+</code></pre></div>
+
+<p>O protocolo consolida a ideia central do volume: autonomia sem política é loteria; política sem autonomia é gargalo. O equilíbrio operacional surge quando a decisão pode ser rápida sem deixar de ser justificável.</p>
+<h2 id="7-fecho-do-volume">7. Fecho do volume</h2>
+<p>Autonomia, Decisão e Priorização posiciona a vontade do agente dentro de um arcabouço de responsabilidade. O que vem a seguir é ampliar essa vontade para contextos coordenados, onde múltiplos agentes dividem trabalho, protocolo e responsabilidade compartilhada.</p>
+<p><strong>Checklist de internalização</strong>
+- Diferencio autonomia de licença irrestrita.
+- Sei modelar níveis de autoridade por tipo de decisão.
+- Consigo priorizar com base em impacto, prazo e reversibilidade.
+- Entendo quando delegar, escalar ou esperar.
+- Associo toda decisão a um plano de recuperação.</p>
+<p><strong>Glossário estruturado</strong>
+- <strong>Autoridade operacional:</strong> perímetro dentro do qual o agente pode agir sem confirmação adicional.
+- <strong>Reversibilidade:</strong> facilidade de desfazer uma ação malsucedida.
+- <strong>Escalonamento:</strong> transferência deliberada da decisão para humano, ferramenta ou agente especializado.
+- <strong>Função de priorização:</strong> regra que ordena tarefas concorrentes.
+- <strong>Opcionalidade:</strong> preservação de caminhos futuros ao evitar decisões prematuras.</p>
+</body>
+</html>

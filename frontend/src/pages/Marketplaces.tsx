@@ -124,7 +124,14 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const hasOnboardingFlag =
     typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
 
-  const packStates = NEXUS_PACKS.map((pack) => ({
+  // Correção #3 — Marketplace enxuto:
+  // Em vitrine pública (sem autenticação) expõe APENAS o Pack de Acesso (pack-a2).
+  // Aquisição de upgrades é exclusiva em /upgrades (autenticado).
+  const visiblePacks = isPublicView
+    ? NEXUS_PACKS.filter((p) => p.slug === "pack-a2")
+    : NEXUS_PACKS;
+
+  const packStates = visiblePacks.map((pack) => ({
     ...pack,
     access: getPackAccess(displayProfile, pack),
   }));
@@ -137,7 +144,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const [storefrontFilter, setStorefrontFilter] = useState<"all" | "packs" | "ebooks">("all");
   const stockItems = useMemo(() => getOperationalInventory(displayProfile), [displayProfile]);
   const marketplaceEbooks = useMemo(() => getMarketplaceEbooks(displayProfile), [displayProfile]);
-  const heroPacks = (isPublicView ? packStates.slice(0, 3) : availableNow.slice(0, 3));
+  // Em vista pública, hero exibe somente o Pack de Acesso (único item de packStates).
+  // Para usuários autenticados, mantém até 3 packs disponíveis.
+  const heroPacks = isPublicView ? packStates : availableNow.slice(0, 3);
   const featuredChannels = EXTERNAL_MARKETPLACES.slice(0, 4);
   const storefrontItems = useMemo(() => {
     const packItems = packStates.map((pack) => ({

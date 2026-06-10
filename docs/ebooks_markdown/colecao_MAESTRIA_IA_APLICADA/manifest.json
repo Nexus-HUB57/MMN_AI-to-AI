@@ -1,0 +1,89 @@
+{
+  "collection": "MAESTRIA IA APLICADA — 10 Playbooks de Automação, Claude Code e Negócios IA-First",
+  "edition": "Edição Especial 1.0.0",
+  "generated_at": "2026-06-08T00:40:43.579020Z",
+  "total_volumes": 10,
+  "source_channel": "https://www.youtube.com/@maestrosdaia",
+  "volumes": [
+    {
+      "id": "01_automacao_inteligente_para_negocios_reais",
+      "volume": "I",
+      "title": "Automação Inteligente para Negócios Reais",
+      "subtitle": "Como aplicar IA no dia a dia da operação, reduzir atrito, economizar tempo e criar vantagem prática sem depender de código pesado.",
+      "markdown": "01_automacao_inteligente_para_negocios_reais.md",
+      "question": "Como transformar IA em alavanca operacional diária?"
+    },
+    {
+      "id": "02_claude_code_em_modo_producao",
+      "volume": "II",
+      "title": "Claude Code em Modo Produção",
+      "subtitle": "Uso estratégico de Claude Code, skills, rotinas, contexto e execução para acelerar trabalho técnico, criativo e operacional.",
+      "markdown": "02_claude_code_em_modo_producao.md",
+      "question": "Como usar Claude Code melhor que a maioria?"
+    },
+    {
+      "id": "03_workflows_vencem_agentes",
+      "volume": "III",
+      "title": "Workflows Vencem Agentes",
+      "subtitle": "Quando parar de perseguir hype, estruturar fluxos robustos e criar sistemas repetíveis que entregam valor de verdade.",
+      "markdown": "03_workflows_vencem_agentes.md",
+      "question": "Quando um workflow supera um agente?"
+    },
+    {
+      "id": "04_make_n8n_e_orquestracao_sem_gargalos",
+      "volume": "IV",
+      "title": "Make, n8n e Orquestração sem Gargalos",
+      "subtitle": "Integrações, cenários, filas, webhooks e desenho de automações confiáveis para operações que precisam escalar.",
+      "markdown": "04_make_n8n_e_orquestracao_sem_gargalos.md",
+      "question": "Como automatizar sem criar um labirinto frágil?"
+    },
+    {
+      "id": "05_lovable_e_produtos_ia_first",
+      "volume": "V",
+      "title": "Lovable e Produtos IA-First",
+      "subtitle": "Da ideia à interface: como conceber apps, MVPs e experiências centradas em IA com velocidade e clareza de produto.",
+      "markdown": "05_lovable_e_produtos_ia_first.md",
+      "question": "Como prototipar produtos IA-first com rapidez e direção?"
+    },
+    {
+      "id": "06_claude_canva_design_e_conteudo_em_escala",
+      "volume": "VI",
+      "title": "Claude + Canva: Design e Conteúdo em Escala",
+      "subtitle": "Fluxos para criar peças, campanhas, criativos e comunicação visual com velocidade sem sacrificar consistência.",
+      "markdown": "06_claude_canva_design_e_conteudo_em_escala.md",
+      "question": "Como produzir conteúdo visual em minutos sem perder padrão?"
+    },
+    {
+      "id": "07_o_negocio_de_uma_pessoa_so",
+      "volume": "VII",
+      "title": "O Negócio de Uma Pessoa Só",
+      "subtitle": "Estratégias para construir operação enxuta, monetizar rápido e usar IA como equipe invisível em negócios de uma pessoa.",
+      "markdown": "07_o_negocio_de_uma_pessoa_so.md",
+      "question": "Como uma pessoa pode operar como uma mini-empresa com IA?"
+    },
+    {
+      "id": "08_pesquisa_de_mercado_e_lacunas_competitivas",
+      "volume": "VIII",
+      "title": "Pesquisa de Mercado e Lacunas Competitivas",
+      "subtitle": "Como usar IA para mapear concorrentes, descobrir brechas de posicionamento e transformar sinais em oportunidades.",
+      "markdown": "08_pesquisa_de_mercado_e_lacunas_competitivas.md",
+      "question": "Como encontrar oportunidades que os concorrentes não estão vendo?"
+    },
+    {
+      "id": "09_video_reels_e_midia_automatizada",
+      "volume": "IX",
+      "title": "Vídeo, Reels e Mídia Automatizada",
+      "subtitle": "Pipelines para editar, transformar, reciclar e publicar mídia com ajuda de IA em canais, marcas e operações de conteúdo.",
+      "markdown": "09_video_reels_e_midia_automatizada.md",
+      "question": "Como multiplicar mídia sem multiplicar equipe?"
+    },
+    {
+      "id": "10_o_sistema_operacional_da_empresa_ia_first",
+      "volume": "X",
+      "title": "O Sistema Operacional da Empresa IA-First",
+      "subtitle": "A síntese final: pessoas, processos, IA, automações, rituais, governança e escala em uma organização desenhada para a nova era.",
+      "markdown": "10_o_sistema_operacional_da_empresa_ia_first.md",
+      "question": "Como reestruturar uma empresa inteira para operar com IA no centro?"
+    }
+  ]
+}

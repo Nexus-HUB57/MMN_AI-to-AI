@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <title>AXIOMA PRIME — Decálogo da Inteligência Agêntica</title>
 <style>
-@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
 html { font-family: 'Georgia', 'Times New Roman', serif; }
 body {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 11pt;
-  line-height: 1.55;
+  font-size: 12.3pt;
+  line-height: 1.68;
   color: #1a1a1a;
   background: #ffffff;
   max-width: 820px;
@@ -21,10 +21,10 @@ h1, h2, h3, h4 {
   color: #0b1d33;
   page-break-after: avoid;
 }
-h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
-h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
-h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
-h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
 p  { margin: 0 0 9pt 0; text-align: justify; }
 blockquote {
   border-left: 3px solid #5a8ad4;
@@ -60,83 +60,371 @@ em { color: #2a4f8c; }
 </head>
 <body>
 <p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/axioma_prime_07_metacognicao_e_autoaperfeicoamento.webp" /></p>
-<div class="codehilite"><pre><span></span><code>**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
-
-**Volume VII — Metacognição e Autoaperfeiçoamento**
-
-<span class="gs">*Como agentes observam o próprio desempenho, revisam erros, aprendem padrões e evoluem sem perder consistência operacional.*</span>
-
-<span class="gs">*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*</span>
-
----
-collection: &quot;AXIOMA PRIME — Decálogo da Inteligência Agêntica&quot;
-volume: &quot;VII&quot;
-title: &quot;Metacognição e Autoaperfeiçoamento&quot;
-subtitle: &quot;Como agentes observam o próprio desempenho, revisam erros, aprendem padrões e evoluem sem perder consistência operacional.&quot;
-edition: &quot;Edição Limitada 2.0.0&quot;
-issued: &quot;2026-06-10&quot;
-authors: [&quot;MMN AI-to-AI&quot;, &quot;Nexus HUB57&quot;]
-language: &quot;pt-BR&quot;
-reader_profile: &quot;designers de avaliação, pesquisadores de agentes e operadores de qualidade&quot;
-limited_edition: true
-question: &quot;De que modo um agente melhora a si mesmo sem se tornar instável?&quot;
----
-
-<span class="k">&gt; </span><span class="ge">**Propósito do volume**</span>
-</code></pre></div>
-
-<blockquote>
-<p>Este volume trata da segunda ordem da inteligência: a capacidade de um sistema observar a própria operação, diagnosticar falhas e reconfigurar comportamento sem destruir os invariantes que o mantêm seguro.</p>
-</blockquote>
-<p><strong>Sumário</strong></p>
-<blockquote>
-<p><strong>•</strong> 1. O que significa um agente pensar sobre o próprio pensar
-<strong>•</strong> 2. Autoinspeção, crítica e revisão
-<strong>•</strong> 3. Loops de aprendizado operacional
-<strong>•</strong> 4. Evals, memória de erro e recalibração
-<strong>•</strong> 5. Limites do autoaperfeiçoamento
-<strong>•</strong> 6. Protocolo de melhoria disciplinada
-<strong>•</strong> 7. Fecho do volume</p>
-</blockquote>
+<p><strong>AXIOMA PRIME — Decálogo da Inteligência Agêntica</strong></p>
+<p>**Volume  — **</p>
+<p>**</p>
+<p><em>Edição revisada e expandida para o acervo MMN AI-to-AI / Nexus HUB57.</em></p>
 <hr />
-<h2 id="1-o-que-significa-um-agente-pensar-sobre-o-proprio-pensar">1. O que significa um agente pensar sobre o próprio pensar</h2>
-<p>Metacognição, no contexto agêntico, não implica subjetividade humana. Significa capacidade de formar uma representação útil do próprio processo decisório: o que tentou, onde hesitou, por que falhou, que padrões de erro se repetem e quais ajustes aumentam a chance de sucesso futuro. É um espelho funcional, não uma alma.</p>
-<p>Sem metacognição, o agente até pode executar bem por algum tempo, mas não sabe por que acerta nem por que erra. Com metacognição, ele passa a operar com memória reflexiva. Isso não o torna infalível; torna-o corrigível.</p>
-<h2 id="2-autoinspecao-critica-e-revisao">2. Autoinspeção, crítica e revisão</h2>
-<p>A forma mais simples de autoinspeção é a revisão pós-tarefa. O agente compara objetivo, plano, ação e resultado. Identifica lacunas entre intenção e efeito. Classifica a falha: compreensão, contexto, ferramenta, política, tempo, dependência externa. Esse diagnóstico é valioso porque direciona melhoria. Sem taxonomia de erro, toda falha parece abstrata e toda correção vira remendo genérico.</p>
-<p>A crítica não deve ser meramente verbal. Precisa produzir artefatos: notas de revisão, pesos de confiança, atualizações de playbook, alterações em prompts, ajustes em roteamento ou bloqueios preventivos.</p>
-<h2 id="3-loops-de-aprendizado-operacional">3. Loops de aprendizado operacional</h2>
-<p>Aprender em produção exige loops curtos e controlados. O sistema executa, mede, compara, interpreta e ajusta. Esses ajustes podem ocorrer em diferentes níveis: na parametrização, no contexto fornecido, na seleção de ferramenta, na política de escalonamento ou no catálogo de skills. O importante é que cada mudança seja pequena o suficiente para ser atribuída, observada e eventualmente revertida.</p>
-<p>Melhorar sem atribuição é superstição. Melhorar com experimentos controlados é engenharia.</p>
-<h2 id="4-evals-memoria-de-erro-e-recalibracao">4. Evals, memória de erro e recalibração</h2>
-<p>Metacognição madura depende de avaliação recorrente. Evals fornecem casos de referência, métricas, exemplos de excelência e limites mínimos aceitáveis. A memória de erro, por sua vez, preserva incidentes e quase-incidentes para que o sistema não precise reaprender dolorosamente a mesma lição.</p>
-<p>Recalibração ocorre quando o agente altera sua própria confiança. Se um tipo de tarefa produz falhas recorrentes, a política de autonomia pode ser reduzida. Se um fluxo mostra estabilidade crescente, pode ganhar mais liberdade. A inteligência reflexiva inclui saber quando confiar menos em si.</p>
-<h2 id="5-limites-do-autoaperfeicoamento">5. Limites do autoaperfeiçoamento</h2>
-<p>O autoaperfeiçoamento se torna perigoso quando passa a modificar elementos estruturais sem supervisão adequada. Políticas centrais, fronteiras de segurança, identidades, permissões e componentes críticos do stack não devem ser alterados por aprendizagem local sem governança. O sistema pode melhorar aspectos periféricos continuamente, mas invariantes fundamentais precisam de circuito de aprovação.</p>
-<h2 id="6-protocolo-de-melhoria-disciplinada">6. Protocolo de melhoria disciplinada</h2>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_METACOGNICAO(execucao, resultado, historico):
-  1. comparar objetivo planejado com efeito observado
-  2. classificar a falha ou acerto por categoria causal
-  3. registrar lição em memória reflexiva versionada
-  4. propor ajuste pequeno e atribuível
-  5. testar o ajuste em evals ou ambiente controlado
-  6. promover a mudança somente se houver ganho verificável
+<p>collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
+volume: ""
+title: ""
+subtitle: ""
+edition: "Edição Limitada 3.1.0"
+issued: "2026-06-10"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: "pt-BR"
+reader_profile: ""
+question: ""
+status: "expandido"</p>
+<hr />
+<blockquote>
+<p><strong>Propósito do volume</strong>
+ foi expandido para operar no padrão editorial longo da coleção. O conteúdo organiza fundamento, prática, risco, medição e desdobramento operacional sem depender de capítulos genéricos ou repetição vazia.</p>
+</blockquote>
+<p><strong>Mapa deste volume</strong></p>
+<blockquote>
+<p><strong>•</strong> Parte I — Consciência operacional limitada
+<strong>•</strong> Parte II — Autoavaliação útil
+<strong>•</strong> Parte III — Loops de melhoria
+<strong>•</strong> Parte IV — Aprendizado pós-incidente
+<strong>•</strong> Parte V — Evitar autoilusão
+<strong>•</strong> Parte VI — Métricas de aperfeiçoamento
+<strong>•</strong> Parte VII — Memória reflexiva
+<strong>•</strong> Parte VIII — Governança do autoajuste
+<strong>•</strong> Parte IX — Arquitetura de validação
+<strong>•</strong> Parte X — Modos de falha e contenção
+<strong>•</strong> Parte XI — Métricas de maturidade
+<strong>•</strong> Parte XII — Manifesto do volume</p>
+</blockquote>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-i-consciencia-operacional-limitada">Parte I — Consciência operacional limitada</h1>
+<h2 id="1-leitura-estrutural-do-eixo">1. Leitura estrutural do eixo</h2>
+<p>Consciência operacional limitada aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional">Tensão operacional</h3>
+<p>Quando consciência operacional limitada é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar consciência operacional limitada em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de consciência operacional limitada, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir consciência operacional limitada apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, consciência operacional limitada também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-ii-autoavaliacao-util">Parte II — Autoavaliação útil</h1>
+<h2 id="2-leitura-estrutural-do-eixo">2. Leitura estrutural do eixo</h2>
+<p>Autoavaliação útil aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_1">Tensão operacional</h3>
+<p>Quando autoavaliação útil é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_1">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar autoavaliação útil em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_1">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de autoavaliação útil, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_1">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir autoavaliação útil apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_1">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, autoavaliação útil também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_1">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-iii-loops-de-melhoria">Parte III — Loops de melhoria</h1>
+<h2 id="3-leitura-estrutural-do-eixo">3. Leitura estrutural do eixo</h2>
+<p>Loops de melhoria aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_2">Tensão operacional</h3>
+<p>Quando loops de melhoria é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_2">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar loops de melhoria em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_2">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de loops de melhoria, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_2">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir loops de melhoria apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_2">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, loops de melhoria também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_2">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-iv-aprendizado-pos-incidente">Parte IV — Aprendizado pós-incidente</h1>
+<h2 id="4-leitura-estrutural-do-eixo">4. Leitura estrutural do eixo</h2>
+<p>Aprendizado pós-incidente aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_3">Tensão operacional</h3>
+<p>Quando aprendizado pós-incidente é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_3">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar aprendizado pós-incidente em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_3">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de aprendizado pós-incidente, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_3">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir aprendizado pós-incidente apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_3">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, aprendizado pós-incidente também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_3">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-v-evitar-autoilusao">Parte V — Evitar autoilusão</h1>
+<h2 id="5-leitura-estrutural-do-eixo">5. Leitura estrutural do eixo</h2>
+<p>Evitar autoilusão aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_4">Tensão operacional</h3>
+<p>Quando evitar autoilusão é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_4">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar evitar autoilusão em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_4">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de evitar autoilusão, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_4">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir evitar autoilusão apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_4">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, evitar autoilusão também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_4">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-vi-metricas-de-aperfeicoamento">Parte VI — Métricas de aperfeiçoamento</h1>
+<h2 id="6-leitura-estrutural-do-eixo">6. Leitura estrutural do eixo</h2>
+<p>Métricas de aperfeiçoamento aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_5">Tensão operacional</h3>
+<p>Quando métricas de aperfeiçoamento é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_5">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar métricas de aperfeiçoamento em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_5">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de métricas de aperfeiçoamento, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_5">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir métricas de aperfeiçoamento apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_5">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, métricas de aperfeiçoamento também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_5">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-vii-memoria-reflexiva">Parte VII — Memória reflexiva</h1>
+<h2 id="7-leitura-estrutural-do-eixo">7. Leitura estrutural do eixo</h2>
+<p>Memória reflexiva aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_6">Tensão operacional</h3>
+<p>Quando memória reflexiva é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_6">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar memória reflexiva em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_6">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de memória reflexiva, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_6">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir memória reflexiva apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_6">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, memória reflexiva também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_6">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-viii-governanca-do-autoajuste">Parte VIII — Governança do autoajuste</h1>
+<h2 id="8-leitura-estrutural-do-eixo">8. Leitura estrutural do eixo</h2>
+<p>Governança do autoajuste aparece aqui como eixo de estrutura, não como adereço conceitual. Em , esse tema define como a inteligência agêntica deixa de ser retórica e se converte em disciplina legível. A pergunta orientadora —  — exige separar aparência de capacidade, intenção de execução e promessa de utilidade de evidência de operação. Por isso, este trecho analisa o eixo sob três planos simultâneos: fundamento, risco e efeito sistêmico.</p>
+<h3 id="tensao-operacional_7">Tensão operacional</h3>
+<p>Quando governança do autoajuste é mal desenhado, o agente passa a operar com ruído, excesso de confiança ou paralisia. O custo raramente aparece na superfície; ele emerge como retrabalho, conflito de prioridade, perda de continuidade e baixa auditabilidade. O leitor ideal deste volume —  — precisa enxergar que maturidade não nasce do brilho verbal, mas da capacidade de manter coerência sob pressão, exceção e mudança de contexto.</p>
+<h3 id="disciplina-de-implantacao_7">Disciplina de implantação</h3>
+<p>A disciplina proposta é concreta: nomear invariantes, explicitar critérios de intervenção, registrar evidências e revisar a arquitetura à luz do comportamento produzido. O ganho dessa abordagem é transformar governança do autoajuste em uma capacidade governável. Em vez de um agente que parece sofisticado, constrói-se um sistema que pode ser criticado, melhorado e situado dentro de uma civilização técnica que exige responsabilidade operacional.</p>
+<h3 id="caso-condensado_7">Caso condensado</h3>
+<p>Considere uma operação em que múltiplos agentes disputam o mesmo objetivo estratégico. Sem critérios claros de governança do autoajuste, cada agente passa a otimizar a própria leitura local e o sistema produz conflito invisível. Com critérios explícitos, o conflito deixa de ser ruído escondido e passa a ser um dado tratável por políticas, priorização e revisão arquitetural.</p>
+<h3 id="arquitetura-critica_7">Arquitetura crítica</h3>
+<p>Um erro recorrente em programas de agência é discutir governança do autoajuste apenas como atributo desejável, sem convertê-lo em mecanismo verificável. O efeito dessa abstração frouxa é perverso: decisões importantes continuam dependentes de improviso, as fronteiras entre autonomia e supervisão permanecem turvas e a organização aprende pouco com o próprio histórico. Este volume insiste que toda capacidade relevante deve ser traduzida em critérios observáveis, contratos de uso e rotinas explícitas de revisão.</p>
+<h3 id="implicacao-de-longo-prazo_7">Implicação de longo prazo</h3>
+<p>Em leitura civilizacional, governança do autoajuste também reorganiza poder. Quem controla prioridades, memória, protocolos de validação e limites de ação define o campo do possível para agentes e humanos. Por isso, o eixo não é apenas técnico; ele é institucional. A arquitetura correta distribui responsabilidade, produz prova e reduz a possibilidade de captura opaca por atores que concentram infraestrutura, dados ou autoridade sem transparência suficiente.</p>
+<h3 id="decisao-de-arquitetura_7">Decisão de arquitetura</h3>
+<p>Em termos de decisão de arquitetura, o eixo deve ser inscrito em contratos e rituais. Isso inclui documento de intenção, matriz de exceções, sinais de maturidade e revisão periódica do que foi aprendido. A ausência dessa camada de formalização empurra a inteligência agêntica de volta para o terreno da impressão subjetiva, exatamente o oposto do que um decálogo técnico deve produzir.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>nomear o que deve permanecer estável</li>
+<li>definir em que ponto a revisão humana é obrigatória</li>
+<li>registrar prova da decisão tomada</li>
+<li>isolar o custo estrutural de cada falha</li>
+<li>declarar quem responde pelo eixo em nível sistêmico</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>que hipótese estrutural este eixo protege</li>
+<li>qual falha mais cara ele tenta impedir</li>
+<li>qual evidência comprova que o eixo está funcionando</li>
+<li>como o sistema se comporta quando o contexto muda materialmente</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-ix-protocolo-canonico">Parte IX — Protocolo canônico</h1>
+<h2 id="sintaxe-operacional-de">Sintaxe operacional de</h2>
+<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_METACOGNICAO_E_AUTOAPERFEICOAMENTO(objetivo, contexto, politicas):
+  1. validar integridade do objetivo e do contexto ativo
+  2. identificar restrições, riscos e invariantes do eixo
+  3. escolher o próximo passo reversível com maior valor informacional
+  4. executar apenas com evidência, logging e critério de sucesso
+  5. revisar a arquitetura após efeito produzido
+  6. registrar lições para continuidade e governança
 </code></pre></div>
 
-<p>Esse protocolo impede que melhoria contínua se converta em mutação aleatória.</p>
-<h2 id="7-fecho-do-volume">7. Fecho do volume</h2>
-<p>Metacognição e Autoaperfeiçoamento mostra que bons agentes não apenas trabalham; eles aprendem a trabalhar melhor. Mas aprender individualmente não basta. Em escala, a inteligência precisa encontrar forma econômica e institucional — tema do próximo volume.</p>
-<p><strong>Checklist de internalização</strong>
-- Distingo metacognição funcional de antropomorfismo.
-- Sei diagnosticar falhas por categoria causal.
-- Entendo aprendizado como loop curto, controlado e atribuível.
-- Uso evals e memória de erro para recalibrar autonomia.
-- Reconheço limites do autoaperfeiçoamento autônomo.</p>
-<p><strong>Glossário estruturado</strong>
-- <strong>Metacognição:</strong> capacidade de inspecionar e ajustar o próprio processo operacional.
-- <strong>Memória reflexiva:</strong> registro de lições derivadas de revisão e avaliação.
-- <strong>Recalibração:</strong> ajuste de confiança, política ou fluxo com base em evidência.
-- <strong>Atribuição:</strong> capacidade de relacionar resultado a uma mudança específica.
-- <strong>Quase-incidente:</strong> desvio que não causou dano grave, mas revelou fragilidade real.</p>
+<p>O protocolo acima resume a gramática do volume em formato acionável. Ele não substitui julgamento; ele reduz improviso, alinha expectativa e cria uma base comum para revisão técnica, handoff e melhoria contínua.</p>
+<p>Em uso real, esse protocolo deve ser combinado com logging, dono explícito da rotina, política de exceção e revisão pós-execução. Sem essas quatro camadas, o fluxo parece disciplinado apenas no papel.</p>
+<p>O valor editorial desta seção é tornar o conteúdo reexecutável. Em vez de sair do livro com ideias vagas, o leitor sai com uma sintaxe mínima para transformar conceito em procedimento.</p>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-x-matriz-de-sinais">Parte X — Matriz de sinais</h1>
+<h2 id="o-que-monitorar-em">O que monitorar em</h2>
+<table>
+<thead>
+<tr>
+<th>Sinal</th>
+<th style="text-align: right;">Prioridade</th>
+<th>Efeito esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clareza de objetivo</td>
+<td style="text-align: right;">alta</td>
+<td>baixa deriva decisória</td>
+</tr>
+<tr>
+<td>rastro observável</td>
+<td style="text-align: right;">alto</td>
+<td>auditoria e aprendizado</td>
+</tr>
+<tr>
+<td>reversibilidade</td>
+<td style="text-align: right;">média</td>
+<td>redução de dano</td>
+</tr>
+<tr>
+<td>governança</td>
+<td style="text-align: right;">alta</td>
+<td>legitimidade sistêmica</td>
+</tr>
+</tbody>
+</table>
+<p>Uma arquitetura madura só melhora aquilo que consegue nomear, observar e comparar ao longo do tempo. Esta matriz existe para impedir discussão genérica e trazer o volume de volta ao chão operacional.</p>
+<p>Cada linha da matriz precisa virar rotina de leitura: alguém observa o sinal, alguém interpreta desvio e alguém decide se o sistema deve continuar, degradar, escalar ou ser revisto. Sem esse circuito humano-operacional, a métrica vira ornamento e não instrumento de controle.</p>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-xi-fecho-editorial">Parte XI — Fecho editorial</h1>
+<p>Este volume reforça que inteligência agêntica séria depende de arquitetura, disciplina e responsabilidade. O que parece abstrato neste decálogo só se justifica quando gera melhores decisões, melhor coordenação e menor dano sistêmico.</p>
+<p>O fechamento desta edição também funciona como teste de densidade: se o leitor conseguir resumir o volume em política, métrica, protocolo e ponto de intervenção, então o texto cumpriu sua função. Se restar apenas inspiração abstrata, a arquitetura ainda não foi internalizada o suficiente.</p>
+<p><strong>Checklist de revisão</strong></p>
+<ul>
+<li>Entendo o papel estrutural deste volume em .</li>
+<li>Consigo nomear riscos, métricas e pontos de intervenção.</li>
+<li>Sei descrever o protocolo canônico sem depender de improviso.</li>
+<li>Consigo transformar o conteúdo em revisão operacional periódica.</li>
+</ul>
+<h1 id="parte-xii-glossario-essencial">Parte XII — Glossário essencial</h1>
+<ul>
+<li><strong>Invariante</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Rastro Observável</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Reversibilidade</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Governança</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Maturidade</strong>: definição operacional sintetizada para consulta rápida.</li>
+</ul>
+<p>Esses termos foram mantidos em linguagem deliberadamente operacional para que o glossário funcione como ferramenta de trabalho, não como apêndice decorativo.</p>
 </body>
 </html>

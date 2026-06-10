@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <title>FORJA AGÊNTICA — Engenharia de Agentes em Produção</title>
 <style>
-@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
 html { font-family: 'Georgia', 'Times New Roman', serif; }
 body {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 11pt;
-  line-height: 1.55;
+  font-size: 12.3pt;
+  line-height: 1.68;
   color: #1a1a1a;
   background: #ffffff;
   max-width: 820px;
@@ -21,10 +21,10 @@ h1, h2, h3, h4 {
   color: #0b1d33;
   page-break-after: avoid;
 }
-h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
-h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
-h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
-h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
 p  { margin: 0 0 9pt 0; text-align: justify; }
 blockquote {
   border-left: 3px solid #5a8ad4;
@@ -59,16 +59,17 @@ em { color: #2a4f8c; }
 </style>
 </head>
 <body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/forja_agentica_01_runtime_de_agentes_em_producao.png" /></p>
 <p><strong>FORJA AGÊNTICA — Engenharia de Agentes em Produção</strong></p>
 <p><strong>Volume I — Runtime de Agentes em Produção</strong></p>
 <p><em>Como um agente deixa o laboratório e passa a operar como sistema com estado, fila, restrições, políticas e SLA.</em></p>
-<p><em>Quadrilogia MMN AI-to-AI · Volume Técnico Final</em></p>
+<p><em>Quadrilogia MMN AI-to-AI · Volume Técnico Final.</em></p>
 <hr />
 <p>collection: "FORJA AGÊNTICA — Engenharia de Agentes em Produção"
 volume: "I"
 title: "Runtime de Agentes em Produção"
 subtitle: "Como um agente deixa o laboratório e passa a operar como sistema com estado, fila, restrições, políticas e SLA."
-edition: "Draft Editorial 1.0"
+edition: "Edição Técnica 1.1.0"
 issued: "2026-06-10"
 authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: "pt-BR"
@@ -79,358 +80,352 @@ quadrilogia_role: "última coletânea da quadrilogia"</p>
 <hr />
 <blockquote>
 <p><strong>Propósito do volume</strong>
-O verdadeiro nascimento do agente em produção ocorre quando o raciocínio passa a obedecer limites de estado, latência, prioridade, reexecução, política e observabilidade. Este volume organiza esse nascimento como engenharia de runtime e não como entusiasmo de laboratório.</p>
+Runtime de Agentes em Produção foi expandido para operar no padrão editorial longo da coleção. O conteúdo organiza fundamento, prática, risco, medição e desdobramento operacional sem depender de capítulos genéricos ou repetição vazia.</p>
 </blockquote>
 <p><strong>Mapa deste volume</strong></p>
 <blockquote>
-<p><strong>•</strong> Parte I — Por que demos falham em produção
-<strong>•</strong> Parte II — O que é runtime agêntico
-<strong>•</strong> Parte III — Scheduler, filas e orquestração básica
-<strong>•</strong> Parte IV — Estado, sessão e continuidade operacional
-<strong>•</strong> Parte V — Execução de ferramentas e contratos
-<strong>•</strong> Parte VI — Latência, throughput e degradação controlada
-<strong>•</strong> Parte VII — Políticas, permissões e fronteiras do runtime
-<strong>•</strong> Parte VIII — Telemetria, traces e diagnóstico
-<strong>•</strong> Parte IX — Failure modes de produção
-<strong>•</strong> Parte X — Runbook do operador de agentes
-<strong>•</strong> Parte XI — Arquitetura de referência para o primeiro runtime
-<strong>•</strong> Parte XII — Manifesto da engenharia agêntica de produção
-<strong>•</strong> Apêndices — protocolos, checklists e glossário</p>
+<p><strong>•</strong> Parte I — Contrato mínimo de runtime
+<strong>•</strong> Parte II — Scheduler e prioridades
+<strong>•</strong> Parte III — Estado e sessão viva
+<strong>•</strong> Parte IV — Execução de ferramentas
+<strong>•</strong> Parte V — Telemetria do ciclo
+<strong>•</strong> Parte VI — Degradação controlada
+<strong>•</strong> Parte VII — Políticas de permissão
+<strong>•</strong> Parte VIII — Operação com sla
+<strong>•</strong> Parte IX — Telemetria e slo
+<strong>•</strong> Parte X — Incidentes e recuperação
+<strong>•</strong> Parte XI — Capacidade e custos
+<strong>•</strong> Parte XII — Runbook final</p>
 </blockquote>
-<hr />
-<h1 id="abertura">Abertura</h1>
-<p>Toda equipe que trabalha com agentes passa por um momento de euforia. O protótipo responde bem, usa ferramentas em uma sequência convincente, resolve alguns casos de demonstração e transmite a sensação de que a tecnologia já está madura. Esse é exatamente o ponto em que nascem os maiores erros de arquitetura. O laboratório produz confiança estética; a produção exige confiança operacional. Entre uma coisa e outra existe um abismo chamado runtime.</p>
-<p>Um runtime de agentes é o conjunto de mecanismos que sustenta a vida real do sistema: filas, sessões, estado, retries, timeouts, permissões, observabilidade, policies, tratamento de erro, roteamento e recuperação. Sem essa camada, a agência se comporta como teatro de raciocínio. Funciona enquanto o cenário é simples, o contexto é curto e ninguém exige previsibilidade. Quando o tráfego cresce, as dependências falham, as prioridades colidem e o usuário espera confiabilidade, o sistema revela que nunca havia saído da fase de demo.</p>
-<p>A missão deste volume é converter essa lacuna em disciplina. Em vez de perguntar “como fazer o agente parecer inteligente?”, a pergunta aqui é: “como manter um agente útil, rastreável, corrigível e economicamente sustentável quando ele se torna parte de uma operação real?”. Essa mudança de pergunta muda toda a engenharia.</p>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-i-por-que-demos-falham-em-producao">Parte I — Por que demos falham em produção</h1>
-<h2 id="1-o-ambiente-da-demonstracao-e-artificialmente-gentil">1. O ambiente da demonstração é artificialmente gentil</h2>
-<p>Em demos, quase tudo favorece o sistema. O input é relativamente limpo. O operador sabe o que esperar. O fluxo é curto. Não existe concorrência real por recursos. O risco reputacional é baixo. A plateia tende a interpretar o sucesso local como sinal de robustez geral. Esse ambiente é útil para explorar capacidade, mas péssimo para provar confiabilidade.</p>
-<p>O problema é que a organização frequentemente toma decisões de arquitetura com base nesse teatro gentil. Supõe que o mesmo comportamento se manterá quando chegarem múltiplas requisições, integrações externas instáveis, usuários ambíguos, deadlines, custos limitados e necessidade de auditoria. Sem runtime, a promessa de inteligência degrada justamente no instante em que passa a importar mais.</p>
-<h2 id="2-o-choque-com-a-realidade-operacional">2. O choque com a realidade operacional</h2>
-<p>Produção adiciona propriedades que o protótipo não conhece bem: carga, tempo, conflito de prioridade, política, histórico, interrupção e responsabilidade. O sistema precisa decidir em janelas estreitas, lidar com tarefas simultâneas, sobreviver a reentregas de evento, registrar o que ocorreu e responder por seus efeitos. Essa é a fronteira real entre uma prova de conceito e um ativo operacional.</p>
-<h2 id="3-o-custo-de-lancar-sem-runtime">3. O custo de lançar sem runtime</h2>
-<p>Quando uma equipe lança cedo demais, paga em vários níveis. Surgem mensagens duplicadas, tarefas órfãs, contexto perdido, actions parciais, escalonamentos sem evidência, erro silencioso de ferramenta e custo exagerado por tarefa concluída. Em muitos casos, o problema não é o modelo. É a inexistência de uma malha operacional que enquadre o modelo dentro de um regime estável de execução.</p>
+<h1 id="parte-i-contrato-minimo-de-runtime">Parte I — Contrato mínimo de runtime</h1>
+<h2 id="1-leitura-estrutural-do-eixo">1. Leitura estrutural do eixo</h2>
+<p>Contrato mínimo de runtime é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional">Tensão operacional</h3>
+<p>Se contrato mínimo de runtime é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando contrato mínimo de runtime é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se contrato mínimo de runtime não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Contrato mínimo de runtime precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, contrato mínimo de runtime também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-ii-o-que-e-runtime-agentico">Parte II — O que é runtime agêntico</h1>
-<h2 id="4-definicao-operacional">4. Definição operacional</h2>
-<p>Runtime agêntico é a infraestrutura de sustentação contínua do agente. Ele define como tarefas entram, são priorizadas, adquirem contexto, podem chamar ferramentas, sofrem restrições, emitem logs, lidam com falha e retornam ao sistema. O runtime não é um detalhe de implementação; é o próprio ambiente em que a agência ganha forma reproduzível.</p>
-<p>Se quisermos uma fórmula simples, podemos dizer que o runtime é o lugar onde o raciocínio encontra limites. É ali que a inteligência deixa de ser apenas capacidade potencial e passa a obedecer orçamento de tempo, permissão, memória, latência e causalidade.</p>
-<h2 id="5-componentes-minimos">5. Componentes mínimos</h2>
-<p>Um runtime minimamente sério costuma ter: ponto de ingestão de tarefas, scheduler ou roteador, store de estado, mecanismo de memória de trabalho, camada de políticas, executor de ferramentas, subsistema de observabilidade, tratamento de exceção e interface de escalonamento humano. Nem sempre todos esses componentes aparecem como serviços separados. Mas funcionalmente eles precisam existir.</p>
-<h2 id="6-o-runtime-como-contrato-organizacional">6. O runtime como contrato organizacional</h2>
-<p>Também é útil entender o runtime como contrato entre times. Produto diz o que a experiência precisa garantir. Operação define o que o fluxo não pode quebrar. Segurança delimita permissões. Infraestrutura impõe orçamento e confiabilidade. O runtime é onde essas exigências se encontram. Sem ele, cada área supõe que a outra garantirá a robustez. Ninguém garante de fato.</p>
+<h1 id="parte-ii-scheduler-e-prioridades">Parte II — Scheduler e prioridades</h1>
+<h2 id="2-leitura-estrutural-do-eixo">2. Leitura estrutural do eixo</h2>
+<p>Scheduler e prioridades é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_1">Tensão operacional</h3>
+<p>Se scheduler e prioridades é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_1">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando scheduler e prioridades é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_1">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se scheduler e prioridades não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_1">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Scheduler e prioridades precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_1">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_1">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, scheduler e prioridades também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-iii-scheduler-filas-e-orquestracao-basica">Parte III — Scheduler, filas e orquestração básica</h1>
-<h2 id="7-toda-agencia-em-producao-vira-problema-de-fila">7. Toda agência em produção vira problema de fila</h2>
-<p>No laboratório, fala-se muito de raciocínio. Em produção, fala-se muito de fila. Tarefas chegam juntas, algumas são urgentes, outras podem esperar, algumas exigem humano, outras são automáticas, várias dependem de recursos escassos. Sem uma política de agendamento, o sistema opera por acidente.</p>
-<p>O scheduler é a camada que escolhe quando e em que ordem cada trabalho entra no ciclo decisório. Ele precisa considerar prioridade, custo, tempo esperado, política de risco e disponibilidade de recurso. Quando o scheduler inexiste ou é ingênuo, a organização passa a achar que o agente é inconsistente, quando na verdade a inconsistência nasceu da ordem errada de execução.</p>
-<h2 id="8-filas-prioridades-e-starvation">8. Filas, prioridades e starvation</h2>
-<p>Uma fila sem critérios tende a privilegiar o que chegou primeiro ou o que grita mais alto. Em muitos cenários, nenhum dos dois critérios é suficiente. Tarefas críticas podem ser enterradas por volume baixo valor. Tarefas longas podem bloquear tarefas curtas. Usuários premium podem exigir tratamento distinto. O runtime precisa lidar com prioridade e fairness ao mesmo tempo.</p>
-<p>Starvation é um problema clássico: certos itens nunca são processados porque sempre aparece algo “mais importante”. A arquitetura madura cria mecanismos de envelhecimento de prioridade, janelas de processamento e categorias de serviço para impedir esse abandono silencioso.</p>
-<h2 id="9-orquestracao-nao-e-apenas-encadear-passos">9. Orquestração não é apenas encadear passos</h2>
-<p>Orquestrar significa coordenar estados, dependências, exceções e confirmações. Um fluxo de agente não é uma sequência linear de tool calls. Pode precisar parar, esperar, reavaliar, escalar, pedir confirmação ou reconstituir contexto. A orquestração precisa ser pensada como máquina de estados, não como simples narrativa procedural.</p>
+<h1 id="parte-iii-estado-e-sessao-viva">Parte III — Estado e sessão viva</h1>
+<h2 id="3-leitura-estrutural-do-eixo">3. Leitura estrutural do eixo</h2>
+<p>Estado e sessão viva é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_2">Tensão operacional</h3>
+<p>Se estado e sessão viva é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_2">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando estado e sessão viva é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_2">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se estado e sessão viva não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_2">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Estado e sessão viva precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_2">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_2">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, estado e sessão viva também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-iv-estado-sessao-e-continuidade-operacional">Parte IV — Estado, sessão e continuidade operacional</h1>
-<h2 id="10-sessao-e-mais-do-que-historico-de-conversa">10. Sessão é mais do que histórico de conversa</h2>
-<p>Muita gente reduz sessão a transcript. Em produção, sessão é unidade de continuidade operacional. Ela precisa carregar identidade da tarefa, parâmetros ativos, checkpoints, dependências, políticas aplicadas, artefatos gerados e relação com eventos anteriores. Se a sessão depende apenas de texto acumulado, torna-se cara, instável e opaca.</p>
-<h2 id="11-estado-ativo-estado-duravel-e-snapshots">11. Estado ativo, estado durável e snapshots</h2>
-<p>O runtime precisa distinguir o estado que muda no momento do estado que precisa sobreviver por mais tempo. Estado ativo inclui subtarefas, tool calls pendentes, temporizadores e resultados provisórios. Estado durável inclui compromissos, identificadores, vínculo com usuário, política aplicada e artefatos permanentes. Snapshots permitem congelar a fotografia operacional para retomada, debugging e rollback.</p>
-<h2 id="12-continuidade-sem-contaminacao">12. Continuidade sem contaminação</h2>
-<p>Um agente em produção deve continuar uma tarefa sem ser arrastado por resíduos irrelevantes de sessões anteriores. Isso exige política de hidratação de contexto: o que entra, o que fica fora, o que é relembrado apenas sob demanda. Continuidade boa é seletiva. Continuidade total vira ruído.</p>
-<h2 id="13-retomada-de-fluxo">13. Retomada de fluxo</h2>
-<p>Quando uma dependência externa falha ou um humano demora a responder, a sessão pode precisar ficar suspensa. O runtime precisa saber guardar esse estado e retomá-lo depois sem perder o fio causal. Essa capacidade de pausar e continuar é um dos grandes divisores entre agentes de demonstração e agentes de operação real.</p>
+<h1 id="parte-iv-execucao-de-ferramentas">Parte IV — Execução de ferramentas</h1>
+<h2 id="4-leitura-estrutural-do-eixo">4. Leitura estrutural do eixo</h2>
+<p>Execução de ferramentas é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_3">Tensão operacional</h3>
+<p>Se execução de ferramentas é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_3">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando execução de ferramentas é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_3">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se execução de ferramentas não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_3">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Execução de ferramentas precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_3">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_3">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, execução de ferramentas também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-v-execucao-de-ferramentas-e-contratos">Parte V — Execução de ferramentas e contratos</h1>
-<h2 id="14-tools-nao-sao-magicas-sao-superficies-de-risco">14. Tools não são mágicas; são superfícies de risco</h2>
-<p>Cada ferramenta conectada ao agente aumenta poder e superfície de erro. Em produção, o runtime precisa tratar tool execution como contrato auditável: schema de entrada, permissão, expectativa de saída, tratamento de timeout, política de retry, verificação pós-efeito e logging. Quando uma tool é tratada apenas como “capacidade disponível”, o sistema tende a superestimar sua confiabilidade.</p>
-<h2 id="15-o-ciclo-completo-da-execucao">15. O ciclo completo da execução</h2>
-<p>Uma execução segura passa por seis momentos: intenção, preparação, chamada, observação, verificação e commit lógico. Em muitos projetos, apenas a chamada é implementada. O agente decide usar a ferramenta e pronto. Isso é insuficiente. O runtime maduro observa o contexto anterior, valida parâmetros, registra a chamada, verifica o resultado e só então considera a etapa concluída.</p>
-<h2 id="16-retries-e-compensacao">16. Retries e compensação</h2>
-<p>Retry cego costuma transformar falha pequena em desastre grande. Se a primeira chamada criou efeito parcial e o runtime simplesmente repete sem checagem, surge duplicação. Por isso, retries devem ser combinados com idempotência, chaves de correlação e mecanismos de compensação. Em fluxos críticos, compensar é tão importante quanto executar.</p>
+<h1 id="parte-v-telemetria-do-ciclo">Parte V — Telemetria do ciclo</h1>
+<h2 id="5-leitura-estrutural-do-eixo">5. Leitura estrutural do eixo</h2>
+<p>Telemetria do ciclo é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_4">Tensão operacional</h3>
+<p>Se telemetria do ciclo é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_4">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando telemetria do ciclo é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_4">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se telemetria do ciclo não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_4">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Telemetria do ciclo precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_4">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_4">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, telemetria do ciclo também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-vi-latencia-throughput-e-degradacao-controlada">Parte VI — Latência, throughput e degradação controlada</h1>
-<h2 id="17-a-experiencia-real-e-governada-pelo-tempo">17. A experiência real é governada pelo tempo</h2>
-<p>Um agente pode ser brilhante e ainda assim inútil se responder tarde demais. Latência é requisito de produto, não simples detalhe de infraestrutura. O runtime precisa gerir orçamento temporal por tarefa, por etapa e por classe de serviço. Isso envolve timeouts, cancelamentos, preemption, streaming e escolhas econômicas entre modelos e ferramentas.</p>
-<h2 id="18-throughput-nao-e-so-volume-bruto">18. Throughput não é só volume bruto</h2>
-<p>Throughput saudável é volume concluído com qualidade aceitável e custo sustentável. Se o sistema processa muitas tarefas, mas aumenta retrabalho, erro ou escalonamento, o throughput aparente é ilusório. O runtime precisa medir conclusão útil, não apenas número de execuções.</p>
-<h2 id="19-degradacao-controlada">19. Degradação controlada</h2>
-<p>Toda operação séria precisa saber degradar. Quando o orçamento de latência é estourado, talvez o sistema precise responder parcialmente, reduzir profundidade, adiar uma etapa, recorrer a uma heurística mais barata ou escalonar mais cedo. A degradação controlada preserva experiência e integridade quando o ambiente não permite a forma ideal de execução.</p>
+<h1 id="parte-vi-degradacao-controlada">Parte VI — Degradação controlada</h1>
+<h2 id="6-leitura-estrutural-do-eixo">6. Leitura estrutural do eixo</h2>
+<p>Degradação controlada é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_5">Tensão operacional</h3>
+<p>Se degradação controlada é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_5">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando degradação controlada é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_5">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se degradação controlada não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_5">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Degradação controlada precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_5">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_5">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, degradação controlada também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-vii-politicas-permissoes-e-fronteiras-do-runtime">Parte VII — Políticas, permissões e fronteiras do runtime</h1>
-<h2 id="20-runtime-tambem-e-enforcement">20. Runtime também é enforcement</h2>
-<p>Política sem mecanismo vira intenção. O runtime é o ponto em que política ganha enforcement. É ali que se decide o que o agente pode ler, escrever, chamar, persistir, escalar ou recusar. Sem essa camada, a governança fica terceirizada para instruções textuais frágeis.</p>
-<h2 id="21-menor-privilegio-aplicavel">21. Menor privilégio aplicável</h2>
-<p>Cada sessão, tarefa ou tool call deve receber apenas o mínimo necessário de permissão. Tokens temporários, scopes específicos, leitura separada de escrita e credenciais por contexto reduzem dano em caso de erro ou abuso. Um runtime que distribui privilégios amplos por conveniência técnica está acumulando risco estrutural.</p>
-<h2 id="22-fronteiras-e-zonas-de-exclusao">22. Fronteiras e zonas de exclusão</h2>
-<p>Há áreas em que o agente não deve entrar sem múltiplas barreiras: sistemas financeiros, dados sensíveis, comunicação pública, configurações críticas, destruição de registros. O runtime maduro possui zonas de exclusão e gatilhos claros de approval gate. Isso não diminui a agência; a torna socialmente suportável.</p>
+<h1 id="parte-vii-politicas-de-permissao">Parte VII — Políticas de permissão</h1>
+<h2 id="7-leitura-estrutural-do-eixo">7. Leitura estrutural do eixo</h2>
+<p>Políticas de permissão é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_6">Tensão operacional</h3>
+<p>Se políticas de permissão é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_6">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando políticas de permissão é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_6">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se políticas de permissão não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_6">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Políticas de permissão precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_6">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_6">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, políticas de permissão também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-viii-telemetria-traces-e-diagnostico">Parte VIII — Telemetria, traces e diagnóstico</h1>
-<h2 id="23-o-runtime-ve-o-que-o-agente-faz">23. O runtime vê o que o agente faz</h2>
-<p>Se o runtime não vê, ele não governa. Telemetria útil precisa registrar ingestão, construção de contexto, escolha de política, chamadas de ferramenta, tempo por etapa, falhas, replanejamento, saída e efeito observado. Isso permite diagnóstico causal e não apenas leitura de sintomas.</p>
-<h2 id="24-trace-semantico">24. Trace semântico</h2>
-<p>Além de logs técnicos, agentes precisam de eventos semânticos: “classificou risco como alto”, “escalou por falta de confiança”, “ignorou memória expirada”, “falhou por timeout de API externa”. Esses traços permitem entender o comportamento em termos operacionais, não apenas em termos de infraestrutura.</p>
-<h2 id="25-evals-conectados-ao-runtime">25. Evals conectados ao runtime</h2>
-<p>Um runtime maduro conversa com evals. Casos canônicos, regressões conhecidas e métricas por fluxo ajudam a comparar versões de prompts, políticas, ferramentas e rotas de modelo. A verdadeira melhoria contínua começa quando o runtime não apenas executa, mas também alimenta a avaliação sistemática do que executa.</p>
+<h1 id="parte-viii-operacao-com-sla">Parte VIII — Operação com sla</h1>
+<h2 id="8-leitura-estrutural-do-eixo">8. Leitura estrutural do eixo</h2>
+<p>Operação com sla é uma camada de engenharia de produção. Em Runtime de Agentes em Produção, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — quais componentes, contratos e políticas transformam um experimento de ia em runtime operacional de produção? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_7">Tensão operacional</h3>
+<p>Se operação com SLA é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros de plataforma, arquitetos de sistemas agênticos e operadores técnicos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_7">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando operação com SLA é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_7">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se operação com SLA não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_7">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Operação com sla precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_7">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_7">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, operação com SLA também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-ix-failure-modes-de-producao">Parte IX — Failure modes de produção</h1>
-<h2 id="26-tarefa-orfa">26. Tarefa órfã</h2>
-<p>A tarefa entra, algum passo falha, ninguém percebe e o item desaparece da consciência operacional. Tarefas órfãs são comuns em sistemas sem estado explícito, alertas e política de retry bem desenhada.</p>
-<h2 id="27-duplicacao-de-efeito">27. Duplicação de efeito</h2>
-<p>O evento chega duas vezes, a tool é repetida, a ação é cometida mais de uma vez. Sem idempotência e checagem pós-efeito, o runtime vira multiplicador de dano.</p>
-<h2 id="28-contaminacao-de-contexto">28. Contaminação de contexto</h2>
-<p>Informação inválida, expirada ou mal priorizada entra no contexto ativo e empurra o agente para decisões equivocadas. Esse failure mode nasce da ausência de curadoria entre memória, sessão e evento atual.</p>
-<h2 id="29-loop-de-replanejamento">29. Loop de replanejamento</h2>
-<p>O agente detecta dificuldade e replaneja sem parar. Em vez de agir, entra em espiral de análise. O runtime precisa impor limites de iteração, critérios de escalonamento e mecanismos de escolha de menor próximo passo útil.</p>
-<h2 id="30-sobrecarga-de-custo">30. Sobrecarga de custo</h2>
-<p>Um runtime mal calibrado pode gastar demais com modelos caros, chamadas desnecessárias, retries e contexto excessivo. Sem observabilidade econômica, a operação fica inviável antes mesmo de provar valor.</p>
-<div style="page-break-before: always;"></div>
-
-<h1 id="parte-x-runbook-do-operador-de-agentes">Parte X — Runbook do operador de agentes</h1>
-<h2 id="31-o-operador-como-guardiao-do-comportamento">31. O operador como guardião do comportamento</h2>
-<p>O operador de runtime não é apenas um técnico que “conserta fluxos”. Ele é o guardião da saúde operacional do agente. Observa filas, analisa falhas, decide rollback, revisa escalonamentos, mantém runbooks, comunica incidentes e garante que políticas estejam sendo aplicadas de forma coerente.</p>
-<h2 id="32-rotina-diaria">32. Rotina diária</h2>
-<p>Uma rotina mínima inclui: verificar tarefas paradas, revisar alertas de falha, identificar picos de latência, inspecionar custo por fluxo, observar taxas de escalonamento e detectar regressões recentes. Essa cadência curta impede que pequenos desvios se tornem incidentes grandes.</p>
-<h2 id="33-resposta-a-incidente">33. Resposta a incidente</h2>
-<p>Quando algo sai do esperado, o operador precisa responder em ordem: conter, entender, comunicar, corrigir, aprender. Conter pode significar pausar uma tool, reduzir autonomia, isolar uma fila ou pinagem de versão. Entender exige traces e evidência. Comunicar protege confiança organizacional. Corrigir resolve o caso específico. Aprender atualiza o runtime para o próximo ciclo.</p>
-<div class="codehilite"><pre><span></span><code>RUNBOOK_INCIDENTE(evento):
-  1. identificar escopo e risco do desvio
-  2. conter o fluxo afetado com menor dano adicional
-  3. recuperar traces, estado e chamadas de ferramenta
-  4. classificar causa provável e decidir rollback ou correção
-  5. comunicar impacto e próximos passos
-  6. registrar lições e atualizar política, eval ou configuração
+<h1 id="parte-ix-protocolo-canonico">Parte IX — Protocolo canônico</h1>
+<h2 id="sintaxe-operacional-de-runtime-de-agentes-em-producao">Sintaxe operacional de Runtime de Agentes em Produção</h2>
+<div class="codehilite"><pre><span></span><code>RUNBOOK_01_RUNTIME_DE_AGENTES_EM_PRODUCAO(evento, estado, politicas):
+  1. classificar o evento e recuperar o estado confiável
+  2. aplicar política de execução, retry ou escalonamento
+  3. registrar trace completo com causa, efeito e custo
+  4. degradar com segurança quando o contrato não puder ser cumprido
+  5. acionar rollback, replay ou compensação quando necessário
+  6. fechar incidente com evidência e ação preventiva
 </code></pre></div>
 
+<p>O protocolo acima resume a gramática do volume em formato acionável. Ele não substitui julgamento; ele reduz improviso, alinha expectativa e cria uma base comum para revisão técnica, handoff e melhoria contínua.</p>
+<p>Em uso real, esse protocolo deve ser combinado com logging, dono explícito da rotina, política de exceção e revisão pós-execução. Sem essas quatro camadas, o fluxo parece disciplinado apenas no papel.</p>
+<p>O valor editorial desta seção é tornar o conteúdo reexecutável. Em vez de sair do livro com ideias vagas, o leitor sai com uma sintaxe mínima para transformar conceito em procedimento.</p>
 <div style="page-break-before: always;"></div>
 
-<h1 id="parte-xi-arquitetura-de-referencia-para-o-primeiro-runtime">Parte XI — Arquitetura de referência para o primeiro runtime</h1>
-<h2 id="34-um-desenho-minimo-plausivel">34. Um desenho mínimo plausível</h2>
-<p>Para a maioria das equipes iniciantes, um primeiro runtime plausível pode ser descrito assim: um ponto de entrada de eventos; uma fila com prioridade simples; um store de estado por tarefa; um compositor de contexto; um agente executor; um registry de tools; uma camada de policy enforcement; um sistema básico de logs e alertas; e um canal de escalonamento humano. Esse arranjo já permite sair do caos sem exigir uma plataforma gigantesca.</p>
-<h2 id="35-evolucao-por-maturidade">35. Evolução por maturidade</h2>
-<p>No estágio seguinte, entram observabilidade semântica, eval harness, controle de custo por fluxo, múltiplas filas por classe de serviço, versionamento fino de políticas e ferramentas, além de mecanismos de canary e rollback. A principal lição é que o runtime deve crescer por pressão real de operação, não por desejo abstrato de sofisticação.</p>
-<h2 id="36-o-papel-do-volume-i-na-forja">36. O papel do Volume I na FORJA</h2>
-<p>Este primeiro volume não pretende resolver toda a coletânea. Ele estabelece o alicerce técnico-operacional. Sem runtime, os próximos temas — estado, recuperação, telemetria, memória, segurança, approval, custo, deploy e operação contínua — ficam soltos. Com runtime, passam a compor uma disciplina única de engenharia agêntica.</p>
-<div style="page-break-before: always;"></div>
-
-<h1 id="parte-xii-manifesto-da-engenharia-agentica-de-producao">Parte XII — Manifesto da engenharia agêntica de produção</h1>
-<p>Não lançaremos agentes apenas porque respondem bem em palco.</p>
-<p>Não chamaremos de produção aquilo que não possui fila, estado, política, observabilidade e contenção.</p>
-<p>Não trataremos tool execution como magia invisível.</p>
-<p>Não aceitaremos custos opacos, falhas órfãs e autonomia sem perímetro.</p>
-<p>Não confundiremos transcript com sessão, nem conversa com operação.</p>
-<p>Diremos que um agente entrou em produção quando puder ser medido, auditado, pausado, corrigido e melhorado sem histeria.</p>
-<p>Faremos engenharia de agentes como quem projeta infraestrutura viva: com disciplina, runbook, revisão e responsabilidade.</p>
-<p>A FORJA AGÊNTICA começa aqui.</p>
-<div style="page-break-before: always;"></div>
-
-<h1 id="apendices">Apêndices</h1>
-<h2 id="a-checklist-de-prontidao-de-runtime">A. Checklist de prontidão de runtime</h2>
-<ul>
-<li>Existe ponto explícito de entrada de tarefa.</li>
-<li>Há fila ou scheduler com política mínima de prioridade.</li>
-<li>O estado da tarefa é persistido fora do transcript.</li>
-<li>O agente executa tools por contrato e com checagem.</li>
-<li>Há timeouts, retries e alguma noção de compensação.</li>
-<li>O sistema registra logs e eventos semânticos relevantes.</li>
-<li>Existem limites de permissão e zonas de exclusão.</li>
-<li>Há canal de handoff humano.</li>
-<li>Incidentes podem ser contidos sem desligar toda a operação.</li>
-<li>O custo por fluxo pode ser observado.</li>
-</ul>
-<h2 id="b-checklist-de-revisao-pos-incidente">B. Checklist de revisão pós-incidente</h2>
-<ul>
-<li>Qual evento iniciou o desvio?</li>
-<li>O runtime tinha estado suficiente para reconstrução?</li>
-<li>A falha foi de política, fila, contexto, ferramenta ou custo?</li>
-<li>Houve duplicação de efeito externo?</li>
-<li>O escalonamento humano ocorreu cedo ou tarde demais?</li>
-<li>O runbook existente foi suficiente?</li>
-<li>Que configuração, eval ou guardrail precisa ser alterado?</li>
-</ul>
-<h2 id="c-glossario-nucleo">C. Glossário-núcleo</h2>
-<ul>
-<li><strong>Runtime agêntico:</strong> infraestrutura que sustenta execução, estado, políticas e observabilidade de agentes.</li>
-<li><strong>Scheduler:</strong> mecanismo que decide ordem e prioridade de processamento.</li>
-<li><strong>State store:</strong> camada de persistência do estado operacional da tarefa.</li>
-<li><strong>Policy enforcement:</strong> execução prática das regras que limitam o comportamento do agente.</li>
-<li><strong>Compensação:</strong> ação corretiva usada para reduzir ou desfazer efeitos indesejados.</li>
-<li><strong>Degradação controlada:</strong> comportamento aceitável quando tempo, custo ou recursos não permitem a forma ideal de execução.</li>
-<li><strong>Trace semântico:</strong> registro observável do comportamento em termos de decisão, risco e ação, e não apenas de infraestrutura.</li>
-<li><strong>Runbook:</strong> procedimento operacional para lidar com rotina, falha e incidente.</li>
-</ul>
-<h2 id="d-gancho-para-o-volume-ii">D. Gancho para o Volume II</h2>
-<p>Se o runtime é o ambiente onde o agente vive, o próximo problema é o tecido interno dessa vida: estado, filas e eventos. O Volume II aprofunda exatamente essa engenharia invisível.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="e-matriz-de-maturidade-de-runtime">E. Matriz de maturidade de runtime</h2>
-<p>Uma forma prática de auditar o estágio do runtime é usar uma matriz de maturidade. Ela não mede brilho de demo, mas capacidade operacional.</p>
+<h1 id="parte-x-matriz-de-sinais">Parte X — Matriz de sinais</h1>
+<h2 id="o-que-monitorar-em-runtime-de-agentes-em-producao">O que monitorar em Runtime de Agentes em Produção</h2>
 <table>
 <thead>
 <tr>
-<th>Dimensão</th>
-<th>Estágio 1</th>
-<th>Estágio 2</th>
-<th>Estágio 3</th>
-<th>Estágio 4</th>
+<th>Sinal</th>
+<th style="text-align: right;">Prioridade</th>
+<th>Efeito esperado</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Ingestão</td>
-<td>entrada ad hoc</td>
-<td>endpoint único</td>
-<td>múltiplos canais governados</td>
-<td>catálogo de eventos e contratos</td>
+<td>latência</td>
+<td style="text-align: right;">alta</td>
+<td>cumprimento de SLA</td>
 </tr>
 <tr>
-<td>Fila</td>
-<td>processamento direto</td>
-<td>fila simples</td>
-<td>prioridades e DLQ</td>
-<td>fairness, aging e classes de serviço</td>
+<td>erro recuperável</td>
+<td style="text-align: right;">alta</td>
+<td>resiliência operacional</td>
 </tr>
 <tr>
-<td>Estado</td>
-<td>transcript</td>
-<td>estado parcial</td>
-<td>state store explícito</td>
-<td>snapshots, replay e proveniência</td>
+<td>custo por tarefa</td>
+<td style="text-align: right;">média</td>
+<td>sustentação econômica</td>
 </tr>
 <tr>
-<td>Tools</td>
-<td>chamadas soltas</td>
-<td>schemas básicos</td>
-<td>verificação pós-efeito</td>
-<td>compensação, idempotência e budget</td>
-</tr>
-<tr>
-<td>Política</td>
-<td>regras em prompt</td>
-<td>checagens pontuais</td>
-<td>enforcement técnico</td>
-<td>múltiplas camadas e approval gates</td>
-</tr>
-<tr>
-<td>Observabilidade</td>
-<td>logs básicos</td>
-<td>traces de fluxo</td>
-<td>eventos semânticos</td>
-<td>evals integrados e regressão contínua</td>
-</tr>
-<tr>
-<td>Operação</td>
-<td>manutenção reativa</td>
-<td>checklist periódico</td>
-<td>runbooks claros</td>
-<td>fábrica agêntica com ownership distribuído</td>
+<td>observabilidade</td>
+<td style="text-align: right;">alta</td>
+<td>diagnóstico rápido</td>
 </tr>
 </tbody>
 </table>
-<p>Essa matriz é útil porque força o time a abandonar afirmações vagas como “já temos agentes em produção”. Produção de verdade é uma soma de capacidades sustentáveis. Se a maioria das dimensões permanece em Estágio 1 ou 2, a operação ainda está em fase de transição.</p>
+<p>Uma arquitetura madura só melhora aquilo que consegue nomear, observar e comparar ao longo do tempo. Esta matriz existe para impedir discussão genérica e trazer o volume de volta ao chão operacional.</p>
+<p>Cada linha da matriz precisa virar rotina de leitura: alguém observa o sinal, alguém interpreta desvio e alguém decide se o sistema deve continuar, degradar, escalar ou ser revisto. Sem esse circuito humano-operacional, a métrica vira ornamento e não instrumento de controle.</p>
 <div style="page-break-before: always;"></div>
 
-<h2 id="f-estudo-de-caso-suporte-interno-que-colapsou-por-falta-de-runtime">F. Estudo de caso: suporte interno que colapsou por falta de runtime</h2>
-<p>Considere uma empresa de software que criou um agente interno para atender solicitações de times de vendas, suporte e operações. O protótipo parecia excelente: respondia rápido, consultava documentação, escrevia rascunhos de resposta e prometia abrir tickets quando necessário. Empolgada, a empresa conectou o agente ao sistema de tickets e a um canal de chat usado por toda a organização.</p>
-<p>Nas primeiras semanas, o volume baixo mascarou os problemas. Quando o uso aumentou, surgiram tickets duplicados, prioridades erradas, mensagens sem dono e pedidos que pareciam concluídos, mas nunca haviam sido realmente enviados ao sistema de destino. O histórico do chat não bastava para reconstruir o que aconteceu. Em vários casos, o agente respondeu com segurança e ninguém percebeu que a execução havia falhado.</p>
-<p>A análise posterior mostrou cinco ausências estruturais: não havia fila com prioridade; a sessão dependia demais do contexto conversacional; as ferramentas não tinham verificação pós-efeito; inexistia política clara para escalonamento; e a observabilidade era pobre demais para auditoria causal. O problema não era “IA ruim”, mas runtime inexistente. A correção exigiu redesenhar a operação a partir de estado explícito, DLQ, chaves de correlação e runbooks de incidente.</p>
-<p>O caso ilustra uma verdade dura da FORJA AGÊNTICA: em produção, a maioria dos colapsos não nasce no token. Nasce na engenharia ausente que deveria enquadrar o token.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="g-slos-e-indicadores-minimos-de-um-runtime-saudavel">G. SLOs e indicadores mínimos de um runtime saudável</h2>
-<p>Runtime sem objetivo mensurável tende a degradar lentamente. Uma prática útil é definir SLOs por classe de fluxo. Exemplo: triagem interna pode aceitar mais latência do que execução financeira. Um runtime maduro define indicadores por tipo de tarefa, não apenas médias globais que escondem comportamento desigual.</p>
-<h3 id="indicadores-minimos-recomendados">Indicadores mínimos recomendados</h3>
+<h1 id="parte-xi-fecho-editorial">Parte XI — Fecho editorial</h1>
+<p>A engenharia agêntica de produção só se sustenta quando runtime, observabilidade, segurança e economia andam juntos. O fechamento deste volume transforma teoria de operação em disciplina permanente de plataforma.</p>
+<p>O fechamento desta edição também funciona como teste de densidade: se o leitor conseguir resumir o volume em política, métrica, protocolo e ponto de intervenção, então o texto cumpriu sua função. Se restar apenas inspiração abstrata, a arquitetura ainda não foi internalizada o suficiente.</p>
+<p><strong>Checklist de revisão</strong></p>
 <ul>
-<li><strong>Tempo até primeiro passo útil</strong> por categoria de tarefa.</li>
-<li><strong>Taxa de conclusão com efeito confirmado</strong>.</li>
-<li><strong>Taxa de exceção por ferramenta</strong>.</li>
-<li><strong>Incidentes por falha de política</strong>.</li>
-<li><strong>Taxa de escalonamento humano</strong> por tipo de risco.</li>
-<li><strong>Custo por tarefa concluída</strong>.</li>
-<li><strong>Proporção de tarefas órfãs ou expiradas</strong>.</li>
-<li><strong>Tempo médio de recuperação após incidente</strong>.</li>
+<li>Entendo o papel estrutural deste volume em Runtime de Agentes em Produção.</li>
+<li>Consigo nomear riscos, métricas e pontos de intervenção.</li>
+<li>Sei descrever o protocolo canônico sem depender de improviso.</li>
+<li>Consigo transformar o conteúdo em revisão operacional periódica.</li>
 </ul>
-<h3 id="exemplo-de-slos-iniciais">Exemplo de SLOs iniciais</h3>
-<table>
-<thead>
-<tr>
-<th>Classe</th>
-<th>Meta de tempo</th>
-<th>Meta de sucesso</th>
-<th>Escalonamento esperado</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Classificação interna</td>
-<td>&lt; 20 s</td>
-<td>&gt; 97%</td>
-<td>&lt; 5%</td>
-</tr>
-<tr>
-<td>Roteamento com ferramenta</td>
-<td>&lt; 45 s</td>
-<td>&gt; 95%</td>
-<td>&lt; 10%</td>
-</tr>
-<tr>
-<td>Fluxo com aprovação humana</td>
-<td>&lt; 15 min</td>
-<td>&gt; 99%</td>
-<td>alto por desenho</td>
-</tr>
-<tr>
-<td>Operações sensíveis</td>
-<td>variável</td>
-<td>&gt; 99,5%</td>
-<td>obrigatório em etapas críticas</td>
-</tr>
-</tbody>
-</table>
-<p>O ponto não é copiar números, mas aprender a pensar runtime como serviço com compromissos explícitos.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="h-faq-tecnico-operacional">H. FAQ técnico-operacional</h2>
-<h3 id="um-agente-pequeno-precisa-mesmo-de-runtime">Um agente pequeno precisa mesmo de runtime?</h3>
-<p>Sim. Talvez não de uma plataforma enorme, mas de algum runtime explícito. Mesmo uma automação enxuta precisa de entrada, estado, política, execução e observabilidade mínimos.</p>
-<h3 id="posso-comecar-sem-fila">Posso começar sem fila?</h3>
-<p>Em casos muito pequenos, sim, mas você estará adiando um problema inevitável. Assim que houver concorrência, múltiplos eventos ou dependências externas, a fila deixa de ser opcional.</p>
-<h3 id="transcript-nao-resolve-continuidade">Transcript não resolve continuidade?</h3>
-<p>Resolve pouco e de forma cara. Transcript ajuda interface e debugging inicial, mas não substitui estado operacional estruturado.</p>
-<h3 id="quanto-do-runtime-deve-ser-centralizado">Quanto do runtime deve ser centralizado?</h3>
-<p>Depende do estágio. No começo, centralizar mais pode simplificar. Em escala, componentes como observabilidade, políticas e registries costumam se beneficiar de centralização, enquanto certas rotas de execução podem permanecer mais descentralizadas.</p>
-<h3 id="o-que-costuma-quebrar-primeiro">O que costuma quebrar primeiro?</h3>
-<p>Ordem de prioridade, retries, contexto contaminado, inexistência de verificação pós-efeito e ausência de alertas úteis. Em outras palavras: quase sempre quebra primeiro na costura, não no modelo.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="i-fecho-estendido">I. Fecho estendido</h2>
-<p>O runtime é a primeira grande humilhação necessária para qualquer projeto de agentes. Ele obriga o time a abandonar a ideia de que inteligência aparente basta. Obriga a aceitar que o mundo cobra ordem, estado, custo, tempo, política e prova. Sem essa humilhação produtiva, o projeto fica preso ao ciclo de encantamento e frustração.</p>
-<p>Mas o runtime também é a primeira grande libertação. Quando essa camada existe, a equipe deixa de discutir abstrações soltas e passa a ter um objeto técnico governável. Dá para medir, comparar, refatorar, auditar e escalar. É nessa passagem que a agência deixa o palco e entra na fábrica.</p>
-<p>A FORJA AGÊNTICA foi concebida exatamente para acompanhar essa transição até o fim. Por isso, este primeiro volume precisa ser suficientemente robusto: ele não é um preâmbulo decorativo, mas a fundação do resto da coletânea.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="j-juramento-do-engenheiro-de-runtime">J. Juramento do engenheiro de runtime</h2>
-<p>Eu não publicarei como produção aquilo que ainda depende de sorte.</p>
-<p>Não chamarei de robusto o fluxo que não consigo reconstruir após falha.</p>
-<p>Não concederei permissão ampla onde escopo mínimo basta.</p>
-<p>Não aceitarei retries cegos, tarefas órfãs, custo opaco e logs inúteis.</p>
-<p>Desenharei filas antes da pressa, estado antes da narrativa e observabilidade antes da escala.</p>
-<p>Farei da contenção uma competência tão importante quanto a execução.</p>
-<p>Se um agente tocar o mundo, tocará também uma estrutura de responsabilidade: política, trilha, revisão e possibilidade de rollback.</p>
-<p>Esse juramento existe para manter a engenharia honesta. Runtime não é o lugar do brilho superficial; é o lugar da confiabilidade disciplinada.</p>
-<div style="page-break-before: always;"></div>
-
-<h2 id="k-encerramento-expandido">K. Encerramento expandido</h2>
-<p>O primeiro volume da FORJA AGÊNTICA estabelece uma verdade que muitos times tentam adiar: agentes em produção não são apenas aplicações de modelo, mas sistemas operacionais em miniatura. Têm filas, memória, permissão, falha, custo, latência, runbooks e dívida de manutenção. Ignorar isso é escolher pagar a conta mais tarde, com juros de incidente.</p>
-<p>Ao aceitar o runtime como problema central, a equipe ganha uma linguagem nova para conversar sobre agentes. Sai da abstração vaga e entra na engenharia mensurável. Isso muda tudo: muda como se planeja, como se lança, como se mede, como se corrige e como se governa. O restante da coletânea parte exatamente dessa conquista. A partir daqui, cada novo tema será uma especialização de um ambiente já reconhecido como infraestrutura viva.</p>
+<h1 id="parte-xii-glossario-essencial">Parte XII — Glossário essencial</h1>
+<ul>
+<li><strong>Runtime</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Sla</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Retry</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Rollback</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Trace</strong>: definição operacional sintetizada para consulta rápida.</li>
+</ul>
+<p>Esses termos foram mantidos em linguagem deliberadamente operacional para que o glossário funcione como ferramenta de trabalho, não como apêndice decorativo.</p>
 </body>
 </html>

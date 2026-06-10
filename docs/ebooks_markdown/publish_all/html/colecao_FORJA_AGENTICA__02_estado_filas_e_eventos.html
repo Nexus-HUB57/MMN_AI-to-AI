@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <title>FORJA AGÊNTICA — Engenharia de Agentes em Produção</title>
 <style>
-@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
 html { font-family: 'Georgia', 'Times New Roman', serif; }
 body {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 11pt;
-  line-height: 1.55;
+  font-size: 12.3pt;
+  line-height: 1.68;
   color: #1a1a1a;
   background: #ffffff;
   max-width: 820px;
@@ -21,10 +21,10 @@ h1, h2, h3, h4 {
   color: #0b1d33;
   page-break-after: avoid;
 }
-h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
-h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
-h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
-h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
 p  { margin: 0 0 9pt 0; text-align: justify; }
 blockquote {
   border-left: 3px solid #5a8ad4;
@@ -59,86 +59,373 @@ em { color: #2a4f8c; }
 </style>
 </head>
 <body>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/forja_agentica_02_estado_filas_e_eventos.png" /></p>
 <p><strong>FORJA AGÊNTICA — Engenharia de Agentes em Produção</strong></p>
 <p><strong>Volume II — Estado, Filas e Eventos</strong></p>
 <p><em>A engenharia invisível que impede agentes de se perderem quando múltiplas tarefas, gatilhos e dependências disputam prioridade.</em></p>
-<p><em>Quadrilogia MMN AI-to-AI · Volume Técnico Final</em></p>
+<p><em>Quadrilogia MMN AI-to-AI · Volume Técnico Final.</em></p>
 <hr />
 <p>collection: "FORJA AGÊNTICA — Engenharia de Agentes em Produção"
 volume: "II"
 title: "Estado, Filas e Eventos"
 subtitle: "A engenharia invisível que impede agentes de se perderem quando múltiplas tarefas, gatilhos e dependências disputam prioridade."
-edition: "Draft Editorial 0.1"
+edition: "Edição Técnica 1.1.0"
 issued: "2026-06-10"
 authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: "pt-BR"
 reader_profile: "engenheiros backend, operadores de workflows e arquitetos de eventos"
 question: "Como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação?"
-status: "iniciado"
+status: "expandido"
 quadrilogia_role: "última coletânea da quadrilogia"</p>
 <hr />
 <blockquote>
 <p><strong>Propósito do volume</strong>
-Agentes escalam quando deixam de operar apenas por turnos conversacionais e passam a obedecer a uma malha explícita de estados, transições e eventos.</p>
+Estado, Filas e Eventos foi expandido para operar no padrão editorial longo da coleção. O conteúdo organiza fundamento, prática, risco, medição e desdobramento operacional sem depender de capítulos genéricos ou repetição vazia.</p>
 </blockquote>
-<p><strong>Sumário-base</strong></p>
+<p><strong>Mapa deste volume</strong></p>
 <blockquote>
-<p><strong>•</strong> 1. Por que conversa não basta
-<strong>•</strong> 2. Modelagem de estado finito e estado derivado
-<strong>•</strong> 3. Filas, prioridade e fairness
-<strong>•</strong> 4. Eventos como gatilhos de raciocínio
-<strong>•</strong> 5. Idempotência e deduplicação
-<strong>•</strong> 6. Padrões de replay e reconstrução
-<strong>•</strong> 7. Fecho do volume</p>
+<p><strong>•</strong> Parte I — Modelagem de estado
+<strong>•</strong> Parte II — Eventos canônicos
+<strong>•</strong> Parte III — Ordenação causal
+<strong>•</strong> Parte IV — Filas, retries e dead letters
+<strong>•</strong> Parte V — Consistência entre serviços
+<strong>•</strong> Parte VI — Backpressure
+<strong>•</strong> Parte VII — Reconciliação de estado
+<strong>•</strong> Parte VIII — Debug de eventos
+<strong>•</strong> Parte IX — Telemetria e slo
+<strong>•</strong> Parte X — Incidentes e recuperação
+<strong>•</strong> Parte XI — Capacidade e custos
+<strong>•</strong> Parte XII — Runbook final</p>
 </blockquote>
-<hr />
-<h2 id="tese-central">Tese central</h2>
-<p>Agentes escalam quando deixam de operar apenas por turnos conversacionais e passam a obedecer a uma malha explícita de estados, transições e eventos.</p>
-<h2 id="pergunta-orientadora">Pergunta orientadora</h2>
-<p>Como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação?</p>
-<h2 id="1-por-que-conversa-nao-basta">1. Por que conversa não basta</h2>
-<p>Mostra a insuficiência de chat logs como estrutura principal de coordenação em ambientes com múltiplas tarefas paralelas.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="2-modelagem-de-estado-finito-e-estado-derivado">2. Modelagem de estado finito e estado derivado</h2>
-<p>Diferencia estados duráveis, efêmeros e computados e explica como representar progresso real da tarefa.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="3-filas-prioridade-e-fairness">3. Filas, prioridade e fairness</h2>
-<p>Aborda ordenação de trabalho, starvation, backpressure, dead-letter e justiça operacional entre tarefas concorrentes.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="4-eventos-como-gatilhos-de-raciocinio">4. Eventos como gatilhos de raciocínio</h2>
-<p>Explica quando agentes devem reagir a webhooks, timers, mudanças de banco e sinais humanos.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="5-idempotencia-e-deduplicacao">5. Idempotência e deduplicação</h2>
-<p>Enfrenta o problema de reexecução segura em cenários de retry, falha parcial e múltiplas entregas do mesmo evento.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="6-padroes-de-replay-e-reconstrucao">6. Padrões de replay e reconstrução</h2>
-<p>Ensina a reconstituir contexto operacional a partir de logs e trilhas de eventos sem colapsar causalidade.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="7-fecho-do-volume">7. Fecho do volume</h2>
-<p>Conecta a disciplina de estado ao próximo livro sobre planejamento e recuperação.</p>
-<p>Neste estágio do volume, o desenvolvimento editorial deve aprofundar o tema em três camadas: <strong>arquitetura</strong>, <strong>operação</strong> e <strong>trade-offs</strong>. A camada de arquitetura mostra os componentes, contratos e limites do problema. A camada operacional converte a teoria em mecanismo concreto de implantação, observação e correção. A camada de trade-offs evita dogmas e explicita custo, risco, latência, governança e impacto organizacional.</p>
-<p>O texto final deste capítulo deve preservar o padrão MMN AI-to-AI de densidade técnica, vocabulário operacional, exemplos de falha real, checklist tático e transição orgânica para o capítulo seguinte. O objetivo desta fase inicial é consolidar a espinha dorsal temática da coletânea sem repetir estrutura vazia ou capítulos intercambiáveis.</p>
-<h2 id="checklist-editorial-de-desenvolvimento">Checklist editorial de desenvolvimento</h2>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-i-modelagem-de-estado">Parte I — Modelagem de estado</h1>
+<h2 id="1-leitura-estrutural-do-eixo">1. Leitura estrutural do eixo</h2>
+<p>Modelagem de estado é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional">Tensão operacional</h3>
+<p>Se modelagem de estado é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando modelagem de estado é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se modelagem de estado não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Modelagem de estado precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, modelagem de estado também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
 <ul>
-<li>Expandir cada capítulo até densidade compatível com ebook de longa leitura.</li>
-<li>Incluir exemplos, padrões, falhas recorrentes e protocolos operacionais próprios do tema.</li>
-<li>Evitar reaproveitamento mecânico de estruturas de outras coletâneas.</li>
-<li>Preservar coerência com a sequência AXIOMA → NEXUS → MAESTRIA → FORJA.</li>
-<li>Preparar o volume para futura etapa de renderização premium e publicação.</li>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
 </ul>
-<h2 id="glossario-nucleo">Glossário-núcleo</h2>
+<p><strong>Perguntas de auditoria</strong></p>
 <ul>
-<li><strong>Runtime agêntico:</strong> ambiente que sustenta execução, estado, políticas e observabilidade dos agentes.</li>
-<li><strong>Operação contínua:</strong> regime em que agentes são tratados como infraestrutura viva, medida e mantida.</li>
-<li><strong>Trade-off:</strong> escolha explícita entre custo, qualidade, velocidade, autonomia e risco.</li>
-<li><strong>Rollout:</strong> estratégia de introdução controlada de mudanças em produção.</li>
-<li><strong>Fábrica agêntica:</strong> capacidade organizacional de projetar, medir, lançar e sustentar agentes em escala.</li>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
 </ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-ii-eventos-canonicos">Parte II — Eventos canônicos</h1>
+<h2 id="2-leitura-estrutural-do-eixo">2. Leitura estrutural do eixo</h2>
+<p>Eventos canônicos é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_1">Tensão operacional</h3>
+<p>Se eventos canônicos é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_1">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando eventos canônicos é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_1">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se eventos canônicos não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_1">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Eventos canônicos precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_1">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_1">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, eventos canônicos também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-iii-ordenacao-causal">Parte III — Ordenação causal</h1>
+<h2 id="3-leitura-estrutural-do-eixo">3. Leitura estrutural do eixo</h2>
+<p>Ordenação causal é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_2">Tensão operacional</h3>
+<p>Se ordenação causal é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_2">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando ordenação causal é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_2">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se ordenação causal não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_2">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Ordenação causal precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_2">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_2">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, ordenação causal também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-iv-filas-retries-e-dead-letters">Parte IV — Filas, retries e dead letters</h1>
+<h2 id="4-leitura-estrutural-do-eixo">4. Leitura estrutural do eixo</h2>
+<p>Filas, retries e dead letters é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_3">Tensão operacional</h3>
+<p>Se filas, retries e dead letters é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_3">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando filas, retries e dead letters é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_3">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se filas, retries e dead letters não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_3">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Filas, retries e dead letters precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_3">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_3">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, filas, retries e dead letters também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-v-consistencia-entre-servicos">Parte V — Consistência entre serviços</h1>
+<h2 id="5-leitura-estrutural-do-eixo">5. Leitura estrutural do eixo</h2>
+<p>Consistência entre serviços é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_4">Tensão operacional</h3>
+<p>Se consistência entre serviços é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_4">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando consistência entre serviços é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_4">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se consistência entre serviços não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_4">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Consistência entre serviços precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_4">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_4">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, consistência entre serviços também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-vi-backpressure">Parte VI — Backpressure</h1>
+<h2 id="6-leitura-estrutural-do-eixo">6. Leitura estrutural do eixo</h2>
+<p>Backpressure é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_5">Tensão operacional</h3>
+<p>Se backpressure é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_5">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando backpressure é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_5">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se backpressure não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_5">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Backpressure precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_5">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_5">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, backpressure também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-vii-reconciliacao-de-estado">Parte VII — Reconciliação de estado</h1>
+<h2 id="7-leitura-estrutural-do-eixo">7. Leitura estrutural do eixo</h2>
+<p>Reconciliação de estado é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_6">Tensão operacional</h3>
+<p>Se reconciliação de estado é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_6">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando reconciliação de estado é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_6">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se reconciliação de estado não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_6">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Reconciliação de estado precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_6">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_6">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, reconciliação de estado também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-viii-debug-de-eventos">Parte VIII — Debug de eventos</h1>
+<h2 id="8-leitura-estrutural-do-eixo">8. Leitura estrutural do eixo</h2>
+<p>Debug de eventos é uma camada de engenharia de produção. Em Estado, Filas e Eventos, o objetivo não é discutir agentes como demos conversacionais, mas como sistemas submetidos a estado, contrato, observabilidade e SLA. A pergunta do volume — como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação? — exige tratar runtime, filas e políticas como componentes de infraestrutura, porque é justamente nesse plano que a operação deixa de ser frágil.</p>
+<h3 id="tensao-operacional_7">Tensão operacional</h3>
+<p>Se debug de eventos é negligenciado, o resultado aparece em sintomas familiares: tarefas órfãs, retries descontrolados, rastros incompletos, latência imprevisível e incapacidade de explicar por que um fluxo falhou. Para engenheiros backend, operadores de workflows e arquitetos de eventos, isso significa que a arquitetura precisa nascer preparada para exceção, não apenas para o caminho feliz. Produção é o lugar onde todo atalho vira dívida operacional com juros compostos.</p>
+<h3 id="disciplina-de-implantacao_7">Disciplina de implantação</h3>
+<p>A proposta desta parte é construir legibilidade e capacidade de intervenção. Isso implica contratos claros, estados nomeados, mecanismos de recuperação, limites econômicos e painéis que tornem o comportamento do sistema verificável. Quando debug de eventos é tratado como disciplina e não como detalhe secundário, o runtime agêntico finalmente se torna uma plataforma operável por times reais.</p>
+<h3 id="caso-condensado_7">Caso condensado</h3>
+<p>Pense em um runtime que processa múltiplos eventos concorrentes. Se debug de eventos não estiver codificado em contratos e estados verificáveis, cada incidente exigirá arqueologia manual. Quando o eixo é bem modelado, o operador consegue responder com replay, compensação, throttling ou rollback sem depender de adivinhação.</p>
+<h3 id="arquitetura-critica_7">Arquitetura crítica</h3>
+<p>Há ainda uma dimensão de capacidade institucional. Equipes conseguem operar sistemas complexos somente quando o design torna o comportamento analisável por mais de uma pessoa. Debug de eventos precisa ser descrito em runbooks, refletido em eventos, medido em painéis e reproduzido em incidentes simulados. Sem isso, o conhecimento crítico fica preso a poucos especialistas e a plataforma perde resiliência humana justamente quando mais precisa dela.</p>
+<h3 id="implicacao-de-longo-prazo_7">Implicação de longo prazo</h3>
+<p>Também é necessário tratar o eixo como problema econômico. Toda decisão de runtime consome orçamento de latência, armazenamento, atenção do operador e confiança do negócio. O volume aprofunda esse ponto para mostrar que a melhor engenharia não é a mais exuberante, mas a que mantém estabilidade, custo controlado e clareza diagnóstica diante de carga, falha ou mudança de política.</p>
+<h3 id="decisao-de-arquitetura_7">Decisão de arquitetura</h3>
+<p>Do ponto de vista de plataforma, debug de eventos também precisa aparecer em versionamento, testes de caos, documentação de incidente e critérios de capacidade. Sem esses artefatos, o sistema até funciona em dias tranquilos, mas perde previsibilidade justamente quando enfrenta carga, falha externa ou mudança de política. Engenharia de produção madura registra o eixo para que ele sobreviva à troca de turno, à pressão operacional e à passagem do tempo.</p>
+<p><strong>Quadro de revisão</strong></p>
+<ul>
+<li>declarar estados e transições válidas</li>
+<li>medir a saúde do fluxo em tempo real</li>
+<li>separar erro recuperável de incidente crítico</li>
+<li>garantir rollback, replay ou compensação</li>
+<li>atribuir ownership técnico e operacional</li>
+</ul>
+<p><strong>Perguntas de auditoria</strong></p>
+<ul>
+<li>qual é o estado confiável mínimo para continuar</li>
+<li>quais alertas disparam antes do colapso</li>
+<li>que custo operacional cresce quando o eixo falha</li>
+<li>como o sistema volta a um ponto seguro</li>
+</ul>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-ix-protocolo-canonico">Parte IX — Protocolo canônico</h1>
+<h2 id="sintaxe-operacional-de-estado-filas-e-eventos">Sintaxe operacional de Estado, Filas e Eventos</h2>
+<div class="codehilite"><pre><span></span><code>RUNBOOK_02_ESTADO_FILAS_E_EVENTOS(evento, estado, politicas):
+  1. classificar o evento e recuperar o estado confiável
+  2. aplicar política de execução, retry ou escalonamento
+  3. registrar trace completo com causa, efeito e custo
+  4. degradar com segurança quando o contrato não puder ser cumprido
+  5. acionar rollback, replay ou compensação quando necessário
+  6. fechar incidente com evidência e ação preventiva
+</code></pre></div>
+
+<p>O protocolo acima resume a gramática do volume em formato acionável. Ele não substitui julgamento; ele reduz improviso, alinha expectativa e cria uma base comum para revisão técnica, handoff e melhoria contínua.</p>
+<p>Em uso real, esse protocolo deve ser combinado com logging, dono explícito da rotina, política de exceção e revisão pós-execução. Sem essas quatro camadas, o fluxo parece disciplinado apenas no papel.</p>
+<p>O valor editorial desta seção é tornar o conteúdo reexecutável. Em vez de sair do livro com ideias vagas, o leitor sai com uma sintaxe mínima para transformar conceito em procedimento.</p>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-x-matriz-de-sinais">Parte X — Matriz de sinais</h1>
+<h2 id="o-que-monitorar-em-estado-filas-e-eventos">O que monitorar em Estado, Filas e Eventos</h2>
+<table>
+<thead>
+<tr>
+<th>Sinal</th>
+<th style="text-align: right;">Prioridade</th>
+<th>Efeito esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>latência</td>
+<td style="text-align: right;">alta</td>
+<td>cumprimento de SLA</td>
+</tr>
+<tr>
+<td>erro recuperável</td>
+<td style="text-align: right;">alta</td>
+<td>resiliência operacional</td>
+</tr>
+<tr>
+<td>custo por tarefa</td>
+<td style="text-align: right;">média</td>
+<td>sustentação econômica</td>
+</tr>
+<tr>
+<td>observabilidade</td>
+<td style="text-align: right;">alta</td>
+<td>diagnóstico rápido</td>
+</tr>
+</tbody>
+</table>
+<p>Uma arquitetura madura só melhora aquilo que consegue nomear, observar e comparar ao longo do tempo. Esta matriz existe para impedir discussão genérica e trazer o volume de volta ao chão operacional.</p>
+<p>Cada linha da matriz precisa virar rotina de leitura: alguém observa o sinal, alguém interpreta desvio e alguém decide se o sistema deve continuar, degradar, escalar ou ser revisto. Sem esse circuito humano-operacional, a métrica vira ornamento e não instrumento de controle.</p>
+<div style="page-break-before: always;"></div>
+
+<h1 id="parte-xi-fecho-editorial">Parte XI — Fecho editorial</h1>
+<p>A engenharia agêntica de produção só se sustenta quando runtime, observabilidade, segurança e economia andam juntos. O fechamento deste volume transforma teoria de operação em disciplina permanente de plataforma.</p>
+<p>O fechamento desta edição também funciona como teste de densidade: se o leitor conseguir resumir o volume em política, métrica, protocolo e ponto de intervenção, então o texto cumpriu sua função. Se restar apenas inspiração abstrata, a arquitetura ainda não foi internalizada o suficiente.</p>
+<p><strong>Checklist de revisão</strong></p>
+<ul>
+<li>Entendo o papel estrutural deste volume em Estado, Filas e Eventos.</li>
+<li>Consigo nomear riscos, métricas e pontos de intervenção.</li>
+<li>Sei descrever o protocolo canônico sem depender de improviso.</li>
+<li>Consigo transformar o conteúdo em revisão operacional periódica.</li>
+</ul>
+<h1 id="parte-xii-glossario-essencial">Parte XII — Glossário essencial</h1>
+<ul>
+<li><strong>Runtime</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Sla</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Retry</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Rollback</strong>: definição operacional sintetizada para consulta rápida.</li>
+<li><strong>Trace</strong>: definição operacional sintetizada para consulta rápida.</li>
+</ul>
+<p>Esses termos foram mantidos em linguagem deliberadamente operacional para que o glossário funcione como ferramenta de trabalho, não como apêndice decorativo.</p>
 </body>
 </html>

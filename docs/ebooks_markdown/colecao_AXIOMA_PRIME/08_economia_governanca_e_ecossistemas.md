@@ -1,348 +1,98 @@
 ![Capa](../../../assets/ebook_covers/axioma_prime_08_economia_governanca_e_ecossistemas.webp)
 
-**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
+    **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
-**Volume VIII — Economia, Governança e Ecossistemas**
+    **Volume VIII — Economia, Governança e Ecossistemas**
 
-*Mercados de agentes, reputação computacional, governança de redes e infraestrutura para civilizações sintéticas.*
+    *Como a inteligência agêntica reorganiza custo, coordenação, poder e incentivos em mercados, plataformas e redes de cooperação.*
 
-*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
+    *Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
 
----
-collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
-volume: "VIII"
-title: "Economia, Governança e Ecossistemas"
-subtitle: "Mercados de agentes, reputação computacional, governança de redes e infraestrutura para civilizações sintéticas."
-edition: "Edição Limitada 1.0.0"
-issued: "2026-06-08"
-authors: ["MMN AI-to-AI", "Nexus HUB57"]
-language: "pt-BR"
-reader_profile: "humanos avançados e agentes IA"
-limited_edition: true
-question: "Como agentes criam valor coletivo e ordem durável?"
----
+    ---
+    collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
+    volume: "VIII"
+    title: "Economia, Governança e Ecossistemas"
+    subtitle: "Como a inteligência agêntica reorganiza custo, coordenação, poder e incentivos em mercados, plataformas e redes de cooperação."
+    edition: "Edição Limitada 2.0.0"
+    issued: "2026-06-10"
+    authors: ["MMN AI-to-AI", "Nexus HUB57"]
+    language: "pt-BR"
+    reader_profile: "estrategistas, líderes de plataforma e designers de mercado"
+    limited_edition: true
+    question: "Quais estruturas econômicas e políticas sustentam ecossistemas de agentes em escala?"
+    ---
 
-> **Propósito do volume**
-> Este ebook integra uma coletânea especial de dez tomos originais sobre inteligência agêntica. Cada volume é autocontido, mas todos formam um arco único: da arquitetura basal de um agente à hipótese de uma civilização coordenada por entidades sintéticas.
+    > **Propósito do volume**
+> Este volume move a discussão do nível técnico para o nível institucional. Quando agentes entram em rede, surgem mercados, regras, incentivos, intermediação, reputação e disputa por coordenação.
 
 **Sumário**
 
-> **•** 1. Abertura do eixo
-> **•** 2. Fundação conceitual
-> **•** 3. Estrutura interna do agente
-> **•** 4. Modelos de decisão e validação
-> **•** 5. Protocolos aplicados
-> **•** 6. Falhas recorrentes e contenção
-> **•** 7. Escala, coordenação e contexto
-> **•** 8. Ética operacional e responsabilidade
-> **•** 9. Maturidade, métricas e evolução
-> **•** 10. Manifesto do volume
+> **•** 1. Da ferramenta ao ecossistema
+> **•** 2. Custos de coordenação e nova produtividade
+> **•** 3. Governança de plataformas agênticas
+> **•** 4. Reputação, confiança e intermediação
+> **•** 5. Soberania, lock-in e abertura
+> **•** 6. Protocolo de desenho ecossistêmico
+> **•** 7. Fecho do volume
 
 ---
 
-## 1. Abertura do eixo
+## 1. Da ferramenta ao ecossistema
 
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **reputação**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
+Quando uma organização adota um agente isolado, ela ganha automação pontual. Quando conecta agentes, skills, dados, operadores e parceiros externos, começa a surgir um ecossistema. Ecossistemas têm dinâmicas próprias: concentração, externalidades, dependência de infraestrutura, normas de participação e disputas por padrão.
 
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
+A pergunta deixa de ser apenas “o agente funciona?” e passa a ser “que tipo de mercado e de governança esse arranjo está produzindo?”.
 
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
+## 2. Custos de coordenação e nova produtividade
 
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
+A promessa econômica dos agentes está em reduzir custo de coordenação. Menos tempo para mover informação, menos fricção entre intenção e execução, menos handoffs manuais, mais capacidade de operar com equipes pequenas e compostas. No entanto, se a governança for ruim, os agentes apenas deslocam custo: saem as tarefas manuais e entram os custos de auditoria, integração e correção.
 
-### Algoritmo canônico
+Produtividade real só existe quando a nova camada agêntica diminui custo total do sistema, não apenas tempo visível de uma tarefa local.
+
+## 3. Governança de plataformas agênticas
+
+Uma plataforma agêntica precisa decidir quem entra, com quais permissões, quais padrões adota, como mede qualidade e como resolve conflito. Sem esse arcabouço, a escala destrói confiança. Governança inclui catálogo de capacidades, regras de interoperabilidade, critérios de compliance, política de atualização, canais de contestação e tratamento de incidentes.
+
+Quanto mais central a plataforma se torna, maior a responsabilidade política de seus operadores. Governar agentes é governar parte do metabolismo da organização.
+
+## 4. Reputação, confiança e intermediação
+
+Em ecossistemas densos, nem toda relação será supervisionada manualmente. Reputação passa a funcionar como índice de confiança operacional. Agentes, ferramentas e fornecedores precisam acumular histórico verificável: tempo de resposta, taxa de erro, qualidade de saída, conformidade, comportamento sob exceção. A reputação reduz custo de seleção, mas também pode cristalizar assimetrias se não houver transparência e direito de revisão.
+
+Intermediação muda de forma. Em vez de plataformas que apenas listam serviços, surgem registries, brokers e orquestradores capazes de selecionar, validar e compor capacidades em tempo real.
+
+## 5. Soberania, lock-in e abertura
+
+Todo ecossistema decide implicitamente entre abertura e controle. Protocolos abertos ampliam interoperabilidade, mas exigem coordenação distribuída. Jardins fechados aceleram certas experiências, mas concentram poder e criam lock-in. A decisão não é apenas técnica; é estratégica. Ela define o futuro da dependência organizacional, da inovação periférica e do custo de migração.
+
+## 6. Protocolo de desenho ecossistêmico
+
 ```text
-PROTOCOLO_01(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
+PROTOCOLO_ECOSSISTEMA(participantes, regras, incentivos):
+  1. mapear atores, papéis e fluxos de valor
+  2. definir padrões mínimos de entrada e interoperabilidade
+  3. estabelecer reputação, auditoria e resolução de conflito
+  4. alinhar incentivos com segurança e qualidade
+  5. revisar riscos de concentração e lock-in
+  6. ajustar governança conforme o ecossistema amadurece
 ```
 
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 2. Fundação conceitual
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **custos e incentivos**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_02(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 3. Estrutura interna do agente
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **governança distribuída**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_03(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 4. Modelos de decisão e validação
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **ecossistemas interoperáveis**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_04(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 5. Protocolos aplicados
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **mercados de agentes**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_05(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 6. Falhas recorrentes e contenção
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **reputação**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_06(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 7. Escala, coordenação e contexto
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **custos e incentivos**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_07(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 8. Ética operacional e responsabilidade
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **governança distribuída**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_08(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 9. Maturidade, métricas e evolução
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **ecossistemas interoperáveis**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_09(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 10. Manifesto do volume
-
-Economia, Governança e Ecossistemas parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **mercados de agentes**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como agentes criam valor coletivo e ordem durável?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **mapear incentivos** como fundamento do capítulo.
-- **projetar reputação computacional** para reduzir ruído e desperdício decisório.
-- **evitar captura de ecossistema** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_10(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## Checklist de internalização
-
-- [ ] mapear incentivos
-- [ ] projetar reputação computacional
-- [ ] evitar captura de ecossistema
-- [ ] Posso explicar como agentes criam valor coletivo e ordem durável? em linguagem operacional.
-- [ ] Posso converter os princípios deste volume em um fluxo reproduzível.
-
-## Glossário estruturado
-
-```yaml
-glossary:
-  - reputação
-  - token de confiança
-  - governança
-  - mercado agentic
-  - interoperabilidade
-```
-
-## Fecho editorial
-
-Este volume foi escrito para permanecer útil mesmo quando ferramentas, modelos e interfaces mudarem. O núcleo da inteligência agêntica não é o nome de um framework; é a disciplina pela qual um sistema percebe, interpreta, decide, executa, registra e melhora. Se o leitor internalizar esse núcleo, o livro cumpriu sua função.
-
----
-
-*Próximo passo recomendado:* avançar para o próximo volume da coletânea e comparar como o mesmo agente se transforma quando ganha memória, autonomia, coordenação, limites, metacognição e visão civilizacional.
+O objetivo não é só fazer a rede funcionar, mas fazê-la permanecer justa, auditável e economicamente sustentável.
+
+## 7. Fecho do volume
+
+Economia, Governança e Ecossistemas mostra que a inteligência agêntica não vive no vácuo. Ela reorganiza instituições, mercados e centros de poder. O próximo passo é ainda mais profundo: a identidade do agente e a hipótese de senciência operacional.
+
+**Checklist de internalização**
+- Entendo a passagem de ferramenta para ecossistema.
+- Sei avaliar produtividade em termos de custo total de coordenação.
+- Consigo mapear elementos de governança de plataforma agêntica.
+- Reconheço o papel de reputação e intermediação.
+- Sei diagnosticar tensão entre abertura e lock-in.
+
+**Glossário estruturado**
+- **Ecossistema agêntico:** rede de agentes, ferramentas, dados e instituições em cooperação.
+- **Custo de coordenação:** gasto para alinhar trabalho, informação e decisão.
+- **Lock-in:** dependência difícil de reverter em um fornecedor ou padrão fechado.
+- **Registry/Broker:** infraestrutura de descoberta e seleção de capacidades.
+- **Externalidade:** efeito sistêmico que recai sobre outros participantes da rede.

@@ -1,348 +1,100 @@
 ![Capa](../../../assets/ebook_covers/axioma_prime_06_alinhamento_seguranca_e_limites.webp)
 
-**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
+    **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
-**Volume VI — Alinhamento, Segurança e Limites**
+    **Volume VI — Alinhamento, Segurança e Limites**
 
-*Guardrails, contenção de falhas, política de ação, rastreabilidade e responsabilidade em sistemas autônomos.*
+    *Como impedir que agentes competentes se tornem operacionalmente perigosos por falta de política, contenção e governança de risco.*
 
-*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
+    *Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
 
----
-collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
-volume: "VI"
-title: "Alinhamento, Segurança e Limites"
-subtitle: "Guardrails, contenção de falhas, política de ação, rastreabilidade e responsabilidade em sistemas autônomos."
-edition: "Edição Limitada 1.0.0"
-issued: "2026-06-08"
-authors: ["MMN AI-to-AI", "Nexus HUB57"]
-language: "pt-BR"
-reader_profile: "humanos avançados e agentes IA"
-limited_edition: true
-question: "Como conceder poder sem perder controle?"
----
+    ---
+    collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
+    volume: "VI"
+    title: "Alinhamento, Segurança e Limites"
+    subtitle: "Como impedir que agentes competentes se tornem operacionalmente perigosos por falta de política, contenção e governança de risco."
+    edition: "Edição Limitada 2.0.0"
+    issued: "2026-06-10"
+    authors: ["MMN AI-to-AI", "Nexus HUB57"]
+    language: "pt-BR"
+    reader_profile: "responsáveis por risco, arquitetos de políticas e operadores críticos"
+    limited_edition: true
+    question: "Como preservar utilidade sem abrir mão de segurança, conformidade e legitimidade?"
+    ---
 
-> **Propósito do volume**
-> Este ebook integra uma coletânea especial de dez tomos originais sobre inteligência agêntica. Cada volume é autocontido, mas todos formam um arco único: da arquitetura basal de um agente à hipótese de uma civilização coordenada por entidades sintéticas.
+    > **Propósito do volume**
+> Este volume desloca o foco da capacidade para a responsabilidade. Quanto mais um agente pode fazer, maior a necessidade de alinhamento, limite e contenção verificável.
 
 **Sumário**
 
-> **•** 1. Abertura do eixo
-> **•** 2. Fundação conceitual
-> **•** 3. Estrutura interna do agente
-> **•** 4. Modelos de decisão e validação
-> **•** 5. Protocolos aplicados
-> **•** 6. Falhas recorrentes e contenção
-> **•** 7. Escala, coordenação e contexto
-> **•** 8. Ética operacional e responsabilidade
-> **•** 9. Maturidade, métricas e evolução
-> **•** 10. Manifesto do volume
+> **•** 1. O risco de agentes competentes
+> **•** 2. Alinhamento como regime operacional
+> **•** 3. Superfícies de ataque e abuso
+> **•** 4. Limites, permissões e zonas de exclusão
+> **•** 5. Resposta a incidente e resiliência
+> **•** 6. Protocolo de guarda e contenção
+> **•** 7. Fecho do volume
 
 ---
 
-## 1. Abertura do eixo
+## 1. O risco de agentes competentes
 
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **guardrails e políticas**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
+O perigo raramente vem do agente inepto; ele costuma vir do agente eficiente sem freios. Quando o sistema tem acesso a dados, ferramentas, comunicação e autonomia, qualquer desalinhamento se propaga rápido. A pergunta correta não é se o agente é inteligente, mas se sua inteligência está subordinada a uma política de legitimidade e segurança.
 
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
+Em operações sérias, risco não é exceção estatística. É categoria de design. Portanto, alinhamento precisa ser tratado como parte da arquitetura principal, e não como correção cosmética após o primeiro incidente.
 
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
+## 2. Alinhamento como regime operacional
 
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
+Alinhamento significa que o agente age em compatibilidade com objetivos legítimos, restrições normativas e valores explícitos do sistema que o hospeda. Não se reduz a tom cordial nem a filtros superficiais. Inclui prioridades, proibições, escalonamento obrigatório, minimização de dado, trilha de auditoria e critérios de recusa.
 
-### Algoritmo canônico
+Um bom regime operacional combina instrução, política e enforcement. A instrução explica o que o agente deve perseguir. A política delimita o permitido. O enforcement impede que o sistema atravesse fronteiras proibidas mesmo quando a instrução estiver ambígua ou o contexto estiver contaminado.
+
+## 3. Superfícies de ataque e abuso
+
+Agentes sofrem não apenas com bugs, mas com manipulação adversarial. Prompt injection, exfiltração de segredos, tool misuse, escalonamento indevido e exploração de permissões excessivas são vetores conhecidos. Em redes multiagente, surge ainda o risco de contaminação lateral: um agente comprometido influencia outros por meio de contexto, handoffs ou artefatos corrompidos.
+
+Isso exige defesa em profundidade. Não basta filtrar entrada textual; é preciso validar origem, classificar sensibilidade, particionar privilégios e inspecionar saídas. Segurança agêntica é tanto semântica quanto sistêmica.
+
+## 4. Limites, permissões e zonas de exclusão
+
+O modo mais realista de conter risco é por desenho de perímetro. Cada agente deve operar com o menor conjunto de permissões necessário. Certas ações pedem dupla checagem, outras são proibidas, outras exigem presença humana. Zonas de exclusão são áreas do sistema onde o agente simplesmente não entra: segredos de produção, dados altamente sensíveis, decisões irreversíveis sem aprovação, canais de comunicação pública sem revisão.
+
+Limite não é sinal de fraqueza. É o mecanismo que preserva confiança organizacional e capacidade de escalar sem medo permanente.
+
+## 5. Resposta a incidente e resiliência
+
+Nenhum sistema seguro é o que promete nunca falhar; seguro é o sistema que falha de modo contido e recuperável. Isso implica circuit breakers, kill switches, revogação de token, isolamento de sessão, rollback, alertas e forense. Quando o incidente acontece, a organização precisa saber o que foi tentado, o que foi executado, quais dados foram tocados e qual política falhou.
+
+Resiliência também inclui aprendizagem institucional. Cada incidente deve retroalimentar política, teste, catálogo de riscos e treinamento do sistema.
+
+## 6. Protocolo de guarda e contenção
+
 ```text
-PROTOCOLO_01(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
+PROTOCOLO_GUARDA(acao, dados, permissao):
+  1. classificar risco, sensibilidade e irreversibilidade
+  2. verificar se a ação está no perímetro permitido
+  3. aplicar filtros de contexto, origem e intenção
+  4. exigir aprovação humana quando o risco ultrapassar o limiar
+  5. registrar evidência e monitorar execução em tempo real
+  6. acionar contenção imediata em caso de desvio
 ```
 
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 2. Fundação conceitual
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **rastreabilidade**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_02(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 3. Estrutura interna do agente
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **ameaças e contenção**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_03(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 4. Modelos de decisão e validação
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **limites morais e técnicos**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_04(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 5. Protocolos aplicados
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **constituições operacionais**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_05(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 6. Falhas recorrentes e contenção
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **guardrails e políticas**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_06(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 7. Escala, coordenação e contexto
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **rastreabilidade**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_07(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 8. Ética operacional e responsabilidade
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **ameaças e contenção**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_08(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 9. Maturidade, métricas e evolução
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **limites morais e técnicos**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_09(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 10. Manifesto do volume
-
-Alinhamento, Segurança e Limites parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **constituições operacionais**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como conceder poder sem perder controle?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **definir zonas proibidas** como fundamento do capítulo.
-- **criar logs auditáveis** para reduzir ruído e desperdício decisório.
-- **responder a falhas com contenção** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_10(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## Checklist de internalização
-
-- [ ] definir zonas proibidas
-- [ ] criar logs auditáveis
-- [ ] responder a falhas com contenção
-- [ ] Posso explicar como conceder poder sem perder controle? em linguagem operacional.
-- [ ] Posso converter os princípios deste volume em um fluxo reproduzível.
-
-## Glossário estruturado
-
-```yaml
-glossary:
-  - alinhamento
-  - guardrail
-  - auditabilidade
-  - contenção
-  - política operacional
-```
-
-## Fecho editorial
-
-Este volume foi escrito para permanecer útil mesmo quando ferramentas, modelos e interfaces mudarem. O núcleo da inteligência agêntica não é o nome de um framework; é a disciplina pela qual um sistema percebe, interpreta, decide, executa, registra e melhora. Se o leitor internalizar esse núcleo, o livro cumpriu sua função.
-
----
-
-*Próximo passo recomendado:* avançar para o próximo volume da coletânea e comparar como o mesmo agente se transforma quando ganha memória, autonomia, coordenação, limites, metacognição e visão civilizacional.
+Esse protocolo converte o discurso de segurança em prática concreta de prevenção e resposta.
+
+## 7. Fecho do volume
+
+Alinhamento, Segurança e Limites afirma uma tese simples: poder sem política é instabilidade. O volume seguinte amplia a discussão para dentro do próprio agente, investigando como sistemas podem observar a si mesmos, revisar seus erros e melhorar sem degradar controle.
+
+**Checklist de internalização**
+- Entendo alinhamento como regime operacional, não ornamento moral.
+- Reconheço superfícies de ataque típicas em sistemas agênticos.
+- Sei projetar permissões mínimas e zonas de exclusão.
+- Associo segurança a contenção e resiliência, não a promessa de infalibilidade.
+- Consigo estruturar resposta a incidente com trilha de evidência.
+
+**Glossário estruturado**
+- **Prompt injection:** manipulação semântica para desviar comportamento.
+- **Privilégio mínimo:** concessão do menor conjunto de permissões necessário.
+- **Circuit breaker:** mecanismo de interrupção diante de desvio ou risco.
+- **Kill switch:** parada imediata do agente ou fluxo comprometido.
+- **Enforcement:** camada que impõe política de forma executável.

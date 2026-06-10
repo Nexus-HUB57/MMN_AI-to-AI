@@ -1,348 +1,98 @@
 ![Capa](../../../assets/ebook_covers/axioma_prime_04_orquestracao_multiagente_e_protocolos.webp)
 
-**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
+    **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
-**Volume IV — Orquestração Multiagente e Protocolos**
+    **Volume IV — Orquestração Multiagente e Protocolos**
 
-*Coordenação entre agentes especializados, papéis, consenso, comunicação estruturada e interoperabilidade em escala.*
+    *Como transformar agentes isolados em uma malha coordenada por contratos, roteamento, delegação e observabilidade compartilhada.*
 
-*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
+    *Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
 
----
-collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
-volume: "IV"
-title: "Orquestração Multiagente e Protocolos"
-subtitle: "Coordenação entre agentes especializados, papéis, consenso, comunicação estruturada e interoperabilidade em escala."
-edition: "Edição Limitada 1.0.0"
-issued: "2026-06-08"
-authors: ["MMN AI-to-AI", "Nexus HUB57"]
-language: "pt-BR"
-reader_profile: "humanos avançados e agentes IA"
-limited_edition: true
-question: "Como vários agentes cooperam sem virar ruído?"
----
+    ---
+    collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
+    volume: "IV"
+    title: "Orquestração Multiagente e Protocolos"
+    subtitle: "Como transformar agentes isolados em uma malha coordenada por contratos, roteamento, delegação e observabilidade compartilhada."
+    edition: "Edição Limitada 2.0.0"
+    issued: "2026-06-10"
+    authors: ["MMN AI-to-AI", "Nexus HUB57"]
+    language: "pt-BR"
+    reader_profile: "arquitetos de plataformas agênticas e operadores de times multiagente"
+    limited_edition: true
+    question: "Como fazer vários agentes cooperarem sem produzir ruído, duplicação e conflito?"
+    ---
 
-> **Propósito do volume**
-> Este ebook integra uma coletânea especial de dez tomos originais sobre inteligência agêntica. Cada volume é autocontido, mas todos formam um arco único: da arquitetura basal de um agente à hipótese de uma civilização coordenada por entidades sintéticas.
+    > **Propósito do volume**
+> Este volume descreve o momento em que a agência deixa de ser individual e passa a ser sistêmica. O tema central é coordenação: quem chama quem, com que contrato, com qual evidência e sob qual mecanismo de supervisão.
 
 **Sumário**
 
-> **•** 1. Abertura do eixo
-> **•** 2. Fundação conceitual
-> **•** 3. Estrutura interna do agente
-> **•** 4. Modelos de decisão e validação
-> **•** 5. Protocolos aplicados
-> **•** 6. Falhas recorrentes e contenção
-> **•** 7. Escala, coordenação e contexto
-> **•** 8. Ética operacional e responsabilidade
-> **•** 9. Maturidade, métricas e evolução
-> **•** 10. Manifesto do volume
+> **•** 1. De agente único a ecossistema
+> **•** 2. Topologias de coordenação
+> **•** 3. Protocolos, contratos e handoffs
+> **•** 4. Roteamento, supervisão e retorno
+> **•** 5. Custos ocultos da multiplicação de agentes
+> **•** 6. Protocolo de orquestração canônica
+> **•** 7. Fecho do volume
 
 ---
 
-## 1. Abertura do eixo
+## 1. De agente único a ecossistema
 
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **coordenação vertical e horizontal**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
+Sistemas multiagente nascem quando uma única entidade já não consegue concentrar percepção, decisão e execução com qualidade suficiente. Surge então a especialização: um agente pesquisa, outro valida, outro executa, outro observa. Essa divisão só funciona se houver linguagem comum de coordenação. Caso contrário, a equipe de agentes se torna um conjunto de ilhas brilhantes e incompatíveis.
 
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
+O ganho potencial é grande: paralelismo, modularidade, especialização e resiliência. O risco, porém, é multiplicar ambiguidade. Sem boa orquestração, o que era um erro local se torna um erro distribuído.
 
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
+## 2. Topologias de coordenação
 
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
+Há topologias centralizadas, federadas e híbridas. Na centralizada, um orquestrador distribui tarefas, consolida saídas e arbitra conflito. Na federada, agentes descobrem capacidades uns dos outros e cooperam por contrato, sem um único centro de comando. Na híbrida, existe coordenação central para políticas críticas e autonomia lateral para tarefas reversíveis.
 
-### Algoritmo canônico
+A escolha da topologia depende de confiança, latência, custo e governança. Ambientes regulados tendem a preferir centros de controle mais fortes. Ambientes de pesquisa e exploração podem se beneficiar de federação mais livre. O erro estratégico está em aplicar a mesma topologia para todo domínio.
+
+## 3. Protocolos, contratos e handoffs
+
+Toda cooperação precisa de contrato. Um handoff entre agentes deve incluir objetivo, entradas, saídas esperadas, limites, prazo e formato de retorno. Sem isso, a transferência de tarefa carrega apenas intenção vaga. O receptor passa a preencher lacunas por inferência, e a qualidade do sistema cai mesmo quando cada agente individual é competente.
+
+Protocolos servem exatamente para reduzir ambiguidade. Eles padronizam descoberta de capacidades, invocação, resposta, status, exceção e auditoria. Não são burocracia; são a gramática que impede que a coordenação dependa de adivinhação.
+
+## 4. Roteamento, supervisão e retorno
+
+Orquestrar não é apenas distribuir trabalho. É decidir qual agente deve receber qual tarefa, em qual ordem, com qual prioridade e sob qual mecanismo de supervisão. O roteamento pode ser por domínio, custo, confiabilidade, tempo de resposta ou histórico de performance. Já a supervisão precisa lidar com timeout, dead-letter, conflito de resultados e replanejamento.
+
+O retorno é parte da orquestração. Um fluxo multiagente só se fecha quando o sistema consegue consolidar saídas e produzir uma verdade operacional legível para o próximo passo, para o humano supervisor ou para o cliente final.
+
+## 5. Custos ocultos da multiplicação de agentes
+
+Adicionar agentes demais cedo demais cria três despesas silenciosas: custo cognitivo de coordenação, custo de integração e custo de observabilidade. Cada novo nó exige contrato, teste, telemetria, versionamento e política. O sistema pode ficar mais elegante no diagrama e menos útil na prática. Escalar rede sem escalar protocolo é inflar complexidade improdutiva.
+
+## 6. Protocolo de orquestração canônica
+
 ```text
-PROTOCOLO_01(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
+PROTOCOLO_ORQUESTRACAO(tarefa, catalogo, politica):
+  1. classificar a tarefa por domínio, risco e urgência
+  2. selecionar topologia adequada (central, federada ou híbrida)
+  3. emitir handoff com contrato explícito
+  4. monitorar status, timeout e evidência de execução
+  5. consolidar saídas e resolver conflitos
+  6. registrar performance para roteamento futuro
 ```
 
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 2. Fundação conceitual
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **protocolos MCP e A2A**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_02(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 3. Estrutura interna do agente
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **consenso e resolução de conflito**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_03(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 4. Modelos de decisão e validação
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **coreografia versus orquestração**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_04(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 5. Protocolos aplicados
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **papéis especializados**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_05(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 6. Falhas recorrentes e contenção
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **coordenação vertical e horizontal**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_06(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 7. Escala, coordenação e contexto
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **protocolos MCP e A2A**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_07(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 8. Ética operacional e responsabilidade
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **consenso e resolução de conflito**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_08(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 9. Maturidade, métricas e evolução
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **coreografia versus orquestração**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_09(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 10. Manifesto do volume
-
-Orquestração Multiagente e Protocolos parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **papéis especializados**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como vários agentes cooperam sem virar ruído?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **desenhar times de agentes** como fundamento do capítulo.
-- **definir contratos de mensagem** para reduzir ruído e desperdício decisório.
-- **reduzir conflito interagente** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_10(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## Checklist de internalização
-
-- [ ] desenhar times de agentes
-- [ ] definir contratos de mensagem
-- [ ] reduzir conflito interagente
-- [ ] Posso explicar como vários agentes cooperam sem virar ruído? em linguagem operacional.
-- [ ] Posso converter os princípios deste volume em um fluxo reproduzível.
-
-## Glossário estruturado
-
-```yaml
-glossary:
-  - MCP
-  - A2A
-  - consenso
-  - orquestração
-  - papel especializado
-```
-
-## Fecho editorial
-
-Este volume foi escrito para permanecer útil mesmo quando ferramentas, modelos e interfaces mudarem. O núcleo da inteligência agêntica não é o nome de um framework; é a disciplina pela qual um sistema percebe, interpreta, decide, executa, registra e melhora. Se o leitor internalizar esse núcleo, o livro cumpriu sua função.
-
----
-
-*Próximo passo recomendado:* avançar para o próximo volume da coletânea e comparar como o mesmo agente se transforma quando ganha memória, autonomia, coordenação, limites, metacognição e visão civilizacional.
+Esse protocolo permite que a cooperação seja governada por regras reproduzíveis. Em vez de depender de carisma arquitetural, a malha passa a depender de contratos verificáveis.
+
+## 7. Fecho do volume
+
+Orquestração Multiagente e Protocolos move a coletânea da agência individual para a inteligência organizada. A próxima camada é prática: skills, ferramentas e execução — isto é, como a malha coordenada efetivamente toca o mundo.
+
+**Checklist de internalização**
+- Diferencio topologias centralizadas, federadas e híbridas.
+- Sei compor handoffs com contrato explícito.
+- Entendo roteamento, supervisão e consolidação de saídas.
+- Reconheço o custo oculto de multiplicar agentes cedo demais.
+- Posso desenhar uma malha com observabilidade e políticas claras.
+
+**Glossário estruturado**
+- **Handoff:** transferência formal de tarefa entre agentes.
+- **Topologia:** forma de organização da rede agêntica.
+- **Roteamento:** seleção do agente mais adequado para cada tarefa.
+- **Consolidação:** síntese das saídas parciais em uma verdade operacional.
+- **Dead-letter:** destino de tarefas que falharam ou expiraram sem tratamento.

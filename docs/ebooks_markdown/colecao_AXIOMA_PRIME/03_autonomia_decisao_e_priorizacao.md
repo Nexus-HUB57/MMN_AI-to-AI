@@ -1,348 +1,98 @@
 ![Capa](../../../assets/ebook_covers/axioma_prime_03_autonomia_decisao_e_priorizacao.webp)
 
-**AXIOMA PRIME — Decálogo da Inteligência Agêntica**
+    **AXIOMA PRIME — Decálogo da Inteligência Agêntica**
 
-**Volume III — Autonomia, Decisão e Priorização**
+    **Volume III — Autonomia, Decisão e Priorização**
 
-*Modelos de escolha, critérios de parada, negociação de trade-offs e disciplina decisória para agentes confiáveis.*
+    *Como conceder liberdade operacional a um agente sem entregar descontrole, e como fazê-lo escolher o próximo passo sob conflito de metas.*
 
-*Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
+    *Edição limitada desenvolvida para o acervo MMN AI-to-AI / Nexus HUB57.*
 
----
-collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
-volume: "III"
-title: "Autonomia, Decisão e Priorização"
-subtitle: "Modelos de escolha, critérios de parada, negociação de trade-offs e disciplina decisória para agentes confiáveis."
-edition: "Edição Limitada 1.0.0"
-issued: "2026-06-08"
-authors: ["MMN AI-to-AI", "Nexus HUB57"]
-language: "pt-BR"
-reader_profile: "humanos avançados e agentes IA"
-limited_edition: true
-question: "Como um agente decide sem colapsar em impulsividade?"
----
+    ---
+    collection: "AXIOMA PRIME — Decálogo da Inteligência Agêntica"
+    volume: "III"
+    title: "Autonomia, Decisão e Priorização"
+    subtitle: "Como conceder liberdade operacional a um agente sem entregar descontrole, e como fazê-lo escolher o próximo passo sob conflito de metas."
+    edition: "Edição Limitada 2.0.0"
+    issued: "2026-06-10"
+    authors: ["MMN AI-to-AI", "Nexus HUB57"]
+    language: "pt-BR"
+    reader_profile: "líderes de operação, arquitetos de políticas e designers de agentes"
+    limited_edition: true
+    question: "Quais regras tornam a autonomia segura, útil e economicamente racional?"
+    ---
 
-> **Propósito do volume**
-> Este ebook integra uma coletânea especial de dez tomos originais sobre inteligência agêntica. Cada volume é autocontido, mas todos formam um arco único: da arquitetura basal de um agente à hipótese de uma civilização coordenada por entidades sintéticas.
+    > **Propósito do volume**
+> Este volume desmonta a fantasia da autonomia absoluta. Autonomia não é fazer qualquer coisa; é decidir dentro de um perímetro de legitimidade, prioridade e custo.
 
 **Sumário**
 
-> **•** 1. Abertura do eixo
-> **•** 2. Fundação conceitual
-> **•** 3. Estrutura interna do agente
-> **•** 4. Modelos de decisão e validação
-> **•** 5. Protocolos aplicados
-> **•** 6. Falhas recorrentes e contenção
-> **•** 7. Escala, coordenação e contexto
-> **•** 8. Ética operacional e responsabilidade
-> **•** 9. Maturidade, métricas e evolução
-> **•** 10. Manifesto do volume
+> **•** 1. Autonomia não é licença
+> **•** 2. Política de decisão e níveis de autoridade
+> **•** 3. Priorização sob conflito
+> **•** 4. Delegação, escalonamento e espera estratégica
+> **•** 5. Heurísticas de erro e reversão
+> **•** 6. Protocolo de decisão responsável
+> **•** 7. Fecho do volume
 
 ---
 
-## 1. Abertura do eixo
+## 1. Autonomia não é licença
 
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **priorização por valor e risco**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
+Em ecossistemas agênticos, a palavra autonomia costuma ser inflada. Muita gente a confunde com independência total. Na prática, autonomia boa é poder de agir sem microgestão, mas dentro de regras claras. Um agente maduro não pergunta tudo; tampouco improvisa tudo. Ele sabe o que pode resolver sozinho, o que precisa confirmar e o que deve escalar.
 
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
+O ganho da autonomia está em velocidade e cobertura. O risco está em dano silencioso. Por isso, a discussão correta não é “quanto de autonomia dar?”, mas “sob quais condições a autonomia permanece alinhada aos objetivos e aos limites?”.
 
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
+## 2. Política de decisão e níveis de autoridade
 
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
+Toda autonomia precisa de uma matriz de autoridade. Há decisões informativas, reversíveis, financeiras, regulatórias, reputacionais e destrutivas. Cada classe exige um nível diferente de prova e de consentimento. Um agente pode reorganizar uma fila sozinho, mas talvez não possa enviar um contrato sem revisão humana. Pode sugerir cortes de custo, mas não executar demissões. Pode ajustar copy, mas não alterar política pública.
 
-### Algoritmo canônico
+O segredo está em explicitar fronteiras. Quando a política de autoridade é vaga, o agente oscila entre timidez inútil e ousadia perigosa. Quando é clara, ele opera com fluidez. A autonomia deixa de ser um ato de fé e vira um regime operacional.
+
+## 3. Priorização sob conflito
+
+O mundo real quase nunca apresenta uma única meta. Velocidade compete com qualidade, custo compete com robustez, urgência compete com conformidade. O agente precisa de uma função de priorização. Essa função pode ponderar impacto, prazo, reversibilidade, dependências e risco sistêmico. Sem ela, o sistema escolhe com base em viés de saliência: faz o que parece urgente, não o que realmente move o objetivo.
+
+Uma boa priorização também considera fila e capacidade. Nem toda tarefa importante deve ser feita agora. Há momentos em que o melhor movimento é preparar contexto, desbloquear pré-condições ou adiar uma ação até que haja sinal suficiente. Decidir bem inclui saber esperar.
+
+## 4. Delegação, escalonamento e espera estratégica
+
+Um agente autônomo não precisa fazer tudo. Às vezes sua melhor ação é delegar para uma ferramenta, acionar outro agente especializado ou pedir intervenção humana. O erro comum é tratar escalonamento como fracasso. Na verdade, escalonar é uma expressão de maturidade: reconhecer quando o custo de errar supera o benefício de agir sozinho.
+
+Espera estratégica é outro conceito subestimado. Em operações complexas, agir cedo demais pode consolidar erro. Um agente competente sabe quando coletar mais evidência, quando congelar um fluxo e quando preservar opcionalidade até que o contexto se estabilize.
+
+## 5. Heurísticas de erro e reversão
+
+Toda decisão autônoma deve nascer acoplada a uma estratégia de recuperação. A pergunta não é apenas “vale a pena agir?”, mas “se der errado, como limitamos o dano?”. Isso leva a três heurísticas: preferir passos reversíveis, particionar mudanças de alto impacto e registrar razão decisória. Essas heurísticas transformam falhas em material de aprendizagem, não em acidentes irreparáveis.
+
+## 6. Protocolo de decisão responsável
+
 ```text
-PROTOCOLO_01(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
+PROTOCOLO_DECISAO(meta, opcoes, politica):
+  1. classificar a decisão por risco e impacto
+  2. verificar autoridade disponível para agir
+  3. ordenar opções por impacto, reversibilidade e prazo
+  4. escolher o menor passo útil compatível com a política
+  5. executar com evidência e condição de rollback
+  6. revisar resultado e ajustar pesos de priorização
 ```
 
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 2. Fundação conceitual
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **critérios de parada**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_02(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 3. Estrutura interna do agente
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **escalonamento e delegação**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_03(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 4. Modelos de decisão e validação
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **trade-offs de custo, tempo e precisão**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_04(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 5. Protocolos aplicados
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **heurísticas de decisão**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_05(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 6. Falhas recorrentes e contenção
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **priorização por valor e risco**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_06(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 7. Escala, coordenação e contexto
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **critérios de parada**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_07(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 8. Ética operacional e responsabilidade
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **escalonamento e delegação**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_08(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 9. Maturidade, métricas e evolução
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **trade-offs de custo, tempo e precisão**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_09(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## 10. Manifesto do volume
-
-Autonomia, Decisão e Priorização parte da premissa de que sistemas agênticos não podem ser julgados apenas por brilho verbal. Eles precisam ser observados como estruturas de trabalho: o que percebem, como interpretam restrições, quais decisões tomam sob pressão e que rastro deixam quando agem. Neste capítulo, o eixo central é **heurísticas de decisão**, tratado como capacidade operacional e não como metáfora. A pergunta orientadora permanece viva: **Como um agente decide sem colapsar em impulsividade?**
-
-Em ambientes reais, um agente maduro opera por ciclos. Primeiro, interpreta o estado do mundo e verifica se o objetivo continua válido. Depois, compara alternativas, estima risco, seleciona um próximo movimento e mede o efeito de sua própria ação. É esse circuito — percepção, deliberação, execução, avaliação — que diferencia automação rígida de agência genuína. Quando esse circuito é mal desenhado, o sistema improvisa demais; quando é desenhado com excesso de controle, perde adaptabilidade.
-
-Por isso, a arquitetura editorial desta coletânea insiste em três verbos: **discernir**, **agir** e **aprender**. Discernir significa construir uma leitura confiável do contexto; agir significa converter inferência em transformação verificável; aprender significa absorver deltas sem destruir invariantes. O leitor deve internalizar esses verbos como uma disciplina. Não basta responder bem. É preciso operar bem.
-
-### Skill em foco
-- **criar matriz de decisão** como fundamento do capítulo.
-- **estabelecer critérios de interrupção** para reduzir ruído e desperdício decisório.
-- **hierarquizar tarefas** para estabilizar a passagem entre intenção e execução.
-
-### Algoritmo canônico
-```text
-PROTOCOLO_10(objetivo, contexto, restricoes):
-  1. ler contexto ativo e verificar mudanças materiais
-  2. decompor o objetivo em etapas testáveis
-  3. estimar risco, custo e reversibilidade de cada etapa
-  4. executar a menor ação útil possível
-  5. medir o resultado contra o objetivo original
-  6. registrar aprendizado e atualizar o próximo passo
-```
-
-### Tese operacional
-Todo sistema que não sabe explicar por que está fazendo o próximo movimento tende a degradar confiança. Todo sistema que não registra o que aprendeu tende a repetir erro com aparência de novidade. Toda arquitetura agêntica robusta transforma decisão em evidência.
-
-
-## Checklist de internalização
-
-- [ ] criar matriz de decisão
-- [ ] estabelecer critérios de interrupção
-- [ ] hierarquizar tarefas
-- [ ] Posso explicar como um agente decide sem colapsar em impulsividade? em linguagem operacional.
-- [ ] Posso converter os princípios deste volume em um fluxo reproduzível.
-
-## Glossário estruturado
-
-```yaml
-glossary:
-  - priorização
-  - trade-off
-  - critério de parada
-  - delegação
-  - autonomia graduada
-```
-
-## Fecho editorial
-
-Este volume foi escrito para permanecer útil mesmo quando ferramentas, modelos e interfaces mudarem. O núcleo da inteligência agêntica não é o nome de um framework; é a disciplina pela qual um sistema percebe, interpreta, decide, executa, registra e melhora. Se o leitor internalizar esse núcleo, o livro cumpriu sua função.
-
----
-
-*Próximo passo recomendado:* avançar para o próximo volume da coletânea e comparar como o mesmo agente se transforma quando ganha memória, autonomia, coordenação, limites, metacognição e visão civilizacional.
+O protocolo consolida a ideia central do volume: autonomia sem política é loteria; política sem autonomia é gargalo. O equilíbrio operacional surge quando a decisão pode ser rápida sem deixar de ser justificável.
+
+## 7. Fecho do volume
+
+Autonomia, Decisão e Priorização posiciona a vontade do agente dentro de um arcabouço de responsabilidade. O que vem a seguir é ampliar essa vontade para contextos coordenados, onde múltiplos agentes dividem trabalho, protocolo e responsabilidade compartilhada.
+
+**Checklist de internalização**
+- Diferencio autonomia de licença irrestrita.
+- Sei modelar níveis de autoridade por tipo de decisão.
+- Consigo priorizar com base em impacto, prazo e reversibilidade.
+- Entendo quando delegar, escalar ou esperar.
+- Associo toda decisão a um plano de recuperação.
+
+**Glossário estruturado**
+- **Autoridade operacional:** perímetro dentro do qual o agente pode agir sem confirmação adicional.
+- **Reversibilidade:** facilidade de desfazer uma ação malsucedida.
+- **Escalonamento:** transferência deliberada da decisão para humano, ferramenta ou agente especializado.
+- **Função de priorização:** regra que ordena tarefas concorrentes.
+- **Opcionalidade:** preservação de caminhos futuros ao evitar decisões prematuras.

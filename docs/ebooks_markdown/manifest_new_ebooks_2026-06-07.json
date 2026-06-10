@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-10T14:26:35.750417Z",
-  "total_new_ebooks": 48,
+  "generated_at": "2026-06-10T17:34:46.702148Z",
+  "total_new_ebooks": 58,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
@@ -8,7 +8,8 @@
     "colecao_AgenticAI_Revolucao",
     "colecao_AXIOMA_PRIME",
     "colecao_MAESTRIA_IA_APLICADA",
-    "colecao_NEXUS_PROTOCOL"
+    "colecao_NEXUS_PROTOCOL",
+    "colecao_FORJA_AGENTICA"
   ],
   "entries": [
     {
@@ -197,8 +198,8 @@
       "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
-      "size_bytes_md": 8785,
-      "size_bytes_pdf": 1630986,
+      "size_bytes_md": 37395,
+      "size_bytes_pdf": 1681973,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -297,8 +298,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/01_automacao_inteligente_para_negocios_reais.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.pdf",
-      "size_bytes_md": 6405,
-      "size_bytes_pdf": 1140320,
+      "size_bytes_md": 32621,
+      "size_bytes_pdf": 1189342,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -490,6 +491,106 @@
       "size_bytes_md": 17203,
       "size_bytes_pdf": 2655308,
       "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "01_runtime_de_agentes_em_producao",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/01_runtime_de_agentes_em_producao.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__01_runtime_de_agentes_em_producao.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__01_runtime_de_agentes_em_producao.pdf",
+      "size_bytes_md": 30852,
+      "size_bytes_pdf": 79974,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "02_estado_filas_e_eventos",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/02_estado_filas_e_eventos.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__02_estado_filas_e_eventos.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__02_estado_filas_e_eventos.pdf",
+      "size_bytes_md": 9359,
+      "size_bytes_pdf": 31703,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "03_planejamento_execucao_e_recuperacao",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/03_planejamento_execucao_e_recuperacao.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__03_planejamento_execucao_e_recuperacao.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__03_planejamento_execucao_e_recuperacao.pdf",
+      "size_bytes_md": 9317,
+      "size_bytes_pdf": 31826,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "04_observability_telemetria_e_evals",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/04_observability_telemetria_e_evals.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__04_observability_telemetria_e_evals.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__04_observability_telemetria_e_evals.pdf",
+      "size_bytes_md": 9269,
+      "size_bytes_pdf": 32303,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "05_memoria_operacional_e_knowledge_substrates",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/05_memoria_operacional_e_knowledge_substrates.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__05_memoria_operacional_e_knowledge_substrates.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__05_memoria_operacional_e_knowledge_substrates.pdf",
+      "size_bytes_md": 9291,
+      "size_bytes_pdf": 32304,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "06_seguranca_guardrails_e_sandboxes",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/06_seguranca_guardrails_e_sandboxes.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__06_seguranca_guardrails_e_sandboxes.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__06_seguranca_guardrails_e_sandboxes.pdf",
+      "size_bytes_md": 9362,
+      "size_bytes_pdf": 32321,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "07_handoff_humano_aprovacao_e_compliance",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/07_handoff_humano_aprovacao_e_compliance.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__07_handoff_humano_aprovacao_e_compliance.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__07_handoff_humano_aprovacao_e_compliance.pdf",
+      "size_bytes_md": 9221,
+      "size_bytes_pdf": 31738,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "08_custos_latencia_e_engenharia_economica",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/08_custos_latencia_e_engenharia_economica.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__08_custos_latencia_e_engenharia_economica.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__08_custos_latencia_e_engenharia_economica.pdf",
+      "size_bytes_md": 9374,
+      "size_bytes_pdf": 32288,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "09_deploy_versionamento_e_rollbacks",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/09_deploy_versionamento_e_rollbacks.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__09_deploy_versionamento_e_rollbacks.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__09_deploy_versionamento_e_rollbacks.pdf",
+      "size_bytes_md": 9267,
+      "size_bytes_pdf": 32524,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "10_fabrica_agentica_e_operacao_continua",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/10_fabrica_agentica_e_operacao_continua.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__10_fabrica_agentica_e_operacao_continua.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__10_fabrica_agentica_e_operacao_continua.pdf",
+      "size_bytes_md": 9341,
+      "size_bytes_pdf": 31687,
+      "collection": "colecao_FORJA_AGENTICA"
     }
   ]
 }

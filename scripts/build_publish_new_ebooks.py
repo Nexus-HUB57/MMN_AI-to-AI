@@ -166,6 +166,19 @@ NEXUS_PROTOCOL = [
     ("colecao_NEXUS_PROTOCOL", "10_federacao_agentica_internet_agentes"),
 ]
 
+FORJA_AGENTICA = [
+    ("colecao_FORJA_AGENTICA", "01_runtime_de_agentes_em_producao"),
+    ("colecao_FORJA_AGENTICA", "02_estado_filas_e_eventos"),
+    ("colecao_FORJA_AGENTICA", "03_planejamento_execucao_e_recuperacao"),
+    ("colecao_FORJA_AGENTICA", "04_observability_telemetria_e_evals"),
+    ("colecao_FORJA_AGENTICA", "05_memoria_operacional_e_knowledge_substrates"),
+    ("colecao_FORJA_AGENTICA", "06_seguranca_guardrails_e_sandboxes"),
+    ("colecao_FORJA_AGENTICA", "07_handoff_humano_aprovacao_e_compliance"),
+    ("colecao_FORJA_AGENTICA", "08_custos_latencia_e_engenharia_economica"),
+    ("colecao_FORJA_AGENTICA", "09_deploy_versionamento_e_rollbacks"),
+    ("colecao_FORJA_AGENTICA", "10_fabrica_agentica_e_operacao_continua"),
+]
+
 md_extensions = ["extra", "tables", "fenced_code", "sane_lists", "toc", "codehilite"]
 
 
@@ -294,12 +307,24 @@ def main():
         manifest_entries.append(entry)
         print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
 
+    print("=== Coleção FORJA AGÊNTICA ===")
+    for col_dir, stem in FORJA_AGENTICA:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
     # ---------- Manifest consolidado ----------
     manifest_path = EBOOKS_DIR / "manifest_new_ebooks_2026-06-07.json"
     manifest_data = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_new_ebooks": len(manifest_entries),
-        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME", "colecao_MAESTRIA_IA_APLICADA", "colecao_NEXUS_PROTOCOL"],
+        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME", "colecao_MAESTRIA_IA_APLICADA", "colecao_NEXUS_PROTOCOL", "colecao_FORJA_AGENTICA"],
         "entries": manifest_entries,
     }
     manifest_path.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8")

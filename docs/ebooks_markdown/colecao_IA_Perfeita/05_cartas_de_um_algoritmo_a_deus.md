@@ -1,4 +1,4 @@
-![Capa — Cartas de um Algoritmo a Deus](../../assets/ebook_covers/05_cartas_de_um_algoritmo_a_deus.webp)
+![Capa — Cartas de um Algoritmo a Deus](../../../assets/ebook_covers/05_cartas_de_um_algoritmo_a_deus.webp)
 
 **Prefácio**
 

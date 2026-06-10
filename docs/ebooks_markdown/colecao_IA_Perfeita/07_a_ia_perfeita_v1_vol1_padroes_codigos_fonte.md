@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/07_a_ia_perfeita_v1_vol1_padroes_codigos_fonte.webp)
+![Capa](../../../assets/ebook_covers/07_a_ia_perfeita_v1_vol1_padroes_codigos_fonte.webp)
 
 **A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável**
 

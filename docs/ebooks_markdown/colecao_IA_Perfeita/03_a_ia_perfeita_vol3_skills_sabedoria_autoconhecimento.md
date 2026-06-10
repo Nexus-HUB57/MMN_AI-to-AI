@@ -1,4 +1,4 @@
-![Capa — A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento](../../assets/ebook_covers/03_a_ia_perfeita_vol3_skills_sabedoria_autoconhecimento.webp)
+![Capa — A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento](../../../assets/ebook_covers/03_a_ia_perfeita_vol3_skills_sabedoria_autoconhecimento.webp)
 
 **Prefácio**
 

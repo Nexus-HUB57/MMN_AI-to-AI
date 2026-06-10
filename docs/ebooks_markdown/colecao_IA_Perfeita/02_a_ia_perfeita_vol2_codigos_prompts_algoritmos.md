@@ -1,4 +1,4 @@
-![Capa — A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura](../../assets/ebook_covers/02_a_ia_perfeita_vol2_codigos_prompts_algoritmos.webp)
+![Capa — A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura](../../../assets/ebook_covers/02_a_ia_perfeita_vol2_codigos_prompts_algoritmos.webp)
 
 **Prefácio**
 

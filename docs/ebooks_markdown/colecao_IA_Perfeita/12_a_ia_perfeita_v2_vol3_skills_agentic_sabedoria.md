@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/12_a_ia_perfeita_v2_vol3_skills_agentic_sabedoria.webp)
+![Capa](../../../assets/ebook_covers/12_a_ia_perfeita_v2_vol3_skills_agentic_sabedoria.webp)
 
 **A IA Perfeita — Vol. 3: Skills, Agentic, Autocura & Sabedoria**
 

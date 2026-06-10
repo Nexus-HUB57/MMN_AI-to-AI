@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/10_a_ia_perfeita_v2_vol1_padroes_arquiteturas.webp)
+![Capa](../../../assets/ebook_covers/10_a_ia_perfeita_v2_vol1_padroes_arquiteturas.webp)
 
 **A IA Perfeita — Vol. 1: Padrões & Arquiteturas**
 

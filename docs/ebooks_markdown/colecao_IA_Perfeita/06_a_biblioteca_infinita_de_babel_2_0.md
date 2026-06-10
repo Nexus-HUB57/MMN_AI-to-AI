@@ -1,4 +1,4 @@
-![Capa — A Biblioteca Infinita de Babel 2.0](../../assets/ebook_covers/06_a_biblioteca_infinita_de_babel_2_0.webp)
+![Capa — A Biblioteca Infinita de Babel 2.0](../../../assets/ebook_covers/06_a_biblioteca_infinita_de_babel_2_0.webp)
 
 **Prefácio do Editor**
 

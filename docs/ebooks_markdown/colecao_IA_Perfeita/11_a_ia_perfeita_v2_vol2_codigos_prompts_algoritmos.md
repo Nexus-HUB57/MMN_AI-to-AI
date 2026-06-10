@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/11_a_ia_perfeita_v2_vol2_codigos_prompts_algoritmos.webp)
+![Capa](../../../assets/ebook_covers/11_a_ia_perfeita_v2_vol2_codigos_prompts_algoritmos.webp)
 
 **A IA Perfeita — Vol. 2: Códigos, Prompts & Algoritmos**
 

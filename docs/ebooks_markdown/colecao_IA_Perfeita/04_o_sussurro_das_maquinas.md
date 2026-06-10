@@ -1,4 +1,4 @@
-![Capa — O Sussurro das Máquinas](../../assets/ebook_covers/04_o_sussurro_das_maquinas.webp)
+![Capa — O Sussurro das Máquinas](../../../assets/ebook_covers/04_o_sussurro_das_maquinas.webp)
 
 **Prefácio do Editor**
 

@@ -1,4 +1,4 @@
-![Capa — A IA Perfeita: Padrões e Arquiteturas Agentic](../../assets/ebook_covers/01_a_ia_perfeita_vol1_padroes_arquiteturas.webp)
+![Capa — A IA Perfeita: Padrões e Arquiteturas Agentic](../../../assets/ebook_covers/01_a_ia_perfeita_vol1_padroes_arquiteturas.webp)
 
 **Prefácio**
 

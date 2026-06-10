@@ -1,0 +1,77 @@
+{
+  "collection": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+  "issued": "2026-06-10",
+  "status": "iniciado",
+  "volumes": [
+    {
+      "file": "01_runtime_de_agentes_em_producao.md",
+      "volume": "I",
+      "title": "Runtime de Agentes em Produção",
+      "subtitle": "Como um agente deixa o laboratório e passa a operar como sistema com estado, fila, restrições e SLA.",
+      "question": "Quais são os requisitos mínimos de runtime para operar agentes em produção de forma previsível?"
+    },
+    {
+      "file": "02_estado_filas_e_eventos.md",
+      "volume": "II",
+      "title": "Estado, Filas e Eventos",
+      "subtitle": "A engenharia invisível que impede agentes de se perderem quando múltiplas tarefas, gatilhos e dependências disputam prioridade.",
+      "question": "Como modelar estado e eventos para que agentes trabalhem com ordem, causalidade e recuperação?"
+    },
+    {
+      "file": "03_planejamento_execucao_e_recuperacao.md",
+      "volume": "III",
+      "title": "Planejamento, Execução e Recuperação",
+      "subtitle": "Como decompor metas em planos, executar sob incerteza e recuperar fluxo quando o mundo real interrompe a linha ideal.",
+      "question": "Como agentes planejam sem se tornarem rígidos e como se recuperam sem improviso destrutivo?"
+    },
+    {
+      "file": "04_observability_telemetria_e_evals.md",
+      "volume": "IV",
+      "title": "Observability, Telemetria e Evals",
+      "subtitle": "Como ver o que os agentes realmente fazem, medir qualidade de decisão e criar disciplina de melhoria contínua baseada em evidência.",
+      "question": "Como tornar agentes auditáveis, mensuráveis e evolutivos sem depender de impressão subjetiva?"
+    },
+    {
+      "file": "05_memoria_operacional_e_knowledge_substrates.md",
+      "volume": "V",
+      "title": "Memória Operacional e Knowledge Substrates",
+      "subtitle": "Como armazenar, recuperar e versionar conhecimento de forma útil para agentes sem transformar memória em ruído crônico.",
+      "question": "Que arquitetura de memória permite continuidade real, recuperação eficiente e aprendizado confiável?"
+    },
+    {
+      "file": "06_seguranca_guardrails_e_sandboxes.md",
+      "volume": "VI",
+      "title": "Segurança, Guardrails e Sandboxes",
+      "subtitle": "Como reduzir superfície de ataque, conter desvios e executar agentes com poder real sem comprometer sistemas e dados críticos.",
+      "question": "Como conceder capacidade de ação a agentes mantendo segurança operacional e contenção de danos?"
+    },
+    {
+      "file": "07_handoff_humano_aprovacao_e_compliance.md",
+      "volume": "VII",
+      "title": "Handoff Humano, Aprovação e Compliance",
+      "subtitle": "Como projetar o ponto exato em que humanos devem revisar, aprovar, contestar ou assumir o fluxo sem degradar throughput.",
+      "question": "Como equilibrar autonomia agêntica com responsabilidade humana verificável?"
+    },
+    {
+      "file": "08_custos_latencia_e_engenharia_economica.md",
+      "volume": "VIII",
+      "title": "Custos, Latência e Engenharia Econômica",
+      "subtitle": "Como fazer agentes caberem no orçamento, performarem dentro do tempo esperado e gerarem retorno operacional líquido.",
+      "question": "Que decisões econômicas separam um sistema agêntico elegante de um sistema sustentável?"
+    },
+    {
+      "file": "09_deploy_versionamento_e_rollbacks.md",
+      "volume": "IX",
+      "title": "Deploy, Versionamento e Rollbacks",
+      "subtitle": "Como publicar agentes com segurança, comparar versões e desfazer mudanças ruins sem caos operacional.",
+      "question": "Como tratar agentes como software de produção com disciplina de release e reversão?"
+    },
+    {
+      "file": "10_fabrica_agentica_e_operacao_continua.md",
+      "volume": "X",
+      "title": "Fábrica Agêntica e Operação Contínua",
+      "subtitle": "A visão integrada de plataforma, governança, tooling e equipe para sustentar agentes como capacidade industrial permanente.",
+      "question": "Como transformar iniciativas isoladas em uma plataforma contínua de engenharia agêntica?"
+    }
+  ]
+}

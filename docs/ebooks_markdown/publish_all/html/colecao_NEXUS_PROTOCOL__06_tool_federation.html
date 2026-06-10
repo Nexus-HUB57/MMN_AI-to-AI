@@ -67,13 +67,8 @@ title: "Tool Federation e Skills Compartilhadas"
 subtitle: "Como ferramentas e skills se federam entre agentes, equipes e organizações."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "Como uma skill criada por um agente vira ativo de uma rede inteira?"
-axis: "Registries, marketplaces internos, versionamento de skills e contratos de uso."
-core_invariant: "Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha."
-anchors: ['skill registry', 'tool catalog', 'semver', 'contract testing', 'marketplace interno']
 canonical_edition: true</p>
 <hr />
 <h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
@@ -82,605 +77,303 @@ canonical_edition: true</p>
 <p><strong>Como ferramentas e skills se federam entre agentes, equipes e organizações.</strong></p>
 <p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
 <blockquote>
-<p><strong>Pergunta-âncora:</strong> Como uma skill criada por um agente vira ativo de uma rede inteira?
-<strong>Eixo do volume:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante canônico:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
+<p><strong>Pergunta-âncora:</strong> Como uma skill criada por um agente vira ativo de uma rede inteira?</p>
 </blockquote>
 <hr />
 <h2 id="sumario">Sumário</h2>
 <blockquote>
-<ul>
-<li>
 <ol>
-<li>Abertura — O Problema Operacional</li>
+<li>A diferença entre tool, skill e capability</li>
+<li>Skill Registry: o npm dos agentes</li>
+<li>Versionamento semântico aplicado a skills</li>
+<li>Contract testing: input, output e modo de falha</li>
+<li>Discovery: pull, push e marketplace híbrido</li>
+<li>Composição: skills que chamam skills</li>
+<li>Skills com side-effects: idempotência, retry, compensação</li>
+<li>Monetização: skills pagas e billing por execução</li>
+<li>Skill drift: quando o modelo embaixo muda</li>
+<li>Manifesto: skill é produto, não código</li>
 </ol>
-</li>
-<li>
-<ol start="2">
-<li>Fundação Conceitual</li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li>Anatomia do Protocolo</li>
-</ol>
-</li>
-<li>
-<ol start="4">
-<li>Modelos de Implementação Canônicos</li>
-</ol>
-</li>
-<li>
-<ol start="5">
-<li>Fluxo Operacional em Produção</li>
-</ol>
-</li>
-<li>
-<ol start="6">
-<li>Falhas Recorrentes e Contenção</li>
-</ol>
-</li>
-<li>
-<ol start="7">
-<li>Métricas, Evals e Observabilidade</li>
-</ol>
-</li>
-<li>
-<ol start="8">
-<li>Padrões Avançados de Composição</li>
-</ol>
-</li>
-<li>
-<ol start="9">
-<li>Maturidade, Roadmap e Próximos Marcos</li>
-</ol>
-</li>
-<li>
-<ol start="10">
-<li>Manifesto do Protocolo</li>
-</ol>
-</li>
-<li>Checklist Canônico</li>
-<li>Glossário</li>
-<li>Gancho para o Próximo Volume</li>
-</ul>
 </blockquote>
 <hr />
-<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi1-diagnostico-operacional">VI.1 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi1-protocolo-executavel">VI.1 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<h2 id="1-a-diferenca-entre-tool-skill-e-capability">1. A diferença entre tool, skill e capability</h2>
+<p>Três termos costumam ser usados como sinônimos e não são. A confusão é
+responsável por arquiteturas que parecem federadas mas não compõem:</p>
+<p><strong>Tool.</strong> Função atômica, baixo nível, sem inteligência. <code>read_file(path)</code>,
+<code>send_email(to, body)</code>. Vive em servidores MCP. Determinística no
+comportamento; a inteligência fica no agente que decide quando chamar.</p>
+<p><strong>Skill.</strong> Competência composta, pode envolver múltiplas tools, múltiplos
+turnos com o usuário, decisões locais. "Renegociar fatura com cliente",
+"Preparar onboarding técnico", "Auditar contrato de fornecedor". Vive no
+Agent Card (Volume II). É <strong>comportamento embalado</strong>.</p>
+<p><strong>Capability.</strong> Conjunto declarado de skills + restrições operacionais
+(modelos suportados, idiomas, SLA). Capability é o que aparece no
+discovery. "Atendimento financeiro PT-BR, 24/7, com SLA de 30s para
+classificação."</p>
+<p>A regra prática: <strong>tools são átomos, skills são moléculas, capabilities
+são produtos</strong>. Federação opera principalmente na camada de skills —
+átomos são baratos de duplicar; produtos são caros de produzir.</p>
+<h2 id="2-skill-registry-o-npm-dos-agentes">2. Skill Registry: o npm dos agentes</h2>
+<p>O componente que torna federação possível é o <strong>skill registry</strong>: um
+catálogo onde skills são publicadas, versionadas, descobertas e
+consumidas. O paralelo com gerenciadores de pacotes (npm, PyPI, Maven) é
+direto, com três adaptações importantes.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;skill_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@acme/renegotiate-invoice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.3.1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;published_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-12T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;license&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Apache-2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Renegocia fatura em aberto com base em política do plano do cliente.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;input_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://schemas.acme.com/skills/renegotiate-invoice/2.x/input.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;output_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://schemas.acme.com/skills/renegotiate-invoice/2.x/output.json&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;failure_modes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;customer_not_found&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;invoice_already_paid&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;policy_denied&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;max_attempts_exceeded&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;required_tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;crm.read@&gt;=1.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;billing.write@&gt;=2.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;policy-engine.evaluate@&gt;=1.5&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;compatible_models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;claude-3.7&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gpt-5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gemini-2.5&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;telemetry_endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://telemetry.acme.com/skills/v1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;trust_score&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.94</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;executions_30d&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="err">_</span><span class="mi">847</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi1-skills-centrais-associadas">VI.1 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi1-tese-operacional">VI.1 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi2-diagnostico-operacional">VI.2 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Adaptações em relação a um registry de software clássico:</p>
+<ol>
+<li><strong>Compatibilidade de modelo é cidadã de primeira classe.</strong> Skill pode
+   funcionar em Claude e falhar em GPT por mudanças de instruction following.</li>
+<li><strong>Failure modes são documentados estruturalmente.</strong> Não é só "lê o
+   readme" — é contrato consumível por código.</li>
+<li><strong>Trust score é parte do índice.</strong> Discovery prioriza skills com
+   reputação medida em execuções reais (ver Volume VII).</li>
+</ol>
+<h2 id="3-versionamento-semantico-aplicado-a-skills">3. Versionamento semântico aplicado a skills</h2>
+<p>Skills versionam por semver, mas com regras adaptadas:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>MAJOR.</strong> Mudança de input/output schema <strong>ou</strong> mudança de prompt
+  interno que altera materialmente o comportamento (ex.: skill que antes
+  pedia confirmação humana e agora age direto). Major obriga consumidor
+  a revisar.</li>
+<li><strong>MINOR.</strong> Adição de campos opcionais, adição de failure mode, melhoria
+  de prompt sem mudar contrato observável. Compatível para trás.</li>
+<li><strong>PATCH.</strong> Correção de bugs, melhoria de mensagens internas, ajustes
+  imperceptíveis ao consumidor.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi2-protocolo-executavel">VI.2 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>A regra menos óbvia: <strong>mudança de modelo embaixo é MAJOR</strong> se a skill foi
+testada e calibrada para um modelo específico. Trocar Claude 3.5 por
+Claude 3.7 sem notificar consumidores é o tipo de mudança que parece
+patch e quebra produção. (Mais sobre isso no Capítulo 9.)</p>
+<p>Convenção canônica para depreciar uma skill:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">deprecation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deprecated</span>
+<span class="w">  </span><span class="nt">since</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-04-01&quot;</span>
+<span class="w">  </span><span class="nt">sunset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-10-01&quot;</span>
+<span class="w">  </span><span class="nt">reason</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Substituída</span><span class="nv"> </span><span class="s">por</span><span class="nv"> </span><span class="s">@acme/renegotiate-invoice-v3&quot;</span>
+<span class="w">  </span><span class="nt">migration_guide</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://docs.acme.com/migrations/renegotiate-v2-to-v3&quot;</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi2-skills-centrais-associadas">VI.2 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi2-tese-operacional">VI.2 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi3-diagnostico-operacional">VI.3 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi3-protocolo-executavel">VI.3 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Skill deprecada continua respondendo (não some), mas o registry retorna
+flag de aviso. Consumidores recebem 6 meses para migrar.</p>
+<h2 id="4-contract-testing-input-output-e-modo-de-falha">4. Contract testing: input, output e modo de falha</h2>
+<p>Skill federada sem contract testing é dívida prestes a virar incidente.
+Três níveis de teste canônicos:</p>
+<p><strong>Schema test.</strong> Inputs reais (anonimizados) validam contra
+<code>input_schema</code>; outputs validam contra <code>output_schema</code>. Roda em CI da
+skill e em CI do consumidor.</p>
+<p><strong>Behavioral test.</strong> Conjunto de cenários golden (input → output esperado
+estruturalmente). Falhas aqui sinalizam regressão semântica — mesmo que
+o schema continue válido.</p>
+<p><strong>Failure-mode test.</strong> Para cada <code>failure_mode</code> declarado, existe
+fixture que dispara aquela falha exatamente. Garante que o contrato de
+falha não é decorativo.</p>
+<p>Implementação típica de behavioral test:</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;case&quot;</span><span class="p">,</span> <span class="n">load_cases</span><span class="p">(</span><span class="s2">&quot;golden/renegotiate-invoice&quot;</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_renegotiate_invoice_golden</span><span class="p">(</span><span class="n">case</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">run_skill</span><span class="p">(</span>
+        <span class="s2">&quot;@acme/renegotiate-invoice@2.x&quot;</span><span class="p">,</span>
+        <span class="nb">input</span><span class="o">=</span><span class="n">case</span><span class="o">.</span><span class="n">input</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">case</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># tolerância semântica: campos críticos devem bater; texto livre, não.</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">case</span><span class="o">.</span><span class="n">expected</span><span class="o">.</span><span class="n">status</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">new_amount</span> <span class="o">==</span> <span class="n">case</span><span class="o">.</span><span class="n">expected</span><span class="o">.</span><span class="n">new_amount</span>
+    <span class="n">assert_within</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="n">case</span><span class="o">.</span><span class="n">expected</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi3-skills-centrais-associadas">VI.3 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi3-tese-operacional">VI.3 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi4-diagnostico-operacional">VI.4 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi4-protocolo-executavel">VI.4 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>A pergunta diagnóstica para skill federada: <em>"se eu mudar o prompt
+interno amanhã, que teste pega a regressão antes do cliente?"</em>. Se a
+resposta é "nenhum", a skill ainda não está em produção — está em demo.</p>
+<h2 id="5-discovery-pull-push-e-marketplace-hibrido">5. Discovery: pull, push e marketplace híbrido</h2>
+<p>Três modelos de discovery competem em 2026:</p>
+<p><strong>Pull (cliente consulta registry).</strong> Consumidor faz query: "skill que
+classifique tickets de billing em PT-BR com SLA &lt;2s". Registry retorna
+candidatos ranqueados. Vantagem: cliente mantém controle. Desvantagem:
+exige registry confiável e bem indexado.</p>
+<p><strong>Push (provedor anuncia capacidades).</strong> Skills se inscrevem em "feeds"
+temáticos. Consumidores assinam feeds relevantes e recebem notificações
+de novas versões. Vantagem: descoberta passiva. Desvantagem: spam de
+skills irrelevantes.</p>
+<p><strong>Marketplace híbrido.</strong> Registry curado + ratings + paid placement +
+recomendação algorítmica. Modelo do app store. Vantagem: descoberta
+fácil. Desvantagem: gatekeeper pode capturar renda. É o modelo que
+provavelmente vence — pela mesma razão que app stores venceram sobre
+APT/yum: humanos preferem catálogo curado.</p>
+<p>Em arquiteturas internas (não-públicas), o padrão recomendado é <strong>pull
+sobre registry interno</strong>, com tags de governança próprias da organização.</p>
+<h2 id="6-composicao-skills-que-chamam-skills">6. Composição: skills que chamam skills</h2>
+<p>Skills compõem. A skill <code>prepare-customer-onboarding</code> chama
+<code>create-account</code> (atômica), <code>send-welcome-email</code> (atômica) e
+<code>schedule-kickoff-meeting</code> (composta, que por sua vez chama outras três).</p>
+<p>Composição traz três problemas que precisam de protocolo:</p>
+<p><strong>Propagação de versão.</strong> Quando uma skill depende de outra com <code>&gt;=2.0</code>,
+e a 2.0 vira 3.0 incompatível, alguém precisa atualizar. Estratégia
+canônica: lockfile por skill (tipo <code>package-lock.json</code>), atualizações
+explícitas, dependabot agêntico.</p>
+<p><strong>Propagação de contexto.</strong> Sub-skill precisa saber em nome de quem está
+agindo, com que escopo de autorização. Caso de uso para o
+<strong>capability token</strong> descendente:</p>
+<div class="codehilite"><pre><span></span><code>parent_token  → derived_token(parent, restrict_to=[&quot;billing.read&quot;])
+                                    ↓
+                          sub-skill executa com escopo reduzido
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi4-skills-centrais-associadas">VI.4 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi4-tese-operacional">VI.4 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi5-diagnostico-operacional">VI.5 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi5-protocolo-executavel">VI.5 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p><strong>Propagação de falha.</strong> Sub-skill falha → super-skill decide se compensa
+(undo das ações anteriores) ou propaga. Política de compensação faz parte
+do contrato; não é decisão do runtime.</p>
+<p>A regra prática: composição funciona quando cada skill tem <strong>contrato
+completo</strong> (input/output/failures/compensação) e o orquestrador respeita
+o contrato. Composição quebra quando algum nó "se vira" no meio.</p>
+<h2 id="7-skills-com-side-effects-idempotencia-retry-compensacao">7. Skills com side-effects: idempotência, retry, compensação</h2>
+<p>Skill que muda o mundo (cobra cartão, envia email, agenda reunião) precisa
+de três propriedades operacionais:</p>
+<p><strong>Idempotência via chave externa.</strong> Toda chamada carrega
+<code>idempotency_key</code>. Skill registra a chave após sucesso; chamada repetida
+com mesma chave retorna o resultado anterior em vez de re-executar.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">charge_card</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">customer</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="p">):</span>
+    <span class="n">cached</span> <span class="o">=</span> <span class="n">idem_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">idempotency_key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cached</span>  <span class="c1"># retorno seguro, sem cobrança dupla</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">payment_gateway</span><span class="o">.</span><span class="n">charge</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">customer</span><span class="p">)</span>
+    <span class="n">idem_store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">idempotency_key</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">24</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi5-skills-centrais-associadas">VI.5 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi5-tese-operacional">VI.5 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi6-diagnostico-operacional">VI.6 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p><strong>Retry policy explícita.</strong> Skill declara: quais erros são retryáveis,
+quantas tentativas, qual backoff, qual timeout total. Consumidores leem
+da metadata; runtime do agente respeita.</p>
+<p><strong>Saga / compensação.</strong> Operações de múltiplos passos em sistemas
+distintos não suportam rollback transacional. A compensação é uma
+ação inversa explícita por passo. Toda skill multi-passo declara seu
+mapa de compensação no metadata.</p>
+<p>A pergunta diagnóstica: <em>"se o consumidor chamar essa skill 5 vezes com
+o mesmo input por engano, o que acontece?"</em>. Se a resposta inclui dano
+real (5 cobranças, 5 emails, 5 reuniões), a skill não está pronta para
+federação.</p>
+<h2 id="8-monetizacao-skills-pagas-e-billing-por-execucao">8. Monetização: skills pagas e billing por execução</h2>
+<p>Skills viram economia quando podem ser monetizadas. Modelos canônicos:</p>
+<p><strong>Per-execution.</strong> US$ 0,02 por chamada. Simples para consumidor;
+imprevisível para provedor (custos variáveis de tokens).</p>
+<p><strong>Per-seat.</strong> Assinatura por agente consumidor, calls ilimitadas dentro
+de quota. Previsível, premium.</p>
+<p><strong>Per-outcome.</strong> Cobra apenas em sucesso ("fatura efetivamente
+renegociada", "lead efetivamente convertido"). Alinha incentivo, exige
+oráculo de outcome confiável.</p>
+<p><strong>Híbrido.</strong> Base assinatura + per-execution acima da quota. Modelo
+dominante em SaaS, replicável aqui.</p>
+<p>Infraestrutura mínima de billing:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Metering.</strong> Cada execução gera evento com <code>skill_id</code>, <code>version</code>,
+  <code>consumer_id</code>, <code>cost_tokens</code>, <code>outcome</code>, <code>timestamp</code>. Imutável.</li>
+<li><strong>Atribuição.</strong> O provedor da skill paga o fornecedor de modelo
+  (custo de tokens) e fica com a margem. Repassar custo bruto vira
+  unsustainable rápido.</li>
+<li><strong>Disputa.</strong> Mecanismo de contestação de cobrança com janela definida
+  (típico 30 dias). Sem isso, federação não atravessa fronteiras
+  organizacionais.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi6-protocolo-executavel">VI.6 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi6-skills-centrais-associadas">VI.6 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi6-tese-operacional">VI.6 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi7-diagnostico-operacional">VI.7 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Quem trata billing como pós-pensamento descobre, em escala, que estava
+operando subsidiando consumidores. A regra: <strong>billing nasce com a skill,
+não depois</strong>.</p>
+<h2 id="9-skill-drift-quando-o-modelo-embaixo-muda">9. Skill drift: quando o modelo embaixo muda</h2>
+<p>A falha invisível mais perigosa de skill federada é o <strong>drift por troca
+de modelo</strong>. A skill foi calibrada com Claude 3.5; provedor sobe para 3.7
+silenciosamente; o instruction following muda em 3% dos casos; consumidor
+descobre semanas depois quando uma cliente importante reclama.</p>
+<p>Mitigações canônicas:</p>
+<ol>
+<li><strong>Pin de modelo no metadata.</strong> Skill v2.3.1 declara
+   <code>compatible_models: ["claude-3.5"]</code>. Mudar exige bump de versão.</li>
+<li><strong>Canary deployment de skill.</strong> Nova versão recebe 5% do tráfego por
+   N dias; métricas comparadas com versão estável; promote/rollback
+   automático.</li>
+<li><strong>Eval continuous.</strong> Suite de golden cases roda diariamente contra a
+   skill em produção. Regressão dispara alerta antes de incidente.</li>
+<li><strong>Versão de assinatura.</strong> Output da skill carrega <code>signed_by:
+   skill@version+model_id</code>. Consumidor pode auditar qual combinação
+   produziu determinado output.</li>
+</ol>
+<p>Drift de modelo é o equivalente agêntico de "atualização silenciosa de
+dependência transitiva" — destrutivo, sutil, evitável com disciplina.</p>
+<h2 id="10-manifesto-skill-e-produto-nao-codigo">10. Manifesto: skill é produto, não código</h2>
+<p>A indústria de software passou décadas aprendendo que biblioteca não é
+produto: produto tem documentação, suporte, SLA, política de versionamento,
+canal de feedback, billing. Skill federada está repetindo a mesma curva,
+mais rápido.</p>
+<p>A skill que sobrevive em federação não é a mais clever — é a que tem:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li>Contrato completo (input/output/failures/compensação).</li>
+<li>Versionamento honesto (major quando muda comportamento, não só schema).</li>
+<li>Testes que pegam regressão antes do cliente.</li>
+<li>Telemetria que permite ao provedor saber se está degradando.</li>
+<li>Billing alinhado com custo real.</li>
+<li>Policy de drift de modelo declarada.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi7-protocolo-executavel">VI.7 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi7-skills-centrais-associadas">VI.7 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi7-tese-operacional">VI.7 — Tese operacional</h3>
+<p>Skill sem essas seis propriedades funciona em demo e custa caro em produção.</p>
 <blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+<p><strong>Tese final do volume:</strong> A próxima década da economia agêntica será
+dominada por quem entendeu que skill é produto, não snippet de código.
+Provedores que tratam skill com a disciplina que SaaS B2B já trata APIs
+vão capturar a renda; os demais vão competir por preço até o zero.</p>
 </blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
 <hr />
-<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi8-diagnostico-operacional">VI.8 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="checklist-canonico-tool-federation">Checklist Canônico — Tool Federation</h2>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi8-protocolo-executavel">VI.8 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi8-skills-centrais-associadas">VI.8 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi8-tese-operacional">VI.8 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi9-diagnostico-operacional">VI.9 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi9-protocolo-executavel">VI.9 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi9-skills-centrais-associadas">VI.9 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi9-tese-operacional">VI.9 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Registries, marketplaces internos, versionamento de skills e contratos de uso.
-<strong>Invariante operacional:</strong> Toda skill federada deve ter contrato de entrada, contrato de saída e contrato de falha.</p>
-</blockquote>
-<h3 id="vi10-diagnostico-operacional">VI.10 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Tool Federation e Skills Compartilhadas</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Como uma skill criada por um agente vira ativo de uma rede inteira?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vi10-protocolo-executavel">VI.10 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_06_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vi10-skills-centrais-associadas">VI.10 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>skill registry, tool catalog, semver, contract testing, marketplace interno</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vi10-tese-operacional">VI.10 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Tool Federation e Skills Compartilhadas</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="checklist-canonico-volume-vi">Checklist Canônico — Volume VI</h2>
-<ul>
-<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
-<li>[ ] Invariante canônico documentado em README do componente.</li>
-<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
-<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
-<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
-<li>[ ] Skill federada com contrato de falha explícito.</li>
-<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
-<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
-<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
-<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+<li>[ ] Distinção tool/skill/capability documentada no design system.</li>
+<li>[ ] Skill Registry interno ou contratado em uso.</li>
+<li>[ ] Semver aplicado com regra de "modelo embaixo = major".</li>
+<li>[ ] Contract tests (schema + behavioral + failure-mode) em CI.</li>
+<li>[ ] Lockfile de dependências de skill em cada agente consumidor.</li>
+<li>[ ] Skills com side-effects declaram idempotência, retry, compensação.</li>
+<li>[ ] Telemetria estruturada exportada por execução.</li>
+<li>[ ] Política de drift de modelo definida e canary deployment ativo.</li>
+<li>[ ] Billing/metering implementado se skill é monetizada.</li>
+<li>[ ] Política de deprecation (sunset &gt;= 6 meses) documentada.</li>
 </ul>
 <h2 id="glossario-do-volume">Glossário do Volume</h2>
 <ul>
-<li><strong>skill registry</strong> — termo canônico do volume VI; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>tool catalog</strong> — termo canônico do volume VI; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>semver</strong> — termo canônico do volume VI; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>contract testing</strong> — termo canônico do volume VI; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>marketplace interno</strong> — termo canônico do volume VI; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>Tool</strong> — função atômica determinística (típica em MCP).</li>
+<li><strong>Skill</strong> — competência composta, embalada com contrato.</li>
+<li><strong>Capability</strong> — conjunto declarado de skills com restrições operacionais.</li>
+<li><strong>Skill Registry</strong> — catálogo onde skills publicam, versionam e descobrem.</li>
+<li><strong>Idempotency key</strong> — identificador externo que garante chamada repetida = uma execução.</li>
+<li><strong>Saga</strong> — composição de passos com compensação por passo.</li>
+<li><strong>Skill drift</strong> — degradação por mudança de modelo embaixo.</li>
+<li><strong>Canary deployment</strong> — release gradual de nova versão com fallback automático.</li>
 </ul>
 <h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
-<p>O próximo volume — <strong>Volume 7</strong> — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.</p>
+<p>Federação de skills só funciona se confiamos em quem publicou. E confiança
+em sistemas distribuídos não é sentimento — é assinatura criptográfica,
+histórico verificável, atestação. Como provar que um agente é quem diz
+ser? Esse é o terreno do <strong>Volume VII — Identidade, Reputação e Trust Layer</strong>.</p>
 <hr />
-<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume VI · Edição Canônica 1.0.0 · 2026-06-08</em>
+<p><em>NEXUS PROTOCOL · Volume VI · Edição Canônica 1.0.0 · 2026-06-08</em>
 <em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
 </body>
 </html>

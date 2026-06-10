@@ -67,13 +67,8 @@ title: "Memória Distribuída entre Agentes"
 subtitle: "Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "O que um agente pode lembrar do outro sem violar contrato ou identidade?"
-axis: "Memória episódica, vetorial e simbólica como recurso compartilhável e auditável."
-core_invariant: "Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação."
-anchors: ['memória episódica', 'vetor store', 'namespace', 'linhagem', 'revogação']
 canonical_edition: true</p>
 <hr />
 <h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
@@ -82,605 +77,268 @@ canonical_edition: true</p>
 <p><strong>Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente.</strong></p>
 <p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
 <blockquote>
-<p><strong>Pergunta-âncora:</strong> O que um agente pode lembrar do outro sem violar contrato ou identidade?
-<strong>Eixo do volume:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante canônico:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
+<p><strong>Pergunta-âncora:</strong> O que um agente pode lembrar do outro sem violar contrato ou identidade?</p>
 </blockquote>
 <hr />
 <h2 id="sumario">Sumário</h2>
 <blockquote>
-<ul>
-<li>
 <ol>
-<li>Abertura — O Problema Operacional</li>
+<li>Por que memória compartilhada é mais difícil que compute compartilhado</li>
+<li>Taxonomia: working, episódica, semântica, procedural</li>
+<li>Namespaces, escopos e o problema do vazamento</li>
+<li>Vector stores compartilhados: trade-offs reais</li>
+<li>Linhagem (provenance) e o direito de revogação</li>
+<li>Sincronização: CRDT, event sourcing, snapshots</li>
+<li>Memória semântica via grafos de conhecimento</li>
+<li>Esquecer corretamente: TTL, decaimento e GDPR</li>
+<li>Padrões de federação: hub-and-spoke vs malha</li>
+<li>Manifesto: memória é território, não dado</li>
 </ol>
-</li>
-<li>
-<ol start="2">
-<li>Fundação Conceitual</li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li>Anatomia do Protocolo</li>
-</ol>
-</li>
-<li>
-<ol start="4">
-<li>Modelos de Implementação Canônicos</li>
-</ol>
-</li>
-<li>
-<ol start="5">
-<li>Fluxo Operacional em Produção</li>
-</ol>
-</li>
-<li>
-<ol start="6">
-<li>Falhas Recorrentes e Contenção</li>
-</ol>
-</li>
-<li>
-<ol start="7">
-<li>Métricas, Evals e Observabilidade</li>
-</ol>
-</li>
-<li>
-<ol start="8">
-<li>Padrões Avançados de Composição</li>
-</ol>
-</li>
-<li>
-<ol start="9">
-<li>Maturidade, Roadmap e Próximos Marcos</li>
-</ol>
-</li>
-<li>
-<ol start="10">
-<li>Manifesto do Protocolo</li>
-</ol>
-</li>
-<li>Checklist Canônico</li>
-<li>Glossário</li>
-<li>Gancho para o Próximo Volume</li>
-</ul>
 </blockquote>
 <hr />
-<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv1-diagnostico-operacional">IV.1 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="1-por-que-memoria-compartilhada-e-mais-dificil-que-compute-compartilhado">1. Por que memória compartilhada é mais difícil que compute compartilhado</h2>
+<p>Compartilhar compute entre agentes é um problema resolvido. Você roda em
+Kubernetes, define quotas, isola por namespace, e o tempo de máquina é
+fungível: o segundo de CPU de um agente é igual ao do outro.</p>
+<p>Memória agêntica não é assim. Uma "lembrança" carrega:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Origem semântica</strong> — quem viu o quê, em que contexto, com que confiança.</li>
+<li><strong>Identidade do observador</strong> — a percepção de um agente sobre um cliente
+  não é intercambiável com a percepção de outro agente sobre o mesmo cliente.</li>
+<li><strong>Privilégio implícito</strong> — saber que o cliente X cancelou em janeiro pode
+  ser informação que só um subset de agentes deveria portar.</li>
+<li><strong>Risco de envenenamento</strong> — uma lembrança injetada vira fundamento de
+  decisões futuras sem possibilidade de auditoria retroativa simples.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv1-protocolo-executavel">IV.1 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Tratar memória agêntica como "Redis compartilhado" é o erro mais caro do
+multi-agente em produção. Você troca um problema de coordenação por um
+problema de <strong>vazamento epistemológico</strong>: agentes acreditando em coisas
+que nunca observaram, porque outro agente colocou no cache.</p>
+<h2 id="2-taxonomia-working-episodica-semantica-procedural">2. Taxonomia: working, episódica, semântica, procedural</h2>
+<p>Antes de qualquer arquitetura, uma taxonomia clara separa quatro tipos de
+memória que <strong>não devem ser misturados</strong> num mesmo store:</p>
+<p><strong>Working memory.</strong> Contexto da conversa/tarefa atual. Vida curta (minutos),
+escopo da sessão, alto custo de leitura (vai pro context window).
+Localização canônica: in-process ou cache rápido.</p>
+<p><strong>Episódica.</strong> Eventos vividos pelo agente: "atendi o cliente X em
+2026-05-01 às 14h, problema Y, resolução Z". Vida média (semanas a meses),
+escopo do agente individual ou do tenant. Imutável após criação.</p>
+<p><strong>Semântica.</strong> Fatos generalizados extraídos da experiência: "clientes do
+plano premium têm prioridade", "API X falha em horários de pico".
+Vida longa, escopo organizacional, mutável com cuidado e versionamento.</p>
+<p><strong>Procedural.</strong> Como fazer coisas: skills, workflows, playbooks executáveis.
+Vida longa, escopo de skill registry (ver Volume VI), versionável com semver.</p>
+<p>A separação importa porque cada categoria tem <strong>regras de compartilhamento
+diferentes</strong>. Working memory entre agentes vaza contexto privado.
+Episódica entre agentes embaralha identidade. Semântica entre agentes é o
+caso de uso óbvio. Procedural entre agentes é o objetivo final.</p>
+<h2 id="3-namespaces-escopos-e-o-problema-do-vazamento">3. Namespaces, escopos e o problema do vazamento</h2>
+<p>A unidade mínima de isolamento de memória agêntica é o <strong>namespace
+composto</strong>. Ele tem ao menos três dimensões:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">memória</span><span class="o">[</span><span class="n">tenant_id</span><span class="o">][</span><span class="n">agent_id</span><span class="o">][</span><span class="n">memory_kind</span><span class="o">][</span><span class="n">key</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv1-skills-centrais-associadas">IV.1 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv1-tese-operacional">IV.1 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv2-diagnostico-operacional">IV.2 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Onde:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><code>tenant_id</code> — fronteira de cliente/organização. Vazamento aqui é
+  incidente de segurança.</li>
+<li><code>agent_id</code> — fronteira de identidade agêntica. Vazamento aqui é
+  incidente de governança.</li>
+<li><code>memory_kind</code> — tipo (working/episódica/semântica/procedural).</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv2-protocolo-executavel">IV.2 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>A regra canônica: <strong>leituras cross-namespace exigem justificativa explícita
+no trace</strong>. Não é uma chave esquecida no Redis — é um direito declarado.</p>
+<p>Anti-padrão recorrente: agentes que usam o mesmo embedding store sem
+namespace, "porque é só um pool de vetores". O resultado previsível é o
+agente do tenant A retornando contexto do tenant B na primeira consulta
+semântica similar. Não é hipótese — é o incidente mais reportado em
+post-mortems de RAG multi-tenant.</p>
+<h2 id="4-vector-stores-compartilhados-trade-offs-reais">4. Vector stores compartilhados: trade-offs reais</h2>
+<p>Quando a decisão é compartilhar memória semântica entre agentes (ex.: base
+de conhecimento corporativa), o vector store vira o componente crítico.
+Três escolhas arquiteturais dominam:</p>
+<p><strong>Single store + filtros de metadata.</strong> Um Pinecone/Weaviate/Qdrant global,
+cada documento taggeado com <code>tenant_id</code> e <code>visibility</code>. Buscas sempre
+incluem o filtro. <strong>Risco:</strong> filtro esquecido = vazamento total.
+<strong>Vantagem:</strong> custo de infra mínimo.</p>
+<p><strong>Store por tenant.</strong> Isolamento físico. Buscas cross-tenant tecnicamente
+impossíveis. <strong>Risco:</strong> custo multiplicado, complexidade de admin.
+<strong>Vantagem:</strong> garantias de compliance.</p>
+<p><strong>Híbrido: tiers.</strong> Tier "público" compartilhado; tier "privado" por tenant.
+Documentos sobem para o tier público apenas após review explícito.
+<strong>Risco:</strong> processo de promoção de tier vira gargalo.
+<strong>Vantagem:</strong> balanço operacional.</p>
+<p>A escolha real depende de uma pergunta simples: <strong>se um filtro fosse
+esquecido amanhã, qual seria o estrago?</strong>. Quem responde "nenhum" pode usar
+single store; quem responde "ação regulatória" usa por tenant; o resto
+tipicamente acaba em híbrido.</p>
+<h2 id="5-linhagem-provenance-e-o-direito-de-revogacao">5. Linhagem (provenance) e o direito de revogação</h2>
+<p>Toda memória federada precisa carregar <strong>proveniência verificável</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mem-9f3a2c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;semantic&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cliente prefere contato por WhatsApp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;provenance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;source_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:atendimento.acme.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;source_session&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s-7e2b&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;observed_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-12T14:32:11Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.87</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;evidence_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;audit-log://acme/2026-05/session-s-7e2b&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;tenant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;acme&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;visibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;internal&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-11-12T00:00:00Z&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;revocation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;revocable_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;did:web:atendimento.acme.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tenant-admin&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;revoked&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv2-skills-centrais-associadas">IV.2 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv2-tese-operacional">IV.2 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv3-diagnostico-operacional">IV.3 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv3-protocolo-executavel">IV.3 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>A proveniência permite três operações que sem ela são impossíveis:</p>
+<ol>
+<li><strong>Auditoria retroativa.</strong> "Por que o agente decidiu X?" → segue a
+   cadeia de evidências até a observação original.</li>
+<li><strong>Revogação dirigida.</strong> Cliente exerce direito de esquecimento → todas
+   as memórias com <code>tenant=acme &amp; subject=cliente_X</code> são apagadas e os
+   agentes derivados são notificados.</li>
+<li><strong>Reputação por fonte.</strong> Memórias de um agente que historicamente
+   produz baixa precisão recebem peso menor em decisões agregadas.</li>
+</ol>
+<p>Quem não implementa proveniência desde o dia 1 retroage pagando o custo de
+reescrever toda a pipeline. É o tipo de decisão arquitetural cujo custo
+diferido cresce quadraticamente.</p>
+<h2 id="6-sincronizacao-crdt-event-sourcing-snapshots">6. Sincronização: CRDT, event sourcing, snapshots</h2>
+<p>Quando múltiplos agentes escrevem na mesma memória compartilhada,
+sincronização entra no jogo. Três técnicas dominam:</p>
+<p><strong>CRDTs (Conflict-free Replicated Data Types).</strong> Estruturas onde
+operações comutam: G-Counter, OR-Set, LWW-Register. Cada agente escreve
+local, sincroniza eventualmente, e a convergência é matemática, não
+acordada. Funciona para fatos aditivos ("cliente é premium"); falha para
+fatos com semântica de ordem ("cliente cancelou").</p>
+<p><strong>Event sourcing.</strong> A memória <strong>não é</strong> o estado — é o log de eventos.
+Cada agente emite eventos imutáveis; estado é projeção. Compartilhamento
+vira "consumir o mesmo log". Custo: storage cresce linearmente, queries
+exigem projeções materializadas.</p>
+<p><strong>Snapshots versionados.</strong> Cada agente mantém memória local; periodicamente
+publica snapshot assinado para outros. Simples, mas latência alta e
+janelas de inconsistência longas.</p>
+<p>Critério prático: para fatos com baixa frequência e alta criticidade, use
+event sourcing. Para fatos commutativos, CRDT. Snapshots só funcionam quando
+inconsistência temporária é tolerável.</p>
+<h2 id="7-memoria-semantica-via-grafos-de-conhecimento">7. Memória semântica via grafos de conhecimento</h2>
+<p>Vetor é bom para "encontrar coisas parecidas". É terrível para "navegar
+relações". Quando os agentes precisam responder "todos os clientes da
+empresa X que tiveram problema Y nos últimos 90 dias", o store certo é um
+<strong>grafo de conhecimento</strong>.</p>
+<p>Modelo canônico (RDF-like, simplificado):</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">&lt;cliente:42&gt;</span>  <span class="nn">rdf</span><span class="p">:</span><span class="nt">type</span>        <span class="p">:</span><span class="nt">Cliente</span> <span class="p">;</span>
+              <span class="p">:</span><span class="nt">plano</span>           <span class="s">&quot;premium&quot;</span> <span class="p">;</span>
+              <span class="p">:</span><span class="nt">ultimo_contato</span>  <span class="s">&quot;2026-05-12&quot;</span> <span class="p">.</span>
+
+<span class="nv">&lt;incidente:99&gt;</span>  <span class="nn">rdf</span><span class="p">:</span><span class="nt">type</span>        <span class="p">:</span><span class="nt">Incidente</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">afeta_cliente</span>  <span class="nv">&lt;cliente:42&gt;</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">categoria</span>      <span class="s">&quot;billing&quot;</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">data</span>           <span class="s">&quot;2026-05-10&quot;</span> <span class="p">.</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv3-skills-centrais-associadas">IV.3 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv3-tese-operacional">IV.3 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv4-diagnostico-operacional">IV.4 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Vantagens operacionais para multi-agente:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Updates atômicos por entidade.</strong> Agente atualiza <code>&lt;cliente:42&gt;</code> sem
+  reescrever embeddings.</li>
+<li><strong>Queries declarativas.</strong> SPARQL/Cypher substituem código imperativo.</li>
+<li><strong>Inferência sobre relações.</strong> "Quem é cliente do mesmo grupo que X?"
+  é trivial; em vetor é desastre.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv4-protocolo-executavel">IV.4 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv4-skills-centrais-associadas">IV.4 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv4-tese-operacional">IV.4 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv5-diagnostico-operacional">IV.5 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Combinação canônica para 2026: <strong>grafo para entidades e relações; vetor
+para texto e similaridade; ambos referenciados pela mesma proveniência</strong>.</p>
+<h2 id="8-esquecer-corretamente-ttl-decaimento-e-gdpr">8. Esquecer corretamente: TTL, decaimento e GDPR</h2>
+<p>Memória sem política de esquecimento é dívida técnica que vira passivo
+legal. Três mecanismos canônicos:</p>
+<p><strong>TTL explícito.</strong> Cada memória nasce com <code>expires_at</code>. Vencimento dispara
+arquivamento (não delete imediato) com janela de recuperação curta antes do
+hard delete.</p>
+<p><strong>Decaimento por relevância.</strong> Score de cada memória decresce com tempo e
+desuso; abaixo de um threshold, ela some das buscas (mesmo que ainda exista
+no store). Permite "esquecer praticamente" sem perder auditabilidade.</p>
+<p><strong>Direito de esquecimento (GDPR/LGPD).</strong> Operação <code>subject_erasure(subject_id)</code>
+percorre <strong>todos os stores e todos os derivados</strong> removendo conteúdo onde
+o titular é identificável. Inclui:
+- vetores derivados de texto que mencionavam o titular,
+- arestas em grafos,
+- logs de eventos (anonimizados, não deletados — preservam contagem),
+- checkpoints de fine-tuning derivados (caso aplicável).</p>
+<p>A operação só é confiável se a proveniência foi gravada desde o início.
+Tentar implementar esquecimento retroativamente em sistemas sem
+proveniência é trabalho de arqueologia — caro, incompleto e auditavelmente
+falho.</p>
+<h2 id="9-padroes-de-federacao-hub-and-spoke-vs-malha">9. Padrões de federação: hub-and-spoke vs malha</h2>
+<p>Quando memórias precisam atravessar fronteiras organizacionais (parceiros,
+fornecedores, marketplaces), dois topos dominam:</p>
+<p><strong>Hub-and-spoke.</strong> Um agregador central recebe contribuições dos agentes
+periféricos e redistribui. Pros: governança centralizada, auditoria simples.
+Cons: ponto único de falha, fornecedor central vira poderoso demais.</p>
+<p><strong>Malha (P2P).</strong> Agentes federam-se pareados, cada par com acordo bilateral.
+Pros: sem ponto central. Cons: complexidade de governança O(n²),
+revogação difícil.</p>
+<p>A escolha real em produção tende ao <strong>hub federado</strong>: vários hubs setoriais
+(finance, saúde, varejo) com interconexão limitada entre si. Modelo similar
+ao das clearinghouses bancárias. Funciona porque os trade-offs políticos
+batem com a realidade do mercado, não porque seja tecnicamente superior.</p>
+<h2 id="10-manifesto-memoria-e-territorio-nao-dado">10. Manifesto: memória é território, não dado</h2>
+<p>A indústria gosta de chamar memória de "dado": fungível, exportável,
+intercambiável. Em sistemas agênticos isso é mentira útil para vendedores
+de banco de dados.</p>
+<p>Memória agêntica é <strong>território</strong>: tem fronteira, tem dono, tem história,
+tem regras de entrada e saída. Tratá-la como dado leva a:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li>Vazamento entre tenants ("ah, é só filtrar").</li>
+<li>Confusão de identidade ("o agente X aprendeu sozinho").</li>
+<li>Violação regulatória ("não rastreamos a origem").</li>
+<li>Decisões irrecuperáveis ("o embedding original foi sobrescrito").</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv5-protocolo-executavel">IV.5 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv5-skills-centrais-associadas">IV.5 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv5-tese-operacional">IV.5 — Tese operacional</h3>
 <blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+<p><strong>Tese final do volume:</strong> Toda memória compartilhada entre agentes deve
+carregar proveniência, escopo e direito de revogação <strong>explícitos no
+próprio registro</strong>. Memória sem essas três propriedades não é memória
+distribuída — é vazamento institucionalizado com aparência de
+arquitetura.</p>
 </blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
 <hr />
-<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv6-diagnostico-operacional">IV.6 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="checklist-canonico-memoria-distribuida">Checklist Canônico — Memória Distribuída</h2>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv6-protocolo-executavel">IV.6 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv6-skills-centrais-associadas">IV.6 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv6-tese-operacional">IV.6 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv7-diagnostico-operacional">IV.7 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv7-protocolo-executavel">IV.7 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv7-skills-centrais-associadas">IV.7 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv7-tese-operacional">IV.7 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv8-diagnostico-operacional">IV.8 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv8-protocolo-executavel">IV.8 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv8-skills-centrais-associadas">IV.8 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv8-tese-operacional">IV.8 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv9-diagnostico-operacional">IV.9 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv9-protocolo-executavel">IV.9 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv9-skills-centrais-associadas">IV.9 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv9-tese-operacional">IV.9 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Memória episódica, vetorial e simbólica como recurso compartilhável e auditável.
-<strong>Invariante operacional:</strong> Toda memória compartilhada entre agentes deve carregar proveniência, escopo e direito de revogação.</p>
-</blockquote>
-<h3 id="iv10-diagnostico-operacional">IV.10 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Memória Distribuída entre Agentes</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que um agente pode lembrar do outro sem violar contrato ou identidade?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iv10-protocolo-executavel">IV.10 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_04_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iv10-skills-centrais-associadas">IV.10 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>memória episódica, vetor store, namespace, linhagem, revogação</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iv10-tese-operacional">IV.10 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Memória Distribuída entre Agentes</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="checklist-canonico-volume-iv">Checklist Canônico — Volume IV</h2>
-<ul>
-<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
-<li>[ ] Invariante canônico documentado em README do componente.</li>
-<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
-<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
-<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
-<li>[ ] Skill federada com contrato de falha explícito.</li>
-<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
-<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
-<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
-<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+<li>[ ] Taxonomia (working/episódica/semântica/procedural) implementada em stores separados.</li>
+<li>[ ] Namespace composto (<code>tenant/agent/kind/key</code>) obrigatório em todas as leituras.</li>
+<li>[ ] Proveniência (source_agent, observed_at, evidence_uri) em cada registro.</li>
+<li>[ ] Política de TTL aplicada por kind, com janela de arquivamento.</li>
+<li>[ ] Operação <code>subject_erasure</code> testada end-to-end (incluindo derivados).</li>
+<li>[ ] Grafo para entidades/relações; vetor para texto/similaridade.</li>
+<li>[ ] Sincronização escolhida por tipo de fato (CRDT/event/snapshot).</li>
+<li>[ ] Cross-namespace reads geram trace com justificativa.</li>
+<li>[ ] Vector store multi-tenant tem teste de leakage contínuo em CI.</li>
+<li>[ ] Plano de revogação por agente em caso de comprometimento testado.</li>
 </ul>
 <h2 id="glossario-do-volume">Glossário do Volume</h2>
 <ul>
-<li><strong>memória episódica</strong> — termo canônico do volume IV; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>vetor store</strong> — termo canônico do volume IV; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>namespace</strong> — termo canônico do volume IV; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>linhagem</strong> — termo canônico do volume IV; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>revogação</strong> — termo canônico do volume IV; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>Working memory</strong> — contexto da tarefa atual, vida curta.</li>
+<li><strong>Episódica</strong> — eventos vividos pelo agente, imutável.</li>
+<li><strong>Semântica</strong> — fatos generalizados, mutável com versionamento.</li>
+<li><strong>Procedural</strong> — skills/workflows executáveis, versionados.</li>
+<li><strong>Proveniência</strong> — cadeia de evidência da origem de uma memória.</li>
+<li><strong>CRDT</strong> — estrutura cujas operações comutam, convergência matemática.</li>
+<li><strong>Subject Erasure</strong> — operação que remove memórias identificáveis de um titular.</li>
+<li><strong>Hub-and-spoke</strong> — topologia com agregador central.</li>
 </ul>
 <h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
-<p>O próximo volume — <strong>Volume 5</strong> — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.</p>
+<p>Memória distribuída resolve o que cada agente <em>sabe</em>. Mas quando vários
+agentes precisam <strong>decidir junto</strong>, surge um problema diferente: consenso,
+delegação, hierarquia. Quem desempata? Como evitar que se travem em loop?
+Esse é o terreno do <strong>Volume V — Consenso, Delegação e Hierarquia
+Multi-Agente</strong>.</p>
 <hr />
-<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume IV · Edição Canônica 1.0.0 · 2026-06-08</em>
+<p><em>NEXUS PROTOCOL · Volume IV · Edição Canônica 1.0.0 · 2026-06-08</em>
 <em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
 </body>
 </html>

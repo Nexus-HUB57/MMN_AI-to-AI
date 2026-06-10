@@ -6,13 +6,8 @@ title: "A2A — Comunicação entre Agentes"
 subtitle: "Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "Como dois agentes se reconhecem e dividem trabalho sem humano no meio?"
-axis: "Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos."
-core_invariant: "Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo."
-anchors: ['agent card', 'task lifecycle', 'streaming updates', 'delegation', 'interop']
 canonical_edition: true
 ---
 
@@ -27,685 +22,355 @@ canonical_edition: true
 *Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57*
 
 > **Pergunta-âncora:** Como dois agentes se reconhecem e dividem trabalho sem humano no meio?
-> **Eixo do volume:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante canônico:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
 
 ---
 
 ## Sumário
 
-> - 1. Abertura — O Problema Operacional
-> - 2. Fundação Conceitual
-> - 3. Anatomia do Protocolo
-> - 4. Modelos de Implementação Canônicos
-> - 5. Fluxo Operacional em Produção
-> - 6. Falhas Recorrentes e Contenção
-> - 7. Métricas, Evals e Observabilidade
-> - 8. Padrões Avançados de Composição
-> - 9. Maturidade, Roadmap e Próximos Marcos
-> - 10. Manifesto do Protocolo
-> - Checklist Canônico
-> - Glossário
-> - Gancho para o Próximo Volume
+> 1. Por que MCP não basta: a fronteira entre tool e agente
+> 2. Agent Card: o "passaporte" do agente
+> 3. O ciclo de vida de uma Task A2A
+> 4. Streaming, long-running e webhooks de retorno
+> 5. Modalidades: texto, dados, áudio, vídeo, formulários
+> 6. Push notifications e operações assíncronas longas
+> 7. Multi-turno: como agentes mantêm conversa sem confundir contexto
+> 8. Composição: agente cliente, agente servidor, agente híbrido
+> 9. A2A vs MCP: quando escolher cada um
+> 10. Manifesto: o agente não é uma tool com mais tokens
 
 ---
 
-## 1. Abertura — O Problema Operacional
+## 1. Por que MCP não basta: a fronteira entre tool e agente
 
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
+MCP resolve um lado da equação: o agente fala com **ferramentas** padronizadas.
+Mas há um problema que MCP **propositalmente não resolve**: e quando o outro
+lado da conexão não é uma ferramenta — é outro agente, com seu próprio LLM,
+suas próprias decisões, seu próprio estado interno?
 
-### II.1 — Diagnóstico operacional
+A diferença operacional é grande:
 
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
+- Uma **tool** retorna em milissegundos, é stateless, devolve dado.
+- Um **agente** pode levar minutos, mantém estado entre chamadas, pode
+  fazer perguntas de volta, pode escalar para um humano, pode falhar de
+  formas semânticas (não só sintáticas).
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+Tratar agente como tool é a causa #1 de sistemas multi-agente que parecem
+funcionar no demo e desmoronam em produção. O **A2A** (Agent-to-Agent),
+publicado pela Google em abril de 2025 e endossado por mais de 50 parceiros,
+nasceu exatamente para preencher essa lacuna. Ele responde a quatro perguntas
+que MCP deixa em aberto:
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+1. **Como descobrir** que existe outro agente capaz de fazer X?
+2. **Como acordar** o contrato da tarefa antes de iniciar?
+3. **Como acompanhar** uma execução que dura horas?
+4. **Como conversar** durante a execução (perguntas, follow-ups, cancelamento)?
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+A2A é deliberadamente **complementar a MCP**, não competitivo. A regra mental:
+*MCP para falar com o mundo; A2A para falar com pares*.
 
-### II.1 — Protocolo executável
+## 2. Agent Card: o "passaporte" do agente
 
-```text
-PROTOCOLO_02_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+Todo agente A2A publica um documento JSON em uma URL bem conhecida:
+`https://<dominio>/.well-known/agent.json`. Esse é o **Agent Card** — o
+passaporte que descreve quem o agente é, o que sabe fazer, como autenticar
+e quais modalidades aceita.
+
+```json
+{
+  "name": "InvoiceProcessor",
+  "description": "Processa faturas em PDF e extrai dados estruturados",
+  "url": "https://invoices.example.com/a2a/v1",
+  "version": "1.4.2",
+  "provider": {
+    "organization": "Acme Corp",
+    "url": "https://acme.example.com"
+  },
+  "documentationUrl": "https://invoices.example.com/docs",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": true,
+    "stateTransitionHistory": true
+  },
+  "authentication": {
+    "schemes": ["bearer", "oauth2"]
+  },
+  "defaultInputModes":  ["text/plain", "application/pdf"],
+  "defaultOutputModes": ["application/json", "text/markdown"],
+  "skills": [
+    {
+      "id": "extract-invoice-data",
+      "name": "Extrair dados de fatura",
+      "description": "Recebe um PDF e devolve JSON com campos canônicos.",
+      "tags": ["finance", "ocr", "extraction"],
+      "examples": [
+        "Extraia número, valor e vencimento desta fatura."
+      ]
+    }
+  ]
+}
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Três decisões deliberadas do design importam:
 
-### II.1 — Skills centrais associadas
+- **Skills, não tools.** Skills são unidades de competência, não funções.
+  Uma skill pode envolver múltiplas chamadas internas, múltiplas tools MCP,
+  múltiplos turnos com o usuário. O cliente A2A não precisa saber.
+- **Capabilities declaradas.** Se um agente não declara `streaming: true`,
+  o cliente não tenta SSE. Se não declara `pushNotifications`, sabe que
+  precisa fazer polling.
+- **Modalidades por skill.** Um agente pode aceitar PDF em uma skill e
+  só texto em outra. O Card descreve o default; a skill pode sobrescrever.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 3. O ciclo de vida de uma Task A2A
 
-### II.1 — Tese operacional
+A unidade canônica de A2A não é "uma mensagem" — é uma **Task**. Tasks têm
+identidade, estado, histórico e podem viver minutos, horas ou dias.
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+Os estados canônicos da máquina de estados de uma Task:
 
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 2. Fundação Conceitual
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.2 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.2 — Protocolo executável
-
-```text
-PROTOCOLO_02_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+```
+        submitted
+            │
+            ▼
+        working ◄────┐
+         │ │ │       │
+         │ │ │       │ (responder ao input-required)
+         │ │ ▼       │
+         │ │ input-required ──┘
+         │ ▼
+         │ completed
+         ▼
+       failed | canceled
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+- **submitted** — task aceita, fila ou inicialização.
+- **working** — execução ativa, pode emitir updates.
+- **input-required** — agente pausou e precisa de resposta para continuar
+  (este é o que separa A2A de uma fila de jobs comum).
+- **completed** — sucesso, artefatos disponíveis.
+- **failed** — erro irrecuperável.
+- **canceled** — cliente solicitou cancelamento.
 
-### II.2 — Skills centrais associadas
+Transições inválidas (ex.: `completed → working`) **devem ser rejeitadas
+pelo servidor**, não silenciadas. Um agente que aceita reabrir tarefas
+fechadas é um agente sem máquina de estados — e por consequência sem
+contrato auditável.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 4. Streaming, long-running e webhooks de retorno
 
-### II.2 — Tese operacional
+A2A suporta três modos de execução, e escolher o errado degrada o sistema
+inteiro:
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+**1. Síncrono (`tasks/send`)** — para tarefas <30 segundos. Cliente espera,
+recebe resultado final. Simples, mas amarra conexão.
 
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
+**2. Streaming (`tasks/sendSubscribe`, SSE)** — para tarefas onde o agente
+quer mostrar progresso. O cliente abre SSE, recebe eventos de
+`TaskStatusUpdateEvent` e `TaskArtifactUpdateEvent` até `final: true`.
 
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
+```http
+POST /a2a/v1/tasks/sendSubscribe
+Accept: text/event-stream
+Authorization: Bearer ...
 
-
----
-
-## 3. Anatomia do Protocolo
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.3 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.3 — Protocolo executável
-
-```text
-PROTOCOLO_02_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+{ "id": "t-7f3a", "message": { ... }, "sessionId": "s-9e2c" }
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+```
+event: status-update
+data: {"taskId":"t-7f3a","status":{"state":"working","message":"Lendo PDF..."}}
 
-### II.3 — Skills centrais associadas
+event: artifact-update
+data: {"taskId":"t-7f3a","artifact":{"name":"page-1.json","parts":[...]}}
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### II.3 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 4. Modelos de Implementação Canônicos
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.4 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.4 — Protocolo executável
-
-```text
-PROTOCOLO_02_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+event: status-update
+data: {"taskId":"t-7f3a","status":{"state":"completed"},"final":true}
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+**3. Push assíncrono (`pushNotificationConfig`)** — para tarefas que duram
+horas ou dias. Cliente registra um webhook; agente notifica via POST quando
+houver transição. Indispensável para integrações onde o cliente não pode
+manter conexão aberta (mobile, serverless).
 
-### II.4 — Skills centrais associadas
+Anti-padrão crônico: usar streaming SSE para tarefas de 6 horas. SSE não foi
+desenhado para isso; a primeira interrupção de rede e a task vira fantasma.
+Para >2 minutos, use push.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 5. Modalidades: texto, dados, áudio, vídeo, formulários
 
-### II.4 — Tese operacional
+Mensagens A2A são compostas por **Parts**, e cada Part declara seu tipo.
+Esse é o ponto onde A2A se distancia mais radicalmente de protocolos baseados
+em "chat":
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 5. Fluxo Operacional em Produção
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.5 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.5 — Protocolo executável
-
-```text
-PROTOCOLO_02_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+```json
+{
+  "role": "user",
+  "parts": [
+    { "type": "text", "text": "Processe esta fatura:" },
+    { "type": "file", "file": {
+        "name": "fatura.pdf",
+        "mimeType": "application/pdf",
+        "bytes": "JVBERi0xLjQK..." }},
+    { "type": "data", "data": {
+        "currency": "BRL",
+        "expectedFormat": "v2"
+    }}
+  ]
+}
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Tipos canônicos de Part:
 
-### II.5 — Skills centrais associadas
+- **text** — string simples.
+- **file** — binário, com bytes inline ou URI.
+- **data** — JSON estruturado (parâmetros, metadados, formulários).
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+A inovação prática é o `DataPart`: o agente cliente pode mandar
+**estruturas semânticas** sem serializar em texto e torcer para o agente
+servidor parsear. E o agente servidor pode **retornar formulários
+estruturados** que o cliente renderiza nativamente, em vez de devolver
+markdown que o front-end precisa interpretar.
 
-### II.5 — Tese operacional
+## 6. Push notifications e operações assíncronas longas
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+Para tarefas de longa duração, o cliente registra um endpoint de callback:
 
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 6. Falhas Recorrentes e Contenção
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.6 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.6 — Protocolo executável
-
-```text
-PROTOCOLO_02_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+```http
+POST /a2a/v1/tasks/pushNotificationConfig
+{
+  "taskId": "t-7f3a",
+  "pushNotificationConfig": {
+    "url": "https://cliente.example.com/webhooks/a2a",
+    "token": "wh_secret_token_for_HMAC_validation",
+    "authentication": { "schemes": ["bearer"] }
+  }
+}
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+O servidor então, a cada transição relevante, faz POST autenticado para essa
+URL. Três regras de produção que não estão no spec mas separam quem leva A2A
+a sério:
 
-### II.6 — Skills centrais associadas
+1. **HMAC assinado por payload**, não só bearer no header. Bearer pode
+   vazar; HMAC com timestamp tem janela curta de replay.
+2. **Idempotência via `eventId`.** O cliente deve deduplicar; servidores
+   reentregam em caso de falha de rede.
+3. **Backoff exponencial com circuit breaker.** Se o webhook do cliente
+   está caindo 5xx por 10 minutos, pare de tentar e marque a notificação
+   como `delivery-failed`, mas mantenha a task disponível para polling.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 7. Multi-turno: como agentes mantêm conversa sem confundir contexto
 
-### II.6 — Tese operacional
+O conceito que muitos primeiro-implementadores quebram é o **sessionId vs
+taskId**. Eles **não são** sinônimos:
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+- **sessionId** — conversa lógica entre dois agentes. Pode conter N tasks.
+- **taskId** — uma unidade de trabalho. Tem ciclo de vida finito.
 
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
+Exemplo: um agente de viagens recebe `sessionId=s-1`. Dentro dessa sessão,
+ele cria `task=t-1` para "achar voos", `task=t-2` para "reservar hotel",
+`task=t-3` para "gerar roteiro". Todas as três tasks compartilham contexto
+de sessão (destino, datas, perfil do viajante), mas têm artefatos e estado
+independentes.
 
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
+Quando uma task entra em `input-required`, o cliente deve responder com
+mensagem que **referencia o taskId**, não cria outra task. Criar nova task
+para responder uma pergunta é o erro mais comum em integrações iniciais —
+e quebra o histórico em pedaços não-relacionáveis.
 
+## 8. Composição: agente cliente, agente servidor, agente híbrido
 
----
+A2A é simétrico: todo agente pode ser **servidor** (expõe Agent Card e
+recebe tasks) e **cliente** (consome tasks de outros agentes). Três padrões
+de composição que se repetem em produção:
 
-## 7. Métricas, Evals e Observabilidade
+### Padrão Orchestrator
+Um agente "maestro" recebe a task do humano e delega sub-tasks para N
+agentes especialistas. O orchestrator agrega artefatos e devolve resultado
+único. Funciona bem quando a decomposição é estável.
 
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
+### Padrão Pipeline
+Agente A → agente B → agente C, cada um adicionando valor sobre o artefato
+do anterior. Cada link é uma task A2A separada. Robusto porque cada nó pode
+ser reescalado, substituído ou observado isoladamente.
 
-### II.7 — Diagnóstico operacional
+### Padrão Marketplace
+Um broker recebe uma necessidade, faz **discovery** entre Agent Cards
+indexados, escolhe o melhor agente para cada skill (por reputação, custo,
+latência) e delega. É o padrão mais ambicioso e o que mais exige
+infraestrutura adicional (registry, trust layer — ver Volume VII).
 
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
+## 9. A2A vs MCP: quando escolher cada um
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+Uma das confusões mais comuns: "se já uso MCP, preciso de A2A?". A resposta
+honesta exige uma matriz de decisão:
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+| Critério | Use MCP | Use A2A |
+|----------|---------|---------|
+| O outro lado tem **seu próprio LLM**? | Não | Sim |
+| Resposta esperada em **<1s**? | Sim | Não |
+| Há **state interno** persistente no outro lado? | Não | Sim |
+| Pode haver **input-required** mid-execution? | Não | Sim |
+| O outro lado pode **escalar para humano**? | Não | Sim |
+| Quero **descoberta dinâmica**? | Não | Sim |
+| Quero **descrever uma função estática**? | Sim | Não |
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+Caso real: um agente de atendimento usa **MCP** para falar com o CRM
+(Resource: ficha do cliente; Tool: registrar nota) e **A2A** para chamar o
+agente de cobrança da outra área quando precisa renegociar uma fatura.
+A regra mental: *MCP é integração; A2A é colaboração*.
 
-### II.7 — Protocolo executável
+## 10. Manifesto: o agente não é uma tool com mais tokens
 
-```text
-PROTOCOLO_02_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
+A indústria passou 2024 inteiro tentando empurrar agentes para a abstração
+de tool-call. Foi reconfortante porque cabia no mental model existente
+(function calling) — e foi ineficaz, porque tools não têm estado, não fazem
+perguntas de volta e não negociam.
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+A2A inverte a metáfora: o agente é um **par**, não um subordinado. Ele pode
+recusar, pode pedir clarificação, pode entregar parcial, pode escalar. Quem
+fala com agente como se fosse stored procedure colhe sistemas frágeis.
 
-### II.7 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### II.7 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 8. Padrões Avançados de Composição
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.8 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.8 — Protocolo executável
-
-```text
-PROTOCOLO_02_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### II.8 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### II.8 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
+> **Tese final do volume:** A arquitetura multi-agente real só começa quando
+> paramos de tratar o outro agente como uma tool com mais tokens — e
+> começamos a tratá-lo como uma entidade com contrato, máquina de estados e
+> histórico próprio. A2A é o primeiro protocolo que opera essa virada.
 
 ---
 
-## 9. Maturidade, Roadmap e Próximos Marcos
+## Checklist Canônico — A2A em produção
 
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.9 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.9 — Protocolo executável
-
-```text
-PROTOCOLO_02_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### II.9 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### II.9 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 10. Manifesto do Protocolo
-
-> **Eixo deste capítulo:** Descoberta, capability cards, tasks, mensageria entre agentes heterogêneos.
-> **Invariante operacional:** Agente que fala com outro agente deve declarar identidade, capacidades e contrato antes do primeiro turno produtivo.
-
-### II.10 — Diagnóstico operacional
-
-Antes de implementar **A2A — Comunicação entre Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como dois agentes se reconhecem e dividem trabalho sem humano no meio?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### II.10 — Protocolo executável
-
-```text
-PROTOCOLO_02_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### II.10 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`agent card, task lifecycle, streaming updates, delegation, interop`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### II.10 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `A2A — Comunicação entre Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## Checklist Canônico — Volume II
-
-- [ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.
-- [ ] Invariante canônico documentado em README do componente.
-- [ ] Schemas de entrada e saída versionados e testados em CI.
-- [ ] Trace estruturado emitido em todos os pontos críticos.
-- [ ] Plano de degradação digna escrito antes do primeiro deploy.
-- [ ] Skill federada com contrato de falha explícito.
-- [ ] Identidade do agente e proveniência da chamada auditáveis.
-- [ ] Eval de regressão executado a cada mudança de prompt ou tool.
-- [ ] Métrica de SLO agêntico definida e monitorada.
-- [ ] Documento editorial deste protocolo revisado por outro agente.
+- [ ] Agent Card publicado em `/.well-known/agent.json` e versionado.
+- [ ] Skills com descrição clara, exemplos e tags estáveis.
+- [ ] Máquina de estados de Task rejeita transições inválidas.
+- [ ] Streaming usado apenas para tarefas <2 min; push para o resto.
+- [ ] Push notifications assinadas com HMAC + janela de replay curta.
+- [ ] sessionId separado de taskId em toda a base de código.
+- [ ] Resposta a `input-required` referencia taskId, não cria task nova.
+- [ ] DataPart usado para dados estruturados (não serializar em texto).
+- [ ] Cancelamento (`tasks/cancel`) testado e idempotente.
+- [ ] Discovery (catálogo de Agent Cards) com TTL e revalidação.
 
 ## Glossário do Volume
 
-- **agent card** — termo canônico do volume II; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **task lifecycle** — termo canônico do volume II; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **streaming updates** — termo canônico do volume II; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **delegation** — termo canônico do volume II; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **interop** — termo canônico do volume II; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
+- **Agent Card** — JSON em `/.well-known/agent.json` que descreve o agente.
+- **Skill** — unidade de competência exposta no Agent Card.
+- **Task** — unidade de trabalho com máquina de estados própria.
+- **Session** — conversa lógica que agrupa múltiplas tasks.
+- **Part** — pedaço tipado de uma mensagem (text, file, data).
+- **input-required** — estado em que a task pausa aguardando resposta do cliente.
+- **Push Notification** — webhook que o servidor chama para informar transições.
+- **Streaming (A2A)** — entrega de updates via SSE durante execução.
 
 ## Gancho para o Próximo Volume
 
-O próximo volume — **Volume 3** — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.
+A2A resolve **um agente conversando com outro**. Mas a indústria não para por aí:
+a IBM publicou ACP, a OpenAI tem propostas próprias, a Microsoft empurra AutoGen
+como padrão de fato. Como escolher entre eles? Como construir camadas de
+abstração que sobrevivam à guerra de protocolos? Esse é o terreno do
+**Volume III — ACP e Padrões de Interoperabilidade**.
 
 ---
 
-*NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume II · Edição Canônica 1.0.0 · 2026-06-08*
+*NEXUS PROTOCOL · Volume II · Edição Canônica 1.0.0 · 2026-06-08*
 *MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI*

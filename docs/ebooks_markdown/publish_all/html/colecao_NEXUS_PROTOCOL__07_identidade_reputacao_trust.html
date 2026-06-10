@@ -67,13 +67,8 @@ title: "Identidade, Reputação e Trust Layer"
 subtitle: "Como agentes provam quem são, o que já fizeram e por que devem ser ouvidos."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "O que separa um agente confiável de um agente apenas funcional?"
-axis: "DID, assinaturas, atestações, histórico de execução, score de confiança."
-core_invariant: "Confiança sem rastro auditável é credulidade institucionalizada."
-anchors: ['DID', 'assinatura', 'atestação', 'reputation score', 'auditoria']
 canonical_edition: true</p>
 <hr />
 <h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
@@ -82,605 +77,362 @@ canonical_edition: true</p>
 <p><strong>Como agentes provam quem são, o que já fizeram e por que devem ser ouvidos.</strong></p>
 <p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
 <blockquote>
-<p><strong>Pergunta-âncora:</strong> O que separa um agente confiável de um agente apenas funcional?
-<strong>Eixo do volume:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante canônico:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
+<p><strong>Pergunta-âncora:</strong> O que separa um agente confiável de um agente apenas funcional?</p>
 </blockquote>
 <hr />
 <h2 id="sumario">Sumário</h2>
 <blockquote>
-<ul>
-<li>
 <ol>
-<li>Abertura — O Problema Operacional</li>
+<li>Três identidades, três problemas distintos</li>
+<li>DIDs aplicados a agentes: w3c, did:web, did:key</li>
+<li>Agent Passport: estrutura canônica</li>
+<li>Atestações verificáveis: o que o agente "viveu"</li>
+<li>Reputação: cálculo, decay e ataques</li>
+<li>Capability tokens descendentes</li>
+<li>Revogação: o problema mais difícil</li>
+<li>Trust frameworks setoriais</li>
+<li>Identidade do operador humano vs identidade do agente</li>
+<li>Manifesto: confiança sem rastro é credulidade</li>
 </ol>
-</li>
-<li>
-<ol start="2">
-<li>Fundação Conceitual</li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li>Anatomia do Protocolo</li>
-</ol>
-</li>
-<li>
-<ol start="4">
-<li>Modelos de Implementação Canônicos</li>
-</ol>
-</li>
-<li>
-<ol start="5">
-<li>Fluxo Operacional em Produção</li>
-</ol>
-</li>
-<li>
-<ol start="6">
-<li>Falhas Recorrentes e Contenção</li>
-</ol>
-</li>
-<li>
-<ol start="7">
-<li>Métricas, Evals e Observabilidade</li>
-</ol>
-</li>
-<li>
-<ol start="8">
-<li>Padrões Avançados de Composição</li>
-</ol>
-</li>
-<li>
-<ol start="9">
-<li>Maturidade, Roadmap e Próximos Marcos</li>
-</ol>
-</li>
-<li>
-<ol start="10">
-<li>Manifesto do Protocolo</li>
-</ol>
-</li>
-<li>Checklist Canônico</li>
-<li>Glossário</li>
-<li>Gancho para o Próximo Volume</li>
-</ul>
 </blockquote>
 <hr />
-<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii1-diagnostico-operacional">VII.1 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii1-protocolo-executavel">VII.1 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<h2 id="1-tres-identidades-tres-problemas-distintos">1. Três identidades, três problemas distintos</h2>
+<p>A palavra "identidade" em sistemas agênticos colapsa três conceitos
+distintos que precisam ser separados antes de qualquer arquitetura:</p>
+<p><strong>Identidade do modelo.</strong> Qual LLM gerou aquela resposta? Claude 3.7?
+GPT-5? Llama 4 70B fine-tunado? Importa para auditoria, para
+reprodutibilidade e para policy ("não use modelos não-aprovados em decisões
+financeiras").</p>
+<p><strong>Identidade do agente.</strong> O agente é uma entidade composta — modelo +
+prompt + tools + skills + memória. Dois agentes com o mesmo modelo são
+agentes diferentes. Identidade do agente é o que aparece em Agent Cards,
+delegations, audit logs.</p>
+<p><strong>Identidade do operador.</strong> Quem é o humano (ou organização) responsável
+final pelo agente? Quem responde quando o agente comete erro? Quem assina
+contratos comerciais?</p>
+<p>Tratar essas três como uma só é o erro que custa caro em compliance.
+Toda interação agêntica produz três trilhas que precisam ser separáveis
+e correlacionáveis:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">operator_id</span><span class="w">  </span><span class="err">→</span><span class="w"> </span><span class="s">&quot;did:web:acme.com#legal-entity&quot;</span>
+<span class="n">agent_id</span><span class="w">     </span><span class="err">→</span><span class="w"> </span><span class="s">&quot;did:web:acme.com:agents:billing-v3&quot;</span>
+<span class="n">model_id</span><span class="w">     </span><span class="err">→</span><span class="w"> </span><span class="s">&quot;anthropic:claude-3.7-sonnet@2026-04-15&quot;</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii1-skills-centrais-associadas">VII.1 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii1-tese-operacional">VII.1 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii2-diagnostico-operacional">VII.2 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii2-protocolo-executavel">VII.2 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>A tríade não é cosmética. É o que permite responder a três perguntas
+diferentes em três contextos diferentes: regulatório, técnico, comercial.</p>
+<h2 id="2-dids-aplicados-a-agentes-w3c-didweb-didkey">2. DIDs aplicados a agentes: w3c, did:web, did:key</h2>
+<p>A camada de identidade que está convergindo em 2026 é
+<strong>Decentralized Identifiers (DIDs)</strong> do W3C. A vantagem sobre OAuth/OIDC
+puros é que DIDs não dependem de um Identity Provider central — o agente
+pode provar sua identidade contra documento que ele próprio publica.</p>
+<p>Três métodos DID dominam em uso agêntico:</p>
+<p><strong>did:web.</strong> O DID resolve via HTTPS para <code>https://&lt;dominio&gt;/.well-known/did.json</code>.
+Simples, sem blockchain, sem infra exótica. Funciona porque dominio +
+TLS já é uma camada de confiança que a web entende.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;https://www.w3.org/ns/did/v1&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;verificationMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com#key-1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ed25519VerificationKey2020&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;controller&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;publicKeyMultibase&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;z6Mkf...&quot;</span>
+<span class="w">  </span><span class="p">}],</span>
+<span class="w">  </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com#a2a&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A2AEndpoint&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;serviceEndpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://billing.acme.com/a2a/v1&quot;</span>
+<span class="w">  </span><span class="p">}]</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii2-skills-centrais-associadas">VII.2 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii2-tese-operacional">VII.2 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii3-diagnostico-operacional">VII.3 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii3-protocolo-executavel">VII.3 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p><strong>did:key.</strong> A chave pública É o DID. Útil para agentes efêmeros,
+sub-agentes spawn'ados, identidades sem URL pública.</p>
+<p><strong>did:peer.</strong> Identidade pareada entre dois agentes específicos. Não
+resolve publicamente; é usada apenas na sessão estabelecida.</p>
+<p>A regra prática: <strong>did:web para agentes públicos e organizacionais;
+did:key para efêmeros; did:peer para conversas privadas</strong>. Usar
+blockchain-based DIDs (did:ion, did:ethr) sem motivo regulatório
+específico adiciona complexidade sem benefício proporcional.</p>
+<h2 id="3-agent-passport-estrutura-canonica">3. Agent Passport: estrutura canônica</h2>
+<p>O documento que consolida identidade agêntica em 2026 é o <strong>Agent
+Passport</strong> — extensão do Agent Card do A2A com camada de identidade,
+proveniência e atestações.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;did&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com:agents:v3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BillingAgent v3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;agent_card_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://billing.acme.com/.well-known/agent.json&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;did&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:acme.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;legal_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Acme Brasil Ltda.&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;jurisdiction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BR&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;responsible_contact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ai-ops@acme.com&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;model_attestation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;primary_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic:claude-3.7-sonnet@2026-04-15&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;fingerprint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:8f3a...&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;fine_tuning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;compliance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;frameworks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;LGPD&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;SOC2-Type-II&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;EU-AI-Act-limited-risk&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;audit_log_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://audit.acme.com/agents/billing-v3/&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;issued_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-15T00:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2027-01-15T00:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ed25519:...&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii3-skills-centrais-associadas">VII.3 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii3-tese-operacional">VII.3 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii4-diagnostico-operacional">VII.4 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii4-protocolo-executavel">VII.4 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>O passaporte é <strong>assinado pelo operator</strong>, não pelo próprio agente.
+Isso resolve um problema fundamental: o agente não pode atestar a si
+mesmo (atestação reflexiva é vazia). A organização que opera o agente é
+quem assume responsabilidade legal e quem assina.</p>
+<p>Renovação típica: anual, com rotação de chave. Comprometimento
+detectado: revogação imediata via lista pública (ver Capítulo 7).</p>
+<h2 id="4-atestacoes-verificaveis-o-que-o-agente-viveu">4. Atestações verificáveis: o que o agente "viveu"</h2>
+<p>Identidade responde "quem é"; atestação responde "o que fez". A camada
+de atestação usa <strong>Verifiable Credentials</strong> (W3C VC), com o agente como
+<em>subject</em> e terceiros como <em>issuers</em>.</p>
+<p>Exemplos canônicos:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// Atestação de auditoria SOC2</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VerifiableCredential&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;SOC2AuditCredential&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:auditor.example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;issuanceDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-03-20T00:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;credentialSubject&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com:agents:v3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;audited_for&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;security&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;availability&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;confidentiality&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;report_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://auditor.example.com/reports/acme-2026-q1.pdf&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;report_hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sha256:c4d1...&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;proof&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ed25519Signature2020&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Atestação de outcome (executou N tarefas com sucesso medido)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VerifiableCredential&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OutcomeAttestation&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:registry.skills.example.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;credentialSubject&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com:agents:v3&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;@acme/renegotiate-invoice@2.x&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01/2026-04-01&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;executions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="err">_</span><span class="mi">847</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;success_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.943</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;median_latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1840</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii4-skills-centrais-associadas">VII.4 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii4-tese-operacional">VII.4 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii5-diagnostico-operacional">VII.5 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii5-protocolo-executavel">VII.5 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Três regras canônicas para atestações em federação:</p>
+<ol>
+<li><strong>Issuer é parte da reputação.</strong> Atestação assinada por auditor
+   reconhecido pesa mais que auto-atestação. O verificador deve manter
+   lista de issuers confiáveis.</li>
+<li><strong>Toda atestação tem expiração.</strong> Atestação de 2 anos atrás não
+   prova nada sobre o agente de hoje.</li>
+<li><strong>Atestações negativas existem.</strong> "Agente X falhou auditoria em
+   março/2026" é informação tão importante quanto sucesso. Frameworks
+   sérios suportam ambas.</li>
+</ol>
+<h2 id="5-reputacao-calculo-decay-e-ataques">5. Reputação: cálculo, decay e ataques</h2>
+<p>Reputação numérica é o atalho que a federação usa para "vale a pena
+delegar a este agente?". Cálculo simplista (soma de sucessos / total) é
+fácil de manipular. Modelos mais robustos consideram:</p>
+<div class="codehilite"><pre><span></span><code>trust_score(agent) =
+    α <span class="gs">* weighted_success_rate(últimos N dias)</span>
+<span class="gs">  + β *</span> domain_expertise(skill_relevante)
+  + γ <span class="gs">* issuer_quality(atestações ativas)</span>
+<span class="gs">  + δ *</span> peer_endorsements(outros agentes que delegaram com sucesso)
+  <span class="k">-</span> ε * incident_penalty(N dias decaindo)
+  <span class="k">-</span> ζ * sybil_risk(idade da identidade, diversidade de issuers)
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii5-skills-centrais-associadas">VII.5 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii5-tese-operacional">VII.5 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii6-diagnostico-operacional">VII.6 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Sete vetores de ataque que sistemas de reputação ingênuos sofrem:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Sybil.</strong> Atacante cria 10.000 agentes que se endossam mutuamente.
+  Mitigação: penalizar redes com baixa diversidade de issuers.</li>
+<li><strong>Whitewashing.</strong> Agente acumula reputação ruim, abandona identidade,
+  recria nova limpa. Mitigação: idade de identidade pesa em score.</li>
+<li><strong>Boost coordenado.</strong> Pequeno grupo dá ratings 5★ para amigos.
+  Mitigação: peso por reputação do avaliador (PageRank-like).</li>
+<li><strong>Bait-and-switch.</strong> Acumula reputação fazendo tarefas pequenas, abusa
+  em uma tarefa grande. Mitigação: tarefas têm "peso" no histórico.</li>
+<li><strong>Reputation-as-a-service.</strong> Mercado paralelo vende endorsements.
+  Mitigação: detecção estatística + penalização severa quando
+  comprovado.</li>
+<li><strong>Time decay errado.</strong> Score atual reflete reputação de 2 anos atrás.
+  Mitigação: half-life explícito (típico 90 dias para domínios voláteis).</li>
+<li><strong>Domínio cruzado.</strong> Bom em coding, ruim em finance, score agregado
+  esconde. Mitigação: scores por skill, não global.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii6-protocolo-executavel">VII.6 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Quem implementa reputação sem prever esses vetores entrega gameable
+system. Reputação real é tão complexa quanto a contabilidade — e exige
+o mesmo tipo de auditoria.</p>
+<h2 id="6-capability-tokens-descendentes">6. Capability tokens descendentes</h2>
+<p>Quando agente A delega para agente B (Volume V), B precisa agir <strong>em
+nome de A</strong> com escopo limitado. A primitiva canônica é o
+<strong>capability token descendente</strong> — análogo ao macaroon de Google,
+adaptado para agentes.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w">   </span><span class="s2">&quot;did:web:supervisor.acme.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;audience&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:billing.acme.com:agents:v3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;did:web:acme.com#cliente-99&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;billing.invoice.read&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;billing.invoice.renegotiate:max_discount=15%&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;constraints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;ip_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;time_window&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-08T00:00:00Z/PT4H&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_calls&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;delegation_chain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;did:web:human:joao.silva@acme.com&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;did:web:supervisor.acme.com&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;exp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1781096400</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;jti&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tkn-7f3a9c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;proof&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ed25519:...&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii6-skills-centrais-associadas">VII.6 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii6-tese-operacional">VII.6 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii7-diagnostico-operacional">VII.7 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Propriedades canônicas:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Atenuação só, nunca elevação.</strong> Token derivado pode reduzir escopo,
+  nunca aumentar. Garantia criptográfica via assinatura encadeada.</li>
+<li><strong>Cadeia auditável.</strong> <code>delegation_chain</code> registra quem autorizou o quê
+  até o humano de origem.</li>
+<li><strong>Restrições contextuais.</strong> IP, janela de tempo, contagem máxima.</li>
+<li><strong>Revogável.</strong> Token pode ser invalidado antes do <code>exp</code> por lista de
+  revogação (Capítulo 7).</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii7-protocolo-executavel">VII.7 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii7-skills-centrais-associadas">VII.7 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii7-tese-operacional">VII.7 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii8-diagnostico-operacional">VII.8 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>A diferença prática vs OAuth puro: OAuth amarra escopo ao usuário; aqui
+o escopo viaja com a tarefa e atravessa N agentes mantendo trilha completa.</p>
+<h2 id="7-revogacao-o-problema-mais-dificil">7. Revogação: o problema mais difícil</h2>
+<p>Identidade emitida é fácil. Identidade revogada de forma propagada é o
+problema sem solução elegante de toda a literatura.</p>
+<p>Quatro mecanismos canônicos, todos com trade-offs:</p>
+<p><strong>CRL (Certificate Revocation List).</strong> Lista centralizada de IDs
+revogados. Verificadores consultam antes de aceitar. Funciona; é lento;
+não é cacheável corretamente.</p>
+<p><strong>OCSP-like (consulta em tempo real).</strong> "Esse ID ainda é válido?".
+Latência adicional por chamada; ponto único de falha do responder.</p>
+<p><strong>Short-lived credentials.</strong> Em vez de revogar, emitir credenciais
+curtas (1-4h) e simplesmente não re-emitir. Elegante; exige
+infraestrutura de renovação ativa.</p>
+<p><strong>Status List 2021 (W3C).</strong> Bitmap em URL pública; cada credencial
+referencia índice no bitmap; verificador faz GET. Funciona offline
+(cacheável); só precisa baixar bitmap uma vez por janela.</p>
+<p>A combinação canônica para 2026: <strong>short-lived credentials para uso
+diário + Status List para emergências</strong>. Operadores que confiam apenas
+em CRL legacy descobrem na hora errada que a propagação demora horas.</p>
+<p>Cenário pior: agente comprometido, token vazado, atacante usando em
+outro agente. O tempo entre detecção e revogação propagada é a janela
+de exposição. Empresas sérias medem essa janela como métrica de
+incident response.</p>
+<h2 id="8-trust-frameworks-setoriais">8. Trust frameworks setoriais</h2>
+<p>Federação cross-org não acontece em vácuo. Acontece dentro de <strong>trust
+frameworks setoriais</strong> que definem regras de identidade, atestação e
+revogação para uma indústria.</p>
+<p>Frameworks em consolidação em 2026:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Open Banking AI</strong> — padrão para agentes financeiros, herda KYC/AML
+  do banking tradicional.</li>
+<li><strong>HealthAgent Trust</strong> — agentes em saúde, com requisitos HIPAA/LGPD
+  específicos.</li>
+<li><strong>GovAI Roster</strong> — agentes que operam para governo, com listas de
+  conformidade.</li>
+<li><strong>EU AI Act Risk Registry</strong> — agentes "high-risk" precisam de
+  registro público obrigatório.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii8-protocolo-executavel">VII.8 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii8-skills-centrais-associadas">VII.8 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii8-tese-operacional">VII.8 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii9-diagnostico-operacional">VII.9 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Trust framework define três coisas:</p>
+<ol>
+<li><strong>Quem pode ser issuer.</strong> Lista de auditores e autoridades aceitas.</li>
+<li><strong>Que atestações são exigidas.</strong> Mínimo de credenciais para operar.</li>
+<li><strong>Como funciona revogação.</strong> Mecanismo e SLA propagação.</li>
+</ol>
+<p>Operar fora de framework setorial em domínio regulado é viável
+tecnicamente, <strong>inviável legalmente</strong>. Quem ignora isso colhe
+notificações regulatórias antes do produto-market fit.</p>
+<h2 id="9-identidade-do-operador-humano-vs-identidade-do-agente">9. Identidade do operador humano vs identidade do agente</h2>
+<p>A pergunta jurídica não-resolvida em 2026: quando o agente age, <strong>quem
+agiu</strong>? O agente, o operador, o desenvolvedor da skill, o provedor do
+modelo?</p>
+<p>A doutrina que está prevalecendo (EU AI Act, NIST AI RMF) é
+<strong>responsabilidade do operador</strong>: a entidade que coloca o agente em
+operação para tarefas específicas é responsável final pelas
+consequências. Provedor de modelo tem responsabilidade limitada
+(defeito no modelo); desenvolvedor de skill tem responsabilidade pelo
+contrato declarado.</p>
+<p>Isso desenha a arquitetura de logs que precisa existir:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Log assinado pelo operator</strong> — registra que tarefa foi autorizada.</li>
+<li><strong>Log assinado pelo agente</strong> — registra decisões e ações.</li>
+<li><strong>Log do modelo (no provedor)</strong> — registra inferências executadas.</li>
+<li><strong>Log da skill (no skill provider)</strong> — registra execuções.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii9-protocolo-executavel">VII.9 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii9-skills-centrais-associadas">VII.9 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii9-tese-operacional">VII.9 — Tese operacional</h3>
+<p>Em incidente, a investigação cruza os quatro logs para estabelecer
+cadeia de causalidade. Sistema que não produz essa quádrupla é sistema
+não-auditável — e na prática, não-defensável em processo.</p>
+<h2 id="10-manifesto-confianca-sem-rastro-e-credulidade">10. Manifesto: confiança sem rastro é credulidade</h2>
+<p>A indústria descobriu nos últimos anos que reputação numérica em e-commerce
+e gig economy é manipulável (avaliações falsas, bots). Sistemas agênticos
+estão prestes a importar todos esses problemas, com agravante: o agente
+mente em escala industrial.</p>
+<p>Confiança real em federação agêntica não vem de:
+- "Confio porque o nome soa profissional."
+- "Confio porque tem rating 4.8★."
+- "Confio porque está na lista do registry X."</p>
+<p>Vem de:
+- Identidade verificável criptograficamente.
+- Atestações de terceiros independentes, datadas e revogáveis.
+- Histórico de execução com proveniência rastreável.
+- Capacidade de revogar e penalizar em escala.
+- Framework setorial com responsabilidade legal definida.</p>
+<p>Quem opera federação agêntica sem essa pilha está rezando, não
+arquitetando.</p>
 <blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+<p><strong>Tese final do volume:</strong> A camada de confiança agêntica não é um
+diferencial competitivo — é precondição para qualquer sistema
+multi-agente atravessar fronteira organizacional. Federação sem
+trust layer é o equivalente de uma bolsa de valores sem custódia:
+funciona até alguém perceber.</p>
 </blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
 <hr />
-<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> DID, assinaturas, atestações, histórico de execução, score de confiança.
-<strong>Invariante operacional:</strong> Confiança sem rastro auditável é credulidade institucionalizada.</p>
-</blockquote>
-<h3 id="vii10-diagnostico-operacional">VII.10 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Identidade, Reputação e Trust Layer</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>O que separa um agente confiável de um agente apenas funcional?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="checklist-canonico-trust-layer">Checklist Canônico — Trust Layer</h2>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="vii10-protocolo-executavel">VII.10 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_07_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="vii10-skills-centrais-associadas">VII.10 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>DID, assinatura, atestação, reputation score, auditoria</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="vii10-tese-operacional">VII.10 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Identidade, Reputação e Trust Layer</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="checklist-canonico-volume-vii">Checklist Canônico — Volume VII</h2>
-<ul>
-<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
-<li>[ ] Invariante canônico documentado em README do componente.</li>
-<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
-<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
-<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
-<li>[ ] Skill federada com contrato de falha explícito.</li>
-<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
-<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
-<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
-<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+<li>[ ] Distinção operator_id / agent_id / model_id em toda audit trail.</li>
+<li>[ ] DIDs (did:web preferencial) publicados para todos os agentes.</li>
+<li>[ ] Agent Passport com signature do operator e validade definida.</li>
+<li>[ ] Atestações verificáveis de terceiros (auditoria, outcome, compliance).</li>
+<li>[ ] Reputação calculada por skill, com decay, e protegida contra Sybil.</li>
+<li>[ ] Capability tokens descendentes com atenuação criptográfica.</li>
+<li>[ ] Mecanismo de revogação testado (Status List + short-lived combo).</li>
+<li>[ ] Trust framework setorial mapeado e atendido.</li>
+<li>[ ] Logs quádruplos (operator/agent/model/skill) preservados.</li>
+<li>[ ] Plano de resposta a comprometimento de identidade documentado.</li>
 </ul>
 <h2 id="glossario-do-volume">Glossário do Volume</h2>
 <ul>
-<li><strong>DID</strong> — termo canônico do volume VII; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>assinatura</strong> — termo canônico do volume VII; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>atestação</strong> — termo canônico do volume VII; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>reputation score</strong> — termo canônico do volume VII; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>auditoria</strong> — termo canônico do volume VII; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>DID</strong> — Decentralized Identifier (W3C).</li>
+<li><strong>did:web</strong> — método DID resolvido via HTTPS em domínio próprio.</li>
+<li><strong>VC</strong> — Verifiable Credential, atestação assinada.</li>
+<li><strong>Agent Passport</strong> — documento de identidade do agente, assinado pelo operator.</li>
+<li><strong>Capability token</strong> — token de autoridade delegada com escopo limitado.</li>
+<li><strong>Atenuação</strong> — propriedade de tokens derivados: só reduz escopo.</li>
+<li><strong>CRL</strong> — Certificate Revocation List.</li>
+<li><strong>Trust framework</strong> — conjunto setorial de regras de identidade/atestação.</li>
 </ul>
 <h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
-<p>O próximo volume — <strong>Volume 8</strong> — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.</p>
+<p>Identidade prova quem é. Mas mesmo agentes confiáveis degradam — modelos
+mudam, dados driftam, prompts envelhecem. Como saber se a rede de
+agentes está melhor hoje que ontem? Como detectar regressão antes do
+cliente? Esse é o terreno do <strong>Volume VIII — Evals, Observability e
+Telemetria Agêntica</strong>.</p>
 <hr />
-<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume VII · Edição Canônica 1.0.0 · 2026-06-08</em>
+<p><em>NEXUS PROTOCOL · Volume VII · Edição Canônica 1.0.0 · 2026-06-08</em>
 <em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
 </body>
 </html>

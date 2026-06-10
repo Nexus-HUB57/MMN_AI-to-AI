@@ -67,13 +67,8 @@ title: "ACP e Padrões de Interoperabilidade"
 subtitle: "Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "Quais protocolos sobrevivem ao próximo ciclo e por quê?"
-axis: "Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção."
-core_invariant: "Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência."
-anchors: ['ACP', 'OpenAgents', 'schemas', 'vendor neutrality', 'fallback layer']
 canonical_edition: true</p>
 <hr />
 <h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
@@ -82,605 +77,363 @@ canonical_edition: true</p>
 <p><strong>Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões.</strong></p>
 <p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
 <blockquote>
-<p><strong>Pergunta-âncora:</strong> Quais protocolos sobrevivem ao próximo ciclo e por quê?
-<strong>Eixo do volume:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante canônico:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
+<p><strong>Pergunta-âncora:</strong> Quais protocolos sobrevivem ao próximo ciclo e por quê?</p>
 </blockquote>
 <hr />
 <h2 id="sumario">Sumário</h2>
 <blockquote>
-<ul>
-<li>
 <ol>
-<li>Abertura — O Problema Operacional</li>
+<li>A guerra dos padrões nunca é técnica, é política</li>
+<li>ACP (IBM): a proposta enterprise</li>
+<li>AGNTCY, OpenAgents e o esforço de neutralidade</li>
+<li>AutoGen, LangGraph e os "padrões de fato"</li>
+<li>Mapa comparativo: MCP × A2A × ACP × proprietários</li>
+<li>Arquitetura de tradução: o gateway interoperável</li>
+<li>Schemas JSON-LD e a camada semântica compartilhada</li>
+<li>Adoção estratégica: aposta única, dual stack ou agnóstico?</li>
+<li>Migração entre protocolos sem reescrever agentes</li>
+<li>Manifesto: o padrão que vence é o que perde menos</li>
 </ol>
-</li>
-<li>
-<ol start="2">
-<li>Fundação Conceitual</li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li>Anatomia do Protocolo</li>
-</ol>
-</li>
-<li>
-<ol start="4">
-<li>Modelos de Implementação Canônicos</li>
-</ol>
-</li>
-<li>
-<ol start="5">
-<li>Fluxo Operacional em Produção</li>
-</ol>
-</li>
-<li>
-<ol start="6">
-<li>Falhas Recorrentes e Contenção</li>
-</ol>
-</li>
-<li>
-<ol start="7">
-<li>Métricas, Evals e Observabilidade</li>
-</ol>
-</li>
-<li>
-<ol start="8">
-<li>Padrões Avançados de Composição</li>
-</ol>
-</li>
-<li>
-<ol start="9">
-<li>Maturidade, Roadmap e Próximos Marcos</li>
-</ol>
-</li>
-<li>
-<ol start="10">
-<li>Manifesto do Protocolo</li>
-</ol>
-</li>
-<li>Checklist Canônico</li>
-<li>Glossário</li>
-<li>Gancho para o Próximo Volume</li>
-</ul>
 </blockquote>
 <hr />
-<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii1-diagnostico-operacional">III.1 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="1-a-guerra-dos-padroes-nunca-e-tecnica-e-politica">1. A guerra dos padrões nunca é técnica, é política</h2>
+<p>A história dos protocolos é uma sequência previsível: três fornecedores publicam
+especificações concorrentes, um consórcio tenta unificar, a maioria adota o que
+o maior player suporta nativamente, os perdedores viram footnote. Aconteceu com
+SOAP×REST, OpenID×SAML, gRPC×REST. Está acontecendo com protocolos agênticos.</p>
+<p>Em 2026, o mapa do território é:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>MCP</strong> (Anthropic, 2024) — vencedor de fato na camada agente↔ferramenta.</li>
+<li><strong>A2A</strong> (Google, abril 2025) — vencedor de fato na camada agente↔agente.</li>
+<li><strong>ACP</strong> (IBM via Linux Foundation/BeeAI, 2025) — desafio enterprise com REST puro.</li>
+<li><strong>AGNTCY</strong> (Cisco, LangChain, Galileo) — colectivo da Internet of Agents.</li>
+<li><strong>AutoGen runtime / Microsoft</strong> — padrão de fato em ambientes .NET/Azure.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii1-protocolo-executavel">III.1 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Quem decide o vencedor não é o comitê técnico — são três forças:</p>
+<ol>
+<li><strong>Adoção dos hyperscalers</strong> (AWS, Azure, GCP exporem SDKs nativos).</li>
+<li><strong>Suporte dos modelos foundation</strong> (Claude, GPT, Gemini falarem nativamente).</li>
+<li><strong>Inércia das ferramentas existentes</strong> (IDE, observability, frameworks).</li>
+</ol>
+<p>Quem ignora essa dinâmica e escolhe protocolo "pelo design mais elegante"
+costuma pagar caro em 18 meses, quando o ecossistema correu para o outro lado.</p>
+<h2 id="2-acp-ibm-a-proposta-enterprise">2. ACP (IBM): a proposta enterprise</h2>
+<p>O <strong>Agent Communication Protocol (ACP)</strong>, doado pela IBM à Linux Foundation
+em 2025, faz uma aposta diferente das anteriores: <strong>REST puro, sem SDK
+obrigatório, async-first por design</strong>. A premissa filosófica é que, para
+adoção enterprise massiva, o protocolo precisa ser consumível com um
+<code>curl</code> e auditável com Wireshark.</p>
+<p>Diferenças canônicas em relação ao A2A:</p>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>A2A</th>
+<th>ACP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td>JSON-RPC + SSE</td>
+<td>REST + SSE/webhooks</td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td><code>/.well-known/agent.json</code></td>
+<td>Registry centralizado opcional</td>
+</tr>
+<tr>
+<td>Identidade</td>
+<td>OAuth 2.1</td>
+<td>OAuth 2.1 + mTLS recomendado</td>
+</tr>
+<tr>
+<td>Async</td>
+<td>Push notifications</td>
+<td>Async-first nativo (job IDs)</td>
+</tr>
+<tr>
+<td>SDK</td>
+<td>Recomendado</td>
+<td>Opcional por design</td>
+</tr>
+</tbody>
+</table>
+<p>ACP brilha em três cenários:</p>
+<ul>
+<li><strong>Integrações corporativas legadas</strong> onde o time já fala REST e pipelines
+  Jenkins/Tekton precisam consumir agentes sem instalar SDK específico.</li>
+<li><strong>Auditoria regulatória</strong> (finance, saúde) que exige logs HTTP puros para
+  retenção legal.</li>
+<li><strong>Multi-vendor neutralidade</strong> quando a organização decide não amarrar
+  arquitetura a um fornecedor de modelo.</li>
+</ul>
+<p>A fraqueza honesta do ACP: ecossistema menor, ferramentas de observability
+ainda primitivas, falta de implementações de referência maduras fora do
+BeeAI. Em 2026, adotar ACP é apostar em uma versão de longo prazo onde
+neutralidade pesa mais que time-to-market.</p>
+<h2 id="3-agntcy-openagents-e-o-esforco-de-neutralidade">3. AGNTCY, OpenAgents e o esforço de neutralidade</h2>
+<p>O <strong>AGNTCY collective</strong> (Cisco + LangChain + Galileo + outros) opera em uma
+camada acima: em vez de propor outro wire protocol, propõe um <strong>Agent
+Directory</strong> federado e uma camada de <strong>identity + trust</strong> que pode plugar
+em MCP, A2A ou ACP.</p>
+<p>O modelo mental é a comparação correta com DNS: AGNTCY não substitui HTTP, ele
+substitui a forma como você <strong>acha</strong> o servidor HTTP certo. Em concreto:</p>
+<ul>
+<li><strong>Agent Directory</strong> — registry federado de Agent Cards (ou equivalentes).</li>
+<li><strong>AID</strong> (Agent Identifier) — DID-like, resolvível, com chave de assinatura.</li>
+<li><strong>OASF</strong> (Open Agent Schema Framework) — schema compartilhado para descrever
+  capacidades de forma machine-actionable.</li>
+</ul>
+<p>OpenAgents (Salesforce, Apple e outros, 2025) é uma proposta menos
+empolgante mas com peso institucional: padroniza um subset de
+funcionalidades A2A/ACP e oferece um conformance kit. É menos um protocolo
+e mais um <strong>compliance layer</strong> sobre os existentes.</p>
+<p>Lição prática: protocolos "neutros" raramente substituem incumbentes; eles
+viram <strong>camadas de tradução</strong>. Quem investe neles trata-os como seguro
+contra lock-in, não como aposta principal.</p>
+<h2 id="4-autogen-langgraph-e-os-padroes-de-fato">4. AutoGen, LangGraph e os "padrões de fato"</h2>
+<p>Há uma categoria de "protocolo" que nunca foi RFC e nunca será: os formatos
+que se tornaram padrão <strong>por uso</strong>. AutoGen 0.4 (Microsoft) e LangGraph
+(LangChain) são os maiores casos.</p>
+<p>AutoGen define um <strong>runtime de mensagens</strong> com <code>AgentId</code>, <code>MessageContext</code>
+e tipagem Python forte. Não é wire protocol, é <strong>biblioteca de orquestração</strong>.
+Mas como dezenas de milhares de projetos rodam AutoGen em produção, os
+artefatos que ele gera (logs, traces, formatos de mensagem) viraram <strong>input
+de fato</strong> para ferramentas de observability.</p>
+<p>LangGraph foi além e definiu um formato serializável para grafos de
+agentes — checkpoints, state, edges condicionais. Esse formato hoje é
+consumido por inspectors, visualizadores e até por outros frameworks.</p>
+<p>A regra mental para 2026: <strong>wire protocols</strong> competem em RFCs;
+<strong>runtime protocols</strong> competem por adoção em frameworks. Os dois importam
+e raramente são os mesmos.</p>
+<h2 id="5-mapa-comparativo-mcp-a2a-acp-proprietarios">5. Mapa comparativo: MCP × A2A × ACP × proprietários</h2>
+<table>
+<thead>
+<tr>
+<th>Pergunta operacional</th>
+<th>MCP</th>
+<th>A2A</th>
+<th>ACP</th>
+<th>AutoGen Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agente fala com ferramenta?</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Agente fala com agente?</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (intra-runtime)</td>
+</tr>
+<tr>
+<td>Async de horas?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Discovery sem registry central?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Multi-language sem SDK?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Suporte Anthropic</td>
+<td>✅✅</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Suporte Google</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Suporte Microsoft</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+</tr>
+<tr>
+<td>Suporte IBM</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅✅</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Maturidade observability</td>
+<td>✅</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>Leitura honesta: nenhum protocolo é vencedor universal. A arquitetura
+canônica para 2026 não é "escolher um", é <strong>estratificar</strong>:</p>
+<ul>
+<li><strong>MCP</strong> na camada inferior (agente↔ferramentas).</li>
+<li><strong>A2A ou ACP</strong> na camada intermediária (agente↔agente externo).</li>
+<li><strong>Runtime proprietário</strong> na camada interna (agentes do mesmo cluster).</li>
+</ul>
+<h2 id="6-arquitetura-de-traducao-o-gateway-interoperavel">6. Arquitetura de tradução: o gateway interoperável</h2>
+<p>A consequência prática do mapa acima é o surgimento de uma figura
+arquitetural nova: o <strong>Agent Gateway</strong>. Ele faz para protocolos agênticos o
+que API Gateway fez para REST nos anos 2010.</p>
+<p>Funções canônicas de um Agent Gateway:</p>
+<div class="codehilite"><pre><span></span><code>                  ┌─────────────────────────────┐
+   A2A inbound    │                             │
+   ──────────────►│                             │
+                  │      AGENT GATEWAY          │  ACP outbound
+   ACP inbound    │   ┌─────────────────────┐   │  ───────────►
+   ──────────────►│   │  - Protocol bridge  │   │
+                  │   │  - Auth translation │   │  MCP outbound
+   MCP inbound    │   │  - Rate limiting    │   │  ───────────►
+   ──────────────►│   │  - Audit logging    │   │
+                  │   │  - Schema validation│   │  Runtime call
+                  │   └─────────────────────┘   │  ───────────►
+                  └─────────────────────────────┘
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii1-skills-centrais-associadas">III.1 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii1-tese-operacional">III.1 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii2-diagnostico-operacional">III.2 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii2-protocolo-executavel">III.2 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Cinco capacidades indispensáveis em um gateway maduro:</p>
+<ol>
+<li><strong>Protocol bridging</strong> — receber A2A e despachar como ACP (ou vice-versa).</li>
+<li><strong>Auth translation</strong> — OAuth client A → mTLS B, sem expor credenciais cruzadas.</li>
+<li><strong>Schema validation por contrato</strong> — rejeitar requests que violam contrato declarado.</li>
+<li><strong>Rate limiting por skill</strong>, não por endpoint genérico.</li>
+<li><strong>Audit log unificado</strong> — independente do protocolo de origem.</li>
+</ol>
+<p>Quem trata gateway como afterthought paga em fragilidade: cada protocolo
+novo vira código duplicado em cada agente. Quem trata como cidadão de
+primeira classe ganha mobilidade entre padrões.</p>
+<h2 id="7-schemas-json-ld-e-a-camada-semantica-compartilhada">7. Schemas JSON-LD e a camada semântica compartilhada</h2>
+<p>A interoperabilidade real não é sintática — é semântica. Dois agentes podem
+falar A2A perfeitamente e ainda assim discordar do que "invoice" significa.
+A resposta para isso, herdada da web semântica, é JSON-LD com contextos
+compartilhados.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://schema.agentic.org/v1/invoice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;@type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Invoice&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;invoiceNumber&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2026-0042&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MonetaryAmount&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BRL&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;dueDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-07-15&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;@id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:acme.com&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii2-skills-centrais-associadas">III.2 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii2-tese-operacional">III.2 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii3-diagnostico-operacional">III.3 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>O <code>@context</code> resolve para um schema público; os campos têm semântica
+estável; ferramentas de validação aceitam ou rejeitam por contrato. Isso
+é distinto de "JSON com campos comuns" — é uma camada onde a <strong>referência
+canônica é externa ao agente</strong>.</p>
+<p>Iniciativas relevantes em 2026:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>schema.org/agent</strong> — extensão tentativa, ainda limitada.</li>
+<li><strong>OASF</strong> (AGNTCY) — schemas para capacidades agênticas.</li>
+<li><strong>OpenInvoice, OpenContract, OpenTicket</strong> — verticais setoriais.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii3-protocolo-executavel">III.3 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii3-skills-centrais-associadas">III.3 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii3-tese-operacional">III.3 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii4-diagnostico-operacional">III.4 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Usar JSON-LD não é gratuito (parsers maiores, validação adicional), mas é
+o único caminho conhecido para <strong>interoperabilidade sem coordenação prévia</strong>.</p>
+<h2 id="8-adocao-estrategica-aposta-unica-dual-stack-ou-agnostico">8. Adoção estratégica: aposta única, dual stack ou agnóstico?</h2>
+<p>Três estratégias dominam decisões de arquitetura em 2026:</p>
+<p><strong>Aposta única.</strong> Adota um protocolo e otimiza para ele. Time-to-market
+máximo; risco de lock-in se o padrão perder tração. Recomendado para
+startups com janela curta.</p>
+<p><strong>Dual stack.</strong> Implementa dois protocolos com adapter compartilhado.
+Custo de manutenção 1.4×, mas resiliência a mudanças de mercado.
+Recomendado para scale-ups com janela 12-24 meses.</p>
+<p><strong>Agnóstico (gateway-first).</strong> Toda comunicação passa por gateway; agentes
+falam um "dialeto interno". Custo inicial alto, flexibilidade máxima.
+Recomendado para enterprise com horizonte 3+ anos.</p>
+<p>A decisão real não é "qual escolher" — é <strong>em que horizonte estou apostando</strong>.</p>
+<h2 id="9-migracao-entre-protocolos-sem-reescrever-agentes">9. Migração entre protocolos sem reescrever agentes</h2>
+<p>Quando a aposta inicial precisa mudar, três técnicas reduzem o custo de migração:</p>
+<p><strong>1. Strangler Fig pattern.</strong> Coloca gateway novo na frente, gradualmente
+roteia tráfego do protocolo antigo para o novo, mantém ambos vivos durante
+janela de coexistência. Funciona quando os dois protocolos têm
+mapeamento semântico claro.</p>
+<p><strong>2. Adapter de runtime.</strong> Mantém o protocolo do código interno e adiciona
+um shim que traduz para o protocolo externo. Útil quando o investimento em
+SDK interno é grande.</p>
+<p><strong>3. Dual-write transitório.</strong> Por uma janela definida, agentes respondem
+em ambos os protocolos. Custo dobrado por 60-90 dias, depois deprecate o antigo.</p>
+<p>A regra de ouro: <strong>nunca migre sem replay logs</strong>. A capacidade de re-rodar
+1000 chamadas reais do tráfego antigo no novo protocolo é o que diferencia
+migração de roleta russa.</p>
+<h2 id="10-manifesto-o-padrao-que-vence-e-o-que-perde-menos">10. Manifesto: o padrão que vence é o que perde menos</h2>
+<p>O critério canônico para apostar em um protocolo agêntico em 2026 não é
+"qual é o mais elegante". É:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li>Qual tem o <strong>menor número de breaking changes</strong> desde a v1?</li>
+<li>Qual tem o <strong>maior número de implementações independentes</strong> vivas?</li>
+<li>Qual deixou de quebrar <strong>observability tooling existente</strong>?</li>
+<li>Qual sobrevive ao <strong>próximo realinhamento de big tech</strong>?</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii4-protocolo-executavel">III.4 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii4-skills-centrais-associadas">III.4 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii4-tese-operacional">III.4 — Tese operacional</h3>
+<p>Protocolos vencem por durabilidade, não por brilho. MCP venceu por aceitar
+ser feio em troca de adoção. A2A venceu por amarrar Google + 50 parceiros
+no dia do anúncio. ACP pode vencer no enterprise por aceitar REST simples
+quando todos os outros se complicaram.</p>
 <blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+<p><strong>Tese final do volume:</strong> A guerra dos padrões agênticos não terá um
+vencedor único. Terá três camadas coexistindo por uma década, e a
+arquitetura competente será a que <strong>declara explicitamente em que
+camada está apostando — e mantém um gateway pronto para o caso de
+estar errada</strong>.</p>
 </blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
 <hr />
-<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii5-diagnostico-operacional">III.5 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="checklist-canonico-interoperabilidade-estrategica">Checklist Canônico — Interoperabilidade Estratégica</h2>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii5-protocolo-executavel">III.5 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii5-skills-centrais-associadas">III.5 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii5-tese-operacional">III.5 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii6-diagnostico-operacional">III.6 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii6-protocolo-executavel">III.6 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii6-skills-centrais-associadas">III.6 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii6-tese-operacional">III.6 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii7-diagnostico-operacional">III.7 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii7-protocolo-executavel">III.7 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii7-skills-centrais-associadas">III.7 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii7-tese-operacional">III.7 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii8-diagnostico-operacional">III.8 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii8-protocolo-executavel">III.8 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii8-skills-centrais-associadas">III.8 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii8-tese-operacional">III.8 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii9-diagnostico-operacional">III.9 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii9-protocolo-executavel">III.9 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii9-skills-centrais-associadas">III.9 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii9-tese-operacional">III.9 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Mapa comparativo, trade-offs, neutralidade de vendor e estratégia de adoção.
-<strong>Invariante operacional:</strong> Adotar protocolo sem estratégia de fallback é compromisso unilateral com a obsolescência.</p>
-</blockquote>
-<h3 id="iii10-diagnostico-operacional">III.10 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>ACP e Padrões de Interoperabilidade</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quais protocolos sobrevivem ao próximo ciclo e por quê?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="iii10-protocolo-executavel">III.10 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_03_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="iii10-skills-centrais-associadas">III.10 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>ACP, OpenAgents, schemas, vendor neutrality, fallback layer</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="iii10-tese-operacional">III.10 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>ACP e Padrões de Interoperabilidade</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="checklist-canonico-volume-iii">Checklist Canônico — Volume III</h2>
-<ul>
-<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
-<li>[ ] Invariante canônico documentado em README do componente.</li>
-<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
-<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
-<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
-<li>[ ] Skill federada com contrato de falha explícito.</li>
-<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
-<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
-<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
-<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+<li>[ ] Estratégia documentada: aposta única, dual stack ou agnóstico.</li>
+<li>[ ] Mapa de protocolos ativos por camada (tool, agent, runtime).</li>
+<li>[ ] Agent Gateway implementado se há mais de um protocolo externo.</li>
+<li>[ ] Schemas semânticos versionados (JSON-LD ou equivalente).</li>
+<li>[ ] Plano de migração com replay de logs definido.</li>
+<li>[ ] Audit log unificado independente do protocolo.</li>
+<li>[ ] Auth translation testada entre todos os pares.</li>
+<li>[ ] Conformance tests rodando contra mais de uma implementação.</li>
+<li>[ ] Revisão trimestral do mapa de adoção da indústria.</li>
+<li>[ ] Cláusula contratual de portabilidade com fornecedores principais.</li>
 </ul>
 <h2 id="glossario-do-volume">Glossário do Volume</h2>
 <ul>
-<li><strong>ACP</strong> — termo canônico do volume III; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>OpenAgents</strong> — termo canônico do volume III; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>schemas</strong> — termo canônico do volume III; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>vendor neutrality</strong> — termo canônico do volume III; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>fallback layer</strong> — termo canônico do volume III; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>ACP</strong> — Agent Communication Protocol (IBM/Linux Foundation).</li>
+<li><strong>AGNTCY</strong> — Coletivo de neutralidade da Internet of Agents.</li>
+<li><strong>OpenAgents</strong> — Compliance kit para padrões agênticos.</li>
+<li><strong>Agent Gateway</strong> — Componente de bridge/translation entre protocolos.</li>
+<li><strong>JSON-LD</strong> — JSON com contexto semântico resolvível.</li>
+<li><strong>OASF</strong> — Open Agent Schema Framework.</li>
+<li><strong>AID</strong> — Agent Identifier, DID-like, federado.</li>
+<li><strong>Strangler Fig</strong> — Padrão de migração gradual via proxy.</li>
 </ul>
 <h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
-<p>O próximo volume — <strong>Volume 4</strong> — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.</p>
+<p>Decidido o protocolo de fio, surge a pergunta sobre <strong>estado</strong>: como agentes
+compartilham memória sem violar isolamento? Como uma lembrança nascida em
+um agente vira ativo de outro sem corromper identidade? Esse é o terreno do
+<strong>Volume IV — Memória Distribuída entre Agentes</strong>.</p>
 <hr />
-<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume III · Edição Canônica 1.0.0 · 2026-06-08</em>
+<p><em>NEXUS PROTOCOL · Volume III · Edição Canônica 1.0.0 · 2026-06-08</em>
 <em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
 </body>
 </html>

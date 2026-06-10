@@ -67,13 +67,8 @@ title: "Consenso, Delegação e Hierarquia Multi-Agente"
 subtitle: "Como múltiplos agentes decidem juntos sem travar nem se canibalizar."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "Quando agentes discordam, quem decide e como o sistema avança?"
-axis: "Voto, quórum, supervisor, orchestrator, leader election, tie-breaking."
-core_invariant: "Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade."
-anchors: ['supervisor', 'orchestrator', 'quórum', 'leader election', 'tie-break']
 canonical_edition: true</p>
 <hr />
 <h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
@@ -82,605 +77,298 @@ canonical_edition: true</p>
 <p><strong>Como múltiplos agentes decidem juntos sem travar nem se canibalizar.</strong></p>
 <p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
 <blockquote>
-<p><strong>Pergunta-âncora:</strong> Quando agentes discordam, quem decide e como o sistema avança?
-<strong>Eixo do volume:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante canônico:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
+<p><strong>Pergunta-âncora:</strong> Quando agentes discordam, quem decide e como o sistema avança?</p>
 </blockquote>
 <hr />
 <h2 id="sumario">Sumário</h2>
 <blockquote>
-<ul>
-<li>
 <ol>
-<li>Abertura — O Problema Operacional</li>
+<li>O mito do swarm horizontal</li>
+<li>Topologias canônicas: supervisor, blackboard, mesh, hierárquica</li>
+<li>Eleição de líder e o problema do leader-no-evento</li>
+<li>Voto, quórum e o critério Byzantine-tolerant em agentes</li>
+<li>Delegação: contratos, prazos e direito de recusar</li>
+<li>Resolução de conflito: debate, juiz, oráculo externo</li>
+<li>Loops infinitos: detecção, contenção e quebra digna</li>
+<li>Custo: quem paga pela conversa entre agentes?</li>
+<li>Hierarquia adaptativa: papéis que mudam por tarefa</li>
+<li>Manifesto: anarquia agêntica não escala</li>
 </ol>
-</li>
-<li>
-<ol start="2">
-<li>Fundação Conceitual</li>
-</ol>
-</li>
-<li>
-<ol start="3">
-<li>Anatomia do Protocolo</li>
-</ol>
-</li>
-<li>
-<ol start="4">
-<li>Modelos de Implementação Canônicos</li>
-</ol>
-</li>
-<li>
-<ol start="5">
-<li>Fluxo Operacional em Produção</li>
-</ol>
-</li>
-<li>
-<ol start="6">
-<li>Falhas Recorrentes e Contenção</li>
-</ol>
-</li>
-<li>
-<ol start="7">
-<li>Métricas, Evals e Observabilidade</li>
-</ol>
-</li>
-<li>
-<ol start="8">
-<li>Padrões Avançados de Composição</li>
-</ol>
-</li>
-<li>
-<ol start="9">
-<li>Maturidade, Roadmap e Próximos Marcos</li>
-</ol>
-</li>
-<li>
-<ol start="10">
-<li>Manifesto do Protocolo</li>
-</ol>
-</li>
-<li>Checklist Canônico</li>
-<li>Glossário</li>
-<li>Gancho para o Próximo Volume</li>
-</ul>
 </blockquote>
 <hr />
-<h2 id="1-abertura-o-problema-operacional">1. Abertura — O Problema Operacional</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v1-diagnostico-operacional">V.1 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v1-protocolo-executavel">V.1 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<h2 id="1-o-mito-do-swarm-horizontal">1. O mito do swarm horizontal</h2>
+<p>Existe uma fantasia recorrente na literatura multi-agente: "vários agentes
+iguais conversando livremente chegam a soluções melhores que um agente
+central." A fantasia tem charme, mas em produção colapsa por três motivos:</p>
+<ol>
+<li><strong>Custo combinatório.</strong> N agentes deliberando geram O(N²) mensagens.
+   Em 6 agentes isso já são 30 chamadas de LLM por turno.</li>
+<li><strong>Convergência não-garantida.</strong> Sem regra de desempate, dois agentes
+   confiantes em respostas opostas conversam até estourar o budget.</li>
+<li><strong>Diluição de responsabilidade.</strong> "O coletivo decidiu" não é resposta
+   aceitável quando uma transação financeira sai errada.</li>
+</ol>
+<p>A arquitetura competente raramente é horizontal. Ela é <strong>hierarquia
+explícita disfarçada de colaboração</strong>: existe um nó cuja decisão prevalece
+em caso de empate, e essa designação é declarada, não emergente.</p>
+<p>Quando alguém apresenta um diagrama com 5 agentes em círculo, troque a
+pergunta de "como eles colaboram?" para "<strong>quem decide quando eles
+discordam?</strong>". Se não há resposta clara, o sistema vai falhar — só não
+sabemos ainda em que cliente.</p>
+<h2 id="2-topologias-canonicas-supervisor-blackboard-mesh-hierarquica">2. Topologias canônicas: supervisor, blackboard, mesh, hierárquica</h2>
+<p>Quatro topologias respondem por 95% dos sistemas multi-agente em produção:</p>
+<p><strong>Supervisor (orchestrator).</strong> Um agente central recebe a tarefa, decompõe,
+delega para sub-agentes especialistas, agrega resultado. Vantagem: ponto
+único de decisão e auditoria. Desvantagem: gargalo, ponto único de falha.
+Caso de uso típico: pipelines lineares previsíveis.</p>
+<p><strong>Blackboard.</strong> Agentes leem e escrevem em um quadro compartilhado de fatos.
+Cada agente decide autonomamente quando contribuir, com base no estado do
+quadro. Vantagem: extensível, descoplado. Desvantagem: race conditions e
+sincronização tornam-se o problema central. Caso de uso típico: análise
+exploratória com agentes especialistas independentes.</p>
+<p><strong>Mesh (peer-to-peer).</strong> Agentes conversam diretamente uns com os outros
+via A2A. Sem central. Vantagem: resiliência. Desvantagem: caos sem regras
+de consenso fortes. Caso de uso típico: federação entre organizações
+distintas.</p>
+<p><strong>Hierárquica em árvore.</strong> Supervisor de supervisores. Cada nó tem escopo
+limitado; decisões sobem só quando excedem o escopo local. Vantagem: escala
+para dezenas de agentes. Desvantagem: latência cresce com profundidade.
+Caso de uso típico: organizações grandes com domínios bem separados.</p>
+<p>A regra prática: começar com <strong>supervisor</strong>, evoluir para <strong>hierárquica em
+árvore</strong> quando o supervisor vira gargalo. Mesh só faz sentido quando
+fronteiras organizacionais impedem central. Blackboard é elegante no papel
+e perigoso na prática — exige instrumentação que poucos times mantêm.</p>
+<h2 id="3-eleicao-de-lider-e-o-problema-do-leader-no-evento">3. Eleição de líder e o problema do leader-no-evento</h2>
+<p>Em mesh sem central, alguém precisa coordenar o turno. Algoritmos clássicos
+de distributed systems (Raft, Paxos) adaptam-se ao mundo agêntico com uma
+diferença importante: <strong>agentes podem ter capacidade diferente para a
+tarefa em jogo</strong>, não só disponibilidade.</p>
+<p>Pseudo-código de eleição agêntica por competência:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">elect_leader</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">candidates</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="c1"># leitura do Agent Card e histórico</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">semantic_match</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">required_skills</span><span class="p">,</span> <span class="n">agent</span><span class="o">.</span><span class="n">skills</span><span class="p">)</span>
+        <span class="n">reputation</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">trust_score</span>   <span class="c1"># ver Volume VII</span>
+        <span class="n">load</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">current_load</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">match</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">reputation</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">-</span> <span class="n">load</span> <span class="o">*</span> <span class="mf">0.2</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">agent</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+
+    <span class="n">scores</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">leader</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># janela de aceite explícito</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">leader</span><span class="o">.</span><span class="n">accept_lead</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">deadline</span><span class="o">=</span><span class="mi">5</span><span class="n">_sec</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">elect_leader</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>  <span class="c1"># fallback</span>
+    <span class="k">return</span> <span class="n">leader</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v1-skills-centrais-associadas">V.1 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v1-tese-operacional">V.1 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="2-fundacao-conceitual">2. Fundação Conceitual</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v2-diagnostico-operacional">V.2 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v2-protocolo-executavel">V.2 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Três detalhes não-óbvios que separam implementação real de tutorial:</p>
+<ol>
+<li><strong>O líder deve aceitar.</strong> Eleger sem confirmação leva a líder zumbi
+   (escolhido mas indisponível na execução). Aceite tem deadline curto.</li>
+<li><strong>Tie-breaking determinístico.</strong> Empate de score se resolve por
+   identidade lexicográfica do <code>agent_id</code>, nunca por random — para que
+   replays do log produzam o mesmo resultado.</li>
+<li><strong>Leader-no-evento.</strong> O líder deve emitir heartbeat. Sem heartbeat por
+   X segundos, próximo candidato assume. Sem essa cláusula, sistemas
+   travam silenciosamente.</li>
+</ol>
+<h2 id="4-voto-quorum-e-o-criterio-byzantine-tolerant-em-agentes">4. Voto, quórum e o critério Byzantine-tolerant em agentes</h2>
+<p>Quando a decisão pode ser delegada à pluralidade (ex.: classificação de
+qual departamento responde a um ticket), voto faz sentido. Esquemas:</p>
+<p><strong>Maioria simples.</strong> N agentes votam, vence quem tem &gt;50%. Frágil quando
+um agente envenenado domina (1 voto de N=3 já é decisivo).</p>
+<p><strong>Quórum qualificado.</strong> Exige super-maioria (2/3 ou 3/4). Reduz risco de
+agente isolado, ao custo de mais agentes consultados.</p>
+<p><strong>Byzantine fault-tolerant (BFT).</strong> Tolera até f agentes maliciosos com N ≥ 3f+1.
+Em multi-agente, "malicioso" raramente é adversário ativo — é mais
+frequentemente "modelo com hallucination consistente". BFT continua útil
+porque hallucination é um tipo de fault.</p>
+<p><strong>Weighted vote por reputação.</strong> Cada agente contribui com peso
+proporcional ao seu trust score histórico nessa categoria de decisão.
+Combinação eficaz com o sistema de identidade do Volume VII.</p>
+<p>Anti-padrão crítico: usar voto para tarefas onde o output é texto livre.
+"Qual é a melhor resposta?" não tem critério de agregação. Use voto só
+para domínios com espaço de respostas pequeno e discreto (categorias,
+flags, números).</p>
+<h2 id="5-delegacao-contratos-prazos-e-direito-de-recusar">5. Delegação: contratos, prazos e direito de recusar</h2>
+<p>Delegar não é "mandar o outro fazer". É <strong>fechar um contrato bilateral
+com escopo, deadline, contrapartida e cláusula de recusa</strong>. Estrutura
+canônica de uma delegação:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;delegation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;del-7a2f9c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:supervisor.acme.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w">   </span><span class="s2">&quot;did:web:billing-agent.acme.com&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;skill&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;renegotiate-invoice&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;invoice_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2026-0042&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;customer_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C-99&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;constraints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;deadline&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-06-08T18:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_calls_to_user&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;max_cost_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;allowed_tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;crm.read&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;billing.write&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;compensation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;on_success&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ack&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;on_failure&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;report_with_attempts&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;right_to_refuse&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v2-skills-centrais-associadas">V.2 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v2-tese-operacional">V.2 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="3-anatomia-do-protocolo">3. Anatomia do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v3-diagnostico-operacional">V.3 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v3-protocolo-executavel">V.3 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Cinco regras canônicas para delegação saudável:</p>
+<ol>
+<li><strong>Toda delegação tem deadline explícito.</strong> Sem deadline, agentes
+   acumulam backlog até travarem.</li>
+<li><strong>O delegado tem direito de recusar.</strong> Recusa é resposta válida; deve
+   incluir motivo categorizado (<code>scope_outside_capability</code>, <code>overloaded</code>,
+   <code>policy_violation</code>).</li>
+<li><strong>Escopo de tools é parte do contrato.</strong> Delegado não pode escalar
+   privilégios por iniciativa própria.</li>
+<li><strong>Compensação na falha é tão importante quanto no sucesso.</strong> O
+   delegante precisa saber o que foi tentado antes de re-delegar.</li>
+<li><strong>Sub-delegação requer permissão explícita.</strong> Caso contrário, vira
+   uma cascata de responsabilidade impossível de auditar.</li>
+</ol>
+<h2 id="6-resolucao-de-conflito-debate-juiz-oraculo-externo">6. Resolução de conflito: debate, juiz, oráculo externo</h2>
+<p>Quando dois agentes chegam a conclusões opostas e ambos têm autoridade
+parcial, três mecanismos resolvem:</p>
+<p><strong>Debate estruturado.</strong> Os agentes escrevem argumentos limitados (N tokens,
+M turnos). Um terceiro agente — explicitamente designado <strong>juiz</strong> — lê
+ambos e decide. Pesquisa da Anthropic mostrou que debate aumenta acurácia
+em tarefas de avaliação subjetiva. Funciona quando o juiz tem critério
+claro de avaliação.</p>
+<p><strong>Juiz determinístico.</strong> Quando o domínio tem regras formais (limite de
+crédito, política de devolução, SLA), o conflito é resolvido por
+verificação dessas regras, não por outro LLM. O juiz é um sistema de
+regras, não um modelo. Mais barato, mais auditável.</p>
+<p><strong>Oráculo externo.</strong> Quando os dois agentes não confiam um no outro
+(federação cross-org), escalonam para um terceiro neutro acordado em
+contrato. Análogo a arbitragem comercial. Caro e lento, mas é o único
+mecanismo que escala entre fronteiras de confiança.</p>
+<p>A regra de seleção: prefira <strong>juiz determinístico</strong> sempre que o domínio
+permitir. Debate só quando o domínio é genuinamente subjetivo. Oráculo
+quando há fronteira organizacional.</p>
+<h2 id="7-loops-infinitos-deteccao-contencao-e-quebra-digna">7. Loops infinitos: detecção, contenção e quebra digna</h2>
+<p>A patologia mais comum em multi-agente em produção não é o erro — é o
+<strong>loop</strong>. Dois agentes refinando indefinidamente, três agentes em
+ping-pong de delegação, um agente reescrevendo seu próprio output
+indefinidamente.</p>
+<p>Mecanismos canônicos de contenção:</p>
+<p><strong>Budget global por task.</strong> Cada task tem cota dura: tokens, chamadas de
+LLM, tempo de wall-clock. Atingiu cota → task termina em <code>failed</code> com
+artefato parcial. Implementação típica:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TaskBudget</span><span class="p">:</span>
+    <span class="n">max_tokens</span> <span class="o">=</span> <span class="mi">100_000</span>
+    <span class="n">max_llm_calls</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">max_wall_seconds</span> <span class="o">=</span> <span class="mi">600</span>
+    <span class="n">max_delegations</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">charge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">used</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">+=</span> <span class="n">amount</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">used</span><span class="p">[</span><span class="n">kind</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;max_</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BudgetExceeded</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v3-skills-centrais-associadas">V.3 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v3-tese-operacional">V.3 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="4-modelos-de-implementacao-canonicos">4. Modelos de Implementação Canônicos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v4-diagnostico-operacional">V.4 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p><strong>Detecção de ciclos em delegação.</strong> Mantenha um grafo de delegação por
+task; se um agente recebe sub-task originada (transitivamente) de uma
+delegação que ele mesmo iniciou, recuse automaticamente.</p>
+<p><strong>Heurística de "no progress".</strong> Compare hash do estado entre iterações.
+Se N iterações consecutivas produzem estado equivalente, force exit.</p>
+<p><strong>Quebra digna.</strong> Ao encerrar por budget ou loop, <strong>publique um artefato
+parcial estruturado</strong>, não apenas erro. O cliente precisa de algo
+acionável.</p>
+<h2 id="8-custo-quem-paga-pela-conversa-entre-agentes">8. Custo: quem paga pela conversa entre agentes?</h2>
+<p>Cada turno entre agentes é uma chamada de LLM, e LLM não é gratuito.
+Sistemas multi-agente ingenuamente desenhados multiplicam custo por
+fator 5-10× em relação a um agente único — e a maior parte desse custo
+<strong>é conversa interna que o usuário nunca verá</strong>.</p>
+<p>Estratégias para conter custo agregado:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Compressão de contexto na borda.</strong> Cada agente que delega comprime o
+  contexto antes de passar adiante (resumo estruturado, não o transcript).</li>
+<li><strong>Modelo escalonado.</strong> Sub-agentes operacionais usam modelo menor;
+  apenas o supervisor (ou disputas escaladas) usa modelo grande.</li>
+<li><strong>Cache de delegações repetidas.</strong> Mesma sub-task com mesmos inputs →
+  retorne resultado cacheado se idempotência for declarada.</li>
+<li><strong>Atribuição de custo.</strong> Cada chamada carrega <code>cost_center</code>. No final
+  da task, gere relatório de quem consumiu quanto. Sem isso, otimizar
+  o sistema é tiro no escuro.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v4-protocolo-executavel">V.4 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+<p>Em organizações maduras, o custo agregado de multi-agente é uma métrica
+de SRE, não uma surpresa mensal na fatura do provedor.</p>
+<h2 id="9-hierarquia-adaptativa-papeis-que-mudam-por-tarefa">9. Hierarquia adaptativa: papéis que mudam por tarefa</h2>
+<p>Em sistemas avançados, a hierarquia não é fixa: ela se recompõe por tarefa.
+O agente A é líder em compliance, B é líder em produto, C é líder em
+billing. Quando chega uma tarefa multi-domínio, eleger o líder vira parte
+do trabalho.</p>
+<p>Padrão canônico: <strong>routing por taxonomia de skill</strong>, com fallback para
+debate ou supervisor humano em casos ambíguos:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">incoming_task</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">classify_domain</span><span class="w"> </span><span class="err">→</span>
+<span class="w">    </span><span class="k">domain</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">known_domains</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">leader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">registry</span><span class="o">[</span><span class="n">domain</span><span class="o">]</span>
+<span class="w">    </span><span class="k">domain</span><span class="w"> </span><span class="k">unknown</span><span class="w">          </span><span class="err">→</span><span class="w"> </span><span class="n">spawn_debate</span><span class="p">(</span><span class="n">top_3_candidates</span><span class="p">)</span>
+<span class="w">    </span><span class="n">debate</span><span class="w"> </span><span class="n">inconclusive</span><span class="w">     </span><span class="err">→</span><span class="w"> </span><span class="n">escalate_human</span><span class="p">()</span>
 </code></pre></div>
 
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v4-skills-centrais-associadas">V.4 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v4-tese-operacional">V.4 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="5-fluxo-operacional-em-producao">5. Fluxo Operacional em Produção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v5-diagnostico-operacional">V.5 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<p>Adaptatividade tem custo: a árvore de decisão de quem-lidera-o-quê precisa
+ser auditável e estável. Sem isso, o sistema parece "inteligente" e na
+prática é imprevisível — exatamente o oposto do que produção exige.</p>
+<h2 id="10-manifesto-anarquia-agentica-nao-escala">10. Manifesto: anarquia agêntica não escala</h2>
+<p>Há uma estética de marketing que vende multi-agente como "rede neural de
+agentes pensando juntos, descobrindo soluções emergentes." Em produção,
+sistemas assim morrem em três sintomas:</p>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
+<li><strong>Loop de custo</strong> — agentes refinando para sempre, fatura inflada.</li>
+<li><strong>Decisão fantasma</strong> — output saiu, ninguém sabe quem decidiu.</li>
+<li><strong>Incidente sem dono</strong> — falhou, nenhum agente é responsável.</li>
 </ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v5-protocolo-executavel">V.5 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v5-skills-centrais-associadas">V.5 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v5-tese-operacional">V.5 — Tese operacional</h3>
+<p>A arquitetura que funciona é menos romântica e mais clássica: hierarquia
+declarada, contratos explícitos, budgets duros, juízes formais para
+empates. Multi-agente competente parece organização humana bem-desenhada —
+porque herda os mesmos problemas, e as mesmas soluções que séculos de
+gestão já depuraram.</p>
 <blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
+<p><strong>Tese final do volume:</strong> A coordenação multi-agente é primariamente um
+problema de <strong>governança</strong>, não de inteligência. Modelos melhores não
+resolvem ausência de regras de desempate; melhoram só a qualidade
+média das decisões individuais. Sistema que confunde inteligência com
+coordenação ganha agentes mais capazes e processos mais caóticos.</p>
 </blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
 <hr />
-<h2 id="6-falhas-recorrentes-e-contencao">6. Falhas Recorrentes e Contenção</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v6-diagnostico-operacional">V.6 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
+<h2 id="checklist-canonico-coordenacao-multi-agente">Checklist Canônico — Coordenação Multi-Agente</h2>
 <ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v6-protocolo-executavel">V.6 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v6-skills-centrais-associadas">V.6 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v6-tese-operacional">V.6 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="7-metricas-evals-e-observabilidade">7. Métricas, Evals e Observabilidade</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v7-diagnostico-operacional">V.7 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v7-protocolo-executavel">V.7 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v7-skills-centrais-associadas">V.7 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v7-tese-operacional">V.7 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="8-padroes-avancados-de-composicao">8. Padrões Avançados de Composição</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v8-diagnostico-operacional">V.8 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v8-protocolo-executavel">V.8 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v8-skills-centrais-associadas">V.8 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v8-tese-operacional">V.8 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="9-maturidade-roadmap-e-proximos-marcos">9. Maturidade, Roadmap e Próximos Marcos</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v9-diagnostico-operacional">V.9 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v9-protocolo-executavel">V.9 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v9-skills-centrais-associadas">V.9 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v9-tese-operacional">V.9 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="10-manifesto-do-protocolo">10. Manifesto do Protocolo</h2>
-<blockquote>
-<p><strong>Eixo deste capítulo:</strong> Voto, quórum, supervisor, orchestrator, leader election, tie-breaking.
-<strong>Invariante operacional:</strong> Sistema multi-agente sem regra de desempate é sistema com falha de design, não com flexibilidade.</p>
-</blockquote>
-<h3 id="v10-diagnostico-operacional">V.10 — Diagnóstico operacional</h3>
-<p>Antes de implementar <strong>Consenso, Delegação e Hierarquia Multi-Agente</strong>, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: <em>Quando agentes discordam, quem decide e como o sistema avança?</em></p>
-<p>Um protocolo só é útil quando reduz <strong>atrito real</strong> entre componentes. O atrito aparece
-em três camadas:</p>
-<ul>
-<li><strong>Camada semântica:</strong> os dois lados entendem o mesmo conceito pelo mesmo nome?</li>
-<li><strong>Camada de contrato:</strong> existe um schema versionado, com semântica de versão clara?</li>
-<li><strong>Camada operacional:</strong> existe rastro, timeout, retry, idempotência e plano de falha?</li>
-</ul>
-<p>Quando qualquer uma dessas camadas é frágil, o protocolo vira <em>cosmético</em>: parece padrão,
-mas cada integração é um caso especial disfarçado.</p>
-<h3 id="v10-protocolo-executavel">V.10 — Protocolo executável</h3>
-<div class="codehilite"><pre><span></span><code>PROTOCOLO_05_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-</code></pre></div>
-
-<p>Cada passo desse protocolo é <strong>rastreável, testável e reversível</strong>. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.</p>
-<h3 id="v10-skills-centrais-associadas">V.10 — Skills centrais associadas</h3>
-<p>Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-<code>supervisor, orchestrator, quórum, leader election, tie-break</code>. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o <strong>contrato invariante</strong> que sobrevive a qualquer framework.</p>
-<h3 id="v10-tese-operacional">V.10 — Tese operacional</h3>
-<blockquote>
-<p>A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-vai ser construída por quem entende melhor de <strong>contratos</strong>.</p>
-</blockquote>
-<p>Quem trata <code>Consenso, Delegação e Hierarquia Multi-Agente</code> como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.</p>
-<p>A tese operacional deste capítulo é simples e inflexível: <strong>trate o protocolo como
-artefato editorial vivo</strong> — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta <code>infra/</code>.</p>
-<hr />
-<h2 id="checklist-canonico-volume-v">Checklist Canônico — Volume V</h2>
-<ul>
-<li>[ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.</li>
-<li>[ ] Invariante canônico documentado em README do componente.</li>
-<li>[ ] Schemas de entrada e saída versionados e testados em CI.</li>
-<li>[ ] Trace estruturado emitido em todos os pontos críticos.</li>
-<li>[ ] Plano de degradação digna escrito antes do primeiro deploy.</li>
-<li>[ ] Skill federada com contrato de falha explícito.</li>
-<li>[ ] Identidade do agente e proveniência da chamada auditáveis.</li>
-<li>[ ] Eval de regressão executado a cada mudança de prompt ou tool.</li>
-<li>[ ] Métrica de SLO agêntico definida e monitorada.</li>
-<li>[ ] Documento editorial deste protocolo revisado por outro agente.</li>
+<li>[ ] Topologia documentada (supervisor/blackboard/mesh/hierárquica).</li>
+<li>[ ] Regra de desempate explícita para todo conflito previsível.</li>
+<li>[ ] Eleição de líder com aceite confirmado e heartbeat.</li>
+<li>[ ] Voto restrito a domínios com espaço de respostas discreto.</li>
+<li>[ ] Delegações têm deadline, escopo de tools e direito de recusa.</li>
+<li>[ ] Sub-delegação só com permissão explícita do delegante original.</li>
+<li>[ ] Budget global (tokens/calls/tempo/delegations) por task.</li>
+<li>[ ] Detecção de ciclos em grafo de delegação.</li>
+<li>[ ] Atribuição de custo por agente/cost-center.</li>
+<li>[ ] Plano de escalação humana documentado para casos <code>unresolved</code>.</li>
 </ul>
 <h2 id="glossario-do-volume">Glossário do Volume</h2>
 <ul>
-<li><strong>supervisor</strong> — termo canônico do volume V; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>orchestrator</strong> — termo canônico do volume V; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>quórum</strong> — termo canônico do volume V; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>leader election</strong> — termo canônico do volume V; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
-<li><strong>tie-break</strong> — termo canônico do volume V; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.</li>
+<li><strong>Supervisor</strong> — agente central que decompõe e agrega.</li>
+<li><strong>Blackboard</strong> — quadro compartilhado onde agentes escrevem fatos.</li>
+<li><strong>Quórum</strong> — limiar mínimo de votos para decisão válida.</li>
+<li><strong>BFT</strong> — Byzantine fault-tolerant; tolera f faltosos com N ≥ 3f+1.</li>
+<li><strong>Juiz</strong> — agente ou sistema designado para resolver empate.</li>
+<li><strong>Delegação</strong> — contrato bilateral com escopo, prazo e direito de recusa.</li>
+<li><strong>Leader-no-evento</strong> — falha onde líder eleito não age; resolve-se com heartbeat.</li>
+<li><strong>Cost center</strong> — atribuição de gasto de tokens a uma unidade responsável.</li>
 </ul>
 <h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
-<p>O próximo volume — <strong>Volume 6</strong> — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.</p>
+<p>Coordenação resolve "quem decide". Mas decidir o quê? A próxima fronteira é
+<strong>capacidade compartilhada</strong>: como uma habilidade desenvolvida por um
+agente vira ativo de uma rede inteira? Como skills se federam, versionam
+e ganham preço? Esse é o terreno do <strong>Volume VI — Tool Federation e Skills
+Compartilhadas</strong>.</p>
 <hr />
-<p><em>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume V · Edição Canônica 1.0.0 · 2026-06-08</em>
+<p><em>NEXUS PROTOCOL · Volume V · Edição Canônica 1.0.0 · 2026-06-08</em>
 <em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
 </body>
 </html>

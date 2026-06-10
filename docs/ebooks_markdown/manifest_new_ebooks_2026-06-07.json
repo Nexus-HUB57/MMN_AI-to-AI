@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-09T21:48:56.946037Z",
-  "total_new_ebooks": 51,
+  "generated_at": "2026-06-09T22:21:36.914363Z",
+  "total_new_ebooks": 48,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
@@ -70,36 +70,6 @@
       "size_bytes_md": 21770,
       "size_bytes_pdf": 2503510,
       "collection": "root"
-    },
-    {
-      "id": "01_a_ia_perfeita_padroes_e_codigos_fonte",
-      "title": "A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável",
-      "markdown": "colecao_A_IA_Perfeita/01_a_ia_perfeita_padroes_e_codigos_fonte.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.pdf",
-      "size_bytes_md": 26228,
-      "size_bytes_pdf": 3192370,
-      "collection": "colecao_A_IA_Perfeita"
-    },
-    {
-      "id": "02_a_ia_perfeita_prompts_algoritmos_skills",
-      "title": "A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística",
-      "markdown": "colecao_A_IA_Perfeita/02_a_ia_perfeita_prompts_algoritmos_skills.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.pdf",
-      "size_bytes_md": 23585,
-      "size_bytes_pdf": 3596308,
-      "collection": "colecao_A_IA_Perfeita"
-    },
-    {
-      "id": "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica",
-      "title": "A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica",
-      "markdown": "colecao_A_IA_Perfeita/03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.pdf",
-      "size_bytes_md": 25165,
-      "size_bytes_pdf": 4297793,
-      "collection": "colecao_A_IA_Perfeita"
     },
     {
       "id": "01_gnoxs_prima_codice_do_despertar",
@@ -427,8 +397,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/01_mcp_model_context_protocol.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.pdf",
-      "size_bytes_md": 35851,
-      "size_bytes_pdf": 2306558,
+      "size_bytes_md": 16770,
+      "size_bytes_pdf": 2279925,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -437,8 +407,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/02_a2a_agent_to_agent.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.pdf",
-      "size_bytes_md": 36306,
-      "size_bytes_pdf": 2212296,
+      "size_bytes_md": 15011,
+      "size_bytes_pdf": 2183258,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -447,8 +417,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/03_acp_e_interoperabilidade.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.pdf",
-      "size_bytes_md": 35907,
-      "size_bytes_pdf": 2560898,
+      "size_bytes_md": 15040,
+      "size_bytes_pdf": 2528437,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -457,8 +427,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/04_memoria_distribuida.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.pdf",
-      "size_bytes_md": 36297,
-      "size_bytes_pdf": 2618334,
+      "size_bytes_md": 14631,
+      "size_bytes_pdf": 2582319,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -467,8 +437,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/05_consenso_delegacao_hierarquia.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.pdf",
-      "size_bytes_md": 36114,
-      "size_bytes_pdf": 2615458,
+      "size_bytes_md": 15967,
+      "size_bytes_pdf": 2581527,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -477,8 +447,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/06_tool_federation.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__06_tool_federation.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__06_tool_federation.pdf",
-      "size_bytes_md": 36169,
-      "size_bytes_pdf": 2638597,
+      "size_bytes_md": 15929,
+      "size_bytes_pdf": 2607346,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -487,8 +457,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/07_identidade_reputacao_trust.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.pdf",
-      "size_bytes_md": 35669,
-      "size_bytes_pdf": 2749905,
+      "size_bytes_md": 17058,
+      "size_bytes_pdf": 2722869,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -497,8 +467,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/08_evals_observability_telemetria.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.pdf",
-      "size_bytes_md": 36272,
-      "size_bytes_pdf": 2190114,
+      "size_bytes_md": 16135,
+      "size_bytes_pdf": 2162952,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -507,8 +477,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/09_seguranca_guardrails_resiliencia.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.pdf",
-      "size_bytes_md": 35999,
-      "size_bytes_pdf": 2436262,
+      "size_bytes_md": 18595,
+      "size_bytes_pdf": 2407095,
       "collection": "colecao_NEXUS_PROTOCOL"
     },
     {
@@ -517,8 +487,8 @@
       "markdown": "colecao_NEXUS_PROTOCOL/10_federacao_agentica_internet_agentes.md",
       "html": "publish_all/html/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.html",
       "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.pdf",
-      "size_bytes_md": 37005,
-      "size_bytes_pdf": 2689513,
+      "size_bytes_md": 17203,
+      "size_bytes_pdf": 2655308,
       "collection": "colecao_NEXUS_PROTOCOL"
     }
   ]

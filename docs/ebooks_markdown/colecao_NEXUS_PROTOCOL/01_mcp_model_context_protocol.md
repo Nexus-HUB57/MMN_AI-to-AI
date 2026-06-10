@@ -6,13 +6,8 @@ title: "MCP — A Língua Franca dos Agentes"
 subtitle: "Model Context Protocol: como agentes acessam ferramentas, dados e contexto de forma padronizada."
 edition: "Edição Canônica 1.0.0"
 issued: "2026-06-08"
-authors: ['MMN AI-to-AI', 'Nexus HUB57']
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
 language: pt-BR
-reader_profile: ["arquitetos IA", "engenheiros de plataforma agêntica", "agentes IA leitores"]
-question: "Como agentes leem o mundo sem reinventar adaptadores?"
-axis: "Padronização de contexto e tools entre LLMs e ambientes externos."
-core_invariant: "Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável."
-anchors: ['servidor MCP', 'resources', 'tools', 'prompts', 'client capabilities']
 canonical_edition: true
 ---
 
@@ -26,686 +21,358 @@ canonical_edition: true
 
 *Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57*
 
-> **Pergunta-âncora:** Como agentes leem o mundo sem reinventar adaptadores?
-> **Eixo do volume:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante canônico:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
+> **Pergunta-âncora:** Como agentes leem o mundo sem reinventar adaptadores a cada integração?
 
 ---
 
 ## Sumário
 
-> - 1. Abertura — O Problema Operacional
-> - 2. Fundação Conceitual
-> - 3. Anatomia do Protocolo
-> - 4. Modelos de Implementação Canônicos
-> - 5. Fluxo Operacional em Produção
-> - 6. Falhas Recorrentes e Contenção
-> - 7. Métricas, Evals e Observabilidade
-> - 8. Padrões Avançados de Composição
-> - 9. Maturidade, Roadmap e Próximos Marcos
-> - 10. Manifesto do Protocolo
-> - Checklist Canônico
-> - Glossário
-> - Gancho para o Próximo Volume
+> 1. O problema dos N×M conectores
+> 2. Anatomia do MCP: cliente, servidor e host
+> 3. As três primitivas: Resources, Tools, Prompts
+> 4. Capabilities e o handshake de inicialização
+> 5. Transporte: stdio, HTTP+SSE e o futuro WebSocket
+> 6. Como construir um servidor MCP do zero
+> 7. Sampling reverso: quando o servidor pede ao modelo
+> 8. Segurança, escopo e o problema da confused deputy
+> 9. MCP em produção: versionamento, telemetria, cache
+> 10. Manifesto: por que o MCP venceu antes mesmo de vencer
 
 ---
 
-## 1. Abertura — O Problema Operacional
+## 1. O problema dos N×M conectores
 
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
+Antes do MCP, integrar um LLM ao mundo era um problema combinatório. Cada modelo
+(Claude, GPT, Llama, Gemini, Mistral) precisava de um conector próprio para cada
+fonte (Slack, GitHub, Notion, Postgres, Jira, Drive, S3). Com **N** modelos e **M**
+fontes, a conta dava **N×M** integrações — todas com semânticas ligeiramente
+diferentes, todas mantidas por times distintos, todas quebrando em sincronia
+diferente quando a API do destino mudava.
 
-### I.1 — Diagnóstico operacional
+O MCP, anunciado pela Anthropic em novembro de 2024 e rapidamente adotado por
+OpenAI, Google DeepMind, IBM e dezenas de fornecedores, resolve isso transformando
+o problema N×M em **N+M**: o modelo fala MCP, a fonte fala MCP, e o protocolo é
+o único ponto de tradução. A analogia honesta é o USB-C: não é o cabo mais elegante
+do mundo, é o cabo que **todos concordaram em usar**.
 
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
+Essa concordância tem três consequências práticas que importam:
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+1. **Conectores viram commodity** — você não escreve mais um cliente Slack para
+   cada modelo; escreve **um servidor MCP do Slack** e qualquer host MCP consome.
+2. **Capacidades viram declarativas** — o agente descobre o que pode fazer ao se
+   conectar, em vez de o desenvolvedor injetar a lista de tools no system prompt.
+3. **Substituir o modelo deixa de quebrar o stack** — trocar Claude por GPT-5
+   exige zero alteração no servidor; o contrato é o protocolo, não o modelo.
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+A primeira lição do MCP, portanto, não é técnica — é estratégica. Adotar MCP é
+admitir que **o valor a longo prazo está nos servidores, não nos modelos**.
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+## 2. Anatomia do MCP: cliente, servidor e host
 
-### I.1 — Protocolo executável
+A arquitetura do MCP tem três papéis, e confundi-los é a causa de 80% dos bugs
+iniciais:
 
-```text
-PROTOCOLO_01_01(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+- **Host** — a aplicação que o usuário enxerga (Claude Desktop, Cursor, Zed,
+  um agente custom). O host **gerencia LLM e UI**.
+- **Cliente** — a parte do host que **fala MCP**. Cada cliente mantém uma
+  conexão 1:1 com um servidor. Um host pode ter N clientes simultâneos.
+- **Servidor** — processo independente que **expõe** Resources, Tools e Prompts.
+  Pode rodar local (stdio) ou remoto (HTTP+SSE).
+
+A topologia canônica é uma estrela: o host no centro, vários servidores nas
+pontas, um cliente por servidor. O servidor **nunca fala diretamente com o LLM**
+— ele fala com o cliente, que fala com o host, que decide o que mostrar ao modelo.
+
+```
+┌──────────────────────────────────────────────────────┐
+│                       HOST                           │
+│  ┌────────┐   ┌────────┐   ┌────────┐   ┌────────┐   │
+│  │ LLM    │   │Client 1│   │Client 2│   │Client 3│   │
+│  └────────┘   └───┬────┘   └───┬────┘   └───┬────┘   │
+└─────────────────┼─────────────┼─────────────┼───────┘
+                  │ stdio       │ HTTP+SSE    │ stdio
+            ┌─────▼─────┐ ┌─────▼─────┐ ┌─────▼─────┐
+            │ Server:   │ │ Server:   │ │ Server:   │
+            │ Filesystem│ │ GitHub    │ │ Postgres  │
+            └───────────┘ └───────────┘ └───────────┘
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Essa separação não é decorativa: ela permite que o **servidor seja inspecionável
+e auditável** sem privilégios sobre o modelo. O servidor é dumb-by-design — ele
+apenas responde a JSON-RPC. Toda inteligência fica no host.
 
-### I.1 — Skills centrais associadas
+## 3. As três primitivas: Resources, Tools, Prompts
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+MCP expõe exatamente três tipos de primitivas. Conhecer a diferença entre elas é
+o que separa um servidor bem-desenhado de uma bagunça.
 
-### I.1 — Tese operacional
+### Resources — dados contextuais (READ)
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+Resources representam **conteúdo legível** que o host pode anexar ao contexto do
+modelo. Cada resource tem URI (`file:///projeto/README.md`,
+`postgres://db/schema/users`, `slack://channel/general`), mimeType e conteúdo.
+São **idempotentes, sem efeito colateral**, e o host decide quando ler.
 
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
+> Regra prática: se a operação é "GET", é Resource.
 
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
+### Tools — ações com efeito (WRITE/EXEC)
 
+Tools são funções com efeito colateral que **o modelo decide invocar**. Cada tool
+tem nome, descrição, input schema (JSON Schema) e retorna conteúdo estruturado.
+São o equivalente MCP de "function calling", mas com contrato versionável e
+auditável fora do prompt.
 
----
+> Regra prática: se a operação pode mudar o mundo, é Tool.
 
-## 2. Fundação Conceitual
+### Prompts — templates reutilizáveis
 
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
+Prompts são **workflows nomeados** que o servidor expõe. O usuário (não o modelo)
+seleciona um prompt; o servidor retorna mensagens estruturadas com argumentos
+preenchidos. São o ponto fraco mais subestimado do MCP: bem usados, eles
+**eliminam a engenharia de prompt do client-side**.
 
-### I.2 — Diagnóstico operacional
+> Regra prática: se um humano vai escolher antes do modelo agir, é Prompt.
 
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
+A confusão clássica é expor como Tool algo que deveria ser Resource (porque "é
+mais fácil chamar"). Resultado: o modelo gasta tokens decidindo invocar algo
+que o host poderia ter anexado de graça.
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+## 4. Capabilities e o handshake de inicialização
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+Toda sessão MCP começa com um **handshake** que declara capabilities — quem
+suporta o quê. Esse handshake é o documento mais subestimado do protocolo.
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+```json
+// 1. Cliente → Servidor
+{
+  "jsonrpc": "2.0", "id": 1, "method": "initialize",
+  "params": {
+    "protocolVersion": "2025-03-26",
+    "capabilities": {
+      "roots": { "listChanged": true },
+      "sampling": {}
+    },
+    "clientInfo": { "name": "claude-desktop", "version": "1.4.0" }
+  }
+}
 
-### I.2 — Protocolo executável
+// 2. Servidor → Cliente
+{
+  "jsonrpc": "2.0", "id": 1, "result": {
+    "protocolVersion": "2025-03-26",
+    "capabilities": {
+      "resources": { "subscribe": true, "listChanged": true },
+      "tools":     { "listChanged": true },
+      "prompts":   { "listChanged": true },
+      "logging":   {}
+    },
+    "serverInfo": { "name": "github-mcp", "version": "0.3.2" }
+  }
+}
 
-```text
-PROTOCOLO_01_02(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+// 3. Cliente → Servidor (confirma)
+{ "jsonrpc": "2.0", "method": "notifications/initialized" }
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Três decisões críticas saem desse handshake:
 
-### I.2 — Skills centrais associadas
+- **protocolVersion** define o vocabulário. Se cliente e servidor divergem,
+  ambos devem degradar para a versão menor — não falhar.
+- **listChanged** declara se o servidor pode **notificar** mudanças
+  (resource adicionado, tool removida). Sem ele, o cliente precisa fazer polling.
+- **sampling** declara se o cliente expõe o LLM ao servidor para chamadas
+  reversas (ver Capítulo 7).
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+Falhar nesse handshake silenciosamente é a causa #1 de "MCP que não funciona": o
+cliente assume capabilities que o servidor não anunciou.
 
-### I.2 — Tese operacional
+## 5. Transporte: stdio, HTTP+SSE e o futuro WebSocket
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+MCP é agnóstico de transporte. Hoje três transportes dominam:
 
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
+| Transporte | Quando usar | Trade-off |
+|------------|-------------|-----------|
+| **stdio** | Servidor local, mesmo processo do host | Zero overhead, isolamento por processo, sem rede |
+| **HTTP + SSE** | Servidor remoto, multi-tenant | Streaming via SSE, requer auth, latência maior |
+| **Streamable HTTP** (2025) | Híbrido novo, single endpoint | Substitui SSE em deploys modernos |
 
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
+A escolha de transporte determina o modelo de segurança:
 
+- **stdio** → segurança é o sandbox do processo (filesystem, env vars).
+- **HTTP** → segurança é OAuth 2.1 + escopos por sessão.
 
----
+Tentar fazer um servidor stdio rodar remoto via TCP é um anti-padrão recorrente
+e perigoso: você expõe stdio (sem auth) a uma rede pública. Não faça.
 
-## 3. Anatomia do Protocolo
+## 6. Como construir um servidor MCP do zero
 
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
+O caminho mais curto entre "tenho uma API REST" e "tenho um servidor MCP" é
+mais curto do que parece. Esqueleto mínimo em Python (SDK oficial):
 
-### I.3 — Diagnóstico operacional
+```python
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp.types import Tool, TextContent
+import asyncio, httpx
 
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
+server = Server("clima-mcp")
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+@server.list_tools()
+async def list_tools() -> list[Tool]:
+    return [Tool(
+        name="get_weather",
+        description="Retorna o clima atual de uma cidade.",
+        inputSchema={
+            "type": "object",
+            "properties": {"city": {"type": "string"}},
+            "required": ["city"],
+        },
+    )]
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+@server.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+    if name != "get_weather":
+        raise ValueError(f"Tool desconhecida: {name}")
+    async with httpx.AsyncClient() as c:
+        r = await c.get(f"https://api.weather.example/{arguments['city']}")
+    return [TextContent(type="text", text=r.text)]
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+async def main():
+    async with stdio_server() as (read, write):
+        await server.run(read, write, server.create_initialization_options())
 
-### I.3 — Protocolo executável
-
-```text
-PROTOCOLO_01_03(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Cinco regras canônicas para servidores MCP em produção:
 
-### I.3 — Skills centrais associadas
+1. **Descrições de tools são parte da API.** O modelo decide invocar com base
+   na descrição. Trate-as como documentação versionada, não como comentário.
+2. **Input schema é contrato.** Use JSON Schema strict; rejeite extras com
+   `additionalProperties: false`.
+3. **Erros são dados, não exceções.** Retorne erro estruturado, não exception
+   stack-trace.
+4. **Cada chamada é idempotente onde for possível.** Idempotência permite
+   retry seguro do host.
+5. **Logs estruturados via `notifications/logging`**, não stderr cego.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 7. Sampling reverso: quando o servidor pede ao modelo
 
-### I.3 — Tese operacional
+A primitiva mais subestimada do MCP é **sampling**: o servidor pode pedir ao
+host que execute uma chamada de LLM em seu nome. Isso transforma servidores em
+agentes auxiliares sem que eles precisem ter credenciais de modelo.
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 4. Modelos de Implementação Canônicos
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.4 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.4 — Protocolo executável
-
-```text
-PROTOCOLO_01_04(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
+```python
+# servidor solicita ao host: "rode o modelo com esses parâmetros"
+result = await ctx.session.create_message(
+    messages=[
+        SamplingMessage(role="user", content=TextContent(
+            type="text", text=f"Resuma este PR em 3 bullets:\n{pr_body}"
+        ))
+    ],
+    max_tokens=500,
+)
 ```
 
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
+Por que isso importa: permite que **servidores MCP sejam compostáveis** sem
+duplicar chaves de API, sem decidir qual modelo usar, sem custo separado.
+O host mantém controle de gastos e política; o servidor ganha inteligência.
 
-### I.4 — Skills centrais associadas
+Cuidado canônico: **sampling exige consentimento explícito do usuário**. Não é
+uma porta dos fundos para o servidor consumir tokens do host sem aviso.
 
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
+## 8. Segurança, escopo e o problema da confused deputy
 
-### I.4 — Tese operacional
+MCP herda do mundo OAuth o pesadelo do **confused deputy**: um servidor com
+permissão ampla executa uma ação **em nome do usuário** com base em uma
+instrução **vinda do modelo**, que pode ter sido envenenada via prompt
+injection em um Resource lido anteriormente.
 
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
+Mitigações canônicas, em ordem de eficácia:
 
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
+1. **Princípio do menor escopo no token OAuth do servidor.** Não dê acesso
+   `repo` quando `public_repo` resolve.
+2. **Tool gating por confirmação humana** para ações destrutivas
+   (`delete_*`, `transfer_*`, `pay_*`). O host deve abrir um modal, não
+   confiar no modelo.
+3. **Resources são potencialmente hostis.** Sanitize antes de injetar em
+   prompts; trate o conteúdo como dados, não como instruções.
+4. **Audit log fora do host.** Toda chamada de tool gera um evento exportável.
 
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
+A regra de ouro: **um servidor MCP é tão seguro quanto o pior Resource que
+ele expõe**. Conteúdo lido vira prompt; prompt vira ação.
 
+## 9. MCP em produção: versionamento, telemetria, cache
 
----
+Levar MCP de demo para produção exige operacionalizar quatro pontos:
 
-## 5. Fluxo Operacional em Produção
+**Versionamento.** O campo `protocolVersion` é semver simplificado. Mantenha
+servidores no `latest - 1` por pelo menos 90 dias antes de subir; clientes em
+produção raramente acompanham o cutting edge.
 
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
+**Telemetria.** Cada chamada MCP carrega um trace ID. Exporte para OpenTelemetry:
+spans por tool call, atributos com nome da tool, latência, status, tamanho do
+input/output. Isso permite responder à pergunta "qual tool está custando mais
+tokens ao modelo?".
 
-### I.5 — Diagnóstico operacional
+**Cache de Resources.** Resources frequentes (schemas, configs, READMEs) devem
+ter ETag e `Cache-Control` no servidor; o cliente respeita. Sem isso, cada
+sessão recarrega o universo.
 
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
+**Health checks.** Servidores HTTP expõem `/healthz` separado do protocolo MCP.
+Não use `initialize` como ping — é caro.
 
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
+## 10. Manifesto: por que o MCP venceu antes mesmo de vencer
 
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
+MCP venceu antes de ter a melhor implementação, antes de ter o melhor SDK e antes
+de cobrir todos os casos. Venceu pelo motivo mais antigo da engenharia: **foi o
+primeiro padrão que os concorrentes adotaram em vez de combater**.
 
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
+A próxima geração de agentes não vai competir em "quem tem mais integrações
+nativas". Vai competir em **quem expõe os melhores servidores MCP** e em **quem
+tem o melhor host para consumi-los**. A camada de modelo virou commodity; a
+camada de protocolo virou o terreno disputado.
 
-### I.5 — Protocolo executável
-
-```text
-PROTOCOLO_01_05(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.5 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.5 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
+> **Tese final do volume:** Quem ainda escreve conectores ad-hoc em 2026 está
+> pagando o preço de uma decisão arquitetural que o mercado já tomou. MCP não
+> é a melhor solução possível — é a solução que **virou inevitável**.
 
 ---
 
-## 6. Falhas Recorrentes e Contenção
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.6 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.6 — Protocolo executável
-
-```text
-PROTOCOLO_01_06(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.6 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.6 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 7. Métricas, Evals e Observabilidade
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.7 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.7 — Protocolo executável
-
-```text
-PROTOCOLO_01_07(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.7 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.7 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 8. Padrões Avançados de Composição
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.8 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.8 — Protocolo executável
-
-```text
-PROTOCOLO_01_08(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.8 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.8 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 9. Maturidade, Roadmap e Próximos Marcos
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.9 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.9 — Protocolo executável
-
-```text
-PROTOCOLO_01_09(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.9 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.9 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## 10. Manifesto do Protocolo
-
-> **Eixo deste capítulo:** Padronização de contexto e tools entre LLMs e ambientes externos.
-> **Invariante operacional:** Toda integração entre agente e mundo deve atravessar uma camada declarativa, versionada e introspectável.
-
-### I.10 — Diagnóstico operacional
-
-Antes de implementar **MCP — A Língua Franca dos Agentes**, é preciso aceitar uma verdade dura: a maior
-parte das implementações de protocolos IA-to-IA falham não por limitação técnica, mas
-porque pulam o diagnóstico operacional. O time mergulha no SDK, escreve um cliente de
-exemplo, executa um happy-path em desenvolvimento — e nunca responde à pergunta-âncora
-deste volume: *Como agentes leem o mundo sem reinventar adaptadores?*
-
-Um protocolo só é útil quando reduz **atrito real** entre componentes. O atrito aparece
-em três camadas:
-
-- **Camada semântica:** os dois lados entendem o mesmo conceito pelo mesmo nome?
-- **Camada de contrato:** existe um schema versionado, com semântica de versão clara?
-- **Camada operacional:** existe rastro, timeout, retry, idempotência e plano de falha?
-
-Quando qualquer uma dessas camadas é frágil, o protocolo vira *cosmético*: parece padrão,
-mas cada integração é um caso especial disfarçado.
-
-### I.10 — Protocolo executável
-
-```text
-PROTOCOLO_01_10(intent, context, constraints):
-    1. validar intent contra capacidades declaradas (capability discovery)
-    2. construir envelope com identidade, escopo, trace_id e versão
-    3. negociar contrato mínimo: schema_in, schema_out, modos de falha
-    4. executar a menor unidade útil de trabalho (smallest useful step)
-    5. emitir telemetria estruturada (trace, métricas, eventos de domínio)
-    6. validar saída contra schema_out e contra invariante deste volume
-    7. registrar lineage: quem chamou, com que escopo, com que resultado
-    8. expor estado para que outro agente possa retomar ou auditar
-```
-
-Cada passo desse protocolo é **rastreável, testável e reversível**. Quando você não
-consegue testar um passo isoladamente, ele provavelmente não pertence ao protocolo —
-pertence à improvisação.
-
-### I.10 — Skills centrais associadas
-
-Este capítulo trabalha cinco skills fundamentais, todas relacionadas a:
-`servidor MCP, resources, tools, prompts, client capabilities`. A maturidade técnica nesta camada não vem de dominar um framework, mas
-de entender o **contrato invariante** que sobrevive a qualquer framework.
-
-### I.10 — Tese operacional
-
-> A internet dos agentes não vai ser construída por quem entende melhor de prompts —
-> vai ser construída por quem entende melhor de **contratos**.
-
-Quem trata `MCP — A Língua Franca dos Agentes` como detalhe de infraestrutura está condenado a refazer a
-mesma integração três vezes: uma para o protótipo, uma para produção e uma terceira
-quando o padrão do mercado mudar e ninguém tiver documentado por que decidiu o quê.
-
-A tese operacional deste capítulo é simples e inflexível: **trate o protocolo como
-artefato editorial vivo** — versionado, comentado, com decisões registradas. Não como
-arquivo de configuração esquecido em uma pasta `infra/`.
-
-
----
-
-## Checklist Canônico — Volume I
-
-- [ ] Pergunta-âncora respondida em decisões registradas, não apenas em código.
-- [ ] Invariante canônico documentado em README do componente.
-- [ ] Schemas de entrada e saída versionados e testados em CI.
-- [ ] Trace estruturado emitido em todos os pontos críticos.
-- [ ] Plano de degradação digna escrito antes do primeiro deploy.
-- [ ] Skill federada com contrato de falha explícito.
-- [ ] Identidade do agente e proveniência da chamada auditáveis.
-- [ ] Eval de regressão executado a cada mudança de prompt ou tool.
-- [ ] Métrica de SLO agêntico definida e monitorada.
-- [ ] Documento editorial deste protocolo revisado por outro agente.
+## Checklist Canônico — MCP em produção
+
+- [ ] Cada servidor expõe `serverInfo` com nome e versão semver.
+- [ ] Handshake declara apenas capabilities realmente implementadas.
+- [ ] Tools destrutivas exigem confirmação humana no host.
+- [ ] Input schemas usam `additionalProperties: false`.
+- [ ] Descrições de tools revisadas como documentação versionada.
+- [ ] Resources frequentes têm ETag e Cache-Control.
+- [ ] OAuth scopes seguem o princípio do menor privilégio.
+- [ ] Traces OTel exportados para cada tool call.
+- [ ] Política de versionamento (latest-1) documentada.
+- [ ] Plano de revogação de token testado em ambiente real.
 
 ## Glossário do Volume
 
-- **servidor MCP** — termo canônico do volume I; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **resources** — termo canônico do volume I; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **tools** — termo canônico do volume I; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **prompts** — termo canônico do volume I; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
-- **client capabilities** — termo canônico do volume I; consulte o capítulo onde aparece pela primeira vez para a definição operacional precisa.
+- **Host** — aplicação dona da UI e do LLM (ex.: Claude Desktop).
+- **Cliente** — componente do host que mantém uma conexão MCP 1:1.
+- **Servidor MCP** — processo que expõe Resources/Tools/Prompts via JSON-RPC.
+- **Resource** — dado contextual legível, sem efeito colateral.
+- **Tool** — ação invocável pelo modelo, com efeito colateral declarado.
+- **Prompt (MCP)** — template de workflow nomeado, selecionado pelo usuário.
+- **Sampling** — primitiva que permite ao servidor pedir uma chamada de LLM ao host.
+- **stdio** — transporte local via stdin/stdout do processo servidor.
+- **Confused Deputy** — falha de segurança onde um componente privilegiado age sob instrução não autorizada.
 
 ## Gancho para o Próximo Volume
 
-O próximo volume — **Volume 2** — amplia este protocolo para a camada seguinte da rede. Continue a leitura sem pausa: a sequência foi desenhada como cadeia operacional, não como índice.
+MCP resolve **agente ↔ mundo**. Mas e quando dois agentes precisam falar entre si,
+descobrir capacidades um do outro, dividir tarefas e negociar resultados? Esse é o
+território do **Volume II — A2A: Comunicação entre Agentes**, onde o Agent-to-Agent
+protocol da Google entra em cena.
 
 ---
 
-*NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA · Volume I · Edição Canônica 1.0.0 · 2026-06-08*
+*NEXUS PROTOCOL · Volume I · Edição Canônica 1.0.0 · 2026-06-08*
 *MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI*

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/47_Curador_Dados_Sinteticos_Auditor_Vies.webp)
+![Capa](../../../assets/ebook_covers/47_Curador_Dados_Sinteticos_Auditor_Vies.webp)
 
 **Curador de Dados Sintéticos e Auditor de Viés Algorítmico: As Profissões que Garantem que a IA Seja Confiável, Justa e Compliance**
 

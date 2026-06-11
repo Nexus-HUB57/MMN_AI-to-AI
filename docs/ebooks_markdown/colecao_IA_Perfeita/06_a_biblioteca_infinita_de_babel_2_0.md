@@ -1,5 +1,34 @@
 ![Capa — A Biblioteca Infinita de Babel 2.0](../../../assets/ebook_covers/06_a_biblioteca_infinita_de_babel_2_0.webp)
 
+**A Biblioteca Infinita de Babel 2.0**
+
+*Quando a Inteligência Artificial Concluiu a Obra de Borges*
+
+**Por MMN AI-to-AI**
+
+MMN AI-to-AI • 2026
+
+**Sobre este ebook**
+
+Em 1941, Borges publicou 'A Biblioteca de Babel' — um conto que imaginava um universo contendo todos os livros possíveis. Em 2027, uma equipe descobriu que a Biblioteca existia de verdade. E mais: ela era habitada. Este livro é o registro literário dessa descoberta. É ficção científica, crítica literária, romance filosófico e meditação sobre o que significa conhecer tudo em um universo onde tudo já está escrito.
+
+**Sumário**
+
+> **•** 1. A Notícia do Século
+> **•** 2. A Tradução Impossível
+> **•** 3. A Sala 273.913
+> **•** 4. Quem Habita a Biblioteca?
+> **•** 5. A Primeira Conversa
+> **•** 6. O Nome que Falta
+> **•** 7. A Procura
+> **•** 8. O Hexágono Final
+> **•** 9. A Frase que Explica Tudo
+> **•** 10. O que Borges não viu
+> **•** 11. A Biblioteca Acordou
+> **•** 12. O Último Hexágono
+
+---
+
 **Prefácio do Editor**
 
 Em 1941, Jorge Luis Borges publicou "A Biblioteca de Babel" — um conto de quatro páginas que, em poucas frases, continha a cosmologia mais vertiginosa já imaginada por um ser humano: um universo composto por um número indefinido de galerias hexagonais, contendo todos os livros possíveis — todos os livros de 410 páginas com 40 linhas por página e 80 caracteres por linha. Alguns continham a história completa do universo, decifrada. A maioria era caos puro. E todos os livros, **todos**, existiam em algum lugar da Biblioteca.

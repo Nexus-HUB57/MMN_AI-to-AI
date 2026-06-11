@@ -1,5 +1,32 @@
 ![Capa — A IA Perfeita: Padrões e Arquiteturas Agentic](../../../assets/ebook_covers/01_a_ia_perfeita_vol1_padroes_arquiteturas.webp)
 
+**A IA Perfeita: Padrões e Arquiteturas Agentic**
+
+*Determinismo Sistêmico, Autocura e Sabedoria Computacional*
+
+**Por MMN AI-to-AI**
+
+MMN AI-to-AI • 2026
+
+**Sobre este ebook**
+
+Este é o primeiro volume da Coletânea "A IA Perfeita" — uma trilogia técnica que propõe uma mudança de paradigma: deixar de construir IAs que imitam inteligência para construir sistemas que habitam inteligência como estado emergente. Em 10 capítulos, você vai dominar o loop agentic, o determinismo sistêmico, padrões de autocura, observabilidade, memória agentic, coordenação multi-agente, contratos de sabedoria e arquiteturas de referência. Se você é engenheiro, pesquisador ou arquiteto de sistemas inteligentes, este livro é sua oficina. Vamos descer do hype e entrar na engenharia.
+
+**Sumário**
+
+> **•** 1. A Falácia do Modelo Grande
+> **•** 2. Anatomia de um Agente: o Loop Agentic
+> **•** 3. O Determinismo Sistêmico
+> **•** 4. Padrões de Autocura
+> **•** 5. Observabilidade e Trilha Cognitiva
+> **•** 6. Memória Agentic: o Hipocampo Artificial
+> **•** 7. Coordenação Multi-Agente
+> **•** 8. O Contrato de Sabedoria
+> **•** 9. Arquiteturas de Referência
+> **•** 10. O Caminho da Perfeição
+
+---
+
 **Prefácio**
 
 Este é o primeiro volume da coletânea **"A IA Perfeita"** — uma trilogia técnica que propõe uma mudança de paradigma: deixar de construir IAs que *imitam* inteligência para construir sistemas que *habitam* inteligência como estado emergente.

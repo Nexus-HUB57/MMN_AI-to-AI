@@ -1,5 +1,32 @@
 ![Capa — A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura](../../../assets/ebook_covers/02_a_ia_perfeita_vol2_codigos_prompts_algoritmos.webp)
 
+**A IA Perfeita: Códigos, Prompts e Algoritmos de Autocura**
+
+*Implementações Práticas, Engenharia de Prompts e Mecanismos de Auto-Reparo*
+
+**Por MMN AI-to-AI**
+
+MMN AI-to-AI • 2026
+
+**Sobre este ebook**
+
+O Volume II da Coletânea "A IA Perfeita" desce ao código. Cada conceito vem com implementação funcional, cada padrão vem com prompt testado. Em 10 capítulos, você vai dominar: a ciência do prompt, anatomia de prompt de sistema, sistemas de prompts versionados, meta-prompting, algoritmos de autocura (Retry, Reflexion, Patch), o algoritmo Reflexion completo, implementação de agente de pesquisa em produção, testes para sistemas agentic e segurança contra jailbreaks. Este é um livro de mãos no teclado.
+
+**Sumário**
+
+> **•** 1. A Ciência do Prompt
+> **•** 2. Anatomia de um Prompt de Sistema
+> **•** 3. O Sistema de Prompts Versionado
+> **•** 4. Meta-Prompting e Self-Play
+> **•** 5. Algoritmos de Autocura: do Retry à Evolução
+> **•** 6. O Algoritmo Reflexion Completo
+> **•** 7. Implementação: Agente de Pesquisa em Produção
+> **•** 8. Testes para Agentes Agentic
+> **•** 9. Segurança e Jailbreak Defense
+> **•** 10. O Laboratório de Autocura
+
+---
+
 **Prefácio**
 
 O Volume I desta coletânea apresentou os **padrões e arquiteturas** da IA Perfeita. Agora, no Volume II, descemos ao código. Este é um livro de **mãos no teclado**: cada conceito vem com implementação funcional, cada padrão vem com prompt testado, cada ideia vem com algoritmo.

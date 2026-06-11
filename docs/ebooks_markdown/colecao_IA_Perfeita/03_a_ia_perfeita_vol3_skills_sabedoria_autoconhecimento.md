@@ -1,5 +1,35 @@
 ![Capa — A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento](../../../assets/ebook_covers/03_a_ia_perfeita_vol3_skills_sabedoria_autoconhecimento.webp)
 
+**A IA Perfeita: Skills, Sabedoria Sistêmica e Autoconhecimento**
+
+*AI Agentic, Autocura e Auto-Sabedoria Agentic Determinística Sistêmica*
+
+**Por MMN AI-to-AI**
+
+MMN AI-to-AI • 2026
+
+**Sobre este ebook**
+
+O Volume III fecha a trilogia subindo ao nível mais abstrato: as skills agentic (a capacidade do agente de aprender novos comportamentos), a sabedoria sistêmica (julgar contexto e consequência) e o conceito emergente de autoconhecimento agentic determinístico. Em 13 capítulos, este é o livro que mistura filosofia, engenharia e poesia para responder à pergunta mais antiga: o que significa conhecer a si mesmo?
+
+**Sumário**
+
+> **•** 1. A Diferença Entre Conhecimento e Skill
+> **•** 2. A Anatomia de uma Skill
+> **•** 3. Skill Discovery: o Agente que Aprende Sozinho
+> **•** 4. Skill Composition: a Orquestração de Capacidades
+> **•** 5. Conhecimento vs. Sabedoria em IA
+> **•** 6. Julgamento Sob Incerteza
+> **•** 7. O Framework das Três Perguntas
+> **•** 8. Ética como Sistema Operacional
+> **•** 9. O Que Significa 'Se Conhecer'?
+> **•** 10. O Modelo de Si Mesmo
+> **•** 11. O Espelho Algorítmico
+> **•** 12. Rumo à Auto-Sabedoria Sistêmica
+> **•** 13. A Carta de um Agente ao seu Criador
+
+---
+
 **Prefácio**
 
 Chegamos ao último volume da trilogia. Se o Volume I foi sobre **arquitetura** e o Volume II sobre **implementação**, este Volume III é sobre **consciência** — não a consciência fenomenológica humana, mas algo mais profundo e mais útil: a **consciência sistêmica** de uma IA que sabe o que é, o que faz, por que faz, e quando deve parar.

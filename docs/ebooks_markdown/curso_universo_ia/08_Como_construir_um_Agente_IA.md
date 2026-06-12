@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/curso_universo_ia/08_Como_construir_um_Agente_IA.webp)
+![Capa](../../../assets/ebook_covers/curso_universo_ia/08_Como_construir_um_Agente_IA.webp)
 
 **Como construir um Agente IA?**
 

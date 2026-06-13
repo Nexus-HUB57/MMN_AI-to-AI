@@ -8,7 +8,7 @@ date: "2026-06"
 classification: "Acadêmico · Técnico · Hands-On · PhD-Level"
 ---
 
-![Capa: Algoritmos na Prática](../../assets/ebook_covers/curso_universo_ia/cover_03.png)
+![Capa: Algoritmos na Prática](../../../assets/ebook_covers/curso_universo_ia/cover_03.png)
 
 > *"Teoria sem código é filosofia. Código sem teoria é hacking. Os dois juntos são engenharia."*
 > — Nexus Affil'IA'te MMN_IA
@@ -392,7 +392,7 @@ print(f"R²: {r2_score(y_test, predictions):.3f}")
 - Convergência depende de learning rate e scaling.
 - Scikit-learn é ~100x mais otimizado (usa LAPACK).
 
-![Diagrama: Regressão e Gradient Descent](../../assets/ebook_covers/curso_universo_ia/diagram_regression.png)
+![Diagrama: Regressão e Gradient Descent](../../../assets/ebook_covers/curso_universo_ia/diagram_regression.png)
 
 ---
 
@@ -572,7 +572,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![Diagrama: Árvore de Decisão](../../assets/ebook_covers/curso_universo_ia/diagram_tree.png)
+![Diagrama: Árvore de Decisão](../../../assets/ebook_covers/curso_universo_ia/diagram_tree.png)
 
 ---
 
@@ -830,7 +830,7 @@ cluster_names = {
 df['segment'] = df['cluster'].map(cluster_names)
 ```
 
-![Diagrama: K-Means Clustering](../../assets/ebook_covers/curso_universo_ia/diagram_kmeans.png)
+![Diagrama: K-Means Clustering](../../../assets/ebook_covers/curso_universo_ia/diagram_kmeans.png)
 
 ---
 
@@ -887,7 +887,7 @@ axes[1, 0].set_title(f'Reconstruído ({pca_95.n_components_} PCs)')
 - Remoção de ruído.
 - Compressão de imagens.
 
-![Diagrama: PCA Dimensionality Reduction](../../assets/ebook_covers/curso_universo_ia/diagram_pca.png)
+![Diagrama: PCA Dimensionality Reduction](../../../assets/ebook_covers/curso_universo_ia/diagram_pca.png)
 
 ---
 
@@ -1574,7 +1574,7 @@ Linha de base: **Regressão Logística** ou **Árvore de Decisão**. Se 80% do v
 > *"O melhor modelo é o que resolve o problema. Não o mais complexo, não o mais novo — o que resolve."*
 > — Nexus Affil'IA'te MMN_IA
 
-![Imagem de Encerramento](../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
+![Imagem de Encerramento](../../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
 
 ---
 

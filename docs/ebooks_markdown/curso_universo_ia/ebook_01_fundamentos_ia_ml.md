@@ -8,7 +8,7 @@ date: "2026-06"
 classification: "Acadêmico · Técnico · PhD-Level"
 ---
 
-![Capa: Fundamentos de Algoritmos de IA & Machine Learning](../../assets/ebook_covers/curso_universo_ia/cover_01.png)
+![Capa: Fundamentos de Algoritmos de IA & Machine Learning](../../../assets/ebook_covers/curso_universo_ia/cover_01.png)
 
 > *"A Inteligência Artificial não é magia. É matemática aplicada com dados suficientes."*
 > — Nexus Affil'IA'te MMN_IA
@@ -112,7 +112,7 @@ A resposta curta: **porque regras explícitas não escalam**. Considere:
 
 ML resolve isso **generalizando a partir de exemplos** — e é aí que as três categorias de aprendizado entram.
 
-![Diagrama: Taxonomia de Machine Learning](../../assets/ebook_covers/curso_universo_ia/diagram_taxonomy.png)
+![Diagrama: Taxonomia de Machine Learning](../../../assets/ebook_covers/curso_universo_ia/diagram_taxonomy.png)
 
 ---
 
@@ -170,7 +170,7 @@ A taxonomia canônica de ML, popularizada por Arthur Samuel (1959) e formalizada
 
 > *Existem ainda o aprendizado semi-supervisionado, self-supervised e few-shot learning, mas as três categorias formam a base teórica sobre a qual tudo se constrói.*
 
-![Diagrama: Fluxo do Aprendizado Supervisionado](../../assets/ebook_covers/curso_universo_ia/diagram_supervised.png)
+![Diagrama: Fluxo do Aprendizado Supervisionado](../../../assets/ebook_covers/curso_universo_ia/diagram_supervised.png)
 
 ---
 
@@ -246,7 +246,7 @@ Onde **α** é a taxa de aprendizado.
 - Análise de risco em seguros
 - Modelagem epidemiológica
 
-![Diagrama: Regressão Linear e Gradient Descent](../../assets/ebook_covers/curso_universo_ia/diagram_regression.png)
+![Diagrama: Regressão Linear e Gradient Descent](../../../assets/ebook_covers/curso_universo_ia/diagram_regression.png)
 
 ---
 
@@ -324,7 +324,7 @@ $$\text{IG}(S, A) = H(S) - \sum_{v \in A} \frac{|S_v|}{|S|} H(S_v)$$
 | Não precisam de normalização | Viés para features com mais níveis |
 | Rápidos na inferência | Fronteiras de decisão axiais |
 
-![Diagrama: Árvore de Decisão](../../assets/ebook_covers/curso_universo_ia/diagram_tree.png)
+![Diagrama: Árvore de Decisão](../../../assets/ebook_covers/curso_universo_ia/diagram_tree.png)
 
 ---
 
@@ -408,7 +408,7 @@ No aprendizado não supervisionado, o dataset é apenas **D = {xᵢ}ᵢ₌₁ⁿ
 - **Association rules** — Descobrir coocorrências.
 - **Density estimation** — Modelar a distribuição P(X).
 
-![Diagrama: Clustering e Redução de Dimensionalidade](../../assets/ebook_covers/curso_universo_ia/diagram_unsupervised.png)
+![Diagrama: Clustering e Redução de Dimensionalidade](../../../assets/ebook_covers/curso_universo_ia/diagram_unsupervised.png)
 
 ## 10.3 Por que Usar?
 
@@ -461,7 +461,7 @@ Como escolher K? Métodos:
 - Pode convergir para mínimos locais.
 - Difícil com alta dimensionalidade (maldição da dimensionalidade).
 
-![Diagrama: K-Means passo a passo](../../assets/ebook_covers/curso_universo_ia/diagram_kmeans.png)
+![Diagrama: K-Means passo a passo](../../../assets/ebook_covers/curso_universo_ia/diagram_kmeans.png)
 
 ---
 
@@ -503,7 +503,7 @@ $$\sum_{i=1}^{k} \lambda_i \geq 0.95 \sum_{i=1}^{d} \lambda_i$$
 - **Filtragem de ruído**
 - **Análise de genômica**
 
-![Diagrama: Redução de Dimensionalidade via PCA](../../assets/ebook_covers/curso_universo_ia/diagram_pca.png)
+![Diagrama: Redução de Dimensionalidade via PCA](../../../assets/ebook_covers/curso_universo_ia/diagram_pca.png)
 
 ---
 
@@ -590,7 +590,7 @@ Rede neural que aprende a **reconstruir** os dados. Anomalias têm **alto erro d
 
 No RL, um **agente** aprende a tomar **ações** em um **ambiente** para maximizar uma **recompensa cumulativa**. Diferente de supervised learning, o agente não recebe "respostas certas" — ele descobre quais ações são boas por **tentativa e erro**.
 
-![Diagrama: Loop de Reinforcement Learning](../../assets/ebook_covers/curso_universo_ia/diagram_reinforcement.png)
+![Diagrama: Loop de Reinforcement Learning](../../../assets/ebook_covers/curso_universo_ia/diagram_reinforcement.png)
 
 ## 15.2 Componentes Fundamentais
 
@@ -778,7 +778,7 @@ Combina o melhor de dois mundos:
 - **TD3 (Twin Delayed DDPG)** — Estável para controle contínuo.
 - **Rainbow DQN** — Combina 6 melhorias sobre DQN.
 
-![Diagrama: Deep RL Architecture](../../assets/ebook_covers/curso_universo_ia/diagram_deep_rl.png)
+![Diagrama: Deep RL Architecture](../../../assets/ebook_covers/curso_universo_ia/diagram_deep_rl.png)
 
 ---
 
@@ -890,7 +890,7 @@ $$\mathbb{E}\left[(y - \hat{f}(x))^2\right] = \text{Bias}^2 + \text{Variance} + 
 - **Data Augmentation:** Aumenta artificialmente o dataset.
 - **Cross-Validation:** Para ajustar hiperparâmetros.
 
-![Diagrama: Bias-Variance Tradeoff](../../assets/ebook_covers/curso_universo_ia/diagram_overfitting.png)
+![Diagrama: Bias-Variance Tradeoff](../../../assets/ebook_covers/curso_universo_ia/diagram_overfitting.png)
 
 ---
 
@@ -1057,7 +1057,7 @@ No ecossistema **Nexus Affil'IA'te MMN_IA**, acreditamos que o futuro da IA é:
 > *"Algoritmos não pensam. Mas o ser humano que os desenha, treina e governa — esse, sim, pensa. E com os algoritmos certos, pensa em escala de bilhões."*
 > — Nexus Affil'IA'te MMN_IA
 
-![Imagem de Encerramento](../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
+![Imagem de Encerramento](../../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
 
 ---
 

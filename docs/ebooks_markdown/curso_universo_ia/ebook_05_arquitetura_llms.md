@@ -8,7 +8,7 @@ date: "2026-06"
 classification: "Acadêmico · Técnico · PhD-Level"
 ---
 
-![Capa: Arquitetura de LLMs](../../assets/ebook_covers/curso_universo_ia/cover_05.png)
+![Capa: Arquitetura de LLMs](../../../assets/ebook_covers/curso_universo_ia/cover_05.png)
 
 > *"A linguagem é a interface definitiva. Quem modela linguagem, modela pensamento."*
 > — Nexus Affil'IA'te MMN_IA
@@ -82,7 +82,7 @@ Este volume é a **anatomia completa** desses modelos. Da tokenização ao RLHF,
 - Mais dados.
 - Mais compute.
 
-![Diagrama: LLM Training Pipeline](../../assets/ebook_covers/curso_universo_ia/diagram_llm_pipeline.png)
+![Diagrama: LLM Training Pipeline](../../../assets/ebook_covers/curso_universo_ia/diagram_llm_pipeline.png)
 
 ## 1.3 A Emergência
 
@@ -409,7 +409,7 @@ BERT é pré-treinado como **encoder**. Para tarefa específica:
 - **Tarefas que precisam de bi-direcionalidade** (NER, QA extractive).
 - **Não é bom para geração.**
 
-![Diagrama: BERT vs GPT Architecture](../../assets/ebook_covers/curso_universo_ia/diagram_bert_vs_gpt.png)
+![Diagrama: BERT vs GPT Architecture](../../../assets/ebook_covers/curso_universo_ia/diagram_bert_vs_gpt.png)
 
 ---
 
@@ -1436,7 +1436,7 @@ No **Nexus Affil'IA'te MMN_IA**, vemos o futuro assim:
 > *"Dominar LLMs é dominar a interface da nova computação. Quem entende esses modelos, entende a nova alfabetização."*
 > — Nexus Affil'IA'te MMN_IA
 
-![Imagem de Encerramento](../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
+![Imagem de Encerramento](../../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
 
 ---
 

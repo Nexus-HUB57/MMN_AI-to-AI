@@ -8,7 +8,7 @@ date: "2026-06"
 classification: "Acadêmico · Técnico · PhD-Level"
 ---
 
-![Capa: Deep Learning — CNNs, RNNs e Transformers](../../assets/ebook_covers/curso_universo_ia/cover_02.png)
+![Capa: Deep Learning — CNNs, RNNs e Transformers](../../../assets/ebook_covers/curso_universo_ia/cover_02.png)
 
 > *"Deep Learning não é uma tecnologia. É uma mudança na forma como representamos conhecimento."*
 > — Nexus Affil'IA'te MMN_IA
@@ -93,7 +93,7 @@ $$a = \begin{cases} 1 & \text{se } z \geq 0 \\ 0 & \text{caso contrário} \end{c
 
 Empilhar perceptrons em camadas resolve problemas não-lineares. **A função de ativação não-linear** é o ingrediente mágico.
 
-![Diagrama: Rede Neural Profunda](../../assets/ebook_covers/curso_universo_ia/diagram_neural_net.png)
+![Diagrama: Rede Neural Profunda](../../../assets/ebook_covers/curso_universo_ia/diagram_neural_net.png)
 
 ---
 
@@ -294,7 +294,7 @@ Acelera convergência em vales alongados.
 Olha adiante antes de calcular o gradiente:
 $$v_t = \beta v_{t-1} + \nabla_\theta J(\theta - \beta v_{t-1})$$
 
-![Diagrama: Gradient Descent no Loss Landscape](../../assets/ebook_covers/curso_universo_ia/diagram_gradient.png)
+![Diagrama: Gradient Descent no Loss Landscape](../../../assets/ebook_covers/curso_universo_ia/diagram_gradient.png)
 
 ---
 
@@ -439,7 +439,7 @@ Hubel & Wiesel (1959) descobriram que o córtex visual de gatos tem neurônios q
 - **Self-driving cars:** detecção de pedestres, sinais.
 - **Reconhecimento facial:** FaceNet, ArcFace.
 
-![Diagrama: CNN Architecture](../../assets/ebook_covers/curso_universo_ia/diagram_cnn.png)
+![Diagrama: CNN Architecture](../../../assets/ebook_covers/curso_universo_ia/diagram_cnn.png)
 
 ---
 
@@ -597,7 +597,7 @@ Em sequências longas, gradientes são multiplicados muitas vezes pela mesma mat
 
 Aplicar backprop "desenrolando" a RNN ao longo de T timesteps. Custo computacional alto, memória alta.
 
-![Diagrama: RNN e LSTM](../../assets/ebook_covers/curso_universo_ia/diagram_rnn.png)
+![Diagrama: RNN e LSTM](../../../assets/ebook_covers/curso_universo_ia/diagram_rnn.png)
 
 ---
 
@@ -671,7 +671,7 @@ Input → Embedding + Positional Encoding
 **Encoder:** 6 camadas idênticas.
 **Decoder:** 6 camadas, com masked self-attention + encoder-decoder attention.
 
-![Diagrama: Transformer Architecture](../../assets/ebook_covers/curso_universo_ia/diagram_transformer.png)
+![Diagrama: Transformer Architecture](../../../assets/ebook_covers/curso_universo_ia/diagram_transformer.png)
 
 ## 19.3 Componentes
 
@@ -729,7 +729,7 @@ $$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
 
 Pesos de atenção revelam o que o modelo "olha" —útil para interpretabilidade.
 
-![Diagrama: Attention Mechanism](../../assets/ebook_covers/curso_universo_ia/diagram_attention.png)
+![Diagrama: Attention Mechanism](../../../assets/ebook_covers/curso_universo_ia/diagram_attention.png)
 
 ---
 
@@ -941,7 +941,7 @@ Equivalente do ZeRO-3 no PyTorch nativo.
 > *"O Transformer é a invenção mais importante em Deep Learning desde o backpropagation. Ele mudou não só o que a IA pode fazer, mas o que podemos imaginar."*
 > — Nexus Affil'IA'te MMN_IA
 
-![Imagem de Encerramento](../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
+![Imagem de Encerramento](../../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
 
 ---
 

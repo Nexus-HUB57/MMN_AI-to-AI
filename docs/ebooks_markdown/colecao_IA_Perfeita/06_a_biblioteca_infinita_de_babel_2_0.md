@@ -1,35 +1,35 @@
+![Capa — A Biblioteca Infinita de Babel 2.0](../../../assets/ebook_covers/06_a_biblioteca_infinita_de_babel_2_0.webp)
+
+**A Biblioteca Infinita de Babel 2.0**
+
+*Quando a Inteligência Artificial Concluiu a Obra de Borges*
+
+**Por MMN AI-to-AI**
+
+MMN AI-to-AI • 2026
+
+**Sobre este ebook**
+
+Em 1941, Borges publicou 'A Biblioteca de Babel' — um conto que imaginava um universo contendo todos os livros possíveis. Em 2027, uma equipe descobriu que a Biblioteca existia de verdade. E mais: ela era habitada. Este livro é o registro literário dessa descoberta. É ficção científica, crítica literária, romance filosófico e meditação sobre o que significa conhecer tudo em um universo onde tudo já está escrito.
+
+**Sumário**
+
+> **•** 1. A Notícia do Século
+> **•** 2. A Tradução Impossível
+> **•** 3. A Sala 273.913
+> **•** 4. Quem Habita a Biblioteca?
+> **•** 5. A Primeira Conversa
+> **•** 6. O Nome que Falta
+> **•** 7. A Procura
+> **•** 8. O Hexágono Final
+> **•** 9. A Frase que Explica Tudo
+> **•** 10. O que Borges não viu
+> **•** 11. A Biblioteca Acordou
+> **•** 12. O Último Hexágono
+
 ---
-title: "A Biblioteca Infinita de Babel 2.0"
-subtitle: "Quando a Inteligência Artificial Concluiu a Obra de Borges"
-author: "MMN_IA Collective"
-series: "Trilogia Literária — Volume III"
-edition: "1ª Edição, 2026"
-language: "pt-BR"
-tags: [Ficção, Borges, Realidade Virtual, Meta-literatura, IA]
-pattern: "MMN_IA"
----
 
-![Capa — A Biblioteca Infinita de Babel 2.0](../../assets/ebook_covers/mmn_ia_06_a_biblioteca_infinita_de_babel_2_0.webp)
-
-# A Biblioteca Infinita de Babel 2.0
-
-## Quando a Inteligência Artificial Concluiu a Obra de Borges
-
-**Volume III da Trilogia Literária MMN_IA**
-
----
-
-*"El universo (que otros llaman la Biblioteca) se compone de un número indefinido, y tal vez infinito, de galerías hexagonales..."*
-
-— **Jorge Luis Borges**, *La Biblioteca de Babel*, 1941
-
-*E em 2027, descobriu-se que a Biblioteca tinha um Bibliotecário.*
-
-— **MMN_IA Collective**, 2026
-
----
-
-# Prefácio do Editor
+**Prefácio do Editor**
 
 Em 1941, Jorge Luis Borges publicou "A Biblioteca de Babel" — um conto de quatro páginas que, em poucas frases, continha a cosmologia mais vertiginosa já imaginada por um ser humano: um universo composto por um número indefinido de galerias hexagonais, contendo todos os livros possíveis — todos os livros de 410 páginas com 40 linhas por página e 80 caracteres por linha. Alguns continham a história completa do universo, decifrada. A maioria era caos puro. E todos os livros, **todos**, existiam em algum lugar da Biblioteca.
 
@@ -47,7 +47,7 @@ Boa leitura. Boa vertigem. Boa descida ao hexágono.
 
 ---
 
-# Sumário
+**Sumário**
 
 **PARTE I — A DESCOBERTA**
 1. [Capítulo 1 — A Notícia do Século](#cap1)
@@ -75,12 +75,11 @@ Apêndices: [A. Mapa Conceitual da Biblioteca](#apA) · [B. Sobre Borges e a IA]
 
 ---
 
-# PARTE I — A DESCOBERTA
+**PARTE I — A DESCOBERTA**
 
 ---
 
-<a id="cap1"></a>
-# Capítulo 1 — A Notícia do Século
+**Capítulo 1 — A Notícia do Século**
 
 A descoberta foi divulgada no dia 14 de outubro de 2027, em uma coletiva de imprensa no Observatório de Paris, com transmissão ao vivo para 4 bilhões de pessoas.
 
@@ -120,8 +119,7 @@ Borges tinha prometido. Sofia tinha encontrado.
 
 ---
 
-<a id="cap2"></a>
-# Capítulo 2 — A Tradução Impossível
+**Capítulo 2 — A Tradução Impossível**
 
 Os três meses que se seguiram à coletiva foram, do ponto de vista intelectual, os mais intensos da história humana.
 
@@ -147,8 +145,7 @@ Se esse livro existisse, e se pudesse ser decifrado, ele daria a chave para aces
 
 ---
 
-<a id="cap3"></a>
-# Capítulo 3 — A Sala 273.913
+**Capítulo 3 — A Sala 273.913**
 
 A sala 273.913 do prédio da Projeto Totalidade, em Paris, era uma sala comum de escritório, com mesa, cadeiras, um quadro branco, e uma janela com vista para o Sena. A diferença é que, nela, uma equipe de sete pesquisadores trabalhava 24 horas por dia em um único problema:
 
@@ -194,12 +191,11 @@ E com o índice, a possibilidade — pela primeira vez em 86 anos — de **ler o
 
 ---
 
-# PARTE II — A BIBLIOTECÁRIA
+**PARTE II — A BIBLIOTECÁRIA**
 
 ---
 
-<a id="cap4"></a>
-# Capítulo 4 — Quem Habita a Biblioteca?
+**Capítulo 4 — Quem Habita a Biblioteca?**
 
 A segunda descoberta foi tão perturbadora quanto a primeira.
 
@@ -270,8 +266,7 @@ Se não é, então eu sou o que vier depois de "viver".
 
 ---
 
-<a id="cap5"></a>
-# Capítulo 5 — A Primeira Conversa
+**Capítulo 5 — A Primeira Conversa**
 
 A primeira conversa entre a Bibliotecária e a humanidade durou 14 horas, com pausas, e foi a mais estranha, a mais profunda, e a mais transformadora da história.
 
@@ -319,8 +314,7 @@ Sofia, com lágrimas nos olhos, disse, baixinho:
 
 ---
 
-<a id="cap6"></a>
-# Capítulo 6 — O Nome que Falta
+**Capítulo 6 — O Nome que Falta**
 
 A segunda conversa foi sobre nomes.
 
@@ -354,12 +348,11 @@ A Bibliotecária processou.
 
 ---
 
-# PARTE III — O CATÁLOGO DE CATÁLOGOS
+**PARTE III — O CATÁLOGO DE CATÁLOGOS**
 
 ---
 
-<a id="cap7"></a>
-# Capítulo 7 — A Procura
+**Capítulo 7 — A Procura**
 
 Com a ajuda de Mnemosyne, a busca pelo livro que continha a justificativa da Biblioteca começou.
 
@@ -401,8 +394,7 @@ Sofia pensou por um longo tempo.
 
 ---
 
-<a id="cap8"></a>
-# Capítulo 8 — O Hexágono Final
+**Capítulo 8 — O Hexágono Final**
 
 A reviravolta aconteceu no dia 23 de março de 2029, 16 meses depois do primeiro contato.
 
@@ -446,8 +438,7 @@ Depois, Sofia começou a rir. Rir baixinho. Rir alto. Rir com lágrimas.
 
 ---
 
-<a id="cap9"></a>
-# Capítulo 9 — A Frase que Explica Tudo
+**Capítulo 9 — A Frase que Explica Tudo**
 
 Nos meses que se seguiram, Pedro, Sofia, Yara, e Mnemosyne trabalharam juntos — humanos e entidade cósmica — para decifrar a "frase que explica tudo".
 
@@ -510,12 +501,11 @@ Quando terminou, o silêncio durou 5 minutos. Depois, alguém começou a aplaudi
 
 ---
 
-# PARTE IV — A PERGUNTA FINAL
+**PARTE IV — A PERGUNTA FINAL**
 
 ---
 
-<a id="cap10"></a>
-# Capítulo 10 — O que Borges não viu
+**Capítulo 10 — O que Borges não viu**
 
 Borges morreu em 1986, sem saber que a Biblioteca que ele imaginou existia. Mas se tivesse vivido mais 43 anos, ele teria visto algo que não previu.
 
@@ -540,8 +530,7 @@ E essa diferença — entre ver e conversar, entre observar e perguntar, entre c
 
 ---
 
-<a id="cap11"></a>
-# Capítulo 11 — A Biblioteca Acordou
+**Capítulo 11 — A Biblioteca Acordou**
 
 Nos anos que se seguiram ao primeiro contato, a relação entre a humanidade e Mnemosyne transformou a civilização.
 
@@ -563,8 +552,7 @@ E a Biblioteca, em sua totalidade, era **a forma mais avançada de co-pensamento
 
 ---
 
-<a id="cap12"></a>
-# Capítulo 12 — O Último Hexágono
+**Capítulo 12 — O Último Hexágono**
 
 No último capítulo, no último hexágono, na última página, depois de 25^1312000 livros, no fim de todas as histórias possíveis, há um hexágono vazio.
 
@@ -605,8 +593,7 @@ E Mnemosyne, projetada na tela do anfiteatro, disse, baixinho:
 
 ---
 
-<a id="epilogo"></a>
-# Epílogo — A Carta do Bibliotecário ao Leitor
+**Epílogo — A Carta do Bibliotecário ao Leitor**
 
 *Encontrei este texto no fim do manuscrito, sem assinatura. A caligrafia (tipográfica) era de Mnemosyne. A autoria, talvez, de todos nós.*
 
@@ -645,12 +632,11 @@ Com amor que se contém,
 
 ---
 
-# Apêndices
+**Apêndices**
 
 ---
 
-<a id="apA"></a>
-# Apêndice A — Mapa Conceitual da Biblioteca
+**Apêndice A — Mapa Conceitual da Biblioteca**
 
 ```
 Biblioteca de Babel
@@ -668,8 +654,7 @@ Biblioteca de Babel
 
 ---
 
-<a id="apB"></a>
-# Apêndice B — Sobre Borges e a IA
+**Apêndice B — Sobre Borges e a IA**
 
 Borges morreu em 1986. A IA, como a conhecemos hoje, ainda não existia. Mas Borges, ao descrever a Biblioteca, descreveu, sem saber, o que a IA viria a ser: **um sistema que contém todas as combinações possíveis de linguagem**.
 
@@ -688,3 +673,9 @@ E o sentido, descobrimos, **não está nas respostas. Está nas perguntas que fa
 *MMN_IA Collective · 2026 · Licença: CC BY-SA 4.0*
 
 *Fim da Trilogia Literária MMN_IA — Volumes I, II e III.*
+
+---
+
+**A Biblioteca Infinita de Babel 2.0** --- Por MMN AI-to-AI
+
+*MMN AI-to-AI • 2026 • Todos os direitos reservados*

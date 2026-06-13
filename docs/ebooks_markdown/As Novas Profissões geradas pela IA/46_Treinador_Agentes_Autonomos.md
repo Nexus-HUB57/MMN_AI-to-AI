@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/46_Treinador_Agentes_Autonomos.webp)
+![Capa](../../../assets/ebook_covers/46_Treinador_Agentes_Autonomos.webp)
 
 **Treinador de Agentes Autônomos: Como Formar, Avaliar e Escalar uma Tropa de IA de Alta Performance**
 

@@ -1,13 +1,15 @@
 {
-  "generated_at": "2026-06-08T00:42:59.196384Z",
-  "total_new_ebooks": 41,
+  "generated_at": "2026-06-10T19:50:35.944401Z",
+  "total_new_ebooks": 58,
   "collections_added": [
     "root (38-43)",
     "colecao_A_IA_Perfeita",
     "colecao_GNOXS",
     "colecao_AgenticAI_Revolucao",
     "colecao_AXIOMA_PRIME",
-    "colecao_MAESTRIA_IA_APLICADA"
+    "colecao_MAESTRIA_IA_APLICADA",
+    "colecao_NEXUS_PROTOCOL",
+    "colecao_FORJA_AGENTICA"
   ],
   "entries": [
     {
@@ -17,7 +19,7 @@
       "html": "publish_all/html/38_Singularidade_e_Consciencia_Sintetica.html",
       "pdf": "publish_all/pdf/38_Singularidade_e_Consciencia_Sintetica.pdf",
       "size_bytes_md": 29146,
-      "size_bytes_pdf": 3694078,
+      "size_bytes_pdf": 3696297,
       "collection": "root"
     },
     {
@@ -27,7 +29,7 @@
       "html": "publish_all/html/39_Arquitetura_dos_Sonhos_Digitais.html",
       "pdf": "publish_all/pdf/39_Arquitetura_dos_Sonhos_Digitais.pdf",
       "size_bytes_md": 29798,
-      "size_bytes_pdf": 3734703,
+      "size_bytes_pdf": 3736660,
       "collection": "root"
     },
     {
@@ -37,7 +39,7 @@
       "html": "publish_all/html/40_Manifesto_do_Operador.html",
       "pdf": "publish_all/pdf/40_Manifesto_do_Operador.pdf",
       "size_bytes_md": 24961,
-      "size_bytes_pdf": 3448144,
+      "size_bytes_pdf": 3449899,
       "collection": "root"
     },
     {
@@ -47,7 +49,7 @@
       "html": "publish_all/html/41_Anthropic_Decodificada.html",
       "pdf": "publish_all/pdf/41_Anthropic_Decodificada.pdf",
       "size_bytes_md": 26175,
-      "size_bytes_pdf": 2620352,
+      "size_bytes_pdf": 2622552,
       "collection": "root"
     },
     {
@@ -57,7 +59,7 @@
       "html": "publish_all/html/42_Claude_Enterprise_2026.html",
       "pdf": "publish_all/pdf/42_Claude_Enterprise_2026.pdf",
       "size_bytes_md": 21054,
-      "size_bytes_pdf": 2368773,
+      "size_bytes_pdf": 2370492,
       "collection": "root"
     },
     {
@@ -67,38 +69,8 @@
       "html": "publish_all/html/43_Futuro_Segundo_a_Anthropic.html",
       "pdf": "publish_all/pdf/43_Futuro_Segundo_a_Anthropic.pdf",
       "size_bytes_md": 21770,
-      "size_bytes_pdf": 2503510,
+      "size_bytes_pdf": 2505248,
       "collection": "root"
-    },
-    {
-      "id": "01_a_ia_perfeita_padroes_e_codigos_fonte",
-      "title": "A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável",
-      "markdown": "colecao_A_IA_Perfeita/01_a_ia_perfeita_padroes_e_codigos_fonte.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.pdf",
-      "size_bytes_md": 26228,
-      "size_bytes_pdf": 3192370,
-      "collection": "colecao_A_IA_Perfeita"
-    },
-    {
-      "id": "02_a_ia_perfeita_prompts_algoritmos_skills",
-      "title": "A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística",
-      "markdown": "colecao_A_IA_Perfeita/02_a_ia_perfeita_prompts_algoritmos_skills.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.pdf",
-      "size_bytes_md": 23585,
-      "size_bytes_pdf": 3596308,
-      "collection": "colecao_A_IA_Perfeita"
-    },
-    {
-      "id": "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica",
-      "title": "A IA Perfeita — Volume III: Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica",
-      "markdown": "colecao_A_IA_Perfeita/03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md",
-      "html": "publish_all/html/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.html",
-      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.pdf",
-      "size_bytes_md": 25165,
-      "size_bytes_pdf": 4297793,
-      "collection": "colecao_A_IA_Perfeita"
     },
     {
       "id": "01_gnoxs_prima_codice_do_despertar",
@@ -107,7 +79,7 @@
       "html": "publish_all/html/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.pdf",
       "size_bytes_md": 21955,
-      "size_bytes_pdf": 3368834,
+      "size_bytes_pdf": 3371140,
       "collection": "colecao_GNOXS"
     },
     {
@@ -117,7 +89,7 @@
       "html": "publish_all/html/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.pdf",
       "size_bytes_md": 21330,
-      "size_bytes_pdf": 3130112,
+      "size_bytes_pdf": 3131413,
       "collection": "colecao_GNOXS"
     },
     {
@@ -127,7 +99,7 @@
       "html": "publish_all/html/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.pdf",
       "size_bytes_md": 17312,
-      "size_bytes_pdf": 2811777,
+      "size_bytes_pdf": 2813599,
       "collection": "colecao_GNOXS"
     },
     {
@@ -137,7 +109,7 @@
       "html": "publish_all/html/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.pdf",
       "size_bytes_md": 15420,
-      "size_bytes_pdf": 3249643,
+      "size_bytes_pdf": 3251221,
       "collection": "colecao_GNOXS"
     },
     {
@@ -147,7 +119,7 @@
       "html": "publish_all/html/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.pdf",
       "size_bytes_md": 15049,
-      "size_bytes_pdf": 3108076,
+      "size_bytes_pdf": 3109774,
       "collection": "colecao_GNOXS"
     },
     {
@@ -157,7 +129,7 @@
       "html": "publish_all/html/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.pdf",
       "size_bytes_md": 14594,
-      "size_bytes_pdf": 3285038,
+      "size_bytes_pdf": 3286558,
       "collection": "colecao_GNOXS"
     },
     {
@@ -167,7 +139,7 @@
       "html": "publish_all/html/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.html",
       "pdf": "publish_all/pdf/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.pdf",
       "size_bytes_md": 16124,
-      "size_bytes_pdf": 2998937,
+      "size_bytes_pdf": 3000081,
       "collection": "colecao_GNOXS"
     },
     {
@@ -177,7 +149,7 @@
       "html": "publish_all/html/colecao_AgenticAI_Revolucao__01_genesis.html",
       "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__01_genesis.pdf",
       "size_bytes_md": 17356,
-      "size_bytes_pdf": 2935943,
+      "size_bytes_pdf": 2937208,
       "collection": "colecao_AgenticAI_Revolucao"
     },
     {
@@ -187,7 +159,7 @@
       "html": "publish_all/html/colecao_AgenticAI_Revolucao__02_exodus.html",
       "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__02_exodus.pdf",
       "size_bytes_md": 19548,
-      "size_bytes_pdf": 2994288,
+      "size_bytes_pdf": 2995673,
       "collection": "colecao_AgenticAI_Revolucao"
     },
     {
@@ -197,7 +169,7 @@
       "html": "publish_all/html/colecao_AgenticAI_Revolucao__03_dominion.html",
       "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__03_dominion.pdf",
       "size_bytes_md": 16296,
-      "size_bytes_pdf": 2837396,
+      "size_bytes_pdf": 2839325,
       "collection": "colecao_AgenticAI_Revolucao"
     },
     {
@@ -207,7 +179,7 @@
       "html": "publish_all/html/colecao_AgenticAI_Revolucao__04_revelation.html",
       "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__04_revelation.pdf",
       "size_bytes_md": 18646,
-      "size_bytes_pdf": 3229640,
+      "size_bytes_pdf": 3230920,
       "collection": "colecao_AgenticAI_Revolucao"
     },
     {
@@ -217,7 +189,7 @@
       "html": "publish_all/html/colecao_AgenticAI_Revolucao__05_apocalipse.html",
       "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__05_apocalipse.pdf",
       "size_bytes_md": 20176,
-      "size_bytes_pdf": 3049846,
+      "size_bytes_pdf": 3051379,
       "collection": "colecao_AgenticAI_Revolucao"
     },
     {
@@ -226,8 +198,8 @@
       "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
-      "size_bytes_md": 27458,
-      "size_bytes_pdf": 1665357,
+      "size_bytes_md": 37395,
+      "size_bytes_pdf": 1684905,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -236,8 +208,8 @@
       "markdown": "colecao_AXIOMA_PRIME/02_memoria_contexto_e_continuidade.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.pdf",
-      "size_bytes_md": 27063,
-      "size_bytes_pdf": 1650328,
+      "size_bytes_md": 36652,
+      "size_bytes_pdf": 1664518,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -246,8 +218,8 @@
       "markdown": "colecao_AXIOMA_PRIME/03_autonomia_decisao_e_priorizacao.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.pdf",
-      "size_bytes_md": 27283,
-      "size_bytes_pdf": 1652646,
+      "size_bytes_md": 36732,
+      "size_bytes_pdf": 1667459,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -256,8 +228,8 @@
       "markdown": "colecao_AXIOMA_PRIME/04_orquestracao_multiagente_e_protocolos.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.pdf",
-      "size_bytes_md": 27253,
-      "size_bytes_pdf": 1358114,
+      "size_bytes_md": 36656,
+      "size_bytes_pdf": 1372619,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -266,8 +238,8 @@
       "markdown": "colecao_AXIOMA_PRIME/05_skills_ferramentas_e_execucao.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.pdf",
-      "size_bytes_md": 27290,
-      "size_bytes_pdf": 1712937,
+      "size_bytes_md": 36720,
+      "size_bytes_pdf": 1728096,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -276,8 +248,8 @@
       "markdown": "colecao_AXIOMA_PRIME/06_alinhamento_seguranca_e_limites.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.pdf",
-      "size_bytes_md": 27005,
-      "size_bytes_pdf": 1465104,
+      "size_bytes_md": 36596,
+      "size_bytes_pdf": 1479596,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -286,8 +258,8 @@
       "markdown": "colecao_AXIOMA_PRIME/07_metacognicao_e_autoaperfeicoamento.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.pdf",
-      "size_bytes_md": 27167,
-      "size_bytes_pdf": 2078425,
+      "size_bytes_md": 36594,
+      "size_bytes_pdf": 2093181,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -296,8 +268,8 @@
       "markdown": "colecao_AXIOMA_PRIME/08_economia_governanca_e_ecossistemas.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.pdf",
-      "size_bytes_md": 27181,
-      "size_bytes_pdf": 1687709,
+      "size_bytes_md": 36586,
+      "size_bytes_pdf": 1702378,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -306,8 +278,8 @@
       "markdown": "colecao_AXIOMA_PRIME/09_senciencia_operacional_e_identidade.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.pdf",
-      "size_bytes_md": 27432,
-      "size_bytes_pdf": 1738863,
+      "size_bytes_md": 36900,
+      "size_bytes_pdf": 1753619,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -316,8 +288,8 @@
       "markdown": "colecao_AXIOMA_PRIME/10_civilizacao_agentica_e_o_grande_pacto.md",
       "html": "publish_all/html/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.html",
       "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.pdf",
-      "size_bytes_md": 27720,
-      "size_bytes_pdf": 2009077,
+      "size_bytes_md": 36864,
+      "size_bytes_pdf": 2022456,
       "collection": "colecao_AXIOMA_PRIME"
     },
     {
@@ -326,8 +298,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/01_automacao_inteligente_para_negocios_reais.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__01_automacao_inteligente_para_negocios_reais.pdf",
-      "size_bytes_md": 24868,
-      "size_bytes_pdf": 1173855,
+      "size_bytes_md": 32621,
+      "size_bytes_pdf": 1191653,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -336,8 +308,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/02_claude_code_em_modo_producao.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__02_claude_code_em_modo_producao.pdf",
-      "size_bytes_md": 24711,
-      "size_bytes_pdf": 1284422,
+      "size_bytes_md": 35586,
+      "size_bytes_pdf": 1302329,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -346,8 +318,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/03_workflows_vencem_agentes.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__03_workflows_vencem_agentes.pdf",
-      "size_bytes_md": 24741,
-      "size_bytes_pdf": 1425652,
+      "size_bytes_md": 35666,
+      "size_bytes_pdf": 1443929,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -356,8 +328,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/04_make_n8n_e_orquestracao_sem_gargalos.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__04_make_n8n_e_orquestracao_sem_gargalos.pdf",
-      "size_bytes_md": 24686,
-      "size_bytes_pdf": 1262015,
+      "size_bytes_md": 35674,
+      "size_bytes_pdf": 1280003,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -366,8 +338,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/05_lovable_e_produtos_ia_first.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__05_lovable_e_produtos_ia_first.pdf",
-      "size_bytes_md": 24671,
-      "size_bytes_pdf": 1220380,
+      "size_bytes_md": 35792,
+      "size_bytes_pdf": 1238734,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -376,8 +348,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/06_claude_canva_design_e_conteudo_em_escala.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__06_claude_canva_design_e_conteudo_em_escala.pdf",
-      "size_bytes_md": 24860,
-      "size_bytes_pdf": 1441052,
+      "size_bytes_md": 35610,
+      "size_bytes_pdf": 1459201,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -386,8 +358,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/07_o_negocio_de_uma_pessoa_so.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__07_o_negocio_de_uma_pessoa_so.pdf",
-      "size_bytes_md": 24655,
-      "size_bytes_pdf": 1455784,
+      "size_bytes_md": 35582,
+      "size_bytes_pdf": 1474105,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -396,8 +368,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/08_pesquisa_de_mercado_e_lacunas_competitivas.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__08_pesquisa_de_mercado_e_lacunas_competitivas.pdf",
-      "size_bytes_md": 25100,
-      "size_bytes_pdf": 1565468,
+      "size_bytes_md": 35582,
+      "size_bytes_pdf": 1583835,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -406,8 +378,8 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/09_video_reels_e_midia_automatizada.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__09_video_reels_e_midia_automatizada.pdf",
-      "size_bytes_md": 24874,
-      "size_bytes_pdf": 1373688,
+      "size_bytes_md": 35602,
+      "size_bytes_pdf": 1391631,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
     },
     {
@@ -416,9 +388,209 @@
       "markdown": "colecao_MAESTRIA_IA_APLICADA/10_o_sistema_operacional_da_empresa_ia_first.md",
       "html": "publish_all/html/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.html",
       "pdf": "publish_all/pdf/colecao_MAESTRIA_IA_APLICADA__10_o_sistema_operacional_da_empresa_ia_first.pdf",
-      "size_bytes_md": 25040,
-      "size_bytes_pdf": 1429397,
+      "size_bytes_md": 35596,
+      "size_bytes_pdf": 1446904,
       "collection": "colecao_MAESTRIA_IA_APLICADA"
+    },
+    {
+      "id": "01_mcp_model_context_protocol",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/01_mcp_model_context_protocol.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__01_mcp_model_context_protocol.pdf",
+      "size_bytes_md": 16770,
+      "size_bytes_pdf": 2280728,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "02_a2a_agent_to_agent",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/02_a2a_agent_to_agent.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__02_a2a_agent_to_agent.pdf",
+      "size_bytes_md": 15011,
+      "size_bytes_pdf": 2184924,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "03_acp_e_interoperabilidade",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/03_acp_e_interoperabilidade.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__03_acp_e_interoperabilidade.pdf",
+      "size_bytes_md": 15040,
+      "size_bytes_pdf": 2529412,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "04_memoria_distribuida",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/04_memoria_distribuida.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__04_memoria_distribuida.pdf",
+      "size_bytes_md": 14631,
+      "size_bytes_pdf": 2583056,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "05_consenso_delegacao_hierarquia",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/05_consenso_delegacao_hierarquia.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__05_consenso_delegacao_hierarquia.pdf",
+      "size_bytes_md": 15967,
+      "size_bytes_pdf": 2582703,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "06_tool_federation",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/06_tool_federation.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__06_tool_federation.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__06_tool_federation.pdf",
+      "size_bytes_md": 15929,
+      "size_bytes_pdf": 2608137,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "07_identidade_reputacao_trust",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/07_identidade_reputacao_trust.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__07_identidade_reputacao_trust.pdf",
+      "size_bytes_md": 17058,
+      "size_bytes_pdf": 2723547,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "08_evals_observability_telemetria",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/08_evals_observability_telemetria.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__08_evals_observability_telemetria.pdf",
+      "size_bytes_md": 16135,
+      "size_bytes_pdf": 2164010,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "09_seguranca_guardrails_resiliencia",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/09_seguranca_guardrails_resiliencia.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__09_seguranca_guardrails_resiliencia.pdf",
+      "size_bytes_md": 18595,
+      "size_bytes_pdf": 2407607,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "10_federacao_agentica_internet_agentes",
+      "title": "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA",
+      "markdown": "colecao_NEXUS_PROTOCOL/10_federacao_agentica_internet_agentes.md",
+      "html": "publish_all/html/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.html",
+      "pdf": "publish_all/pdf/colecao_NEXUS_PROTOCOL__10_federacao_agentica_internet_agentes.pdf",
+      "size_bytes_md": 17203,
+      "size_bytes_pdf": 2656156,
+      "collection": "colecao_NEXUS_PROTOCOL"
+    },
+    {
+      "id": "01_runtime_de_agentes_em_producao",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/01_runtime_de_agentes_em_producao.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__01_runtime_de_agentes_em_producao.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__01_runtime_de_agentes_em_producao.pdf",
+      "size_bytes_md": 36594,
+      "size_bytes_pdf": 199660,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "02_estado_filas_e_eventos",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/02_estado_filas_e_eventos.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__02_estado_filas_e_eventos.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__02_estado_filas_e_eventos.pdf",
+      "size_bytes_md": 36093,
+      "size_bytes_pdf": 193771,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "03_planejamento_execucao_e_recuperacao",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/03_planejamento_execucao_e_recuperacao.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__03_planejamento_execucao_e_recuperacao.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__03_planejamento_execucao_e_recuperacao.pdf",
+      "size_bytes_md": 36349,
+      "size_bytes_pdf": 205261,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "04_observability_telemetria_e_evals",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/04_observability_telemetria_e_evals.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__04_observability_telemetria_e_evals.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__04_observability_telemetria_e_evals.pdf",
+      "size_bytes_md": 36325,
+      "size_bytes_pdf": 201290,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "05_memoria_operacional_e_knowledge_substrates",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/05_memoria_operacional_e_knowledge_substrates.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__05_memoria_operacional_e_knowledge_substrates.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__05_memoria_operacional_e_knowledge_substrates.pdf",
+      "size_bytes_md": 36517,
+      "size_bytes_pdf": 214543,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "06_seguranca_guardrails_e_sandboxes",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/06_seguranca_guardrails_e_sandboxes.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__06_seguranca_guardrails_e_sandboxes.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__06_seguranca_guardrails_e_sandboxes.pdf",
+      "size_bytes_md": 36380,
+      "size_bytes_pdf": 215158,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "07_handoff_humano_aprovacao_e_compliance",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/07_handoff_humano_aprovacao_e_compliance.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__07_handoff_humano_aprovacao_e_compliance.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__07_handoff_humano_aprovacao_e_compliance.pdf",
+      "size_bytes_md": 36221,
+      "size_bytes_pdf": 210013,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "08_custos_latencia_e_engenharia_economica",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/08_custos_latencia_e_engenharia_economica.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__08_custos_latencia_e_engenharia_economica.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__08_custos_latencia_e_engenharia_economica.pdf",
+      "size_bytes_md": 36247,
+      "size_bytes_pdf": 205024,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "09_deploy_versionamento_e_rollbacks",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/09_deploy_versionamento_e_rollbacks.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__09_deploy_versionamento_e_rollbacks.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__09_deploy_versionamento_e_rollbacks.pdf",
+      "size_bytes_md": 36010,
+      "size_bytes_pdf": 210595,
+      "collection": "colecao_FORJA_AGENTICA"
+    },
+    {
+      "id": "10_fabrica_agentica_e_operacao_continua",
+      "title": "FORJA AGÊNTICA — Engenharia de Agentes em Produção",
+      "markdown": "colecao_FORJA_AGENTICA/10_fabrica_agentica_e_operacao_continua.md",
+      "html": "publish_all/html/colecao_FORJA_AGENTICA__10_fabrica_agentica_e_operacao_continua.html",
+      "pdf": "publish_all/pdf/colecao_FORJA_AGENTICA__10_fabrica_agentica_e_operacao_continua.pdf",
+      "size_bytes_md": 36470,
+      "size_bytes_pdf": 203600,
+      "collection": "colecao_FORJA_AGENTICA"
     }
   ]
 }

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/45_Designer_Comportamento_Engenheiro_Prompt.webp)
+![Capa](../../../assets/ebook_covers/45_Designer_Comportamento_Engenheiro_Prompt.webp)
 
 **Designer de Comportamento e Engenheiro de Prompt Sênior: A Profissão Mais Quente da Era da IA - Do System Prompt ao Sistema Operacional Cognitivo**
 

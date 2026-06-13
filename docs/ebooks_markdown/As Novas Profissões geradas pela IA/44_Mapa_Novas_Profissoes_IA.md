@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/44_Mapa_Novas_Profissoes_IA.webp)
+![Capa](../../../assets/ebook_covers/44_Mapa_Novas_Profissoes_IA.webp)
 
 **O Mapa das Novas Profissões da IA: Guia Completo das Carreiras que a Inteligência Artificial Está Criando, Transformando e Eliminando**
 

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/48_Empreendedor_Produtos_IA_Skill_SaaS.webp)
+![Capa](../../../assets/ebook_covers/48_Empreendedor_Produtos_IA_Skill_SaaS.webp)
 
 **Empreendedor de Produtos IA: De Skill a SaaS a Marketplace - O Manual Definitivo Para Construir, Escalar e Monetizar Produtos Baseados em IA**
 

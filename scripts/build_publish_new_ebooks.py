@@ -26,12 +26,12 @@ PUBLISH_ALL_PDF.mkdir(parents=True, exist_ok=True)
 
 # CSS premium para ebooks (Word-like; PDF impresso A4)
 CSS_BASE = """
-@page { size: A4; margin: 22mm 18mm 22mm 18mm; }
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
 html { font-family: 'Georgia', 'Times New Roman', serif; }
 body {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 11pt;
-  line-height: 1.55;
+  font-size: 12.3pt;
+  line-height: 1.68;
   color: #1a1a1a;
   background: #ffffff;
   max-width: 820px;
@@ -43,10 +43,10 @@ h1, h2, h3, h4 {
   color: #0b1d33;
   page-break-after: avoid;
 }
-h1 { font-size: 24pt; margin: 22pt 0 12pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
-h2 { font-size: 16pt; margin: 18pt 0 8pt; color: #122e54; }
-h3 { font-size: 13pt; margin: 14pt 0 6pt; color: #1f3f6e; }
-h4 { font-size: 11.5pt; margin: 10pt 0 4pt; color: #2a4f8c; }
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
 p  { margin: 0 0 9pt 0; text-align: justify; }
 blockquote {
   border-left: 3px solid #5a8ad4;
@@ -151,6 +151,32 @@ MAESTRIA_IA = [
     ("colecao_MAESTRIA_IA_APLICADA", "08_pesquisa_de_mercado_e_lacunas_competitivas"),
     ("colecao_MAESTRIA_IA_APLICADA", "09_video_reels_e_midia_automatizada"),
     ("colecao_MAESTRIA_IA_APLICADA", "10_o_sistema_operacional_da_empresa_ia_first"),
+]
+
+NEXUS_PROTOCOL = [
+    ("colecao_NEXUS_PROTOCOL", "01_mcp_model_context_protocol"),
+    ("colecao_NEXUS_PROTOCOL", "02_a2a_agent_to_agent"),
+    ("colecao_NEXUS_PROTOCOL", "03_acp_e_interoperabilidade"),
+    ("colecao_NEXUS_PROTOCOL", "04_memoria_distribuida"),
+    ("colecao_NEXUS_PROTOCOL", "05_consenso_delegacao_hierarquia"),
+    ("colecao_NEXUS_PROTOCOL", "06_tool_federation"),
+    ("colecao_NEXUS_PROTOCOL", "07_identidade_reputacao_trust"),
+    ("colecao_NEXUS_PROTOCOL", "08_evals_observability_telemetria"),
+    ("colecao_NEXUS_PROTOCOL", "09_seguranca_guardrails_resiliencia"),
+    ("colecao_NEXUS_PROTOCOL", "10_federacao_agentica_internet_agentes"),
+]
+
+FORJA_AGENTICA = [
+    ("colecao_FORJA_AGENTICA", "01_runtime_de_agentes_em_producao"),
+    ("colecao_FORJA_AGENTICA", "02_estado_filas_e_eventos"),
+    ("colecao_FORJA_AGENTICA", "03_planejamento_execucao_e_recuperacao"),
+    ("colecao_FORJA_AGENTICA", "04_observability_telemetria_e_evals"),
+    ("colecao_FORJA_AGENTICA", "05_memoria_operacional_e_knowledge_substrates"),
+    ("colecao_FORJA_AGENTICA", "06_seguranca_guardrails_e_sandboxes"),
+    ("colecao_FORJA_AGENTICA", "07_handoff_humano_aprovacao_e_compliance"),
+    ("colecao_FORJA_AGENTICA", "08_custos_latencia_e_engenharia_economica"),
+    ("colecao_FORJA_AGENTICA", "09_deploy_versionamento_e_rollbacks"),
+    ("colecao_FORJA_AGENTICA", "10_fabrica_agentica_e_operacao_continua"),
 ]
 
 md_extensions = ["extra", "tables", "fenced_code", "sane_lists", "toc", "codehilite"]
@@ -269,12 +295,36 @@ def main():
         manifest_entries.append(entry)
         print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
 
+    print("=== Coleção NEXUS PROTOCOL ===")
+    for col_dir, stem in NEXUS_PROTOCOL:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
+    print("=== Coleção FORJA AGÊNTICA ===")
+    for col_dir, stem in FORJA_AGENTICA:
+        md_path = EBOOKS_DIR / col_dir / f"{stem}.md"
+        if not md_path.exists():
+            print(f"  SKIP missing: {md_path}")
+            continue
+        out_name = f"{col_dir}__{stem}"
+        entry = build_ebook(md_path, f"{out_name}.html", f"{out_name}.pdf")
+        entry["collection"] = col_dir
+        manifest_entries.append(entry)
+        print(f"  + {out_name}  ({entry['size_bytes_pdf']//1024} KB pdf)")
+
     # ---------- Manifest consolidado ----------
     manifest_path = EBOOKS_DIR / "manifest_new_ebooks_2026-06-07.json"
     manifest_data = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "total_new_ebooks": len(manifest_entries),
-        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME", "colecao_MAESTRIA_IA_APLICADA"],
+        "collections_added": ["root (38-43)", "colecao_A_IA_Perfeita", "colecao_GNOXS", "colecao_AgenticAI_Revolucao", "colecao_AXIOMA_PRIME", "colecao_MAESTRIA_IA_APLICADA", "colecao_NEXUS_PROTOCOL", "colecao_FORJA_AGENTICA"],
         "entries": manifest_entries,
     }
     manifest_path.write_text(json.dumps(manifest_data, indent=2, ensure_ascii=False), encoding="utf-8")

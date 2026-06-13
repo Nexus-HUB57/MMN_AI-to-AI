@@ -2,15 +2,15 @@
 title: "INDEX · Academ'IA"
 description: "Índice semântico e mapeamento de habilidades transversais"
 tags: [index, knowledge-map, transversal-skills]
-version: 1.1.0
-last_updated: 2026-06-02
+version: 1.2.0
+last_updated: 2026-06-12
 ---
 
 # 📑 ÍNDICE · Academ'IA
 
 > **Mapa completo do HUB.** Use `Ctrl/Cmd+F` para busca rápida ou tags transversais para correlação semântica via Obsidian.
 
-> **Versão 1.1.0** · Última atualização 2026-06-02 · 15 cursos · 40 tools · 8 prompts · 14 tutoriais · 7 playbooks · 3 webinars
+> **Versão 1.2.0** · Última atualização 2026-06-12 · 15 cursos · 10 apostilas · 40 tools · 8 prompts · 14 tutoriais · 7 playbooks · 3 webinars (expandidos)
 > 
 > 👉 **Novo?** Leia primeiro o [`RESUMO_EXECUTIVO.md`](RESUMO_EXECUTIVO.md) (TL;DR de 1 página).
 > 👉 **Histórico de versões:** [`CHANGELOG.md`](CHANGELOG.md)
@@ -25,6 +25,20 @@ last_updated: 2026-06-02
 | 💎 Top 10% da rede | [`cursos/elite/00-blueprints-elite.md`](cursos/elite/00-blueprints-elite.md) | 60 min |
 | 🧪 Quer ferramentas prontas | [`Lab-Nexus/tools/`](Lab-Nexus/tools/) | Prático |
 | 📖 Quer consultar referência técnica | [`Lib-Nexus/knowledge-base/`](Lib-Nexus/knowledge-base/) | Direto |
+| 📕 Quer formação estruturada | [`apostilas/`](apostilas/) | Sequencial |
+
+## 📕 [`apostilas/`](apostilas/) — 10 Apostilas Oficiais (NOVO · 2026)
+
+- [01 - Apresentação Oficial da Infraestrutura](apostilas/01-apresentacao-infraestrutura.md) ✅ NOVO
+- [02 - Cases Reais de Orquestração Autônoma](apostilas/02-cases-orquestracao-autonoma.md) ✅ NOVO
+- [03 - Infraestrutura Operacional de IA](apostilas/03-infra-operacional-ia.md) ✅ NOVO
+- [04 - Orquestração Híbrida de Agentes](apostilas/04-orquestracao-hibrida-agentes.md) ✅ NOVO
+- [05 - As 7 Telas Essenciais do Dia a Dia](apostilas/05-sete-telas-essenciais.md) ✅ NOVO
+- [06 - Setup Completo do Agente Pessoal](apostilas/06-setup-agente-pessoal.md) ✅ NOVO
+- [07 - As 18 Skills Operacionais Base](apostilas/07-18-skills-operacionais.md) ✅ NOVO
+- [08 - Rotina de Disparo com Agente](apostilas/08-rotina-disparo-agente.md) ✅ NOVO
+- [09 - Campanhas Automatizadas (Whatsapp/Instagram)](apostilas/09-campanhas-automatizadas.md) ✅ NOVO
+- [10 - Jornada Completa do Afiliado](apostilas/10-jornada-completa-afiliado.md) ✅ NOVO
 
 ## 📘 Trilhas de Cursos
 
@@ -72,11 +86,11 @@ Para Top 10% — blueprints internos e operação avançada.
 - **CEN+** — Certificação Elite Nexus
 - **Modelo de avaliação** — Critérios e rubrica
 
-## 📡 [`webinars/`](webinars/) — Gravações
+## 📡 [`webinars/`](webinars/) — Gravações (apostilas expandidas em 12/06/2026)
 
-- **WB-2026-01** — Lançamento do IOAID
-- **WB-2026-02** — SHO em produção
-- **WB-2026-03** — Academ'IA Open House (🟡 15/06/2026)
+- **WB-2026-01** — Lançamento do IOAID ✅ (apostila expandida)
+- **WB-2026-02** — SHO em produção ✅ (apostila expandida)
+- **WB-2026-03** — Academ'IA Open House (🟡 15/06/2026) ✅ (apostila expandida)
 
 ## ⚡ [`tutoriais/`](tutoriais/) — How-to rápidos (14 tutoriais)
 
@@ -92,7 +106,9 @@ Para Top 10% — blueprints internos e operação avançada.
 
 - **PB-LANCAMENTO** — Lançamento 7 dias
 - **PB-WHATSAPP** — Operação diária WhatsApp
-- **PB-CRISES** — Gestão de crises
+- **PB-EMAIL** — Operação diária E-mail
+- **PB-LGPD** — Direitos do Titular (compliance)
+- **PB-CRISES** — Gestão de crises (ban WhatsApp, data loss, autonomia)
 
 ## 🧪 [`Lab-Nexus/`](Lab-Nexus/) — HUB de Ferramentas IA
 
@@ -136,4 +152,4 @@ Para Top 10% — blueprints internos e operação avançada.
 
 ---
 
-**Versão 1.1.0** · Atualizado em 2026-06-02
+**Versão 1.2.0** · Atualizado em 2026-06-12

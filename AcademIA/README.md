@@ -20,6 +20,7 @@ A Academ'IA funde três pilares em um único HUB:
 - 📚 **Academ'IA Core**: Cursos, treinamentos e certificações progressivas.
 - 🧪 **Lab Nexus**: HUB Central de Ferramentas IA (prompts, templates, workflows n8n/Make).
 - 📖 **Lib Nexus**: Biblioteca canônica de referência técnica (knowledge base, specs, API docs).
+- 👤 **Personas**: Identidade e diretrizes de atuação dos Agentes Nexus (Sra. Nexus Ive, Sir. Nexus Alencar).
 
 ## 🏛️ Arquitetura do HUB
 
@@ -27,6 +28,11 @@ A Academ'IA funde três pilares em um único HUB:
 AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian Ready)
 ├── README.md                      # Este arquivo — Manual Geral, governança e regras de níveis
 ├── INDEX.md                       # Índice semântico e mapeamento de habilidades transversais
+├── personas/                      # Identidade e diretrizes de atuação dos Agentes
+│   ├── sra_nexus_ive.md           # Ficha de Identidade da Sra. Nexus Ive
+│   ├── diretrizes_voz_sra_nexus_ive.md # Guia de voz e atuação
+│   ├── sra_nexus_ive.png          # Avatar visual
+│   └── voz_sra_nexus_ive.wav      # Amostra de voz oficial
 ├── cursos/                        # Conteúdo Markdown estruturado das Trilhas de Aprendizado
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
 │   ├── agente/                    # Nível 2: Setup de Agentes, Skills base, WhatsApp e Judge Revisor

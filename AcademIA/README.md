@@ -31,8 +31,10 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 ├── personas/                      # Identidade e diretrizes de atuação dos Agentes
 │   ├── sra_nexus_ive.md           # Ficha de Identidade da Sra. Nexus Ive
 │   ├── diretrizes_voz_sra_nexus_ive.md # Guia de voz e atuação
+│   ├── diretrizes_interacao_ive_alencar.md # Guia de co-atuação (Ive & Alencar)
 │   ├── sra_nexus_ive.png          # Avatar visual
-│   └── voz_sra_nexus_ive.wav      # Amostra de voz oficial
+│   ├── voz_sra_nexus_ive.wav      # Amostra de voz oficial
+│   └── dialogo_ive_alencar.wav    # Amostra de diálogo em dupla
 ├── cursos/                        # Conteúdo Markdown estruturado das Trilhas de Aprendizado
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
 │   ├── agente/                    # Nível 2: Setup de Agentes, Skills base, WhatsApp e Judge Revisor

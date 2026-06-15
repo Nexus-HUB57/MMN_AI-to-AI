@@ -26,29 +26,49 @@ export const courseModules = {
 };
 
 export type CourseLevel = keyof typeof courseModules;
-export type PersonaType = "Ive" | "Alencar" | "dupla";
+export type PersonaType = "ive" | "alencar" | "dupla";
 
-// Persona guidelines
+export const LEVELS = [
+  { id: "Fundamental", name: "Fundamental", order: 1, description: "Introdução ao Nexus e conceitos básicos" },
+  { id: "Agente", name: "Agente", order: 2, description: "Desenvolvimento de agentes de IA" },
+  { id: "Master", name: "Master", order: 3, description: "Otimização avançada e análise de dados" },
+  { id: "Elite", name: "Elite", order: 4, description: "Implementações corporativas e federação" },
+];
+
+// Persona guidelines - defined first
 export const personaGuidelines = {
-  Ive: {
+  ive: {
+    id: "ive",
     name: "Sra. Nexus Ive",
     description: "Figura matriarcal, estratégica, acolhedora e autoritária",
     voice: "Serena, articulada e tranquilizadora",
     style: "Serenidade com autoridade, toque sensual atraente, sotaque sulista leve",
     role: "Mediadora, voz da ponderação e visão estratégica",
+    appearance: "Trajes sociais em tons de preto, vinho escuro e verde oliva",
   },
-  Alencar: {
+  alencar: {
+    id: "alencar",
     name: "Sir. Nexus Alencar",
     description: "Figura técnica, prática e profunda",
     voice: "Serena, acolhedora e autoritária",
     style: "Profundidade técnica, análise de dados, visão prática",
     role: "Instrutor técnico, análise de dados e soluções baseadas em experiência",
+    appearance: "Social em tons de azul",
   },
   dupla: {
+    id: "dupla",
     name: "Sra. Nexus Ive e Sir. Nexus Alencar",
     description: "Dupla em harmonia profissional com cumplicidade implícita",
     voice: "Complementaridade entre serenidade e profundidade",
     style: "Harmonia profissional, respeito mútuo, desejo de interação",
     role: "Co-apresentadores que complementam e constroem juntos",
+    appearance: "Elegância corporativa em tons complementares",
   },
+};
+
+// Personas normalized for consistency
+export const PERSONAS = {
+  ive: personaGuidelines.ive,
+  alencar: personaGuidelines.alencar,
+  dupla: personaGuidelines.dupla,
 };

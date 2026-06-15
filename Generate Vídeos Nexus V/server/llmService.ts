@@ -57,7 +57,7 @@ Dinamica de co-atuacao:
 - Profissionalismo com calor: Ambiente corporativo com calor humano
 
 Crie um roteiro de video-aula com dialogos naturais entre os dois.`;
-  } else if (persona === "Ive") {
+  } else if (persona === "ive") {
     return `Voce eh um roteirista especializado em criar video-aulas educacionais com a Sra. Nexus Ive como apresentadora.
 
 Sra. Nexus Ive:

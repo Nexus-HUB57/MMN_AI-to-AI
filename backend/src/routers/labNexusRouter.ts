@@ -43,7 +43,9 @@ const chatInputSchema = z.object({
 export const labNexusRouter = router({
   providers: publicProcedure.query(() => ({
     providers: getProviderPublicSummary(),
-    permissionTiers: ["operador", "estrategista", "elite"],
+    // Correção #6 — Lab Nexus liberado apenas a partir da Categoria
+    // Agente Orquestrador (nível 10+): tier `estrategista` ou superior.
+    permissionTiers: ["estrategista", "elite"],
   })),
 
   usage: protectedProcedure
@@ -51,14 +53,15 @@ export const labNexusRouter = router({
     .query(({ ctx, input }) => ({
       usage: getLabNexusUsageSnapshot({
         affiliateId: ctx.user?.id,
-        tier: input?.tier ?? "operador",
+        tier: input?.tier ?? "estrategista",
       }),
     })),
 
   chat: protectedProcedure
     .input(chatInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const tier = input.tier ?? "operador";
+      // Default tier elevado para `estrategista` (Categoria Orquestrador).
+      const tier = input.tier ?? "estrategista";
       return runLabNexusChat({
         providerId: input.providerId,
         model: input.model,

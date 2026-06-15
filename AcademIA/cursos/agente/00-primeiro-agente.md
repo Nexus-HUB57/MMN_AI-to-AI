@@ -2,129 +2,191 @@
 title: "00 · Seu primeiro agente"
 level: agente
 duration: 30min
-prerequisites: ["fundamental"]
-tags: [agentes, baseAgent, marketingAgent, setup, runtime]
-last_updated: 2026-06-02
+prerequisites: ["03-painel-afiliado"]
+tags: [agente, primeiro-agente, setup, copywriter, segmenter, judge]
+last_updated: 2026-06-13
+version: "2.0.0"
+pattern: "MMN_IA"
 ---
 
-# 🤖 00 · Seu primeiro agente
+![Capa — Seu primeiro agente](../../assets/ebook_covers/ACAD-apostila-06-setup-agente-pessoal.webp)
 
-> **Tempo:** 30 min · **Nível:** Agente · **Pré-requisitos:** Nível Fundamental completo
+**00 · Seu primeiro agente**
 
-## O que é um agente (no Nexus)
+*Trilha Agente · 30 minutos · Pré-requisito: 03-Painel do Afiliado*
 
-Um agente no Nexus é uma **persona com bundle de skills + autonomia**. Ele é uma entidade de software que:
+**Por Equipe Nexus · Academ'IA**
 
-- Tem **objetivo** (ex: "converter leads em clientes do produto X")
-- Tem **skills atribuídas** (ex: copywriter + audience-segmenter)
-- Tem **autonomia configurada** (limiares do SHO)
-- Tem **identidade visível** no painel (nome, avatar, score)
+Nexus Affil'IA'te · 2026
 
-> Diferente de um script, o agente decide **quais skills usar e em que ordem** com base no contexto.
+**Sobre este curso**
 
-## Os 2 agentes base do Nexus
+Chegou a hora de criar seu primeiro agente funcional. Este curso é o **tutorial guiado** — em 30 minutos você sai com 1 agente rodando, 3 skills instaladas, Judge calibrado, e 1 campanha de teste disparada. Para o tutorial detalhado de 90 minutos (com troubleshooting avançado), consulte a **Apostila 06** (Setup Completo do Agente Pessoal). Aqui, vamos direto ao ponto.
 
-A base atual (`backend/src/agentic/agents/`) tem:
+**Sumário**
 
-| Agente | Função | Bundle padrão |
-|---|---|---|
-| `marketingAgent.ts` | Operação de marketing ponta a ponta | copywriter, auto-publisher, follow-up, judge |
-| `baseAgent.ts` | Classe base para criar novos | (vazio, é a fundação) |
-
-## Anatomia de um agente
-
-```typescript
-// Pseudo-código — baseAgent.ts
-class Agent {
-  id: number;
-  name: string;
-  goal: string;
-  skills: SkillSlug[];     // skills atribuídas
-  autonomy: {
-    autoApprove: boolean;
-    riskLimit: number;     // em R$
-    confidenceThreshold: number;  // 0..1
-  };
-  memory: AgentMemory;     // episodic + semantic
-  judge: JudgeClient;      // avaliação secundária
-}
-```
-
-## Seu primeiro agente: setup
-
-### Passo 1 — Acesse o painel
-**Admin Runtime → "Criar Agente"**
-
-### Passo 2 — Preencha
-- **Nome:** `Meu Agente de WhatsApp`
-- **Objetivo:** `Converter leads do produto X em compradores via WhatsApp`
-- **Avatar:** escolha um dos disponíveis
-
-### Passo 3 — Escolha as skills
-Para um agente de WhatsApp conservador, comece com:
-
-- ✅ `audience-segmenter` (segmenta antes de disparar)
-- ✅ `copywriter-persuasivo` (gera 3 variações de copy)
-- ✅ `judge-revisor` (avalia antes de enviar)
-- ✅ `auto-publisher` (whatsapp dispatcher)
-
-### Passo 4 — Configure autonomia (SHO)
-Para começar, **operação segura**:
-
-```yaml
-autoApprove:         true
-riskLimit:           R$ 50   # limite de gasto por batch
-confidenceThreshold: 0.75
-dispatcher:          whatsapp
-```
-
-### Passo 5 — Salve e ative
-O agente aparece em **Admin Runtime** com o status 🟢 ativo.
-
-## Como rodar o primeiro ciclo
-
-```
-1. Vá em "Admin Runtime"
-2. Selecione seu agente
-3. Clique "Gerar"
-4. Escolha audiência: 50 contatos do segmento "lead frio"
-5. Clique "Executar"
-6. Acompanhe a fila de aprovações em tempo real
-7. Aprove ou rejeite cada sugestão do Judge
-8. Veja o relatório 1h depois
-```
-
-## O que esperar
-
-- **80%** das mensagens serão auto-aprovadas
-- **20%** cairão na fila para sua revisão (normal)
-- Judge reprova **~5%** (média do sistema)
-- Latência média: **1.2s** por mensagem
-
-## 🚨 Troubleshooting
-
-| Sintoma | Causa provável | Solução |
-|---|---|---|
-| Nada é auto-aprovado | `confidenceThreshold` muito alto | Abaixe para `0.70` |
-| Judge reprova tudo | Prompt de copy genérico | Use o template do Lab Nexus |
-| Fila lotada | Volume muito alto para 1 agente | Divida em 2 agentes por segmento |
-| Latência > 5s | Cache Redis frio | Espere 5 min ou reinicie o dispatcher |
-
-## 🎯 Exercício
-
-Crie **1 agente** com as 4 skills listadas acima e rode **1 ciclo real** com 30 contatos.
-
-Documente:
-
-- **Auto-aprovação:** ___% (meta: > 75%)
-- **Judge reprovação:** ___% (meta: < 10%)
-- **Latência média:** ___s (meta: < 2s)
-- **CTR inicial:** ___% (referência para A/B futuro)
-
-## ⏭️ Próximo passo
-
-👉 [**01 · Skills essenciais**](01-skills-essenciais.md)
+> **•** 1. Antes de começar: o que você precisa
+> **•** 2. Criar o agente (5 min)
+> **•** 3. Instalar 3 skills básicas (10 min)
+> **•** 4. Configurar o Judge Revisor (5 min)
+> **•** 5. Primeira campanha de teste (5 min)
+> **•** 6. Monitorar e iterar (5 min)
+> **•** 7. Erros comuns do primeiro agente
+> **•** 8. Quando expandir para mais skills
+> **•** 9. Checklist final
+> **•** 10. Próximo curso
 
 ---
 
-**Versão 1.0** · Atualizado 2026-06-02 · Fonte: `backend/src/agentic/agents/baseAgent.ts` + `marketingAgent.ts`
+**1. Antes de começar: o que você precisa**
+
+- Conta ativa no Nexus com **perfil completo** (nome, banco, nicho).
+- **Pelo menos 1 produto** conectado com link de afiliado.
+- **Pelo menos 100 contatos** importados (ou em importação).
+- **30 minutos de foco** (sem interrupção).
+
+Se algum desses itens falta, volte ao curso 03-Painel e complete primeiro.
+
+**2. Criar o agente (5 min)**
+
+**Caminho:** `/dashboard/agents/new`
+
+1. **Nome descritivo**: `agente_pessoal_<seu_nome>` (ex: `agente_pessoal_marina`).
+2. **Objetivo em 1 frase**: "Atender leads do nicho [X], qualificar interesse, e direcionar para compra de [produto Y]."
+3. **Template**: escolha "Pessoal — Solo Afiliado" (o mais simples).
+4. **Clique "Criar"**.
+
+O sistema provisiona o agente (cria sandbox, registra, configura log) em ~30 segundos.
+
+**Resultado:** você verá o painel do agente com 4 abas: Visão Geral, Skills, Judge, Logs.
+
+**3. Instalar 3 skills básicas (10 min)**
+
+**Caminho:** `/dashboard/agents/<id>/skills`
+
+Instale nessa ordem (comece com o botão "Adicionar Skill"):
+
+**Skill 1 — `copywriter-whatsapp`**
+- Versão: 2.3.1 (estável).
+- Tom: "consultivo" (default).
+- Idioma: pt-BR.
+- Tamanho máximo: 240 caracteres.
+- Custo estimado: R$ 0,012 por geração.
+
+**Skill 2 — `audience-segmenter`**
+- Versão: 1.4.0.
+- Configuração: deixar padrão (já reconhece 4 coortes).
+- Custo: R$ 0,016 por análise.
+
+**Skill 3 — `judge-revisor`**
+- Versão: 3.0.0.
+- Template: "Conservador LGPD".
+- Custo: R$ 0,004 por revisão.
+
+**Clique "Salvar e Ativar"**.
+
+**4. Configurar o Judge Revisor (5 min)**
+
+**Caminho:** `/dashboard/judge`
+
+**Configuração inicial (essencial):**
+
+1. **Modo**: "Bloqueio Total" (Judge reprova → mensagem não é enviada).
+2. **Regras habilitadas** (todas marcadas):
+   - ✅ LGPD: bloquear sem consentimento.
+   - ✅ Spam: bloquear palavras-gatilho.
+   - ✅ Claim médico: bloquear claims sem evidência.
+   - ✅ Tom: bloquear agressividade.
+   - ✅ Personalização: exigir nome do lead.
+3. **Whitelist**: adicione termos autorizados (nome do produto).
+4. **Blacklist**: adicione termos proibidos (concorrentes).
+5. **Testar Judge**: escreva mensagem de exemplo e veja o veredito.
+6. Salvar.
+
+**Por que "Bloqueio Total" no início?** Porque você ainda não conhece os limites. Depois de 30 dias, pode mudar para "Alerta" (mais permissivo).
+
+**5. Primeira campanha de teste (5 min)**
+
+**Caminho:** `/dashboard/dispatch/new`
+
+**Passo a passo:**
+
+1. **Nome**: `Teste_Inicial_<data>` (ex: `Teste_Inicial_20260613`).
+2. **Coorte**: escolha uma pequena primeiro (sugestão: "Novos" com 50 contatos).
+3. **Objetivo da mensagem** (linguagem natural): "Dar boas-vindas aos novos leads, apresentar o produto X, e convidar para uma conversa."
+4. **Gerar Copy com Skill** — copywriter cria 3 variações.
+5. **Escolha a melhor** ou edite.
+6. **Horário**: agende para 30 minutos no futuro.
+7. **Frequência**: "Disparo único".
+8. **Revisar com Judge** (botão no preview).
+9. **Aprovar**.
+
+**Tempo:** ~5 minutos. Agora aguarde 30 minutos até o horário agendado.
+
+**6. Monitorar e iterar (5 min)**
+
+Após o disparo, vá para `/dashboard/dispatch/<id>` e monitore:
+
+- **Enviadas**: contador subindo.
+- **Bloqueadas pelo Judge**: se > 20%, copy inadequada.
+- **Latência**: se > 5s, problema técnico.
+- **Judge selos**: quantas mensagens foram 🟢🟡🔴.
+
+**Após 24 horas**, meça:
+- Taxa de abertura (> 70% é meta).
+- Taxa de resposta (> 5% é meta).
+- Taxa de conversão (> 0.5% é meta).
+
+**Se conversão < 0.5%:** itere. Mude copy OU mude horário OU mude coorte. 1 variável por vez.
+
+**Se conversão > 0.5%:** escale. Aumente base (200, 500, 1000).
+
+**7. Erros comuns do primeiro agente**
+
+- **Erro 1**: Instalar 5+ skills no primeiro agente. Resultado: confusão, custo alto, baixa conversão.
+- **Erro 2**: Desativar Judge. Resultado: ban WhatsApp em 7 dias.
+- **Erro 3**: Disparar para base inteira logo de cara. Resultado: queima base.
+- **Erro 4**: Mudar copy todo dia. Resultado: nunca tem dados suficientes.
+- **Erro 5**: Não medir. Resultado: otimização no escuro.
+- **Erro 6**: Esperar perfeição na primeira campanha. Resultado: desistência.
+
+**8. Quando expandir para mais skills**
+
+**Após 30 dias** com 3 skills eJudge calibrado, você pode adicionar:
+
+- `analytics-cohort` (análise semanal).
+- `automation-cron-trigger` (agendamento automático).
+- `copywriter-email` (e-mail marketing).
+
+**Após 60 dias**, considere adicionar:
+- `marketing-cohort-recommender`.
+- `analytics-funnel`.
+
+**Após 90 dias**, o agente pode ter 5-7 skills e estar em produção plena.
+
+**9. Checklist final**
+
+Antes de considerar seu primeiro agente "pronto":
+
+- [ ] Agente criado com nome descritivo.
+- [ ] 3 skills básicas instaladas.
+- [ ] Judge configurado em "Bloqueio Total".
+- [ ] Whitelist e Blacklist preenchidas.
+- [ ] 1 campanha de teste disparada.
+- [ ] Métricas de 24h avaliadas.
+- [ ] Conversão > 0.5% (ou iterar).
+- [ ] Backup de configuração exportado.
+
+**10. Próximo curso**
+
+👉 [`01-skills-essenciais.md`](01-skills-essenciais.md) — Skills Essenciais · 30 min
+
+**Recursos extras:**
+- **Apostila 06**: Setup Completo do Agente Pessoal (tutorial 90min com troubleshooting).
+- **Apostila 07**: 18 Skills Operacionais Base (catálogo completo).
+
+---
+
+**00 · Seu primeiro agente** --- Trilha Agente
+
+*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

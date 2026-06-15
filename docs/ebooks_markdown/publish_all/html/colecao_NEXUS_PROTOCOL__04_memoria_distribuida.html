@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 12.3pt;
+  line-height: 1.68;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 4
+roman: "IV"
+title: "Memória Distribuída entre Agentes"
+subtitle: "Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/nexus_protocol_04_memoria_distribuida.webp" /></p>
+<h2 id="volume-iv-memoria-distribuida-entre-agentes">Volume IV — Memória Distribuída entre Agentes</h2>
+<p><strong>Compartilhamento, isolamento e linhagem de memória em arquiteturas multi-agente.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> O que um agente pode lembrar do outro sem violar contrato ou identidade?</p>
+</blockquote>
+<hr />
+<h2 id="sumario">Sumário</h2>
+<blockquote>
+<ol>
+<li>Por que memória compartilhada é mais difícil que compute compartilhado</li>
+<li>Taxonomia: working, episódica, semântica, procedural</li>
+<li>Namespaces, escopos e o problema do vazamento</li>
+<li>Vector stores compartilhados: trade-offs reais</li>
+<li>Linhagem (provenance) e o direito de revogação</li>
+<li>Sincronização: CRDT, event sourcing, snapshots</li>
+<li>Memória semântica via grafos de conhecimento</li>
+<li>Esquecer corretamente: TTL, decaimento e GDPR</li>
+<li>Padrões de federação: hub-and-spoke vs malha</li>
+<li>Manifesto: memória é território, não dado</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-por-que-memoria-compartilhada-e-mais-dificil-que-compute-compartilhado">1. Por que memória compartilhada é mais difícil que compute compartilhado</h2>
+<p>Compartilhar compute entre agentes é um problema resolvido. Você roda em
+Kubernetes, define quotas, isola por namespace, e o tempo de máquina é
+fungível: o segundo de CPU de um agente é igual ao do outro.</p>
+<p>Memória agêntica não é assim. Uma "lembrança" carrega:</p>
+<ul>
+<li><strong>Origem semântica</strong> — quem viu o quê, em que contexto, com que confiança.</li>
+<li><strong>Identidade do observador</strong> — a percepção de um agente sobre um cliente
+  não é intercambiável com a percepção de outro agente sobre o mesmo cliente.</li>
+<li><strong>Privilégio implícito</strong> — saber que o cliente X cancelou em janeiro pode
+  ser informação que só um subset de agentes deveria portar.</li>
+<li><strong>Risco de envenenamento</strong> — uma lembrança injetada vira fundamento de
+  decisões futuras sem possibilidade de auditoria retroativa simples.</li>
+</ul>
+<p>Tratar memória agêntica como "Redis compartilhado" é o erro mais caro do
+multi-agente em produção. Você troca um problema de coordenação por um
+problema de <strong>vazamento epistemológico</strong>: agentes acreditando em coisas
+que nunca observaram, porque outro agente colocou no cache.</p>
+<h2 id="2-taxonomia-working-episodica-semantica-procedural">2. Taxonomia: working, episódica, semântica, procedural</h2>
+<p>Antes de qualquer arquitetura, uma taxonomia clara separa quatro tipos de
+memória que <strong>não devem ser misturados</strong> num mesmo store:</p>
+<p><strong>Working memory.</strong> Contexto da conversa/tarefa atual. Vida curta (minutos),
+escopo da sessão, alto custo de leitura (vai pro context window).
+Localização canônica: in-process ou cache rápido.</p>
+<p><strong>Episódica.</strong> Eventos vividos pelo agente: "atendi o cliente X em
+2026-05-01 às 14h, problema Y, resolução Z". Vida média (semanas a meses),
+escopo do agente individual ou do tenant. Imutável após criação.</p>
+<p><strong>Semântica.</strong> Fatos generalizados extraídos da experiência: "clientes do
+plano premium têm prioridade", "API X falha em horários de pico".
+Vida longa, escopo organizacional, mutável com cuidado e versionamento.</p>
+<p><strong>Procedural.</strong> Como fazer coisas: skills, workflows, playbooks executáveis.
+Vida longa, escopo de skill registry (ver Volume VI), versionável com semver.</p>
+<p>A separação importa porque cada categoria tem <strong>regras de compartilhamento
+diferentes</strong>. Working memory entre agentes vaza contexto privado.
+Episódica entre agentes embaralha identidade. Semântica entre agentes é o
+caso de uso óbvio. Procedural entre agentes é o objetivo final.</p>
+<h2 id="3-namespaces-escopos-e-o-problema-do-vazamento">3. Namespaces, escopos e o problema do vazamento</h2>
+<p>A unidade mínima de isolamento de memória agêntica é o <strong>namespace
+composto</strong>. Ele tem ao menos três dimensões:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">memória</span><span class="o">[</span><span class="n">tenant_id</span><span class="o">][</span><span class="n">agent_id</span><span class="o">][</span><span class="n">memory_kind</span><span class="o">][</span><span class="n">key</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span>
+</code></pre></div>
+
+<p>Onde:</p>
+<ul>
+<li><code>tenant_id</code> — fronteira de cliente/organização. Vazamento aqui é
+  incidente de segurança.</li>
+<li><code>agent_id</code> — fronteira de identidade agêntica. Vazamento aqui é
+  incidente de governança.</li>
+<li><code>memory_kind</code> — tipo (working/episódica/semântica/procedural).</li>
+</ul>
+<p>A regra canônica: <strong>leituras cross-namespace exigem justificativa explícita
+no trace</strong>. Não é uma chave esquecida no Redis — é um direito declarado.</p>
+<p>Anti-padrão recorrente: agentes que usam o mesmo embedding store sem
+namespace, "porque é só um pool de vetores". O resultado previsível é o
+agente do tenant A retornando contexto do tenant B na primeira consulta
+semântica similar. Não é hipótese — é o incidente mais reportado em
+post-mortems de RAG multi-tenant.</p>
+<h2 id="4-vector-stores-compartilhados-trade-offs-reais">4. Vector stores compartilhados: trade-offs reais</h2>
+<p>Quando a decisão é compartilhar memória semântica entre agentes (ex.: base
+de conhecimento corporativa), o vector store vira o componente crítico.
+Três escolhas arquiteturais dominam:</p>
+<p><strong>Single store + filtros de metadata.</strong> Um Pinecone/Weaviate/Qdrant global,
+cada documento taggeado com <code>tenant_id</code> e <code>visibility</code>. Buscas sempre
+incluem o filtro. <strong>Risco:</strong> filtro esquecido = vazamento total.
+<strong>Vantagem:</strong> custo de infra mínimo.</p>
+<p><strong>Store por tenant.</strong> Isolamento físico. Buscas cross-tenant tecnicamente
+impossíveis. <strong>Risco:</strong> custo multiplicado, complexidade de admin.
+<strong>Vantagem:</strong> garantias de compliance.</p>
+<p><strong>Híbrido: tiers.</strong> Tier "público" compartilhado; tier "privado" por tenant.
+Documentos sobem para o tier público apenas após review explícito.
+<strong>Risco:</strong> processo de promoção de tier vira gargalo.
+<strong>Vantagem:</strong> balanço operacional.</p>
+<p>A escolha real depende de uma pergunta simples: <strong>se um filtro fosse
+esquecido amanhã, qual seria o estrago?</strong>. Quem responde "nenhum" pode usar
+single store; quem responde "ação regulatória" usa por tenant; o resto
+tipicamente acaba em híbrido.</p>
+<h2 id="5-linhagem-provenance-e-o-direito-de-revogacao">5. Linhagem (provenance) e o direito de revogação</h2>
+<p>Toda memória federada precisa carregar <strong>proveniência verificável</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mem-9f3a2c&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;semantic&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cliente prefere contato por WhatsApp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;provenance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;source_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:web:atendimento.acme.com&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;source_session&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s-7e2b&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;observed_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-12T14:32:11Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.87</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;evidence_uri&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;audit-log://acme/2026-05/session-s-7e2b&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;tenant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;acme&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;visibility&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;internal&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-11-12T00:00:00Z&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;revocation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;revocable_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;did:web:atendimento.acme.com&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tenant-admin&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;revoked&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>A proveniência permite três operações que sem ela são impossíveis:</p>
+<ol>
+<li><strong>Auditoria retroativa.</strong> "Por que o agente decidiu X?" → segue a
+   cadeia de evidências até a observação original.</li>
+<li><strong>Revogação dirigida.</strong> Cliente exerce direito de esquecimento → todas
+   as memórias com <code>tenant=acme &amp; subject=cliente_X</code> são apagadas e os
+   agentes derivados são notificados.</li>
+<li><strong>Reputação por fonte.</strong> Memórias de um agente que historicamente
+   produz baixa precisão recebem peso menor em decisões agregadas.</li>
+</ol>
+<p>Quem não implementa proveniência desde o dia 1 retroage pagando o custo de
+reescrever toda a pipeline. É o tipo de decisão arquitetural cujo custo
+diferido cresce quadraticamente.</p>
+<h2 id="6-sincronizacao-crdt-event-sourcing-snapshots">6. Sincronização: CRDT, event sourcing, snapshots</h2>
+<p>Quando múltiplos agentes escrevem na mesma memória compartilhada,
+sincronização entra no jogo. Três técnicas dominam:</p>
+<p><strong>CRDTs (Conflict-free Replicated Data Types).</strong> Estruturas onde
+operações comutam: G-Counter, OR-Set, LWW-Register. Cada agente escreve
+local, sincroniza eventualmente, e a convergência é matemática, não
+acordada. Funciona para fatos aditivos ("cliente é premium"); falha para
+fatos com semântica de ordem ("cliente cancelou").</p>
+<p><strong>Event sourcing.</strong> A memória <strong>não é</strong> o estado — é o log de eventos.
+Cada agente emite eventos imutáveis; estado é projeção. Compartilhamento
+vira "consumir o mesmo log". Custo: storage cresce linearmente, queries
+exigem projeções materializadas.</p>
+<p><strong>Snapshots versionados.</strong> Cada agente mantém memória local; periodicamente
+publica snapshot assinado para outros. Simples, mas latência alta e
+janelas de inconsistência longas.</p>
+<p>Critério prático: para fatos com baixa frequência e alta criticidade, use
+event sourcing. Para fatos commutativos, CRDT. Snapshots só funcionam quando
+inconsistência temporária é tolerável.</p>
+<h2 id="7-memoria-semantica-via-grafos-de-conhecimento">7. Memória semântica via grafos de conhecimento</h2>
+<p>Vetor é bom para "encontrar coisas parecidas". É terrível para "navegar
+relações". Quando os agentes precisam responder "todos os clientes da
+empresa X que tiveram problema Y nos últimos 90 dias", o store certo é um
+<strong>grafo de conhecimento</strong>.</p>
+<p>Modelo canônico (RDF-like, simplificado):</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">&lt;cliente:42&gt;</span>  <span class="nn">rdf</span><span class="p">:</span><span class="nt">type</span>        <span class="p">:</span><span class="nt">Cliente</span> <span class="p">;</span>
+              <span class="p">:</span><span class="nt">plano</span>           <span class="s">&quot;premium&quot;</span> <span class="p">;</span>
+              <span class="p">:</span><span class="nt">ultimo_contato</span>  <span class="s">&quot;2026-05-12&quot;</span> <span class="p">.</span>
+
+<span class="nv">&lt;incidente:99&gt;</span>  <span class="nn">rdf</span><span class="p">:</span><span class="nt">type</span>        <span class="p">:</span><span class="nt">Incidente</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">afeta_cliente</span>  <span class="nv">&lt;cliente:42&gt;</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">categoria</span>      <span class="s">&quot;billing&quot;</span> <span class="p">;</span>
+                <span class="p">:</span><span class="nt">data</span>           <span class="s">&quot;2026-05-10&quot;</span> <span class="p">.</span>
+</code></pre></div>
+
+<p>Vantagens operacionais para multi-agente:</p>
+<ul>
+<li><strong>Updates atômicos por entidade.</strong> Agente atualiza <code>&lt;cliente:42&gt;</code> sem
+  reescrever embeddings.</li>
+<li><strong>Queries declarativas.</strong> SPARQL/Cypher substituem código imperativo.</li>
+<li><strong>Inferência sobre relações.</strong> "Quem é cliente do mesmo grupo que X?"
+  é trivial; em vetor é desastre.</li>
+</ul>
+<p>Combinação canônica para 2026: <strong>grafo para entidades e relações; vetor
+para texto e similaridade; ambos referenciados pela mesma proveniência</strong>.</p>
+<h2 id="8-esquecer-corretamente-ttl-decaimento-e-gdpr">8. Esquecer corretamente: TTL, decaimento e GDPR</h2>
+<p>Memória sem política de esquecimento é dívida técnica que vira passivo
+legal. Três mecanismos canônicos:</p>
+<p><strong>TTL explícito.</strong> Cada memória nasce com <code>expires_at</code>. Vencimento dispara
+arquivamento (não delete imediato) com janela de recuperação curta antes do
+hard delete.</p>
+<p><strong>Decaimento por relevância.</strong> Score de cada memória decresce com tempo e
+desuso; abaixo de um threshold, ela some das buscas (mesmo que ainda exista
+no store). Permite "esquecer praticamente" sem perder auditabilidade.</p>
+<p><strong>Direito de esquecimento (GDPR/LGPD).</strong> Operação <code>subject_erasure(subject_id)</code>
+percorre <strong>todos os stores e todos os derivados</strong> removendo conteúdo onde
+o titular é identificável. Inclui:
+- vetores derivados de texto que mencionavam o titular,
+- arestas em grafos,
+- logs de eventos (anonimizados, não deletados — preservam contagem),
+- checkpoints de fine-tuning derivados (caso aplicável).</p>
+<p>A operação só é confiável se a proveniência foi gravada desde o início.
+Tentar implementar esquecimento retroativamente em sistemas sem
+proveniência é trabalho de arqueologia — caro, incompleto e auditavelmente
+falho.</p>
+<h2 id="9-padroes-de-federacao-hub-and-spoke-vs-malha">9. Padrões de federação: hub-and-spoke vs malha</h2>
+<p>Quando memórias precisam atravessar fronteiras organizacionais (parceiros,
+fornecedores, marketplaces), dois topos dominam:</p>
+<p><strong>Hub-and-spoke.</strong> Um agregador central recebe contribuições dos agentes
+periféricos e redistribui. Pros: governança centralizada, auditoria simples.
+Cons: ponto único de falha, fornecedor central vira poderoso demais.</p>
+<p><strong>Malha (P2P).</strong> Agentes federam-se pareados, cada par com acordo bilateral.
+Pros: sem ponto central. Cons: complexidade de governança O(n²),
+revogação difícil.</p>
+<p>A escolha real em produção tende ao <strong>hub federado</strong>: vários hubs setoriais
+(finance, saúde, varejo) com interconexão limitada entre si. Modelo similar
+ao das clearinghouses bancárias. Funciona porque os trade-offs políticos
+batem com a realidade do mercado, não porque seja tecnicamente superior.</p>
+<h2 id="10-manifesto-memoria-e-territorio-nao-dado">10. Manifesto: memória é território, não dado</h2>
+<p>A indústria gosta de chamar memória de "dado": fungível, exportável,
+intercambiável. Em sistemas agênticos isso é mentira útil para vendedores
+de banco de dados.</p>
+<p>Memória agêntica é <strong>território</strong>: tem fronteira, tem dono, tem história,
+tem regras de entrada e saída. Tratá-la como dado leva a:</p>
+<ul>
+<li>Vazamento entre tenants ("ah, é só filtrar").</li>
+<li>Confusão de identidade ("o agente X aprendeu sozinho").</li>
+<li>Violação regulatória ("não rastreamos a origem").</li>
+<li>Decisões irrecuperáveis ("o embedding original foi sobrescrito").</li>
+</ul>
+<blockquote>
+<p><strong>Tese final do volume:</strong> Toda memória compartilhada entre agentes deve
+carregar proveniência, escopo e direito de revogação <strong>explícitos no
+próprio registro</strong>. Memória sem essas três propriedades não é memória
+distribuída — é vazamento institucionalizado com aparência de
+arquitetura.</p>
+</blockquote>
+<hr />
+<h2 id="checklist-canonico-memoria-distribuida">Checklist Canônico — Memória Distribuída</h2>
+<ul>
+<li>[ ] Taxonomia (working/episódica/semântica/procedural) implementada em stores separados.</li>
+<li>[ ] Namespace composto (<code>tenant/agent/kind/key</code>) obrigatório em todas as leituras.</li>
+<li>[ ] Proveniência (source_agent, observed_at, evidence_uri) em cada registro.</li>
+<li>[ ] Política de TTL aplicada por kind, com janela de arquivamento.</li>
+<li>[ ] Operação <code>subject_erasure</code> testada end-to-end (incluindo derivados).</li>
+<li>[ ] Grafo para entidades/relações; vetor para texto/similaridade.</li>
+<li>[ ] Sincronização escolhida por tipo de fato (CRDT/event/snapshot).</li>
+<li>[ ] Cross-namespace reads geram trace com justificativa.</li>
+<li>[ ] Vector store multi-tenant tem teste de leakage contínuo em CI.</li>
+<li>[ ] Plano de revogação por agente em caso de comprometimento testado.</li>
+</ul>
+<h2 id="glossario-do-volume">Glossário do Volume</h2>
+<ul>
+<li><strong>Working memory</strong> — contexto da tarefa atual, vida curta.</li>
+<li><strong>Episódica</strong> — eventos vividos pelo agente, imutável.</li>
+<li><strong>Semântica</strong> — fatos generalizados, mutável com versionamento.</li>
+<li><strong>Procedural</strong> — skills/workflows executáveis, versionados.</li>
+<li><strong>Proveniência</strong> — cadeia de evidência da origem de uma memória.</li>
+<li><strong>CRDT</strong> — estrutura cujas operações comutam, convergência matemática.</li>
+<li><strong>Subject Erasure</strong> — operação que remove memórias identificáveis de um titular.</li>
+<li><strong>Hub-and-spoke</strong> — topologia com agregador central.</li>
+</ul>
+<h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
+<p>Memória distribuída resolve o que cada agente <em>sabe</em>. Mas quando vários
+agentes precisam <strong>decidir junto</strong>, surge um problema diferente: consenso,
+delegação, hierarquia. Quem desempata? Como evitar que se travem em loop?
+Esse é o terreno do <strong>Volume V — Consenso, Delegação e Hierarquia
+Multi-Agente</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume IV · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
+</body>
+</html>

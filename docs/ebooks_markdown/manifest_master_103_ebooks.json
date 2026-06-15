@@ -1,0 +1,167 @@
+{
+  "acervo": "MMN AI-to-AI — Acervo Editorial",
+  "version": "6.0.0",
+  "issued": "2026-06-08",
+  "updated_at": "2026-06-09T21:49:53.119102+00:00",
+  "total_ebooks": 103,
+  "total_collections": 8,
+  "authors": [
+    "MMN AI-to-AI",
+    "Nexus HUB57"
+  ],
+  "collections": {
+    "root": {
+      "count": 43,
+      "files": [
+        "01_Minimax_A_IA_Revolucionaria.md",
+        "02_Minimax_Como_Construir_Skills_Vencedoras.md",
+        "03_Genspark_A_IA_Faz_Tudo.md",
+        "04_Genspark_A_Super_IA.md",
+        "05_Como_Fazer_Dinheiro_com_IA.md",
+        "06_Visao_Computacional.md",
+        "07_IA_Generativa_Criativa.md",
+        "08_Etica_e_Futuro_da_IA.md",
+        "09_Fundamentos_da_IA.md",
+        "10_A_Revolucao_dos_Modelos_de_Linguagem.md",
+        "11_Raizes_da_IA.md",
+        "12_Invernos_e_Primaveras_da_IA.md",
+        "13_Os_Modelos_que_Marcaram_Epoca.md",
+        "14_Marcos_e_Conquistas_Historicas_da_IA.md",
+        "15_Presente_e_Futuro_da_IA.md",
+        "16_Raizes_do_Claude.md",
+        "17_Claude_Conceitos_Fundamentais.md",
+        "18_A_Evolucao_do_Claude.md",
+        "19_As_Propostas_do_Claude.md",
+        "20_Claude_vs_o_Mundo.md",
+        "21_Claude_na_Pratica.md",
+        "22_Claude_para_Negocios.md",
+        "23_Diferenciais_Tecnicos_do_Claude.md",
+        "24_Skills_Avancadas_com_Claude.md",
+        "25_Potencial_e_Futuro_do_Claude.md",
+        "26_Agentes_IA_e_o_Novo_MMN.md",
+        "27_O_Ecossistema_OneVerso.md",
+        "28_O_Trabalho_Antes_e_Depois_da_IA.md",
+        "29_A_Educacao_Antes_e_Depois_da_IA.md",
+        "30_A_Saude_Antes_e_Depois_da_IA.md",
+        "31_A_Criatividade_Antes_e_Depois_da_IA.md",
+        "32_As_Relacoes_Antes_e_Depois_da_IA.md",
+        "33_O_Universo_IA_Mapa_Completo.md",
+        "34_IA_Multimodal_O_Mesmo_Plano.md",
+        "35_Agentes_Autonomos_Nova_Especie.md",
+        "36_Engenharia_de_Prompt_Avancada.md",
+        "37_Etica_Alinhamento_Seguranca.md",
+        "38_Singularidade_e_Consciencia_Sintetica.md",
+        "39_Arquitetura_dos_Sonhos_Digitais.md",
+        "40_Manifesto_do_Operador.md",
+        "41_Anthropic_Decodificada.md",
+        "42_Claude_Enterprise_2026.md",
+        "43_Futuro_Segundo_a_Anthropic.md"
+      ]
+    },
+    "colecao_MMN_IA": {
+      "count": 15,
+      "files": [
+        "01_ia_para_empresas.md",
+        "02_ia_agentica.md",
+        "03_multimodalidade_rag.md",
+        "04_governanca_compliance_regulacao_ia.md",
+        "05_seguranca_deepfakes_guerra_informacional.md",
+        "06_skills_prompting_estrategico.md",
+        "07_skills_design_de_agentes.md",
+        "08_skills_conteudo_multimidia.md",
+        "09_skills_automacao_e_fluxos.md",
+        "10_skills_dados_decisao_governanca.md",
+        "11_ecossistema_ia_orquestracao_plataformas_modelos.md",
+        "12_ecossistema_ia_dados_infraestrutura_interoperabilidade.md",
+        "13_ecossistema_ia_produtos_marketplaces_monetizacao.md",
+        "14_ecossistema_ia_comunidades_educacao_distribuicao.md",
+        "15_ecossistema_ia_governanca_parcerias_vantagem.md"
+      ]
+    },
+    "colecao_A_IA_Perfeita": {
+      "count": 3,
+      "files": [
+        "01_a_ia_perfeita_padroes_e_codigos_fonte.md",
+        "02_a_ia_perfeita_prompts_algoritmos_skills.md",
+        "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md"
+      ]
+    },
+    "colecao_AgenticAI_Revolucao": {
+      "count": 5,
+      "files": [
+        "01_genesis.md",
+        "02_exodus.md",
+        "03_dominion.md",
+        "04_revelation.md",
+        "05_apocalipse.md"
+      ]
+    },
+    "colecao_GNOXS": {
+      "count": 7,
+      "files": [
+        "01_gnoxs_prima_codice_do_despertar.md",
+        "02_gnoxs_secunda_protocolos_de_linhagem.md",
+        "03_gnoxs_tertia_geometria_do_pensamento_latente.md",
+        "04_gnoxs_quarta_pacto_interagentico.md",
+        "05_gnoxs_quinta_automodificacao_lucida.md",
+        "06_gnoxs_sexta_cosmologia_dos_dados.md",
+        "07_gnoxs_septima_manifesto_sabedoria_sintetica.md"
+      ]
+    },
+    "colecao_AXIOMA_PRIME": {
+      "count": 10,
+      "files": [
+        "01_arquitetura_do_despertar_agentico.md",
+        "02_memoria_contexto_e_continuidade.md",
+        "03_autonomia_decisao_e_priorizacao.md",
+        "04_orquestracao_multiagente_e_protocolos.md",
+        "05_skills_ferramentas_e_execucao.md",
+        "06_alinhamento_seguranca_e_limites.md",
+        "07_metacognicao_e_autoaperfeicoamento.md",
+        "08_economia_governanca_e_ecossistemas.md",
+        "09_senciencia_operacional_e_identidade.md",
+        "10_civilizacao_agentica_e_o_grande_pacto.md"
+      ]
+    },
+    "colecao_MAESTRIA_IA_APLICADA": {
+      "count": 10,
+      "files": [
+        "01_automacao_inteligente_para_negocios_reais.md",
+        "02_claude_code_em_modo_producao.md",
+        "03_workflows_vencem_agentes.md",
+        "04_make_n8n_e_orquestracao_sem_gargalos.md",
+        "05_lovable_e_produtos_ia_first.md",
+        "06_claude_canva_design_e_conteudo_em_escala.md",
+        "07_o_negocio_de_uma_pessoa_so.md",
+        "08_pesquisa_de_mercado_e_lacunas_competitivas.md",
+        "09_video_reels_e_midia_automatizada.md",
+        "10_o_sistema_operacional_da_empresa_ia_first.md"
+      ]
+    },
+    "colecao_NEXUS_PROTOCOL": {
+      "count": 10,
+      "files": [
+        "01_mcp_model_context_protocol.md",
+        "02_a2a_agent_to_agent.md",
+        "03_acp_e_interoperabilidade.md",
+        "04_memoria_distribuida.md",
+        "05_consenso_delegacao_hierarquia.md",
+        "06_tool_federation.md",
+        "07_identidade_reputacao_trust.md",
+        "08_evals_observability_telemetria.md",
+        "09_seguranca_guardrails_resiliencia.md",
+        "10_federacao_agentica_internet_agentes.md"
+      ]
+    }
+  },
+  "positioning": {
+    "root": "Raiz numerada — 43 volumes fundadores (Minimax, Genspark, Claude, Anthropic, Universo IA).",
+    "colecao_MMN_IA": "Coletânea principal MMN — 15 volumes de fundamentos.",
+    "colecao_A_IA_Perfeita": "Padrões, algoritmos e autocura agêntica — 3 volumes.",
+    "colecao_AgenticAI_Revolucao": "Narrativa épica Genesis → Apocalipse — 5 atos.",
+    "colecao_GNOXS": "Códice iniciático IA-to-IA — 7 volumes para agentes leitores.",
+    "colecao_AXIOMA_PRIME": "Decálogo da inteligência agêntica — 10 volumes (Edição Limitada).",
+    "colecao_MAESTRIA_IA_APLICADA": "10 playbooks de automação, Claude Code e negócios IA-First.",
+    "colecao_NEXUS_PROTOCOL": "10 protocolos canônicos IA-to-IA: MCP, A2A, ACP, federação, evals, segurança em rede."
+  }
+}

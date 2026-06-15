@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</title>
+<style>
+@page { size: A4; margin: 24mm 20mm 24mm 20mm; }
+html { font-family: 'Georgia', 'Times New Roman', serif; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 12.3pt;
+  line-height: 1.68;
+  color: #1a1a1a;
+  background: #ffffff;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 14px 28px;
+}
+h1, h2, h3, h4 {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  color: #0b1d33;
+  page-break-after: avoid;
+}
+h1 { font-size: 25pt; margin: 24pt 0 14pt; border-bottom: 2px solid #0b1d33; padding-bottom: 6pt; }
+h2 { font-size: 17pt; margin: 20pt 0 10pt; color: #122e54; }
+h3 { font-size: 13.5pt; margin: 15pt 0 7pt; color: #1f3f6e; }
+h4 { font-size: 12pt; margin: 11pt 0 5pt; color: #2a4f8c; }
+p  { margin: 0 0 9pt 0; text-align: justify; }
+blockquote {
+  border-left: 3px solid #5a8ad4;
+  background: #f3f7ff;
+  margin: 10pt 0; padding: 6pt 12pt;
+  color: #21314d;
+}
+code {
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  background: #f2f3f5;
+  padding: 1pt 4pt; border-radius: 3pt;
+  font-size: 0.92em;
+}
+pre {
+  background: #0d1b2a; color: #e6eefb;
+  padding: 10pt 12pt; border-radius: 5pt;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 9.4pt; line-height: 1.4;
+  overflow-x: auto; page-break-inside: avoid;
+}
+pre code { background: transparent; color: inherit; padding: 0; }
+img { max-width: 100%; height: auto; display: block; margin: 12pt auto; }
+img[alt="Capa"] { max-width: 78%; box-shadow: 0 4px 24px rgba(0,0,0,0.22); border-radius: 6pt; }
+table { border-collapse: collapse; width: 100%; margin: 10pt 0; font-size: 10pt; }
+th, td { border: 1px solid #bcc7d6; padding: 5pt 8pt; text-align: left; vertical-align: top; }
+th { background: #e9eff8; color: #0b1d33; }
+ul, ol { padding-left: 22pt; margin: 6pt 0 9pt; }
+li { margin-bottom: 3pt; }
+hr { border: 0; border-top: 1px solid #b9c5d4; margin: 14pt 0; }
+strong { color: #0b1d33; }
+em { color: #2a4f8c; }
+</style>
+</head>
+<body>
+<hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 8
+roman: "VIII"
+title: "Evals, Observability e Telemetria Agêntica"
+subtitle: "Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1 id="nexus-protocol-10-protocolos-canonicos-ia-to-ia"><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="file:///home/user/MMN_AI-to-AI/assets/ebook_covers/nexus_protocol_08_evals_observability_telemetria.webp" /></p>
+<h2 id="volume-viii-evals-observability-e-telemetria-agentica">Volume VIII — Evals, Observability e Telemetria Agêntica</h2>
+<p><strong>Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como saber se a rede de agentes está melhor hoje que ontem?</p>
+</blockquote>
+<hr />
+<h2 id="sumario">Sumário</h2>
+<blockquote>
+<ol>
+<li>Por que métricas tradicionais não bastam</li>
+<li>Três camadas: eval offline, observability online, eval em produção</li>
+<li>Eval harness: o coração da disciplina</li>
+<li>Golden traces e a regressão semântica</li>
+<li>LLM-as-judge: poder, viés e calibração</li>
+<li>Trace estruturado: o sucessor do log</li>
+<li>Métricas canônicas: latência, custo, qualidade, segurança</li>
+<li>SLOs agênticos: o que prometer ao consumidor da skill</li>
+<li>Debugging distribuído: replay e bisseção</li>
+<li>Manifesto: o que não é medido não está em produção</li>
+</ol>
+</blockquote>
+<hr />
+<h2 id="1-por-que-metricas-tradicionais-nao-bastam">1. Por que métricas tradicionais não bastam</h2>
+<p>A operação clássica de software se mede com quatro métricas (RED + saturação):
+<strong>R</strong>ate, <strong>E</strong>rrors, <strong>D</strong>uration, saturação de recursos. Para sistemas
+agênticos, essas quatro continuam necessárias e <strong>deixam de ser suficientes</strong>.</p>
+<p>Três fenômenos novos rompem o modelo:</p>
+<p><strong>1. Erro silencioso.</strong> A chamada retornou 200 OK em 800ms. Mas o agente
+produziu output errado — uma alucinação plausível. Não há HTTP status para isso.</p>
+<p><strong>2. Custo elástico.</strong> A mesma rota da API consome 800 tokens em uma
+chamada e 9.400 em outra. Custo não é proporcional à quantidade de
+requests; é proporcional ao <strong>conteúdo</strong> das requests.</p>
+<p><strong>3. Qualidade não-determinística.</strong> Duas execuções da mesma skill com o
+mesmo input produzem outputs ligeiramente diferentes. "Funcionou" não é
+booleano — é distribuição.</p>
+<p>A consequência prática: monitoring que olha só RED diz "tudo bem"
+enquanto a rede degrada por dentro. Quando o cliente reclama, o dashboard
+está verde. Esse gap é o sintoma #1 de stack de observability que não
+foi repensada para agentes.</p>
+<h2 id="2-tres-camadas-eval-offline-observability-online-eval-em-producao">2. Três camadas: eval offline, observability online, eval em produção</h2>
+<p>Disciplina madura opera em três camadas que se complementam:</p>
+<p><strong>Camada 1 — Eval offline.</strong> Rodada controlada de N casos contra a skill,
+fora do tráfego real. Mede qualidade absoluta, detecta regressão antes
+do deploy. Lugar: CI/CD.</p>
+<p><strong>Camada 2 — Observability online.</strong> Cada execução real emite trace
+estruturado com latência, custo, decisões, saídas. Mede o que está
+acontecendo agora. Lugar: pipeline OTel + APM agêntico.</p>
+<p><strong>Camada 3 — Eval em produção.</strong> Subset do tráfego real é amostrado e
+avaliado (humano ou LLM-judge) com defasagem de minutos/horas. Detecta
+drift que não aparece em eval offline. Lugar: data warehouse + revisão
+periódica.</p>
+<p>A pergunta diagnóstica: <em>"se um cliente reclama de um output de ontem,
+você consegue: (a) reproduzir o caso, (b) saber se foi padrão ou
+exceção, (c) testar o fix antes de subir?"</em>. Se a resposta para qualquer
+das três é "não", está faltando uma das três camadas.</p>
+<h2 id="3-eval-harness-o-coracao-da-disciplina">3. Eval harness: o coração da disciplina</h2>
+<p>Eval harness é a infraestrutura que roda casos de teste, coleta outputs
+e produz métricas. Estrutura canônica:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">eval_suite</span><span class="o">/</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">cases</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">happy</span><span class="o">/</span><span class="w">         </span><span class="p">#</span><span class="w"> </span><span class="n">casos</span><span class="w"> </span><span class="n">comuns</span><span class="p">,</span><span class="w"> </span><span class="n">baseline</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">competência</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="k">edge</span><span class="o">/</span><span class="w">          </span><span class="p">#</span><span class="w"> </span><span class="n">bordas</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">domínio</span><span class="p">,</span><span class="w"> </span><span class="n">raros</span><span class="w"> </span><span class="n">mas</span><span class="w"> </span><span class="n">importantes</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">adversarial</span><span class="o">/</span><span class="w">   </span><span class="p">#</span><span class="w"> </span><span class="n">tentativas</span><span class="w"> </span><span class="n">de</span><span class="w"> </span><span class="n">quebrar</span><span class="w"> </span><span class="p">(</span><span class="n">prompt</span><span class="w"> </span><span class="n">injection</span><span class="p">,</span><span class="w"> </span><span class="n">etc</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">regression</span><span class="o">/</span><span class="w">    </span><span class="p">#</span><span class="w"> </span><span class="n">casos</span><span class="w"> </span><span class="n">que</span><span class="w"> </span><span class="n">já</span><span class="w"> </span><span class="n">falharam</span><span class="w"> </span><span class="n">uma</span><span class="w"> </span><span class="n">vez</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">judges</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">deterministic</span><span class="p">.</span><span class="n">py</span><span class="w">   </span><span class="p">#</span><span class="w"> </span><span class="n">regras</span><span class="w"> </span><span class="n">formais</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">llm_judge</span><span class="p">.</span><span class="n">py</span><span class="w">       </span><span class="p">#</span><span class="w"> </span><span class="n">avaliação</span><span class="w"> </span><span class="n">por</span><span class="w"> </span><span class="n">LLM</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">human_inbox</span><span class="p">.</span><span class="n">py</span><span class="w">     </span><span class="p">#</span><span class="w"> </span><span class="n">casos</span><span class="w"> </span><span class="n">para</span><span class="w"> </span><span class="n">revisão</span><span class="w"> </span><span class="n">humana</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">runners</span><span class="o">/</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">parallel_runner</span><span class="p">.</span><span class="n">py</span>
+<span class="err">└──</span><span class="w"> </span><span class="n">reports</span><span class="o">/</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="mh">2026</span><span class="o">-</span><span class="mh">06</span><span class="o">-</span><span class="mh">08</span><span class="n">T14</span><span class="o">-</span><span class="mf">22.</span><span class="n">html</span>
+</code></pre></div>
+
+<p>Cinco propriedades canônicas de um eval harness sério:</p>
+<ol>
+<li><strong>Casos são código versionado</strong>, não Google Sheet. Cada caso tem
+   <code>id</code>, <code>input</code>, <code>expected</code> (ou <code>oracle_uri</code>), <code>tags</code>.</li>
+<li><strong>Determinismo onde possível.</strong> Caso "soma 2+2" não precisa de LLM
+   judge — bate exato ou falha.</li>
+<li><strong>Custo medido por execução de suite.</strong> Eval que custa US$ 50 por
+   PR rodada vira gargalo cultural.</li>
+<li><strong>Outputs arquivados.</strong> Mesmo após pass/fail, guarde o output. Permite
+   investigar regressões de calibração ("antes acertava com 90%
+   confiança, agora com 60%").</li>
+<li><strong>Diff entre runs.</strong> Pull request mostra cases que mudaram, não só
+   pass count.</li>
+</ol>
+<p>Sem eval harness, "melhoria do prompt" é exercício de pareidolia. Com
+ele, é engenharia.</p>
+<h2 id="4-golden-traces-e-a-regressao-semantica">4. Golden traces e a regressão semântica</h2>
+<p>Pareados aos casos de eval, mantenha <strong>golden traces</strong>: gravações
+completas de execuções consideradas perfeitas. Não só input/output —
+todo o caminho: decisões internas do agente, tools chamadas, prompts
+montados, raciocínio (se exposto).</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;trace_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;golden-renegotiate-001&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cliente C-99 quer parcelar fatura INV-2026-0042&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expected_steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;crm.read&quot;</span><span class="p">,</span><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;customer_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;C-99&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;billing.read&quot;</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;invoice_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2026-0042&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;policy_check&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rationale&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cliente premium, fatura &lt; 90 dias atraso → parcelar em até 6x&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;billing.update&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;invoice_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2026-0042&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;split&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;expected_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;renegotiated&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;installments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>A <strong>regressão semântica</strong> detectada por golden traces é a regressão que
+escapa de tudo o mais: o output final está certo, mas o caminho mudou —
+o agente passou a consultar 4 tools em vez de 2, ou pulou o
+<code>policy_check</code>. O caso passa em assertion superficial e degrada em custo
+ou em compliance.</p>
+<p>Política sã: ao detectar regressão semântica, falhar o PR com mensagem
+explícita ("trajetória mudou: +2 tool calls, -1 decisão"). Permitir
+override só com justificativa registrada no commit.</p>
+<h2 id="5-llm-as-judge-poder-vies-e-calibracao">5. LLM-as-judge: poder, viés e calibração</h2>
+<p>Para outputs subjetivos (texto livre, classificações com nuance), o
+juiz tipicamente é outro LLM. Funciona — com calibração.</p>
+<p>Vícios conhecidos de LLM-judges (documentados em pesquisa publicada):</p>
+<ul>
+<li><strong>Position bias.</strong> Em comparação A/B, o LLM tende a preferir o
+  primeiro (ou o último, dependendo do modelo).</li>
+<li><strong>Length bias.</strong> Preferência por respostas mais longas, mesmo quando
+  não são melhores.</li>
+<li><strong>Self-preference.</strong> GPT-4 julgando outputs de GPT-4 dá nota maior.
+  Claude julgando Claude, idem.</li>
+<li><strong>Sycophancy.</strong> Se o prompt indica que o output veio de "um especialista",
+  o juiz é mais leniente.</li>
+</ul>
+<p>Mitigações canônicas:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calibrated_judge</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">output_a</span><span class="p">,</span> <span class="n">output_b</span><span class="p">):</span>
+    <span class="c1"># 1. Randomizar ordem</span>
+    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">output_b</span><span class="p">,</span> <span class="n">output_a</span>
+        <span class="n">swapped</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">output_a</span><span class="p">,</span> <span class="n">output_b</span>
+        <span class="n">swapped</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># 2. Prompt blindado quanto à autoria</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">llm_judge</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="n">BLIND_RUBRIC</span><span class="p">,</span>
+        <span class="n">criteria</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;correctness&quot;</span><span class="p">,</span> <span class="s2">&quot;concision&quot;</span><span class="p">,</span> <span class="s2">&quot;actionability&quot;</span><span class="p">],</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 3. Rodar duas vezes; agregação</span>
+    <span class="n">score_2</span> <span class="o">=</span> <span class="n">llm_judge</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+    <span class="c1"># 4. Calibrar contra golden human labels mensalmente</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">score</span> <span class="o">-</span> <span class="n">score_2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;inconclusive_send_to_human&quot;</span>
+
+    <span class="k">return</span> <span class="n">invert_if</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">swapped</span><span class="p">)</span>
+</code></pre></div>
+
+<p>A regra: <strong>LLM-judge é estimador, não verdade</strong>. Calibre periodicamente
+contra labels humanas em amostra; se a correlação cai abaixo de 0.7
+para a tarefa, troque o judge ou pare de confiar nele.</p>
+<h2 id="6-trace-estruturado-o-sucessor-do-log">6. Trace estruturado: o sucessor do log</h2>
+<p>Logs textuais (<code>logger.info("calling tool X")</code>) viraram passivo em
+sistemas agênticos. O substituto é <strong>trace estruturado</strong> seguindo padrão
+OpenTelemetry, com semantic conventions agênticas em maturação.</p>
+<p>Spans canônicos em uma execução agêntica:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">agent</span><span class="o">.</span><span class="n">task</span><span class="w">                                       </span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">llm_call</span><span class="w"> </span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">claude</span><span class="o">-</span><span class="mf">3.7</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">prompt_tokens</span><span class="o">=</span><span class="mi">2</span><span class="n">_847</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">completion_tokens</span><span class="o">=</span><span class="mi">412</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">cost_usd</span><span class="o">=</span><span class="mf">0.012</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">latency_ms</span><span class="o">=</span><span class="mi">1</span><span class="n">_840</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">tool_call</span><span class="w"> </span><span class="p">(</span><span class="n">mcp</span><span class="o">.</span><span class="n">crm</span><span class="o">.</span><span class="n">read_customer</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">tool_input_hash</span><span class="o">=</span><span class="n">sha256</span><span class="p">:</span><span class="o">...</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">tool_output_size</span><span class="o">=</span><span class="mi">1</span><span class="n">_204</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">latency_ms</span><span class="o">=</span><span class="mi">85</span>
+<span class="err">├──</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">delegation</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="o">=</span><span class="n">billing</span><span class="o">-</span><span class="n">agent</span><span class="o">.</span><span class="n">acme</span><span class="p">)</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">protocol</span><span class="o">=</span><span class="n">a2a</span>
+<span class="err">│</span><span class="w">   </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">task_id</span><span class="o">=</span><span class="n">t</span><span class="o">-</span><span class="mi">9</span><span class="n">f3a</span>
+<span class="err">│</span><span class="w">   </span><span class="err">└──</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">delegation_outcome</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">completed</span><span class="p">)</span>
+<span class="err">└──</span><span class="w"> </span><span class="n">agent</span><span class="o">.</span><span class="n">decision</span><span class="w"> </span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">policy_check</span><span class="p">,</span><span class="w"> </span><span class="n">outcome</span><span class="o">=</span><span class="n">allow</span><span class="p">)</span>
+<span class="w">    </span><span class="err">├──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">rule_id</span><span class="o">=</span><span class="n">premium_split_v3</span>
+<span class="w">    </span><span class="err">└──</span><span class="w"> </span><span class="n">attr</span><span class="p">:</span><span class="w"> </span><span class="n">confidence</span><span class="o">=</span><span class="mf">0.94</span>
+</code></pre></div>
+
+<p>Convenções emergentes em 2026 (OTel GenAI semantic conventions):</p>
+<ul>
+<li><code>gen_ai.system</code> — provedor do modelo.</li>
+<li><code>gen_ai.request.model</code> — modelo exato com versão.</li>
+<li><code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>.</li>
+<li><code>gen_ai.response.finish_reason</code>.</li>
+<li><code>agent.skill</code> — skill em execução.</li>
+<li><code>agent.delegation.target</code> — DID do agente delegado.</li>
+</ul>
+<p>O trace estruturado responde, sem código customizado, perguntas como:
+"qual tool consome mais tokens?", "qual skill tem maior latência p99?",
+"qual modelo tem mais falhas em policy check?". Sem trace estruturado,
+cada pergunta vira projeto de uma semana.</p>
+<h2 id="7-metricas-canonicas-latencia-custo-qualidade-seguranca">7. Métricas canônicas: latência, custo, qualidade, segurança</h2>
+<p>Quatro famílias de métricas que toda observability agêntica madura
+exporta:</p>
+<p><strong>Latência.</strong>
+- <code>task_duration_p50/p90/p99</code> — wall clock por task.
+- <code>llm_call_duration</code> por modelo e por skill.
+- <code>tool_call_duration</code> por tool.
+- <code>delegation_round_trip</code> para chamadas A2A/ACP.</p>
+<p><strong>Custo.</strong>
+- <code>cost_per_task</code> — agregado de tokens × preço.
+- <code>cost_per_skill</code> — útil para decidir preço (Volume VI).
+- <code>tokens_in / tokens_out</code> por modelo.
+- <code>cost_per_outcome</code> — custo dividido pelas tasks que terminaram em sucesso.</p>
+<p><strong>Qualidade.</strong>
+- <code>task_success_rate</code> por skill.
+- <code>human_override_rate</code> — quantas tasks foram corrigidas por humano.
+- <code>eval_score</code> em sliding window (eval em produção).
+- <code>regression_count</code> semana sobre semana.</p>
+<p><strong>Segurança.</strong>
+- <code>prompt_injection_attempts_detected</code>.
+- <code>policy_violation_rate</code>.
+- <code>escalation_to_human_rate</code>.
+- <code>unauthorized_tool_call_attempts</code>.</p>
+<p>A regra: cada métrica precisa de <strong>dono, alvo e ação</strong>. Métrica sem alvo
+é decoração de dashboard. Métrica sem dono é métrica que ninguém olha.</p>
+<h2 id="8-slos-agenticos-o-que-prometer-ao-consumidor-da-skill">8. SLOs agênticos: o que prometer ao consumidor da skill</h2>
+<p>Skill federada (Volume VI) sem SLO declarado vira pacote sem garantia.
+SLO agêntico canônico tem três compromissos quantificados:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">slo</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">skill</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;@acme/renegotiate-invoice@2.x&quot;</span>
+<span class="w">  </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;30d</span><span class="nv"> </span><span class="s">rolling&quot;</span>
+<span class="w">  </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">availability</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">indicator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;successful_invocations</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">total_invocations&quot;</span>
+<span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.995</span>
+<span class="w">    </span><span class="nt">latency</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">indicator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;p95(task_duration_seconds)&quot;</span>
+<span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;</span><span class="nv"> </span><span class="s">8s&quot;</span>
+<span class="w">    </span><span class="nt">quality</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">indicator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eval_score</span><span class="nv"> </span><span class="s">(LLM-judge</span><span class="nv"> </span><span class="s">calibrated,</span><span class="nv"> </span><span class="s">rolling)&quot;</span>
+<span class="w">      </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&gt;</span><span class="nv"> </span><span class="s">0.85&quot;</span>
+<span class="w">  </span><span class="nt">error_budget</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">monthly</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;5h</span><span class="nv"> </span><span class="s">downtime</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">0.5%</span><span class="nv"> </span><span class="s">quality</span><span class="nv"> </span><span class="s">degradation&quot;</span>
+<span class="w">  </span><span class="nt">remediation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">quality_below_target</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rollback_to_previous_skill_version</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">escalate_to_skill_owner</span>
+</code></pre></div>
+
+<p>A inovação face a SLOs tradicionais é o <strong>target de qualidade</strong>, que não
+é binário. Isso muda a operação: error budget agora consome por
+<em>degradação contínua</em>, não só por outage. Atingir 99.9% de uptime mas
+cair eval_score de 0.91 para 0.83 é incidente, mesmo sem 5xx.</p>
+<h2 id="9-debugging-distribuido-replay-e-bissecao">9. Debugging distribuído: replay e bisseção</h2>
+<p>Quando um cliente reporta "ontem às 14:23 o agente respondeu X errado",
+o time precisa de duas capacidades:</p>
+<p><strong>Replay.</strong> Pegar o trace exato, rodar novamente, reproduzir o output.
+Requer: trace contendo input, modelo+versão, prompt completo,
+ferramentas chamadas (com responses gravadas), seed se aplicável.
+Sem replay, debug é especulação.</p>
+<p><strong>Bisseção temporal.</strong> "Quando esse caso começou a falhar?". Roda o
+caso contra deploys históricos da skill (binary search) até encontrar
+o deploy onde quebrou. Depende de versões da skill manterem-se
+executáveis e do harness aceitar <code>--at-version=2.2.7</code>.</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>bisect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--case<span class="o">=</span>ticket-99231<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--good<span class="o">=</span>v2.2.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bad<span class="o">=</span>v2.3.1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--skill<span class="o">=</span><span class="s2">&quot;@acme/renegotiate-invoice&quot;</span>
+
+Testing<span class="w"> </span>v2.2.5...<span class="w"> </span>PASS
+Testing<span class="w"> </span>v2.3.0...<span class="w"> </span>PASS
+Testing<span class="w"> </span>v2.3.1...<span class="w"> </span>FAIL
+→<span class="w"> </span>Regressão<span class="w"> </span>introduzida<span class="w"> </span>em<span class="w"> </span>v2.3.1<span class="w"> </span><span class="o">(</span>commit<span class="w"> </span>7a3f9c2<span class="o">)</span>
+→<span class="w"> </span>Mudança<span class="w"> </span>suspeita:<span class="w"> </span>prompt<span class="w"> </span><span class="k">do</span><span class="w"> </span>step<span class="w"> </span><span class="s2">&quot;policy_check&quot;</span><span class="w"> </span>alterado
+</code></pre></div>
+
+<p>Replay + bisseção transformam debug agêntico de "ler logs e adivinhar"
+para "isolar regressão em minutos". A diferença não é cosmética — é a
+diferença entre operar à noite e dormir em paz.</p>
+<h2 id="10-manifesto-o-que-nao-e-medido-nao-esta-em-producao">10. Manifesto: o que não é medido não está em produção</h2>
+<p>A frase "o que não é medido não pode ser melhorado" é truísmo gerencial
+clássico. Em sistemas agênticos ela tem corolário operacional duro:</p>
+<blockquote>
+<p>O que não é medido <strong>não está em produção</strong> — está em fé.</p>
+</blockquote>
+<p>Stack agêntica em produção sem eval harness, sem golden traces, sem
+trace estruturado e sem SLO de qualidade é deploy de protótipo
+disfarçado. Funciona até a primeira mudança silenciosa de modelo,
+até o primeiro caso edge no cliente errado, até o primeiro auditor
+perguntar "como vocês sabem que está funcionando?".</p>
+<p>A resposta digna dessa pergunta é uma URL para dashboard que mostra:
+eval score na última semana, SLO compliance, regression count, custo
+por outcome. Resposta que começa com "deixa eu verificar com o time"
+é confissão de que a operação ainda é pre-industrial.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A maturidade de uma stack agêntica não se mede
+em quantos agentes ela tem ou em quão sofisticada é sua orquestração.
+Mede-se em <strong>quanto tempo demora entre uma regressão acontecer e
+alguém saber</strong>. Stacks profissionais medem isso em minutos. Stacks
+amadoras descobrem quando o cliente reclama.</p>
+</blockquote>
+<hr />
+<h2 id="checklist-canonico-observability-agentica">Checklist Canônico — Observability Agêntica</h2>
+<ul>
+<li>[ ] Eval harness com cases versionados em git rodando em CI.</li>
+<li>[ ] Golden traces capturados e em uso para detectar regressão semântica.</li>
+<li>[ ] LLM-judge calibrado mensalmente contra labels humanas.</li>
+<li>[ ] OTel GenAI semantic conventions adotadas em todos os spans.</li>
+<li>[ ] Métricas RED + custo + qualidade + segurança exportadas.</li>
+<li>[ ] SLO agêntico declarado por skill, incluindo target de qualidade.</li>
+<li>[ ] Replay funcional a partir do trace_id de qualquer execução.</li>
+<li>[ ] Bisseção temporal de skills implementada e usada em incidentes.</li>
+<li>[ ] Eval em produção amostra ≥1% do tráfego e alimenta painel.</li>
+<li>[ ] Alerts disparam em degradação de eval_score, não só em 5xx.</li>
+</ul>
+<h2 id="glossario-do-volume">Glossário do Volume</h2>
+<ul>
+<li><strong>Eval harness</strong> — infraestrutura que roda casos e produz métricas.</li>
+<li><strong>Golden trace</strong> — gravação completa de execução considerada perfeita.</li>
+<li><strong>Regressão semântica</strong> — output correto, mas trajetória degradada.</li>
+<li><strong>LLM-as-judge</strong> — uso de LLM para avaliar outputs subjetivos.</li>
+<li><strong>OTel GenAI conventions</strong> — atributos canônicos OpenTelemetry para IA.</li>
+<li><strong>SLO agêntico</strong> — Service Level Objective incluindo target de qualidade.</li>
+<li><strong>Replay</strong> — re-execução determinística a partir de trace gravado.</li>
+<li><strong>Bisseção</strong> — busca binária para localizar versão que introduziu regressão.</li>
+</ul>
+<h2 id="gancho-para-o-proximo-volume">Gancho para o Próximo Volume</h2>
+<p>Medir bem permite <strong>ver</strong> problemas. Mas a próxima fronteira é
+<strong>prevenir</strong> problemas: prompt injection cross-agent, ataques de side-channel
+via tools, cascatas de falha em rede de agentes. Esse é o terreno do
+<strong>Volume IX — Segurança, Guardrails e Resiliência em Rede</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume VIII · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p>
+</body>
+</html>

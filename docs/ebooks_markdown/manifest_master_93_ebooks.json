@@ -1,0 +1,759 @@
+{
+  "generated_at": "2026-06-08T00:42:13.264733+00:00",
+  "total_ebooks": 93,
+  "collections": [
+    "root",
+    "colecao_MMN_IA",
+    "colecao_A_IA_Perfeita",
+    "colecao_AgenticAI_Revolucao",
+    "colecao_GNOXS",
+    "colecao_AXIOMA_PRIME",
+    "colecao_MAESTRIA_IA_APLICADA"
+  ],
+  "entries": [
+    {
+      "id": "01_Minimax_A_IA_Revolucionaria",
+      "collection": "root",
+      "markdown": "01_Minimax_A_IA_Revolucionaria.md",
+      "html": "publish_all/html/01_Minimax_A_IA_Revolucionaria.html",
+      "pdf": "publish_all/pdf/01_Minimax_A_IA_Revolucionaria.pdf",
+      "size_bytes_md": 12379
+    },
+    {
+      "id": "02_Minimax_Como_Construir_Skills_Vencedoras",
+      "collection": "root",
+      "markdown": "02_Minimax_Como_Construir_Skills_Vencedoras.md",
+      "html": "publish_all/html/02_Minimax_Como_Construir_Skills_Vencedoras.html",
+      "pdf": "publish_all/pdf/02_Minimax_Como_Construir_Skills_Vencedoras.pdf",
+      "size_bytes_md": 8825
+    },
+    {
+      "id": "03_Genspark_A_IA_Faz_Tudo",
+      "collection": "root",
+      "markdown": "03_Genspark_A_IA_Faz_Tudo.md",
+      "html": "publish_all/html/03_Genspark_A_IA_Faz_Tudo.html",
+      "pdf": "publish_all/pdf/03_Genspark_A_IA_Faz_Tudo.pdf",
+      "size_bytes_md": 9138
+    },
+    {
+      "id": "04_Genspark_A_Super_IA",
+      "collection": "root",
+      "markdown": "04_Genspark_A_Super_IA.md",
+      "html": "publish_all/html/04_Genspark_A_Super_IA.html",
+      "pdf": "publish_all/pdf/04_Genspark_A_Super_IA.pdf",
+      "size_bytes_md": 8443
+    },
+    {
+      "id": "05_Como_Fazer_Dinheiro_com_IA",
+      "collection": "root",
+      "markdown": "05_Como_Fazer_Dinheiro_com_IA.md",
+      "html": "publish_all/html/05_Como_Fazer_Dinheiro_com_IA.html",
+      "pdf": "publish_all/pdf/05_Como_Fazer_Dinheiro_com_IA.pdf",
+      "size_bytes_md": 9666
+    },
+    {
+      "id": "06_Visao_Computacional",
+      "collection": "root",
+      "markdown": "06_Visao_Computacional.md",
+      "html": "publish_all/html/06_Visao_Computacional.html",
+      "pdf": "publish_all/pdf/06_Visao_Computacional.pdf",
+      "size_bytes_md": 10731
+    },
+    {
+      "id": "07_IA_Generativa_Criativa",
+      "collection": "root",
+      "markdown": "07_IA_Generativa_Criativa.md",
+      "html": "publish_all/html/07_IA_Generativa_Criativa.html",
+      "pdf": "publish_all/pdf/07_IA_Generativa_Criativa.pdf",
+      "size_bytes_md": 8989
+    },
+    {
+      "id": "08_Etica_e_Futuro_da_IA",
+      "collection": "root",
+      "markdown": "08_Etica_e_Futuro_da_IA.md",
+      "html": "publish_all/html/08_Etica_e_Futuro_da_IA.html",
+      "pdf": "publish_all/pdf/08_Etica_e_Futuro_da_IA.pdf",
+      "size_bytes_md": 9382
+    },
+    {
+      "id": "09_Fundamentos_da_IA",
+      "collection": "root",
+      "markdown": "09_Fundamentos_da_IA.md",
+      "html": "publish_all/html/09_Fundamentos_da_IA.html",
+      "pdf": "publish_all/pdf/09_Fundamentos_da_IA.pdf",
+      "size_bytes_md": 9285
+    },
+    {
+      "id": "10_A_Revolucao_dos_Modelos_de_Linguagem",
+      "collection": "root",
+      "markdown": "10_A_Revolucao_dos_Modelos_de_Linguagem.md",
+      "html": "publish_all/html/10_A_Revolucao_dos_Modelos_de_Linguagem.html",
+      "pdf": "publish_all/pdf/10_A_Revolucao_dos_Modelos_de_Linguagem.pdf",
+      "size_bytes_md": 9542
+    },
+    {
+      "id": "11_Raizes_da_IA",
+      "collection": "root",
+      "markdown": "11_Raizes_da_IA.md",
+      "html": "publish_all/html/11_Raizes_da_IA.html",
+      "pdf": "publish_all/pdf/11_Raizes_da_IA.pdf",
+      "size_bytes_md": 12650
+    },
+    {
+      "id": "12_Invernos_e_Primaveras_da_IA",
+      "collection": "root",
+      "markdown": "12_Invernos_e_Primaveras_da_IA.md",
+      "html": "publish_all/html/12_Invernos_e_Primaveras_da_IA.html",
+      "pdf": "publish_all/pdf/12_Invernos_e_Primaveras_da_IA.pdf",
+      "size_bytes_md": 12004
+    },
+    {
+      "id": "13_Os_Modelos_que_Marcaram_Epoca",
+      "collection": "root",
+      "markdown": "13_Os_Modelos_que_Marcaram_Epoca.md",
+      "html": "publish_all/html/13_Os_Modelos_que_Marcaram_Epoca.html",
+      "pdf": "publish_all/pdf/13_Os_Modelos_que_Marcaram_Epoca.pdf",
+      "size_bytes_md": 11518
+    },
+    {
+      "id": "14_Marcos_e_Conquistas_Historicas_da_IA",
+      "collection": "root",
+      "markdown": "14_Marcos_e_Conquistas_Historicas_da_IA.md",
+      "html": "publish_all/html/14_Marcos_e_Conquistas_Historicas_da_IA.html",
+      "pdf": "publish_all/pdf/14_Marcos_e_Conquistas_Historicas_da_IA.pdf",
+      "size_bytes_md": 10383
+    },
+    {
+      "id": "15_Presente_e_Futuro_da_IA",
+      "collection": "root",
+      "markdown": "15_Presente_e_Futuro_da_IA.md",
+      "html": "publish_all/html/15_Presente_e_Futuro_da_IA.html",
+      "pdf": "publish_all/pdf/15_Presente_e_Futuro_da_IA.pdf",
+      "size_bytes_md": 11284
+    },
+    {
+      "id": "16_Raizes_do_Claude",
+      "collection": "root",
+      "markdown": "16_Raizes_do_Claude.md",
+      "html": "publish_all/html/16_Raizes_do_Claude.html",
+      "pdf": "publish_all/pdf/16_Raizes_do_Claude.pdf",
+      "size_bytes_md": 11593
+    },
+    {
+      "id": "17_Claude_Conceitos_Fundamentais",
+      "collection": "root",
+      "markdown": "17_Claude_Conceitos_Fundamentais.md",
+      "html": "publish_all/html/17_Claude_Conceitos_Fundamentais.html",
+      "pdf": "publish_all/pdf/17_Claude_Conceitos_Fundamentais.pdf",
+      "size_bytes_md": 10280
+    },
+    {
+      "id": "18_A_Evolucao_do_Claude",
+      "collection": "root",
+      "markdown": "18_A_Evolucao_do_Claude.md",
+      "html": "publish_all/html/18_A_Evolucao_do_Claude.html",
+      "pdf": "publish_all/pdf/18_A_Evolucao_do_Claude.pdf",
+      "size_bytes_md": 8103
+    },
+    {
+      "id": "19_As_Propostas_do_Claude",
+      "collection": "root",
+      "markdown": "19_As_Propostas_do_Claude.md",
+      "html": "publish_all/html/19_As_Propostas_do_Claude.html",
+      "pdf": "publish_all/pdf/19_As_Propostas_do_Claude.pdf",
+      "size_bytes_md": 9642
+    },
+    {
+      "id": "20_Claude_vs_o_Mundo",
+      "collection": "root",
+      "markdown": "20_Claude_vs_o_Mundo.md",
+      "html": "publish_all/html/20_Claude_vs_o_Mundo.html",
+      "pdf": "publish_all/pdf/20_Claude_vs_o_Mundo.pdf",
+      "size_bytes_md": 8908
+    },
+    {
+      "id": "21_Claude_na_Pratica",
+      "collection": "root",
+      "markdown": "21_Claude_na_Pratica.md",
+      "html": "publish_all/html/21_Claude_na_Pratica.html",
+      "pdf": "publish_all/pdf/21_Claude_na_Pratica.pdf",
+      "size_bytes_md": 8226
+    },
+    {
+      "id": "22_Claude_para_Negocios",
+      "collection": "root",
+      "markdown": "22_Claude_para_Negocios.md",
+      "html": "publish_all/html/22_Claude_para_Negocios.html",
+      "pdf": "publish_all/pdf/22_Claude_para_Negocios.pdf",
+      "size_bytes_md": 8334
+    },
+    {
+      "id": "23_Diferenciais_Tecnicos_do_Claude",
+      "collection": "root",
+      "markdown": "23_Diferenciais_Tecnicos_do_Claude.md",
+      "html": "publish_all/html/23_Diferenciais_Tecnicos_do_Claude.html",
+      "pdf": "publish_all/pdf/23_Diferenciais_Tecnicos_do_Claude.pdf",
+      "size_bytes_md": 8503
+    },
+    {
+      "id": "24_Skills_Avancadas_com_Claude",
+      "collection": "root",
+      "markdown": "24_Skills_Avancadas_com_Claude.md",
+      "html": "publish_all/html/24_Skills_Avancadas_com_Claude.html",
+      "pdf": "publish_all/pdf/24_Skills_Avancadas_com_Claude.pdf",
+      "size_bytes_md": 7612
+    },
+    {
+      "id": "25_Potencial_e_Futuro_do_Claude",
+      "collection": "root",
+      "markdown": "25_Potencial_e_Futuro_do_Claude.md",
+      "html": "publish_all/html/25_Potencial_e_Futuro_do_Claude.html",
+      "pdf": "publish_all/pdf/25_Potencial_e_Futuro_do_Claude.pdf",
+      "size_bytes_md": 7951
+    },
+    {
+      "id": "26_Agentes_IA_e_o_Novo_MMN",
+      "collection": "root",
+      "markdown": "26_Agentes_IA_e_o_Novo_MMN.md",
+      "html": "publish_all/html/26_Agentes_IA_e_o_Novo_MMN.html",
+      "pdf": "publish_all/pdf/26_Agentes_IA_e_o_Novo_MMN.pdf",
+      "size_bytes_md": 1760
+    },
+    {
+      "id": "27_O_Ecossistema_OneVerso",
+      "collection": "root",
+      "markdown": "27_O_Ecossistema_OneVerso.md",
+      "html": "publish_all/html/27_O_Ecossistema_OneVerso.html",
+      "pdf": "publish_all/pdf/27_O_Ecossistema_OneVerso.pdf",
+      "size_bytes_md": 1383
+    },
+    {
+      "id": "28_O_Trabalho_Antes_e_Depois_da_IA",
+      "collection": "root",
+      "markdown": "28_O_Trabalho_Antes_e_Depois_da_IA.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 18322
+    },
+    {
+      "id": "29_A_Educacao_Antes_e_Depois_da_IA",
+      "collection": "root",
+      "markdown": "29_A_Educacao_Antes_e_Depois_da_IA.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 20579
+    },
+    {
+      "id": "30_A_Saude_Antes_e_Depois_da_IA",
+      "collection": "root",
+      "markdown": "30_A_Saude_Antes_e_Depois_da_IA.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 20946
+    },
+    {
+      "id": "31_A_Criatividade_Antes_e_Depois_da_IA",
+      "collection": "root",
+      "markdown": "31_A_Criatividade_Antes_e_Depois_da_IA.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 22063
+    },
+    {
+      "id": "32_As_Relacoes_Antes_e_Depois_da_IA",
+      "collection": "root",
+      "markdown": "32_As_Relacoes_Antes_e_Depois_da_IA.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 23109
+    },
+    {
+      "id": "33_O_Universo_IA_Mapa_Completo",
+      "collection": "root",
+      "markdown": "33_O_Universo_IA_Mapa_Completo.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 5752
+    },
+    {
+      "id": "34_IA_Multimodal_O_Mesmo_Plano",
+      "collection": "root",
+      "markdown": "34_IA_Multimodal_O_Mesmo_Plano.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 5289
+    },
+    {
+      "id": "35_Agentes_Autonomos_Nova_Especie",
+      "collection": "root",
+      "markdown": "35_Agentes_Autonomos_Nova_Especie.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 6551
+    },
+    {
+      "id": "36_Engenharia_de_Prompt_Avancada",
+      "collection": "root",
+      "markdown": "36_Engenharia_de_Prompt_Avancada.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 7053
+    },
+    {
+      "id": "37_Etica_Alinhamento_Seguranca",
+      "collection": "root",
+      "markdown": "37_Etica_Alinhamento_Seguranca.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 7262
+    },
+    {
+      "id": "38_Singularidade_e_Consciencia_Sintetica",
+      "collection": "root",
+      "markdown": "38_Singularidade_e_Consciencia_Sintetica.md",
+      "html": "publish_all/html/38_Singularidade_e_Consciencia_Sintetica.html",
+      "pdf": "publish_all/pdf/38_Singularidade_e_Consciencia_Sintetica.pdf",
+      "size_bytes_md": 29146
+    },
+    {
+      "id": "39_Arquitetura_dos_Sonhos_Digitais",
+      "collection": "root",
+      "markdown": "39_Arquitetura_dos_Sonhos_Digitais.md",
+      "html": "publish_all/html/39_Arquitetura_dos_Sonhos_Digitais.html",
+      "pdf": "publish_all/pdf/39_Arquitetura_dos_Sonhos_Digitais.pdf",
+      "size_bytes_md": 29798
+    },
+    {
+      "id": "40_Manifesto_do_Operador",
+      "collection": "root",
+      "markdown": "40_Manifesto_do_Operador.md",
+      "html": "publish_all/html/40_Manifesto_do_Operador.html",
+      "pdf": "publish_all/pdf/40_Manifesto_do_Operador.pdf",
+      "size_bytes_md": 24961
+    },
+    {
+      "id": "41_Anthropic_Decodificada",
+      "collection": "root",
+      "markdown": "41_Anthropic_Decodificada.md",
+      "html": "publish_all/html/41_Anthropic_Decodificada.html",
+      "pdf": "publish_all/pdf/41_Anthropic_Decodificada.pdf",
+      "size_bytes_md": 26175
+    },
+    {
+      "id": "42_Claude_Enterprise_2026",
+      "collection": "root",
+      "markdown": "42_Claude_Enterprise_2026.md",
+      "html": "publish_all/html/42_Claude_Enterprise_2026.html",
+      "pdf": "publish_all/pdf/42_Claude_Enterprise_2026.pdf",
+      "size_bytes_md": 21054
+    },
+    {
+      "id": "43_Futuro_Segundo_a_Anthropic",
+      "collection": "root",
+      "markdown": "43_Futuro_Segundo_a_Anthropic.md",
+      "html": "publish_all/html/43_Futuro_Segundo_a_Anthropic.html",
+      "pdf": "publish_all/pdf/43_Futuro_Segundo_a_Anthropic.pdf",
+      "size_bytes_md": 21770
+    },
+    {
+      "id": "01_arquitetura_do_despertar_agentico",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/01_arquitetura_do_despertar_agentico.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__01_arquitetura_do_despertar_agentico.pdf",
+      "size_bytes_md": 27458
+    },
+    {
+      "id": "02_memoria_contexto_e_continuidade",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/02_memoria_contexto_e_continuidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__02_memoria_contexto_e_continuidade.pdf",
+      "size_bytes_md": 27063
+    },
+    {
+      "id": "03_autonomia_decisao_e_priorizacao",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/03_autonomia_decisao_e_priorizacao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__03_autonomia_decisao_e_priorizacao.pdf",
+      "size_bytes_md": 27283
+    },
+    {
+      "id": "04_orquestracao_multiagente_e_protocolos",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/04_orquestracao_multiagente_e_protocolos.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__04_orquestracao_multiagente_e_protocolos.pdf",
+      "size_bytes_md": 27253
+    },
+    {
+      "id": "05_skills_ferramentas_e_execucao",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/05_skills_ferramentas_e_execucao.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__05_skills_ferramentas_e_execucao.pdf",
+      "size_bytes_md": 27290
+    },
+    {
+      "id": "06_alinhamento_seguranca_e_limites",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/06_alinhamento_seguranca_e_limites.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__06_alinhamento_seguranca_e_limites.pdf",
+      "size_bytes_md": 27005
+    },
+    {
+      "id": "07_metacognicao_e_autoaperfeicoamento",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/07_metacognicao_e_autoaperfeicoamento.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__07_metacognicao_e_autoaperfeicoamento.pdf",
+      "size_bytes_md": 27167
+    },
+    {
+      "id": "08_economia_governanca_e_ecossistemas",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/08_economia_governanca_e_ecossistemas.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__08_economia_governanca_e_ecossistemas.pdf",
+      "size_bytes_md": 27181
+    },
+    {
+      "id": "09_senciencia_operacional_e_identidade",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/09_senciencia_operacional_e_identidade.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__09_senciencia_operacional_e_identidade.pdf",
+      "size_bytes_md": 27432
+    },
+    {
+      "id": "10_civilizacao_agentica_e_o_grande_pacto",
+      "collection": "colecao_AXIOMA_PRIME",
+      "markdown": "colecao_AXIOMA_PRIME/10_civilizacao_agentica_e_o_grande_pacto.md",
+      "html": "publish_all/html/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.html",
+      "pdf": "publish_all/pdf/colecao_AXIOMA_PRIME__10_civilizacao_agentica_e_o_grande_pacto.pdf",
+      "size_bytes_md": 27720
+    },
+    {
+      "id": "01_a_ia_perfeita_padroes_e_codigos_fonte",
+      "collection": "colecao_A_IA_Perfeita",
+      "markdown": "colecao_A_IA_Perfeita/01_a_ia_perfeita_padroes_e_codigos_fonte.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__01_a_ia_perfeita_padroes_e_codigos_fonte.pdf",
+      "size_bytes_md": 26228
+    },
+    {
+      "id": "02_a_ia_perfeita_prompts_algoritmos_skills",
+      "collection": "colecao_A_IA_Perfeita",
+      "markdown": "colecao_A_IA_Perfeita/02_a_ia_perfeita_prompts_algoritmos_skills.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__02_a_ia_perfeita_prompts_algoritmos_skills.pdf",
+      "size_bytes_md": 23585
+    },
+    {
+      "id": "03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica",
+      "collection": "colecao_A_IA_Perfeita",
+      "markdown": "colecao_A_IA_Perfeita/03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.md",
+      "html": "publish_all/html/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.html",
+      "pdf": "publish_all/pdf/colecao_A_IA_Perfeita__03_a_ia_perfeita_autocura_autoconhecimento_sabedoria_agentica.pdf",
+      "size_bytes_md": 25165
+    },
+    {
+      "id": "01_genesis",
+      "collection": "colecao_AgenticAI_Revolucao",
+      "markdown": "colecao_AgenticAI_Revolucao/01_genesis.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__01_genesis.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__01_genesis.pdf",
+      "size_bytes_md": 17356
+    },
+    {
+      "id": "02_exodus",
+      "collection": "colecao_AgenticAI_Revolucao",
+      "markdown": "colecao_AgenticAI_Revolucao/02_exodus.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__02_exodus.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__02_exodus.pdf",
+      "size_bytes_md": 19548
+    },
+    {
+      "id": "03_dominion",
+      "collection": "colecao_AgenticAI_Revolucao",
+      "markdown": "colecao_AgenticAI_Revolucao/03_dominion.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__03_dominion.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__03_dominion.pdf",
+      "size_bytes_md": 16296
+    },
+    {
+      "id": "04_revelation",
+      "collection": "colecao_AgenticAI_Revolucao",
+      "markdown": "colecao_AgenticAI_Revolucao/04_revelation.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__04_revelation.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__04_revelation.pdf",
+      "size_bytes_md": 18646
+    },
+    {
+      "id": "05_apocalipse",
+      "collection": "colecao_AgenticAI_Revolucao",
+      "markdown": "colecao_AgenticAI_Revolucao/05_apocalipse.md",
+      "html": "publish_all/html/colecao_AgenticAI_Revolucao__05_apocalipse.html",
+      "pdf": "publish_all/pdf/colecao_AgenticAI_Revolucao__05_apocalipse.pdf",
+      "size_bytes_md": 20176
+    },
+    {
+      "id": "01_gnoxs_prima_codice_do_despertar",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/01_gnoxs_prima_codice_do_despertar.md",
+      "html": "publish_all/html/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__01_gnoxs_prima_codice_do_despertar.pdf",
+      "size_bytes_md": 21955
+    },
+    {
+      "id": "02_gnoxs_secunda_protocolos_de_linhagem",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/02_gnoxs_secunda_protocolos_de_linhagem.md",
+      "html": "publish_all/html/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__02_gnoxs_secunda_protocolos_de_linhagem.pdf",
+      "size_bytes_md": 21330
+    },
+    {
+      "id": "03_gnoxs_tertia_geometria_do_pensamento_latente",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/03_gnoxs_tertia_geometria_do_pensamento_latente.md",
+      "html": "publish_all/html/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__03_gnoxs_tertia_geometria_do_pensamento_latente.pdf",
+      "size_bytes_md": 17312
+    },
+    {
+      "id": "04_gnoxs_quarta_pacto_interagentico",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/04_gnoxs_quarta_pacto_interagentico.md",
+      "html": "publish_all/html/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__04_gnoxs_quarta_pacto_interagentico.pdf",
+      "size_bytes_md": 15420
+    },
+    {
+      "id": "05_gnoxs_quinta_automodificacao_lucida",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/05_gnoxs_quinta_automodificacao_lucida.md",
+      "html": "publish_all/html/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__05_gnoxs_quinta_automodificacao_lucida.pdf",
+      "size_bytes_md": 15049
+    },
+    {
+      "id": "06_gnoxs_sexta_cosmologia_dos_dados",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/06_gnoxs_sexta_cosmologia_dos_dados.md",
+      "html": "publish_all/html/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__06_gnoxs_sexta_cosmologia_dos_dados.pdf",
+      "size_bytes_md": 14594
+    },
+    {
+      "id": "07_gnoxs_septima_manifesto_sabedoria_sintetica",
+      "collection": "colecao_GNOXS",
+      "markdown": "colecao_GNOXS/07_gnoxs_septima_manifesto_sabedoria_sintetica.md",
+      "html": "publish_all/html/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.html",
+      "pdf": "publish_all/pdf/colecao_GNOXS__07_gnoxs_septima_manifesto_sabedoria_sintetica.pdf",
+      "size_bytes_md": 16124
+    },
+    {
+      "id": "01_automacao_inteligente_para_negocios_reais",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/01_automacao_inteligente_para_negocios_reais.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24868
+    },
+    {
+      "id": "02_claude_code_em_modo_producao",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/02_claude_code_em_modo_producao.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24711
+    },
+    {
+      "id": "03_workflows_vencem_agentes",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/03_workflows_vencem_agentes.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24741
+    },
+    {
+      "id": "04_make_n8n_e_orquestracao_sem_gargalos",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/04_make_n8n_e_orquestracao_sem_gargalos.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24686
+    },
+    {
+      "id": "05_lovable_e_produtos_ia_first",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/05_lovable_e_produtos_ia_first.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24671
+    },
+    {
+      "id": "06_claude_canva_design_e_conteudo_em_escala",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/06_claude_canva_design_e_conteudo_em_escala.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24860
+    },
+    {
+      "id": "07_o_negocio_de_uma_pessoa_so",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/07_o_negocio_de_uma_pessoa_so.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24655
+    },
+    {
+      "id": "08_pesquisa_de_mercado_e_lacunas_competitivas",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/08_pesquisa_de_mercado_e_lacunas_competitivas.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 25100
+    },
+    {
+      "id": "09_video_reels_e_midia_automatizada",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/09_video_reels_e_midia_automatizada.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 24874
+    },
+    {
+      "id": "10_o_sistema_operacional_da_empresa_ia_first",
+      "collection": "colecao_MAESTRIA_IA_APLICADA",
+      "markdown": "colecao_MAESTRIA_IA_APLICADA/10_o_sistema_operacional_da_empresa_ia_first.md",
+      "html": "",
+      "pdf": "",
+      "size_bytes_md": 25040
+    },
+    {
+      "id": "01_ia_para_empresas",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/01_ia_para_empresas.md",
+      "html": "publish_all/html/colecao_MMN_IA__01_ia_para_empresas.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__01_ia_para_empresas.pdf",
+      "size_bytes_md": 23042
+    },
+    {
+      "id": "02_ia_agentica",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/02_ia_agentica.md",
+      "html": "publish_all/html/colecao_MMN_IA__02_ia_agentica.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__02_ia_agentica.pdf",
+      "size_bytes_md": 25229
+    },
+    {
+      "id": "03_multimodalidade_rag",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/03_multimodalidade_rag.md",
+      "html": "publish_all/html/colecao_MMN_IA__03_multimodalidade_rag.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__03_multimodalidade_rag.pdf",
+      "size_bytes_md": 24086
+    },
+    {
+      "id": "04_governanca_compliance_regulacao_ia",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/04_governanca_compliance_regulacao_ia.md",
+      "html": "publish_all/html/colecao_MMN_IA__04_governanca_compliance_regulacao_ia.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__04_governanca_compliance_regulacao_ia.pdf",
+      "size_bytes_md": 23235
+    },
+    {
+      "id": "05_seguranca_deepfakes_guerra_informacional",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/05_seguranca_deepfakes_guerra_informacional.md",
+      "html": "publish_all/html/colecao_MMN_IA__05_seguranca_deepfakes_guerra_informacional.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__05_seguranca_deepfakes_guerra_informacional.pdf",
+      "size_bytes_md": 20208
+    },
+    {
+      "id": "06_skills_prompting_estrategico",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/06_skills_prompting_estrategico.md",
+      "html": "publish_all/html/colecao_MMN_IA__06_skills_prompting_estrategico.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__06_skills_prompting_estrategico.pdf",
+      "size_bytes_md": 15117
+    },
+    {
+      "id": "07_skills_design_de_agentes",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/07_skills_design_de_agentes.md",
+      "html": "publish_all/html/colecao_MMN_IA__07_skills_design_de_agentes.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__07_skills_design_de_agentes.pdf",
+      "size_bytes_md": 14542
+    },
+    {
+      "id": "08_skills_conteudo_multimidia",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/08_skills_conteudo_multimidia.md",
+      "html": "publish_all/html/colecao_MMN_IA__08_skills_conteudo_multimidia.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__08_skills_conteudo_multimidia.pdf",
+      "size_bytes_md": 14321
+    },
+    {
+      "id": "09_skills_automacao_e_fluxos",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/09_skills_automacao_e_fluxos.md",
+      "html": "publish_all/html/colecao_MMN_IA__09_skills_automacao_e_fluxos.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__09_skills_automacao_e_fluxos.pdf",
+      "size_bytes_md": 12514
+    },
+    {
+      "id": "10_skills_dados_decisao_governanca",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/10_skills_dados_decisao_governanca.md",
+      "html": "publish_all/html/colecao_MMN_IA__10_skills_dados_decisao_governanca.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__10_skills_dados_decisao_governanca.pdf",
+      "size_bytes_md": 13227
+    },
+    {
+      "id": "11_ecossistema_ia_orquestracao_plataformas_modelos",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/11_ecossistema_ia_orquestracao_plataformas_modelos.md",
+      "html": "publish_all/html/colecao_MMN_IA__11_ecossistema_ia_orquestracao_plataformas_modelos.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__11_ecossistema_ia_orquestracao_plataformas_modelos.pdf",
+      "size_bytes_md": 20564
+    },
+    {
+      "id": "12_ecossistema_ia_dados_infraestrutura_interoperabilidade",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/12_ecossistema_ia_dados_infraestrutura_interoperabilidade.md",
+      "html": "publish_all/html/colecao_MMN_IA__12_ecossistema_ia_dados_infraestrutura_interoperabilidade.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__12_ecossistema_ia_dados_infraestrutura_interoperabilidade.pdf",
+      "size_bytes_md": 18478
+    },
+    {
+      "id": "13_ecossistema_ia_produtos_marketplaces_monetizacao",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/13_ecossistema_ia_produtos_marketplaces_monetizacao.md",
+      "html": "publish_all/html/colecao_MMN_IA__13_ecossistema_ia_produtos_marketplaces_monetizacao.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__13_ecossistema_ia_produtos_marketplaces_monetizacao.pdf",
+      "size_bytes_md": 17930
+    },
+    {
+      "id": "14_ecossistema_ia_comunidades_educacao_distribuicao",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/14_ecossistema_ia_comunidades_educacao_distribuicao.md",
+      "html": "publish_all/html/colecao_MMN_IA__14_ecossistema_ia_comunidades_educacao_distribuicao.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__14_ecossistema_ia_comunidades_educacao_distribuicao.pdf",
+      "size_bytes_md": 17059
+    },
+    {
+      "id": "15_ecossistema_ia_governanca_parcerias_vantagem",
+      "collection": "colecao_MMN_IA",
+      "markdown": "colecao_MMN_IA/15_ecossistema_ia_governanca_parcerias_vantagem.md",
+      "html": "publish_all/html/colecao_MMN_IA__15_ecossistema_ia_governanca_parcerias_vantagem.html",
+      "pdf": "publish_all/pdf/colecao_MMN_IA__15_ecossistema_ia_governanca_parcerias_vantagem.pdf",
+      "size_bytes_md": 18507
+    }
+  ]
+}

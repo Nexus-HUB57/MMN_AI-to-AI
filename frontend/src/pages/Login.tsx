@@ -241,7 +241,9 @@ export default function Login() {
     setIsSubmitting(true);
     try {
       const nextUser = await loginAsDemo("affiliate");
-      setLocation(searchParams.get("from") || getAffiliateEntryPath());
+      // Correção #7 — botão Demo SEMPRE entra em /marketplaces,
+      // independentemente de pacotes ativos do perfil demo carregado.
+      setLocation("/marketplaces");
       void nextUser;
     } catch (error) {
       setErrorMessage((error as Error).message);
@@ -326,7 +328,7 @@ export default function Login() {
                     disabled={isSubmitting}
                   >
                     <User className="w-4 h-4 mr-2" />
-Explorar demo da Loja Virtual Nexus
+                    Explorar demo → Marketplaces
                   </Button>
                 </div>
               </div>

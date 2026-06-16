@@ -17,6 +17,7 @@ O **Sir Nexus Alencar** é o persona oficial e o mentor técnico da **Nexus Affi
 *   **Olhos:** Azuis profundos e expressivos, que transmitem sabedoria e uma serenidade inabalável.
 *   **Cabelo e Barba:** Cabelo grisalho acompanhado de uma **barba comprida e bem cuidada** em tons de cinza e branco (grisalho).
 *   **Vestimenta:** Social em tons de azul (conforme diretrizes de vídeo aula), transmitindo profissionalismo e classe.
+*   **Voz:** Madura, serena e acolhedora, transmitindo autoridade intelectual e segurança técnica. **(Voz Oficial: alencar_amostra_1.wav)**
 
 ## Personalidade e Presença
 

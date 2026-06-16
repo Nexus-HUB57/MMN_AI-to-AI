@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>00 · Otimização de Conversão</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">00 · Otimização de Conversão</h1>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp"
+alt="Capa — Otimização de Conversão" />
+<figcaption aria-hidden="true">Capa — Otimização de
+Conversão</figcaption>
+</figure>
+<p><strong>00 · Otimização de Conversão</strong></p>
+<p><em>Trilha Master · 45 minutos · Pré-requisito: 03-Judge
+Revisor</em></p>
+<p><strong>Por Equipe Nexus · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este curso</strong></p>
+<p>Você chegou na Trilha Master. Aqui, o jogo muda: não é mais “como
+usar o agente”, é “como <strong>ganhar mais dinheiro com o mesmo
+agente</strong>”. Otimização de conversão é a arte de melhorar cada elo
+do funil — do primeiro clique à recompra — para que o mesmo volume de
+tráfego gere mais receita. Em 45 minutos, você vai dominar CAC, LTV, e
+as 5 alavancas que movem esses números.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é otimização de conversão (e o que não é)
+<strong>•</strong> 2. As 5 métricas que importam <strong>•</strong> 3.
+CAC: o que é e como reduzir <strong>•</strong> 4. LTV: como aumentar
+<strong>•</strong> 5. As 5 alavancas de otimização <strong>•</strong> 6.
+Onde aplicar cada alavanca no funil <strong>•</strong> 7. A/B testing
+como método <strong>•</strong> 8. Erros clássicos de otimização
+<strong>•</strong> 9. Quando parar de otimizar <strong>•</strong> 10.
+Próximo curso</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é otimização de conversão (e o que não
+é)</strong></p>
+<p>Otimização de conversão é <strong>melhorar a eficiência</strong> do
+funil de vendas. Você tem o mesmo tráfego, o mesmo produto, o mesmo
+agente. O que muda é a forma como cada etapa é executada, e isso muda o
+resultado.</p>
+<p><strong>O que NÃO é otimização:</strong> - ❌ Mudar o produto (isso é
+pivot, não otimização). - ❌ Aumentar tráfego sem melhorar o funil
+(gasta mais, ganha proporcionalmente). - ❌ Mudar de nicho a cada 30
+dias (imaturidade). - ❌ “Hack” de WhatsApp (spam, clickbait, claim
+falso) queima a base.</p>
+<p><strong>O QUE é otimização:</strong> - ✅ Copy que converte mais. -
+✅ Timing que maximiza atenção. - ✅ Coortes certas priorizadas. - ✅
+Judge calibrado. - ✅ Funil sem atrito.</p>
+<p><strong>2. As 5 métricas que importam</strong></p>
+<p>Quando você está otimizando, monitore 5 números (não mais):</p>
+<ol type="1">
+<li><strong>CAC</strong> (Custo de Aquisição de Cliente) — R$ por
+cliente novo.</li>
+<li><strong>LTV</strong> (Lifetime Value) — R$ total por cliente ao
+longo do tempo.</li>
+<li><strong>Taxa de Conversão</strong> — % de leads que viram
+clientes.</li>
+<li><strong>Tempo até Conversão</strong> — dias entre primeiro contato e
+compra.</li>
+<li><strong>Taxa de Recompra</strong> — % de clientes que voltam a
+comprar.</li>
+</ol>
+<p>Essas 5 métricas, otimizadas, <strong>compõem</strong> a saúde do seu
+negócio.</p>
+<p><strong>3. CAC: o que é e como reduzir</strong></p>
+<p><strong>Fórmula:</strong>
+<code>CAC = (Custo total de marketing + custo operacional do agente) / Número de clientes novos</code></p>
+<p><strong>Exemplo:</strong> se você gastou R$ 1.000 em tráfego + R$ 200
+em operação do agente no mês, e ganhou 50 clientes, seu CAC é R$ 24.</p>
+<p><strong>Como reduzir CAC:</strong></p>
+<p><strong>A — Melhorar a copy</strong> (topo de funil): taxa de
+abertura +35% = menos impressões necessárias. <strong>B — Segmentar a
+base</strong> (meio de funil): mensagem certa para pessoa certa = mais
+conversão com mesmo tráfego. <strong>C — Aumentar conversão de
+lead</strong> (fundo de funil): página de vendas otimizada. <strong>D —
+Aumentar recompra</strong> (pós-venda): sem novo tráfego, você ganha 1
+cliente extra = CAC dilui.</p>
+<p><strong>Meta realista:</strong> CAC &lt; 30% do LTV.</p>
+<p><strong>4. LTV: como aumentar</strong></p>
+<p><strong>Fórmula:</strong>
+<code>LTV = (Receita média por compra × Frequência de compra × Tempo de retenção)</code></p>
+<p><strong>Exemplo:</strong> cliente compra R$ 100/mês por 12 meses em
+média = LTV R$ 1.200.</p>
+<p><strong>Como aumentar LTV:</strong></p>
+<p><strong>A — Upsell</strong>: oferecer produto de ticket maior para
+clientes satisfeitos. <strong>B — Cross-sell</strong>: oferecer produto
+complementar. <strong>C — Recompra programática</strong>: lembrete de
+reposição (cosméticos, suplementos). <strong>D — Programa de
+fidelidade</strong>: pontos que viram desconto. <strong>E — Conteúdo de
+valor</strong>: newsletter que mantém a marca na cabeça.</p>
+<p><strong>Meta realista:</strong> LTV &gt; 3× CAC.</p>
+<p><strong>5. As 5 alavancas de otimização</strong></p>
+<p><strong>Alavanca 1 — Copy</strong> - Maior impacto isolado: copy
+melhor → +20-50% conversão. - Como otimizar: A/B test constante, 3
+variações por campanha.</p>
+<p><strong>Alavanca 2 — Timing</strong> - Mudar horário de envio pode
+aumentar abertura em +30%. - Como otimizar: testar 3 janelas (manhã,
+almoço, noite).</p>
+<p><strong>Alavanca 3 — Segmentação</strong> - Mensagem certa para
+pessoa certa = +50% conversão vs. mensagem genérica. - Como otimizar:
+criar 3+ coortes e personalizar copy por coorte.</p>
+<p><strong>Alavanca 4 — Oferta</strong> - Bônus, garantia, escassez,
+prova social — cada um adiciona +10-30% conversão. - Como otimizar:
+empilhar 3-4 elementos na página de vendas.</p>
+<p><strong>Alavanca 5 — Follow-up</strong> - Lead não converteu na 1ª
+mensagem? Follow-up em 48h aumenta +20% conversão. - Como otimizar:
+configurar sequência automática (skill
+<code>automation-cron-trigger</code>).</p>
+<p><strong>6. Onde aplicar cada alavanca no funil</strong></p>
+<pre><code>[TOPO]     Copy + Timing + Oferta
+[MID]      Segmentação + Copy
+[FUNDO]    Oferta + Follow-up
+[PÓS]      Upsell + Recompra</code></pre>
+<p>A maioria dos afiliados foca no topo. <strong>O maior ROI está no
+meio e no fundo</strong>, onde o lead já demonstrou interesse.</p>
+<p><strong>7. A/B testing como método</strong></p>
+<p><strong>Nunca otimize sem testar.</strong> O método é:</p>
+<ol type="1">
+<li><strong>Hipótese</strong>: “se mudarmos X, esperamos Y”.</li>
+<li><strong>Variação A</strong> (controle): versão atual.</li>
+<li><strong>Variação B</strong> (teste): versão com mudança.</li>
+<li><strong>Randomizar</strong>: 50% dos leads recebe A, 50% recebe
+B.</li>
+<li><strong>Aguardar 95% de significância estatística</strong> (não
+menos).</li>
+<li><strong>Promover</strong> o vencedor ou descartar (se diferença &lt;
+5%).</li>
+</ol>
+<p>A skill <code>analytics-ab-test</code> automatiza a análise.</p>
+<p><strong>8. Erros clássicos de otimização</strong></p>
+<ul>
+<li><strong>Erro 1</strong>: Otimizar sem medir. Você não sabe se
+melhorou.</li>
+<li><strong>Erro 2</strong>: Mudar 3 variáveis ao mesmo tempo. Você não
+sabe o que causou a melhora.</li>
+<li><strong>Erro 3</strong>: Parar o teste cedo por “achar que já tem
+vencedor”. Falso positivo.</li>
+<li><strong>Erro 4</strong>: Otimizar micro-métricas (ex: taxa de
+clique) sem olhar macro (ex: receita).</li>
+<li><strong>Erro 5</strong>: Ignorar o Judge na otimização. Copy
+agressiva converte no curto mas queima a base.</li>
+<li><strong>Erro 6</strong>: Otimizar para a média. Otimize para os top
+20% e os bottom 20%, não o meio.</li>
+</ul>
+<p><strong>9. Quando parar de otimizar</strong></p>
+<p>Você está otimizando demais quando: - Mudanças geram &lt; 1% de
+variação. - A/B test demora &gt; 30 dias para convergir. - Você está
+otimizando coortes com &lt; 100 contatos. - O Judge está reprovando mais
+de 30% (sinal de over-optimization).</p>
+<p>Regra prática: <strong>otimize por 90 dias, depois mantenha por 90
+dias, depois mude de estratégia</strong>.</p>
+<p><strong>10. Próximo curso</strong></p>
+<p>👉 <a
+href="01-funis-lifecycle.md"><code>01-funis-lifecycle.md</code></a> —
+Funis e Lifecycle · 45 min</p>
+<p><strong>Recursos extras:</strong> - <strong>Apostila 09</strong>:
+Campanhas Automatizadas (modelos testados). - <strong>Apostila
+07</strong>: Skill <code>analytics-cohort</code> (a mais útil pra
+otimização).</p>
+<hr />
+<p><strong>00 · Otimização de Conversão</strong> — Trilha Master</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC
+BY-SA 4.0</em></p>
+</body>
+</html>

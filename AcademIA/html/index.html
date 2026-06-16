@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Academ'IA · HUB de Educação Nexus</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0a0a1a;
+      color: #e0e0e8;
+      line-height: 1.7;
+      padding: 2rem;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding: 4rem 0;
+      border-bottom: 1px solid #1f1f3a;
+      margin-bottom: 3rem;
+    }
+    h1 {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #06b6d4, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle { color: #9ca3af; font-size: 1.1rem; }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #06b6d4;
+    }
+    .stat-label {
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+    .section {
+      margin: 3rem 0;
+      padding: 2rem;
+      background: #13132a;
+      border-radius: 12px;
+      border: 1px solid #1f1f3a;
+    }
+    .section h2 {
+      color: #06b6d4;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .card {
+      background: #1a1a35;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a2a4a;
+      transition: transform 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #7c3aed;
+    }
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #fff;
+    }
+    .card-body { padding: 1rem; }
+    .card-title {
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .card-meta {
+      color: #9ca3af;
+      font-size: 0.8rem;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #1f1f3a;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📚 Academ'IA</h1>
+      <p class="subtitle">HUB de Educação da Nexus Affil'IA'te · 2026</p>
+      <p class="subtitle" style="margin-top:0.5rem; font-size:0.9rem;">Gestão EAD · Formação completa de afiliados com IA distribuída</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-num">15</div><div class="stat-label">Cursos</div></div>
+        <div class="stat"><div class="stat-num">10</div><div class="stat-label">Apostilas</div></div>
+        <div class="stat"><div class="stat-num">4</div><div class="stat-label">Trilhas</div></div>
+        <div class="stat"><div class="stat-num">3</div><div class="stat-label">Webinars</div></div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>📕 Apostilas Oficiais (10 volumes novos)</h2>
+      <div class="grid">
+        <a href="apostilas/01-apresentacao-infraestrutura.html" class="card">
+          <div class="card-thumb">🏛️</div>
+          <div class="card-body">
+            <div class="card-title">01 · Apresentação da Infraestrutura</div>
+            <div class="card-meta">IOAID, SHO, Federação</div>
+          </div>
+        </a>
+        <a href="apostilas/02-cases-orquestracao-autonoma.html" class="card">
+          <div class="card-thumb">📈</div>
+          <div class="card-body">
+            <div class="card-title">02 · Cases Reais</div>
+            <div class="card-meta">5 cases auditáveis</div>
+          </div>
+        </a>
+        <a href="apostilas/03-infra-operacional-ia.html" class="card">
+          <div class="card-thumb">⚙️</div>
+          <div class="card-body">
+            <div class="card-title">03 · Infra Operacional</div>
+            <div class="card-meta">5 módulos IOAID</div>
+          </div>
+        </a>
+        <a href="apostilas/04-orquestracao-hibrida-agentes.html" class="card">
+          <div class="card-thumb">🎼</div>
+          <div class="card-body">
+            <div class="card-title">04 · Orquestração Híbrida</div>
+            <div class="card-meta">3 tipos, 4 topologias</div>
+          </div>
+        </a>
+        <a href="apostilas/05-sete-telas-essenciais.html" class="card">
+          <div class="card-thumb">🖥️</div>
+          <div class="card-body">
+            <div class="card-title">05 · 7 Telas Essenciais</div>
+            <div class="card-meta">Painel completo</div>
+          </div>
+        </a>
+        <a href="apostilas/06-setup-agente-pessoal.html" class="card">
+          <div class="card-thumb">🚀</div>
+          <div class="card-body">
+            <div class="card-title">06 · Setup do Agente</div>
+            <div class="card-meta">Tutorial 90 min</div>
+          </div>
+        </a>
+        <a href="apostilas/07-18-skills-operacionais.html" class="card">
+          <div class="card-thumb">🛠️</div>
+          <div class="card-body">
+            <div class="card-title">07 · 18 Skills</div>
+            <div class="card-meta">Catálogo essencial</div>
+          </div>
+        </a>
+        <a href="apostilas/08-rotina-disparo-agente.html" class="card">
+          <div class="card-thumb">📅</div>
+          <div class="card-body">
+            <div class="card-title">08 · Rotina de Disparo</div>
+            <div class="card-meta">Manhã/tarde/noite</div>
+          </div>
+        </a>
+        <a href="apostilas/09-campanhas-automatizadas.html" class="card">
+          <div class="card-thumb">📣</div>
+          <div class="card-body">
+            <div class="card-title">09 · Campanhas</div>
+            <div class="card-meta">WhatsApp + Instagram</div>
+          </div>
+        </a>
+        <a href="apostilas/10-jornada-completa-afiliado.html" class="card">
+          <div class="card-thumb">🗺️</div>
+          <div class="card-body">
+            <div class="card-title">10 · Jornada do Afiliado</div>
+            <div class="card-meta">Roadmap 12 meses</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>📘 Trilha Fundamental (4 cursos)</h2>
+      <div class="grid">
+        <a href="cursos/fundamental/00-boas-vindas.html" class="card"><div class="card-thumb">🎓</div><div class="card-body"><div class="card-title">00 · Boas-vindas</div><div class="card-meta">15 min</div></div></a>
+        <a href="cursos/fundamental/01-entendendo-ioaid.html" class="card"><div class="card-thumb">🧠</div><div class="card-body"><div class="card-title">01 · Entendendo IOAID</div><div class="card-meta">20 min</div></div></a>
+        <a href="cursos/fundamental/02-sistema-sho.html" class="card"><div class="card-thumb">🧬</div><div class="card-body"><div class="card-title">02 · Sistema SHO</div><div class="card-meta">15 min</div></div></a>
+        <a href="cursos/fundamental/03-painel-afiliado.html" class="card"><div class="card-thumb">🖥️</div><div class="card-body"><div class="card-title">03 · Painel do Afiliado</div><div class="card-meta">20 min</div></div></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🤖 Trilha Agente (4 cursos)</h2>
+      <div class="grid">
+        <a href="cursos/agente/00-primeiro-agente.html" class="card"><div class="card-thumb">🤖</div><div class="card-body"><div class="card-title">00 · Primeiro Agente</div><div class="card-meta">30 min</div></div></a>
+        <a href="cursos/agente/01-skills-essenciais.html" class="card"><div class="card-thumb">⚡</div><div class="card-body"><div class="card-title">01 · Skills Essenciais</div><div class="card-meta">30 min</div></div></a>
+        <a href="cursos/agente/02-disparo-whatsapp.html" class="card"><div class="card-thumb">📱</div><div class="card-body"><div class="card-title">02 · Disparando WhatsApp</div><div class="card-meta">30 min</div></div></a>
+        <a href="cursos/agente/03-judge-revisor.html" class="card"><div class="card-thumb">⚖️</div><div class="card-body"><div class="card-title">03 · Judge Revisor</div><div class="card-meta">30 min</div></div></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🥇 Trilha Master (4 cursos)</h2>
+      <div class="grid">
+        <a href="cursos/master/00-otimizacao-conversao.html" class="card"><div class="card-thumb">📊</div><div class="card-body"><div class="card-title">00 · Otimização</div><div class="card-meta">45 min</div></div></a>
+        <a href="cursos/master/01-funis-lifecycle.html" class="card"><div class="card-thumb">🌊</div><div class="card-body"><div class="card-title">01 · Funis e Lifecycle</div><div class="card-meta">45 min</div></div></a>
+        <a href="cursos/master/02-ab-test-judge.html" class="card"><div class="card-thumb">🔬</div><div class="card-body"><div class="card-title">02 · A/B Testing</div><div class="card-meta">45 min</div></div></a>
+        <a href="cursos/master/03-coortes-churn.html" class="card"><div class="card-thumb">📉</div><div class="card-body"><div class="card-title">03 · Coortes e Churn</div><div class="card-meta">45 min</div></div></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>💎 Trilha Elite (3 cursos)</h2>
+      <div class="grid">
+        <a href="cursos/elite/00-blueprints-elite.html" class="card"><div class="card-thumb">💎</div><div class="card-body"><div class="card-title">00 · Blueprints Elite</div><div class="card-meta">60 min</div></div></a>
+        <a href="cursos/elite/01-multi-tenant-whitelabel.html" class="card"><div class="card-thumb">🏢</div><div class="card-body"><div class="card-title">01 · Multi-tenant</div><div class="card-meta">60 min</div></div></a>
+        <a href="cursos/elite/02-federacao-agentes.html" class="card"><div class="card-thumb">🌐</div><div class="card-body"><div class="card-title">02 · Federação</div><div class="card-meta">60 min</div></div></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>📡 Webinars (3 gravações expandidas)</h2>
+      <div class="grid">
+        <a href="webinars/WB-2026-01-lancamento-ioaid.html" class="card"><div class="card-thumb">🚀</div><div class="card-body"><div class="card-title">WB-01 · Lançamento IOAID</div><div class="card-meta">15/03/2026</div></div></a>
+        <a href="webinars/WB-2026-02-sho-em-producao.html" class="card"><div class="card-thumb">🛡️</div><div class="card-body"><div class="card-title">WB-02 · SHO em Produção</div><div class="card-meta">22/05/2026</div></div></a>
+        <a href="webinars/WB-2026-03-academia-open-house.html" class="card"><div class="card-thumb">🎪</div><div class="card-body"><div class="card-title">WB-03 · Open House</div><div class="card-meta">15/06/2026</div></div></a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <p>Academ'IA · Nexus Affil'IA'te · 2026</p>
+      <p style="margin-top:0.5rem;">MMN AI-to-AI · Licença CC BY-SA 4.0</p>
+      <p style="margin-top:0.5rem;">Versão 1.2.0 · Última atualização 2026-06-15</p>
+    </div>
+  </div>
+</body>
+</html>

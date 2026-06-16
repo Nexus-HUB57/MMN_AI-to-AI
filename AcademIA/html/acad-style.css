@@ -1,0 +1,195 @@
+/* Academ'IA — Dark Theme CSS para Pandoc HTML */
+
+:root {
+  --bg: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --fg: #e0e0e8;
+  --fg-muted: #9ca3af;
+  --accent: #06b6d4;
+  --accent-purple: #7c3aed;
+  --accent-gold: #f59e0b;
+  --border: #2a2a4a;
+}
+
+html {
+  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  color: var(--fg);
+  background-color: var(--bg);
+}
+
+body {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 40px 30px;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #fff;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.2em;
+  background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 1.6em;
+  color: var(--accent);
+  border-left: 4px solid var(--accent);
+  padding-left: 0.5em;
+}
+
+h3 {
+  font-size: 1.3em;
+  color: var(--accent-purple);
+}
+
+h4 { font-size: 1.1em; color: var(--fg); }
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent);
+}
+a:hover { background: var(--bg-card); }
+
+/* Paragraph */
+p { margin: 1em 0; }
+
+/* Code */
+code {
+  background: #000;
+  color: #f8f8f2;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  background: #000;
+  color: #f8f8f2;
+  padding: 1em;
+  border-radius: 6px;
+  overflow-x: auto;
+  border-left: 4px solid var(--accent);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Blockquote */
+blockquote {
+  border-left: 4px solid var(--accent-purple);
+  padding: 0.5em 1em;
+  margin: 1em 0;
+  color: var(--fg-muted);
+  background: var(--bg-card);
+  font-style: italic;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+  background: var(--bg-card);
+}
+
+th, td {
+  padding: 0.6em 1em;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background: var(--accent-purple);
+  color: #fff;
+}
+
+tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+/* Horizontal rule */
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 1.5em auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Lists */
+ul, ol { padding-left: 2em; }
+li { margin: 0.3em 0; }
+
+/* Strong / em */
+strong { color: #fff; }
+em { color: var(--fg-muted); }
+
+/* TOC */
+#TOC {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin: 2em 0;
+}
+
+#TOC ul { list-style: none; padding-left: 0; }
+#TOC li { padding: 0.3em 0; }
+#TOC a { color: var(--accent); }
+
+/* Header block (frontmatter) */
+.frontmatter {
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin-bottom: 2em;
+  border-left: 4px solid var(--accent-gold);
+  font-size: 0.9em;
+  color: var(--fg-muted);
+}
+
+/* Footer */
+.footer {
+  margin-top: 4em;
+  padding-top: 2em;
+  border-top: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: 0.85em;
+  text-align: center;
+}
+
+/* Print friendly */
+@media print {
+  body { background: #fff; color: #000; }
+  a { color: #06b6d4; }
+}

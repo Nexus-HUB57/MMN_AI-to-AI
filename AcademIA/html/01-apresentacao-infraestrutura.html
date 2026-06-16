@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="MMN_IA Collective" />
+  <meta name="dcterms.date" content="2026-06-12" />
+  <title>A IA Perfeita: Padr��es e Arquiteturas Agentic</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../templates/acad-style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">A IA Perfeita: Padr��es e Arquiteturas Agentic</h1>
+<p class="subtitle">Tour Completo pelo IOAID, SHO e a Camada de
+Federação</p>
+<p class="author">MMN_IA Collective</p>
+<p class="date">2026-06-12</p>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp"
+alt="Capa — Apresentação Oficial da Infraestrutura Nexus" />
+<figcaption aria-hidden="true">Capa — Apresentação Oficial da
+Infraestrutura Nexus</figcaption>
+</figure>
+<p><strong>Apresentação Oficial da Infraestrutura Nexus</strong></p>
+<p><em>Tour Completo pelo IOAID, SHO e a Camada de Federação</em></p>
+<p><strong>Por MMN_IA Collective · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este documento</strong></p>
+<p>Você está prestes a fazer uma visita guiada pela infraestrutura que
+sustenta toda a operação da rede Nexus. Em vez de slides de marketing,
+este documento entrega arquitetura concreta: o que cada peça faz, como
+ela conversa com a peça vizinha, e — o mais importante — onde estão os
+pontos de falha e como o sistema se recupera sozinho. Se você é
+afiliado, vai sair daqui entendendo o suficiente para tomar decisões
+técnicas sem precisar de desenvolvedor. Se você é engenheiro, vai
+encontrar o mapa mental que normalmente só se adquire em 6 meses de
+imersão no código.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. A Visão Macro: o Nexus como organismo
+<strong>•</strong> 2. IOAID: o sistema nervoso <strong>•</strong> 3.
+SHO: o sistema imunológico <strong>•</strong> 4. Marketplace de Skills:
+o vocabulário <strong>•</strong> 5. Federação Multi-Tenant: a rede
+neural <strong>•</strong> 6. Judge Revisor: a consciência
+<strong>•</strong> 7. Telemetria e Observabilidade <strong>•</strong> 8.
+Resiliência: como o sistema se cura <strong>•</strong> 9. Roadmap Q2–Q4
+2026 <strong>•</strong> 10. Glossário de termos-chave <strong>•</strong>
+11. Como contribuir para a infraestrutura</p>
+</blockquote>
+<hr />
+<p><strong>1. A Visão Macro: o Nexus como organismo</strong></p>
+<p>Antes de descer em cada peça, precisamos de uma metáfora que não
+confunda. Pense no Nexus como um <strong>organismo vivo</strong>, não
+como um software. Um software tradicional é uma coleção de módulos
+estáticos. Um organismo tem sistemas que se interpenetram e se regulam
+mutuamente.</p>
+<p>O Nexus tem cinco “sistemas” anatômicos:</p>
+<ul>
+<li><strong>Sistema nervoso</strong> — IOAID. Captura sinais do mundo
+(eventos, requisições, mudanças de estado) e os distribui para os
+centros de decisão corretos.</li>
+<li><strong>Sistema imunológico</strong> — SHO. Detecta anomalias,
+contém falhas, dispara respostas imunes (retry, fallback,
+isolamento).</li>
+<li><strong>Vocabulário</strong> — Marketplace de Skills. As unidades
+mínimas de ação que o sistema sabe executar. Assim como seu corpo tem
+verbos básicos (andar, falar, ver), o Nexus tem skills básicas.</li>
+<li><strong>Rede neural</strong> — Federação Multi-Tenant. A forma como
+vários Nexus conversam entre si, formando uma rede distribuída.</li>
+<li><strong>Consciência</strong> — Judge Revisor. O componente que
+avalia a saída do sistema antes dela virar ação irreversível.</li>
+</ul>
+<p>A beleza do desenho é que <strong>nenhum desses sistemas é
+central</strong>. Cada um pode falhar individualmente sem matar o
+organismo. A redundância é a regra, não a exceção.</p>
+<p><strong>2. IOAID: o sistema nervoso</strong></p>
+<p>IOAID significa <strong>Infraestrutura Operacional de Inteligência
+Distribuída</strong>. É a camada que intercepta toda requisição, decide
+quem deve respondê-la, registra o resultado, e devolve a resposta ao
+solicitante.</p>
+<p>Tecnicamente, o IOAID é um <strong>orquestrador de eventos</strong>
+baseado em arquitetura event-driven. Cada ação dentro do Nexus —
+disparar uma mensagem, criar um agente, aprovar uma sugestão do Judge,
+registrar uma venda — emite um evento. O IOAID escuta, roteia, e
+responde.</p>
+<p>Os 5 módulos do IOAID:</p>
+<ul>
+<li><strong>M1 — Ingestion</strong>: recebe requisições externas
+(webhooks, APIs, comandos do painel).</li>
+<li><strong>M2 — Routing</strong>: decide qual agente/skill deve
+processar.</li>
+<li><strong>M3 — Execution</strong>: executa a skill com isolamento
+(cada execução corre em sandbox).</li>
+<li><strong>M4 — Persistence</strong>: registra input, decisão, output,
+e custo.</li>
+<li><strong>M5 — Response</strong>: devolve o resultado com metadados de
+auditoria.</li>
+</ul>
+<p>A combinação dos 5 módulos entrega SLA de &lt; 2 segundos para 95%
+das ações, como mostrado no webinar de lançamento.</p>
+<p><strong>3. SHO: o sistema imunológico</strong></p>
+<p>SHO é a sigla de <strong>Self-Healing Orchestrator</strong>. Ele é a
+razão pela qual o Nexus consegue prometer disponibilidade alta sem
+precisar de uma equipe de plantão 24/7.</p>
+<p>O SHO tem três modos de operação:</p>
+<ul>
+<li><strong>Modo Saturação</strong>: execução normal. Cada decisão é
+registrada, cada anomalia é flagada.</li>
+<li><strong>Modo Contenção</strong>: anomalias detectadas. O SHO isola a
+skill defeituosa e redireciona tráfego para o fallback.</li>
+<li><strong>Modo Quarentena</strong>: falha grave. O SHO bloqueia novas
+execuções da skill e dispara alerta humano.</li>
+</ul>
+<p>Na prática, 90% das falhas que o SHO encontra são <strong>resolvidas
+sem ninguém saber que existiram</strong>. A skill dá erro, o SHO faz
+retry com backoff, o erro não persiste, e a operação continua. Você só
+vê o SHO em ação quando ele precisa escalar.</p>
+<p><strong>4. Marketplace de Skills: o vocabulário</strong></p>
+<p>Skills são unidades mínimas de capacidade. Hoje o marketplace tem 27
+skills catalogadas, divididas em 5 famílias:</p>
+<ul>
+<li><strong>Copy</strong> (13): geração de texto persuasivo, headlines,
+e-mails, scripts de WhatsApp.</li>
+<li><strong>Analytics</strong> (6): coortes, funis, A/B tests,
+atribuição multitouch.</li>
+<li><strong>Automation</strong> (7): webhooks, integrações,
+sincronização de dados.</li>
+<li><strong>Design</strong> (5): geração de criativos, variação de
+banners, copy visual.</li>
+<li><strong>Marketing</strong> (9): planejamento de lançamento,
+benchmark, posicionamento.</li>
+</ul>
+<p>Cada skill tem um <code>skill-manifest.json</code> com nome,
+descrição, parâmetros de entrada, exemplos, custo estimado, e política
+de uso. O Judge Revisor usa esse manifesto para decidir se a skill pode
+ser invocada naquele contexto.</p>
+<p><strong>5. Federação Multi-Tenant: a rede neural</strong></p>
+<p>Quando você opera em uma rede com vários afiliados, cada nó do Nexus
+precisa conversar com os outros. Por exemplo: afiliado A precisa
+consultar o histórico de compras de afiliado B para recomendar produto
+sem duplicar oferta.</p>
+<p>A federação é o que permite isso. Cada nó expõe uma <strong>API
+federada</strong> com mTLS pinned (certificado fixado por nó, não por
+domínio). Isso evita que um nó malicioso se passe por outro.</p>
+<p>A federação funciona em <strong>3 níveis de confiança</strong>:</p>
+<ul>
+<li><strong>Nível 1 — Leve</strong>: leitura de dados públicos
+(marketplace, catálogo).</li>
+<li><strong>Nível 2 — Médio</strong>: leitura de dados do nó (vendas,
+funis) com consentimento explícito.</li>
+<li><strong>Nível 3 — Forte</strong>: escrita em nome do nó (publicar
+campanha conjunta, dividir comissão).</li>
+</ul>
+<p>Por padrão, todo nó começa no Nível 1. A subida de nível exige
+aprovação mútua dos dois nós.</p>
+<p><strong>6. Judge Revisor: a consciência</strong></p>
+<p>O Judge Revisor é o componente mais importante para a confiabilidade
+percebida. Ele é um LLM menor (3B parâmetros), afinado especificamente
+para revisar saídas do agente antes de elas virarem ação.</p>
+<p>Exemplo: o agente gera um texto para WhatsApp. Antes de enviar, o
+Judge avalia:</p>
+<ul>
+<li>A mensagem contém algum Claim Médico não suportado? (bloqueia)</li>
+<li>A mensagem faz Spam (palavras-gatilho como “GRÁTIS”, “URGENTE”)?
+(alerta)</li>
+<li>A mensagem tem tom inconsistente com a persona do afiliado? (sugere
+ajuste)</li>
+<li>A mensagem viola LGPD? (bloqueia)</li>
+</ul>
+<p>Se o Judge reprova, a mensagem não é enviada. O agente recebe
+feedback e tenta de novo. Se o Judge aprova, a mensagem segue com selo
+de “Revisado” no log.</p>
+<p><strong>7. Telemetria e Observabilidade</strong></p>
+<p>Todo o sistema emite telemetria padronizada em formato OpenTelemetry.
+Você tem 3 dashboards padrão:</p>
+<ul>
+<li><strong>Dashboard Operacional</strong>: latência, throughput, taxa
+de erro por skill.</li>
+<li><strong>Dashboard de Negócio</strong>: vendas por afiliado,
+conversão por funil, CAC, LTV.</li>
+<li><strong>Dashboard de Autonomia</strong>: % de ações executadas sem
+aprovação humana.</li>
+</ul>
+<p>Esses dashboards são alimentados pelo <strong>Módulo M4
+(Persistence)</strong> do IOAID e ficam acessíveis no Painel do Afiliado
+em <code>/dashboard/observability</code>.</p>
+<p><strong>8. Resiliência: como o sistema se cura</strong></p>
+<p>A resiliência é cumulativa. Significa: o sistema de hoje é mais
+robusto que o de ontem, automaticamente.</p>
+<p>O pipeline de autocura é:</p>
+<ol type="1">
+<li>SHO detecta anomalia → registra no log de incidentes.</li>
+<li>Telemetria identifica padrão (≥3 ocorrências) → sugere patch.</li>
+<li>Patch é proposto como <strong>Shadow Testing</strong>: roda em
+paralelo com a versão atual, sem afetar produção.</li>
+<li>Se shadow testing passa por 7 dias sem regressão → promoção gradual
+(5% → 25% → 50% → 100%).</li>
+<li>A qualquer momento, rollback em 1 clique.</li>
+</ol>
+<p>Esse pipeline é o que faz o Nexus ser “vivo”: cada falha vira
+melhoria.</p>
+<p><strong>9. Roadmap Q2–Q4 2026</strong></p>
+<ul>
+<li><strong>Q2 2026</strong> (atual): federação multi-tenant com mTLS
+(✅ no ar).</li>
+<li><strong>Q3 2026</strong>: Agentic Mesh (3+ nós coordenando em tempo
+real).</li>
+<li><strong>Q4 2026</strong>: SHO preditivo (antecipa falhas antes de
+acontecerem via modelos preditivos).</li>
+<li><strong>Q1 2027 (planejado)</strong>: Skills Marketplace aberto
+(qualquer afiliado pode publicar).</li>
+</ul>
+<p><strong>10. Glossário de termos-chave</strong></p>
+<ul>
+<li><strong>IOAID</strong> — Infraestrutura Operacional de Inteligência
+Distribuída.</li>
+<li><strong>SHO</strong> — Self-Healing Orchestrator.</li>
+<li><strong>Skill</strong> — Unidade mínima de capacidade no
+marketplace.</li>
+<li><strong>Judge</strong> — LLM revisor de saídas.</li>
+<li><strong>Federação</strong> — Comunicação entre nós Nexus.</li>
+<li><strong>mTLS</strong> — Mutual TLS, autenticação bidirecional.</li>
+<li><strong>Sandbox</strong> — Ambiente isolado de execução.</li>
+<li><strong>Shadow Testing</strong> — Teste paralelo em produção.</li>
+<li><strong>CAC</strong> — Custo de Aquisição de Cliente.</li>
+<li><strong>LTV</strong> — Lifetime Value.</li>
+</ul>
+<p><strong>11. Como contribuir para a infraestrutura</strong></p>
+<p>Se você é afiliado e quer sugerir uma skill nova:</p>
+<ol type="1">
+<li>Abra issue no GitHub do MMN_AI-to-AI com tag
+<code>skill-request</code>.</li>
+<li>Descreva o caso de uso, inputs esperados, e outputs desejados.</li>
+<li>A equipe técnica avalia viabilidade e publica no marketplace.</li>
+</ol>
+<p>Se você é desenvolvedor e quer implementar uma skill:</p>
+<ol type="1">
+<li>Fork o repo.</li>
+<li>Crie pasta <code>Lab-Nexus/prompts/sua-skill/</code> com
+<code>skill-manifest.json</code> + código.</li>
+<li>Abra PR com testes.</li>
+<li>Aprovação: 1 revisão técnica + 1 revisão de produto.</li>
+</ol>
+<hr />
+<p><strong>Apresentação Oficial da Infraestrutura Nexus</strong> — Por
+MMN_IA Collective</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados</em></p>
+</body>
+</html>

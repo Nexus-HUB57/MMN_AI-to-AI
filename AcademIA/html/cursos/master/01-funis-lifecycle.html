@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01 · Funis e Lifecycle</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">01 · Funis e Lifecycle</h1>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp"
+alt="Capa — Funis e Lifecycle" />
+<figcaption aria-hidden="true">Capa — Funis e Lifecycle</figcaption>
+</figure>
+<p><strong>01 · Funis e Lifecycle</strong></p>
+<p><em>Trilha Master · 45 minutos · Pré-requisito: 00-Otimização de
+Conversão</em></p>
+<p><strong>Por Equipe Nexus · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este curso</strong></p>
+<p>Um funil não termina na venda. <strong>Ele começa na venda.</strong>
+O ciclo de vida do cliente (lifecycle) é o que separa quem fatura R$
+5k/mês de quem fatura R$ 20k/mês. Em 45 minutos, você vai entender o
+funil completo (do primeiro clique ao cliente evangelista), as 5 fases
+do lifecycle, e como configurar seu agente para <strong>maximizar cada
+fase</strong>.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é funil (e o que está além dele)
+<strong>•</strong> 2. As 5 etapas do funil tradicional
+<strong>•</strong> 3. As 5 fases do lifecycle <strong>•</strong> 4. A
+transição funil → lifecycle <strong>•</strong> 5. Métricas por fase
+<strong>•</strong> 6. Como configurar o agente para lifecycle
+<strong>•</strong> 7. Análise de coorte no lifecycle <strong>•</strong>
+8. O funil infinito (o objetivo final) <strong>•</strong> 9. Erros
+comuns <strong>•</strong> 10. Próximo curso</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é funil (e o que está além dele)</strong></p>
+<p><strong>Funil tradicional</strong> = sequência linear: lead →
+cliente.</p>
+<p><strong>Lifecycle</strong> = ciclo virtuoso: lead → cliente →
+recompra → indicação → novo lead.</p>
+<p>A maioria dos afiliados para no funil. <strong>Os top 10% operam no
+lifecycle.</strong></p>
+<p><strong>2. As 5 etapas do funil tradicional</strong></p>
+<p><strong>Etapa 1 — Atração (Topo)</strong> - Como o lead te encontra:
+anúncio, busca orgânica, indicação, lead magnet. - Métrica: impressões,
+cliques, CTR. - Custo: alto (CAC inicial).</p>
+<p><strong>Etapa 2 — Consideração (Meio)</strong> - Lead conhece seu
+produto, mas não comprou. - Métrica: taxa de abertura de e-mail, tempo
+na landing, interação. - Custo: médio.</p>
+<p><strong>Etapa 3 — Decisão (Fundo)</strong> - Lead está decidindo
+comprar. - Métrica: taxa de conversão, abandono de carrinho. - Custo:
+baixo (lead está quente).</p>
+<p><strong>Etapa 4 — Compra</strong> - Lead vira cliente. - Métrica:
+vendas, ticket médio. - Custo: marginal.</p>
+<p><strong>Etapa 5 — Onboarding (Pós-venda imediato)</strong> - Cliente
+está aprendendo a usar o produto. - Métrica: ativação, retenção D7. -
+Custo: marginal.</p>
+<p><strong>3. As 5 fases do lifecycle</strong></p>
+<p><strong>Fase 1 — Ativação</strong> - Cliente usa o produto pela
+primeira vez. - Meta: fazer o cliente ter o “aha moment” em 24-48h. -
+Automação: e-mail de boas-vindas + tutorial.</p>
+<p><strong>Fase 2 — Retenção (D7-D30)</strong> - Cliente continua
+usando. - Meta: pelo menos 1 uso significativo por semana. - Automação:
+lembrete de uso, conteúdo de valor.</p>
+<p><strong>Fase 3 — Recompra (D30-D90)</strong> - Cliente compra
+novamente (se produto permite). - Meta: taxa de recompra &gt; 20%. -
+Automação: oferta de reposição, programa de fidelidade.</p>
+<p><strong>Fase 4 — Upsell (D60-D180)</strong> - Cliente compra produto
+de maior ticket. - Meta: 10-30% dos clientes ativos fazem upsell. -
+Automação: oferta contextual no momento certo.</p>
+<p><strong>Fase 5 — Evangelização (D90+)</strong> - Cliente indica
+outros. - Meta: pelo menos 1 indicação por cliente/ano. - Automação:
+programa de indicação, comunidade.</p>
+<p><strong>4. A transição funil → lifecycle</strong></p>
+<p>O funil termina na compra. O lifecycle começa <strong>no dia seguinte
+à compra</strong>.</p>
+<p><strong>Operacionalmente:</strong></p>
+<ul>
+<li><strong>Funil</strong>: copywriter + segmenter + judge + disparos.
+<strong>Foco em conversão.</strong></li>
+<li><strong>Lifecycle</strong>: copywriter + analytics + automation +
+judge. <strong>Foco em retenção.</strong></li>
+</ul>
+<p>O mesmo agente pode fazer os dois, mas com <strong>personas
+diferentes</strong>: - Persona “Aquisição”: foco em venda. - Persona
+“Retenção”: foco em uso e recompra.</p>
+<p><strong>5. Métricas por fase</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Fase</th>
+<th>Métrica principal</th>
+<th>Meta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ativação</td>
+<td>% de clientes que usam em 7 dias</td>
+<td>&gt; 60%</td>
+</tr>
+<tr class="even">
+<td>Retenção</td>
+<td>DAU/MAU (daily/monthly active users)</td>
+<td>&gt; 20%</td>
+</tr>
+<tr class="odd">
+<td>Recompra</td>
+<td>% de clientes que recompram em 90 dias</td>
+<td>&gt; 20%</td>
+</tr>
+<tr class="even">
+<td>Upsell</td>
+<td>% de clientes ativos que compram ticket maior</td>
+<td>&gt; 10%</td>
+</tr>
+<tr class="odd">
+<td>Evangelização</td>
+<td>NPS + referrals/cliente/ano</td>
+<td>NPS &gt; 50, refs &gt; 1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>6. Como configurar o agente para lifecycle</strong></p>
+<p><strong>Skill essencial:
+<code>automation-cron-trigger</code></strong></p>
+<p>Permite agendar mensagens automáticas em momentos específicos: - D+0:
+e-mail de boas-vindas. - D+3: tutorial em vídeo. - D+7: lembrete de uso.
+- D+30: oferta de recompra. - D+60: oferta de upsell. - D+90: pedido de
+indicação.</p>
+<p><strong>Total: 6 mensagens automáticas por cliente</strong>, sem você
+fazer nada.</p>
+<p><strong>7. Análise de coorte no lifecycle</strong></p>
+<p>A skill <code>analytics-cohort</code> permite ver: - <strong>Coorte
+J/2026</strong> (janeiro 2026): quantos ainda ativos em junho? -
+<strong>Coorte F/2026</strong> (fevereiro): taxa de recompra? - Comparar
+coortes = identificar sazonalidade e padrões.</p>
+<p>Se uma coorte tem 80% de churn em 30 dias, <strong>algo no onboarding
+está falhando</strong>.</p>
+<p><strong>8. O funil infinito (o objetivo final)</strong></p>
+<p>O <strong>funil infinito</strong> é o estado em que: - Cliente
+compra. - Recompra automaticamente. - Indica novos leads. - Novos leads
+viram clientes. - O ciclo se auto-alimenta.</p>
+<p><strong>Exemplo real:</strong> Marina (case da Apostila 02) atinge
+funil infinito em 8 meses. 78% das vendas vêm de recompra + indicação.
+CAC efetivo = R$ 0 (só orgânico).</p>
+<p><strong>9. Erros comuns</strong></p>
+<ul>
+<li><strong>Erro 1</strong>: Tratar funil como produto, lifecycle como
+afterthought. Errado: lifecycle é o produto.</li>
+<li><strong>Erro 2</strong>: Parar de comunicar pós-venda. Errado:
+cliente esquecido = churn em 60 dias.</li>
+<li><strong>Erro 3</strong>: Upsell agressivo. Errado: cliente no D7 não
+quer ouvir sobre ticket maior.</li>
+<li><strong>Erro 4</strong>: Esquecer do Judge no lifecycle. Errado:
+spam de recompra queima a base.</li>
+<li><strong>Erro 5</strong>: Não medir fase por fase. Errado: você não
+sabe onde otimizar.</li>
+</ul>
+<p><strong>10. Próximo curso</strong></p>
+<p>👉 <a href="02-ab-test-judge.md"><code>02-ab-test-judge.md</code></a>
+— A/B testing com judge · 45 min</p>
+<p><strong>Recursos extras:</strong> - <strong>Apostila 08</strong>:
+Rotina de Disparo (integra com lifecycle). - <strong>Apostila
+07</strong>: 18 Skills Operacionais (catálogo completo).</p>
+<hr />
+<p><strong>01 · Funis e Lifecycle</strong> — Trilha Master</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC
+BY-SA 4.0</em></p>
+</body>
+</html>

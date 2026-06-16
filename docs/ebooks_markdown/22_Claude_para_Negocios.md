@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/22_Claude_para_Negocios.png)
+![Capa](../../assets/ebook_covers/25_Claude_para_Negocios1.png)
 
 **Claude para Negócios: A IA que Impulsiona o Crescimento e a Inovação -
 Estratégias Essenciais para Empresas**

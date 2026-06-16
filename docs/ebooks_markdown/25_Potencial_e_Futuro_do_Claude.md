@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/25_Potencial_e_Futuro_do_Claude.png)
+![Capa](../../assets/ebook_covers/aaa0b8b0-6061-11f1-98e9-a533f04b58a1.png)
 
 **O Potencial e o Futuro do Claude**
 

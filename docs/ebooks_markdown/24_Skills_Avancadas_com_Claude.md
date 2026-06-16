@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/24_Skills_Avancadas_com_Claude.png)
+![Capa](../../assets/ebook_covers/a93fc920-6061-11f1-98e9-a533f04b58a1.png)
 
 **Claude: Skills Avançadas - Domine a Criação de Soluções Inteligentes e
 Personalizadas com IA**

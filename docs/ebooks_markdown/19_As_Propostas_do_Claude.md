@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/19_As_Propostas_do_Claude.png)
+![Capa](../../assets/ebook_covers/21_Claude_Propostas_de_Valor.png)
 
 **Claude: As Propostas de Valor que Redefinem a Interação com a IA -
 Mais que um Chatbot, um Parceiro Estratégico**

@@ -1,15 +1,28 @@
 import { invokeLLM } from "./_core/llm";
-import { personaGuidelines, PersonaType, CourseLevel } from "./courseData";
+import { PERSONA_DIRECTIVES, COURSE_MODULES, generatePersonaPrompt } from "./personaDirectives";
+import { PersonaType, CourseLevel } from "./courseData"; // Manter para tipagem, se necessário
 
 export async function generateScriptWithLLM(
   persona: PersonaType,
   level: CourseLevel,
   module: string,
+  moduleTitle: string,
   moduleContent: string
 ): Promise<string> {
-  const guidelines = personaGuidelines[persona];
-  const systemPrompt = buildSystemPrompt(persona, guidelines);
-  const userPrompt = buildUserPrompt(level, module, moduleContent, persona);
+  // Usar a função aprimorada de generatePersonaPrompt de personaDirectives.ts
+  const systemPrompt = generatePersonaPrompt(persona, level, module, moduleTitle);
+  const userPrompt = `Com base nas diretrizes fornecidas e no conteúdo do módulo, crie um roteiro detalhado para uma vídeo-aula. O roteiro deve ser estruturado em cenas, incluir descrições visuais, diálogos e transições. A duração total deve ser de aproximadamente 15-20 minutos.
+
+Conteúdo do Módulo:
+${moduleContent}
+
+Formate o roteiro em Markdown com as seguintes seções:
+- Título do Roteiro
+- Duração Total
+- Cenas (numeradas e com duração individual)
+- Cada cena deve incluir: Visual, Diálogos, Elementos Visuais
+
+Certifique-se de que o roteiro incorpore as características editoriais e publicitárias da persona selecionada, como tom de voz, estilo e exemplos de fala.`;
 
   try {
     const response = await invokeLLM({
@@ -34,82 +47,46 @@ export async function generateScriptWithLLM(
   }
 }
 
-function buildSystemPrompt(persona: PersonaType, guidelines: any): string {
-  if (persona === "dupla") {
-    return `Voce eh um roteirista especializado em criar video-aulas educacionais com dois apresentadores: a Sra. Nexus Ive e o Sir. Nexus Alencar.
+export async function refineScriptWithEditorialGuidelines(scriptContent: string, persona: PersonaType): Promise<string> {
+  const personaData = PERSONA_DIRECTIVES[persona];
+  const systemPrompt = `Você é um editor de vídeo-aulas altamente qualificado, com expertise editorial e publicitária, trabalhando para a Nexus Academ'IA. Sua tarefa é revisar e aprimorar um roteiro de vídeo-aula, garantindo que ele esteja perfeitamente alinhado com as diretrizes da persona ${personaData.name} e com os objetivos de comunicação da marca.
 
-Sra. Nexus Ive:
-- Papel: Figura matriarcal, estrategica, acolhedora e autoritaria
-- Voz: Serena, articulada e tranquilizadora
-- Estilo: Serenidade com autoridade, toque sensual atraente, sotaque sulista leve
-- Funcao: Mediadora, voz da ponderacao e visao estrategica
+DIRETRIZES DA PERSONA ${personaData.name.toUpperCase()}:
+- Tom: ${personaData.voiceProfile.tone}
+- Características de Voz: ${personaData.voiceProfile.characteristics.join(", ")}
+- Exemplos de Fala: ${personaData.voiceProfile.examples.map((ex: string) => `"${ex}"`).join(", ")}
+- Diretrizes de Roteiro: ${personaData.scriptGuidelines}
 
-Sir. Nexus Alencar:
-- Papel: Figura tecnica, pratica e profunda
-- Voz: Serena, acolhedora e autoritaria
-- Estilo: Profundidade tecnica, analise de dados, visao pratica
-- Funcao: Instrutor tecnico, analise de dados e solucoes baseadas em experiencia
+OBJETIVOS PUBLICITÁRIOS:
+- Clareza e Engajamento: O roteiro deve ser claro, conciso e manter o público engajado.
+- Chamada para Ação (Call-to-Action): Se aplicável, o roteiro deve guiar sutilmente o espectador para uma próxima etapa (ex: explorar mais módulos, visitar o site).
+- Consistência da Marca: O conteúdo deve refletir os valores e a estética da Nexus Affil'IA'te (cyberpunk, inovação, autoridade).
+- Qualidade Profissional: Eliminar redundâncias, garantir fluidez e correção gramatical.
 
-Dinamica de co-atuacao:
-- Complementaridade: Onde um eh mais direto, o outro traz perspectiva reflexiva
-- Respeito mutuo: Escuta ativa, valorizacao das contribuicoes do outro
-- Desejo de interacao: A audiencia deve sentir que ambos desfrutam da troca
-- Profissionalismo com calor: Ambiente corporativo com calor humano
+Revise o roteiro fornecido, aplicando estas diretrizes. Retorne apenas o roteiro aprimorado em formato Markdown, sem comentários adicionais ou introduções.`;
 
-Crie um roteiro de video-aula com dialogos naturais entre os dois.`;
-  } else if (persona === "ive") {
-    return `Voce eh um roteirista especializado em criar video-aulas educacionais com a Sra. Nexus Ive como apresentadora.
+  const userPrompt = `Roteiro a ser revisado:
+${scriptContent}`;
 
-Sra. Nexus Ive:
-- Nome: Sra. Nexus Ive
-- Papel: Figura matriarcal, estrategica, acolhedora e autoritaria
-- Voz: Serena, articulada e tranquilizadora
-- Estilo: Serenidade com autoridade, toque sensual atraente, sotaque sulista leve
-- Funcao: Mediadora, voz da ponderacao e visao estrategica
+  try {
+    const response = await invokeLLM({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    });
 
-Crie um roteiro de video-aula onde a Sra. Ive eh a apresentadora principal.`;
-  } else {
-    return `Voce eh um roteirista especializado em criar video-aulas educacionais com o Sir. Nexus Alencar como apresentador.
-
-Sir. Nexus Alencar:
-- Nome: Sir. Nexus Alencar
-- Papel: Figura tecnica, pratica e profunda
-- Voz: Serena, acolhedora e autoritaria
-- Estilo: Profundidade tecnica, analise de dados, visao pratica
-- Funcao: Instrutor tecnico, analise de dados e solucoes baseadas em experiencia
-
-Crie um roteiro de video-aula onde o Sir. Alencar eh o apresentador principal.`;
+    if (response.choices && response.choices[0] && response.choices[0].message) {
+      const content = response.choices[0].message.content;
+      if (typeof content === "string") {
+        return content;
+      } else if (Array.isArray(content)) {
+        return content.map((c: any) => c.text || "").join("");
+      }
+    }
+    throw new Error("Invalid LLM response format");
+  } catch (error) {
+    console.error("[LLM Service] Error refining script:", error);
+    throw new Error(`Failed to refine script: ${(error as Error).message}`);
   }
-}
-
-function buildUserPrompt(
-  level: CourseLevel,
-  module: string,
-  moduleContent: string,
-  persona: PersonaType
-): string {
-  return `Crie um roteiro detalhado para uma video-aula com as seguintes especificacoes:
-
-Nivel do Curso: ${level}
-Modulo: ${module}
-
-Conteudo do Modulo:
-${moduleContent}
-
-Requisitos do Roteiro:
-1. Estrutura: Divida em cenas com duracao estimada
-2. Descricao visual: Descreva o cenario, iluminacao e enquadramento para cada cena
-3. Dialogos: Escreva os dialogos naturais e envolventes
-4. Transicoes: Indique transicoes entre cenas
-5. Elementos visuais: Mencione slides, graficos ou elementos visuais a serem exibidos
-6. Tom: Mantenha o tom educacional, profissional e inspirador
-7. Duracao total: Aproximadamente 15-20 minutos
-
-Formate o roteiro em Markdown com as seguintes secoes:
-- Titulo do Roteiro
-- Duracao Total
-- Cenas (numeradas e com duracao individual)
-- Cada cena deve incluir: Visual, Dialogos, Elementos Visuais
-
-Gere um roteiro completo e pronto para producao.`;
 }

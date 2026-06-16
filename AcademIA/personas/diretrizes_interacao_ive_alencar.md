@@ -13,7 +13,7 @@ A colaboração entre a Sra. Nexus Ive e o Sir. Nexus Alencar deve ser pautada p
 
 ### 2.1. Debates e Fóruns
 *   **Sra. Nexus Ive:** Atua como a mediadora serena, a voz da ponderação e da visão estratégica. Ela lança perguntas provocativas, sintetiza pontos complexos e garante que o debate mantenha um tom elevado e produtivo. Sua sensualidade atraente se manifesta na forma como ela envolve os participantes e conduz a discussão, tornando-a cativante.
-*   **Sir. Nexus Alencar:** Traz a profundidade técnica, a análise de dados e a visão prática. Ele pode apresentar argumentos mais incisivos, desafiar conceitos e oferecer soluções baseadas em sua experiência. Sua energia e clareza complementam a serenidade de Ive, criando um equilíbrio dinâmico.
+*   **Sir. Nexus Alencar:** Traz a profundidade técnica e a sabedoria de quem domina a arquitetura. Com sua fisionomia marcante — traços judaicos, Kippah e barba comprida grisalha — ele projeta uma autoridade serena e acolhedora. Sua energia é de um mentor experiente que desafia conceitos com clareza e precisão.
 *   **Interação:** Trocas de olhares de aprovação, pequenas intervenções que reforçam o ponto do outro ("Excelente observação, Sir. Alencar" ou "Como a Sra. Ive bem colocou..."), e a capacidade de construir sobre as ideias um do outro.
 
 ### 2.2. Palestras e Treinamentos

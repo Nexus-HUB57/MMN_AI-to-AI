@@ -1,12 +1,13 @@
 # Roteiro da Vídeo Aula: 00 · Boas-vindas ao Nexus
 
 **Persona:** Sir Nexus Alencar
-**Voz:** Serena, acolhedora e autoritária
-**Vestimenta:** Social em tons de azul
+**Características:** Homem de meia-idade, traços judaicos, Kippah, barba comprida grisalha, olhos azuis expressivos.
+**Voz:** Serena, acolhedora e autoritária.
+**Vestimenta:** Social em tons de azul.
 
 ## Cena 1: Introdução e Boas-vindas (Duração: 1 minuto)
 
-**Visual:** Sir Nexus Alencar em um cenário de escritório moderno e tecnológico, com o logo da Nexus Affil'IA'te discretamente visível. Ele olha diretamente para a câmera com uma expressão serena e um leve sorriso.
+**Visual:** Sir Nexus Alencar em um cenário de escritório moderno e tecnológico, com o logo da Nexus Affil'IA'te discretamente visível. Sua presença projeta sabedoria e autoridade serena. Ele olha diretamente para a câmera com uma expressão acolhedora e um leve sorriso.
 
 **Sir Nexus Alencar:** "Olá a todos e sejam muito bem-vindos à Nexus Academ'IA! Eu sou Sir Nexus Alencar, e é uma honra guiá-los nesta jornada transformadora. Vocês acabaram de dar um passo crucial para o futuro do marketing de afiliados, um futuro potencializado pela inteligência artificial."
 

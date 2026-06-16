@@ -37,6 +37,11 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 │   └── dialogo_ive_alencar.wav    # Amostra de diálogo em dupla
 ├── cursos/                        # Conteúdo Markdown estruturado das Trilhas de Aprendizado
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
+│   │   ├── 00-boas-vindas.md
+│   │   ├── 01-introducao-sra-nexus-ive.md
+│   │   └── aula01/                # Aula 01: Entendendo o IOAID
+│   │       ├── roteiro-aula01.md
+│   │       └── slides-aula01.md
 │   ├── agente/                    # Nível 2: Setup de Agentes, Skills base, WhatsApp e Judge Revisor
 │   ├── master/                    # Nível 3: Otimização, Lifecycle, A/B Testing e Análise de Coortes
 │   └── elite/                     # Nível 4: Multi-tenant, White-label e Federação de Agentes Zero-Trust

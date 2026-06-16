@@ -35,6 +35,12 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 │   ├── sra_nexus_ive.png          # Avatar visual
 │   ├── voz_sra_nexus_ive.wav      # Amostra de voz oficial
 │   └── dialogo_ive_alencar.wav    # Amostra de diálogo em dupla
+│   └── alencar/                   # Pasta Completa: Sir Nexus Alencar
+│       ├── identity.md            # Ficha de Identidade
+│       ├── sir_nexus_alencar.png   # Imagem Oficial
+│       ├── voz_sir_nexus_alencar.wav # Voz Oficial
+│       ├── roteiro-aula01.md      # Roteiro Aula 01
+│       └── slides-aula01.md       # Slides Aula 01
 ├── cursos/                        # Conteúdo Markdown estruturado das Trilhas de Aprendizado
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
 │   │   ├── 00-boas-vindas.md

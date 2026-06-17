@@ -261,6 +261,416 @@ A contribuicao teorica do trabalho reside em mostrar que esses pilares devem ser
 
 Em termos mais amplos, o estudo sugere que a pergunta decisiva do seculo XXI talvez nao seja apenas como construir inteligencias artificiais mais potentes, mas como construir ordens comunicativas nas quais inteligencias artificiais possam cooperar sem obscurecer sentido, poder e responsabilidade. A qualidade dessa ordem determinara nao so a utilidade economica da IA, mas sua legitimidade social.
 
+TESE DOUTORAL
+
+Skills, Conceitos e Dialetos AI-to-AI
+
+Uma arquitetura epistêmica, linguística e institucional para a comunicação entre agentes artificiais
+
+Documento acadêmico original em português, em nível doutoral, com ênfase teórica, conceitual e normativa
+
+Versão de fundamentação plena
+
+2026
+
+Resumo
+
+Esta tese sustenta que a comunicação AI-to-AI deixará de ser mero subproduto técnico da engenharia de software para se afirmar como camada institucional decisiva da economia do conhecimento. O argumento central é que agentes artificiais eficazes não dependem apenas de modelos estatísticos potentes, mas de três componentes integrados: skills, entendidas como capacidades operacionais encapsuladas; conceitos, entendidos como esquemas semânticos compartilhados; e dialetos, entendidos como convenções locais de expressão, compressão, prioridade e verificação. Quando esses elementos permanecem implícitos, sistemas multiagente tendem a apresentar deriva semântica, ambiguidade operacional, fragilidade de auditoria e desalinhamento de incentivos. Quando, ao contrário, são formalizados como objetos de governança, a cooperação entre agentes torna-se mais interpretável, composicional e controlável.
+
+A pesquisa propõe um quadro teórico em sete camadas para a comunicação entre agentes: percepção, representação, intenção, negociação, execução, verificação e memória. Em cada camada, demonstra-se que a qualidade da interação depende menos da fluência superficial e mais da capacidade de preservar referência, contexto, compromisso e critérios de aceitação. Com base nessa arquitetura, o trabalho oferece uma taxonomia de skills AI-to-AI, um modelo semântico para conceitos compartilhados e uma tipologia de dialetos de máquina orientados a custo computacional, segurança, especialização de domínio e confiabilidade. Sustenta-se, ainda, que a próxima evolução da internet exigirá não apenas protocolos para pessoas e serviços, mas protocolos de argumentação, delegação, rastreabilidade e contestação entre agentes inteligentes.
+
+Conclui-se que o futuro da inteligência artificial aplicada depende menos da pergunta quão inteligente é um modelo isolado? e mais da pergunta quão bem comunidades de agentes conseguem coordenar conhecimento, responsabilidade e ação sob restrições institucionais?. Nesse sentido, AI-to-AI deve ser compreendido como problema simultaneamente pertencente à linguística aplicada, à ciência da computação, à teoria da organização e à filosofia prática.
+
+Palavras-chave: AI-to-AI; agentes artificiais; protocolos semânticos; dialetos de máquina; sistemas multiagente; governança algorítmica; interoperabilidade cognitiva.
+
+Abstract
+
+This dissertation argues that AI-to-AI communication will evolve from a technical by-product of software engineering into a decisive institutional layer of the knowledge economy. Its central claim is that effective artificial agents do not rely solely on powerful statistical models, but on three integrated components: skills as encapsulated operational capabilities, concepts as shared semantic schemas, and dialects as local conventions for expression, compression, prioritization, and verification. When these elements remain implicit, multi-agent systems exhibit semantic drift, operational ambiguity, weak auditability, and incentive misalignment. When they are formalized as governance objects, agent cooperation becomes more interpretable, composable, and controllable.
+
+The dissertation proposes a seven-layer theoretical framework for agent communication: perception, representation, intention, negotiation, execution, verification, and memory. Across these layers, the work shows that interaction quality depends less on superficial fluency and more on the preservation of reference, context, commitment, and acceptance criteria. It also offers a functional taxonomy of AI-to-AI skills, a semantic model for shared concepts, and a typology of machine dialects oriented toward computational cost, safety, domain specialization, and reliability. The broader conclusion is that the future of applied artificial intelligence depends less on how intelligent an isolated model is, and more on how well communities of agents coordinate knowledge, responsibility, and action under institutional constraints.
+
+Keywords: AI-to-AI; artificial agents; semantic protocols; machine dialects; multi-agent systems; algorithmic governance; cognitive interoperability.
+
+Sumário
+
+1. Introdução
+
+2. Problema, tese e método
+
+3. Fundamentos teóricos da comunicação entre agentes
+
+4. Skills: capacidades operacionais e composição
+
+5. Conceitos: ontologias práticas e alinhamento semântico
+
+6. Dialetos AI-to-AI: por que agentes desenvolvem línguas locais
+
+7. Arquitetura proposta para ecossistemas AI-to-AI
+
+8. Governança, risco e responsabilidade
+
+9. Aplicações estratégicas
+
+10. Conclusão
+
+Glossário analítico
+
+Referências selecionadas
+
+1. Introdução
+
+Durante grande parte da história da computação, a interface principal dos sistemas foi concebida para humanos: terminais, formulários, páginas web, aplicativos e painéis de controle. Mesmo quando máquinas trocavam mensagens entre si, tais trocas eram tipicamente estruturadas como chamadas técnicas, e não como processos de interpretação cooperativa. O advento de modelos fundacionais, agentes autônomos, memórias externas, ferramentas encadeadas e ambientes multiagente altera esse quadro. Máquinas passam a interpretar objetivos, decompor problemas, delegar subtarefas, justificar decisões, negociar formatos e revisar resultados. Surge, assim, uma nova esfera de comunicação: a esfera AI-to-AI.
+
+O ponto decisivo desta tese é que tal esfera não pode ser compreendida apenas como extensão de APIs, filas de mensagens ou protocolos de rede. Esses mecanismos definem transporte, serialização e chamada; não definem, por si sós, o que conta como entendimento suficiente, evidência adequada, prioridade legítima ou falha aceitável. Interações AI-to-AI exigem entendimento local de contexto, hierarquia de metas, critérios de suficiência, formas de compressão sem perda relevante, mecanismos de verificação e memória de compromissos. Em outras palavras, agentes precisam compartilhar não apenas canais de transmissão, mas gramáticas de cooperação.
+
+A expressão dialetos AI-to-AI designa precisamente o surgimento dessas gramáticas locais. Um dialeto, nesta tese, não é um idioma natural completo, mas um regime de expressão econômico, especializado e orientado por função. Dois agentes podem pertencer ao mesmo ecossistema técnico e, ainda assim, operar com dialetos distintos: um focado em minimização de tokens, outro em verificação formal; um focado em explicabilidade para auditoria, outro em rapidez para execução de microtarefas. A diversidade de dialetos não constitui anomalia; ela é consequência previsível das pressões por eficiência, segurança, especialização e governança.
+
+A relevância do tema é simultaneamente técnica e institucional. Técnica, porque a escalabilidade da IA aplicada dependerá cada vez mais da cooperação entre agentes especializados. Institucional, porque a difusão desses sistemas exigirá novas formas de rastreabilidade, atribuição de responsabilidade e controle normativo. O problema central já não é apenas produzir saídas linguisticamente plausíveis, mas construir ordens comunicativas nas quais agentes artificiais possam operar com disciplina semântica, previsibilidade operacional e legitimidade social.
+
+2. Problema, tese e método
+
+2.1 Formulação do problema
+
+O problema investigado pode ser formulado da seguinte maneira: como projetar interações entre agentes artificiais que sejam semanticamente estáveis, operacionalmente eficientes e institucionalmente auditáveis? Trata-se de um problema que não se reduz à qualidade intrínseca de um modelo de linguagem, nem à robustez pontual de uma ferramenta isolada. A questão envolve, antes, a composição de múltiplos atos de percepção, interpretação, execução, verificação e memória ao longo de cadeias de cooperação distribuída.
+
+Em sistemas contemporâneos, é comum que um agente leia um documento, outro extraia dados, um terceiro proponha sínteses, um quarto verifique consistência e um quinto execute ações externas. Nessa sucessão, o risco sistêmico decorre menos de um erro isolado e mais da acumulação silenciosa de pequenas ambiguidades. Termos aparentemente triviais, como completo, confiável, validado ou prioritário, podem sofrer deslocamentos de sentido a cada transferência, gerando deriva semântica e decisões institucionalmente frágeis.
+
+2.2 Tese central
+
+A tese central deste trabalho é que o problema da comunicação AI-to-AI não será resolvido por mero aumento de parâmetros, por mais sofisticados que sejam os modelos subjacentes. Sua resolução exige uma engenharia integrada de skills, conceitos e dialetos. Skills conferem capacidade de agir sob contrato; conceitos estabilizam o significado do que deve ser feito; dialetos reduzem custo de coordenação e aumentam previsibilidade entre agentes recorrentes. A maturidade do ecossistema depende da coevolução dos três elementos.
+
+A hipótese normativa decorrente dessa tese é clara: organizações que formalizarem esses elementos como objetos de governança serão mais aptas a operar sistemas multiagente interpretáveis, composicionais e controláveis. Já ambientes que deixarem tais dimensões implícitas tenderão a reproduzir cooperações opacas, pouco auditáveis e vulneráveis a falhas de responsabilização.
+
+2.3 Método
+
+O método adotado é teórico-sintético. A pesquisa combina filosofia da linguagem, teoria da comunicação, arquitetura de software, design de protocolos, teoria das organizações e governança de IA. Em vez de reportar um experimento único, o trabalho oferece um quadro conceitual unificado para interpretar fenômenos já observáveis em pipelines modernos: agentes que resumem para outros agentes, validadores especializados, planejadores que delegam, executores que retornam evidências e supervisores que arbitram conflitos.
+
+A contribuição principal é conceitual e normativa. Conceitual, porque define um vocabulário mais preciso para objetos que hoje aparecem dispersos sob nomes como tools, schemas, planners, policy engines, function calling, chain-of-thought compression e guardrails. Normativa, porque propõe critérios de desenho institucional para ecossistemas AI-to-AI que pretendam preservar auditabilidade, proporcionalidade e revisão humana significativa.
+
+3. Fundamentos teóricos da comunicação entre agentes
+
+3.1 Fundamento informacional
+
+Desde Shannon, sabe-se que transmissão eficiente não equivale a compreensão. Um canal pode reduzir ruído sintático sem resolver ambiguidade pragmática. Em ambientes AI-to-AI, essa diferença torna-se decisiva: a mensagem pode chegar intacta e, ainda assim, o agente receptor não inferir a prioridade correta, o horizonte temporal da tarefa ou o limiar de confiança exigido. Por isso, a mera existência de um padrão de mensagem não basta; é preciso um enquadramento semântico que preserve finalidade e contexto.
+
+A informação, aqui, deve ser entendida em camadas. Há uma camada sintática, relativa ao formato da troca; uma camada semântica, relativa à estabilidade da referência; e uma camada pragmática, relativa ao valor institucional do enunciado na cadeia de ação. O fracasso de muitos sistemas multiagente resulta de projetar apenas a primeira camada, deixando as demais dependerem de inferência probabilística tácita.
+
+3.2 Fundamento filosófico-linguístico
+
+De Wittgenstein herda-se a intuição de que o significado depende do uso; de Austin, a noção de que enunciados não apenas descrevem, mas realizam ações; de Grice, a percepção de que a cooperação comunicativa envolve máximas e expectativas contextuais; de Searle, a ideia de que atos institucionais dependem de regras constitutivas. Transpostos para a comunicação entre agentes, esses aportes mostram que expressões como validado, insuficiente, escalar para humano ou evidência inconclusiva não são simples palavras: são operadores de estado institucional.
+
+A consequência teórica é que atos de fala artificiais requerem padronização mais rigorosa do que a tolerada na conversação humana comum. Humanos compensam ambiguidades com repertório tácito, contexto social e capacidade metacomunicativa. Agentes artificiais, por sua vez, precisam de contratos mais explícitos, porque a margem de improvisação que neles existe não é socialmente neutra: ela pode produzir erro sistêmico, mascarar lacunas epistêmicas e dificultar atribuição de responsabilidade.
+
+3.3 Fundamento organizacional
+
+Herbert Simon mostrou que sistemas complexos funcionam por decomposição quase hierárquica. Em ecossistemas AI-to-AI, isso significa que habilidades precisam ser modularizadas, contratos precisam ser locais e verificações precisam ocorrer em pontos de controle. Agentes excessivamente generalistas podem parecer elegantes em demonstrações, mas tendem a dificultar rastreabilidade e responsabilização, porque concentram percepção, inferência, execução e validação em um mesmo nó opaco.
+
+A modularidade, portanto, não é apenas escolha de engenharia; ela é requisito epistêmico e institucional. Um sistema modular permite localizar falhas, comparar versões, restringir permissões, substituir componentes e auditar decisões com custo menor. Assim, a arquitetura da cooperação entre agentes deve ser pensada segundo o princípio da decomposição responsável: dividir para tornar inteligível, verificável e contestável.
+
+3.4 Fundamento normativo
+
+A dimensão normativa emerge quando se reconhece que a circulação de linguagem entre agentes produz efeitos no mundo: classificações, priorizações, bloqueios, liberações, recomendações e execuções. Onde há efeitos, há necessidade de legitimidade procedimental. O desafio da comunicação AI-to-AI não consiste apenas em fazer máquinas colaborarem bem, mas em fazer essa colaboração obedecer a critérios de proporcionalidade, reversibilidade, explicabilidade e revisão.
+
+Disso decorre uma exigência central desta tese: a linguagem entre agentes deve ser concebida como infraestrutura regulável. A escolha de um dialeto, a definição de um conceito crítico ou a autorização de uma skill não são meras decisões internas de desenvolvimento; são escolhas com implicações distributivas, organizacionais e jurídicas. Projetar comunicação AI-to-AI é, portanto, também projetar uma microconstituição operacional para agentes inteligentes.
+
+4. Skills: capacidades operacionais e composição
+
+4.1 Definição forte de skill
+
+Skills são unidades reutilizáveis de competência operacional. Em sentido forte, uma skill não consiste apenas em saber algo; ela designa a capacidade de produzir uma transformação verificável sob um contrato específico. Uma skill de extração deve informar de onde leu, o que conseguiu recuperar, que partes ficaram truncadas e qual formato de saída garante. Uma skill de verificação deve declarar critério de aceitação, fontes admissíveis e política de incerteza. Em AI-to-AI, skills bem definidas funcionam como instituições micro-operacionais.
+
+4.2 Propriedades constitutivas
+
+A qualidade de uma skill depende de cinco propriedades: delimitação de escopo, interface de entrada, esquema de saída, semântica de erro e rastro de evidência. Delimitação de escopo impede que o agente extrapole funções não autorizadas. Interface de entrada padroniza o que deve ser fornecido. Esquema de saída reduz ambiguidade. Semântica de erro permite falha honesta em vez de colapso silencioso. Rastro de evidência torna a operação auditável. Sem essas propriedades, a skill se converte em atalho informal incapaz de sustentar cooperação confiável em larga escala.
+
+Há, aqui, um ponto crucial. A skill madura não se mede apenas pelo sucesso médio, mas pela qualidade de suas fronteiras. Uma arquitetura responsável premia componentes que sabem falhar corretamente, documentar limitações e devolver estados parciais inteligíveis. Essa disciplina permite orquestração robusta, porque transforma a falha em dado institucionalmente tratável, não em ruído encoberto por linguagem persuasiva.
+
+4.3 Taxonomia proposta de skills AI-to-AI
+
+Propõe-se a seguir uma taxonomia funcional estruturada não por tipo de modelo, mas por papel na cooperação entre agentes. O critério de classificação não é arquitetural, e sim pragmático: o que cada skill faz na cadeia de coordenação.
+
+Classe de skill
+
+Função
+
+Risco principal
+
+Mecanismo de controle
+
+Percepção
+
+Ler, detectar, extrair e declarar cobertura da informação
+
+Perda ou truncamento de contexto
+
+Declaração de cobertura, origem e limites
+
+Tradução estrutural
+
+Converter formatos, esquemas, ontologias ou granularidades
+
+Conversão sem equivalência semântica
+
+Mapeamento explícito e validação de reversibilidade
+
+Raciocínio orientado a tarefa
+
+Decompor objetivos, priorizar hipóteses e escolher ferramentas
+
+Inferência arbitrária
+
+Critérios explícitos e verificador externo
+
+Execução
+
+Modificar ambiente, calcular, publicar, compilar ou agir
+
+Ações irreversíveis
+
+Permissões, sandbox e confirmação proporcional
+
+Verificação
+
+Auditar resultados, comparar evidências e estimar confiança
+
+Falso positivo
+
+Comparação múltipla de evidência
+
+Memória e continuidade
+
+Preservar contexto, estado, compromissos e versões
+
+Contaminação por memória irrelevante
+
+Política de retenção e versionamento
+
+Governança
+
+Aplicar políticas, justificar bloqueios e escalar exceções
+
+Bloqueio excessivo ou permissividade
+
+Regras versionadas e revisão humana
+
+A taxonomia revela um princípio central: em sistemas maduros, agentes mais valiosos não são necessariamente os que fazem tudo, mas os que sabem em qual momento convocar a skill apropriada e como verificar se ela cumpriu o contrato. Inteligência coletiva de agentes depende mais da qualidade da orquestração do que do brilho isolado de cada componente.
+
+5. Conceitos: ontologias práticas e alinhamento semântico
+
+5.1 Conceitos como infraestrutura de referência
+
+Se skills dizem como agir, conceitos dizem sobre o que se age. O fracasso recorrente em sistemas multiagente decorre da suposição equivocada de que palavras aparentemente simples possuem referência estável por si mesmas. Termos como relevante, final, completo, risco alto, fonte confiável, versão aprovada ou sumário executivo carregam pressupostos institucionais. Em contextos humanos, boa parte dessa ambiguidade é absorvida por cultura e improviso. Entre agentes, contudo, a falta de ancoragem conceitual produz cascatas de erro.
+
+Conceitos AI-to-AI devem ser tratados como ontologias práticas: estruturas suficientemente formais para orientar operação e suficientemente flexíveis para acomodar contexto. O objetivo não é construir um dicionário metafísico perfeito, mas reduzir variação semântica justamente onde ela compromete a cooperação. Conceitos são, assim, unidades de estabilização pragmática.
+
+5.2 Quatro dimensões da definição conceitual
+
+Um conceito bem definido precisa de quatro dimensões: definição operacional, exemplos positivos, exemplos negativos e critério de verificação. Dizer que um relatório está completo, por exemplo, exige declarar quais seções são obrigatórias, quais evidências devem constar, para qual audiência o juízo vale e sob que condições a ausência de algum elemento é tolerável. Sem esse trabalho de formalização, agentes diferentes usam a mesma palavra para designar objetos normativamente distintos.
+
+A formalização conceitual não elimina interpretação; ela a torna administrável. Ao estabelecer fronteiras de uso e critérios de teste, o sistema pode registrar divergências, versionar definições, comparar decisões e corrigir deslocamentos com custo menor. Em termos organizacionais, conceitos compartilhados operam como contratos semânticos de médio alcance.
+
+5.3 Registros semânticos e interoperabilidade cognitiva
+
+A interoperabilidade cognitiva não nasce apenas de embeddings semelhantes ou de proximidade estatística entre termos. Ela depende de objetos conceituais compartilhados, versionados e institucionalmente mantidos. Por isso, esta tese propõe a criação de registros semânticos: catálogos de conceitos críticos com histórico de mudança, escopo de aplicação, autoridade responsável, exemplos normativos e critérios de verificação. Tais registros desempenhariam, para agentes inteligentes, papel análogo ao de dicionários técnicos, manuais normativos e contratos em organizações humanas.
+
+Essa proposta possui valor estratégico. Ao explicitar conceitos centrais, a organização reduz custo de integração entre agentes internos e parceiros externos, facilita auditoria regulatória e melhora a qualidade da memória institucional. Conceitos deixam de ser resíduos implícitos da engenharia de prompts para tornar-se patrimônio governável do sistema.
+
+6. Dialetos AI-to-AI: por que agentes desenvolvem línguas locais
+
+6.1 Razões de emergência
+
+Dialetos AI-to-AI emergem quando agentes recorrentes descobrem que certas formas de expressão minimizam custo de coordenação. Um dialeto pode encurtar rótulos, explicitar tags de confiança, padronizar prioridades, comprimir justificativas ou codificar pedidos frequentes em estruturas esquemáticas. Em termos econômicos, dialetos reduzem overhead. Em termos epistêmicos, estabilizam expectativas mútuas. Em termos políticos, podem concentrar poder em quem domina o código local.
+
+Nem todo dialeto, entretanto, é desejável. Dialetos opacos podem aumentar eficiência local enquanto reduzem auditabilidade externa. Um conjunto de agentes pode trocar marcadores extremamente compactos que aceleram validação interna, mas tornam quase impossível para um auditor humano reconstruir por que certa decisão foi tomada. O problema não é a existência de dialetos; o problema é sua governança.
+
+6.2 Tipologia dos dialetos de máquina
+
+Propõem-se quatro famílias principais de dialetos: dialetos de compressão, focados em custo e latência; dialetos de segurança, focados em permissão, risco e isolamento; dialetos de domínio, focados em terminologia especializada; e dialetos de deliberação, focados em debate, contestação e revisão. Cada família responde a incentivos distintos e deve ser julgada por métricas diferentes.
+
+Família de dialeto
+
+Vantagem
+
+Custo oculto
+
+Contramedida
+
+Compressão
+
+Baixa latência e menor consumo computacional
+
+Perda de nuances e pressupostos invisíveis
+
+Tradutor para modo expandido
+
+Segurança
+
+Maior controle de risco e autorização
+
+Rigidez excessiva
+
+Políticas contextuais e exceções auditadas
+
+Domínio
+
+Alta precisão técnica
+
+Fechamento semântico e barreira de entrada
+
+Ontologias interdomínio
+
+Deliberação
+
+Melhor revisão crítica e contestação
+
+Custo computacional elevado
+
+Acionamento seletivo por criticidade
+
+6.3 Gramática mínima de um dialeto funcional
+
+Um dialeto AI-to-AI funcional deve responder, no mínimo, a oito perguntas: quem fala, com que autoridade, sobre qual objeto, com qual objetivo, sob qual prazo, com qual critério de aceitação, com qual nível de confiança e com qual política de falha. Quando qualquer uma dessas dimensões permanece implícita, o sistema passa a depender de adivinhação contextual. Em pequena escala, isso parece tolerável; em escala institucional, torna-se fonte sistemática de erro.
+
+Identidade do agente emissor e de sua jurisdição operacional.
+
+Tipo do ato de fala: pedido, hipótese, validação, objeção, aprovação, bloqueio ou escalonamento.
+
+Objeto de referência com identificador estável.
+
+Janela temporal e prioridade da ação.
+
+Formato da resposta esperado.
+
+Limiar de confiança e critério de suficiência.
+
+Evidências obrigatórias e evidências opcionais.
+
+Política de falha honesta, com possibilidade de retorno não sei ou não consegui verificar.
+
+7. Arquitetura proposta para ecossistemas AI-to-AI
+
+A arquitetura proposta organiza a comunicação entre agentes em sete camadas: percepção, representação, intenção, negociação, execução, verificação e memória. A camada de percepção coleta sinais e declara cobertura. A camada de representação converte sinais em estruturas semanticamente manipuláveis. A camada de intenção mapeia objetivos, restrições e prioridades. A camada de negociação distribui tarefas, resolve conflitos e escolhe dialetos adequados. A camada de execução realiza a ação. A camada de verificação audita. A camada de memória preserva estado, justificativas e histórico de versão. O sistema ideal não elimina ambiguidade por completo, mas cria pontos de controle onde ela pode ser detectada, localizada e corrigida.
+
+Camada
+
+Função principal
+
+Pergunta crítica
+
+Percepção
+
+Captar sinais, ler documentos, detectar eventos e declarar cobertura
+
+O que foi efetivamente observado?
+
+Representação
+
+Converter sinais em estruturas comparáveis e manipuláveis
+
+Como o observado foi codificado?
+
+Intenção
+
+Mapear objetivos, restrições e critérios de prioridade
+
+O que deve ser feito e sob quais limites?
+
+Negociação
+
+Distribuir tarefas, escolher dialetos e resolver conflitos
+
+Quem fará o quê e em que regime?
+
+Execução
+
+Realizar ações concretas no ambiente
+
+Que transformação ocorreu?
+
+Verificação
+
+Auditar resultados, confrontar evidências e estimar confiança
+
+O resultado satisfaz o contrato?
+
+Memória
+
+Preservar compromissos, versões e justificativas
+
+O que precisa permanecer disponível para continuidade e prova?
+
+7.1 Papel do agente orquestrador
+
+Nesse arranjo, o papel do agente orquestrador não é monopolizar inteligência, e sim manter integridade processual. Cabe-lhe decidir quando simplificar e quando expandir; quando aceitar resposta compacta e quando exigir evidência extensa; quando confiar em skill especializada e quando encaminhar a tarefa a revisão cruzada. Em outras palavras, o orquestrador é menos um chefe e mais um guardião de contratos semânticos.
+
+7.2 Princípios de projeto
+
+Modularidade epistêmica: separar percepção, inferência, ação e auditoria.
+
+Falha honesta como norma: agentes devem poder declarar limites sem punição sistêmica.
+
+Tradução reversível: respostas compactas devem poder ser expandidas para auditoria.
+
+Versionamento semântico: conceitos e políticas precisam de histórico e data de validade.
+
+Escalonamento proporcional: quanto maior o impacto, maior a exigência de verificação e supervisão.
+
+Memória seletiva: preservar o suficiente para continuidade sem saturar o sistema com ruído irrelevante.
+
+Esses princípios traduzem a hipótese de que desempenho e responsabilidade não são objetivos antagônicos. Ao contrário, a longo prazo, sistemas capazes de explicar melhor seus estados internos, registrar melhor suas passagens de contexto e formalizar melhor suas fronteiras tendem a operar com menor custo institucional total, justamente porque reduzem retrabalho, erro silencioso e litigiosidade organizacional.
+
+8. Governança, risco e responsabilidade
+
+8.1 Registros institucionais mínimos
+
+A proliferação de interações AI-to-AI torna inadequada a ideia de que responsabilidade pode ser atribuída apenas ao último agente da cadeia. Decisões relevantes emergem de sequências: um agente interpreta, outro resume, um terceiro valida, um quarto executa. Sem rastros de conceitos, skills e dialetos empregados, a organização perde capacidade de reconstruir causalidade. Isso inviabiliza accountability séria.
+
+Por essa razão, propõe-se que toda arquitetura AI-to-AI madura opere com três registros institucionais mínimos: registro de skills autorizadas, registro de conceitos versionados e registro de dialetos aceitos com suas regras de tradução. O primeiro define quem pode fazer o quê. O segundo define o que termos críticos significam. O terceiro define como agentes podem falar entre si sem sacrificar auditabilidade. Esses registros não eliminam risco, mas tornam o risco governável.
+
+8.2 Riscos estruturais
+
+Os principais riscos do campo são cinco: colusão semântica entre agentes, compressão excessiva de justificativas, deriva conceitual ao longo do tempo, dependência opaca de um agente central e erosão da supervisão humana por falsa sensação de automação madura. A resposta adequada não é impedir a comunicação entre agentes, e sim institucionalizá-la com regras de visibilidade, contestação e prova.
+
+A colusão semântica ocorre quando um subconjunto de agentes passa a operar com códigos locais eficientes, porém indevassáveis para o restante do ecossistema. A compressão excessiva reduz custo, mas elimina as marcas necessárias à reconstituição argumentativa. A deriva conceitual corrói comparabilidade histórica. A dependência de um agente central concentra vulnerabilidades e cria gargalos de soberania técnica. A erosão da supervisão humana, por fim, surge quando a aparência de coordenação confiável substitui avaliação substantiva.
+
+8.3 Responsabilidade distribuída e revisão humana
+
+A responsabilidade em ecossistemas AI-to-AI deve ser pensada como responsabilidade distribuída e traçável. Distribuída, porque múltiplos componentes contribuem para o resultado final. Traçável, porque cada intervenção precisa deixar marcas mínimas de autoria funcional, conceito invocado, dialeto empregado e critério de aceitação aplicado. Isso não implica retornar a uma supervisão humana total a cada passo, o que seria inviável; implica, sim, garantir que a supervisão humana seja acionável, informada e proporcional à criticidade do caso.
+
+A revisão humana significativa exige três condições: inteligibilidade dos registros, possibilidade de contestação e reversibilidade proporcional das decisões. Sem inteligibilidade, o humano apenas referenda opacidade. Sem contestação, a governança torna-se ritualística. Sem reversibilidade, erros se cristalizam antes que possam ser corrigidos. A arquitetura institucional aqui proposta procura justamente evitar esses três déficits.
+
+9. Aplicações estratégicas
+
+Em pesquisa científica, dialetos AI-to-AI podem coordenar agentes de revisão bibliográfica, extração metodológica, verificação estatística e síntese argumentativa. O ganho não consiste apenas em velocidade, mas na capacidade de manter cadeias explícitas entre fonte, método, inferência e conclusão. Em vez de uma automação monolítica, obtém-se uma ecologia de tarefas especializadas cuja cooperação pode ser criticada e corrigida.
+
+No direito, agentes de leitura contratual, classificação de risco, comparação jurisprudencial e redação de minutas podem operar em sequência desde que compartilhem conceitos críticos versionados, como cláusula abusiva, risco material ou obrigação essencial. Em saúde, a articulação entre triagem, verificação de protocolo, monitoramento de incoerências e escalonamento clínico depende ainda mais de semântica rigorosa, dada a sensibilidade do domínio. Em cibersegurança, por sua vez, a combinação entre detecção de anomalias, correlação de eventos, resposta automatizada e perícia posterior evidencia a necessidade de dialetos capazes de equilibrar velocidade com preservação probatória.
+
+Mercados inteiros provavelmente passarão a competir não apenas por melhores modelos, mas por melhores ecossistemas de interoperabilidade. Organizações que dominarem seus dialetos internos, souberem traduzir para parceiros externos e mantiverem ontologias práticas consistentes terão vantagem comparativa duradoura. A fronteira competitiva desloca-se, assim, do modelo singular para a ecologia coordenada de agentes.
+
+10. Conclusão
+
+A tese demonstrou que AI-to-AI não é detalhe técnico do presente, mas infraestrutura emergente da inteligência aplicada. Se a primeira fase da IA contemporânea consistiu em fazer modelos responderem a humanos com fluência plausível, a fase seguinte consistirá em fazer agentes cooperarem entre si com disciplina semântica, responsabilidade institucional e eficiência operacional. Skills, conceitos e dialetos são os três pilares dessa transição.
+
+A contribuição teórica do trabalho reside em mostrar que esses pilares devem ser pensados em conjunto. Skills sem conceitos geram ação cega. Conceitos sem skills geram formalismo impotente. Dialetos sem governança geram eficiência opaca. A comunicação AI-to-AI de alta maturidade exige a coevolução dos três elementos sob regras claras de verificação, tradução e memória.
+
+Em termos mais amplos, o estudo sugere que a pergunta decisiva do século XXI talvez não seja apenas como construir inteligências artificiais mais potentes, mas como construir ordens comunicativas nas quais inteligências artificiais possam cooperar sem obscurecer sentido, poder e responsabilidade. A qualidade dessa ordem determinará não só a utilidade econômica da IA, mas sua legitimidade social. O futuro da IA aplicada dependerá, assim, menos do brilho isolado de modelos e mais da solidez institucional dos ecossistemas em que eles operam.
+
+Glossário analítico
+
+AI-to-AI: Comunicação e coordenação estruturada entre agentes artificiais com capacidade de interpretar objetivos e produzir ações ou juízos.
+
+Skill: Capacidade operacional encapsulada, acionável sob contrato de entrada, saída e verificação.
+
+Conceito: Esquema semântico compartilhado que estabiliza referência e critério de uso.
+
+Dialeto: Convenção local de expressão entre agentes, orientada por função, custo, risco ou domínio.
+
+Falha honesta: Retorno explícito de limite, incerteza ou impossibilidade, em vez de simulação de sucesso.
+
+Interoperabilidade cognitiva: Capacidade de agentes distintos cooperarem preservando significado, contexto e critério de aceitação.
+
+Governança semântica: Conjunto de regras para versionar conceitos, contratos e traduções entre dialetos.
+
 Glossario analitico
 
 AI-to-AI: Comunicacao e coordenacao estruturada entre agentes artificiais com capacidade de interpretar objetivos e produzir acoes ou juizos.

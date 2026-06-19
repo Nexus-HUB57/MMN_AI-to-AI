@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Skills Essenciais](../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
+![Capa — Skills Essenciais](../../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
 
 **01 · Skills essenciais: copywriter + audience-segmenter**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Você já tem 1 agente rodando com 3 skills básicas. Agora é hora de dominar as 2 skills mais importantes do dia a dia: **copywriter** (que gera mensagens persuasivas) e **audience-segmenter** (que segmenta sua base em coortes acionáveis). Em 30 minutos, você vai entender como cada uma funciona, quais parâmetros ajustar, e como combiná-las para campanhas de alta conversão. Para o catálogo completo das 18 skills, consulte a **Apostila 07**.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Skills são as capacidades do seu agente. Você vai conhecer as 18 skills base, aprender a criar skills customizadas para seu nicho, e montar seu primeiro workflow encadeado (3 skills em série).
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 00-primeiro-agente](00-primeiro-agente.md)
+**Próximo:** [→ 02-disparo-whatsapp](02-disparo-whatsapp.md)
+
+
 
 **Sumário**
 
@@ -190,5 +203,60 @@ O fluxo ideal de uma campanha:
 ---
 
 **01 · Skills Essenciais** --- Trilha Agente
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Skills Essenciais
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Catálogo**
+
+Liste as 18 skills do catálogo. Para cada uma, marque: já uso, quero aprender, não preciso. Foque nas 3 primeiras.
+
+**Exercício 2 — Skill custom**
+
+Crie 1 skill nova para seu nicho (ex: copywriter para sua vertical). Use o template da apostila 07.
+
+**Exercício 3 — Combinação**
+
+Monte um workflow de 3 skills encadeadas (ex: audience-segmenter → copywriter → disparador). Rode em teste.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Qual a diferença entre "skill" e "ferramenta" no Nexus?
+2. Cite 3 skills que todo afiliado deveria dominar (independente do nicho).
+3. Como versionar skills (controle de mudança)?
+4. O que é "skill library" e como contribuir?
+5. Qual a economia estimada ao dominar 5 skills essenciais?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

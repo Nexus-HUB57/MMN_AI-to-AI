@@ -8,7 +8,7 @@ tags: [academia, cases, orquestracao, autonomia, resultados]
 pattern: "MMN_IA"
 ---
 
-![Capa — Cases Reais de Orquestração Autônoma](../../assets/ebook_covers/ACAD-apostila-02-cases-orquestracao.webp)
+![Capa — Cases Reais de Orquestração Autônoma](../../assets/ebook_covers/ACAD-apostila-02-cases-orquestracao-autonoma.webp)
 
 **Cases Reais de Orquestração Autônoma**
 

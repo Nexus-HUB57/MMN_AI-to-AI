@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Blueprints Elite](../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
+![Capa — Blueprints Elite](../../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
 
 **00 · Blueprints Elite**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Você chegou na **Trilha Elite**. Este material é para os top 10% da rede, ou para quem quer chegar lá. Os blueprints aqui não são "técnicas avançadas" — são **decisões estratégicas** que separam operadores comuns de operadores excepcionais. Em 60 minutos, você vai entender os 5 pilares do top 10%, os 3 caminhos para escalar, e o que os campeões fazem diferente.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Trilha Elite é o top 10% dos afiliados Nexus. Você vai se auto-avaliar nos 5 pilares, benchmarkar contra os melhores, e construir um plano pessoal de 6 meses para sair de Master para Elite.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← ../master/03-coortes-churn](../master/03-coortes-churn.md)
+**Próximo:** [→ 01-multi-tenant-whitelabel](01-multi-tenant-whitelabel.md)
+
+
 
 **Sumário**
 
@@ -195,5 +208,60 @@ Elite tem custos reais:
 ---
 
 **00 · Blueprints Elite** --- Trilha Elite
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Blueprints Elite
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Auto-avaliação**
+
+Pontue-se honestamente nos 5 pilares (1-10). Qual é seu gap mais crítico? Defina plano de 90 dias para fechar.
+
+**Exercício 2 — Benchmark**
+
+Identifique 3 afiliados Elite (top 10%). O que eles fazem que você não faz? Documente 5 padrões.
+
+**Exercício 3 — Plano elite**
+
+Escreva seu plano pessoal para sair de "Master" para "Elite" em 6 meses. Marcos mensais.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são os 5 pilares do perfil Elite?
+2. Qual o LTV mínimo para ser considerado Elite?
+3. Como construir rede de mentores Elite?
+4. Qual a diferença entre "Elite técnico" e "Elite de negócio"?
+5. Quando parar de buscar Elite (rendimento decrescente)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

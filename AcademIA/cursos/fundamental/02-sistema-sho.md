@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Sistema SHO](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
+![Capa — Sistema SHO](../../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
 
 **02 · Sistema SHO — Sistema Híbrido de Orquestração**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 O IOAID é o "sistema nervoso" da Nexus. Mas todo sistema nervoso precisa de um **sistema imunológico** que detecte, contenha, e recupere de falhas. Esse sistema se chama **SHO** (Sistema Híbrido de Orquestração). Em 15 minutos, você vai entender como ele funciona, por que ele é o que permite autonomia real, e como configurar os 3 modos de operação para o seu perfil.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> SHO (Sistema Híbrido de Orquestração) é o sistema imunológico do seu ecossistema: monitora, diagnostica, cura e aprende. Em 30 minutos, você vai entender a anatomia do SHO, 3 cenários reais onde ele brilha, e métricas de sucesso (uptime 99.97%, MTTR < 2 min).
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 01-entendendo-ioaid](01-entendendo-ioaid.md)
+**Próximo:** [→ 03-painel-afiliado](03-painel-afiliado.md)
+
+
 
 **Sumário**
 
@@ -206,5 +219,60 @@ Para aprofundamento:
 ---
 
 **02 · Sistema SHO** --- Trilha Fundamental
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Sistema SHO
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Cenário**
+
+Escreva 1 cenário onde seu agente pode falhar (ex: API do WhatsApp cai). Como o SHO deveria reagir em < 2 minutos?
+
+**Exercício 2 — Métricas**
+
+No painel, localize os indicadores de "saúde do SHO" (uptime, MTTR, taxa de cura). Anote os valores atuais.
+
+**Exercício 3 — Plano**
+
+Crie um mini-plano de contingência (1 página) para quando o SHO ficar offline por > 30 minutos. Quem é avisado? O que fazer manualmente?
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são os 4 papéis do SHO (monitora, diagnostica, cura, aprende)?
+2. O que é MTTR e qual é a meta do SHO?
+3. Como o SHO evita reincidência de incidentes?
+4. Cite 2 cenários onde o SHO NÃO deveria atuar automaticamente.
+5. Qual a diferença entre "restart" e "fallback" no SHO?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

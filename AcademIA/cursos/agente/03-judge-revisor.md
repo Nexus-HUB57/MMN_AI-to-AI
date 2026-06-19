@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Lendo o Judge Revisor](../../assets/ebook_covers/ACAD-apostila-05-sete-telas-essenciais.webp)
+![Capa — Lendo o Judge Revisor](../../../assets/ebook_covers/ACAD-apostila-05-sete-telas-essenciais.webp)
 
 **03 · Lendo o Judge Revisor**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 O Judge Revisor é o componente mais importante para a sua segurança operacional. Ele é o que te protege de ban do WhatsApp, de multas da LGPD, e de mensagens com tom inadequado. Em 30 minutos, você vai entender como ele funciona, como configurar as regras, como interpretar os vereditos (verde/amarelo/vermelho), e como calibrá-lo ao longo do tempo. Para a interface detalhada, consulte a tela `/dashboard/judge` ou a **Apostila 05** (Tela 04).
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Judge Revisor é o filtro ético e de compliance do seu agente. Você vai aprender os 3 modos (Revisão, Bloqueio Parcial, Bloqueio Total), configurar regras para seu nicho, e calibrar para evitar falsos positivos que matam conversão.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 02-disparo-whatsapp](02-disparo-whatsapp.md)
+**Próximo:** [→ ../master/00-otimizacao-conversao](../master/00-otimizacao-conversao.md)
+
+
 
 **Sumário**
 
@@ -190,5 +203,60 @@ Você completou a **Trilha Agente**. Próximo passo:
 ---
 
 **03 · Lendo o Judge Revisor** --- Trilha Agente
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Judge Revisor
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Configurar**
+
+Configure o Judge com 5 regras específicas do seu nicho (ex: "nunca prometer ganho de R$X sem disclaimer"). Teste 10 prompts.
+
+**Exercício 2 — Calibrar**
+
+Para cada bloqueio do Judge, classifique: falso positivo (bloqueou certo), falso negativo (não bloqueou errado). Meta: < 5% FP.
+
+**Exercício 3 — Auditoria**
+
+Revise o histórico de 1 semana do Judge. Identifique 1 padrão de bloqueio que pode virar regra automática.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são os 3 modos do Judge (Revisão, Bloqueio Parcial, Bloqueio Total)?
+2. Quando usar cada modo (cenário real)?
+3. Como evitar "Judge excessivamente cauteloso" (perda de conversão)?
+4. O que são "falsos positivos" e como mitigá-los?
+5. Como treinar o Judge com feedbacks do operador?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

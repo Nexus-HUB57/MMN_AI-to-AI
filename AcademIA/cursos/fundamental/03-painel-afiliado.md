@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Primeiros passos no Painel do Afiliado](../../assets/ebook_covers/ACAD-apostila-05-sete-telas-essenciais.webp)
+![Capa — Primeiros passos no Painel do Afiliado](../../../assets/ebook_covers/ACAD-apostila-05-sete-telas-essenciais.webp)
 
 **03 · Primeiros passos no Painel do Afiliado**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Você já conhece o ecossistema, o IOAID, e o SHO. Agora é hora de colocar a mão na massa. Este curso é o seu **tour guiado pelo painel do afiliado** — onde tudo acontece no dia a dia. Em 20 minutos, você vai navegar com confiança pelas 7 telas essenciais, configurar comissões, criar seu primeiro agente, e entender onde fica cada coisa. Para o detalhamento profundo de cada tela, consulte a **Apostila 05** (7 Telas Essenciais).
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> O Painel do Afiliado é onde a mágica aparece para o operador. Você vai aprender a navegar nas 7 telas essenciais, configurar widgets, exportar relatórios, e transformar dados em decisões. Conclui a Trilha Fundamental.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 02-sistema-sho](02-sistema-sho.md)
+**Próximo:** [→ ../agente/00-primeiro-agente](../agente/00-primeiro-agente.md)
+
+
 
 **Sumário**
 
@@ -206,5 +219,60 @@ Você completou a **Trilha Fundamental**. Próximo passo:
 ---
 
 **03 · Primeiros passos no Painel do Afiliado** --- Trilha Fundamental
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Painel do Afiliado
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Tour guiado**
+
+Acesse o painel e complete o tour guiado (se houver). Anote os 3 indicadores que você não conhecia.
+
+**Exercício 2 — Personalização**
+
+Configure ao menos 1 widget customizado no dashboard (gráfico de conversão, mapa de leads, ranking de produtos).
+
+**Exercício 3 — Exportação**
+
+Exporte seus dados de afiliado em CSV. Abra no Excel/Sheets. Identifique 1 insight novo que você não tinha visto na UI.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são os 7 indicadores-padrão do dashboard inicial?
+2. O que significa "CAC" e "LTV" no contexto do painel?
+3. Como configurar alertas automáticos (webhook, e-mail, SMS)?
+4. Qual a diferença entre "comissão direta" e "comissão de rede"?
+5. Como exportar relatórios para contabilidade?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

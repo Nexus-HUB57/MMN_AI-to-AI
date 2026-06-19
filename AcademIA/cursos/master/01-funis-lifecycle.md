@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Funis e Lifecycle](../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp)
+![Capa — Funis e Lifecycle](../../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp)
 
 **01 · Funis e Lifecycle**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Um funil não termina na venda. **Ele começa na venda.** O ciclo de vida do cliente (lifecycle) é o que separa quem fatura R$ 5k/mês de quem fatura R$ 20k/mês. Em 45 minutos, você vai entender o funil completo (do primeiro clique ao cliente evangelista), as 5 fases do lifecycle, e como configurar seu agente para **maximizar cada fase**.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Funis não são páginas — são jornadas. Você vai desenhar as 5 fases do lifecycle do cliente (lead → ativação → retenção → revenue → advocacy), automatizar gatilhos, e analisar coortes para entender retenção real.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 00-otimizacao-conversao](00-otimizacao-conversao.md)
+**Próximo:** [→ 02-ab-test-judge](02-ab-test-judge.md)
+
+
 
 **Sumário**
 
@@ -176,5 +189,60 @@ O **funil infinito** é o estado em que:
 ---
 
 **01 · Funis e Lifecycle** --- Trilha Master
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Funis e Lifecycle
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Mapa lifecycle**
+
+Desenhe as 5 fases do lifecycle do seu cliente (lead, ativação, retenção, revenue, advocacy). Em qual fase você perde mais?
+
+**Exercício 2 — Automação**
+
+Configure 1 automação de lifecycle (ex: e-mail D+3 para inativos). Defina gatilho, mensagem, e métrica.
+
+**Exercício 3 — Coorte**
+
+Analise a coorte de Janeiro vs. Fevereiro. A retenção está melhorando? Se não, por quê?
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são as 5 fases do lifecycle de um afiliado MMN?
+2. Como "ativação" se diferencia de "conversão"?
+3. Qual a taxa de churn aceitável para um afiliado em mês 1?
+4. O que é "NPS" e como usar para advocacy?
+5. Quando parar de tentar reter um cliente (e focar em novos) ?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

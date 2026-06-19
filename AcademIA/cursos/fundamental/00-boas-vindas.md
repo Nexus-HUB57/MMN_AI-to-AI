@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Boas-vindas ao Nexus](../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
+![Capa — Boas-vindas ao Nexus](../../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
 
 **00 · Boas-vindas ao Nexus**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Bem-vindo à Nexus Affil'IA'te — o ecossistema de afiliados com IA distribuída do Brasil. Este curso é o seu primeiro passo. Em 15 minutos, você vai entender o que é a Nexus, como ela funciona, o que esperar dos próximos 30 dias, e — o mais importante — por que você tomou a decisão certa de estar aqui. Vamos juntos.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Você vai entender o que é o Nexus em 5 minutos: o ecossistema, o painel do afiliado, e as 4 trilhas que vão te levar de zero a Elite em 90 dias. Este é o curso porta de entrada — leia antes de qualquer outro.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** _(este é o curso de entrada)_
+**Próximo:** [→ 01-entendendo-ioaid](01-entendendo-ioaid.md) · [→ 01-introducao-sra-nexus-ive](01-introducao-sra-nexus-ive.md)
+
+
 
 **Sumário**
 
@@ -159,5 +172,60 @@ Antes de pedir ajuda, tenha em mãos:
 ---
 
 **00 · Boas-vindas ao Nexus** --- Trilha Fundamental
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Boas-Vindas
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Reflexão**
+
+Liste 3 áreas do seu trabalho diário que mais consomem tempo. Para cada uma, pergunte: "um agente IA poderia assumir isso?"
+
+**Exercício 2 — Mapeamento**
+
+Acesse o painel do afiliado. Identifique os 5 indicadores que aparecem na tela inicial. Anote o valor atual de cada um.
+
+**Exercício 3 — Compromisso**
+
+Defina 1 objetivo SMART (específico, mensurável, atingível, relevante, temporal) que você quer atingir com IA nos próximos 90 dias.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Qual é o papel do SHO no ecossistema Nexus?
+2. Cite 2 diferenças entre o agente tradicional e o agente IA agêntico.
+3. Por que a Trilha Fundamental é considerada pré-requisito?
+4. O que significa "operar" no contexto do Nexus (vs. "aprender")?
+5. Qual é o SLA mínimo esperado para latência de resposta do IOAID?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

@@ -8,7 +8,7 @@ tags: [academia, orquestracao, hibrido, agentes, federacao]
 pattern: "MMN_IA"
 ---
 
-![Capa — Orquestração Híbrida de Agentes](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida.webp)
+![Capa — Orquestração Híbrida de Agentes](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
 
 **Orquestração Híbrida de Agentes**
 

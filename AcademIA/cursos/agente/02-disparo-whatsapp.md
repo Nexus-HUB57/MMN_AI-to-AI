@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Disparando no WhatsApp](../../assets/ebook_covers/ACAD-apostila-08-rotina-disparo-agente.webp)
+![Capa — Disparando no WhatsApp](../../../assets/ebook_covers/ACAD-apostila-08-rotina-disparo-agente.webp)
 
 **02 · Disparando no WhatsApp**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Você já tem coortes, copy, e Judge configurado. Agora é hora de **disparar**. Mas disparar no WhatsApp sem estratégia é como pilotar sem bússola: pode dar certo uma vez, mas a segunda acaba em ban. Este curso ensina o protocolo seguro, o agendamento, a personalização, e as 7 regras de ouro anti-ban. Para a rotina diária, consulte a **Apostila 08** (Rotina de Disparo). Para os modelos de campanha prontos, a **Apostila 09**.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Aqui é onde o agente ganha dinheiro: disparar no WhatsApp com Judge em modo Revisão. Você vai aprender setup, segmentação (frio/morno/quente), métricas de 24h, e como respeitar os limites da Meta.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 01-skills-essenciais](01-skills-essenciais.md)
+**Próximo:** [→ 03-judge-revisor](03-judge-revisor.md)
+
+
 
 **Sumário**
 
@@ -203,5 +216,60 @@ Após o disparo, monitore em `/dashboard/dispatch/<id>`:
 ---
 
 **02 · Disparando no WhatsApp** --- Trilha Agente
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Disparo no WhatsApp
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Setup real**
+
+Configure 1 campanha real de WhatsApp para 50 contatos (lista quente). Use o Judge em modo "Revisão". Avalie.
+
+**Exercício 2 — Segmentação**
+
+Crie 3 listas de público (frio, morno, quente) com critérios claros. Dispare mensagens diferentes para cada.
+
+**Exercício 3 — Métricas**
+
+Após 24h, meça: taxa de abertura, resposta, conversão. Compare com baseline anterior. Identifique o principal gargalo.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Por que NÃO disparar sem o Judge em modo "Bloqueio Total"?
+2. Qual o limite diário de mensagens permitido pela Meta?
+3. Como configurar fallback para Telegram quando WhatsApp cai?
+4. Qual a taxa de conversão esperada em lista fria (vs. quente)?
+5. O que é "opt-out" e como respeitar?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/24_Claude_na_Pratica1.png)
+![Capa](../../assets/ebook_covers/21_Claude_na_Pratica.png)
 
 **Claude na Prática: Desbloqueie o Potencial Máximo da IA
 Conversacional - Guia Essencial para Uso Diário**

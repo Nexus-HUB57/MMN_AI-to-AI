@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/21_Claude_Propostas_de_Valor.png)
+![Capa](../../assets/ebook_covers/21_Claude_na_Pratica.png)
 
 **Genspark: A Super IA que Faz Tudo - Seu Guia Completo para Criar,
 Inovar e Dominar o Mercado**

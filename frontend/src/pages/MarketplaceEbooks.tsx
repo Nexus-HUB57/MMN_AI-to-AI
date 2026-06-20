@@ -172,7 +172,7 @@ export default function MarketplaceEbooksPage() {
                     {groups[cat].map((eb) => (
                       <article
               key={eb.slug}
-              className="group bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition flex flex-col"
+              className="group bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition flex flex-col transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20"
             >
               <div
                 className="h-44 relative"

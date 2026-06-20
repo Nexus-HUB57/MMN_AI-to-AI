@@ -5,6 +5,7 @@
  * e checkout integrado. Usa /api/trpc/marketplaceNexus.*
  */
 import { useMemo, useState } from "react";
+import { sortByCollectionRank } from '@/lib/collectionRanking';
 import { Link } from "wouter";
 import { trpc } from "../lib/trpc";
 import { Button } from "../components/ui/button";
@@ -70,7 +71,7 @@ export default function MarketplaceEbooksPage() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return sortByCategoryOrder(ebooks.filter((e) => {
+    return sortByCollectionRank(ebooks.filter((e) => {
       if (filterCategory && e.category !== filterCategory) return false;
       if (filterPack && e.unlockPackSlug !== filterPack) return false;
       if (q && !`${e.title} ${e.subtitle ?? ""} ${e.description ?? ""}`.toLowerCase().includes(q))
@@ -151,10 +152,25 @@ export default function MarketplaceEbooksPage() {
           </p>
         )}
 
-        {/* Vitrine */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((eb) => (
-            <article
+        {/* Vitrine agrupada por coleção (IOAID · SaaS UX) */}
+        {(() => {
+          const groups = filtered.reduce<Record<string, typeof filtered>>((acc, eb) => {
+            const key = eb.category || "Outras";
+            (acc[key] = acc[key] || []).push(eb);
+            return acc;
+          }, {});
+          const orderedCats = Object.keys(groups).sort((a, b) => a.localeCompare(b, "pt-BR"));
+          return (
+            <div className="space-y-10">
+              {orderedCats.map((cat) => (
+                <section key={cat} id={"col-" + cat.toLowerCase().replace(/[^a-z0-9]+/g, "-")} className="scroll-mt-24">
+                  <div className="flex items-baseline justify-between mb-4 border-b border-slate-800 pb-2">
+                    <h2 className="text-xl md:text-2xl font-bold text-emerald-300">{cat}</h2>
+                    <span className="text-xs text-slate-400">{groups[cat].length} ebooks</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {groups[cat].map((eb) => (
+                      <article
               key={eb.slug}
               className="group bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition flex flex-col"
             >
@@ -210,8 +226,13 @@ export default function MarketplaceEbooksPage() {
                 </div>
               </div>
             </article>
-          ))}
-        </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          );
+        })()}
 
         {filtered.length === 0 && !ebooksQuery.isLoading && (
           <p className="text-center text-slate-500 py-12">Nenhum e-book encontrado com esses filtros.</p>

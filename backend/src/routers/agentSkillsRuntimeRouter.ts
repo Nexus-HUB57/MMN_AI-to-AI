@@ -12,6 +12,7 @@ import { addExecution, getTelemetry } from "../agentic/runtimeTelemetry";
 
 // AGENTIC_CONTEXT_DEFAULTS_V2
 import { buildAgenticContextDefaults } from "../agentic/skills/agenticCoreImpls";
+import { Planner } from "../agentic/llmPlanner"; // LLM_PLANNER_V2_WIRED
 import {
   enqueueScheduledPosts,
   getAutoPublisherStats,
@@ -98,6 +99,7 @@ export const agentSkillsRuntimeRouter = router({
       }
 
       const context = {
+      planner: Planner,
         ...buildAgenticContextDefaults(),
         agentId: agent?.id ?? -1,
         userId: ctx.user.id,

@@ -32,6 +32,10 @@ import { allocateBrlToBtc, isBtcLocked, getLevelLabel, getLevelSubtitle, getProg
 import { getAcademiaRuntimeSummary } from "@/lib/nexus-academia";
 // AGENT_LIVE_PANEL_V2
 import AgentLivePanel from "@/components/AgentLivePanel";
+import SalesFunnelDashboard from "../components/SalesFunnelDashboard";
+import AchievementsBadges from "../components/AchievementsBadges";
+import NotificationCenter from "../components/NotificationCenter";
+// SPRINTS_8_9_10_INJECTED
 
 const QUICK_ACTIONS = [
   {
@@ -257,6 +261,11 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
+      <NotificationCenter />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+        <SalesFunnelDashboard />
+        <AchievementsBadges />
+      </div>
             <AgentLivePanel variant="compact" />
       <div className="relative space-y-8 font-sans antialiased">
         {/* Background atmosférico fixo do backoffice usuário */}

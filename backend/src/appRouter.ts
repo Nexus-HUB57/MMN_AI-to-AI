@@ -21,6 +21,7 @@ import { upgradesRouter } from "./routers/upgradesRouter";
 import { packsRouter } from "./routers/packsRouter";
 import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { marketplaceConnectionsRouter } from "./routers/marketplaceConnectionsRouter";
+import { packEntitlementsRouter } from "./routers/packEntitlementsRouter";
 import { skillsRouter } from "./routers/skillsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
@@ -177,6 +178,7 @@ export const appRouter = router({
   marketplaces: marketplacesRouter,
   marketplaceNexus: marketplaceNexusRouter,
   marketplaceConnections: marketplaceConnectionsRouter,
+  packEntitlements: packEntitlementsRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,

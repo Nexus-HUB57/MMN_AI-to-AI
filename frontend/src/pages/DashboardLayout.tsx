@@ -86,187 +86,50 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => window.clearTimeout(timer);
   }, [userMenuOpen]);
 
+  // NEXUS_HUBS_V2 — 3 Hubs: Operar / Crescer / Conta
   const navGroups: NavGroup[] = [
     {
-      title: "Geral",
+      title: "🧠 Operar — Agente & Conteúdo",
       items: [
-        {
-          label: "Dashboard",
-          href: "/dashboard",
-          icon: <BarChart3 className="w-5 h-5" />,
-        },
-        {
-          label: "Rede Binária N.O",
-          href: "/network",
-          icon: <Network className="w-5 h-5" />,
-        },
-        {
-          label: "Comissões",
-          href: "/commissions",
-          icon: <TrendingUp className="w-5 h-5" />,
-        },
-        {
-          label: "Carreira / XP",
-          href: "/career",
-          icon: <Trophy className="w-5 h-5" />,
-        },
-        {
-          label: "Pagamentos",
-          href: "/payments",
-          icon: <Wallet className="w-5 h-5" />,
-        },
-        {
-          label: "Checkout PIX",
-          href: "/pix/checkout",
-          icon: <QrCode className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Histórico PIX",
-          href: "/pix/history",
-          icon: <History className="w-5 h-5" />,
-        },
-        {
-          label: "Bônus & Recompensas",
-          href: "/bonus",
-          icon: <Star className="w-5 h-5" />,
-        },
+        { label: "Painel do Agente", href: "/agents", icon: <Cpu className="w-5 h-5" />, badge: "Live" },
+        { label: "Skills do Agente", href: "/skills", icon: <Sparkles className="w-5 h-5" />, badge: "25" },
+        { label: "Sincronizar IA", href: "/agents/sync", icon: <Globe className="w-5 h-5" /> },
+        { label: "Orquestrador", href: "/orchestrator", icon: <Network className="w-5 h-5" /> },
+        { label: "Hub de Conteúdo", href: "/content-hub", icon: <BookOpen className="w-5 h-5" /> },
+        { label: "Gerador de Conteúdo", href: "/content/generation", icon: <Sparkles className="w-5 h-5" /> },
+        { label: "Calendário Social", href: "/content/calendar", icon: <Calendar className="w-5 h-5" /> },
+        { label: "Materiais", href: "/marketing/materials", icon: <Image className="w-5 h-5" /> },
+        { label: "Contas Sociais", href: "/social/accounts", icon: <MessageSquare className="w-5 h-5" /> },
       ],
     },
     {
-      title: "Agente IA",
+      title: "🚀 Crescer — Vendas & Rede",
       items: [
-        {
-          label: "Painel do Agente",
-          href: "/agents",
-          icon: <Cpu className="w-5 h-5" />,
-          badge: "Beta",
-        },
-        {
-          label: "Sincronizar IA",
-          href: "/agents/sync",
-          icon: <Globe className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Orquestrador",
-          href: "/orchestrator",
-          icon: <Globe className="w-5 h-5" />,
-        },
-        {
-          label: "Packs Nexus",
-          href: "/packs",
-          icon: <Package className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Skills Nexus",
-          href: "/skills",
-          icon: <Sparkles className="w-5 h-5" />,
-          badge: "Plano",
-        },
-        {
-          label: "Upgrades",
-          href: "/upgrades",
-          icon: <Zap className="w-5 h-5" />,
-        },
+        { label: "Marketplace Nexus", href: "/marketplaces", icon: <ShoppingCart className="w-5 h-5" />, badge: "201" },
+        { label: "Minha Loja", href: "/minha-loja", icon: <Globe className="w-5 h-5" /> },
+        { label: "Meu Estoque", href: "/estoque", icon: <Box className="w-5 h-5" /> },
+        { label: "Rastreamento", href: "/tracking/links", icon: <Link2 className="w-5 h-5" /> },
+        { label: "Dropshipping", href: "/dropshipping/orders", icon: <Package className="w-5 h-5" /> },
+        { label: "Rede Binária N.O", href: "/network", icon: <Network className="w-5 h-5" /> },
+        { label: "Sub-Redes (SiSu)", href: "/sisu", icon: <Network className="w-5 h-5" /> },
+        { label: "Comissões", href: "/commissions", icon: <TrendingUp className="w-5 h-5" /> },
+        { label: "Carreira / XP", href: "/career", icon: <Trophy className="w-5 h-5" /> },
+        { label: "Bônus & Recompensas", href: "/bonus", icon: <Star className="w-5 h-5" /> },
+        { label: "Analytics", href: "/utilities", icon: <LineChart className="w-5 h-5" /> },
       ],
     },
     {
-      title: "Nexus Hubs",
+      title: "👤 Conta — Gestão & Pagamentos",
       items: [
-        {
-          label: "Nexus Partners Pack",
-          href: "/subscriptions",
-          icon: <Briefcase className="w-5 h-5" />,
-          badge: "SaaS",
-        },
-        {
-          label: "Painel Partners",
-          href: "/partners",
-          icon: <Users className="w-5 h-5" />,
-          badge: "API",
-        },
-        {
-          label: "Nexus Academ'IA",
-          href: "/academia",
-          icon: <BookOpen className="w-5 h-5" />,
-          badge: "Trilhas",
-        },
-      ],
-    },
-    {
-      title: "Marketing",
-      items: [
-        {
-          label: "Hub de Conteúdo",
-          href: "/content-hub",
-          icon: <BookOpen className="w-5 h-5" />,
-        },
-        {
-          label: "Calendário Social",
-          href: "/content/calendar",
-          icon: <Calendar className="w-5 h-5" />,
-        },
-        {
-          label: "Materiais",
-          href: "/marketing/materials",
-          icon: <Image className="w-5 h-5" />,
-        },
-        {
-          label: "Contas Sociais",
-          href: "/social/accounts",
-          icon: <MessageSquare className="w-5 h-5" />,
-        },
-        {
-          label: "Rastreamento de Links",
-          href: "/tracking/links",
-          icon: <Link2 className="w-5 h-5" />,
-        },
-        {
-          label: "Minha Loja",
-          href: "/minha-loja",
-          icon: <Globe className="w-5 h-5" />,
-        },
-      ],
-    },
-    {
-      title: "Loja & Operações",
-      items: [
-        {
-          label: "Marketplace Nexus",
-          href: "/marketplaces",
-          icon: <ShoppingCart className="w-5 h-5" />,
-          badge: "XP",
-        },
-        {
-          label: "E-books (Revenda)",
-          href: "/marketplaces/ebooks",
-          icon: <BookOpen className="w-5 h-5" />,
-          badge: "R$ 0,50",
-        },
-        {
-          label: "Meu Estoque",
-          href: "/estoque",
-          icon: <Box className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Sub-Redes (SiSu)",
-          href: "/sisu",
-          icon: <Network className="w-5 h-5" />,
-          badge: "CPF",
-        },
-        {
-          label: "Dropshipping",
-          href: "/dropshipping/orders",
-          icon: <Box className="w-5 h-5" />,
-        },
-        {
-          label: "Analytics",
-          href: "/utilities",
-          icon: <LineChart className="w-5 h-5" />,
-        },
+        { label: "Dashboard", href: "/dashboard", icon: <BarChart3 className="w-5 h-5" /> },
+        { label: "Packs Nexus", href: "/packs", icon: <Package className="w-5 h-5" /> },
+        { label: "Upgrades", href: "/upgrades", icon: <Zap className="w-5 h-5" /> },
+        { label: "Pagamentos", href: "/payments", icon: <Wallet className="w-5 h-5" /> },
+        { label: "Checkout PIX", href: "/pix/checkout", icon: <QrCode className="w-5 h-5" /> },
+        { label: "Histórico PIX", href: "/pix/history", icon: <History className="w-5 h-5" /> },
+        { label: "Subscriptions", href: "/subscriptions", icon: <Briefcase className="w-5 h-5" /> },
+        { label: "Partners (API)", href: "/partners", icon: <Users className="w-5 h-5" /> },
+        { label: "Academ'IA", href: "/academia", icon: <BookOpen className="w-5 h-5" /> },
       ],
     },
   ];
@@ -362,7 +225,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Zap className="w-4 h-4 text-background" />
               </div>
               <span className="text-lg font-bold gradient-text hidden sm:inline">
-                MMNAI
+                IOAID · SaaS
               </span>
             </button>
           </div>

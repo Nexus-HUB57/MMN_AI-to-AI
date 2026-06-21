@@ -111,6 +111,72 @@ function PublicCtaBanner({ packSlug, packName, amountCents, description }: { pac
   );
 }
 
+
+// NEXUS_QUICK_ACTIONS_V2
+function NexusQuickActionsBar() {
+  const [, setLocation] = useLocation();
+  const executeMutation = trpc.agentSkillsRuntime.execute.useMutation();
+  const [busySlug, setBusySlug] = useState<string | null>(null);
+  const [result, setResult] = useState<{ ok: boolean; label: string; msg: string } | null>(null);
+
+  const runSkill = async (slug: string, label: string) => {
+    setBusySlug(slug);
+    setResult(null);
+    try {
+      const res: any = await executeMutation.mutateAsync({ slug, params: {}, dryRun: true } as any);
+      setResult({ ok: true, label, msg: `${label} executou em dry-run com sucesso. ${typeof res === "object" ? JSON.stringify(res).slice(0, 120) : ""}` });
+    } catch (e: any) {
+      setResult({ ok: false, label, msg: e?.message ?? "Falha" });
+    } finally {
+      setBusySlug(null);
+    }
+  };
+
+  const actions = [
+    { slug: "prospeccao-outbound", icon: "🎯", label: "Prospectar Leads", color: "from-emerald-500 to-teal-500", action: () => runSkill("prospeccao-outbound", "Prospecção Outbound") },
+    { slug: "auto-publisher", icon: "📤", label: "Publicar Agora", color: "from-purple-500 to-pink-500", action: () => runSkill("auto-publisher", "Auto-Publisher") },
+    { slug: "copywriter-persuasivo", icon: "✍️", label: "Gerar Conteúdo", color: "from-quantum-cyan to-blue-500", action: () => runSkill("copywriter-persuasivo", "Copywriter Persuasivo") },
+    { slug: "tracking", icon: "🔗", label: "Tracking Links", color: "from-amber-500 to-orange-500", action: () => setLocation("/tracking/links") },
+  ];
+
+  return (
+    <section className="rounded-3xl border border-quantum-cyan/30 bg-[linear-gradient(135deg,rgba(7,89,133,0.18),rgba(2,6,23,0.96))] p-5 shadow-2xl shadow-cyan-900/20">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <Badge className="border border-quantum-cyan/40 bg-quantum-cyan/10 text-quantum-cyan mb-1">
+            ⚡ Ações Rápidas · Agente Live
+          </Badge>
+          <h2 className="text-lg font-bold text-white">Operação de vendas em 1 clique</h2>
+        </div>
+      </div>
+
+      {result && (
+        <div className={`mb-3 rounded-xl border p-3 text-sm ${result.ok ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200" : "border-rose-500/40 bg-rose-500/10 text-rose-200"}`}>
+          {result.ok ? "✅" : "❌"} <strong>{result.label}</strong>: {result.msg}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {actions.map((a) => (
+          <button
+            key={a.slug}
+            onClick={a.action}
+            disabled={busySlug === a.slug}
+            className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-left transition hover:border-quantum-cyan/50 disabled:opacity-50`}
+          >
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${a.color}`} />
+            <div className="text-2xl mb-2">{a.icon}</div>
+            <div className="text-sm font-bold text-white">{a.label}</div>
+            <div className="text-[10px] font-mono text-slate-500 mt-1">
+              {busySlug === a.slug ? "⏳ executando…" : a.slug === "tracking" ? "navegar →" : "dry-run"}
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const { profile } = useMarketplaceProfile();
   const { isAuthenticated } = useAuth();
@@ -334,6 +400,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
 
   return (
     <div className="space-y-8 pb-8">
+      <NexusQuickActionsBar />
       {isMonthlyActivationFocus && (
         <section
           id="monthly-activation"

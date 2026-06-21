@@ -43,6 +43,9 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 
+// NEXUS_ONBOARDING_V2
+import OnboardingBundle from "@/components/OnboardingBundle";
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -397,6 +400,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+        <OnboardingBundle />
     </div>
   );
 }

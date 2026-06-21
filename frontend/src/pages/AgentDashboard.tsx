@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Save, AlertCircle } from "lucide-react";
 import AutonomyScoreCard from "@/components/agents/AutonomyScoreCard";
 import { toast } from "sonner";
+// AGENT_LIVE_PANEL_V2
+import AgentLivePanel from "@/components/AgentLivePanel";
 
 export default function AgentDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -48,6 +50,7 @@ export default function AgentDashboard() {
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
+        <AgentLivePanel variant="full" />
         <Loader2 className="animate-spin" />
       </div>
     );

@@ -9,6 +9,9 @@ import {
 } from "../agentic/skills/dispatcher";
 import { computeAutonomyScore } from "../agentic/autonomyScore";
 import { addExecution, getTelemetry } from "../agentic/runtimeTelemetry";
+
+// AGENTIC_CONTEXT_DEFAULTS_V2
+import { buildAgenticContextDefaults } from "../agentic/skills/agenticCoreImpls";
 import {
   enqueueScheduledPosts,
   getAutoPublisherStats,
@@ -95,6 +98,7 @@ export const agentSkillsRuntimeRouter = router({
       }
 
       const context = {
+        ...buildAgenticContextDefaults(),
         agentId: agent?.id ?? -1,
         userId: ctx.user.id,
         agentName: agent?.name ?? "Agente Nexus",

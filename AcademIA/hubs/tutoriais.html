@@ -1,0 +1,66 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Tutoriais · Academ'IA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#0c0c22 0%,#05050f 65%);color:#e6e6f5;font-family:Inter,system-ui,sans-serif;line-height:1.55}
+header{padding:36px 24px;border-bottom:1px solid #20203a;background:rgba(10,10,28,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.nav{display:flex;gap:12px;font-size:13px;opacity:.7;margin-bottom:14px}.nav a{color:#22d3ee;text-decoration:none}
+h1{margin:0;font-size:32px;background:linear-gradient(90deg,#10b981,#22d3ee);-webkit-background-clip:text;color:transparent}
+.sub{opacity:.7;font-size:15px;margin-top:6px}
+.search{margin:18px 0;width:100%;max-width:520px;padding:10px 14px;background:#0d0d22;border:1px solid #20203a;border-radius:10px;color:#e6e6f5;font-size:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));padding:8px 0 60px}
+.card{background:#0d0d22;border:1px solid #20203a;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);border-color:#10b98155}
+.tag{font-size:11px;color:#10b981;background:#161630;border:1px solid #20203a;padding:2px 8px;border-radius:999px;align-self:flex-start;text-transform:uppercase;letter-spacing:.5px}
+h3{margin:4px 0 0;font-size:16px;color:#fff}.repo{font-size:11px;opacity:.55;word-break:break-all}
+.links{display:flex;gap:8px;margin-top:auto}
+.btn{flex:1;text-align:center;padding:8px 10px;border-radius:8px;font-size:13px;text-decoration:none;border:1px solid #20203a;color:#10b981}
+.btn.primary{background:linear-gradient(90deg,#10b981,#22d3ee);color:#001;border-color:transparent;font-weight:600}
+.footer{padding:30px 24px;border-top:1px solid #20203a;opacity:.65;font-size:13px;text-align:center}
+.empty{padding:30px;text-align:center;opacity:.6}
+.kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.kpi .item{background:#0d0d22;border:1px solid #20203a;border-radius:12px;padding:14px}
+.kpi .v{font-size:24px;color:#10b981}.kpi .l{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+@media (max-width:720px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body>
+<header><div class="container">
+<div class="nav"><a href="/academia/hubs/">← Hubs</a> · <a href="/academia/ead/curso">Trilhas</a> · <a href="/academia/hubs/lab.html">Lab</a> · <a href="/academia/hubs/lib.html">Lib</a></div>
+<h1>🧭 Tutoriais</h1>
+<div class="sub">Tutoriais práticos do ecossistema Nexus.</div>
+<input id="search" class="search" placeholder="Buscar..." />
+<div class="kpi">
+ <div class="item"><div class="v" id="kpi-total">–</div><div class="l">Total</div></div>
+ <div class="item"><div class="v" id="kpi-md">–</div><div class="l">Markdown</div></div>
+ <div class="item"><div class="v" id="kpi-html">–</div><div class="l">HTML</div></div>
+</div>
+</div></header>
+<main class="container"><div id="grid" class="grid"><div class="empty">Carregando catálogo...</div></div></main>
+<div class="footer">© Nexus Affil'IA'te · Academ'IA · oneverso.com.br · canal @NexusAffilIAte-w9p</div>
+<script>
+fetch('/api/academia/catalog').then(r=>r.json()).then(cat=>{
+  const items=(cat["tutoriais"]||[]);
+  document.getElementById('kpi-total').textContent=items.length;
+  document.getElementById('kpi-md').textContent=items.filter(i=>i.mdUrl).length;
+  document.getElementById('kpi-html').textContent=items.filter(i=>i.htmlUrl).length;
+  const grid=document.getElementById('grid');
+  function render(){
+    const q=document.getElementById('search').value.toLowerCase();
+    const list=items.filter(i=>i.name.toLowerCase().includes(q)||(i.repoPath||'').toLowerCase().includes(q));
+    if(!list.length){grid.innerHTML='<div class="empty">Nenhum item.</div>';return}
+    grid.innerHTML=list.map(i=>`
+      <div class="card">
+        <span class="tag">Tutoriais</span>
+        <h3>${i.name.replace(/\.md$/,'')}</h3>
+        <div class="repo">${i.repoPath||''}</div>
+        <div class="links">
+          <a class="btn primary" href="${i.htmlUrl}" target="_blank" rel="noopener">Ler HTML</a>
+          <a class="btn" href="${i.mdUrl}" target="_blank" rel="noopener">Markdown</a>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('search').addEventListener('input',render);
+  render();
+}).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">Falha ao carregar.</div>';});
+</script></body></html>

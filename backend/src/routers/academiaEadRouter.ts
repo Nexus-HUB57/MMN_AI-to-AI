@@ -376,6 +376,7 @@ function rowToOverride(row: AcademiaLessonRow) {
     mdPath: row.mdUrl || undefined,
     htmlUrl: row.htmlUrl || undefined,
     thumbnailUrl: row.thumbnailUrl || undefined,
+    coverUrl: row.coverUrl || undefined,
     youtubeStatus: row.youtubeStatus || undefined,
     youtubeChannel: row.youtubeChannel || undefined,
     tags: row.tags && row.tags.length ? row.tags : undefined,
@@ -575,5 +576,53 @@ export const academiaEadRouter = router({
       storage.items = storage.items.filter((item) => item.lessonId !== input.lessonId);
       await writeStorage(storage);
       return { ok: true, removed: before !== storage.items.length, source: "json" as const };
+    }),
+
+  setFeatured: adminProcedure
+    .input(z.object({ lessonId: z.string().min(1), featured: z.boolean() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!(await isAcademiaLessonsAvailable())) {
+        throw new Error("Postgres indisponível");
+      }
+      const updatedBy = ctx.user?.id ? `user:${ctx.user.id}` : "admin:unknown";
+      const existing = await getLesson(input.lessonId);
+      if (!existing) throw new Error(`lesson_not_found:${input.lessonId}`);
+      const row = await upsertLesson(
+        { ...existing, isFeatured: input.featured } as any,
+        updatedBy,
+      );
+      return { ok: true, item: rowToOverride(row), source: "postgres" as const };
+    }),
+
+  setSortOrder: adminProcedure
+    .input(z.object({ lessonId: z.string().min(1), sortOrder: z.number().int() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!(await isAcademiaLessonsAvailable())) {
+        throw new Error("Postgres indisponível");
+      }
+      const updatedBy = ctx.user?.id ? `user:${ctx.user.id}` : "admin:unknown";
+      const existing = await getLesson(input.lessonId);
+      if (!existing) throw new Error(`lesson_not_found:${input.lessonId}`);
+      const row = await upsertLesson(
+        { ...existing, sortOrder: input.sortOrder } as any,
+        updatedBy,
+      );
+      return { ok: true, item: rowToOverride(row), source: "postgres" as const };
+    }),
+
+  setCover: adminProcedure
+    .input(z.object({ lessonId: z.string().min(1), coverUrl: z.string().url() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!(await isAcademiaLessonsAvailable())) {
+        throw new Error("Postgres indisponível");
+      }
+      const updatedBy = ctx.user?.id ? `user:${ctx.user.id}` : "admin:unknown";
+      const existing = await getLesson(input.lessonId);
+      if (!existing) throw new Error(`lesson_not_found:${input.lessonId}`);
+      const row = await upsertLesson(
+        { ...existing, coverUrl: input.coverUrl } as any,
+        updatedBy,
+      );
+      return { ok: true, item: rowToOverride(row), source: "postgres" as const };
     }),
 });

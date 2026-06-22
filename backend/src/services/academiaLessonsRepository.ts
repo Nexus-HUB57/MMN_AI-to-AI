@@ -1,8 +1,6 @@
 /**
- * academiaLessonsRepository — Acesso PostgreSQL à tabela `academia_lessons`.
- *
- * Encapsula leitura e escrita das aulas/overrides da Academ'IA.
- * Usa Pool nativo do pg para evitar acoplamento com drizzle.
+ * academiaLessonsRepository — acesso PostgreSQL à tabela `academia_lessons`.
+ * Inclui featured, sort_order, busca full-text (search_vec) e trigram em title.
  */
 import { Pool } from "pg";
 
@@ -11,9 +9,7 @@ let _pool: Pool | null = null;
 function getPool(): Pool | null {
   const connStr = process.env.DATABASE_URL;
   if (!connStr) return null;
-  if (!_pool) {
-    _pool = new Pool({ connectionString: connStr, max: 5 });
-  }
+  if (!_pool) _pool = new Pool({ connectionString: connStr, max: 5 });
   return _pool;
 }
 
@@ -33,9 +29,12 @@ export type AcademiaLessonRow = {
   youtubeStatus: string | null;
   youtubeChannel: string | null;
   isPublished: boolean;
+  isFeatured: boolean;
+  sortOrder: number;
   tags: string[];
   updatedAt: string;
   updatedBy: string | null;
+  rank?: number;
 };
 
 function mapRow(r: any): AcademiaLessonRow {
@@ -55,9 +54,12 @@ function mapRow(r: any): AcademiaLessonRow {
     youtubeStatus: r.youtube_status,
     youtubeChannel: r.youtube_channel,
     isPublished: r.is_published === null ? true : Boolean(r.is_published),
+    isFeatured: Boolean(r.featured),
+    sortOrder: Number(r.sort_order ?? 1000),
     tags: Array.isArray(r.tags) ? r.tags.filter(Boolean) : [],
     updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
     updatedBy: r.updated_by,
+    ...(r.rank !== undefined ? { rank: Number(r.rank) } : {}),
   };
 }
 
@@ -77,20 +79,37 @@ export async function isAcademiaLessonsAvailable(): Promise<boolean> {
 export async function listLessons(filter?: {
   sectionSlug?: string;
   publishedOnly?: boolean;
+  featuredOnly?: boolean;
+  search?: string;
+  limit?: number;
 }): Promise<AcademiaLessonRow[]> {
   const pool = getPool();
   if (!pool) return [];
   const where: string[] = [];
   const params: any[] = [];
+  let rankSelect = "";
+  let orderSql = "section_slug ASC, sort_order ASC, lesson_id ASC";
   if (filter?.sectionSlug) {
     params.push(filter.sectionSlug);
     where.push(`section_slug = $${params.length}`);
   }
-  if (filter?.publishedOnly) {
-    where.push(`is_published = true`);
+  if (filter?.publishedOnly) where.push("is_published = true");
+  if (filter?.featuredOnly) where.push("featured = true");
+
+  const q = filter?.search?.trim();
+  if (q) {
+    params.push(q);
+    const tsq = `plainto_tsquery('simple', $${params.length})`;
+    params.push(q.toLowerCase());
+    const trgm = `lower(coalesce(title,'')) % $${params.length}`;
+    where.push(`(search_vec @@ ${tsq} OR ${trgm})`);
+    rankSelect = `, GREATEST(ts_rank(search_vec, ${tsq}), similarity(lower(coalesce(title,'')), $${params.length})) AS rank`;
+    orderSql = "rank DESC NULLS LAST, sort_order ASC, lesson_id ASC";
   }
+
   const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
-  const sql = `SELECT * FROM public.academia_lessons ${whereSql} ORDER BY level NULLS LAST, lesson_id`;
+  const limitSql = filter?.limit && filter.limit > 0 ? `LIMIT ${Math.min(filter.limit, 200)}` : "";
+  const sql = `SELECT *${rankSelect} FROM public.academia_lessons ${whereSql} ORDER BY ${orderSql} ${limitSql}`;
   const res = await pool.query(sql, params);
   return res.rows.map(mapRow);
 }
@@ -115,9 +134,11 @@ export async function upsertLesson(
     INSERT INTO public.academia_lessons (
       lesson_id, section_slug, title, subtitle, level, required_tier, duration_s,
       video_url, md_url, html_url, pdf_url, thumbnail_url,
-      youtube_status, youtube_channel, is_published, tags, updated_at, updated_by
+      youtube_status, youtube_channel, is_published, tags,
+      featured, sort_order, updated_at, updated_by
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,COALESCE($15,true),$16,now(),$17
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
+      COALESCE($15,true),$16,COALESCE($17,false),COALESCE($18,1000), now(),$19
     )
     ON CONFLICT (lesson_id) DO UPDATE SET
       section_slug    = EXCLUDED.section_slug,
@@ -135,8 +156,10 @@ export async function upsertLesson(
       youtube_channel = COALESCE(EXCLUDED.youtube_channel, public.academia_lessons.youtube_channel),
       is_published    = COALESCE(EXCLUDED.is_published, public.academia_lessons.is_published),
       tags            = COALESCE(EXCLUDED.tags, public.academia_lessons.tags),
+      featured        = COALESCE(EXCLUDED.featured, public.academia_lessons.featured),
+      sort_order      = COALESCE(EXCLUDED.sort_order, public.academia_lessons.sort_order),
       updated_at      = now(),
-      updated_by      = $17
+      updated_by      = $19
     RETURNING *`;
   const params = [
     input.lessonId,
@@ -155,6 +178,8 @@ export async function upsertLesson(
     input.youtubeChannel ?? null,
     input.isPublished ?? null,
     input.tags ?? null,
+    input.isFeatured ?? null,
+    input.sortOrder ?? null,
     updatedBy,
   ];
   const res = await pool.query(sql, params);
@@ -173,6 +198,7 @@ export async function deleteLesson(lessonId: string): Promise<boolean> {
 export async function lessonsStats(): Promise<{
   total: number;
   published: number;
+  featured: number;
   withVideo: number;
   withMd: number;
   withHtml: number;
@@ -185,22 +211,15 @@ export async function lessonsStats(): Promise<{
   const pool = getPool();
   if (!pool) {
     return {
-      total: 0,
-      published: 0,
-      withVideo: 0,
-      withMd: 0,
-      withHtml: 0,
-      withPdf: 0,
-      withThumb: 0,
-      bySection: {},
-      byLevel: {},
-      updatedAt: new Date().toISOString(),
+      total: 0, published: 0, featured: 0, withVideo: 0, withMd: 0, withHtml: 0,
+      withPdf: 0, withThumb: 0, bySection: {}, byLevel: {}, updatedAt: new Date().toISOString(),
     };
   }
   const totals = await pool.query(`
     SELECT
       count(*)::int AS total,
       count(*) FILTER (WHERE is_published)::int AS published,
+      count(*) FILTER (WHERE featured)::int     AS featured,
       count(*) FILTER (WHERE video_url     IS NOT NULL AND video_url     <> '')::int AS with_video,
       count(*) FILTER (WHERE md_url        IS NOT NULL AND md_url        <> '')::int AS with_md,
       count(*) FILTER (WHERE html_url      IS NOT NULL AND html_url      <> '')::int AS with_html,
@@ -223,6 +242,7 @@ export async function lessonsStats(): Promise<{
   return {
     total: Number(t.total || 0),
     published: Number(t.published || 0),
+    featured: Number(t.featured || 0),
     withVideo: Number(t.with_video || 0),
     withMd: Number(t.with_md || 0),
     withHtml: Number(t.with_html || 0),

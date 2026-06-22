@@ -1,5 +1,6 @@
-// SPRINT10_NOTIFICATION_CENTER_V1
-import { useState, useEffect } from "react";
+// SPRINT10_NOTIFICATION_CENTER_V2 — eventos reais (academia + dashboard)
+import { useEffect, useMemo, useState } from "react";
+import { trpc } from "../lib/trpc";
 
 interface Notification {
   id: string;
@@ -7,26 +8,69 @@ interface Notification {
   title: string;
   message: string;
   timestamp: number;
+  href?: string;
 }
 
 export default function NotificationCenter() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const yt = trpc.academiaEad.youtubeSyncStatus.useQuery(undefined, {
+    retry: false,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const dash = trpc.dashboard.getMyDashboard.useQuery(undefined, {
+    retry: false,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    // Demo: simulate startup notification
-    const demo: Notification = {
-      id: `boot-${Date.now()}`,
+  const notifications = useMemo<Notification[]>(() => {
+    const out: Notification[] = [];
+
+    // Notificação de sistema (boot)
+    out.push({
+      id: "system-boot",
       type: "info",
       title: "Sistema Online",
       message: "Nexus Hub operacional. Agentes IA prontos.",
       timestamp: Date.now(),
-    };
-    setNotifications([demo]);
-  }, []);
+    });
 
+    // Notificação Academ'IA — vídeos unlisted
+    const ytData: any = yt.data;
+    if (ytData?.configured && ytData?.connected) {
+      const count = (ytData.latestVideos || []).length;
+      if (count > 0) {
+        out.push({
+          id: "yt-videos-ready",
+          type: "success",
+          title: "Academ'IA · Vídeos publicados",
+          message: `${count} vídeo(s) disponíveis no canal oficial @NexusAffilIAte-w9p.`,
+          timestamp: Date.now(),
+          href: "/academia/ead/curso",
+        });
+      }
+    }
+
+    // Notificações Dashboard — comissões pendentes
+    const dd: any = dash.data;
+    if (dd?.pendingCommissions && Number(dd.pendingCommissions) > 0) {
+      out.push({
+        id: "commissions-pending",
+        type: "warning",
+        title: "Comissões pendentes",
+        message: `Você possui R$ ${(Number(dd.pendingCommissions) / 100).toFixed(2)} em comissões aguardando confirmação.`,
+        timestamp: Date.now(),
+        href: "/dashboard",
+      });
+    }
+
+    return out.filter((n) => !dismissed.has(n.id));
+  }, [yt.data, dash.data, dismissed]);
+
+  const dismiss = (id: string) => setDismissed((s) => new Set([...s, id]));
   const unread = notifications.length;
-  const dismiss = (id: string) => setNotifications((n) => n.filter((x) => x.id !== id));
 
   return (
     <div className="fixed top-4 right-4 z-50">
@@ -57,6 +101,9 @@ export default function NotificationCenter() {
                   <div className="flex-1">
                     <div className="font-semibold text-sm text-gray-900 dark:text-white">{n.title}</div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{n.message}</div>
+                    {n.href && (
+                      <a href={n.href} className="text-[11px] text-blue-500 hover:underline mt-1 inline-block">Abrir</a>
+                    )}
                   </div>
                   <button onClick={() => dismiss(n.id)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
                 </div>

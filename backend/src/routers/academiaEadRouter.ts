@@ -628,4 +628,25 @@ export const academiaEadRouter = router({
       );
       return { ok: true, item: rowToOverride(row), source: "postgres" as const };
     }),
+
+  setLessonI18n: adminProcedure
+    .input(z.object({
+      lessonId: z.string().min(1),
+      titleEn: z.string().max(500).optional(),
+      subtitleEn: z.string().max(1000).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!(await isAcademiaLessonsAvailable())) {
+        throw new Error("Postgres indisponível");
+      }
+      const updatedBy = ctx.user?.id ? `user:${ctx.user.id}` : "admin:unknown";
+      const existing = await getLesson(input.lessonId);
+      if (!existing) throw new Error(`lesson_not_found:${input.lessonId}`);
+      const row = await upsertLesson(
+        { ...existing, titleEn: input.titleEn ?? existing.titleEn, subtitleEn: input.subtitleEn ?? existing.subtitleEn } as any,
+        updatedBy,
+      );
+      return { ok: true, item: rowToOverride(row), source: "postgres" as const };
+    }),
+
 });

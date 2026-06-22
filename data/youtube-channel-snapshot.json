@@ -1,0 +1,102 @@
+{
+  "configured": true,
+  "connected": true,
+  "channel": {
+    "id": "UCRBIjE5zxufWHR9lVmHRVGw",
+    "title": "Nexus Affil'IA'te",
+    "handle": "@NexusAffilIAte-w9p",
+    "privacyStatus": "public",
+    "country": "BR",
+    "publishedAt": "2026-06-17T23:56:11.092947Z"
+  },
+  "channelUrl": "https://www.youtube.com/@NexusAffilIAte-w9p",
+  "studioContentUrl": "https://studio.youtube.com/channel/UCRBIjE5zxufWHR9lVmHRVGw/content",
+  "totals": {
+    "enviados": 8,
+    "publicos": 0,
+    "naoListados": 8
+  },
+  "contentPillars": [
+    {
+      "slug": "video-aulas",
+      "title": "Vídeo Aulas",
+      "count": 8
+    },
+    {
+      "slug": "materiais-informativos",
+      "title": "Materiais Informativos",
+      "count": 0
+    },
+    {
+      "slug": "materiais-nexus",
+      "title": "Materiais Nexus Affil'IA'te",
+      "count": 0
+    }
+  ],
+  "latestVideos": [
+    {
+      "lessonId": "fund-00",
+      "title": "Academ'IA · Fundamental · Boas-vindas",
+      "duration": 261,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod00-boas-vindas.mp4"
+    },
+    {
+      "lessonId": "fund-01",
+      "title": "Academ'IA · Fundamental · Entendendo IOAID",
+      "duration": 210,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod01-entendendo-ioaid.mp4"
+    },
+    {
+      "lessonId": "fund-02",
+      "title": "Academ'IA · Fundamental · Sistema SHO",
+      "duration": 167,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod02-sistema-sho.mp4"
+    },
+    {
+      "lessonId": "fund-03",
+      "title": "Academ'IA · Fundamental · Painel do Afiliado",
+      "duration": 167,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod03-painel-afiliado.mp4"
+    },
+    {
+      "lessonId": "agent-00",
+      "title": "Academ'IA · Agente · Primeiro Agente",
+      "duration": 16,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod00-primeiro-agente.mp4"
+    },
+    {
+      "lessonId": "agent-01",
+      "title": "Academ'IA · Agente · Skills Essenciais",
+      "duration": 16,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod01-skills-essenciais.mp4"
+    },
+    {
+      "lessonId": "agent-02",
+      "title": "Academ'IA · Agente · Disparo WhatsApp",
+      "duration": 13,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod02-disparo-whatsapp.mp4"
+    },
+    {
+      "lessonId": "agent-03",
+      "title": "Academ'IA · Agente · Judge Revisor",
+      "duration": 13,
+      "visibility": "unlisted",
+      "platformUrl": "https://oneverso.com.br/academia/videos/mod03-judge-revisor.mp4"
+    }
+  ],
+  "note": "8 vídeos enviados em 18/06/2026 · visibilidade 'Não listado' (não indexáveis pela API pública). Player on-platform ativo via mirror /academia/videos/.",
+  "syncedAt": "2026-06-22T15:13:29.000Z",
+  "inventory": {
+    "md_files": 142,
+    "html_files": 36,
+    "video_files": 8,
+    "thumb_files": 11
+  }
+}

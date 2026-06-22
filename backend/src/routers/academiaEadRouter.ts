@@ -504,39 +504,67 @@ export const academiaEadRouter = router({
   upsertOverride: adminProcedure
     .input(lessonOverrideSchema)
     .mutation(async ({ input, ctx }) => {
-      const storage = await readStorage();
       const updatedBy = ctx.user?.id ? `user:${ctx.user.id}` : "admin:unknown";
+
+      // Primário: Postgres
+      try {
+        if (await isAcademiaLessonsAvailable()) {
+          const row = await upsertLesson(
+            {
+              lessonId: input.lessonId,
+              sectionSlug: input.sectionSlug || "curso",
+              title: input.title,
+              subtitle: input.subtitle,
+              level: input.level,
+              requiredTier: input.requiredTier,
+              durationS: input.duration ? Number(String(input.duration).replace(/[^0-9]/g, "")) || null : null,
+              videoUrl: input.videoUrl,
+              mdUrl: input.mdPath,
+              pdfUrl: input.pdfUrl,
+              thumbnailUrl: input.thumbnailUrl,
+              tags: input.tags,
+              isPublished: input.isPublished,
+            },
+            updatedBy,
+          );
+          return { ok: true, item: rowToOverride(row), source: "postgres" as const };
+        }
+      } catch (err) {
+        console.warn("[academiaEad] PG upsertOverride falhou, usando JSON:", err);
+      }
+
+      // Fallback: JSON
+      const storage = await readStorage();
       const normalized = normalizeOverride(input, updatedBy);
       const existingIndex = storage.items.findIndex((item) => item.lessonId === input.lessonId);
-
       if (existingIndex >= 0) {
-        storage.items[existingIndex] = {
-          ...storage.items[existingIndex],
-          ...normalized,
-        };
+        storage.items[existingIndex] = { ...storage.items[existingIndex], ...normalized };
       } else {
         storage.items.push(normalized);
       }
-
       await writeStorage(storage);
-
       return {
         ok: true,
         item: storage.items.find((item) => item.lessonId === input.lessonId) ?? normalized,
+        source: "json" as const,
       };
     }),
 
   deleteOverride: adminProcedure
     .input(z.object({ lessonId: z.string().min(1) }))
     .mutation(async ({ input }) => {
+      try {
+        if (await isAcademiaLessonsAvailable()) {
+          const removed = await deleteLesson(input.lessonId);
+          return { ok: true, removed, source: "postgres" as const };
+        }
+      } catch (err) {
+        console.warn("[academiaEad] PG deleteOverride falhou, usando JSON:", err);
+      }
       const storage = await readStorage();
       const before = storage.items.length;
       storage.items = storage.items.filter((item) => item.lessonId !== input.lessonId);
       await writeStorage(storage);
-
-      return {
-        ok: true,
-        removed: before !== storage.items.length,
-      };
+      return { ok: true, removed: before !== storage.items.length, source: "json" as const };
     }),
 });

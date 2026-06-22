@@ -45,9 +45,12 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
 │   │   ├── 00-boas-vindas.md
 │   │   ├── 01-introducao-sra-nexus-ive.md
-│   │   └── aula01/                # Aula 01: Entendendo o IOAID
-│   │       ├── roteiro-aula01.md
-│   │       └── slides-aula01.md
+│   │   ├── aula01/                # Aula 01: Entendendo o IOAID
+│   │   │   ├── roteiro-aula01.md
+│   │   │   └── slides-aula01.md
+│   │   └── aula02/                # Aula 02: Dominando o SHO
+│   │       ├── roteiro-aula02.md
+│   │       └── slides-aula02.md
 │   ├── agente/                    # Nível 2: Setup de Agentes, Skills base, WhatsApp e Judge Revisor
 │   ├── master/                    # Nível 3: Otimização, Lifecycle, A/B Testing e Análise de Coortes
 │   └── elite/                     # Nível 4: Multi-tenant, White-label e Federação de Agentes Zero-Trust
@@ -56,8 +59,10 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 ├── webinars/                      # Gravações de eventos e lives
 ├── tutoriais/                     # How-to rápidos (15 min)
 ├── playbooks/                     # Manuais de operação para crises e campanhas
+│   └── otimizacao-campanhas-sho.md # Playbook: Otimização de Campanhas com SHO
 ├── Lab-Nexus/                     # HUB Central de Ferramentas IA
 │   ├── tools/                     # 38 ferramentas categorizadas
+│   │   └── categorizacao-ferramentas.md # Guia: Ferramentas Categorizadas
 │   ├── prompts/                   # Biblioteca de Prompts testados
 │   ├── templates/                 # Templates ricos editáveis
 │   └── workflows/                 # Blueprints de workflows operacionais

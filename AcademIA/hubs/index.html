@@ -1,0 +1,59 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Academ'IA · Hubs · Nexus Affil'IA'te</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#0c0c22 0%,#05050f 70%);color:#e6e6f5;font-family:Inter,system-ui,sans-serif}
+.container{max-width:1180px;margin:0 auto;padding:32px 24px}
+h1{font-size:38px;background:linear-gradient(90deg,#22d3ee,#a855f7);-webkit-background-clip:text;color:transparent;margin:0 0 8px}
+.sub{opacity:.75;font-size:16px;margin-bottom:24px}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:30px}
+.card{background:#0d0d22;border:1px solid #20203a;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);border-color:#22d3ee66}
+.card .icon{font-size:30px}
+.card h2{margin:0;font-size:22px;color:#fff}
+.card p{margin:0;opacity:.7;font-size:14px;line-height:1.55}
+.card a{margin-top:auto;align-self:flex-start;background:linear-gradient(90deg,#22d3ee,#a855f7);color:#001;font-weight:600;padding:9px 16px;border-radius:10px;text-decoration:none;font-size:14px}
+.kpi{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:18px}
+.kpi .item{background:#0d0d22;border:1px solid #20203a;border-radius:12px;padding:14px}
+.kpi .v{font-size:22px;color:#22d3ee}.kpi .l{font-size:12px;opacity:.7;letter-spacing:.5px;text-transform:uppercase}
+@media (max-width:720px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body><div class="container">
+<h1>Academ'IA · Hubs</h1>
+<div class="sub">Trilhas, Lab e Lib do ecossistema <strong>Nexus Affil'IA'te</strong>. Canal oficial: <a href="https://www.youtube.com/@NexusAffilIAte-w9p" target="_blank" style="color:#22d3ee">@NexusAffilIAte-w9p</a></div>
+
+<div class="kpi" id="kpi"></div>
+
+<div class="grid">
+ <div class="card">
+  <div class="icon">🎓</div>
+  <h2>Cursos & Trilhas</h2>
+  <p>Fundamental, Agente, Master e Elite. Vídeos sincronizados ao canal oficial, apostilas HTML/PDF e roteiros canônicos.</p>
+  <a href="/academia/ead/curso">Abrir trilhas →</a>
+ </div>
+ <div class="card">
+  <div class="icon">🧪</div>
+  <h2>Lab Nexus</h2>
+  <p>Prompts, templates, tools e workflows para acelerar a operação no Marketplace, Marketing e Agentes.</p>
+  <a href="/academia/hubs/lab.html">Explorar Lab →</a>
+ </div>
+ <div class="card">
+  <div class="icon">📚</div>
+  <h2>Lib Nexus</h2>
+  <p>Knowledge-base canônica, especificações de agentes, API docs e best-practices da plataforma.</p>
+  <a href="/academia/hubs/lib.html">Explorar Lib →</a>
+ </div>
+ <div class="card">
+  <div class="icon">📺</div>
+  <h2>Canal YouTube</h2>
+  <p>Vídeo-aulas, materiais informativos e demais conteúdos do Nexus Affil'IA'te. Visibilidade controlada pelo proprietário.</p>
+  <a href="https://www.youtube.com/@NexusAffilIAte-w9p" target="_blank">Abrir canal →</a>
+ </div>
+</div>
+</div>
+<script>
+fetch('/api/academia/catalog').then(r=>r.json()).then(c=>{
+  const cats=[['Cursos','cursos'],['Lab','lab_nexus'],['Lib','lib_nexus'],['Playbooks','playbooks'],['Tutoriais','tutoriais']];
+  document.getElementById('kpi').innerHTML=cats.map(([l,k])=>`<div class="item"><div class="v">${(c[k]||[]).length}</div><div class="l">${l}</div></div>`).join('');
+});
+</script></body></html>

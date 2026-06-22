@@ -1,6 +1,6 @@
 /**
  * academiaLessonsRepository — acesso PostgreSQL à tabela `academia_lessons`.
- * Inclui featured, sort_order, busca full-text (search_vec) e trigram em title.
+ * v11: featured, sort_order, cover_url, published_at, title_en, subtitle_en, search.
  */
 import { Pool } from "pg";
 
@@ -18,6 +18,8 @@ export type AcademiaLessonRow = {
   sectionSlug: string;
   title: string | null;
   subtitle: string | null;
+  titleEn: string | null;
+  subtitleEn: string | null;
   level: string | null;
   requiredTier: string | null;
   durationS: number | null;
@@ -32,6 +34,7 @@ export type AcademiaLessonRow = {
   isPublished: boolean;
   isFeatured: boolean;
   sortOrder: number;
+  publishedAt: string | null;
   tags: string[];
   updatedAt: string;
   updatedBy: string | null;
@@ -44,9 +47,11 @@ function mapRow(r: any): AcademiaLessonRow {
     sectionSlug: r.section_slug,
     title: r.title,
     subtitle: r.subtitle,
+    titleEn: r.title_en ?? null,
+    subtitleEn: r.subtitle_en ?? null,
     level: r.level,
     requiredTier: r.required_tier,
-    durationS: r.duration_s !== null ? Number(r.duration_s) : null,
+    durationS: r.duration_s !== null && r.duration_s !== undefined ? Number(r.duration_s) : null,
     videoUrl: r.video_url,
     mdUrl: r.md_url,
     htmlUrl: r.html_url,
@@ -58,6 +63,7 @@ function mapRow(r: any): AcademiaLessonRow {
     isPublished: r.is_published === null ? true : Boolean(r.is_published),
     isFeatured: Boolean(r.featured),
     sortOrder: Number(r.sort_order ?? 1000),
+    publishedAt: r.published_at ? new Date(r.published_at).toISOString() : null,
     tags: Array.isArray(r.tags) ? r.tags.filter(Boolean) : [],
     updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
     updatedBy: r.updated_by,
@@ -91,6 +97,7 @@ export async function listLessons(filter?: {
   const params: any[] = [];
   let rankSelect = "";
   let orderSql = "section_slug ASC, sort_order ASC, lesson_id ASC";
+
   if (filter?.sectionSlug) {
     params.push(filter.sectionSlug);
     where.push(`section_slug = $${params.length}`);
@@ -136,16 +143,22 @@ export async function upsertLesson(
     INSERT INTO public.academia_lessons (
       lesson_id, section_slug, title, subtitle, level, required_tier, duration_s,
       video_url, md_url, html_url, pdf_url, thumbnail_url, cover_url,
+      title_en, subtitle_en, published_at,
       youtube_status, youtube_channel, is_published, tags,
       featured, sort_order, updated_at, updated_by
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
-      COALESCE($16,true),$17,COALESCE($18,false),COALESCE($19,1000), now(),$20
+      $1,$2,$3,$4,$5,$6,$7,
+      $8,$9,$10,$11,$12,$13,
+      $14,$15,$16,
+      $17,$18,COALESCE($19,true),$20,
+      COALESCE($21,false),COALESCE($22,1000), now(),$23
     )
     ON CONFLICT (lesson_id) DO UPDATE SET
       section_slug    = EXCLUDED.section_slug,
       title           = COALESCE(EXCLUDED.title, public.academia_lessons.title),
       subtitle        = COALESCE(EXCLUDED.subtitle, public.academia_lessons.subtitle),
+      title_en        = COALESCE(EXCLUDED.title_en, public.academia_lessons.title_en),
+      subtitle_en     = COALESCE(EXCLUDED.subtitle_en, public.academia_lessons.subtitle_en),
       level           = COALESCE(EXCLUDED.level, public.academia_lessons.level),
       required_tier   = COALESCE(EXCLUDED.required_tier, public.academia_lessons.required_tier),
       duration_s      = COALESCE(EXCLUDED.duration_s, public.academia_lessons.duration_s),
@@ -155,6 +168,7 @@ export async function upsertLesson(
       pdf_url         = COALESCE(EXCLUDED.pdf_url, public.academia_lessons.pdf_url),
       thumbnail_url   = COALESCE(EXCLUDED.thumbnail_url, public.academia_lessons.thumbnail_url),
       cover_url       = COALESCE(EXCLUDED.cover_url, public.academia_lessons.cover_url),
+      published_at    = COALESCE(EXCLUDED.published_at, public.academia_lessons.published_at),
       youtube_status  = COALESCE(EXCLUDED.youtube_status, public.academia_lessons.youtube_status),
       youtube_channel = COALESCE(EXCLUDED.youtube_channel, public.academia_lessons.youtube_channel),
       is_published    = COALESCE(EXCLUDED.is_published, public.academia_lessons.is_published),
@@ -162,7 +176,7 @@ export async function upsertLesson(
       featured        = COALESCE(EXCLUDED.featured, public.academia_lessons.featured),
       sort_order      = COALESCE(EXCLUDED.sort_order, public.academia_lessons.sort_order),
       updated_at      = now(),
-      updated_by      = $19
+      updated_by      = $23
     RETURNING *`;
   const params = [
     input.lessonId,
@@ -178,6 +192,9 @@ export async function upsertLesson(
     input.pdfUrl ?? null,
     input.thumbnailUrl ?? null,
     input.coverUrl ?? null,
+    input.titleEn ?? null,
+    input.subtitleEn ?? null,
+    input.publishedAt ?? null,
     input.youtubeStatus ?? null,
     input.youtubeChannel ?? null,
     input.isPublished ?? null,
@@ -208,6 +225,8 @@ export async function lessonsStats(): Promise<{
   withHtml: number;
   withPdf: number;
   withThumb: number;
+  withCover: number;
+  withPublishedAt: number;
   bySection: Record<string, number>;
   byLevel: Record<string, number>;
   updatedAt: string;
@@ -216,7 +235,8 @@ export async function lessonsStats(): Promise<{
   if (!pool) {
     return {
       total: 0, published: 0, featured: 0, withVideo: 0, withMd: 0, withHtml: 0,
-      withPdf: 0, withThumb: 0, bySection: {}, byLevel: {}, updatedAt: new Date().toISOString(),
+      withPdf: 0, withThumb: 0, withCover: 0, withPublishedAt: 0,
+      bySection: {}, byLevel: {}, updatedAt: new Date().toISOString(),
     };
   }
   const totals = await pool.query(`
@@ -229,6 +249,8 @@ export async function lessonsStats(): Promise<{
       count(*) FILTER (WHERE html_url      IS NOT NULL AND html_url      <> '')::int AS with_html,
       count(*) FILTER (WHERE pdf_url       IS NOT NULL AND pdf_url       <> '')::int AS with_pdf,
       count(*) FILTER (WHERE thumbnail_url IS NOT NULL AND thumbnail_url <> '')::int AS with_thumb,
+      count(*) FILTER (WHERE cover_url     IS NOT NULL AND cover_url     <> '')::int AS with_cover,
+      count(*) FILTER (WHERE published_at  IS NOT NULL)::int AS with_published_at,
       max(updated_at) AS updated_at
     FROM public.academia_lessons
   `);
@@ -252,6 +274,8 @@ export async function lessonsStats(): Promise<{
     withHtml: Number(t.with_html || 0),
     withPdf: Number(t.with_pdf || 0),
     withThumb: Number(t.with_thumb || 0),
+    withCover: Number(t.with_cover || 0),
+    withPublishedAt: Number(t.with_published_at || 0),
     bySection: secObj,
     byLevel: lvlObj,
     updatedAt: t.updated_at ? new Date(t.updated_at).toISOString() : new Date().toISOString(),

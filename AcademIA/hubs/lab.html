@@ -1,0 +1,92 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Lab Nexus · Academ'IA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% 0%,#0c0c22 0%,#05050f 60%);color:#e6e6f5;font-family:Inter,system-ui,sans-serif;line-height:1.55}
+header{padding:36px 24px;border-bottom:1px solid #20203a;background:rgba(10,10,28,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+h1{margin:0;font-size:34px;background:linear-gradient(90deg,#00e5ff,#a855f7);-webkit-background-clip:text;color:transparent}
+h2{color:#00e5ff;margin:32px 0 14px;font-size:20px;border-bottom:1px solid #20203a;padding-bottom:8px}
+.sub{opacity:.7;font-size:15px;margin-top:6px}
+.tabs{display:flex;gap:8px;margin:24px 0 4px}
+.tab{padding:8px 16px;border:1px solid #20203a;border-radius:999px;cursor:pointer;background:#0d0d22;color:#bdbdd1;font-size:13px;text-decoration:none}
+.tab.active{background:linear-gradient(90deg,#22d3ee,#a855f7);color:#001;border-color:transparent;font-weight:600}
+.search{margin:18px 0;width:100%;max-width:520px;padding:10px 14px;background:#0d0d22;border:1px solid #20203a;border-radius:10px;color:#e6e6f5;font-size:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));padding:8px 0 60px}
+.card{background:#0d0d22;border:1px solid #20203a;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);border-color:#22d3ee55}
+.card .tag{font-size:11px;color:#22d3ee;background:#161630;border:1px solid #20203a;padding:2px 8px;border-radius:999px;align-self:flex-start;text-transform:uppercase;letter-spacing:.5px}
+.card h3{margin:4px 0 0;font-size:16px;color:#fff}
+.card .repo{font-size:11px;opacity:.55;word-break:break-all}
+.card .links{display:flex;gap:8px;margin-top:auto}
+.card a.btn{flex:1;text-align:center;padding:8px 10px;border-radius:8px;font-size:13px;text-decoration:none;border:1px solid #20203a;color:#22d3ee}
+.card a.btn.primary{background:linear-gradient(90deg,#22d3ee,#a855f7);color:#001;border-color:transparent;font-weight:600}
+.footer{padding:30px 24px;border-top:1px solid #20203a;opacity:.65;font-size:13px;text-align:center}
+.empty{padding:30px;text-align:center;opacity:.6}
+.badge-channel{display:inline-block;font-size:11px;padding:4px 10px;border-radius:999px;background:#161630;border:1px solid #20203a;color:#22d3ee;margin-left:10px;vertical-align:middle}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.kpi .item{background:#0d0d22;border:1px solid #20203a;border-radius:12px;padding:14px}
+.kpi .item .v{font-size:24px;color:#22d3ee}
+.kpi .item .l{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:.5px}
+@media (max-width:720px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body>
+<header><div class="container">
+<h1>Lab Nexus <span class="badge-channel">Academ'IA · canal @NexusAffilIAte-w9p</span></h1>
+<div class="sub">Prompts, templates, tools e workflows da operação Nexus Affil'IA'te.</div>
+<div class="tabs" id="filters"></div>
+<input id="search" class="search" placeholder="Buscar por nome, prompt, template..." />
+<div class="kpi">
+ <div class="item"><div class="v" id="kpi-total">–</div><div class="l">Itens Lab</div></div>
+ <div class="item"><div class="v" id="kpi-prompts">–</div><div class="l">Prompts</div></div>
+ <div class="item"><div class="v" id="kpi-templates">–</div><div class="l">Templates</div></div>
+ <div class="item"><div class="v" id="kpi-tools">–</div><div class="l">Tools/Workflows</div></div>
+</div>
+</div></header>
+<main class="container">
+<h2>Catálogo Lab Nexus</h2>
+<div id="grid" class="grid"><div class="empty">Carregando catálogo...</div></div>
+</main>
+<div class="footer">© Nexus Affil'IA'te · Academ'IA · oneverso.com.br · canal @NexusAffilIAte-w9p</div>
+<script>
+const KIND={prompts:'Prompt',templates:'Template',tools:'Tool',workflows:'Workflow',lib:'Lib',root:'Lab'};
+function inferKind(repoPath){
+  if(repoPath.includes('/prompts/')) return 'prompts';
+  if(repoPath.includes('/templates/')) return 'templates';
+  if(repoPath.includes('/tools/')) return 'tools';
+  if(repoPath.includes('/workflows/')) return 'workflows';
+  return 'root';
+}
+fetch('/api/academia/catalog').then(r=>r.json()).then(cat=>{
+  const items=(cat.lab_nexus||[]).map(x=>({...x, kind:inferKind(x.repoPath)}));
+  document.getElementById('kpi-total').textContent=items.length;
+  document.getElementById('kpi-prompts').textContent=items.filter(i=>i.kind==='prompts').length;
+  document.getElementById('kpi-templates').textContent=items.filter(i=>i.kind==='templates').length;
+  document.getElementById('kpi-tools').textContent=items.filter(i=>i.kind==='tools'||i.kind==='workflows').length;
+
+  const kinds=['all','prompts','templates','tools','workflows','root'];
+  const tabs=document.getElementById('filters');
+  kinds.forEach(k=>{const a=document.createElement('a');a.className='tab'+(k==='all'?' active':'');a.textContent=KIND[k]||'Todos';a.dataset.kind=k;a.href='#';tabs.appendChild(a);});
+  const grid=document.getElementById('grid');
+  function render(){
+    const q=document.getElementById('search').value.toLowerCase();
+    const active=document.querySelector('.tab.active').dataset.kind;
+    const list=items.filter(i=>(active==='all'||i.kind===active)&&(i.name.toLowerCase().includes(q)||i.repoPath.toLowerCase().includes(q)));
+    if(!list.length){grid.innerHTML='<div class="empty">Nenhum item para esses filtros.</div>';return}
+    grid.innerHTML=list.map(i=>`
+      <div class="card">
+        <span class="tag">${KIND[i.kind]||'Item'}</span>
+        <h3>${i.name.replace(/\.md$/,'')}</h3>
+        <div class="repo">${i.repoPath}</div>
+        <div class="links">
+          <a class="btn primary" href="${i.htmlUrl}" target="_blank" rel="noopener">Ler HTML</a>
+          <a class="btn" href="${i.mdUrl}" target="_blank" rel="noopener">Markdown</a>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('search').addEventListener('input',render);
+  tabs.addEventListener('click',e=>{const t=e.target.closest('.tab');if(!t)return;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');render();e.preventDefault();});
+  render();
+}).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">Falha ao carregar catálogo. Tente novamente.</div>';});
+</script></body></html>

@@ -26,6 +26,7 @@ export type AcademiaLessonRow = {
   htmlUrl: string | null;
   pdfUrl: string | null;
   thumbnailUrl: string | null;
+  coverUrl: string | null;
   youtubeStatus: string | null;
   youtubeChannel: string | null;
   isPublished: boolean;
@@ -51,6 +52,7 @@ function mapRow(r: any): AcademiaLessonRow {
     htmlUrl: r.html_url,
     pdfUrl: r.pdf_url,
     thumbnailUrl: r.thumbnail_url,
+    coverUrl: r.cover_url ?? r.thumbnail_url ?? null,
     youtubeStatus: r.youtube_status,
     youtubeChannel: r.youtube_channel,
     isPublished: r.is_published === null ? true : Boolean(r.is_published),
@@ -133,12 +135,12 @@ export async function upsertLesson(
   const sql = `
     INSERT INTO public.academia_lessons (
       lesson_id, section_slug, title, subtitle, level, required_tier, duration_s,
-      video_url, md_url, html_url, pdf_url, thumbnail_url,
+      video_url, md_url, html_url, pdf_url, thumbnail_url, cover_url,
       youtube_status, youtube_channel, is_published, tags,
       featured, sort_order, updated_at, updated_by
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,
-      COALESCE($15,true),$16,COALESCE($17,false),COALESCE($18,1000), now(),$19
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,
+      COALESCE($16,true),$17,COALESCE($18,false),COALESCE($19,1000), now(),$20
     )
     ON CONFLICT (lesson_id) DO UPDATE SET
       section_slug    = EXCLUDED.section_slug,
@@ -152,6 +154,7 @@ export async function upsertLesson(
       html_url        = COALESCE(EXCLUDED.html_url, public.academia_lessons.html_url),
       pdf_url         = COALESCE(EXCLUDED.pdf_url, public.academia_lessons.pdf_url),
       thumbnail_url   = COALESCE(EXCLUDED.thumbnail_url, public.academia_lessons.thumbnail_url),
+      cover_url       = COALESCE(EXCLUDED.cover_url, public.academia_lessons.cover_url),
       youtube_status  = COALESCE(EXCLUDED.youtube_status, public.academia_lessons.youtube_status),
       youtube_channel = COALESCE(EXCLUDED.youtube_channel, public.academia_lessons.youtube_channel),
       is_published    = COALESCE(EXCLUDED.is_published, public.academia_lessons.is_published),
@@ -174,6 +177,7 @@ export async function upsertLesson(
     input.htmlUrl ?? null,
     input.pdfUrl ?? null,
     input.thumbnailUrl ?? null,
+    input.coverUrl ?? null,
     input.youtubeStatus ?? null,
     input.youtubeChannel ?? null,
     input.isPublished ?? null,

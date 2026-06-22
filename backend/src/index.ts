@@ -17,6 +17,7 @@ import {
   processHotmartSubscriptionWebhook,
   processMercadoPagoSubscriptionWebhook,
 } from "./domains/subscriptions/billingWebhook";
+import { getDb } from "../../database/schemas/db";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
 import { createNexusOpenApiRouter } from "./open-api/routes";
@@ -42,13 +43,15 @@ function resolveOrigin(origin?: string) {
   return ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
 }
 
-function createContext(opts: { req: express.Request; res: express.Response }): Context {
+async function createContext(opts: { req: express.Request; res: express.Response }): Promise<Context> {
   const userId = opts.req.header("x-user-id");
   const userRole = opts.req.header("x-user-role") || "user";
+  const db = await getDb();
 
   return {
     req: opts.req,
     res: opts.res,
+    db,
     user: userId
       ? {
           id: Number(userId),
@@ -166,6 +169,61 @@ app.post("/webhooks/hotmart", async (req, res) => {
 });
 
 app.use("/api/v1/lab-nexus", createLabNexusRestRouter());
+// REST público de busca da Academ'IA (alias REST do tRPC listOverrides)
+app.get("/api/academia/search", async (req, res) => {
+  try {
+    const { listLessons, isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const q = typeof req.query.q === "string" ? req.query.q.trim() : undefined;
+    const section = typeof req.query.section === "string" ? req.query.section : undefined;
+    const featured = req.query.featured === "1" || req.query.featured === "true";
+    const publishedOnly = req.query.publishedOnly !== "0" && req.query.publishedOnly !== "false";
+    const limitRaw = Number(req.query.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), 200) : 50;
+    const items = await listLessons({
+      sectionSlug: section,
+      publishedOnly,
+      featuredOnly: featured,
+      search: q,
+      limit,
+    });
+    res.setHeader("Cache-Control", "public, max-age=30");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      query: { q: q || null, section: section || null, featured, publishedOnly, limit },
+      total: items.length,
+      items: items.map((row) => ({
+        lessonId: row.lessonId,
+        sectionSlug: row.sectionSlug,
+        title: row.title,
+        subtitle: row.subtitle,
+        level: row.level,
+        requiredTier: row.requiredTier,
+        durationS: row.durationS,
+        videoUrl: row.videoUrl,
+        mdUrl: row.mdUrl,
+        htmlUrl: row.htmlUrl,
+        pdfUrl: row.pdfUrl,
+        thumbnailUrl: row.thumbnailUrl,
+        coverUrl: row.coverUrl,
+        youtubeStatus: row.youtubeStatus,
+        youtubeChannel: row.youtubeChannel,
+        isFeatured: row.isFeatured,
+        sortOrder: row.sortOrder,
+        tags: row.tags,
+        rank: (row as any).rank,
+        updatedAt: row.updatedAt,
+      })),
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+
 app.use("/api/v1", nexusOpenApiRouter);
 app.use("/trpc", trpcMiddleware);
 app.use("/api/trpc", trpcMiddleware);

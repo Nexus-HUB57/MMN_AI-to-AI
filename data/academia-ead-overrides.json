@@ -434,7 +434,7 @@
       "updatedBy": "system-bootstrap"
     }
   ],
-  "updatedAt": "2026-06-22T16:02:03.000Z",
+  "updatedAt": "2026-06-22T16:12:17.000Z",
   "overrides": [
     {
       "lessonId": "fund-00",
@@ -443,8 +443,8 @@
       "level": "fundamental",
       "requiredTier": "iniciante",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "alencar",
@@ -453,7 +453,7 @@
         "video-aula",
         "youtube-pillar"
       ],
-      "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-00-boas-vindas.png",
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod00-boas-vindas-thumb.webp",
       "duration": 261,
       "title": "00 · Boas-vindas ao Nexus",
       "subtitle": "Apresentação da Academ'IA · Persona Alencar",
@@ -471,8 +471,8 @@
       "level": "fundamental",
       "requiredTier": "iniciante",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "iniciante",
@@ -499,8 +499,8 @@
       "level": "fundamental",
       "requiredTier": "iniciante",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "iniciante",
@@ -509,7 +509,7 @@
         "video-aula",
         "youtube-pillar"
       ],
-      "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-02-sho.png",
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod02-sistema-sho-thumb.webp",
       "duration": 167,
       "title": "02 · Sistema SHO",
       "subtitle": "Self-Healing Orchestrator · Persona Ive",
@@ -527,8 +527,8 @@
       "level": "fundamental",
       "requiredTier": "iniciante",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "iniciante",
@@ -555,8 +555,8 @@
       "level": "agente",
       "requiredTier": "operador",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "dupla",
@@ -565,7 +565,7 @@
         "video-aula",
         "youtube-pillar"
       ],
-      "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-04-primeiro-agente.png",
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod00-primeiro-agente-thumb.webp",
       "duration": 16,
       "title": "00 · Primeiro Agente",
       "subtitle": "Criando o primeiro agente Nexus",
@@ -583,8 +583,8 @@
       "level": "agente",
       "requiredTier": "operador",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "dupla",
@@ -611,8 +611,8 @@
       "level": "agente",
       "requiredTier": "operador",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "dupla",
@@ -639,8 +639,8 @@
       "level": "agente",
       "requiredTier": "operador",
       "isPublished": true,
-      "updatedAt": "2026-06-22T16:02:03.000Z",
-      "updatedBy": "fix-routes-v4",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "tags": [
         "academia",
         "dupla",
@@ -663,43 +663,121 @@
     {
       "lessonId": "elite-01",
       "sectionSlug": "curso",
-      "mdUrl": "https://oneverso.com.br/academia/md/01-multi-tenant-whitelabel.md",
-      "htmlUrl": "https://oneverso.com.br/academia/html/01-multi-tenant-whitelabel.html",
-      "updatedAt": "2026-06-22T15:13:29.000Z",
-      "updatedBy": "repo-sync-v3b",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-01.html",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "isPublished": true,
       "tags": [
         "academia",
         "repo-sync"
-      ]
+      ],
+      "title": "01 · Multi-tenant White-label",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-01.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
     },
     {
       "lessonId": "elite-02",
       "sectionSlug": "curso",
-      "mdUrl": "https://oneverso.com.br/academia/md/02-federacao-agentes.md",
-      "htmlUrl": "https://oneverso.com.br/academia/html/02-federacao-agentes.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-02.html",
       "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-02-sho.png",
-      "updatedAt": "2026-06-22T15:13:29.000Z",
-      "updatedBy": "repo-sync-v3b",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "isPublished": true,
       "tags": [
         "academia",
         "repo-sync"
-      ]
+      ],
+      "title": "02 · Federação de Agentes",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-02.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
     },
     {
       "lessonId": "elite-00",
       "sectionSlug": "curso",
-      "mdUrl": "https://oneverso.com.br/academia/md/00-blueprints-elite.md",
-      "htmlUrl": "https://oneverso.com.br/academia/html/00-blueprints-elite.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-00.html",
       "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-00-boas-vindas.png",
-      "updatedAt": "2026-06-22T15:13:29.000Z",
-      "updatedBy": "repo-sync-v3b",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
       "isPublished": true,
       "tags": [
         "academia",
         "repo-sync"
-      ]
+      ],
+      "title": "00 · Blueprints Elite",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-00.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
+    },
+    {
+      "lessonId": "master-00",
+      "sectionSlug": "curso",
+      "title": "00 · Governança Operacional",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-00.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-00.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-01",
+      "sectionSlug": "curso",
+      "title": "01 · Observabilidade & Métricas",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-01.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-01.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-02",
+      "sectionSlug": "curso",
+      "title": "02 · Copy Master",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-02.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-02.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-03",
+      "sectionSlug": "curso",
+      "title": "03 · Funil Master",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-03.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-03.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-03.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
     }
   ]
 }

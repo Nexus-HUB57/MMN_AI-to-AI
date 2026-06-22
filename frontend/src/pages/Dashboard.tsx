@@ -35,6 +35,7 @@ import AgentLivePanel from "@/components/AgentLivePanel";
 import SalesFunnelDashboard from "../components/SalesFunnelDashboard";
 import AchievementsBadges from "../components/AchievementsBadges";
 import NotificationCenter from "../components/NotificationCenter";
+import { CommissionChart } from '../components/CommissionChart';
 // SPRINTS_8_9_10_INJECTED
 
 const QUICK_ACTIONS = [
@@ -1035,6 +1036,26 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      {/* sprints-7-10-block */}
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))', gap:'18px', margin:'24px 0'}}>
+        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
+          <h3 style={{margin:'0 0 12px', color:'#22d3ee', fontSize:'16px'}}>📊 Comissões</h3>
+          <CommissionChart />
+        </div>
+        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
+          <h3 style={{margin:'0 0 12px', color:'#a855f7', fontSize:'16px'}}>🎯 Funil de Vendas</h3>
+          <SalesFunnelDashboard />
+        </div>
+        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
+          <h3 style={{margin:'0 0 12px', color:'#f59e0b', fontSize:'16px'}}>🏆 Conquistas</h3>
+          <AchievementsBadges />
+        </div>
+        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
+          <h3 style={{margin:'0 0 12px', color:'#10b981', fontSize:'16px'}}>🔔 Notificações</h3>
+          <NotificationCenter />
+        </div>
+      </div>
+
     </DashboardLayout>
   );
 }

@@ -170,6 +170,127 @@ app.post("/webhooks/hotmart", async (req, res) => {
 
 app.use("/api/v1/lab-nexus", createLabNexusRestRouter());
 // REST público de busca da Academ'IA (alias REST do tRPC listOverrides)
+
+// GET /api/academia/lesson/:lessonId — REST público alias do getOverride
+app.get("/api/academia/lesson/:lessonId", async (req, res) => {
+  try {
+    const { getLesson, isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const row = await getLesson(String(req.params.lessonId));
+    if (!row) return res.status(404).json({ error: "lesson_not_found", lessonId: req.params.lessonId });
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ item: row, generatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/whats-new — últimas aulas publicadas por published_at DESC
+app.get("/api/academia/whats-new", async (req, res) => {
+  try {
+    const { isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    const { Pool } = await import("pg");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const connStr = process.env.DATABASE_URL!;
+    const pool = new Pool({ connectionString: connStr, max: 2 });
+    const limitRaw = Number(req.query.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), 50) : 5;
+    const r = await pool.query(
+      `SELECT lesson_id, section_slug, title, subtitle, level, required_tier,
+              video_url, md_url, html_url, pdf_url, cover_url, thumbnail_url,
+              featured, sort_order, published_at, updated_at
+       FROM public.academia_lessons
+       WHERE is_published = TRUE
+       ORDER BY published_at DESC NULLS LAST, updated_at DESC
+       LIMIT $1`,
+      [limit]
+    );
+    await pool.end();
+    const items = r.rows.map((row) => ({
+      lessonId: row.lesson_id,
+      sectionSlug: row.section_slug,
+      title: row.title,
+      subtitle: row.subtitle,
+      level: row.level,
+      requiredTier: row.required_tier,
+      videoUrl: row.video_url,
+      mdUrl: row.md_url,
+      htmlUrl: row.html_url,
+      pdfUrl: row.pdf_url,
+      coverUrl: row.cover_url ?? row.thumbnail_url ?? null,
+      isFeatured: Boolean(row.featured),
+      sortOrder: Number(row.sort_order ?? 1000),
+      publishedAt: row.published_at ? new Date(row.published_at).toISOString() : null,
+      updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : null,
+    }));
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ total: items.length, items, generatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// POST /api/academia/translate-suggest — sugestão PT->EN heurística (dicionário Nexus)
+app.post("/api/academia/translate-suggest", async (req, res) => {
+  try {
+    const body = (req.body || {}) as { title?: string; subtitle?: string };
+    const dict: Array<[RegExp, string]> = [
+      [/\bBoas-vindas\b/gi, "Welcome"],
+      [/\bao Nexus\b/gi, "to Nexus"],
+      [/\bEntendendo o\b/gi, "Understanding"],
+      [/\bSistema\b/gi, "System"],
+      [/\bPainel do Afiliado\b/gi, "Affiliate Dashboard"],
+      [/\bPrimeiro Agente\b/gi, "First Agent"],
+      [/\bSkills Essenciais\b/gi, "Essential Skills"],
+      [/\bDisparo\b/gi, "Broadcast"],
+      [/\bJudge Revisor\b/gi, "Judge Reviewer"],
+      [/\bAcadem'IA\b/gi, "Academ'IA"],
+      [/\bApresentação\b/gi, "Introduction"],
+      [/\bPersona\b/gi, "Persona"],
+      [/\bem ação\b/gi, "in action"],
+      [/\bModelo\b/gi, "Model"],
+      [/\bCriando o\b/gi, "Creating the"],
+      [/\bTreinamento\b/gi, "Training"],
+      [/\bPlaybook\b/gi, "Playbook"],
+      [/\bWebinar\b/gi, "Webinar"],
+      [/\bLançamento\b/gi, "Launch"],
+      [/\bCrise\b/gi, "Crisis"],
+      [/\bOperação\b/gi, "Operations"],
+      [/\bAutonomia\b/gi, "Autonomy"],
+      [/\bRevisão\b/gi, "Review"],
+      [/\bFundamental\b/gi, "Fundamental"],
+      [/\bAgente\b/gi, "Agent"],
+      [/\bMaster\b/gi, "Master"],
+      [/\bElite\b/gi, "Elite"],
+      [/\b·\b/g, "·"],
+    ];
+    const translate = (input?: string) => {
+      if (!input) return null;
+      let out = input;
+      for (const [re, en] of dict) out = out.replace(re, en);
+      return out;
+    };
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      input: { title: body.title || null, subtitle: body.subtitle || null },
+      suggestion: {
+        titleEn: translate(body.title),
+        subtitleEn: translate(body.subtitle),
+      },
+      strategy: "dictionary-v1",
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
 app.get("/api/academia/search", async (req, res) => {
   try {
     const { listLessons, isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");

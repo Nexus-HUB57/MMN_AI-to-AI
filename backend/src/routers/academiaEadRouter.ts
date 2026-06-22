@@ -380,6 +380,9 @@ function rowToOverride(row: AcademiaLessonRow) {
     youtubeChannel: row.youtubeChannel || undefined,
     tags: row.tags && row.tags.length ? row.tags : undefined,
     isPublished: row.isPublished,
+    isFeatured: row.isFeatured,
+    sortOrder: row.sortOrder,
+    rank: row.rank,
     updatedAt: row.updatedAt,
     updatedBy: row.updatedBy || undefined,
   };
@@ -393,16 +396,20 @@ export const academiaEadRouter = router({
           sectionSlug: contentTypeSchema.optional(),
           publishedOnly: z.boolean().optional().default(false),
           featuredOnly: z.boolean().optional().default(false),
+          search: z.string().min(1).max(200).optional(),
+          limit: z.number().int().positive().max(200).optional(),
         })
         .optional(),
     )
     .query(async ({ input }) => {
-      // Fonte primária: PostgreSQL (tabela academia_lessons)
       try {
         if (await isAcademiaLessonsAvailable()) {
           const rows = await listLessons({
             sectionSlug: input?.sectionSlug,
             publishedOnly: input?.publishedOnly,
+            featuredOnly: input?.featuredOnly,
+            search: input?.search,
+            limit: input?.limit,
           });
           const items = rows.map(rowToOverride);
           return {
@@ -415,23 +422,25 @@ export const academiaEadRouter = router({
       } catch (err) {
         console.warn("[academiaEad] PG listOverrides falhou, usando JSON:", err);
       }
-      // Fallback: arquivo JSON legado
       const storage = await readStorage();
       let items = [...storage.items];
       if (input?.sectionSlug) items = items.filter((item) => item.sectionSlug === input.sectionSlug);
       if (input?.publishedOnly) items = items.filter((item) => item.isPublished !== false);
-      if (input?.featuredOnly) items = items.filter((item) => item.isFeatured === true);
+      if (input?.featuredOnly)  items = items.filter((item) => item.isFeatured === true);
+      if (input?.search) {
+        const q = input.search.toLowerCase();
+        items = items.filter((item) =>
+          (item.title || "").toLowerCase().includes(q) ||
+          (item.subtitle || "").toLowerCase().includes(q) ||
+          (item.tags || []).some((t) => t.toLowerCase().includes(q)),
+        );
+      }
       items.sort((a, b) => {
         const orderA = a.sortOrder ?? 9999;
         const orderB = b.sortOrder ?? 9999;
         return orderA - orderB || a.lessonId.localeCompare(b.lessonId);
       });
-      return {
-        items,
-        total: items.length,
-        updatedAt: storage.updatedAt,
-        source: "json" as const,
-      };
+      return { items, total: items.length, updatedAt: storage.updatedAt, source: "json" as const };
     }),
 
   getOverride: publicProcedure

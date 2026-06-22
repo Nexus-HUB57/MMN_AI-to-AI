@@ -200,16 +200,25 @@ app.get("/api/academia/whats-new", async (req, res) => {
     const pool = new Pool({ connectionString: connStr, max: 2 });
     const limitRaw = Number(req.query.limit);
     const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), 50) : 5;
-    const r = await pool.query(
-      `SELECT lesson_id, section_slug, title, subtitle, level, required_tier,
+    const after = typeof req.query.after === "string" ? req.query.after : undefined;
+
+    let sql = `SELECT lesson_id, section_slug, title, subtitle, level, required_tier,
               video_url, md_url, html_url, pdf_url, cover_url, thumbnail_url,
               featured, sort_order, published_at, updated_at
        FROM public.academia_lessons
-       WHERE is_published = TRUE
-       ORDER BY published_at DESC NULLS LAST, updated_at DESC
-       LIMIT $1`,
-      [limit]
-    );
+       WHERE is_published = TRUE`;
+    const params: any[] = [];
+    if (after) {
+      // cursor: { publishedAt, lessonId }
+      try {
+        const [pAt, lid] = Buffer.from(after, "base64url").toString("utf8").split("|");
+        params.push(pAt); params.push(lid);
+        sql += ` AND (published_at, lesson_id) < ($${params.length-1}::timestamptz, $${params.length})`;
+      } catch {/* cursor inválido — ignora */}
+    }
+    sql += ` ORDER BY published_at DESC NULLS LAST, lesson_id DESC LIMIT $${params.length+1}`;
+    params.push(limit);
+    const r = await pool.query(sql, params);
     await pool.end();
     const items = r.rows.map((row) => ({
       lessonId: row.lesson_id,
@@ -228,9 +237,13 @@ app.get("/api/academia/whats-new", async (req, res) => {
       publishedAt: row.published_at ? new Date(row.published_at).toISOString() : null,
       updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : null,
     }));
+    const last = items[items.length - 1];
+    const nextCursor = items.length === limit && last?.publishedAt
+      ? Buffer.from(`${last.publishedAt}|${last.lessonId}`, "utf8").toString("base64url")
+      : null;
     res.setHeader("Cache-Control", "public, max-age=60");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    return res.json({ total: items.length, items, generatedAt: new Date().toISOString() });
+    return res.json({ total: items.length, items, nextCursor, generatedAt: new Date().toISOString() });
   } catch (err: any) {
     return res.status(500).json({ error: err?.message || "internal_error" });
   }
@@ -291,7 +304,86 @@ app.post("/api/academia/translate-suggest", async (req, res) => {
   }
 });
 
+
+// POST /api/academia/track-view — registra view de aula (anônimo ou autenticado)
+app.post("/api/academia/track-view", async (req, res) => {
+  try {
+    const body = (req.body || {}) as { lessonId?: string };
+    if (!body.lessonId || typeof body.lessonId !== "string") {
+      return res.status(400).json({ error: "missing_lessonId" });
+    }
+    const { isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    const { Pool } = await import("pg");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const connStr = process.env.DATABASE_URL!;
+    const pool = new Pool({ connectionString: connStr, max: 2 });
+    const fwd = (req.headers["x-forwarded-for"] || "").toString().split(",")[0].trim() || req.ip || "";
+    const crypto = await import("crypto");
+    const ipHash = fwd ? crypto.createHash("sha256").update(fwd).digest("hex").slice(0, 32) : null;
+    const ua = (req.headers["user-agent"] || "").toString().slice(0, 500);
+    const ref = (req.headers["referer"] || req.headers["referrer"] || "").toString().slice(0, 500);
+    const userId = (req as any).user?.id ? Number((req as any).user.id) : null;
+    await pool.query(
+      "INSERT INTO public.lesson_views (lesson_id, user_id, ip_hash, user_agent, referrer) VALUES ($1,$2,$3,$4,$5)",
+      [body.lessonId, userId, ipHash, ua || null, ref || null]
+    );
+    await pool.end();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ ok: true, lessonId: body.lessonId, trackedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/stats/popular — aulas mais vistas (últimos N dias)
+app.get("/api/academia/stats/popular", async (req, res) => {
+  try {
+    const { isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    const { Pool } = await import("pg");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const connStr = process.env.DATABASE_URL!;
+    const pool = new Pool({ connectionString: connStr, max: 2 });
+    const daysRaw = Number(req.query.days);
+    const days = Number.isFinite(daysRaw) && daysRaw > 0 ? Math.min(Math.floor(daysRaw), 365) : 30;
+    const limitRaw = Number(req.query.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), 50) : 10;
+    const r = await pool.query(
+      `SELECT al.lesson_id, al.section_slug, al.title, al.subtitle, al.cover_url, al.thumbnail_url, al.video_url, al.html_url,
+              count(lv.id)::int AS views, max(lv.viewed_at) AS last_viewed_at
+       FROM public.academia_lessons al
+       LEFT JOIN public.lesson_views lv ON lv.lesson_id = al.lesson_id AND lv.viewed_at >= now() - ($1 * INTERVAL '1 day')
+       WHERE al.is_published = TRUE
+       GROUP BY al.lesson_id, al.section_slug, al.title, al.subtitle, al.cover_url, al.thumbnail_url, al.video_url, al.html_url
+       ORDER BY count(lv.id) DESC, al.lesson_id ASC
+       LIMIT $2`,
+      [days, limit]
+    );
+    await pool.end();
+    const items = r.rows.map((row) => ({
+      lessonId: row.lesson_id,
+      sectionSlug: row.section_slug,
+      title: row.title,
+      subtitle: row.subtitle,
+      coverUrl: row.cover_url ?? row.thumbnail_url ?? null,
+      videoUrl: row.video_url,
+      htmlUrl: row.html_url,
+      views: Number(row.views || 0),
+      lastViewedAt: row.last_viewed_at ? new Date(row.last_viewed_at).toISOString() : null,
+    }));
+    res.setHeader("Cache-Control", "public, max-age=120");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ days, total: items.length, items, generatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
 app.get("/api/academia/search", async (req, res) => {
+  // /api/academia/search-v2-cursor-applied
   try {
     const { listLessons, isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
     if (!(await isAcademiaLessonsAvailable())) {
@@ -303,19 +395,24 @@ app.get("/api/academia/search", async (req, res) => {
     const publishedOnly = req.query.publishedOnly !== "0" && req.query.publishedOnly !== "false";
     const limitRaw = Number(req.query.limit);
     const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(Math.floor(limitRaw), 200) : 50;
-    const items = await listLessons({
-      sectionSlug: section,
-      publishedOnly,
-      featuredOnly: featured,
-      search: q,
-      limit,
-    });
+    const after = typeof req.query.after === "string" ? req.query.after : undefined;
+    // Sobre-busca: pegamos limit+1 e descartamos extra para detectar nextCursor
+    const rows = await listLessons({ sectionSlug: section, publishedOnly, featuredOnly: featured, search: q, limit: limit + 1 });
+    let sliced = rows;
+    if (after) {
+      const idx = rows.findIndex((r) => r.lessonId === after);
+      if (idx >= 0) sliced = rows.slice(idx + 1);
+    }
+    const hasMore = sliced.length > limit;
+    const finalItems = sliced.slice(0, limit);
+    const nextCursor = hasMore ? finalItems[finalItems.length - 1]?.lessonId || null : null;
     res.setHeader("Cache-Control", "public, max-age=30");
     res.setHeader("Access-Control-Allow-Origin", "*");
     return res.json({
-      query: { q: q || null, section: section || null, featured, publishedOnly, limit },
-      total: items.length,
-      items: items.map((row) => ({
+      query: { q: q || null, section: section || null, featured, publishedOnly, limit, after: after || null },
+      total: finalItems.length,
+      nextCursor,
+      items: finalItems.map((row) => ({
         lessonId: row.lessonId,
         sectionSlug: row.sectionSlug,
         title: row.title,
@@ -347,6 +444,37 @@ app.get("/api/academia/search", async (req, res) => {
   }
 });
 
+
+
+// /api/v1/academia/* — alias OpenAPI público com NEXUS_PUBLIC_API_KEY (read-only)
+function checkPublicKey(req: any, res: any) {
+  const expected = process.env.NEXUS_PUBLIC_API_KEY || "";
+  const provided = (req.headers["x-nexus-public-key"] || req.query.key || "").toString();
+  if (!expected) { res.status(503).json({ error: "public_key_not_configured" }); return false; }
+  if (provided !== expected) { res.status(401).json({ error: "invalid_public_key" }); return false; }
+  return true;
+}
+app.get("/api/v1/academia/search", async (req, res) => {
+  if (!checkPublicKey(req, res)) return;
+  req.url = "/api/academia/search" + (req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "");
+  // Reuso da implementação principal: delegar via redirect interno
+  return (app as any)._router.handle(req, res, () => {});
+});
+app.get("/api/v1/academia/lesson/:lessonId", async (req, res) => {
+  if (!checkPublicKey(req, res)) return;
+  req.url = `/api/academia/lesson/${req.params.lessonId}`;
+  return (app as any)._router.handle(req, res, () => {});
+});
+app.get("/api/v1/academia/whats-new", async (req, res) => {
+  if (!checkPublicKey(req, res)) return;
+  req.url = "/api/academia/whats-new" + (req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "");
+  return (app as any)._router.handle(req, res, () => {});
+});
+app.get("/api/v1/academia/stats/popular", async (req, res) => {
+  if (!checkPublicKey(req, res)) return;
+  req.url = "/api/academia/stats/popular" + (req.url.includes("?") ? req.url.substring(req.url.indexOf("?")) : "");
+  return (app as any)._router.handle(req, res, () => {});
+});
 
 app.use("/api/v1", nexusOpenApiRouter);
 app.use("/trpc", trpcMiddleware);

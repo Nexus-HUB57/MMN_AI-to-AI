@@ -382,6 +382,149 @@ app.get("/api/academia/stats/popular", async (req, res) => {
   }
 });
 
+
+// V15 LESSON PROGRESS BLOCK
+// POST /api/academia/lesson-progress — atualizar progresso (autenticado)
+app.post("/api/academia/lesson-progress", async (req, res) => {
+  try {
+    const body = (req.body || {}) as { lessonId?: string; watchedSeconds?: number; lastPosition?: number; durationS?: number; completed?: boolean; userId?: number };
+    const lessonId = String(body.lessonId || "");
+    if (!lessonId) return res.status(400).json({ error: "missing_lessonId" });
+    const userId = (req as any).user?.id ? Number((req as any).user.id) : (body.userId ? Number(body.userId) : null);
+    if (!userId) return res.status(401).json({ error: "unauthenticated" });
+
+    const { isAcademiaLessonsAvailable } = await import("./services/academiaLessonsRepository");
+    const { Pool } = await import("pg");
+    if (!(await isAcademiaLessonsAvailable())) {
+      return res.status(503).json({ error: "academia_repository_unavailable" });
+    }
+    const connStr = process.env.DATABASE_URL!;
+    const pool = new Pool({ connectionString: connStr, max: 2 });
+    const watched = Math.max(0, Math.floor(Number(body.watchedSeconds || 0)));
+    const lastPos = Math.max(0, Math.floor(Number(body.lastPosition || 0)));
+    const dur = body.durationS ? Math.max(0, Math.floor(Number(body.durationS))) : null;
+    const completed = Boolean(body.completed) || (dur ? lastPos >= dur * 0.9 : false);
+    const r = await pool.query(
+      `INSERT INTO public.lesson_progress (user_id, lesson_id, watched_seconds, last_position, duration_s, completed, completed_at)
+       VALUES ($1,$2,$3,$4,$5,$6, CASE WHEN $6 THEN now() ELSE NULL END)
+       ON CONFLICT (user_id, lesson_id) DO UPDATE SET
+         watched_seconds = GREATEST(public.lesson_progress.watched_seconds, EXCLUDED.watched_seconds),
+         last_position   = GREATEST(public.lesson_progress.last_position, EXCLUDED.last_position),
+         duration_s      = COALESCE(EXCLUDED.duration_s, public.lesson_progress.duration_s),
+         completed       = public.lesson_progress.completed OR EXCLUDED.completed,
+         completed_at    = COALESCE(public.lesson_progress.completed_at, EXCLUDED.completed_at),
+         updated_at      = now()
+       RETURNING *`,
+      [userId, lessonId, watched, lastPos, dur, completed]
+    );
+    await pool.end();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ ok: true, progress: r.rows[0] });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/lesson-progress/me?userId=N — retomada (próxima aula sugerida)
+app.get("/api/academia/lesson-progress/me", async (req, res) => {
+  try {
+    const userId = (req as any).user?.id ? Number((req as any).user.id) : (req.query.userId ? Number(req.query.userId) : null);
+    if (!userId) return res.status(401).json({ error: "unauthenticated" });
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const r = await pool.query(
+      `SELECT lp.lesson_id, lp.watched_seconds, lp.last_position, lp.duration_s, lp.completed, lp.updated_at,
+              al.title, al.subtitle, al.cover_url, al.thumbnail_url, al.video_url, al.html_url, al.section_slug
+       FROM public.lesson_progress lp
+       JOIN public.academia_lessons al ON al.lesson_id = lp.lesson_id
+       WHERE lp.user_id = $1
+       ORDER BY lp.completed ASC, lp.updated_at DESC
+       LIMIT 10`,
+      [userId]
+    );
+    await pool.end();
+    const items = r.rows.map((row) => ({
+      lessonId: row.lesson_id,
+      title: row.title,
+      subtitle: row.subtitle,
+      sectionSlug: row.section_slug,
+      coverUrl: row.cover_url ?? row.thumbnail_url ?? null,
+      videoUrl: row.video_url,
+      htmlUrl: row.html_url,
+      watchedSeconds: Number(row.watched_seconds || 0),
+      lastPosition: Number(row.last_position || 0),
+      durationS: row.duration_s ? Number(row.duration_s) : null,
+      completed: Boolean(row.completed),
+      updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : null,
+      progressPct: row.duration_s && Number(row.duration_s) > 0
+        ? Math.min(100, Math.round((Number(row.last_position) / Number(row.duration_s)) * 100))
+        : null,
+    }));
+    const resume = items.find((i) => !i.completed) || null;
+    res.setHeader("Cache-Control", "private, no-cache");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ total: items.length, resume, items, generatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/admin/cleanup-views?olderThan=180d (admin-only, X-Nexus-Public-Key OU sessão admin)
+app.post("/api/academia/admin/cleanup-views", async (req, res) => {
+  try {
+    const expected = process.env.NEXUS_PUBLIC_API_KEY || "";
+    const provided = (req.headers["x-nexus-public-key"] || req.query.key || "").toString();
+    if (!expected || provided !== expected) {
+      return res.status(401).json({ error: "invalid_public_key" });
+    }
+    const daysRaw = Number(req.query.olderThanDays || 180);
+    const days = Number.isFinite(daysRaw) && daysRaw >= 30 ? Math.min(Math.floor(daysRaw), 730) : 180;
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const r = await pool.query(
+      `DELETE FROM public.lesson_views WHERE viewed_at < now() - ($1 * INTERVAL '1 day')`,
+      [days]
+    );
+    await pool.end();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ ok: true, deleted: r.rowCount ?? 0, retentionDays: days, executedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/lesson/:lessonId/stats — completion + views (sem PII)
+app.get("/api/academia/lesson/:lessonId/stats", async (req, res) => {
+  try {
+    const lessonId = String(req.params.lessonId);
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const v = await pool.query(
+      "SELECT count(*)::int AS views_30d FROM public.lesson_views WHERE lesson_id=$1 AND viewed_at >= now() - INTERVAL '30 days'",
+      [lessonId]
+    );
+    const c = await pool.query(
+      "SELECT * FROM public.lesson_completion_stats WHERE lesson_id=$1",
+      [lessonId]
+    );
+    await pool.end();
+    res.setHeader("Cache-Control", "public, max-age=120");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      lessonId,
+      views30d: Number(v.rows[0]?.views_30d || 0),
+      startedCount: Number(c.rows[0]?.started_count || 0),
+      completedCount: Number(c.rows[0]?.completed_count || 0),
+      avgWatchedS: Number(c.rows[0]?.avg_watched_s || 0),
+      completionRate: c.rows[0]?.completion_rate !== null && c.rows[0]?.completion_rate !== undefined
+        ? Number(c.rows[0].completion_rate) : null,
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
 app.get("/api/academia/search", async (req, res) => {
   // /api/academia/search-v2-cursor-applied
   try {

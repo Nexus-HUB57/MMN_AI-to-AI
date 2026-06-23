@@ -36,6 +36,7 @@ import SalesFunnelDashboard from "../components/SalesFunnelDashboard";
 import AchievementsBadges from "../components/AchievementsBadges";
 import NotificationCenter from "../components/NotificationCenter";
 import { CommissionChart } from '../components/CommissionChart';
+import AcademiaPersonalTrail from "../components/AcademiaPersonalTrail";
 import AcademiaResume from "../components/AcademiaResume";
 import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
@@ -268,6 +269,7 @@ export default function Dashboard() {
     <DashboardLayout>
       <NotificationCenter />
       <AcademiaPushOptIn />
+      <AcademiaPersonalTrail />
       <AcademiaResume />
       <AcademiaWhatsNew />
       <AcademiaPopular />

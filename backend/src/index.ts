@@ -641,6 +641,127 @@ app.get("/api/academia/whats-new/has-recent", async (req, res) => {
   }
 });
 
+
+// V17 PROGRESS BY-SECTION + TRANSLATE-BULK
+// GET /api/academia/lesson-progress/by-section?section=curso&userId=N
+//   Retorna map { lessonId: progressPct } para todas as aulas da seção
+app.get("/api/academia/lesson-progress/by-section", async (req, res) => {
+  try {
+    const section = String(req.query.section || "").trim();
+    const userId = (req as any).user?.id ? Number((req as any).user.id) : (req.query.userId ? Number(req.query.userId) : null);
+    if (!section || !userId) return res.status(400).json({ error: "missing_section_or_userId" });
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const r = await pool.query(
+      `SELECT lp.lesson_id, lp.watched_seconds, lp.last_position, lp.duration_s, lp.completed
+       FROM public.lesson_progress lp
+       JOIN public.academia_lessons al ON al.lesson_id = lp.lesson_id
+       WHERE lp.user_id = $1 AND al.section_slug = $2`,
+      [userId, section]
+    );
+    await pool.end();
+    const byLesson: Record<string, { progressPct: number; completed: boolean; watched: number; duration: number | null }> = {};
+    for (const row of r.rows) {
+      const dur = row.duration_s ? Number(row.duration_s) : null;
+      const pct = dur && dur > 0 ? Math.min(100, Math.round((Number(row.last_position) / dur) * 100)) : 0;
+      byLesson[row.lesson_id] = {
+        progressPct: row.completed ? 100 : pct,
+        completed: Boolean(row.completed),
+        watched: Number(row.watched_seconds || 0),
+        duration: dur,
+      };
+    }
+    res.setHeader("Cache-Control", "private, max-age=10");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({ section, userId, total: Object.keys(byLesson).length, byLesson, generatedAt: new Date().toISOString() });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// POST /api/academia/admin/translate-bulk?dryRun=1
+//   Gera title_en/subtitle_en para aulas que ainda não têm, via dicionário Nexus.
+//   dryRun=1 não persiste, apenas retorna lista de sugestões.
+app.post("/api/academia/admin/translate-bulk", async (req, res) => {
+  try {
+    const expected = process.env.NEXUS_PUBLIC_API_KEY || "";
+    const provided = (req.headers["x-nexus-public-key"] || req.query.key || "").toString();
+    if (!expected || provided !== expected) return res.status(401).json({ error: "invalid_public_key" });
+
+    const dryRun = req.query.dryRun === "1" || req.query.dryRun === "true";
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const r = await pool.query(
+      `SELECT lesson_id, title, subtitle FROM public.academia_lessons
+       WHERE (title_en IS NULL OR title_en = '') AND title IS NOT NULL
+       ORDER BY lesson_id LIMIT 200`
+    );
+
+    const dict: Array<[RegExp, string]> = [
+      [/\bBoas-vindas\b/gi, "Welcome"],
+      [/\bao Nexus\b/gi, "to Nexus"],
+      [/\bEntendendo o\b/gi, "Understanding"],
+      [/\bSistema\b/gi, "System"],
+      [/\bPainel do Afiliado\b/gi, "Affiliate Dashboard"],
+      [/\bPrimeiro Agente\b/gi, "First Agent"],
+      [/\bSkills Essenciais\b/gi, "Essential Skills"],
+      [/\bDisparo\b/gi, "Broadcast"],
+      [/\bJudge Revisor\b/gi, "Judge Reviewer"],
+      [/\bApresentação\b/gi, "Introduction"],
+      [/\bem ação\b/gi, "in action"],
+      [/\bModelo\b/gi, "Model"],
+      [/\bCriando o\b/gi, "Creating the"],
+      [/\bTreinamento\b/gi, "Training"],
+      [/\bLançamento\b/gi, "Launch"],
+      [/\bCrise\b/gi, "Crisis"],
+      [/\bOperação\b/gi, "Operations"],
+      [/\bAutonomia\b/gi, "Autonomy"],
+      [/\bRevisão\b/gi, "Review"],
+      [/\bFundamental\b/gi, "Fundamental"],
+      [/\bAgente\b/gi, "Agent"],
+      [/\bMaster\b/gi, "Master"],
+      [/\bElite\b/gi, "Elite"],
+      [/\bPersona\b/gi, "Persona"],
+      [/\bAcadem'IA\b/gi, "Academ'IA"],
+    ];
+    const translate = (text?: string | null) => {
+      if (!text) return null;
+      let out = text;
+      for (const [re, en] of dict) out = out.replace(re, en);
+      return out;
+    };
+
+    const suggestions = r.rows.map((row) => ({
+      lessonId: row.lesson_id,
+      titlePt: row.title,
+      subtitlePt: row.subtitle,
+      titleEn: translate(row.title),
+      subtitleEn: translate(row.subtitle),
+    }));
+
+    let updated = 0;
+    if (!dryRun) {
+      for (const sug of suggestions) {
+        await pool.query(
+          `UPDATE public.academia_lessons SET title_en = COALESCE(title_en, $2), subtitle_en = COALESCE(subtitle_en, $3), updated_at = now() WHERE lesson_id = $1`,
+          [sug.lessonId, sug.titleEn, sug.subtitleEn]
+        );
+        updated++;
+      }
+    }
+    await pool.end();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      dryRun, totalCandidates: suggestions.length, updated,
+      strategy: "dictionary-v1",
+      suggestions: dryRun ? suggestions : suggestions.slice(0, 5),
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
 app.get("/api/academia/search", async (req, res) => {
   // /api/academia/search-v2-cursor-applied
   try {

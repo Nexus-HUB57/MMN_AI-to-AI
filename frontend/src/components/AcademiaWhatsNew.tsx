@@ -1,5 +1,6 @@
 // V12: Painel "Novidades da Academ'IA" — últimas 5 aulas publicadas
 import { useEffect, useState } from "react";
+import AcademiaNewBadge from "./AcademiaNewBadge";
 
 interface WhatsNewItem {
   lessonId: string;
@@ -88,6 +89,7 @@ export default function AcademiaWhatsNew() {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">
           🆕 Novidades da Academ&apos;IA
+          <AcademiaNewBadge hours={24} />
         </h3>
         <a href="/academia/ead/curso" className="text-xs text-cyan-600 hover:underline">Ver tudo →</a>
       </div>

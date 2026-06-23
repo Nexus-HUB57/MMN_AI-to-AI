@@ -8,7 +8,7 @@
 *   **Aparência Geral:** Imponente, sábio e experiente. Possui uma barba longa e grisalha, bem cuidada, que transmite autoridade e maturidade. Veste-se com uma camisa social azul marinho, mantendo um estilo profissional e sóbrio.
 *   **Olhos:** Azuis claros, expressivos e focados, transmitindo inteligência e serenidade.
 *   **Cabelos:** Grisalhos, curtos no topo, complementando a barba proeminente.
-*   **Acessório:** Usa uma quipá preta, indicando sua identidade cultural/religiosa e adicionando uma camada de respeito e tradição à sua imagem de mentor.
+*   **Acessório:** Usa uma quipá, indicando sua identidade cultural/religiosa e adicionando uma camada de respeito e tradição à sua imagem de mentor.
 *   **Cenário:** Escritório de alta tecnologia com painéis de dados holográficos azuis ao fundo, simbolizando sua maestria sobre o IOAID e o SHO.
 *   **Voz:** Serena, acolhedora e autoritária.
 

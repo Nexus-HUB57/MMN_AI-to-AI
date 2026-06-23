@@ -192,4 +192,74 @@ Imagine que você tem:
 
 **Orquestração Híbrida de Agentes** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Orquestração Híbrida de Agentes
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Topologia**
+
+Desenhe a topologia do seu sistema (quantos agentes, como se comunicam). Documente em 1 página.
+
+**Exercício 2 — Protocolo**
+
+Implemente 1 protocolo de comunicação entre agentes (REST, gRPC, ou fila). Documente o contrato.
+
+**Exercício 3 — Estado**
+
+Implemente 1 estratégia de gerenciamento de estado (compartilhado vs. isolado). Teste com 2 agentes.
+
+**Exercício 4 — Falha**
+
+Simule 1 falha de agente (matar processo). Documente como o sistema detecta e recupera.
+
+**Exercício 5 — Otimização**
+
+Otimize 1 gargalo identificado (latência, throughput, ou memória). Meça o ganho.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. O que é 'orquestração híbrida' (centralizada + federada)?
+2. Quais protocolos de comunicação entre agentes?
+3. Como gerenciar estado compartilhado sem race conditions?
+4. Qual a estratégia de failover recomendada?
+5. Como evitar 'cascading failures' (falha em cascata)?
+6. O que é 'circuit breaker' e quando usar?
+7. Como fazer 'graceful degradation' (degradação controlada)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

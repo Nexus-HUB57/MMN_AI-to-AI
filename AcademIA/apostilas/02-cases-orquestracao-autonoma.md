@@ -161,4 +161,74 @@ Esse roteiro de 6 semanas é o que separa quem triplica receita de quem fica tra
 
 **Cases Reais de Orquestração Autônoma** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Cases Reais de Orquestração
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Case study**
+
+Escolha 1 case da apostila (loja de roupas, academia, e-commerce). Refaça a análise técnica: por que aquele design funcionou?
+
+**Exercício 2 — Anti-patterns**
+
+Identifique 2 anti-patterns mencionados. Para cada um, descreva como você evitaria em seu projeto.
+
+**Exercício 3 — Adaptação**
+
+Adapte 1 dos cases para o seu nicho. Documente: agentes, skills, ferramentas, métricas.
+
+**Exercício 4 — Métricas**
+
+Para o case adaptado, defina 3 KPIs que validariam o sucesso em 30 dias.
+
+**Exercício 5 — Apresentação**
+
+Crie 1 slide (ou 1 página) resumindo o case adaptado. Apresente para 1 pessoa real e colete feedback.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são os 3 pilares da orquestração autônoma (eventos, ferramentas, memória)?
+2. O que diferencia um agente 'autônomo' de um agente 'automatizado'?
+3. Cite 3 anti-patterns comuns em orquestração.
+4. Como medir sucesso de uma orquestração (métricas)?
+5. Qual o papel do Judge em uma orquestração autônoma?
+6. Como evitar 'agent loops' (loops infinitos)?
+7. Qual a diferença entre orquestração 'centralizada' e 'federada'?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

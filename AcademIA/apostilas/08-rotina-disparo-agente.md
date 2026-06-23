@@ -193,4 +193,74 @@ Quando algum desses sinais aparecer, **revise a rotina inteira**, não só o sin
 
 **Rotina de Disparo com Agente** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Rotina de Disparo com Agente
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Setup**
+
+Configure 1 rotina de disparo (ex: 100 contatos/dia, 9h da manhã). Use Judge em modo Revisão.
+
+**Exercício 2 — Segmentação**
+
+Crie 3 listas (frio, morno, quente) com critérios claros. Dispare mensagens diferentes.
+
+**Exercício 3 — Métricas**
+
+Após 7 dias, meça: abertura, resposta, conversão. Identifique 1 gargalo principal.
+
+**Exercício 4 — Otimização**
+
+Itere na copy (3 variantes). Compare resultado. Documente qual versão converteu mais.
+
+**Exercício 5 — Compliance**
+
+Documente como você respeita opt-out, LGPD, e limite diário. Faça 1 auditoria simulada.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Qual o limite diário de mensagens permitido pela Meta?
+2. Como configurar fallback para Telegram quando WhatsApp cai?
+3. Qual a taxa de conversão esperada em lista fria vs. quente?
+4. Como configurar Judge em modo Revisão sem atrasar o envio?
+5. O que é 'opt-out' e como respeitar?
+6. Qual a diferença entre 'broadcast' e 'disparo'?
+7. Como evitar bloqueio do número (boas práticas)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

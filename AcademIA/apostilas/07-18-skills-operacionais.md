@@ -231,4 +231,74 @@ Previstas para Q3-Q4 2026:
 
 **As 18 Skills Operacionais Base** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: As 18 Skills Operacionais
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Catálogo**
+
+Leia as 18 skills. Para cada, marque: já uso, quero aprender, não preciso. Foque nas top 3.
+
+**Exercício 2 — Skill custom**
+
+Crie 1 skill nova (não copie). Use o template da apostila. Teste com 3 cenários reais.
+
+**Exercício 3 — Workflow**
+
+Monte 1 workflow de 4 skills (ex: segmenter → copywriter → disparador → medidor).
+
+**Exercício 4 — Calibração**
+
+Para 3 skills, ajuste os parâmetros até o output ficar > 90% satisfatório. Documente os ajustes.
+
+**Exercício 5 — Biblioteca**
+
+Publique suas 3 skills customizadas em uma biblioteca pessoal (mesmo que interna). Documente bem.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são as 18 skills base?
+2. Como categorizar skills (categoria, função, custo)?
+3. Qual a diferença entre 'skill' e 'tool' no Nexus?
+4. Como encadear skills em workflow (sequência, paralelo)?
+5. Como testar uma skill antes de colocar em produção?
+6. Qual a política de versionamento de skills?
+7. Como contribuir com skills para a biblioteca comum?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

@@ -182,4 +182,74 @@ Se você é desenvolvedor e quer implementar uma skill:
 
 **Apresentação Oficial da Infraestrutura Nexus** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Apresentação da Infraestrutura
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Mapeamento**
+
+Desenhe a topologia da sua operação atual: agentes, bancos, APIs, integrações. Identifique 3 pontos de falha em potencial.
+
+**Exercício 2 — Auditoria**
+
+Acesse o painel Nexus e liste os 7 indicadores-padrão da tela inicial. Compare com seus valores reais.
+
+**Exercício 3 — Setup local**
+
+Suba o docker-compose da apostila em um ambiente de teste. Verifique se todos os 5 módulos do IOAID estão rodando.
+
+**Exercício 4 — Backup**
+
+Configure backup automático do Postgres (1x dia) e do Redis (3x dia). Documente o procedimento de restore.
+
+**Exercício 5 — Capacidade**
+
+Calcule o limite teórico de requisições/segundo do seu setup (considerando CPU, memória, rede). Compare com a demanda real.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são os 5 módulos do IOAID e qual a função de cada um?
+2. Por que 'distribuída' é uma decisão técnica, não marketing?
+3. Qual a diferença entre 'auditável', 'escalável' e 'reversível'?
+4. Como o SHO se relaciona com o IOAID?
+5. Qual o SLA mínimo esperado (latência, uptime, MTTR)?
+6. Cite 3 cenários de failover que o IOAID deveria suportar.
+7. Qual a estratégia de backup recomendada (frequência, retenção)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

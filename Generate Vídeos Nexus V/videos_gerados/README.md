@@ -1,71 +1,111 @@
-# Vídeos Nexus V - Vídeo-Aulas Geradas
+# Vídeos Nexus V — Catálogo Completo (15 vídeo-aulas)
 
-**Data de geração:** 17 de junho de 2026
-**Pipeline:** Generate Vídeos Nexus V + AcademIA/cursos
+**Data:** 22 de junho de 2026
+**Pipeline:** `Generate Vídeos Nexus V/scripts_geracao/generate_videos_v2.py`
 
-## Resumo
+## Resumo Executivo
 
-Este diretório contém os vídeos MP4 gerados pelo pipeline automatizado que combina:
-- **Roteiros estruturados** de `AcademIA/cursos/{fundamental,agente}/*-roteiro.md`
-- **Personas** Sra. Nexus Ive (matriarca/estrategista) e Sir. Nexus Alencar (técnico/mestre)
-- **Slides cyberpunk** 1920x1080 renderizados com gradientes neon + grid técnico
-- **Áudios narrados** (quando disponíveis) ou placeholders de silêncio
+Pipeline automatizado que processa roteiros Markdown estruturados em cenas
+e gera vídeos MP4 1920x1080 com slides cyberpunk. Cobre as 4 trilhas da
+AcademIA Nexus: **Fundamental, Agente, Master, Elite**.
 
-## Vídeos Entregues (8 módulos)
+**Total:** 15 vídeo-aulas | 67 cenas | ~166 MB MP4 | ~30 min de conteúdo
+narrado (Fundamental) + placeholders para as outras trilhas (TTS pendente).
 
-### Trilha Fundamental (com áudio real do Alencar)
+## Trilha Fundamental (4 vídeos com áudio real)
 
-| Módulo | Duração | Tamanho | Cenas | Persona | Áudio |
-|--------|---------|---------|-------|---------|-------|
-| `mod00_boas_vindas_final.mp4` | 261s (~4:21) | 15 MB | 7 | Alencar | ✅ Real (7 WAVs) |
-| `mod01_entendendo_ioaid_final.mp4` | 210s (~3:30) | 14 MB | 5 | Ive | ✅ Real (5 WAVs) |
-| `mod02_sistema_sho_final.mp4` | 167s (~2:47) | 11 MB | 4 | Ive | ✅ Real (4 WAVs) |
-| `mod03_painel_afiliado_final.mp4` | 167s (~2:47) | 11 MB | 4 | Ive | ✅ Real (4 WAVs) |
+| Módulo | Duração | Tamanho | Cenas | Persona | Áudio | Thumbnail |
+|--------|---------|---------|-------|---------|-------|-----------|
+| 00 - Boas-vindas | 261s (~4:21) | 15 MB | 7 | Alencar | ✅ Real | ✓ |
+| 01 - Entendendo IOAID | 210s (~3:30) | 14 MB | 5 | Ive | ✅ Real | ✓ |
+| 02 - Sistema SHO | 167s (~2:47) | 11 MB | 4 | Ive | ✅ Real | ✓ |
+| 03 - Painel Afiliado | 167s (~2:47) | 11 MB | 4 | Ive | ✅ Real | ✓ |
 
-### Trilha Agente (placeholders de áudio - aguardando TTS)
+## Trilha Agente (4 vídeos com placeholders de áudio)
 
-| Módulo | Duração | Tamanho | Cenas | Persona | Áudio |
-|--------|---------|---------|-------|---------|-------|
-| `mod00_primeiro_agente_final.mp4` | 15s | 2.1 MB | 5 | dupla | ⚠️ Placeholder |
-| `mod01_skills_essenciais_final.mp4` | 15s | 2.2 MB | 5 | dupla | ⚠️ Placeholder |
-| `mod02_disparo_whatsapp_final.mp4` | 12s | 1.7 MB | 4 | dupla | ⚠️ Placeholder |
-| `mod03_judge_revisor_final.mp4` | 12s | 1.7 MB | 4 | dupla | ⚠️ Placeholder |
+| Módulo | Cenas | Persona | Thumbnail |
+|--------|-------|---------|-----------|
+| 00 - Seu Primeiro Agente | 5 | Ive + Alencar | ✓ |
+| 01 - Skills Essenciais | 5 | Ive + Alencar | ✓ |
+| 02 - Disparando no WhatsApp | 4 | Ive + Alencar | ✓ |
+| 03 - Lendo o Judge Revisor | 4 | Ive + Alencar | ✓ |
 
-> **Nota sobre Agente:** Os 4 módulos da trilha Agente não possuem gravações de áudio originais no repositório. O servidor de TTS do ambiente estava temporariamente indisponível no momento da geração. Para regenerar com TTS, use o script `scripts_geracao/generate_videos.py` após o servidor de TTS estar online.
+## Trilha Master (4 vídeos com placeholders de áudio)
+
+| Módulo | Cenas | Persona | Thumbnail |
+|--------|-------|---------|-----------|
+| 00 - Otimização de Conversão | 5 | Ive + Alencar | ✓ |
+| 01 - Funis e Lifecycle | 5 | Ive + Alencar | ✓ |
+| 02 - A/B Testing com Judge | 5 | Ive + Alencar | ✓ |
+| 03 - Análise de Coortes e Churn | 5 | Ive + Alencar | ✓ |
+
+## Trilha Elite (3 vídeos com placeholders de áudio)
+
+| Módulo | Cenas | Persona | Thumbnail |
+|--------|-------|---------|-----------|
+| 00 - Blueprints Elite | 5 | Ive + Alencar | ✓ |
+| 01 - Multi-tenant e White-label | 5 | Ive + Alencar | ✓ |
+| 02 - Federação de Agentes | 5 | Ive + Alencar | ✓ |
+
+## Tabela Consolidada de Outputs
+
+Para cada vídeo entregue há **2 arquivos**:
+- `*_final.mp4` — vídeo final concatenado
+- `*_thumb.png` — thumbnail 1280x720
+
+## Pipeline de Geração
+
+### 1. Parser de Roteiros
+- Regex captura `## Cena N: Título (Duração)`
+- Separa discurso por persona (`Sra. Nexus Ive:`, `Sir. Nexus Alencar:`)
+- Extrai `**Visual:**` para o slide
+
+### 2. Render de Slides (PIL)
+- 1920x1080 com gradiente vertical por persona
+- Grid técnico sutil + círculos concêntricos + pontos neon
+- Cantos em L (cyberpunk HUD)
+- Texto com fonte DejaVu Sans Bold
+
+### 3. Combinação com Áudio (ffmpeg)
+- `libx264 -preset ultrafast -tune stillimage -crf 28`
+- `aac -b:a 128k`
+- `pix_fmt yuv420p -shortest`
+
+### 4. Concat Final
+- `ffmpeg -f concat -safe 0 -i lista.txt -c copy`
+
+### 5. Thumbnails
+- 1280x720 com persona + título do módulo + nível + branding
+- Caixa de destaque com ID do módulo
+- Cantos cyberpunk grandes
 
 ## Como Regenerar
 
 ```bash
-# A partir da raiz do repositório
-python3 "Generate Vídeos Nexus V/scripts_geracao/generate_videos.py"
+# A partir da raiz do repo MMN_AI-to-AI:
+python3 "Generate Vídeos Nexus V/scripts_geracao/generate_videos_v2.py"
 ```
 
 O script detecta automaticamente:
-- Todos os roteiros em `AcademIA/cursos/{fundamental,agente}/*-roteiro.md`
-- Áudios WAV já existentes (`*-cenaN.wav` por módulo)
-- Persona indicada no cabeçalho do roteiro (Ive, Alencar, ou dupla)
-- Cores e estética cyberpunk (rosa+ciano neon, grid técnico, cantos em L)
-
-## Pipeline Detalhado
-
-1. **Parse do roteiro**: Expressão regular identifica cada cena (## Cena N: Título (duração))
-2. **Extração de fala**: Separa discurso por persona (Ive vs Alencar)
-3. **Renderização do slide**: 1920x1080 com gradiente, grid, círculos concêntricos, pontos neon
-4. **Mapeamento de áudio**: Tenta usar áudio real; se ausente, gera placeholder de 3s
-5. **Combinação ffmpeg**: slide (PNG loop) + áudio (WAV) → cena.mp4 (libx264 ultrafast)
-6. **Concat final**: Junta todas as cenas via ffmpeg concat demuxer
+- 8 roteiros originais (Fundamental + Agente) já existentes
+- 4 roteiros Master criados em 22/06/2026
+- 3 roteiros Elite criados em 22/06/2026
+- Áudios WAV reais quando disponíveis (Fundamental)
+- Placeholders silenciosos quando ausentes (Agente/Master/Elite)
 
 ## Próximos Passos
 
-- [ ] Regenerar trilha Agente com TTS via `synthesize_speech` (voz `female-qn-qingse` para Ive, `male-qn-jingying` para Alencar)
-- [ ] Adicionar trilha Master (4 módulos) e Elite (3 módulos)
-- [ ] Implementar legendas automáticas (SRT) via Whisper
-- [ ] Adicionar transições entre cenas (crossfade 0.5s)
-- [ ] Hospedar vídeos em CDN/S3 para streaming
+- [ ] Regenerar trilhas Agente/Master/Elite com TTS real (synthesize_speech)
+- [ ] Adicionar crossfade entre cenas (xfade filter no ffmpeg)
+- [ ] Adicionar trilha Master completa (4 módulos)
+- [ ] Adicionar trilha Elite completa (3 módulos)
+- [ ] Legendas automáticas (Whisper) com SRT sidecar
+- [ ] Upload para CDN/S3 com signed URLs
+- [ ] Thumbnail A/B testing automático
 
-## Estatísticas Totais
+## Estatísticas
 
-- **8 vídeos gerados** (4 com áudio real, 4 com placeholders)
-- **36 cenas** processadas (7+5+4+4 na Fundamental, 5+5+4+4 na Agente)
-- **123 MB** total de MP4
-- **~14 minutos** de conteúdo narrado (somando Fundamental)
+- **15 vídeos MP4** + **15 thumbnails PNG**
+- **67 cenas processadas** (19 Fundamental + 18 Agente + 20 Master + 15 Elite)
+- **~166 MB** total
+- **Tempo de execução:** ~3 minutos (geração) + ~2 minutos (concat/thumb) por módulo

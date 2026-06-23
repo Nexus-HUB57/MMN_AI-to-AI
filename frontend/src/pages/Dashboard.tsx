@@ -37,6 +37,7 @@ import AchievementsBadges from "../components/AchievementsBadges";
 import NotificationCenter from "../components/NotificationCenter";
 import { CommissionChart } from '../components/CommissionChart';
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
+import AcademiaPopular from "../components/AcademiaPopular";
 // SPRINTS_8_9_10_INJECTED
 
 const QUICK_ACTIONS = [
@@ -265,6 +266,7 @@ export default function Dashboard() {
     <DashboardLayout>
       <NotificationCenter />
       <AcademiaWhatsNew />
+      <AcademiaPopular />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
         <SalesFunnelDashboard />
         <AchievementsBadges />

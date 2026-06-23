@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { getAcademiaRuntimeSummary } from "@/lib/nexus-academia";
 import { trpc } from "@/lib/trpc";
+import AcademiaNextSuggested from "@/components/AcademiaNextSuggested";
 import {
   EAD_SECTIONS,
   LEVEL_COLORS,
@@ -96,7 +97,8 @@ export default function AcademiaLesson() {
             </Button>
           </Link>
         </div>
-      </DashboardLayout>
+      <AcademiaNextSuggested lessonId={lessonId} />
+    </DashboardLayout>
     );
   }
 
@@ -236,7 +238,48 @@ export default function AcademiaLesson() {
                   {playerEnabled && lesson.videoUrl ? (
                     <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black/50">
                       {lesson.videoUrl.endsWith(".mp4") ? (
-                        <video controls className="h-full w-full" src={lesson.videoUrl} />
+                        <video
+                          controls
+                          className="h-full w-full"
+                          src={lesson.videoUrl}
+                          onLoadedMetadata={(e) => {
+                            const v = e.currentTarget as HTMLVideoElement;
+                            (window as any).__nexusVideoDuration = Math.floor(v.duration || 0);
+                          }}
+                          onTimeUpdate={(e) => {
+                            const v = e.currentTarget as HTMLVideoElement;
+                            const w = window as any;
+                            const now = Date.now();
+                            if (!w.__nexusLastSync || now - w.__nexusLastSync > 10_000) {
+                              w.__nexusLastSync = now;
+                              fetch("/api/academia/lesson-progress", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  lessonId,
+                                  watchedSeconds: Math.floor(v.currentTime),
+                                  lastPosition: Math.floor(v.currentTime),
+                                  durationS: Math.floor(v.duration || 0),
+                                  userId: 1,
+                                }),
+                              }).catch(() => {});
+                            }
+                          }}
+                          onEnded={() => {
+                            fetch("/api/academia/lesson-progress", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                lessonId,
+                                watchedSeconds: (window as any).__nexusVideoDuration || 0,
+                                lastPosition: (window as any).__nexusVideoDuration || 0,
+                                durationS: (window as any).__nexusVideoDuration || 0,
+                                completed: true,
+                                userId: 1,
+                              }),
+                            }).catch(() => {});
+                          }}
+                        />
                       ) : (
                         <iframe
                           src={lesson.videoUrl}

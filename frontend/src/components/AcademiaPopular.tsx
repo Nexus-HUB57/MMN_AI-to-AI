@@ -18,6 +18,15 @@ const SECTION_LABEL: Record<string, string> = {
   playbook: "Playbook", webinar: "Webinar", treinamento: "Treinamento",
 };
 
+
+const _prefetched = new Set<string>();
+function prefetchLesson(id: string) {
+  if (_prefetched.has(id)) return;
+  _prefetched.add(id);
+  // Prefetch metadata da aula (warm-up do PG cache)
+  fetch(`/api/academia/lesson/${encodeURIComponent(id)}`, { cache: "default" }).catch(() => {});
+}
+
 export default function AcademiaPopular() {
   const [items, setItems] = useState<PopularItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +73,8 @@ export default function AcademiaPopular() {
           <a
             key={it.lessonId}
             href={`/academia/ead/curso/${it.lessonId}`}
+            onMouseEnter={() => prefetchLesson(it.lessonId)}
+            onFocus={() => prefetchLesson(it.lessonId)}
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
           >
             <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-br from-amber-400/20 to-red-500/20 text-amber-600 font-bold text-sm flex-shrink-0">

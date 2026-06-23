@@ -26,5 +26,15 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  
+    <script>
+      // Nexus Academ'IA SW — registra apenas em produção
+      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .catch(() => { /* silent — não bloquear UX */ });
+        });
+      }
+    </script>
+</body>
 </html>

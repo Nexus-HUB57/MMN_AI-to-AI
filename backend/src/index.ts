@@ -525,6 +525,122 @@ app.get("/api/academia/lesson/:lessonId/stats", async (req, res) => {
   }
 });
 
+
+// V16 NEXT-SUGGESTED BLOCK
+// GET /api/academia/lesson/:lessonId/next-suggested — próxima aula natural
+app.get("/api/academia/lesson/:lessonId/next-suggested", async (req, res) => {
+  try {
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const lessonId = String(req.params.lessonId);
+
+    // 1) Pega seção + sort_order da aula atual
+    const cur = await pool.query(
+      "SELECT section_slug, sort_order, level FROM public.academia_lessons WHERE lesson_id = $1 LIMIT 1",
+      [lessonId]
+    );
+    if (!cur.rowCount) { await pool.end(); return res.status(404).json({ error: "lesson_not_found" }); }
+    const { section_slug, sort_order, level } = cur.rows[0];
+
+    // 2) Próxima aula na MESMA seção e nível, com sort_order > atual
+    let next = await pool.query(
+      `SELECT lesson_id, section_slug, title, subtitle, level, cover_url, thumbnail_url, video_url, html_url, sort_order
+       FROM public.academia_lessons
+       WHERE is_published = TRUE
+         AND section_slug = $1
+         AND COALESCE(level, '') = COALESCE($2, '')
+         AND sort_order > $3
+       ORDER BY sort_order ASC, lesson_id ASC
+       LIMIT 1`,
+      [section_slug, level || null, sort_order]
+    );
+
+    // 3) Fallback: próxima da mesma seção (qualquer nível)
+    if (!next.rowCount) {
+      next = await pool.query(
+        `SELECT lesson_id, section_slug, title, subtitle, level, cover_url, thumbnail_url, video_url, html_url, sort_order
+         FROM public.academia_lessons
+         WHERE is_published = TRUE
+           AND section_slug = $1
+           AND sort_order > $2
+         ORDER BY sort_order ASC, lesson_id ASC
+         LIMIT 1`,
+        [section_slug, sort_order]
+      );
+    }
+
+    // 4) Fallback: primeira aula da próxima seção (curso → lab → lib → ...)
+    if (!next.rowCount) {
+      const order = ["curso","lab","lib","playbook","webinar","treinamento"];
+      const idx = order.indexOf(section_slug);
+      const nextSec = idx >= 0 && idx < order.length - 1 ? order[idx + 1] : null;
+      if (nextSec) {
+        next = await pool.query(
+          `SELECT lesson_id, section_slug, title, subtitle, level, cover_url, thumbnail_url, video_url, html_url, sort_order
+           FROM public.academia_lessons
+           WHERE is_published = TRUE AND section_slug = $1
+           ORDER BY sort_order ASC, lesson_id ASC LIMIT 1`,
+          [nextSec]
+        );
+      }
+    }
+
+    await pool.end();
+    if (!next.rowCount) {
+      res.setHeader("Cache-Control", "public, max-age=60");
+      return res.json({ next: null, currentLessonId: lessonId, message: "Você completou a trilha." });
+    }
+    const r = next.rows[0];
+    res.setHeader("Cache-Control", "public, max-age=60");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      currentLessonId: lessonId,
+      next: {
+        lessonId: r.lesson_id,
+        sectionSlug: r.section_slug,
+        title: r.title,
+        subtitle: r.subtitle,
+        level: r.level,
+        coverUrl: r.cover_url ?? r.thumbnail_url ?? null,
+        videoUrl: r.video_url,
+        htmlUrl: r.html_url,
+        sortOrder: Number(r.sort_order ?? 1000),
+      },
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
+// GET /api/academia/whats-new/has-recent — sinal "tem aula nova nas últimas 24h?"
+app.get("/api/academia/whats-new/has-recent", async (req, res) => {
+  try {
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL!, max: 2 });
+    const hoursRaw = Number(req.query.hours);
+    const hours = Number.isFinite(hoursRaw) && hoursRaw > 0 ? Math.min(Math.floor(hoursRaw), 24 * 30) : 24;
+    const r = await pool.query(
+      `SELECT count(*)::int AS recent_count, max(published_at) AS last_published
+       FROM public.academia_lessons
+       WHERE is_published = TRUE AND published_at >= now() - ($1 * INTERVAL '1 hour')`,
+      [hours]
+    );
+    await pool.end();
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.json({
+      hasRecent: Number(r.rows[0].recent_count) > 0,
+      recentCount: Number(r.rows[0].recent_count),
+      lastPublishedAt: r.rows[0].last_published ? new Date(r.rows[0].last_published).toISOString() : null,
+      windowHours: hours,
+      generatedAt: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err?.message || "internal_error" });
+  }
+});
+
 app.get("/api/academia/search", async (req, res) => {
   // /api/academia/search-v2-cursor-applied
   try {

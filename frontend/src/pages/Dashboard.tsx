@@ -37,6 +37,7 @@ import AchievementsBadges from "../components/AchievementsBadges";
 import NotificationCenter from "../components/NotificationCenter";
 import { CommissionChart } from '../components/CommissionChart';
 import AcademiaResume from "../components/AcademiaResume";
+import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 // SPRINTS_8_9_10_INJECTED
@@ -266,6 +267,7 @@ export default function Dashboard() {
   return (
     <DashboardLayout>
       <NotificationCenter />
+      <AcademiaPushOptIn />
       <AcademiaResume />
       <AcademiaWhatsNew />
       <AcademiaPopular />

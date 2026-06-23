@@ -1,8 +1,10 @@
+/* UX_MAX_v1 */
 import { Toaster } from "sonner";
+import { PageSkeleton } from "@/components/ui/Skeleton";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Route, Switch, Redirect } from "wouter";
+import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -12,6 +14,7 @@ import Dashboard from "@/pages/Dashboard";
 import Marketplaces from "@/pages/Marketplaces";
 import Estoque from "@/pages/Estoque";
 import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
+import MinhaLoja from "@/pages/MinhaLoja";
 import PixCheckout from "@/pages/PixCheckout";
 import PixHistory from "@/pages/PixHistory";
 import PacksMarketplace from "@/pages/PacksMarketplace";
@@ -23,6 +26,12 @@ import CareerProgress from "@/pages/CareerProgress";
 import ContentHub from "@/pages/ContentHub";
 import ContentCalendar from "@/pages/ContentCalendar";
 import MarketingMaterials from "@/pages/MarketingMaterials";
+import ProfileSettings from "@/pages/ProfileSettings";
+import PartnersAccessGuard from "@/components/PartnersAccessGuard";
+import EbookManager from "@/pages/EbookManager";
+import ImageGenerator from "@/pages/ImageGenerator";
+import ContentGeneration from "@/pages/ContentGeneration";
+import ContentGenerator from "@/pages/ContentGenerator";
 import TrackingLinks from "@/pages/TrackingLinks";
 import MarketplaceEbooks from "@/pages/MarketplaceEbooks";
 import SisuPanel from "@/pages/SisuPanel";
@@ -37,25 +46,49 @@ import OrchestratorDashboard from "@/pages/OrchestratorDashboard";
 import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
-import AcademiaDashboard from "@/pages/AcademiaDashboard";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminUsers from "@/pages/AdminUsers";
+import AdminNetwork from "@/pages/AdminNetwork";
+import AdminPayments from "@/pages/AdminPayments";
+import AdminScheduler from "@/pages/AdminScheduler";
+import AdminSchedules from "@/pages/AdminSchedules";
+import AdminMaterials from "@/pages/AdminMaterials";
+import AdminDelinquents from "@/pages/AdminDelinquents";
+import AdminCommissions from "@/pages/AdminCommissions";
+import AdminApprovals from "@/pages/AdminApprovals";
+import AdminRuntime from "@/pages/AdminRuntime";
+import AdminSettings from "@/pages/AdminSettings";
+import AdminPanel from "@/pages/AdminPanel";
+import AdminSkills from "@/pages/AdminSkills";
+import AdminAgentDetails from "@/pages/AdminAgentDetails";
+import AdminAcademia from "@/pages/AdminAcademia";
+import AdminAcademiaAnalytics from "@/pages/AdminAcademiaAnalytics";
+import AcademiaHub from "@/pages/AcademiaHub";
+import AcademiaSection from "@/pages/AcademiaSection";
+import AcademiaLesson from "@/pages/AcademiaLesson";
 import LabChatbot from "@/pages/LabChatbot";
 import NotFound from "@/pages/NotFound";
+import CommandPalette from "@/components/ux/CommandPalette";
+import QuickAgentDock from "@/components/ux/QuickAgentDock";
+import RouteProgress from "@/components/ux/RouteProgress";
+import WelcomeTour from "@/components/ux/WelcomeTour";
 
 function Router() {
   return (
-    <Switch>
+    <><RouteProgress /><CommandPalette /><QuickAgentDock /><WelcomeTour /><Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/afiliado" component={Dashboard} />
       <Route path="/marketplaces" component={Marketplaces} />
-      <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
+      <Route path="/marketplaces/ebooks">{() => { if (typeof window !== "undefined") { window.location.replace("/marketplaces"); } return null; }}</Route>
       <Route path="/estoque" component={Estoque} />
-      <Route path="/minha-loja" component={AffiliateMiniSite} />
-      {/* Rota legada /minisite — redirect 301-equivalente (90d) para /minha-loja */}
-      <Route path="/minisite">{() => <Redirect to="/minha-loja" />}</Route>
-      <Route path="/afiliado/:code" component={AffiliateMiniSite} />
+      <Route path="/minisite" component={MinhaLoja} />
+      <Route path="/minha-loja" component={MinhaLoja} />
+      <Route path="/minha-loja/:code" component={MinhaLoja} />
+      <Route path="/afiliado/:code" component={MinhaLoja} />
       <Route path="/pix/checkout" component={PixCheckout} />
       <Route path="/pix/history" component={PixHistory} />
       <Route path="/packs" component={PacksMarketplace} />
@@ -69,15 +102,26 @@ function Router() {
       <Route path="/agents" component={Agents} />
       <Route path="/agents/sync" component={AgentsSync} />
       <Route path="/orchestrator" component={OrchestratorDashboard} />
-      <Route path="/partners" component={PartnersDashboardPage} />
+      <Route path="/partners"><PartnersAccessGuard><PartnersDashboardPage /></PartnersAccessGuard></Route>
       <Route path="/subscriptions" component={Subscriptions} />
-      <Route path="/academia" component={AcademiaDashboard} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/academia/analytics" component={AdminAcademiaAnalytics} />
+      <Route path="/admin/academia" component={AdminAcademia} />
+      <Route path="/academia" component={AcademiaHub} />
+      <Route path="/academia/ead/:slug" component={AcademiaSection} />
+      <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />
       <Route path="/academia/lab-nexus" component={LabChatbot} />
       <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
+      <Route path="/profile" component={ProfileSettings} />
+      <Route path="/content/generator" component={ContentGenerator} />
+      <Route path="/content/generation" component={ContentGeneration} />
+      <Route path="/content/image" component={ImageGenerator} />
+      <Route path="/marketing/ebooks" component={EbookManager} />
       <Route path="/tracking/links" component={TrackingLinks} />
       <Route path="/social/accounts" component={SocialAccounts} />
       <Route path="/sisu" component={SisuPanel} />
@@ -85,9 +129,26 @@ function Router() {
       <Route path="/dropshipping/orders/:orderId" component={OrderTracking} />
       <Route path="/order-tracking/:orderId" component={OrderTracking} />
       <Route path="/utilities" component={Utilities} />
+
+      <Route path="/admin/users" component={AdminUsers} />
+      <Route path="/admin/network" component={AdminNetwork} />
+      <Route path="/admin/payments" component={AdminPayments} />
+      <Route path="/admin/scheduler" component={AdminScheduler} />
+      <Route path="/admin/schedules" component={AdminSchedules} />
+      <Route path="/admin/materials" component={AdminMaterials} />
+      <Route path="/admin/delinquents" component={AdminDelinquents} />
+      <Route path="/admin/commissions" component={AdminCommissions} />
+      <Route path="/admin/approvals" component={AdminApprovals} />
+      <Route path="/admin/status" component={AdminRuntime} />
+      <Route path="/admin/runtime" component={AdminRuntime} />
+      <Route path="/admin/config" component={AdminSettings} />
+      <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/panel" component={AdminPanel} />
+      <Route path="/admin/skills" component={AdminSkills} />
+      <Route path="/admin/agents/:agentId" component={AdminAgentDetails} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
-    </Switch>
+    </Switch></>
   );
 }
 

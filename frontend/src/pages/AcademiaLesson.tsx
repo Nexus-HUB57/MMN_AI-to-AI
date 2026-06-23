@@ -58,6 +58,19 @@ function isEmbeddableVideo(url: string) {
 
 export default function AcademiaLesson() {
   const { slug, lessonId } = useParams<{ slug: string; lessonId: string }>();
+
+  // V14: tracking automático de visualização (UX + telemetria)
+  useEffect(() => {
+    if (!lessonId) return;
+    const controller = new AbortController();
+    fetch("/api/academia/track-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lessonId }),
+      signal: controller.signal,
+    }).catch(() => { /* silent fail — não bloquear UX */ });
+    return () => controller.abort();
+  }, [lessonId]);
   const [, navigate] = useLocation();
   const { profile } = useMarketplaceProfile();
   const runtimeSummary = getAcademiaRuntimeSummary(profile);

@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Entendendo o IOAID](../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
+![Capa — Entendendo o IOAID](../../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
 
 **01 · Entendendo o IOAID**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Agora que você conhece o ecossistema, é hora de descer um nível e entender o coração técnico de tudo: o **IOAID** (Infraestrutura Operacional de Inteligência Distribuída). Em 20 minutos, você vai entender o que é o IOAID, como ele processa cada requisição, e como usar isso para tomar melhores decisões como afiliado. Não precisa ser programador — apenas curioso.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> IOAID é o coração técnico do Nexus. Em 20 minutos, você vai entender os 5 módulos (autenticação, event bus, agent runtime, judge, monitoring), o fluxo de uma requisição, e como isso impacta sua operação como afiliado.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 00-boas-vindas](00-boas-vindas.md)
+**Próximo:** [→ 02-sistema-sho](02-sistema-sho.md)
+
+
 
 **Sumário**
 
@@ -195,5 +208,60 @@ Para aprofundamento, ver também:
 ---
 
 **01 · Entendendo o IOAID** --- Trilha Fundamental
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Entendendo IOAID
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Diagrama**
+
+Desenhe em uma folha (ou no Miro/Excalidraw) o fluxo de uma requisição sua até a resposta final, indicando os 5 módulos do IOAID.
+
+**Exercício 2 — Auditoria**
+
+No painel do afiliado, localize a aba de "Logs de Requisição". Filtre as últimas 10 requisições e classifique cada uma por módulo usado.
+
+**Exercício 3 — Latência**
+
+Meça o tempo de resposta de 5 requisições consecutivas no painel. Compare com o SLA de 800ms. Está dentro? Se não, identifique gargalos.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são os 5 módulos do IOAID?
+2. O que diferencia uma requisição "auditável" de uma "escalável"?
+3. Como o Judge Revisor se encaixa no fluxo do IOAID?
+4. Qual a diferença entre autenticação e autorização no contexto do IOAID?
+5. Cite 1 cenário onde o IOAID deveria falhar (failover intencional).
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

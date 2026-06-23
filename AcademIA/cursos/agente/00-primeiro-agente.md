@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Seu primeiro agente](../../assets/ebook_covers/ACAD-apostila-06-setup-agente-pessoal.webp)
+![Capa — Seu primeiro agente](../../../assets/ebook_covers/ACAD-apostila-06-setup-agente-pessoal.webp)
 
 **00 · Seu primeiro agente**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Chegou a hora de criar seu primeiro agente funcional. Este curso é o **tutorial guiado** — em 30 minutos você sai com 1 agente rodando, 3 skills instaladas, Judge calibrado, e 1 campanha de teste disparada. Para o tutorial detalhado de 90 minutos (com troubleshooting avançado), consulte a **Apostila 06** (Setup Completo do Agente Pessoal). Aqui, vamos direto ao ponto.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Em 25 minutos, você vai construir seu primeiro agente funcional: cérebro (LLM), identidade (system prompt), ferramenta (API), memória (contexto). Não é mágica — é engenharia. Inclui setup com docker-compose e teste com 3 prompts.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← ../fundamental/03-painel-afiliado](../fundamental/03-painel-afiliado.md)
+**Próximo:** [→ 01-skills-essenciais](01-skills-essenciais.md)
+
+
 
 **Sumário**
 
@@ -188,5 +201,60 @@ Antes de considerar seu primeiro agente "pronto":
 ---
 
 **00 · Seu primeiro agente** --- Trilha Agente
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Seu Primeiro Agente
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Setup local**
+
+Siga o tutorial da apostila 06. Configure seu primeiro agente localmente. Teste com 3 prompts diferentes.
+
+**Exercício 2 — Identidade**
+
+Escreva um system prompt de 200 palavras para seu agente. Teste, itere 3 vezes, e anote qual versão ficou melhor.
+
+**Exercício 3 — Ferramenta**
+
+Adicione 1 tool real ao seu agente (consultar preço, agendar, enviar e-mail). Teste com 2 cenários reais do seu dia-a-dia.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Quais são as 4 partes de um agente?
+2. O que é um system prompt e por que ele importa mais que o modelo?
+3. Cite 2 guardrails essenciais para um agente em produção.
+4. Qual a diferença entre memória de curto prazo e longo prazo?
+5. Quando NÃO usar um agente (cenário onde é exagero)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

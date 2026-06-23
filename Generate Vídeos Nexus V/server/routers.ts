@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { generateScriptWithLLM } from "./llmService";
 import { createScript, updateVideoProject, getScriptByProjectId, deleteVideoProject, getVideoProjectById, getUserVideoProjects, createVideoProject, updateScript } from "./db";
+import { courseModules } from "./courseData";
 import { ltx2Generator } from "./ltx2Service";
 
 export const appRouter = router({
@@ -85,10 +86,16 @@ export const appRouter = router({
         
         try {
           // Generate script using LLM
+          const moduleData = courseModules[project.level as keyof typeof courseModules]?.find(
+            (m) => m.id === project.module
+          );
+          const moduleTitle = moduleData?.title || project.module;
+
           const scriptContent = await generateScriptWithLLM(
             project.persona as any,
             project.level as any,
             project.module,
+            moduleTitle,
             input.moduleContent
           );
           

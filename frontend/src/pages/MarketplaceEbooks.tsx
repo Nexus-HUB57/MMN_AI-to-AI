@@ -1,353 +1,270 @@
+/**
+ * MarketplaceEbooks — Vitrine do Marketplace Nexus
+ *
+ * Listagem dos 132 ebooks com filtro por coleção/pack, carrinho persistente
+ * e checkout integrado. Usa /api/trpc/marketplaceNexus.*
+ */
 import { useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
-import { formatCurrency, getMarketplaceEbooks, getPackBySlug } from "@/lib/nexus-marketplace";
-import {
-  BookOpen,
-  CheckCircle2,
-  Download,
-  ExternalLink,
-  Lock,
-  ShoppingCart,
-  Sparkles,
-  Star,
-  Tag,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
+import { sortByCollectionRank } from '@/lib/collectionRanking';
+import { Link } from "wouter";
+import { trpc } from "../lib/trpc";
+import { Button } from "../components/ui/button";
 
-type FilterMode = "all" | "active" | "locked";
+const BRL = (cents: number) =>
+  (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-const FILTERS: Array<{ id: FilterMode; label: string }> = [
-  { id: "all", label: "Todos" },
-  { id: "active", label: "Liberados" },
-  { id: "locked", label: "Bloqueados" },
-];
+type Ebook = {
+  slug: string;
+  order: number;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  costCents: number;
+  resalePriceCents: number;
+  pages: number;
+  category: string;
+  coverGradient: string | null;
+  htmlPath: string;
+  pdfPath: string;
+  coverPath: string | null;
+  highlights: string[];
+  unlockPackSlug: string;
+};
 
-export default function MarketplaceEbooks() {
-  const { profile } = useMarketplaceProfile();
-  const ebooks = getMarketplaceEbooks(profile);
-  const [filter, setFilter] = useState<FilterMode>("all");
-  const [category, setCategory] = useState<string>("all");
+// IOAID · SaaS UX: ordenação estável por (category, order) para agrupar coleções
+function sortByCategoryOrder<T extends {category?: string; order?: number; title?: string}>(arr: T[]): T[] {
+  return [...arr].sort((a, b) => {
+    const c = (a.category || '').localeCompare(b.category || '', 'pt-BR');
+    if (c !== 0) return c;
+    const o = (a.order ?? 999) - (b.order ?? 999);
+    if (o !== 0) return o;
+    return (a.title || '').localeCompare(b.title || '', 'pt-BR');
+  });
+}
 
-  const activeCount = ebooks.filter((ebook) => ebook.status === "active").length;
-  const lockedCount = ebooks.length - activeCount;
-  const totalMarginCents = useMemo(
-    () => ebooks.reduce((sum, ebook) => sum + (ebook.resalePriceCents - ebook.costCents), 0),
-    [ebooks],
-  );
+export default function MarketplaceEbooksPage() {
+  const ebooksQuery = trpc.marketplaceNexus.listEbooks.useQuery();
+  const packsQuery = trpc.marketplaceNexus.listPacks.useQuery();
+  const cartQuery = trpc.marketplaceNexus.getCart.useQuery(undefined, {
+    retry: false,
+    refetchOnMount: false,
+  });
+  const utils = trpc.useUtils();
 
-  const categories = useMemo(() => ["all", ...Array.from(new Set(ebooks.map((ebook) => ebook.category)))], [ebooks]);
+  const addItem = trpc.marketplaceNexus.addToCart.useMutation({
+    onSuccess: () => {
+      utils.marketplaceNexus.getCart.invalidate();
+    },
+  });
+
+  const [filterCategory, setFilterCategory] = useState<string>("");
+  const [filterPack, setFilterPack] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+
+  const ebooks = (ebooksQuery.data ?? []) as Ebook[];
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    ebooks.forEach((e) => set.add(e.category));
+    return Array.from(set).sort();
+  }, [ebooks]);
 
   const filtered = useMemo(() => {
-    return ebooks.filter((ebook) => {
-      const matchesFilter =
-        filter === "all" ? true : filter === "active" ? ebook.status === "active" : ebook.status === "locked";
-      const matchesCategory = category === "all" ? true : ebook.category === category;
-      return matchesFilter && matchesCategory;
-    });
-  }, [category, ebooks, filter]);
+    const q = search.trim().toLowerCase();
+    return sortByCollectionRank(ebooks.filter((e) => {
+      if (filterCategory && e.category !== filterCategory) return false;
+      if (filterPack && e.unlockPackSlug !== filterPack) return false;
+      if (q && !`${e.title} ${e.subtitle ?? ""} ${e.description ?? ""}`.toLowerCase().includes(q))
+        return false;
+      return true;
+    }));
+  }, [ebooks, filterCategory, filterPack, search]);
 
-  const featured = filtered[0] ?? ebooks[0];
+  const cartCount = cartQuery.data?.lines.length ?? 0;
+  const cartTotal = cartQuery.data?.totalCents ?? 0;
+  const isAuth = !cartQuery.error;
 
   return (
-    <DashboardLayout>
-      <div className="space-y-8 pb-8">
-        <section className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
-          <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-center">
-            <div className="space-y-5">
-              <div className="flex flex-wrap gap-2">
-                <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">Loja Virtual de e-books</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">Margem de 100% na revenda</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">HTML + PDF prontos</Badge>
-              </div>
-              <div className="space-y-4">
-                <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-5xl xl:text-6xl">
-                  Uma vitrine de <span className="text-quantum-lime">e-books digitais</span> com visual de loja moderna.
-                </h1>
-                <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                  Reorganizamos a biblioteca em formato mais comercial: capas em destaque, filtros de catálogo, margem explícita, entrega digital imediata
-                  e botões de ação mais claros para transformar o Marketplace em uma experiência de compra mais atraente.
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">liberados</p>
-                  <p className="mt-3 text-3xl font-bold text-quantum-lime">{activeCount}</p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">bloqueados</p>
-                  <p className="mt-3 text-3xl font-bold text-amber-300">{lockedCount}</p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">margem total</p>
-                  <p className="mt-3 text-3xl font-bold text-white">{formatCurrency(totalMarginCents)}</p>
-                </div>
-              </div>
-            </div>
-
-            <Card className="overflow-hidden border-white/10 bg-white/6 backdrop-blur">
-              <div className={`relative h-56 bg-gradient-to-br ${featured.coverGradient}`}>
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.12),rgba(2,6,23,0.78))]" />
-                <div className="relative flex h-full flex-col justify-between p-6 text-white">
-                  <div className="flex items-start justify-between gap-3">
-                    <Badge className="border border-white/20 bg-white/10 text-white">
-                      <Tag className="mr-1 h-3 w-3" />
-                      {featured.category}
-                    </Badge>
-                    <Badge className="border border-white/20 bg-black/25 text-white">{featured.pages} páginas</Badge>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-black leading-tight">{featured.title}</p>
-                    <p className="mt-2 text-sm text-slate-100/90">{featured.subtitle}</p>
-                  </div>
-                </div>
-              </div>
-              <CardContent className="space-y-4 p-6">
-                <div>
-                  <p className="text-lg font-semibold text-white">Produto em destaque</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{featured.description}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">custo afiliado</p>
-                    <p className="mt-2 text-xl font-bold text-white">{formatCurrency(featured.costCents)}</p>
-                  </div>
-                  <div className="rounded-2xl border border-quantum-lime/25 bg-quantum-lime/10 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-quantum-lime">preço de revenda</p>
-                    <p className="mt-2 text-xl font-bold text-quantum-lime">{formatCurrency(featured.resalePriceCents)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+      <header className="sticky top-0 z-30 backdrop-blur bg-slate-950/70 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold">Marketplace Nexus</h1>
+            <p className="text-xs text-slate-400">
+              {ebooks.length} e-books · {packsQuery.data?.length ?? 0} packs · custo R$ 0,50 · venda R$ 0,99
+            </p>
           </div>
-        </section>
+          <Link href="/marketplaces/cart">
+            <a className="relative px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition">
+              🛒 {BRL(cartTotal)}
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </a>
+          </Link>
+        </div>
+      </header>
 
-        <section className="grid gap-4 lg:grid-cols-4">
-          {[
-            {
-              title: "Capa premium",
-              description: "Cada card agora funciona como mini-vitrine com impacto visual melhor na primeira leitura.",
-              icon: Star,
-              accent: "text-amber-300",
-            },
-            {
-              title: "Lucro claro",
-              description: "Preço de custo, revenda e margem aparecem com mais destaque para acelerar decisão comercial.",
-              icon: TrendingUp,
-              accent: "text-quantum-lime",
-            },
-            {
-              title: "Entrega instantânea",
-              description: "Arquivos HTML e PDF ficam prontos para visualização e download quando desbloqueados.",
-              icon: Zap,
-              accent: "text-quantum-cyan",
-            },
-            {
-              title: "Experiência de loja",
-              description: "Filtros, badges e CTAs deixam o Marketplace mais próximo de um mini e-commerce moderno.",
-              icon: ShoppingCart,
-              accent: "text-quantum-purple",
-            },
-          ].map((item) => (
-            <Card key={item.title} className="border-white/10 bg-white/5 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
-              <CardContent className="space-y-3 p-5">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 ${item.accent}`}>
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.description}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
+      <section className="max-w-7xl mx-auto px-4 py-6">
+        {/* Filtros */}
+        <div className="grid md:grid-cols-3 gap-3 mb-6">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="🔍 Buscar título, descrição..."
+            className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm"
+          >
+            <option value="">Todas as coleções</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filterPack}
+            onChange={(e) => setFilterPack(e.target.value)}
+            className="bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm"
+          >
+            <option value="">Todos os Packs</option>
+            {(packsQuery.data ?? [])
+              .filter((p) => ["affiliate", "predictive"].includes(p.type))
+              .map((p) => (
+                <option key={p.code} value={p.code}>
+                  {p.name} ({p.ebookPoolSize} ebooks)
+                </option>
+              ))}
+          </select>
+        </div>
 
-        <section className="rounded-[32px] border border-white/10 bg-white/5 p-5 backdrop-blur md:p-6">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <div>
-              <Badge className="border border-white/10 bg-white/5 text-slate-200">Catálogo filtrável</Badge>
-              <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">Encontre o produto certo para sua vitrine</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-                Explore por status e categoria para navegar como em uma loja digital profissional.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setFilter(item.id)}
-                  className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
-                    filter === item.id
-                      ? "border-quantum-lime/60 bg-quantum-lime/15 text-quantum-lime"
-                      : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
+        {/* Status */}
+        {ebooksQuery.isLoading && <p className="text-center py-12">Carregando catálogo...</p>}
+        {ebooksQuery.error && (
+          <p className="text-center py-12 text-red-400">
+            Erro ao carregar catálogo: {ebooksQuery.error.message}
+          </p>
+        )}
+
+        {/* Vitrine agrupada por coleção (IOAID · SaaS UX) */}
+        {(() => {
+          const groups = filtered.reduce<Record<string, typeof filtered>>((acc, eb) => {
+            const key = eb.category || "Outras";
+            (acc[key] = acc[key] || []).push(eb);
+            return acc;
+          }, {});
+          const orderedCats = Object.keys(groups).sort((a, b) => a.localeCompare(b, "pt-BR"));
+          return (
+            <div className="space-y-10">
+              {orderedCats.map((cat) => (
+                <section key={cat} id={"col-" + cat.toLowerCase().replace(/[^a-z0-9]+/g, "-")} className="scroll-mt-24">
+                  <div className="flex items-baseline justify-between mb-4 border-b border-slate-800 pb-2">
+                    <h2 className="text-xl md:text-2xl font-bold text-emerald-300">{cat}</h2>
+                    <span className="text-xs text-slate-400">{groups[cat].length} ebooks</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {groups[cat].map((eb) => (
+                      <article
+              key={eb.slug}
+              className="group bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition flex flex-col transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20"
+            >
+              <div
+                className="h-44 relative"
+                style={{
+                  background:
+                    eb.coverGradient ??
+                    "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)",
+                }}
+              >
+                {eb.coverPath && (
+                  <img
+                    src={eb.coverPath}
+                    alt={eb.title}
+                    className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition"
+                    loading="lazy"
+                  />
+                )}
+                <span className="absolute top-2 right-2 bg-emerald-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full">
+                  {BRL(eb.costCents)}
+                </span>
+              </div>
+              <div className="p-4 flex-1 flex flex-col">
+                <p className="text-[10px] uppercase tracking-wider text-emerald-400/80 mb-1">
+                  {eb.category}
+                </p>
+                <h3 className="font-bold text-sm leading-snug mb-1 line-clamp-2">{eb.title}</h3>
+                {eb.subtitle && eb.subtitle !== eb.title && (
+                  <p className="text-xs text-slate-400 mb-2 line-clamp-2">{eb.subtitle}</p>
+                )}
+                <p className="text-xs text-slate-500 mt-auto">
+                  {eb.pages} páginas · pack {eb.unlockPackSlug}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <a
+                    href={eb.htmlPath}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 text-center bg-slate-800 hover:bg-slate-700 rounded-lg py-2 text-xs font-semibold"
+                  >
+                    Prévia
+                  </a>
+                  <button
+                    disabled={!isAuth || addItem.isPending}
+                    onClick={() =>
+                      addItem.mutate({ itemType: "ebook", itemSlug: eb.slug })
+                    }
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-slate-950 rounded-lg py-2 text-xs font-bold"
+                  >
+                    {isAuth ? "+ Carrinho" : "Login"}
+                  </button>
+                </div>
+              </div>
+            </article>
+                    ))}
+                  </div>
+                </section>
               ))}
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setCategory(item)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                  category === item
-                    ? "border-quantum-cyan/60 bg-quantum-cyan/15 text-quantum-cyan"
-                    : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white"
-                }`}
-              >
-                {item === "all" ? "Todas as categorias" : item}
-              </button>
-            ))}
-          </div>
-        </section>
+          );
+        })()}
 
-        <section className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((ebook, index) => {
-            const isActive = ebook.status === "active";
-            const unlockPack = getPackBySlug(ebook.unlockPackSlug);
-            const isFeatured = index === 0;
+        {filtered.length === 0 && !ebooksQuery.isLoading && (
+          <p className="text-center text-slate-500 py-12">Nenhum e-book encontrado com esses filtros.</p>
+        )}
+      </section>
 
-            return (
-              <Card
-                key={ebook.slug}
-                className={`overflow-hidden border backdrop-blur transition hover:-translate-y-1 hover:border-white/20 ${
-                  isActive ? "border-quantum-lime/30 bg-quantum-lime/5" : "border-white/10 bg-white/5"
-                }`}
-              >
-                <div className={`relative h-44 bg-gradient-to-br ${ebook.coverGradient}`}>
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.10),rgba(2,6,23,0.76))]" />
-                  <div className="relative flex h-full flex-col justify-between p-5 text-white">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex flex-wrap gap-2">
-                        <Badge className="border border-white/20 bg-white/10 text-white">
-                          <Tag className="mr-1 h-3 w-3" />
-                          {ebook.category}
-                        </Badge>
-                        {isFeatured && (
-                          <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">Destaque</Badge>
-                        )}
-                      </div>
-                      <span className="rounded-full bg-black/25 px-2.5 py-1 text-xs">{ebook.pages} págs</span>
-                    </div>
-                    <div>
-                      <p className="text-2xl font-black leading-tight">{ebook.title}</p>
-                      <p className="mt-2 text-sm text-slate-100/85">{ebook.subtitle}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <CardContent className="space-y-4 p-5">
-                  <p className="text-sm leading-6 text-slate-300">{ebook.description}</p>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Custo</p>
-                      <p className="mt-1 text-lg font-bold text-white">{formatCurrency(ebook.costCents)}</p>
-                    </div>
-                    <div className="rounded-2xl border border-quantum-lime/20 bg-quantum-lime/10 p-3">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-quantum-lime">Revenda</p>
-                      <p className="mt-1 text-lg font-bold text-quantum-lime">{formatCurrency(ebook.resalePriceCents)}</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
-                    <p className="flex items-center gap-1.5">
-                      <TrendingUp className="h-3.5 w-3.5 text-quantum-lime" />
-                      <span>
-                        Margem por unidade: <strong className="text-quantum-lime">{formatCurrency(ebook.resalePriceCents - ebook.costCents)}</strong>
-                      </span>
-                    </p>
-                    <p className="mt-2 flex items-center gap-1.5">
-                      <BookOpen className="h-3.5 w-3.5 text-quantum-cyan" />
-                      <span>Desbloqueio pelo pack {unlockPack?.shortName ?? "A²"}</span>
-                    </p>
-                  </div>
-
-                  <ul className="space-y-1.5 text-xs text-slate-300">
-                    {ebook.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-2">
-                        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-quantum-cyan" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {isActive ? (
-                      <>
-                        <a href={ebook.htmlPath} target="_blank" rel="noreferrer" className="flex-1 min-w-[150px]">
-                          <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
-                            <ExternalLink className="mr-1 h-4 w-4" />
-                            Visualizar
-                          </Button>
-                        </a>
-                        <a href={ebook.pdfPath} download className="flex-1 min-w-[150px]">
-                          <Button className="gradient-btn w-full">
-                            <Download className="mr-1 h-4 w-4" />
-                            Baixar PDF
-                          </Button>
-                        </a>
-                      </>
-                    ) : (
-                      <Button variant="outline" disabled className="w-full border-white/10 bg-white/5 text-slate-400">
-                        <Lock className="mr-2 h-4 w-4" />
-                        Bloqueado até ativar {unlockPack?.shortName ?? "Pack A²"}
-                      </Button>
-                    )}
-                  </div>
-
-                  {isActive && (
-                    <div className="flex items-center gap-2 rounded-full border border-quantum-lime/20 bg-quantum-lime/10 px-3 py-1.5 text-[11px] text-quantum-lime">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      Produto liberado para sua loja e mini-site
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
-              <p className="mt-3 text-sm font-semibold text-white">Venda direta com posicionamento claro</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                A experiência de loja destaca custo, revenda, margem e desbloqueio para facilitar seu uso comercial.
+      {/* Banner Packs */}
+      <section className="max-w-7xl mx-auto px-4 pb-12">
+        <h2 className="text-2xl font-bold mb-4">Compre um Pack e desbloqueie ebooks aleatoriamente</h2>
+        <p className="text-slate-400 text-sm mb-6">
+          Cada pack libera uma quantidade fixa de ebooks sorteados do pool. Sorteio determinístico e auditável (seed
+          SHA-256 registrado).
+        </p>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {(packsQuery.data ?? []).slice(0, 5).map((p) => (
+            <button
+              key={p.code}
+              onClick={() => addItem.mutate({ itemType: "pack", itemSlug: p.code })}
+              disabled={!isAuth || addItem.isPending}
+              className="text-left bg-slate-900/60 border border-slate-800 hover:border-emerald-500/40 rounded-2xl p-4 transition disabled:opacity-40"
+              style={{ borderTopColor: p.color ?? undefined, borderTopWidth: 3 }}
+            >
+              <p className="text-xs uppercase text-slate-400 mb-1">{p.type}</p>
+              <h3 className="font-bold text-sm leading-tight mb-2">{p.name}</h3>
+              <p className="text-emerald-400 font-bold text-lg">{BRL(p.priceCents)}</p>
+              <p className="text-xs text-slate-500 mt-1">
+                {p.ebookQuotaIfPurchased} ebooks aleatórios de {p.ebookPoolSize}
               </p>
-            </CardContent>
-          </Card>
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <BookOpen className="h-5 w-5 text-quantum-lime" />
-              <p className="mt-3 text-sm font-semibold text-white">Conteúdo entregue em múltiplos formatos</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                Cada item fica pronto em HTML e PDF, permitindo revenda rápida e distribuição organizada.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <Sparkles className="h-5 w-5 text-quantum-purple" />
-              <p className="mt-3 text-sm font-semibold text-white">Pronto para expansão futura</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                A nova estrutura aceita novos produtos, coleções, combos e futuros destaques promocionais com muito mais elegância.
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-      </div>
-    </DashboardLayout>
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

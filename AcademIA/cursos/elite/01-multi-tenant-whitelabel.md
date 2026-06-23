@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Multi-tenant e White-label](../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
+![Capa — Multi-tenant e White-label](../../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
 
 **01 · Multi-tenant e White-label**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Multi-tenant é a capacidade de rodar **múltiplas operações isoladas** em uma única infraestrutura Nexus. White-label é oferecer essa capacidade **como serviço** para outras marcas. Em 60 minutos, você vai entender como funciona tecnicamente, quanto cobrar, e como evitar os 3 erros que matam operações white-label.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Multi-tenant é quando você roda o mesmo agente para múltiplos clientes, com isolamento de dados e rate limits. White-label é quando você vende como se fosse seu. Aqui você decide se vale a pena economicamente.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 00-blueprints-elite](00-blueprints-elite.md)
+**Próximo:** [→ 02-federacao-agentes](02-federacao-agentes.md)
+
+
 
 **Sumário**
 
@@ -183,5 +196,60 @@ Tenant B (Beleza):       ve_only(tenant_id='B') → ve leads de beleza.
 ---
 
 **01 · Multi-tenant e White-label** --- Trilha Elite
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Multi-tenant e White-label
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Decisão**
+
+Você deveria rodar seu próprio agente (tenant único) ou white-label? Justifique com números (custo, escala, complexidade).
+
+**Exercício 2 — Setup**
+
+Configure 1 ambiente multi-tenant de teste (2 tenants). Rode o mesmo agente em ambos. Compare métricas.
+
+**Exercício 3 — Políticas**
+
+Documente 5 políticas de isolamento entre tenants (dados, rate limits, modelos). Como evitar vazamento?
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Qual a diferença entre multi-tenant lógico e físico?
+2. Quando NÃO vale a pena fazer white-label?
+3. Como isolar dados entre tenants (compartilhado vs. dedicado)?
+4. Qual o custo médio de manter white-label vs. SaaS puro?
+5. Como precificar white-label (por tenant, por uso, fixo)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

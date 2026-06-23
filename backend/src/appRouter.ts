@@ -1,5 +1,6 @@
 import { publicProcedure, router } from "./config/trpc";
 import { agenticRouter } from "./routers/agenticRouter";
+import { auditZkRouter } from './routers/auditZkRouter';
 import { agentsRouter } from "./routers/agentsRouter";
 import { agentRuntimeRouter } from "./domains/agent-runtime/router";
 import { authRouter } from "./domains/auth/router";
@@ -18,6 +19,9 @@ import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./domains/xp/router";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { packsRouter } from "./routers/packsRouter";
+import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
+import { marketplaceConnectionsRouter } from "./routers/marketplaceConnectionsRouter";
+import { packEntitlementsRouter } from "./routers/packEntitlementsRouter";
 import { skillsRouter } from "./routers/skillsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
@@ -35,12 +39,16 @@ import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
+import { partnersIntakeRouter } from "./routers/partnersIntakeRouter";
+import { partnersDeliveryRouter } from "./routers/partnersDeliveryRouter";
 import { subscriptionsRouter } from "./domains/subscriptions/router";
 import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
+import { academiaEadRouter } from "./routers/academiaEadRouter";
+import { affiliateStoreRouter } from "./routers/affiliateStoreRouter";
 
 export const appRouter = router({
   system: router({
@@ -109,6 +117,8 @@ export const appRouter = router({
   }),
 
   auth: authRouter,
+  affiliateStore: affiliateStoreRouter,
+  academiaEad: academiaEadRouter,
 
   bootstrap: router({
     status: publicProcedure.query(() => ({
@@ -166,6 +176,9 @@ export const appRouter = router({
   dropshipping: dropshippingRouter,
   logs: logRouter,
   marketplaces: marketplacesRouter,
+  marketplaceNexus: marketplaceNexusRouter,
+  marketplaceConnections: marketplaceConnectionsRouter,
+  packEntitlements: packEntitlementsRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,
@@ -177,6 +190,8 @@ export const appRouter = router({
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
+  partnersIntake: partnersIntakeRouter,
+  partnersDelivery: partnersDeliveryRouter,
   labNexus: labNexusRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
@@ -196,6 +211,7 @@ export const appRouter = router({
   agentSkillsRuntime: agentSkillsRuntimeRouter,
   pix: pixRouter,
   nexus: nexusOperationsRouter,
+  auditZk: auditZkRouter,
 });
 
 export type AppRouter = typeof appRouter;

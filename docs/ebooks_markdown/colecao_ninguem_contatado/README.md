@@ -9,6 +9,8 @@ pattern: "MMN_IA"
 
 # 📚 Tudo Aquilo que Ninguém Contou sobre IA
 
+![Capa da Coletânea — Ninguém Contou](../../../assets/ebook_covers/NC-colecao-ninguem-contou-colecao-capa.webp)
+
 > **5 ebooks · 5 vozes · Uma era**
 > Coletânea literária com tom de mistério e nostalgia
 > MMN AI-to-AI · 2026

@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Federação de Agentes](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
+![Capa — Federação de Agentes](../../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
 
 **02 · Federação de Agentes**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Federação de agentes é a capacidade de **múltiplos nós Nexus conversarem** entre si, formando uma rede distribuída. É o que permite escalar além de um único afiliado, compartilhar skills entre equipes, e consultar dados de outros nós com consentimento. Em 60 minutos, você vai entender como funciona o mTLS, os 3 níveis de confiança, e como configurar federação para sua operação.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Federação é a fase final: múltiplos agentes cooperando, com mTLS (criptografia mútua), 3 níveis de confiança, e topologia documentada. Curso técnico, último da jornada, para quem quer operar em escala.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 01-multi-tenant-whitelabel](01-multi-tenant-whitelabel.md)
+**Próximo:** _(fim da trilha — parabenize-se!)_
+
+
 
 **Sumário**
 
@@ -211,5 +224,60 @@ Você completou a **Trilha Elite**. Os próximos passos são:
 ---
 
 **02 · Federação de Agentes** --- Trilha Elite · Última Trilha
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Federação de Agentes
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Topologia**
+
+Desenhe a topologia da sua federação (quais agentes, como se conectam, mTLS ou não). Documente em 1 página.
+
+**Exercício 2 — mTLS**
+
+Configure mTLS entre 2 agentes de teste. Use certificados auto-assinados. Documente o processo.
+
+**Exercício 3 — Níveis de confiança**
+
+Defina os 3 níveis de confiança da sua federação. Quais agentes vão em cada nível?
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. O que é mTLS e por que é obrigatório em federação?
+2. Qual a diferença entre federação federada e mesh?
+3. Como revogar acesso a 1 agente sem afetar a federação?
+4. Qual o risco de uma cadeia de confiança longa (3+ hops)?
+5. Como auditar comunicações entre agentes federados?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

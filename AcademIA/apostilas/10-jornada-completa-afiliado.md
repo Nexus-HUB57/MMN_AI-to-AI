@@ -8,7 +8,7 @@ tags: [academia, jornada, afiliado, carreira, roadmap]
 pattern: "MMN_IA"
 ---
 
-![Capa — Jornada Completa do Afiliado](../../assets/ebook_covers/ACAD-apostila-10-jornada-afiliado.webp)
+![Capa — Jornada Completa do Afiliado](../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
 
 **Jornada Completa do Afiliado**
 

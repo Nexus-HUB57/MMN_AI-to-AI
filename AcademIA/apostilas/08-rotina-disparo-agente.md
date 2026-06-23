@@ -8,7 +8,7 @@ tags: [academia, rotina, disparo, whatsapp, agente]
 pattern: "MMN_IA"
 ---
 
-![Capa — Rotina de Disparo com Agente](../../assets/ebook_covers/ACAD-apostila-08-rotina-disparo.webp)
+![Capa — Rotina de Disparo com Agente](../../assets/ebook_covers/ACAD-apostila-08-rotina-disparo-agente.webp)
 
 **Rotina de Disparo com Agente**
 

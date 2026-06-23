@@ -8,7 +8,7 @@ tags: [academia, skills, marketplace, catalogo, operacionais]
 pattern: "MMN_IA"
 ---
 
-![Capa — As 18 Skills Operacionais Base](../../assets/ebook_covers/ACAD-apostila-07-18-skills.webp)
+![Capa — As 18 Skills Operacionais Base](../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
 
 **As 18 Skills Operacionais Base**
 

@@ -338,8 +338,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section className="relative z-10 border-t border-obsidian-700/60 bg-[radial-gradient(circle_at_top_right,rgba(124,255,178,0.12),transparent_30%),rgba(2,6,23,0.72)] px-6 py-14">
+        <IOAIDSection />
+        <HomePersonasSistema />
+<section className="relative z-10 border-t border-obsidian-700/60 bg-[radial-gradient(circle_at_top_right,rgba(124,255,178,0.12),transparent_30%),rgba(2,6,23,0.72)] px-6 py-14">
         <div className="mx-auto max-w-6xl space-y-8">
           <div className="text-center space-y-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-quantum-lime/30 bg-quantum-lime/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-quantum-lime">
@@ -387,6 +388,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <HomePersonasPartners />
 
       {/* VITRINE DE PACKS */}
       <section id="vitrine" className="relative z-10 px-6 py-14 border-t border-obsidian-700/60 bg-obsidian/40">
@@ -777,6 +780,77 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+
+        <HomePersonasAcademia />
+      </div>
+  );
+}
+
+
+function HomePersonasSistema() {
+  return (
+    <section className="relative overflow-hidden py-14" id="persona-sistema">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950"></div>
+      <div className="relative container mx-auto px-4">
+        <div className="mx-auto max-w-5xl flex justify-center">
+          <img src="/img/personas/sistema_forum.png" alt="Forum AI agentic - Sistema Nexus" loading="lazy" className="rounded-2xl border border-cyan-400/30 shadow-2xl w-full object-cover" />
+        </div>
+      </div>
+    </section>
+  );
+}
+function HomePersonasPartners() {
+  return (
+    <section className="relative overflow-hidden py-14" id="persona-partners">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950"></div>
+      <div className="relative container mx-auto px-4">
+        <div className="mx-auto max-w-5xl flex justify-center">
+          <img src="/img/personas/partners_forum.png" alt="Nexus Partners Pack" loading="lazy" className="rounded-2xl border border-purple-400/30 shadow-2xl w-full object-cover" />
+        </div>
+      </div>
+    </section>
+  );
+}
+function HomePersonasAcademia() {
+  return (
+    <section className="relative overflow-hidden py-16" id="persona-academia">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-indigo-950 to-slate-900"></div>
+      <div className="relative container mx-auto px-4">
+        <div className="text-center mb-10">
+          <span className="inline-block border border-cyan-400/60 bg-cyan-500/10 text-cyan-200 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold">Nexus Academ&apos;IA &middot; Personas Oficiais</span>
+          <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-white">Sir Nexus Alencar e Sra. Nexus Ive</h3>
+          <p className="text-slate-300 mt-3 max-w-2xl mx-auto">Mentoria tecnica e estrategica da Academ&apos;IA &mdash; IOAID &middot; SaaS. A dupla oficial conduz onboarding, operacao agentic, otimizacao e governanca.</p>
+        </div>
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="rounded-2xl overflow-hidden border border-cyan-400/30 bg-slate-900/70 shadow-xl"><img src="/img/personas/alencar_ref.png" alt="Sir Nexus Alencar" loading="lazy" className="w-full object-cover" /><div className="p-4"><h4 className="text-white font-bold">Sir Nexus Alencar</h4><p className="text-slate-400 text-xs mt-1">Mentor tecnico &middot; IOAID &middot; SHO</p></div></div>
+          <div className="rounded-2xl overflow-hidden border border-purple-400/30 bg-slate-900/70 shadow-xl"><img src="/img/personas/ive_training.png" alt="Sra. Nexus Ive" loading="lazy" className="w-full object-cover" /><div className="p-4"><h4 className="text-white font-bold">Sra. Nexus Ive</h4><p className="text-slate-400 text-xs mt-1">Estrategia e onboarding agentic</p></div></div>
+          <div className="rounded-2xl overflow-hidden border border-cyan-400/30 bg-slate-900/70 shadow-xl"><img src="/img/personas/celebration_ive_alencar.png" alt="Ive e Alencar - Academia" loading="lazy" className="w-full object-cover" /><div className="p-4"><h4 className="text-white font-bold">Co-atuacao Oficial</h4><p className="text-slate-400 text-xs mt-1">Trilhas conjuntas da Academ&apos;IA</p></div></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+function IOAIDSection() {
+  return (
+    <section className="relative overflow-hidden py-20" id="ioaid-saas">
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900"></div>
+      <div className="relative container mx-auto px-4 text-center">
+        <span className="inline-block border border-cyan-400/60 text-cyan-200 bg-cyan-500/10 px-4 py-1.5 rounded-full text-xs uppercase tracking-wider font-semibold shadow-lg shadow-cyan-500/20">Nexus Affil&apos;IA&apos;te &mdash; IOAID &middot; SaaS</span>
+        <h2 className="mt-6 text-4xl md:text-6xl font-extrabold text-white drop-shadow-lg">Infraestrutura Operacional de</h2>
+        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-cyan-300 via-sky-300 to-purple-300 bg-clip-text text-transparent">Inteligencia Distribuida</h2>
+        <p className="mt-6 text-slate-200 max-w-3xl mx-auto text-lg leading-relaxed">Organismo SaaS AI-Native &middot; Ecossistema de Marketing de Afiliados adotando o <strong className="text-cyan-300">SHO (Sistema Hibrido de Orquestracao)</strong> e buscando alcancar o nivel de <strong className="text-purple-300">AOI (Autonomous Operational Intelligence)</strong>.</p>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
+          <div className="rounded-2xl border border-cyan-400/30 bg-slate-900/70 p-6 text-left shadow-xl shadow-cyan-500/10"><h3 className="text-white font-bold text-lg">Gestao x Operacional</h3><p className="text-slate-300 mt-3 text-sm leading-relaxed">O usuario/peer se cadastra, ajusta funcionalidades operacionais e skills dos Agentes IA autonomos, promovendo acoes na AI Operational Network.</p></div>
+          <div className="rounded-2xl border border-cyan-400/30 bg-slate-900/70 p-6 text-left shadow-xl shadow-cyan-500/10"><h3 className="text-white font-bold text-lg">Full Autonomous Runtime</h3><p className="text-slate-300 mt-3 text-sm leading-relaxed">Modelo de operacao singular, arquitetura de alta integridade operando em runtime totalmente autonomo, com agentes coordenados em malha.</p></div>
+          <div className="rounded-2xl border border-purple-400/30 bg-slate-900/70 p-6 text-left shadow-xl shadow-purple-500/10"><h3 className="text-white font-bold text-lg">Stack Legacy Fusionada</h3><p className="text-slate-300 mt-3 text-sm leading-relaxed">Arquitetura fusionada do legado PHP com stack moderna React + TypeScript, preservando integridade de core e ampliando capacidades agenticas.</p></div>
+        </div>
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5 max-w-6xl mx-auto">
+          <div className="rounded-2xl border border-cyan-400/30 bg-slate-900/70 p-6 text-left shadow-xl shadow-cyan-500/10"><h3 className="text-white font-bold text-lg">AI Operational Network</h3><p className="text-slate-300 mt-3 text-sm leading-relaxed">Rede operacional distribuida onde cada afiliado opera com Agentes IA proprietarios, executando vendas, conteudo, comissoes e relacionamento em paralelo, com observabilidade total.</p></div>
+          <div className="rounded-2xl border border-purple-400/30 bg-slate-900/70 p-6 text-left shadow-xl shadow-purple-500/10"><h3 className="text-white font-bold text-lg">SaaS Early-Stage &middot; Alta Integridade</h3><p className="text-slate-300 mt-3 text-sm leading-relaxed">Plataforma em estagio inicial com arquitetura de alta integridade: auditoria, refresh tokens, segregacao de papeis e sessao soberana por afiliado.</p></div>
+        </div>
+      </div>
+    </section>
   );
 }

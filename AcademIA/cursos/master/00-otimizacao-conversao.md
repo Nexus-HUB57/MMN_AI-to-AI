@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Otimização de Conversão](../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp)
+![Capa — Otimização de Conversão](../../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp)
 
 **00 · Otimização de Conversão**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Você chegou na Trilha Master. Aqui, o jogo muda: não é mais "como usar o agente", é "como **ganhar mais dinheiro com o mesmo agente**". Otimização de conversão é a arte de melhorar cada elo do funil — do primeiro clique à recompra — para que o mesmo volume de tráfego gere mais receita. Em 45 minutos, você vai dominar CAC, LTV, e as 5 alavancas que movem esses números.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Bem-vindo à Trilha Master. Aqui você sai de operador para otimizador. Vai aprender a calcular CAC, LTV, identificar as 5 alavancas de conversão (copy, oferta, página, timing, follow-up), e construir hipóteses testáveis.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← ../agente/03-judge-revisor](../agente/03-judge-revisor.md)
+**Próximo:** [→ 01-funis-lifecycle](01-funis-lifecycle.md)
+
+
 
 **Sumário**
 
@@ -174,5 +187,60 @@ Regra prática: **otimize por 90 dias, depois mantenha por 90 dias, depois mude 
 ---
 
 **00 · Otimização de Conversão** --- Trilha Master
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Otimização de Conversão
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Auditoria CAC/LTV**
+
+Calcule seu CAC e LTV atuais (use a planilha do curso). Qual a relação LTV/CAC? Está acima de 3?
+
+**Exercício 2 — Funil**
+
+Desenhe seu funil atual (lead → MQL → SQL → cliente). Para cada etapa, anote a taxa de conversão e onde está o gargalo.
+
+**Exercício 3 — 5 alavancas**
+
+Liste 5 alavancas (copy, oferta, página, timing, follow-up) que você pode mexer esta semana. Defina hipótese + métrica de sucesso.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. O que é CAC e como calcular corretamente (incluindo custo de oportunidade)?
+2. Qual a relação LTV/CAC saudável para um afiliado?
+3. Cite 3 alavancas de otimização com maior ROI no curto prazo.
+4. Qual a diferença entre "otimização de funil" e "otimização de página"?
+5. Como evitar "otimização local" que piora o global?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import CommissionChart from "../components/CommissionChart"; // SPRINT7_COMMISSION_CHART
 
 const PAGE_SIZE = 20;
 type CommissionStatus = "pending" | "confirmed" | "paid" | "cancelled";

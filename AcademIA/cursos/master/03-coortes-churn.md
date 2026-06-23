@@ -9,7 +9,7 @@ version: "2.0.0"
 pattern: "MMN_IA"
 ---
 
-![Capa — Análise de Coortes e Churn](../../assets/ebook_covers/ACAD-apostila-02-cases-orquestracao-autonoma.webp)
+![Capa — Análise de Coortes e Churn](../../../assets/ebook_covers/ACAD-apostila-02-cases-orquestracao-autonoma.webp)
 
 **03 · Análise de Coortes e Churn**
 
@@ -22,6 +22,19 @@ Nexus Affil'IA'te · 2026
 **Sobre este curso**
 
 Coorte é um agrupamento de clientes com característica comum (mês de entrada, produto, origem). A análise de coorte é a técnica que mostra **quando, onde, e por que seus clientes somem**. Em 45 minutos, você vai aprender a construir uma matriz de coorte, identificar padrões de churn, e usar isso para tomar decisões de retenção. É a skill mais valiosa do Master.
+
+---
+
+## ⚡ TL;DR — Resumo Executivo
+
+> Churn é o vilão silencioso do LTV. Você vai aprender a construir matriz de coortes em planilha, calcular churn mensal/trimestral/anual, e formular hipóteses para recuperar a coorte de pior retenção.
+
+### 🗺️ Posição na Trilha
+
+**Anterior:** [← 02-ab-test-judge](02-ab-test-judge.md)
+**Próximo:** [→ ../elite/00-blueprints-elite](../elite/00-blueprints-elite.md)
+
+
 
 **Sumário**
 
@@ -181,5 +194,60 @@ Você completou a **Trilha Master**. Próximo passo:
 ---
 
 **03 · Análise de Coortes e Churn** --- Trilha Master
+
+---
+
+## 🎯 Exercícios Práticos — Curso: Coortes e Churn
+
+> **Tempo sugerido:** 45-90 minutos
+> **Formato:** individual, com consulta ao painel/ambiente real
+> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
+
+**Exercício 1 — Matriz**
+
+Construa uma matriz de coortes (linhas: mês de cadastro, colunas: mês de atividade). Identifique a coorte com pior retenção.
+
+**Exercício 2 — Churn**
+
+Calcule seu churn mensal, trimestral, e anual. Qual é o mais crítico para seu modelo?
+
+**Exercício 3 — Hipótese**
+
+Para a coorte de pior retenção, formule 3 hipóteses de por que estão churnando. Defina 1 experimento para validar.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li o curso inteiro sem pular seções.
+- [ ] Fiz os 3 exercícios práticos.
+- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
+- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
+- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
+
+---
+
+## 🧠 Auto-Avaliação (5 questões)
+
+Tente responder **sem consultar o curso**. Depois, valide:
+
+1. Qual a diferença entre churn voluntário e involuntário?
+2. Como construir uma matriz de coortes em planilha?
+3. O que é "retenção de curva" e qual o formato ideal (reta, decrescente)?
+4. Qual a métrica de churn mais importante para o LTV?
+5. Quando considerar um cliente "recuperado" vs. "novo"?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
+2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
+3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
+4. **Avançar:** siga para o próximo curso da trilha.
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*

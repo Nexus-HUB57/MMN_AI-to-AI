@@ -1,0 +1,783 @@
+{
+  "version": 2,
+  "items": [
+    {
+      "lessonId": "fund-00",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-00.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-fund-00.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-fund-00.webp",
+      "updatedAt": "2026-06-14T22:32:15.143Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "fund-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-fund-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-fund-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "fund-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-fund-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-fund-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "fund-03",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-03.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-fund-03.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-fund-03.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "agent-00",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-00.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-agent-00.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-agent-00.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "agent-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-agent-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-agent-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "agent-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-agent-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-agent-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "agent-03",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-03.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-agent-03.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-agent-03.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "master-00",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-00.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-master-00.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-master-00.webp",
+      "updatedAt": "2026-06-14T22:32:15.144Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "master-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-master-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-master-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "master-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-master-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-master-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "master-03",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-03.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-master-03.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-master-03.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "elite-00",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-00.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-elite-00.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-elite-00.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "elite-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-curso-elite-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-curso-elite-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "elite-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-treinamento-elite-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-treinamento-elite-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-treinamento-elite-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "ws-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-treinamento-ws-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-treinamento-ws-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-treinamento-ws-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.145Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "ws-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-treinamento-ws-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-treinamento-ws-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-treinamento-ws-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "ws-03",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-webinar-ws-03.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-webinar-ws-03.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-webinar-ws-03.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "wb-2026-01",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-webinar-wb-2026-01.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-webinar-wb-2026-01.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-webinar-wb-2026-01.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "wb-2026-02",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-webinar-wb-2026-02.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-webinar-wb-2026-02.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-webinar-wb-2026-02.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "wb-2026-03",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-wb-2026-03.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-wb-2026-03.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-wb-2026-03.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-crise-autonomia",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-crise-autonomia.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-crise-autonomia.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-crise-autonomia.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-crise-whatsapp",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-crise-whatsapp.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-crise-whatsapp.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-crise-whatsapp.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-crise-data-loss",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-crise-data-loss.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-crise-data-loss.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-crise-data-loss.webp",
+      "updatedAt": "2026-06-14T22:32:15.146Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-email-operacao",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-email-operacao.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-email-operacao.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-email-operacao.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-lancamento-7d",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-lancamento-7d.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-lancamento-7d.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-lancamento-7d.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-lgpd",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-playbook-pb-lgpd.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-playbook-pb-lgpd.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-playbook-pb-lgpd.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "pb-whatsapp-operacao",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-pb-whatsapp-operacao.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-pb-whatsapp-operacao.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-pb-whatsapp-operacao.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-prompt-copy",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-prompt-copy.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-prompt-copy.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-prompt-copy.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-prompt-analise",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-prompt-analise.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-prompt-analise.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-prompt-analise.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-prompt-estrategia",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-prompt-estrategia.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-prompt-estrategia.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-prompt-estrategia.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-template-email",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-template-email.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-template-email.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-template-email.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-template-landing",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-template-landing.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-template-landing.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-template-landing.webp",
+      "updatedAt": "2026-06-14T22:32:15.147Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-template-social",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-template-social.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-template-social.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-template-social.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-tools-analytics",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-tools-analytics.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-tools-analytics.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-tools-analytics.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-tools-automation",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-tools-automation.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-tools-automation.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-tools-automation.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-tools-copy",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-tools-copy.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-tools-copy.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-tools-copy.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-tools-design",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-tools-design.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-tools-design.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-tools-design.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-tools-marketing",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lab-lab-tools-marketing.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lab-lab-tools-marketing.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lab-lab-tools-marketing.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lab-chatbot",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lab-chatbot.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lab-chatbot.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lab-chatbot.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-glossario",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-glossario.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-glossario.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-glossario.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-ioaid",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-ioaid.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-ioaid.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-ioaid.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-taxonomia",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-taxonomia.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-taxonomia.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-taxonomia.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-lgpd",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-lgpd.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-lgpd.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-lgpd.webp",
+      "updatedAt": "2026-06-14T22:32:15.148Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-agent-base",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-agent-base.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-agent-base.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-agent-base.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-agent-marketing",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-agent-marketing.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-agent-marketing.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-agent-marketing.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-judge",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-judge.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-judge.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-judge.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-federation-gate",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-federation-gate.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-federation-gate.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-federation-gate.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-trpc",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-trpc.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-trpc.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-trpc.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-webhooks",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-webhooks.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-webhooks.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-webhooks.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-rest-public",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-rest-public.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-rest-public.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-rest-public.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-prompt-engineering",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-prompt-engineering.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-prompt-engineering.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-prompt-engineering.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-error-handling",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-error-handling.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-error-handling.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-error-handling.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    },
+    {
+      "lessonId": "lib-performance",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-lib-lib-performance.pdf",
+      "mdPath": "https://oneverso.com.br/academia/md/academia-lib-lib-performance.md",
+      "coverUrl": "https://oneverso.com.br/academia/covers/academia-lib-lib-performance.webp",
+      "updatedAt": "2026-06-14T22:32:15.149Z",
+      "updatedBy": "system-bootstrap"
+    }
+  ],
+  "updatedAt": "2026-06-22T16:12:17.000Z",
+  "overrides": [
+    {
+      "lessonId": "fund-00",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod00-boas-vindas.mp4",
+      "level": "fundamental",
+      "requiredTier": "iniciante",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "alencar",
+        "iniciante",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod00-boas-vindas-thumb.webp",
+      "duration": 261,
+      "title": "00 · Boas-vindas ao Nexus",
+      "subtitle": "Apresentação da Academ'IA · Persona Alencar",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-fund-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-fund-00.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-00.pdf"
+    },
+    {
+      "lessonId": "fund-01",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod01-entendendo-ioaid.mp4",
+      "level": "fundamental",
+      "requiredTier": "iniciante",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "iniciante",
+        "ive",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod01-entendendo-ioaid-thumb.webp",
+      "duration": 210,
+      "title": "01 · Entendendo o IOAID",
+      "subtitle": "Modelo IOAID em ação · Persona Ive",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-fund-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-fund-01.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-01.pdf"
+    },
+    {
+      "lessonId": "fund-02",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod02-sistema-sho.mp4",
+      "level": "fundamental",
+      "requiredTier": "iniciante",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "iniciante",
+        "ive",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod02-sistema-sho-thumb.webp",
+      "duration": 167,
+      "title": "02 · Sistema SHO",
+      "subtitle": "Self-Healing Orchestrator · Persona Ive",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-fund-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-fund-02.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-02.pdf"
+    },
+    {
+      "lessonId": "fund-03",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod03-painel-afiliado.mp4",
+      "level": "fundamental",
+      "requiredTier": "iniciante",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "iniciante",
+        "ive",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod03-painel-afiliado-thumb.webp",
+      "duration": 167,
+      "title": "03 · Painel do Afiliado",
+      "subtitle": "Tour pelo painel · Persona Ive",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-fund-03.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-fund-03.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-fund-03.pdf"
+    },
+    {
+      "lessonId": "agent-00",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod00-primeiro-agente.mp4",
+      "level": "agente",
+      "requiredTier": "operador",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "dupla",
+        "operador",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod00-primeiro-agente-thumb.webp",
+      "duration": 16,
+      "title": "00 · Primeiro Agente",
+      "subtitle": "Criando o primeiro agente Nexus",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-agent-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-agent-00.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-00.pdf"
+    },
+    {
+      "lessonId": "agent-01",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod01-skills-essenciais.mp4",
+      "level": "agente",
+      "requiredTier": "operador",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "dupla",
+        "operador",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod01-skills-essenciais-thumb.webp",
+      "duration": 16,
+      "title": "01 · Skills Essenciais",
+      "subtitle": "Skills mínimas viáveis do agente",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-agent-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-agent-01.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-01.pdf"
+    },
+    {
+      "lessonId": "agent-02",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod02-disparo-whatsapp.mp4",
+      "level": "agente",
+      "requiredTier": "operador",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "dupla",
+        "operador",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod02-disparo-whatsapp-thumb.webp",
+      "duration": 13,
+      "title": "02 · Disparo WhatsApp",
+      "subtitle": "Pipeline de disparo via WhatsApp",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-agent-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-agent-02.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-02.pdf"
+    },
+    {
+      "lessonId": "agent-03",
+      "sectionSlug": "curso",
+      "videoUrl": "https://oneverso.com.br/academia/videos/mod03-judge-revisor.mp4",
+      "level": "agente",
+      "requiredTier": "operador",
+      "isPublished": true,
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "tags": [
+        "academia",
+        "dupla",
+        "operador",
+        "repo-sync",
+        "video-aula",
+        "youtube-pillar"
+      ],
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/mod03-judge-revisor-thumb.webp",
+      "duration": 13,
+      "title": "03 · Judge Revisor",
+      "subtitle": "Crítico revisor antes de publicar",
+      "publishedAt": "2026-06-18T14:00:00.000Z",
+      "youtubeStatus": "unlisted",
+      "youtubeChannel": "@NexusAffilIAte-w9p",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-agent-03.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-agent-03.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-agent-03.pdf"
+    },
+    {
+      "lessonId": "elite-01",
+      "sectionSlug": "curso",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-01.html",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "isPublished": true,
+      "tags": [
+        "academia",
+        "repo-sync"
+      ],
+      "title": "01 · Multi-tenant White-label",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-01.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
+    },
+    {
+      "lessonId": "elite-02",
+      "sectionSlug": "curso",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-02.html",
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-02-sho.png",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "isPublished": true,
+      "tags": [
+        "academia",
+        "repo-sync"
+      ],
+      "title": "02 · Federação de Agentes",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-02.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
+    },
+    {
+      "lessonId": "elite-00",
+      "sectionSlug": "curso",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-elite-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-elite-00.html",
+      "thumbnailUrl": "https://oneverso.com.br/academia/assets/thumb-00-boas-vindas.png",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5",
+      "isPublished": true,
+      "tags": [
+        "academia",
+        "repo-sync"
+      ],
+      "title": "00 · Blueprints Elite",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-elite-00.pdf",
+      "level": "elite",
+      "requiredTier": "elite",
+      "videoUrl": null,
+      "youtubeStatus": "pending"
+    },
+    {
+      "lessonId": "master-00",
+      "sectionSlug": "curso",
+      "title": "00 · Governança Operacional",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-00.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-00.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-00.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-01",
+      "sectionSlug": "curso",
+      "title": "01 · Observabilidade & Métricas",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-01.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-01.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-02",
+      "sectionSlug": "curso",
+      "title": "02 · Copy Master",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-02.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-02.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-02.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    },
+    {
+      "lessonId": "master-03",
+      "sectionSlug": "curso",
+      "title": "03 · Funil Master",
+      "mdUrl": "https://oneverso.com.br/academia/md/academia-curso-master-03.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/academia-curso-master-03.html",
+      "pdfUrl": "https://oneverso.com.br/academia/pdf/academia-curso-master-03.pdf",
+      "level": "master",
+      "requiredTier": "estrategista",
+      "isPublished": true,
+      "videoUrl": null,
+      "youtubeStatus": "pending",
+      "updatedAt": "2026-06-22T16:12:17.000Z",
+      "updatedBy": "canon-all-tracks-v5"
+    }
+  ]
+}

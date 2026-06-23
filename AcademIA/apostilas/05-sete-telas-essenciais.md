@@ -8,7 +8,7 @@ tags: [academia, painel, afiliado, dia-a-dia, operacao]
 pattern: "MMN_IA"
 ---
 
-![Capa — As 7 Telas Essenciais do Dia a Dia](../../assets/ebook_covers/ACAD-apostila-05-sete-telas.webp)
+![Capa — As 7 Telas Essenciais do Dia a Dia](../../assets/ebook_covers/ACAD-apostila-05-sete-telas-essenciais.webp)
 
 **As 7 Telas Essenciais do Dia a Dia**
 

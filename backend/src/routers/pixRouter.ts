@@ -6,6 +6,17 @@
  */
 
 import { z } from "zod";
+import { grantPackToUser } from "../services/packEntitlementService";
+import { Pool as PgPoolForHook } from "pg";
+let _hookPool: PgPoolForHook | null = null;
+function getHookPool(): PgPoolForHook {
+  if (!_hookPool) {
+    const connStr = process.env.DATABASE_URL;
+    if (!connStr) throw new Error("DATABASE_URL not configured");
+    _hookPool = new PgPoolForHook({ connectionString: connStr, max: 5 });
+  }
+  return _hookPool;
+}
 import { router, protectedProcedure, publicProcedure, adminProcedure } from "../config/trpc";
 import {
   generatePixStaticPayload,
@@ -308,6 +319,49 @@ export const pixRouter = router({
           }) + "\n",
         );
 
+
+        // === PACK_GRANT_HOOK_V2: dispara entrega de Pack ao confirmar pagamento ===
+        try {
+          // Procura order pendente com este payment_id/txid e identifica se é compra de Pack
+          const orderLookup = await getHookPool().query(
+            `SELECT mo.id AS order_id, mo.user_id, mo.total_cents, moi.item_slug, moi.item_type
+               FROM marketplace_orders mo
+               JOIN marketplace_order_items moi ON moi.order_id = mo.id
+              WHERE (mo.payment_id = $1 OR mo.id = $1)
+                AND moi.item_type = 'pack'
+                AND mo.status IN ('pending', 'awaiting_payment')
+              LIMIT 5`,
+            [txid],
+          );
+          for (const row of orderLookup.rows) {
+            const grantRes = await grantPackToUser(row.user_id, row.item_slug, {
+              paymentRef: txid,
+              paymentMethod: "pix",
+              amountCents: row.total_cents,
+            });
+            process.stdout.write(
+              JSON.stringify({
+                level: "info",
+                tag: "pack-grant-hook",
+                txid,
+                userId: row.user_id,
+                packSlug: row.item_slug,
+                delivered: grantRes.delivered,
+                alreadyGranted: grantRes.alreadyGranted,
+                message: grantRes.message,
+              }) + "\n",
+            );
+          }
+        } catch (grantErr) {
+          process.stderr.write(
+            JSON.stringify({
+              level: "warn",
+              tag: "pack-grant-hook-error",
+              txid,
+              error: String(grantErr),
+            }) + "\n",
+          );
+        }
         processed.push(txid);
       }
 

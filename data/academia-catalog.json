@@ -1,0 +1,918 @@
+{
+  "lab_nexus": [
+    {
+      "name": "QA-ACCEPTANCE-MATRIX.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/QA-ACCEPTANCE-MATRIX.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/QA-ACCEPTANCE-MATRIX.html",
+      "repoPath": "AcademIA/Lab-Nexus/QA-ACCEPTANCE-MATRIX.md"
+    },
+    {
+      "name": "README-CHATBOT.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README-CHATBOT.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README-CHATBOT.html",
+      "repoPath": "AcademIA/Lab-Nexus/README-CHATBOT.md"
+    },
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/Lab-Nexus/README.md"
+    },
+    {
+      "name": "01-analise-coorte-churn.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-analise-coorte-churn.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-analise-coorte-churn.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/analise/01-analise-coorte-churn.md"
+    },
+    {
+      "name": "02-analise-funil-conversao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-analise-funil-conversao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-analise-funil-conversao.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/analise/02-analise-funil-conversao.md"
+    },
+    {
+      "name": "03-diagnostico-funil-completo.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-diagnostico-funil-completo.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-diagnostico-funil-completo.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/analise/03-diagnostico-funil-completo.md"
+    },
+    {
+      "name": "01-headline-persuasiva.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-headline-persuasiva.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-headline-persuasiva.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/copywriting/01-headline-persuasiva.md"
+    },
+    {
+      "name": "02-subject-email.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-subject-email.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-subject-email.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/copywriting/02-subject-email.md"
+    },
+    {
+      "name": "01-planejamento-lancamento.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-planejamento-lancamento.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-planejamento-lancamento.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/estrategia/01-planejamento-lancamento.md"
+    },
+    {
+      "name": "02-benchmark-concorrencia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-benchmark-concorrencia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-benchmark-concorrencia.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/estrategia/02-benchmark-concorrencia.md"
+    },
+    {
+      "name": "03-posicionamento-competitivo.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-posicionamento-competitivo.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-posicionamento-competitivo.html",
+      "repoPath": "AcademIA/Lab-Nexus/prompts/estrategia/03-posicionamento-competitivo.md"
+    },
+    {
+      "name": "01-template-newsletter.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-template-newsletter.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-template-newsletter.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/email/01-template-newsletter.html"
+    },
+    {
+      "name": "02-template-promocional.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-template-promocional.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-template-promocional.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/email/02-template-promocional.html"
+    },
+    {
+      "name": "03-template-transacional.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-template-transacional.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-template-transacional.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/email/03-template-transacional.html"
+    },
+    {
+      "name": "01-template-landing-vendas.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-template-landing-vendas.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-template-landing-vendas.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/landing/01-template-landing-vendas.html"
+    },
+    {
+      "name": "02-template-landing-captura.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-template-landing-captura.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-template-landing-captura.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/landing/02-template-landing-captura.html"
+    },
+    {
+      "name": "01-template-carrossel-educativo.html",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-template-carrossel-educativo.html",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-template-carrossel-educativo.html",
+      "repoPath": "AcademIA/Lab-Nexus/templates/social/01-template-carrossel-educativo.html"
+    },
+    {
+      "name": "01-experimento-ab.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-experimento-ab.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-experimento-ab.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/01-experimento-ab.md"
+    },
+    {
+      "name": "02-comparador-taxas-conversao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-comparador-taxas-conversao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-comparador-taxas-conversao.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/02-comparador-taxas-conversao.md"
+    },
+    {
+      "name": "03-funis-conversao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-funis-conversao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-funis-conversao.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/03-funis-conversao.md"
+    },
+    {
+      "name": "04-atribuicao-multitouch.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-atribuicao-multitouch.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-atribuicao-multitouch.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/04-atribuicao-multitouch.md"
+    },
+    {
+      "name": "05-coorte-churn.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-coorte-churn.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-coorte-churn.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/05-coorte-churn.md"
+    },
+    {
+      "name": "06-dashboard-kpis.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-dashboard-kpis.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-dashboard-kpis.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/analytics/06-dashboard-kpis.md"
+    },
+    {
+      "name": "01-webhooks-payload.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-webhooks-payload.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-webhooks-payload.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/01-webhooks-payload.md"
+    },
+    {
+      "name": "02-triggers-eventos.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-triggers-eventos.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-triggers-eventos.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/02-triggers-eventos.md"
+    },
+    {
+      "name": "03-disparador-whatsapp.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-disparador-whatsapp.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-disparador-whatsapp.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/03-disparador-whatsapp.md"
+    },
+    {
+      "name": "04-pixel-eventos.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-pixel-eventos.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-pixel-eventos.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/04-pixel-eventos.md"
+    },
+    {
+      "name": "05-backup-criptografado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-backup-criptografado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-backup-criptografado.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/05-backup-criptografado.md"
+    },
+    {
+      "name": "06-mensageria-instagram.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-mensageria-instagram.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-mensageria-instagram.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/06-mensageria-instagram.md"
+    },
+    {
+      "name": "07-recuperador-carrinho.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/07-recuperador-carrinho.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/07-recuperador-carrinho.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/automation/07-recuperador-carrinho.md"
+    },
+    {
+      "name": "01-headline-persuasiva.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-headline-persuasiva.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-headline-persuasiva.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/01-headline-persuasiva.md"
+    },
+    {
+      "name": "02-email-frio.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-email-frio.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-email-frio.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/02-email-frio.md"
+    },
+    {
+      "name": "03-sequencia-boas-vindas.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-sequencia-boas-vindas.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-sequencia-boas-vindas.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/03-sequencia-boas-vindas.md"
+    },
+    {
+      "name": "04-whatsapp-persuasivo.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-whatsapp-persuasivo.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-whatsapp-persuasivo.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/04-whatsapp-persuasivo.md"
+    },
+    {
+      "name": "05-landing-page.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-landing-page.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-landing-page.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/05-landing-page.md"
+    },
+    {
+      "name": "06-video-script.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-video-script.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-video-script.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/06-video-script.md"
+    },
+    {
+      "name": "07-post-instagram.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/07-post-instagram.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/07-post-instagram.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/07-post-instagram.md"
+    },
+    {
+      "name": "08-msg-carrinho-abandonado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/08-msg-carrinho-abandonado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/08-msg-carrinho-abandonado.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/08-msg-carrinho-abandonado.md"
+    },
+    {
+      "name": "09-mensagem-instagram-dm.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/09-mensagem-instagram-dm.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/09-mensagem-instagram-dm.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/09-mensagem-instagram-dm.md"
+    },
+    {
+      "name": "10-anuncio-facebook.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/10-anuncio-facebook.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/10-anuncio-facebook.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/10-anuncio-facebook.md"
+    },
+    {
+      "name": "11-newsletter-semanal.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/11-newsletter-semanal.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/11-newsletter-semanal.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/11-newsletter-semanal.md"
+    },
+    {
+      "name": "12-prompt-para-ia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/12-prompt-para-ia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/12-prompt-para-ia.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/12-prompt-para-ia.md"
+    },
+    {
+      "name": "13-disparo-sms-conversacional.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/13-disparo-sms-conversacional.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/13-disparo-sms-conversacional.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md"
+    },
+    {
+      "name": "01-briefing-criativo.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-briefing-criativo.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-briefing-criativo.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/design/01-briefing-criativo.md"
+    },
+    {
+      "name": "02-template-carrossel.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-template-carrossel.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-template-carrossel.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/design/02-template-carrossel.md"
+    },
+    {
+      "name": "03-thumb-youtube.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-thumb-youtube.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-thumb-youtube.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/design/03-thumb-youtube.md"
+    },
+    {
+      "name": "04-capa-thumb-vsl.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-capa-thumb-vsl.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-capa-thumb-vsl.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/design/04-capa-thumb-vsl.md"
+    },
+    {
+      "name": "05-guia-marca-nexus.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-guia-marca-nexus.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-guia-marca-nexus.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/design/05-guia-marca-nexus.md"
+    },
+    {
+      "name": "01-planejador-editorial.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-planejador-editorial.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-planejador-editorial.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/01-planejador-editorial.md"
+    },
+    {
+      "name": "02-segmentacao-rfm.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-segmentacao-rfm.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-segmentacao-rfm.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/02-segmentacao-rfm.md"
+    },
+    {
+      "name": "03-mapa-jornada-cliente.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-mapa-jornada-cliente.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-mapa-jornada-cliente.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/03-mapa-jornada-cliente.md"
+    },
+    {
+      "name": "04-mapa-persona.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-mapa-persona.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-mapa-persona.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/04-mapa-persona.md"
+    },
+    {
+      "name": "05-segmentacao-lista.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-segmentacao-lista.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-segmentacao-lista.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/05-segmentacao-lista.md"
+    },
+    {
+      "name": "06-funil-de-vendas.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-funil-de-vendas.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-funil-de-vendas.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/06-funil-de-vendas.md"
+    },
+    {
+      "name": "07-pesquisa-competitiva.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/07-pesquisa-competitiva.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/07-pesquisa-competitiva.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/07-pesquisa-competitiva.md"
+    },
+    {
+      "name": "08-estrategia-preco.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/08-estrategia-preco.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/08-estrategia-preco.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/08-estrategia-preco.md"
+    },
+    {
+      "name": "09-plano-conteudo-90-dias.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/09-plano-conteudo-90-dias.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/09-plano-conteudo-90-dias.html",
+      "repoPath": "AcademIA/Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md"
+    }
+  ],
+  "lib_nexus": [
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/Lib-Nexus/README.md"
+    },
+    {
+      "name": "00-base-agent.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-base-agent.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-base-agent.html",
+      "repoPath": "AcademIA/Lib-Nexus/agents-specs/00-base-agent.md"
+    },
+    {
+      "name": "01-marketing-agent.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-marketing-agent.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-marketing-agent.html",
+      "repoPath": "AcademIA/Lib-Nexus/agents-specs/01-marketing-agent.md"
+    },
+    {
+      "name": "02-judge-revisor.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-judge-revisor.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-judge-revisor.html",
+      "repoPath": "AcademIA/Lib-Nexus/agents-specs/02-judge-revisor.md"
+    },
+    {
+      "name": "03-federation-gate.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-federation-gate.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-federation-gate.html",
+      "repoPath": "AcademIA/Lib-Nexus/agents-specs/03-federation-gate.md"
+    },
+    {
+      "name": "00-trpc-overview.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-trpc-overview.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-trpc-overview.html",
+      "repoPath": "AcademIA/Lib-Nexus/api-docs/00-trpc-overview.md"
+    },
+    {
+      "name": "01-webhooks.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-webhooks.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-webhooks.html",
+      "repoPath": "AcademIA/Lib-Nexus/api-docs/01-webhooks.md"
+    },
+    {
+      "name": "02-rest-public.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-rest-public.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-rest-public.html",
+      "repoPath": "AcademIA/Lib-Nexus/api-docs/02-rest-public.md"
+    },
+    {
+      "name": "00-prompt-engineering.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-prompt-engineering.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-prompt-engineering.html",
+      "repoPath": "AcademIA/Lib-Nexus/best-practices/00-prompt-engineering.md"
+    },
+    {
+      "name": "01-error-handling.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-error-handling.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-error-handling.html",
+      "repoPath": "AcademIA/Lib-Nexus/best-practices/01-error-handling.md"
+    },
+    {
+      "name": "02-performance.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-performance.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-performance.html",
+      "repoPath": "AcademIA/Lib-Nexus/best-practices/02-performance.md"
+    },
+    {
+      "name": "00-glossario.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-glossario.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-glossario.html",
+      "repoPath": "AcademIA/Lib-Nexus/knowledge-base/00-glossario.md"
+    },
+    {
+      "name": "01-modelo-ioaid.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-modelo-ioaid.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-modelo-ioaid.html",
+      "repoPath": "AcademIA/Lib-Nexus/knowledge-base/01-modelo-ioaid.md"
+    },
+    {
+      "name": "02-taxonomia-skills.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-taxonomia-skills.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-taxonomia-skills.html",
+      "repoPath": "AcademIA/Lib-Nexus/knowledge-base/02-taxonomia-skills.md"
+    },
+    {
+      "name": "03-conformidade-lgpd.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-conformidade-lgpd.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-conformidade-lgpd.html",
+      "repoPath": "AcademIA/Lib-Nexus/knowledge-base/03-conformidade-lgpd.md"
+    }
+  ],
+  "cursos": [
+    {
+      "name": "00-primeiro-agente-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-primeiro-agente-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-primeiro-agente-roteiro.html",
+      "repoPath": "AcademIA/cursos/agente/00-primeiro-agente-roteiro.md"
+    },
+    {
+      "name": "00-primeiro-agente.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-primeiro-agente.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-primeiro-agente.html",
+      "repoPath": "AcademIA/cursos/agente/00-primeiro-agente.md"
+    },
+    {
+      "name": "01-skills-essenciais-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-skills-essenciais-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-skills-essenciais-roteiro.html",
+      "repoPath": "AcademIA/cursos/agente/01-skills-essenciais-roteiro.md"
+    },
+    {
+      "name": "01-skills-essenciais.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-skills-essenciais.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-skills-essenciais.html",
+      "repoPath": "AcademIA/cursos/agente/01-skills-essenciais.md"
+    },
+    {
+      "name": "02-disparo-whatsapp-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-disparo-whatsapp-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-disparo-whatsapp-roteiro.html",
+      "repoPath": "AcademIA/cursos/agente/02-disparo-whatsapp-roteiro.md"
+    },
+    {
+      "name": "02-disparo-whatsapp.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-disparo-whatsapp.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-disparo-whatsapp.html",
+      "repoPath": "AcademIA/cursos/agente/02-disparo-whatsapp.md"
+    },
+    {
+      "name": "03-judge-revisor-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-judge-revisor-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-judge-revisor-roteiro.html",
+      "repoPath": "AcademIA/cursos/agente/03-judge-revisor-roteiro.md"
+    },
+    {
+      "name": "03-judge-revisor.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-judge-revisor.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-judge-revisor.html",
+      "repoPath": "AcademIA/cursos/agente/03-judge-revisor.md"
+    },
+    {
+      "name": "00-blueprints-elite.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-blueprints-elite.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-blueprints-elite.html",
+      "repoPath": "AcademIA/cursos/elite/00-blueprints-elite.md"
+    },
+    {
+      "name": "01-multi-tenant-whitelabel.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-multi-tenant-whitelabel.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-multi-tenant-whitelabel.html",
+      "repoPath": "AcademIA/cursos/elite/01-multi-tenant-whitelabel.md"
+    },
+    {
+      "name": "02-federacao-agentes.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-federacao-agentes.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-federacao-agentes.html",
+      "repoPath": "AcademIA/cursos/elite/02-federacao-agentes.md"
+    },
+    {
+      "name": "00-boas-vindas-roteiro-revisado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-boas-vindas-roteiro-revisado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-boas-vindas-roteiro-revisado.html",
+      "repoPath": "AcademIA/cursos/fundamental/00-boas-vindas-roteiro-revisado.md"
+    },
+    {
+      "name": "00-boas-vindas-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-boas-vindas-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-boas-vindas-roteiro.html",
+      "repoPath": "AcademIA/cursos/fundamental/00-boas-vindas-roteiro.md"
+    },
+    {
+      "name": "00-boas-vindas-slides.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-boas-vindas-slides.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-boas-vindas-slides.html",
+      "repoPath": "AcademIA/cursos/fundamental/00-boas-vindas-slides.md"
+    },
+    {
+      "name": "00-boas-vindas.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-boas-vindas.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-boas-vindas.html",
+      "repoPath": "AcademIA/cursos/fundamental/00-boas-vindas.md"
+    },
+    {
+      "name": "01-entendendo-ioaid-roteiro-revisado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-entendendo-ioaid-roteiro-revisado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-entendendo-ioaid-roteiro-revisado.html",
+      "repoPath": "AcademIA/cursos/fundamental/01-entendendo-ioaid-roteiro-revisado.md"
+    },
+    {
+      "name": "01-entendendo-ioaid-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-entendendo-ioaid-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-entendendo-ioaid-roteiro.html",
+      "repoPath": "AcademIA/cursos/fundamental/01-entendendo-ioaid-roteiro.md"
+    },
+    {
+      "name": "01-entendendo-ioaid-slides.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-entendendo-ioaid-slides.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-entendendo-ioaid-slides.html",
+      "repoPath": "AcademIA/cursos/fundamental/01-entendendo-ioaid-slides.md"
+    },
+    {
+      "name": "01-entendendo-ioaid.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-entendendo-ioaid.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-entendendo-ioaid.html",
+      "repoPath": "AcademIA/cursos/fundamental/01-entendendo-ioaid.md"
+    },
+    {
+      "name": "01-introducao-sra-nexus-ive.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-introducao-sra-nexus-ive.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-introducao-sra-nexus-ive.html",
+      "repoPath": "AcademIA/cursos/fundamental/01-introducao-sra-nexus-ive.md"
+    },
+    {
+      "name": "02-sistema-sho-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-sistema-sho-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-sistema-sho-roteiro.html",
+      "repoPath": "AcademIA/cursos/fundamental/02-sistema-sho-roteiro.md"
+    },
+    {
+      "name": "02-sistema-sho-slides.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-sistema-sho-slides.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-sistema-sho-slides.html",
+      "repoPath": "AcademIA/cursos/fundamental/02-sistema-sho-slides.md"
+    },
+    {
+      "name": "02-sistema-sho.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-sistema-sho.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-sistema-sho.html",
+      "repoPath": "AcademIA/cursos/fundamental/02-sistema-sho.md"
+    },
+    {
+      "name": "03-painel-afiliado-roteiro.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-painel-afiliado-roteiro.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-painel-afiliado-roteiro.html",
+      "repoPath": "AcademIA/cursos/fundamental/03-painel-afiliado-roteiro.md"
+    },
+    {
+      "name": "03-painel-afiliado-slides.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-painel-afiliado-slides.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-painel-afiliado-slides.html",
+      "repoPath": "AcademIA/cursos/fundamental/03-painel-afiliado-slides.md"
+    },
+    {
+      "name": "03-painel-afiliado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-painel-afiliado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-painel-afiliado.html",
+      "repoPath": "AcademIA/cursos/fundamental/03-painel-afiliado.md"
+    },
+    {
+      "name": "roteiro-aula01.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/roteiro-aula01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/roteiro-aula01.html",
+      "repoPath": "AcademIA/cursos/fundamental/aula01/roteiro-aula01.md"
+    },
+    {
+      "name": "slides-aula01.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/slides-aula01.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/slides-aula01.html",
+      "repoPath": "AcademIA/cursos/fundamental/aula01/slides-aula01.md"
+    },
+    {
+      "name": "00-otimizacao-conversao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-otimizacao-conversao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-otimizacao-conversao.html",
+      "repoPath": "AcademIA/cursos/master/00-otimizacao-conversao.md"
+    },
+    {
+      "name": "01-funis-lifecycle.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-funis-lifecycle.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-funis-lifecycle.html",
+      "repoPath": "AcademIA/cursos/master/01-funis-lifecycle.md"
+    },
+    {
+      "name": "02-ab-test-judge.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-ab-test-judge.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-ab-test-judge.html",
+      "repoPath": "AcademIA/cursos/master/02-ab-test-judge.md"
+    },
+    {
+      "name": "03-coortes-churn.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-coortes-churn.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-coortes-churn.html",
+      "repoPath": "AcademIA/cursos/master/03-coortes-churn.md"
+    }
+  ],
+  "apostilas": [
+    {
+      "name": "01-apresentacao-infraestrutura.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-apresentacao-infraestrutura.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-apresentacao-infraestrutura.html",
+      "repoPath": "AcademIA/apostilas/01-apresentacao-infraestrutura.md"
+    },
+    {
+      "name": "02-cases-orquestracao-autonoma.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-cases-orquestracao-autonoma.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-cases-orquestracao-autonoma.html",
+      "repoPath": "AcademIA/apostilas/02-cases-orquestracao-autonoma.md"
+    },
+    {
+      "name": "03-infra-operacional-ia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-infra-operacional-ia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-infra-operacional-ia.html",
+      "repoPath": "AcademIA/apostilas/03-infra-operacional-ia.md"
+    },
+    {
+      "name": "04-orquestracao-hibrida-agentes.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-orquestracao-hibrida-agentes.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-orquestracao-hibrida-agentes.html",
+      "repoPath": "AcademIA/apostilas/04-orquestracao-hibrida-agentes.md"
+    },
+    {
+      "name": "05-sete-telas-essenciais.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-sete-telas-essenciais.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-sete-telas-essenciais.html",
+      "repoPath": "AcademIA/apostilas/05-sete-telas-essenciais.md"
+    },
+    {
+      "name": "06-setup-agente-pessoal.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-setup-agente-pessoal.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-setup-agente-pessoal.html",
+      "repoPath": "AcademIA/apostilas/06-setup-agente-pessoal.md"
+    },
+    {
+      "name": "07-18-skills-operacionais.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/07-18-skills-operacionais.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/07-18-skills-operacionais.html",
+      "repoPath": "AcademIA/apostilas/07-18-skills-operacionais.md"
+    },
+    {
+      "name": "08-rotina-disparo-agente.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/08-rotina-disparo-agente.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/08-rotina-disparo-agente.html",
+      "repoPath": "AcademIA/apostilas/08-rotina-disparo-agente.md"
+    },
+    {
+      "name": "09-campanhas-automatizadas.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/09-campanhas-automatizadas.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/09-campanhas-automatizadas.html",
+      "repoPath": "AcademIA/apostilas/09-campanhas-automatizadas.md"
+    },
+    {
+      "name": "10-jornada-completa-afiliado.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/10-jornada-completa-afiliado.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/10-jornada-completa-afiliado.html",
+      "repoPath": "AcademIA/apostilas/10-jornada-completa-afiliado.md"
+    },
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/apostilas/README.md"
+    }
+  ],
+  "playbooks": [
+    {
+      "name": "PB-CRISES-gestao-crise-autonomia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-CRISES-gestao-crise-autonomia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-CRISES-gestao-crise-autonomia.html",
+      "repoPath": "AcademIA/playbooks/PB-CRISES-gestao-crise-autonomia.md"
+    },
+    {
+      "name": "PB-CRISES-gestao-crise-ban-whatsapp.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-CRISES-gestao-crise-ban-whatsapp.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-CRISES-gestao-crise-ban-whatsapp.html",
+      "repoPath": "AcademIA/playbooks/PB-CRISES-gestao-crise-ban-whatsapp.md"
+    },
+    {
+      "name": "PB-CRISES-gestao-crise-data-loss.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-CRISES-gestao-crise-data-loss.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-CRISES-gestao-crise-data-loss.html",
+      "repoPath": "AcademIA/playbooks/PB-CRISES-gestao-crise-data-loss.md"
+    },
+    {
+      "name": "PB-EMAIL-operacao-diaria.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-EMAIL-operacao-diaria.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-EMAIL-operacao-diaria.html",
+      "repoPath": "AcademIA/playbooks/PB-EMAIL-operacao-diaria.md"
+    },
+    {
+      "name": "PB-LANCAMENTO-lancamento-7-dias.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-LANCAMENTO-lancamento-7-dias.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-LANCAMENTO-lancamento-7-dias.html",
+      "repoPath": "AcademIA/playbooks/PB-LANCAMENTO-lancamento-7-dias.md"
+    },
+    {
+      "name": "PB-LGPD-direitos-titular.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-LGPD-direitos-titular.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-LGPD-direitos-titular.html",
+      "repoPath": "AcademIA/playbooks/PB-LGPD-direitos-titular.md"
+    },
+    {
+      "name": "PB-WHATSAPP-operacao-diaria.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/PB-WHATSAPP-operacao-diaria.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/PB-WHATSAPP-operacao-diaria.html",
+      "repoPath": "AcademIA/playbooks/PB-WHATSAPP-operacao-diaria.md"
+    },
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/playbooks/README.md"
+    }
+  ],
+  "webinars": [
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/webinars/README.md"
+    },
+    {
+      "name": "WB-2026-01-lancamento-ioaid.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/WB-2026-01-lancamento-ioaid.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/WB-2026-01-lancamento-ioaid.html",
+      "repoPath": "AcademIA/webinars/WB-2026-01-lancamento-ioaid.md"
+    },
+    {
+      "name": "WB-2026-02-sho-em-producao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/WB-2026-02-sho-em-producao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/WB-2026-02-sho-em-producao.html",
+      "repoPath": "AcademIA/webinars/WB-2026-02-sho-em-producao.md"
+    },
+    {
+      "name": "WB-2026-03-academia-open-house.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/WB-2026-03-academia-open-house.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/WB-2026-03-academia-open-house.html",
+      "repoPath": "AcademIA/webinars/WB-2026-03-academia-open-house.md"
+    },
+    {
+      "name": "debate-futuro-ia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/debate-futuro-ia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/debate-futuro-ia.html",
+      "repoPath": "AcademIA/webinars/debate-futuro-ia.md"
+    }
+  ],
+  "tutoriais": [
+    {
+      "name": "01-ativar-2fa.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/01-ativar-2fa.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/01-ativar-2fa.html",
+      "repoPath": "AcademIA/tutoriais/01-ativar-2fa.md"
+    },
+    {
+      "name": "02-configurar-dispatcher.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/02-configurar-dispatcher.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/02-configurar-dispatcher.html",
+      "repoPath": "AcademIA/tutoriais/02-configurar-dispatcher.md"
+    },
+    {
+      "name": "03-ler-relatorio-autonomia.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/03-ler-relatorio-autonomia.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/03-ler-relatorio-autonomia.html",
+      "repoPath": "AcademIA/tutoriais/03-ler-relatorio-autonomia.md"
+    },
+    {
+      "name": "04-criar-primeiro-agente.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/04-criar-primeiro-agente.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/04-criar-primeiro-agente.html",
+      "repoPath": "AcademIA/tutoriais/04-criar-primeiro-agente.md"
+    },
+    {
+      "name": "05-aprovar-sugestao-judge.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/05-aprovar-sugestao-judge.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/05-aprovar-sugestao-judge.html",
+      "repoPath": "AcademIA/tutoriais/05-aprovar-sugestao-judge.md"
+    },
+    {
+      "name": "06-disparar-campanha-whatsapp.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/06-disparar-campanha-whatsapp.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/06-disparar-campanha-whatsapp.html",
+      "repoPath": "AcademIA/tutoriais/06-disparar-campanha-whatsapp.md"
+    },
+    {
+      "name": "07-convidar-afiliado-rede.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/07-convidar-afiliado-rede.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/07-convidar-afiliado-rede.html",
+      "repoPath": "AcademIA/tutoriais/07-convidar-afiliado-rede.md"
+    },
+    {
+      "name": "08-primeiro-ab-test.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/08-primeiro-ab-test.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/08-primeiro-ab-test.html",
+      "repoPath": "AcademIA/tutoriais/08-primeiro-ab-test.md"
+    },
+    {
+      "name": "09-ler-tabela-coorte.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/09-ler-tabela-coorte.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/09-ler-tabela-coorte.html",
+      "repoPath": "AcademIA/tutoriais/09-ler-tabela-coorte.md"
+    },
+    {
+      "name": "10-webhook-hotmart.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/10-webhook-hotmart.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/10-webhook-hotmart.html",
+      "repoPath": "AcademIA/tutoriais/10-webhook-hotmart.md"
+    },
+    {
+      "name": "11-instancia-multitenant.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/11-instancia-multitenant.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/11-instancia-multitenant.html",
+      "repoPath": "AcademIA/tutoriais/11-instancia-multitenant.md"
+    },
+    {
+      "name": "12-federa#U00e7#U00e3o-2-nos.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/12-federa#U00e7#U00e3o-2-nos.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/12-federa#U00e7#U00e3o-2-nos.html",
+      "repoPath": "AcademIA/tutoriais/12-federa#U00e7#U00e3o-2-nos.md"
+    },
+    {
+      "name": "12-federação-2-nos.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/12-federação-2-nos.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/12-federação-2-nos.html",
+      "repoPath": "AcademIA/tutoriais/12-federação-2-nos.md"
+    },
+    {
+      "name": "13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/13-federa#U00e7#U00e3o-3-nos-mtls-pinned.html",
+      "repoPath": "AcademIA/tutoriais/13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md"
+    },
+    {
+      "name": "13-federação-3-nos-mtls-pinned.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/13-federação-3-nos-mtls-pinned.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/13-federação-3-nos-mtls-pinned.html",
+      "repoPath": "AcademIA/tutoriais/13-federação-3-nos-mtls-pinned.md"
+    },
+    {
+      "name": "14-ler-skill-manifest.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/14-ler-skill-manifest.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/14-ler-skill-manifest.html",
+      "repoPath": "AcademIA/tutoriais/14-ler-skill-manifest.md"
+    },
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/tutoriais/README.md"
+    }
+  ],
+  "certificacoes": [
+    {
+      "name": "00-modelo-avaliacao.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/00-modelo-avaliacao.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/00-modelo-avaliacao.html",
+      "repoPath": "AcademIA/certificacoes/00-modelo-avaliacao.md"
+    },
+    {
+      "name": "CEN-certificacao-estrategista-nexus.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/CEN-certificacao-estrategista-nexus.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/CEN-certificacao-estrategista-nexus.html",
+      "repoPath": "AcademIA/certificacoes/CEN-certificacao-estrategista-nexus.md"
+    },
+    {
+      "name": "CEN-plus-certificacao-elite-nexus.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/CEN-plus-certificacao-elite-nexus.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/CEN-plus-certificacao-elite-nexus.html",
+      "repoPath": "AcademIA/certificacoes/CEN-plus-certificacao-elite-nexus.md"
+    },
+    {
+      "name": "CON-certificacao-operador-nexus.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/CON-certificacao-operador-nexus.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/CON-certificacao-operador-nexus.html",
+      "repoPath": "AcademIA/certificacoes/CON-certificacao-operador-nexus.md"
+    },
+    {
+      "name": "README.md",
+      "mdUrl": "https://oneverso.com.br/academia/md/README.md",
+      "htmlUrl": "https://oneverso.com.br/academia/html/README.html",
+      "repoPath": "AcademIA/certificacoes/README.md"
+    }
+  ]
+}

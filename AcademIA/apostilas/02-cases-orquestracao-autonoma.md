@@ -37,6 +37,8 @@ Os cases que você vai ler são reais. Nomes foram trocados, mas os números sã
 
 ---
 
+![Ilustração — Sucesso de Afiliados com IA](../../assets/ebook_covers/ACAD-ilustracao-02-cases-sucesso.png)
+
 **1. Case 01 — Marina (afiliada solo, nicho saúde)**
 
 **Perfil:** Marina, 32 anos, publicitária, atua como afiliada solo há 8 meses no nicho de suplementos. Antes do agente: fazia 1 disparo de WhatsApp por dia, manualmente, para uma base de 1.200 contatos. Faturamento médio: R$ 3.800/mês.

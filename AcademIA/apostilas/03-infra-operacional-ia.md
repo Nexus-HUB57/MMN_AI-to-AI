@@ -53,6 +53,8 @@ Pense no IOAID como um **restaurante de luxo**:
 - **M4 — Persistence** é o **livro de registro**. Anota tudo: hora, quem pediu, quanto custou, qualidade.
 - **M5 — Response** é o **garçom**. Devolve o prato pronto (resultado) ao cliente, com recibo (metadados).
 
+![Infográfico — Os 5 Módulos do IOAID](../../assets/ebook_covers/ACAD-diagrama-03-fluxo-ioaid.png)
+
 Cada módulo é independente. Se o livro de registro (M4) falhar, o restaurante continua servindo (M1, M2, M3, M5 funcionam), só não conseguimos cobrar direito. Se a estação de sobremesa (uma skill) falhar, o resto da cozinha segue.
 
 **3. O fluxo completo de um disparo de WhatsApp**

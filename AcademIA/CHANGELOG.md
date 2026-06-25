@@ -2,13 +2,60 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.1.1
-last_updated: 2026-06-02
+version: 1.2.0
+last_updated: 2026-06-24
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.2.0] — 2026-06-24 · "Expansão Acadêmica + Auditoria"
+
+### ✨ Adicionado
+
+- 🎬 **2 workshops novos** (`treinamentos/`):
+  - `WS-04-oficina-sho-avancado.md` — SHO em modo S2/S3 com guardrails, audit trail, rollback reversível (Nível Master)
+  - `WS-05-oficina-federacao-agentes.md` — Federação multi-tenant, mTLS pinned, reputation system, ledger distribuído (Nível Master→Elite)
+- 🧪 **4 ferramentas operacionais novas** (`Lab-Nexus/tools/`):
+  - `analytics/07-comparador-creators.md` — comparador de até 10 creators em 12 métricas com score composto
+  - `automation/08-rate-limiter-pausa-inteligente.md` — rate limiter adaptativo com smart pause por canal
+  - `design/06-prompt-visual-carrossel-v2.md` — gerador de briefings para carrossel Instagram/LinkedIn
+  - `marketing/10-icp-detector.md` — detector automático de Ideal Customer Profile com 5 dimensões
+- 📊 **3 templates novos** (`Lab-Nexus/templates/`):
+  - `social/02-template-stories-sequencia.html` — sequência de 7 stories Instagram/TikTok
+  - `landing/03-template-otimizado-conversao.html` — landing page AIDA + FAQ + prova social
+  - `email/04-template-carrinho-abandonado.html` — email de recuperação com urgência e prova
+- 🔄 **Schema de auditoria** (`sync/audit-log-schema.md`) — schema JSONL completo para logs de auditoria MCP com 6 seções (actor, operation, context, decision, outcome, metadata)
+
+### 🩹 Correções
+
+- **Duplicatas removidas** em `tutoriais/`:
+  - `12-federa#U00e7#U00e3o-2-nos.md` (encoding quebrado)
+  - `13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md` (encoding quebrado)
+  - Versões corretas com UTF-8 já existiam: `12-federação-2-nos.md`, `13-federação-3-nos-mtls-pinned.md`
+- **INDEX.md atualizado** com contagem real de assets (v1.2.1)
+- **Personas Alencar/Ive documentadas** — pasta `AcademIA/personas/alencar/` com imagem oficial, voz, roteiro-aula01 e slides (commit anterior)
+
+### 📊 Métricas
+
+| | v1.1.1 | v1.2.0 |
+|---|---|---|
+| **Apostilas** | 10 | 10 |
+| **Cursos** (total) | 15 | 15 |
+| **Ferramentas (Lab-Nexus)** | 40 | 44 |
+| **Prompts (Lab-Nexus)** | 8 | 8 |
+| **Templates (Lab-Nexus)** | 3 | 6 |
+| **Workflows (Lab-Nexus)** | 3 | 3 |
+| **Tutoriais** | 14 (+2 duplicatas) | 14 |
+| **Playbooks** | 7 | 8 |
+| **Webinars** | 3 | 4 |
+| **Treinamentos/Workshops** | 6 | 8 |
+| **Certificações** | 4 | 5 |
+| **Personas** | 2 (parcial) | 2 (completas com roteiro, slides, voz) |
+| **Audit schema** | — | 1 (v1.0) |
 
 ---
 

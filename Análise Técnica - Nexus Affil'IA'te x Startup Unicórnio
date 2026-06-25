@@ -1,0 +1,3091 @@
+Nexus Affil'IA'te
+Análise técnica aprofundada, estrutura de códigos e roadmap de evolução para transição Startup Unicórnio
+
+Documento executivo editável em Microsoft Word | Formato DOCX
+
+————————————————————————————————————————
+
+Base analítica: estudo do segmento MMN AI-to-AI, páginas públicas da oneverso.com.br e sinais externos de agentic commerce informados no briefing.
+
+Escopo: posicionamento, aderência de mercado, arquitetura, governança, monetização, riscos, roadmap de melhoria, protocolos de experiência do usuário, estrutura de código e tese de unicórnio.
+
+Data de elaboração: 16/06/2026.
+
+Preparado em pt-BR com foco em clareza estratégica, profundidade técnica e aplicabilidade executiva.
+
+
+oneverso.com.br | Estudo estratégico-técnico Nexus Affil'IA'te | Página 
+
+Mapa de leitura
+
+Sumário executivo e tese de mercado.
+
+Diagnóstico técnico-estratégico da proposta atual.
+
+Arquitetura-alvo, governança, monetização e riscos críticos.
+
+Roadmap priorizado de 0 a 36 meses.
+
+Protocolos de otimização de experiência do usuário.
+
+Estrutura recomendada de código, serviços e automações.
+
+Scripts-base para observabilidade, qualidade, rollout e governança.
+
+Plano executivo de transição para startup unicórnio.
+
+1. Sumário executivo
+
+A Nexus Affil'IA'te ocupa uma interseção rara e altamente promissora entre affiliate tech, partner operations, creator commerce, agentic commerce e automação comercial baseada em agentes de IA. O material-base indica corretamente que a plataforma não deve ser tratada como um simples programa de afiliados, mas como uma infraestrutura comercial AI-native.
+
+O potencial de a Nexus tornar-se referência histórica corporativa e candidata real a startup unicórnio não depende apenas do apelo de futurismo. Depende da capacidade de converter narrativa avançada em sistema operacional confiável, auditável, integrável, escalável e economicamente previsível.
+
+A análise técnica aprofundada reforça que o caminho mais promissor é consolidar cinco pilares simultaneamente: arquitetura robusta de agentes, governança de comissionamento, instrumentação unificada de dados, camada enterprise de integração e tese clara de captura de valor.
+
+A oportunidade estratégica central está em ampliar o enquadramento da marca: de MMN AI-to-AI para infraestrutura de agentic revenue networks. Isso reduz fricção reputacional, amplia o mercado endereçável e favorece adoção por B2B, creators, afiliados, representantes, canais indiretos e ecossistemas híbridos de distribuição.
+
+Além do diagnóstico, este documento inclui uma proposta prática de estrutura de código, scripts operacionais e protocolos de experiência do usuário para sustentar a evolução da plataforma com padrão corporativo e readiness de escala.
+
+2. Tese de mercado: por que a Nexus está alinhada com a próxima onda
+
+O enquadramento de mercado da Nexus é estruturalmente consistente com três vetores que convergem em 2026:
+
+A transição de automações reativas para agentes com contexto, memória, decisão assistida e execução em múltiplos canais.
+
+A evolução do comércio digital para jornadas em que descoberta, recomendação, comparação e parte da compra passam a ocorrer via interfaces conversacionais e agentes.
+
+A profissionalização de redes distribuídas de receita, nas quais empresas substituem planilhas, repasses manuais e baixa rastreabilidade por sistemas governados e observáveis.
+
+O ponto decisivo, porém, é que esse mercado não premiará apenas quem automatiza. Premiará quem combinar autonomia com confiança. Em mercados de comissão e rede, qualquer ruído em regras, atribuição, payout, auditoria ou segurança destrói valor rapidamente.
+
+Implicação estratégica: a Nexus deve se apresentar como camada de orquestração de receita distribuída baseada em IA, e não apenas como software de afiliados.
+
+3. Matriz de alinhamento entre proposta atual e tese de unicórnio
+
+Dimensão
+
+Estado percebido
+
+Alinhamento
+
+Prioridade
+
+Narrativa
+
+Discurso AI-native forte e sofisticado.
+
+Alto
+
+Traduzir a narrativa em benefícios simples por ICP.
+
+Produto
+
+SaaS + marketplace + agentes + rede.
+
+Alto, porém complexo
+
+Separar módulos, jornadas e ofertas.
+
+Governança
+
+Sinais de histórico, audit trail e checkpoints.
+
+Promissor
+
+Elevar para padrão enterprise e compliance.
+
+Monetização
+
+Receita recorrente, transacional e em rede.
+
+Muito forte
+
+Modelar unit economics por segmento.
+
+Dados
+
+Observabilidade narrada, mas sem prova recorrente.
+
+Médio
+
+Criar KPI tree e prova de valor.
+
+Integração
+
+Menção a stack moderna com legado fusionado.
+
+Médio
+
+Abrir APIs, conectores e interoperabilidade.
+
+Escala
+
+Ambição de runtime autônomo coerente.
+
+Alto potencial
+
+Fortalecer segurança, confiabilidade e custo computacional.
+
+Leitura executiva: a Nexus já possui vários componentes de narrativa típicos de empresas category-defining. O desafio não é inventar uma nova tese, mas converter a tese atual em produto previsível, mensurável e amplamente adotável.
+
+4. Análise técnica aprofundada do sistema Nexus
+
+4.1 Arquitetura-alvo
+
+A arquitetura descrita no estudo sugere uma plataforma híbrida, com preservação de legado em PHP e expansão por React + TypeScript, além de uma camada de agentes e observabilidade. A decisão é pragmaticamente correta para acelerar time-to-market, mas exige disciplina de arquitetura para evitar dívida técnica invisível.
+
+Separar core transacional, motor de comissionamento, camada de agentes, serviços de catálogo e camada analítica.
+
+Adotar contratos bem definidos entre módulos, preferencialmente via APIs versionadas e eventos de domínio.
+
+Evitar que a camada de IA acesse regras críticas de negócio sem intermediação por policy engine e trilha de auditoria.
+
+Estabelecer observabilidade nativa por tenant, por parceiro, por agente e por fluxo comercial.
+
+4.2 Motor de comissão e atribuição
+
+Se a Nexus deseja tornar-se referência histórica, o motor de comissionamento precisa ser tratado como infraestrutura crítica. Em operações de rede, atribuição de receita e cálculo de repasse são o coração da confiança.
+
+Regras declarativas com versionamento e data de vigência.
+
+Sandbox de simulação antes da publicação.
+
+Reconciliação financeira, rollback controlado e prova de cálculo auditável.
+
+Fluxos de aprovação com segregação de função para alterações sensíveis.
+
+Recomendação técnica: criar um Commission Rules Engine com versionamento, testes determinísticos, logs imutáveis e trilha de aprovação.
+
+4.3 Camada de agentes
+
+A camada de agentes deve evoluir de um conjunto de automações úteis para um sistema de orquestração confiável. A plataforma deve explicitar papéis: agentes de prospecção, conteúdo, compliance, acompanhamento, suporte comercial e análise.
+
+Catálogo de skills e tool permissions por agente.
+
+Guardrails de linguagem, política comercial e política de canal.
+
+Memória segmentada por tenant e com retenção configurável.
+
+Explicabilidade mínima: por que o agente tomou determinada ação, com quais dados e sob qual regra.
+
+Métricas de acerto, conversão assistida, latência, custo por ação e taxa de intervenção humana.
+
+4.4 Dados, observabilidade e segurança
+
+O próximo salto é transformar histórico e memory search em observabilidade operacional de padrão corporativo. A Nexus deve operar um modelo de telemetria que una eventos de produto, eventos comerciais, eventos de IA, eventos financeiros e eventos de segurança.
+
+Agentic Revenue Data Model com entidades-chave: parceiro, afiliado, creator, conta, campanha, oferta, clique, lead, oportunidade, conversa, recomendação, venda, comissão, payout, disputa, agente, skill, intervenção humana e incidente.
+
+RBAC e ABAC para acesso por papel, operação e contexto.
+
+Criptografia em repouso e em trânsito, segredos rotacionáveis e trilha imutável de eventos críticos.
+
+Consentimento, finalidade de uso e políticas de retenção aderentes à LGPD.
+
+Detecção de fraude, padrões anômalos de comissionamento e monitoramento de abuso de agentes.
+
+5. Alinhamentos que já favorecem a ambição de unicórnio
+
+Tese correta de categoria: a Nexus atua em dor estrutural associada a receita distribuída com IA e rastreabilidade.
+
+Modelo de receita multicamadas: assinatura, transação, revenda e dinâmica de rede.
+
+Capacidade de gerar switching costs ao tornar-se sistema de registro de comissões, interações e regras.
+
+Escalabilidade de software com margem incremental quando os componentes críticos estiverem estabilizados.
+
+Potencial de dados proprietários como fonte cumulativa de inteligência e defensibilidade.
+
+6. Lacunas críticas a fechar
+
+Complexidade excessiva de narrativa para buyers pragmáticos.
+
+Prova pública insuficiente de ROI, benchmarks e casos auditáveis.
+
+Possível mistura reputacional entre MMN, afiliados, marketplace e SaaS.
+
+Necessidade de camada enterprise mais explícita: APIs, SSO, exportações, aprovação e compliance.
+
+Ausência percebida de manifesto de confiança explicando cálculo, medição, proteção e auditoria.
+
+7. Roadmap de melhoria priorizado
+
+Onda 1 | 0 a 6 meses | Fundamentos de confiança e clareza
+
+Redesenhar a arquitetura de oferta e separar com clareza plataforma principal, packs, marketplace, carreira e serviços adicionais.
+
+Publicar trust center com política de comissão, critérios de payout, segurança, LGPD, antifraude e auditoria.
+
+Implementar KPI tree executiva: GMV, take rate, ARR, NRR, ativação, parceiros ativos, payout accuracy, CAC payback e margem por linha.
+
+Lançar dashboard de maturidade do agente com métricas compreensíveis por cliente e por parceiro.
+
+Criar estudos de caso com números antes/depois por ICP prioritário.
+
+Onda 2 | 6 a 12 meses | Infraestrutura de escala operacional
+
+Construir Commission Rules Engine versionado com simulação e trilha de aprovação.
+
+Abrir APIs e webhooks para CRM, ERP, e-commerce, gateways e analytics.
+
+Estruturar data lake operacional ou camada analítica central para unificar eventos comerciais, financeiros e de IA.
+
+Criar console de observabilidade por tenant com alertas, reconciliação e detecção de anomalias.
+
+Introduzir SSO, trilhas de auditoria profundas e perfis corporativos multiunidade.
+
+Onda 3 | 12 a 24 meses | Diferenciação de categoria
+
+Evoluir a plataforma para agentic revenue network com agentes especializados por papel, política e objetivo.
+
+Lançar recommendations engine para ofertas, alocação de leads, next best action e prevenção de churn.
+
+Construir benchmark de performance entre operações preservando privacidade.
+
+Criar app ou hub de parceiros com experiência superior para creators, representantes e afiliados em mobilidade.
+
+Expandir a narrativa comercial de MMN para partner-led growth, affiliate infrastructure e agentic commerce enablement.
+
+Onda 4 | 24 a 36 meses | Plataforma de padrão unicórnio
+
+Disponibilizar marketplace de agentes e skills com governança, billing e certificação.
+
+Transformar telemetria acumulada em produtos analíticos premium e scorecards preditivos.
+
+Oferecer módulos enterprise globais: multi-idioma, multi-moeda, compliance setorial e gestão avançada de territórios.
+
+Criar ecossistema de parceiros de implementação, auditoria e integração.
+
+Preparar governança corporativa, reporting financeiro e controles internos compatíveis com captação institucional relevante.
+
+8. Estratégia de produto para captura de valor de longo prazo
+
+Módulo
+
+Problema resolvido
+
+Valor percebido
+
+Efeito estratégico
+
+Core de parceiros e afiliados
+
+Cadastro, tracking, ativação e governança.
+
+Controle operacional imediato.
+
+Base para expansão e retenção.
+
+Motor de comissão e payout
+
+Regras, cálculos, recorrência, auditoria e disputas.
+
+Confiança financeira.
+
+Switching cost elevado.
+
+Hub de agentes
+
+Execução assistida ou autônoma de tarefas comerciais.
+
+Produtividade e escala.
+
+Diferenciação tecnológica.
+
+Marketplace e catálogo
+
+Distribuição de ofertas digitais e descoberta.
+
+Liquidez comercial.
+
+Maior GMV e dados proprietários.
+
+Analytics e benchmark
+
+Leitura de desempenho, maturidade e ROI.
+
+Tomada de decisão.
+
+Upsell de inteligência.
+
+Camada enterprise
+
+Integrações, compliance, segurança e multiunidade.
+
+Adoção corporativa.
+
+Ticket maior e expansão internacional.
+
+9. Estratégia comercial e de posicionamento
+
+ICP 1 - Operações de afiliados e infoprodutos: vender governança, payout accuracy, ativação e automação de rede.
+
+ICP 2 - Creator commerce e embaixadores: vender catálogo, links, campanhas, comissão, experiência mobile e inteligência de desempenho.
+
+ICP 3 - Canais B2B e representantes: vender registro de oportunidades, recorrência, atribuição, repasses e visibilidade gerencial.
+
+ICP 4 - Empresas enterprise: vender compliance, integração, trilha de auditoria, segurança e orquestração de canais com IA.
+
+Reposicionamento sugerido: usar MMN AI-to-AI como tese interna ou contextual, mas externamente priorizar termos como partner revenue infrastructure, affiliate operations, creator commerce OS e agentic commerce enablement.
+
+10. Métricas que investidores e grandes clientes vão observar
+
+Crescimento: ARR, MRR, expansão de receita, GMV e take rate.
+
+Qualidade da base: ativação, parceiros ativos, sellers ativos, creators ativos, churn logo e churn de contas.
+
+Eficiência: CAC payback, LTV/CAC, margem de contribuição por linha, custo computacional por agente e margem bruta ajustada.
+
+Confiança operacional: payout accuracy, tempo de disputa, taxa de contestação, incidentes de segurança e SLA de integração.
+
+Valor de IA: conversões assistidas por agente, redução de tempo operacional, uplift de produtividade e custo por automação bem-sucedida.
+
+Retenção estrutural: NRR, uso de múltiplos módulos, profundidade de integração e dependência do core de comissionamento.
+
+11. Matriz de riscos e mitigadores
+
+Risco
+
+Impacto
+
+Probabilidade
+
+Mitigador prioritário
+
+Ruído regulatório/reputacional associado a MMN
+
+Alto
+
+Médio
+
+Taxonomia comercial clara, compliance público, regras transparentes e foco em valor de software.
+
+Disputas de comissão e baixa confiança
+
+Alto
+
+Alto
+
+Motor versionado, logs auditáveis, reconciliação financeira e trilhas de aprovação.
+
+Escalada de custo computacional dos agentes
+
+Médio/Alto
+
+Médio
+
+Roteamento inteligente de modelos e métricas de custo por tarefa.
+
+Dívida técnica entre legado e novas camadas
+
+Alto
+
+Médio
+
+Arquitetura modular, eventos de domínio e refatoração orientada a valor.
+
+Fraude, abuso ou uso indevido de agentes
+
+Alto
+
+Médio
+
+Policy engine, rate limits, aprovação por contexto e detecção de anomalias.
+
+Mensagem de produto difícil de entender
+
+Médio
+
+Alto
+
+Reposicionamento por ICP, páginas segmentadas e casos de uso mais específicos.
+
+12. O que caracterizaria a Nexus como futura unicórnio
+
+Domínio de categoria: reconhecimento como infraestrutura-padrão para operações distribuídas de receita com IA.
+
+Retenção excepcional: alto NRR e forte dependência operacional do core.
+
+Expansão de margem: monetização eficiente da camada SaaS com uso disciplinado da camada de IA.
+
+Efeito de dados: quanto mais operações rodarem na Nexus, melhor a plataforma recomenda, detecta risco e prova ROI.
+
+Efeito de ecossistema: parceiros, integrações, consultorias, revendedores e marketplace de skills/agentes.
+
+Capacidade enterprise e internacionalização: readiness para grandes contas, múltiplos mercados, moedas e políticas.
+
+13. Protocolos de otimização da experiência do usuário
+
+Para sustentar crescimento com retenção, expansão e confiança, a evolução da experiência do usuário deve ser tratada como protocolo corporativo, não como melhoria cosmética. A seguir, um framework aplicável imediatamente.
+
+13.1 Princípios mandatórios
+
+Clareza antes de poder: a interface deve reduzir ambiguidade sobre ganhos, regras, status e próximos passos.
+
+Tempo para valor mínimo: o usuário deve entender e operar o primeiro fluxo crítico em menos de 10 minutos.
+
+Confiança verificável: cálculos, automações, intervenções e bloqueios devem ser explicáveis na interface.
+
+Autonomia segura: agentes podem sugerir ou executar, mas o usuário sempre enxerga contexto, impacto e rollback possível.
+
+Consistência multi-perfil: afiliado, parceiro, gestor, financeiro e admin precisam ter linguagem, navegação e permissões coerentes.
+
+13.2 Protocolos UX por domínio
+
+Domínio
+
+Protocolo mínimo
+
+Meta operacional
+
+Onboarding
+
+Wizard por ICP, checklist progressivo, dados pré-preenchidos e first-win guiado.
+
+Ativação em até 7 dias.
+
+Navegação
+
+Arquitetura da informação por objetivo e não por estrutura interna do sistema.
+
+Redução de tickets de orientação.
+
+Comissionamento
+
+Ledger legível, simulador, histórico de regra e justificativa de cálculo.
+
+Aumento de confiança e queda em disputas.
+
+Agentes
+
+Centro de comando com status, memória, permissões, logs e aprovação contextual.
+
+Adoção assistida sem medo operacional.
+
+Marketplace
+
+Descoberta, comparação, elegibilidade e recomendação transparente.
+
+Elevação de conversão e GMV.
+
+Analytics
+
+KPIs orientados a decisão, benchmark e insight acionável.
+
+Melhor gestão e upsell de inteligência.
+
+Suporte
+
+Ajuda contextual, base viva, playbooks e roteamento inteligente.
+
+Menor tempo médio de resolução.
+
+13.3 SLOs e critérios de aceite de experiência
+
+Web Vitals: LCP <= 2,5 s; INP <= 200 ms; CLS <= 0,10 nas jornadas core.
+
+Acessibilidade: conformidade WCAG 2.2 AA nos fluxos críticos.
+
+Conversão: pelo menos 80% dos usuários convidados devem concluir onboarding inicial sem suporte humano.
+
+Confiabilidade: taxa de erro front-end inferior a 1% nos fluxos de cadastro, comissão, payout e aprovação.
+
+Compreensão: testes de usabilidade devem confirmar entendimento de regra de comissão por pelo menos 90% da amostra-alvo.
+
+Auditabilidade: todas as ações de agentes com impacto financeiro ou comercial devem ser rastreáveis via interface.
+
+14. Estrutura recomendada de código e serviços
+
+Para viabilizar os protocolos acima, recomenda-se uma arquitetura de monorepo modular com fronteiras claras entre experiência, domínio, integração, governança e dados.
+
+14.1 Estrutura de pastas sugerida
+
+/apps
+
+  /web                 # portal principal React/Next.js
+
+  /admin               # console corporativo e governança
+
+  /partner-hub         # experiência de parceiros, creators e afiliados
+
+  /api                 # BFF e APIs públicas/internas
+
+  /worker              # filas, jobs e reconciliação
+
+  /legacy-bridge       # adaptadores para legado PHP
+
+/packages
+
+  /design-system       # tokens, componentes, padrões de acessibilidade
+
+  /domain-core         # entidades, casos de uso e políticas
+
+  /commission-engine   # regras, versionamento, simulação, ledger
+
+  /agent-runtime       # orquestração, skills, memória e guardrails
+
+  /event-contracts     # schemas de eventos e versionamento
+
+  /telemetry           # logs, traces, métricas e error tracking
+
+  /security            # RBAC, ABAC, secrets, policy engine
+
+  /analytics           # métricas, KPI tree e modelos semânticos
+
+  /integrations        # CRM, ERP, gateway, webhooks, ETL
+
+/infrastructure
+
+  /terraform           # IaC, ambientes, redes e segredos
+
+  /kubernetes          # deploys, autoscaling, jobs
+
+  /github-actions      # pipelines CI/CD
+
+  /observability       # Grafana, OTEL, alertas, dashboards
+
+/scripts
+
+  /quality             # Lighthouse, Playwright, axe, regressão visual
+
+  /release             # versionamento, changelog, rollout e rollback
+
+  /data                # seeds, saneamento, backfill e reconciliação
+
+/docs
+
+  /adr                 # architecture decision records
+
+  /runbooks            # incidentes, segurança, payout, agentes
+
+  /playbooks           # onboarding, ativação, sucesso e go-to-market
+
+14.2 Arquitetura lógica por domínio
+
+Camada de apresentação: web, admin e partner hub com BFF específico por jornada.
+
+Camada de domínio: regras de comissão, payout, campanhas, ofertas, identidade, agentes e analytics.
+
+Camada de integração: conectores e filas para CRM, ERP, gateways, antifraude e mensageria.
+
+Camada de governança: policy engine, auditoria, versionamento, trust center e approval workflows.
+
+Camada de dados: event bus, warehouse/lakehouse, feature store, catálogos analíticos e scorecards.
+
+15. Códigos-base e contratos técnicos prioritários
+
+15.1 Contrato de regra de comissão
+
+export interface CommissionRuleVersion {
+
+  id: string;
+
+  tenantId: string;
+
+  name: string;
+
+  version: number;
+
+  status: 'draft' | 'approved' | 'published' | 'archived';
+
+  effectiveFrom: string;
+
+  effectiveTo?: string;
+
+  conditions: Array<{
+
+    field: 'channel' | 'offer' | 'seller' | 'segment' | 'geo' | 'plan';
+
+    operator: 'eq' | 'in' | 'gte' | 'lte';
+
+    value: string | number | string[];
+
+  }>;
+
+  payouts: Array<{
+
+    beneficiaryType: 'affiliate' | 'partner' | 'manager' | 'house';
+
+    model: 'percentage' | 'fixed' | 'tiered' | 'recurring';
+
+    value: number;
+
+    recurrenceMonths?: number;
+
+  }>;
+
+  requiresApproval: boolean;
+
+  checksum: string;
+
+  createdBy: string;
+
+  approvedBy?: string;
+
+}
+
+15.2 Evento canônico de ledger e payout
+
+export interface CommissionLedgerEvent {
+
+  eventId: string;
+
+  tenantId: string;
+
+  occurredAt: string;
+
+  saleId: string;
+
+  orderId: string;
+
+  ruleVersionId: string;
+
+  participants: Array<{
+
+    actorId: string;
+
+    actorType: 'affiliate' | 'partner' | 'manager' | 'platform';
+
+    grossAmount: number;
+
+    commissionAmount: number;
+
+    currency: string;
+
+  }>;
+
+  explanation: {
+
+    matchedConditions: string[];
+
+    calculationSteps: string[];
+
+    traceId: string;
+
+  };
+
+  status: 'calculated' | 'reconciled' | 'paid' | 'contested' | 'reversed';
+
+}
+
+15.3 Contrato de execução de agente
+
+export interface AgentExecution {
+
+  executionId: string;
+
+  tenantId: string;
+
+  agentType: 'prospecting' | 'content' | 'compliance' | 'followup' | 'analytics';
+
+  objective: string;
+
+  inputContext: Record<string, unknown>;
+
+  permissions: string[];
+
+  policyVersion: string;
+
+  memoryScope: 'session' | 'tenant' | 'account' | 'campaign';
+
+  humanApprovalRequired: boolean;
+
+  actions: Array<{
+
+    tool: string;
+
+    intent: string;
+
+    status: 'planned' | 'executed' | 'blocked' | 'rolled_back';
+
+  }>;
+
+  outcome: {
+
+    result: string;
+
+    confidence: number;
+
+    costUsd: number;
+
+    latencyMs: number;
+
+  };
+
+  audit: {
+
+    traceId: string;
+
+    createdAt: string;
+
+    createdBy: string;
+
+  };
+
+}
+
+16. Scripts e automações essenciais
+
+16.1 Script de budget de performance
+
+{
+
+  "resourceSizes": [
+
+    { "resourceType": "script", "budget": 280 },
+
+    { "resourceType": "stylesheet", "budget": 90 },
+
+    { "resourceType": "image", "budget": 350 }
+
+  ],
+
+  "resourceCounts": [
+
+    { "resourceType": "third-party", "budget": 12 }
+
+  ],
+
+  "timings": [
+
+    { "metric": "interactive", "budget": 4000 },
+
+    { "metric": "largest-contentful-paint", "budget": 2500 }
+
+  ]
+
+}
+
+16.2 Script de teste UX com Playwright
+
+import { test, expect } from '@playwright/test';
+
+
+test('onboarding principal com first-win', async ({ page }) => {
+
+  await page.goto('/signup');
+
+  await page.getByLabel('Nome da empresa').fill('Tenant Demo');
+
+  await page.getByLabel('E-mail').fill('ops@tenantdemo.com');
+
+  await page.getByRole('button', { name: 'Criar ambiente' }).click();
+
+  await expect(page.getByText('Checklist de ativação')).toBeVisible();
+
+  await expect(page.getByText('Importar primeira oferta')).toBeVisible();
+
+  await expect(page.getByText('Conectar canal de pagamento')).toBeVisible();
+
+});
+
+16.3 Script de acessibilidade com axe
+
+import AxeBuilder from '@axe-core/playwright';
+
+import { test, expect } from '@playwright/test';
+
+
+test('dashboard sem violações críticas de acessibilidade', async ({ page }) => {
+
+  await page.goto('/dashboard');
+
+  const results = await new AxeBuilder({ page }).analyze();
+
+  const critical = results.violations.filter(v => v.impact === 'critical');
+
+  expect(critical).toEqual([]);
+
+});
+
+16.4 Pipeline CI/CD mínimo
+
+name: quality-gates
+
+on: [push, pull_request]
+
+
+jobs:
+
+  validate:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+
+        with:
+
+          node-version: 22
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - run: npm run test
+
+      - run: npm run test:e2e
+
+      - run: npm run test:a11y
+
+      - run: npm run lighthouse:ci
+
+16.5 Instrumentação OpenTelemetry
+
+import { NodeSDK } from '@opentelemetry/sdk-node';
+
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+
+
+const sdk = new NodeSDK({
+
+  traceExporter: new OTLPTraceExporter({
+
+    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+
+  }),
+
+  instrumentations: [getNodeAutoInstrumentations()],
+
+  serviceName: 'nexus-api'
+
+});
+
+
+sdk.start();
+
+16.6 Exemplo de feature flag para rollout controlado
+
+export const featureFlags = {
+
+  partnerHubV2: {
+
+    default: false,
+
+    rollout: [
+
+      { segment: 'internal', percentage: 100 },
+
+      { segment: 'beta-tenants', percentage: 30 },
+
+      { segment: 'general', percentage: 0 }
+
+    ]
+
+  },
+
+  agentAutopilotPayoutReview: {
+
+    default: false,
+
+    requiresApproval: true
+
+  }
+
+};
+
+16.7 Política de guarda operacional para agentes
+
+export function mayExecuteAction(context: AgentExecutionContext): boolean {
+
+  if (context.impactDomain === 'financial' && !context.hasHumanApproval) return false;
+
+  if (context.tenantRiskLevel === 'high' && context.action === 'mass_outreach') return false;
+
+  if (!context.permissions.includes(context.action)) return false;
+
+  return true;
+
+}
+
+17. Protocolos de observabilidade e dados
+
+A camada de dados deve nascer preparada para provar valor de produto, saúde operacional e segurança. Recomenda-se o seguinte conjunto mínimo de protocolos:
+
+Schema registry para eventos de produto, comissionamento, payout, campanhas, agentes e segurança.
+
+Trace ID obrigatório do front-end ao back-end para todos os fluxos críticos.
+
+Dashboards executivos e operacionais separados: visão de negócio, visão de confiabilidade e visão de custo computacional.
+
+Alertas por anomalia em payout, queda de ativação, degradação de LCP/INP, aumento de erro 5xx e picos de custo de inferência.
+
+Catálogo semântico de métricas com owner, fórmula, periodicidade, fonte e SLA de atualização.
+
+18. Plano de transição para Startup Unicórnio
+
+18.1 Transição organizacional
+
+Criar operating cadence trimestral com OKRs integrando produto, engenharia, revenue, customer success, finanças e compliance.
+
+Estabelecer comitê de arquitetura e comitê de governança de IA com atas, owners e critérios de escalonamento.
+
+Adotar modelo de priorização por impacto em ARR, confiança operacional, redução de risco e velocidade de ativação.
+
+Instituir ADRs obrigatórios para decisões de domínio crítico, integrações e políticas de rollout.
+
+Conectar remuneração variável de lideranças a métricas de retenção, payout accuracy, estabilidade e expansão de contas.
+
+18.2 Transição técnica
+
+Criar mapa do legado e plano de estrangulamento progressivo com APIs anti-corrupção entre PHP e novos serviços.
+
+Transformar motor de comissão, payout e auditoria em domínios protegidos com backlog dedicado.
+
+Padronizar design system, contratos de eventos e observabilidade antes de acelerar novas features.
+
+Migrar experiências prioritárias para jornadas orientadas a objetivo, reduzindo navegação herdada da estrutura interna.
+
+Adotar release trains quinzenais com feature flags, canary release e rollback automatizado.
+
+18.3 Transição de mercado e marca
+
+Reescrever o site público por ICP, valor de negócio e prova de confiança.
+
+Publicar trust center, benchmark de performance e manifesto de governança algorítmica.
+
+Criar narrativa de categoria compatível com enterprise sales e investidores institucionais.
+
+Desenvolver pacotes de entrada, expansão e enterprise com escopo e SLA claramente definidos.
+
+Trocar ambiguidade conceitual por taxonomia simples, repetível e escalável em marketing, vendas e implantação.
+
+19. Plano executivo recomendado para os próximos 90 dias
+
+Definir a taxonomia oficial do portfólio e reescrever a comunicação pública com menos ambiguidade entre SaaS, marketplace, carreira e rede.
+
+Priorizar um trust center público com segurança, LGPD, auditoria, payouts e regras de comissão.
+
+Escolher 3 ICPs prioritários e construir narrativa, demo e estudo de caso específicos para cada um.
+
+Modelar a árvore de métricas executivas e instrumentar coleta desde já.
+
+Mapear arquitetura atual, dependências legadas, fluxos críticos e backlog de refatoração orientado a risco e valor.
+
+Definir especificação funcional do Commission Rules Engine e do console de observabilidade.
+
+Criar comitê de governança de IA para políticas de uso, logs, revisão humana e segurança operacional.
+
+Implantar quality gates mínimos: lint, testes, acessibilidade, performance budget e rollback seguro.
+
+Selecionar 1 jornada de onboarding e 1 jornada de payout para redesign orientado a confiança e tempo para valor.
+
+Publicar um scorecard mensal executivo com métricas de produto, confiabilidade, adoção e custo de IA.
+
+20. Conclusão
+
+A Nexus Affil'IA'te mostra alinhamento real com uma mudança estrutural do mercado: a passagem de operações comerciais distribuídas e manuais para redes instrumentadas, automatizadas e progressivamente agentic.
+
+Há tese, diferenciação narrativa, múltiplas avenidas de monetização e uma dor relevante a ser resolvida. O fator que definirá sua grandeza não é a ousadia conceitual, e sim a excelência na operacionalização dessa ousadia.
+
+Se a Nexus simplificar sua proposta, elevar a governança ao nível enterprise, transformar o motor de comissão em infraestrutura crítica, publicar prova de valor e construir uma camada de dados verdadeiramente unificada, ela poderá tornar-se uma peça histórica na profissionalização do agentic commerce e das redes modernas de receita.
+
+Em síntese: a plataforma tem condições de ser um marco corporativo e trilhar caminho plausível rumo ao status de unicórnio. O roadmap existe. O mercado mostra abertura. A vantagem agora depende de execução disciplinada, confiança radical e foco em categoria.
+
+
+
+Nexus Affil'IA'te
+Tese Doutoral Estratégico-Técnica para Sustentar a Evolução de uma Infraestrutura de Agentic Revenue Networks
+
+Documento executivo editável em Microsoft Word | Formato DOCX
+Elaborado em pt-BR em 16/06/2026, com base no briefing fornecido, em sinais públicos de mercado e em uma modelagem analítica de padrão doutoral aplicada a produto, arquitetura, governança e escala.
+
+Organização analisada
+
+Nexus Affil'IA'te | ecossistema oneverso.com.br
+
+Natureza do documento
+
+Tese de defesa estratégica, técnica e econômico-institucional
+
+Objetivo
+
+Fundamentar, otimizar e disciplinar a rota de evolução rumo a uma startup de categoria global
+
+Escopo
+
+Posicionamento, mercado, arquitetura, código, UX, monetização, governança, riscos e roadmap
+
+Data
+
+16/06/2026
+
+Idioma
+
+Português do Brasil
+
+Versão 1.0 | Preparado a partir de evidências públicas, hipóteses estruturadas e princípios de governança compatíveis com escala enterprise.
+
+
+oneverso.com.br | Tese estratégica-técnica Nexus Affil'IA'te | Página 
+
+Mapa de leitura
+
+Resumo executivo e argumento central
+
+Fundamentos teóricos: por que o mercado converge para infraestruturas AI-native de receita
+
+Reenquadramento estratégico: de MMN AI-to-AI para agentic revenue network
+
+Modelo econômico, defensibilidade e tese de unicórnio
+
+Arquitetura-alvo, governança, dados e segurança
+
+Protocolos de experiência do usuário e adoção empresarial
+
+Estrutura recomendada de código, serviços e operações
+
+Roadmap de 0 a 36 meses com prioridades executivas
+
+Tese conclusiva e agenda de validação contínua
+
+Esta tese foi escrita em linguagem executiva-acadêmica para ser útil simultaneamente a fundadores, investidores, líderes de produto, engenharia, operação, compliance e potenciais parceiros estratégicos.
+
+1. Resumo executivo e proposicao central
+
+A tese defendida neste documento e direta: a Nexus Affil'IA'te possui os elementos conceituais corretos para emergir como uma infraestrutura AI-native de receita distribuida, mas seu sucesso historico dependera menos do brilho narrativo e mais da sua capacidade de transformar esse discurso em uma arquitetura operacional confiavel, auditavel, integravel e economicamente previsivel. O valor extraordinario nao reside apenas em operar afiliacao ou automacao; reside em tornar-se o sistema de coordenacao de redes de receita humanas e agenticas em um mercado que tende a substituir fluxos fragmentados por plataformas governadas.
+
+A relevancia da Nexus aumenta porque ela atua na zona de convergencia entre affiliate technology, partner operations, creator commerce, agentic commerce e revenue automation. Em vez de competir unicamente como software de afiliados, a empresa pode ocupar um espaco mais nobre: o de infraestrutura de agentic revenue networks. Esse reposicionamento amplia o mercado enderecavel, melhora o encaixe com vendas enterprise e reduz a ambiguidade reputacional associada a taxonomias mais estreitas ou mal compreendidas.
+
+A tese de categoria esta correta: a Nexus endereca coordenacao, rastreabilidade, atribuicao e execucao comercial em redes distribuidas.
+
+O gargalo principal e a confianca operacional: comissao, payout, auditoria, seguranca e explicabilidade precisam virar produto de primeira classe.
+
+A fronteira competitiva nao sera apenas IA generativa, mas sim governanca de agentes, dados proprietarios, integracoes profundas e switching costs.
+
+O caminho para uma tese de unicornio depende da soma entre retencao estrutural, expansao de margem, telemetria acumulada e ecossistema.
+
+2. Problema de pesquisa, hipotese e metodo
+
+Problema de pesquisa: como uma plataforma nascida na intersecao entre afiliacao, rede, marketplace e IA pode evoluir de proposta promissora para infraestrutura de padrao corporativo e categoria global? Hipotese central: plataformas de receita distribuida capturam valor excepcional quando convertem tres assimetrias em vantagem composta: confianca de calculo, inteligencia operacional e coordenação de ecossistema. Metodo: analise estrategico-tecnica baseada no briefing fornecido, leitura de sinais publicos associados a agentic commerce, principios de arquitetura de software escalavel, frameworks de governanca e interpretacao de tendencias de IA em 2026.
+
+Examinar a coerencia entre a proposta atual da Nexus e a proxima onda de comercio agentico.
+
+Testar a robustez da tese de valor sob a lente de produto, economia de plataforma, seguranca e escalabilidade.
+
+Converter a narrativa em desenho operacional, codigo, protocolos e etapas de implementacao executavel.
+
+Definir em que condicoes a empresa deixa de ser apenas promissora e passa a apresentar sinais reais de candidatura a startup unicornio.
+
+3. Fundamentos teoricos: por que o mercado converge para agentic revenue networks
+
+A literatura recente de mercado e os sinais competitivos de 2025-2026 apontam uma transicao clara: a economia digital esta saindo de automacoes reativas e entrando em sistemas semi-autonomos capazes de perceber contexto, consultar memoria, tomar decisoes delimitadas por politica e acionar ferramentas em multiplos canais. Essa evolucao cria um novo requisito organizacional. Empresas nao querem apenas respostas; querem execucao confiavel com trilha de auditoria. No contexto de canais, afiliacao, creators, representantes e redes distribuidas, isso eleva o valor da coordenacao por software.
+
+Tres vetores sustentam essa convergencia. Primeiro, a camada de IA deixa de ser periferica e torna-se operacional, aproximando marketing, vendas, suporte, compliance e analise. Segundo, a jornada comercial migra para interfaces conversacionais, recomendacao automatizada e alocacao dinamica de oportunidades. Terceiro, ecossistemas de receita passam a exigir rastreabilidade financeira, reputacional e regulatoria. Em outras palavras, a proxima onda nao premiara apenas quem automatiza tarefas, mas quem combina autonomia com confianca institucional.
+
+A IA expande produtividade, mas tambem multiplica o custo de erro quando incide sobre fluxo financeiro ou reputacao de canal.
+
+Em mercados de comissionamento, a confianca no calculo e mais importante do que a sofisticação da interface.
+
+Sistemas com dados historicos, policy engine e trilha de eventos tendem a capturar vantagem cumulativa frente a softwares superficiais.
+
+O agente comercial do futuro opera melhor quando inserido em uma plataforma de regras, limites e observabilidade.
+
+4. Reenquadramento estrategico: da narrativa MMN AI-to-AI a uma categoria superior
+
+A expressao MMN AI-to-AI tem valor interno de provocacao e identidade, mas apresenta ruído externo quando confrontada com buyers pragmáticos, times de procurement ou investidores institucionais. O termo pode sugerir complexidade conceitual excessiva ou associacoes reputacionais indevidas, mesmo quando a proposta real do produto e mais sofisticada. Por isso, a tese desta defesa recomenda um reenquadramento disciplinado: a Nexus deve se posicionar externamente como infraestrutura de agentic revenue networks, software de affiliate and partner operations AI-native e camada de orquestracao de creator commerce com governanca.
+
+Esse movimento nao nega a origem; ele a transcende. Em estrategia de categoria, o nome importa porque determina com quem a empresa disputa budget, quais comparativos entram na mesa e que expectativas de risco sao acionadas no processo comercial. A transicao semantica correta aumenta a legibilidade do produto, reduz custo de educacao do mercado e melhora a capacidade de segmentar ofertas por ICP.
+
+Dimensao
+
+Estado atual percebido
+
+Risco
+
+Direcao recomendada
+
+Narrativa
+
+Forte, inovadora e ambiciosa
+
+Alta complexidade para buyers
+
+Traduzir IA-native em beneficios simples por ICP
+
+Produto
+
+SaaS + marketplace + agentes + rede
+
+Sobrecarga de entendimento
+
+Modularizar jornadas e pacotes
+
+Governanca
+
+Promissora, mas implicitamente comunicada
+
+Baixa prova de confianca
+
+Trust center, logs, aprovacoes e auditoria
+
+Go-to-market
+
+Categoria emergente
+
+Comparacoes improprias
+
+Reposicionamento para partner revenue infrastructure
+
+5. Tese economica: por que a Nexus pode construir defensibilidade de classe mundial
+
+Uma tese de unicornio nao se sustenta por retorica de futuro; sustenta-se por mecanismos de acumulacao de valor. No caso Nexus, esses mecanismos existem em estado potencial. O primeiro e a captura de switching costs: quando a plataforma se torna sistema de registro de regras, atribuicoes, calculos, historicos e interacoes, o custo de substituicao sobe drasticamente. O segundo e o efeito de dados: quanto mais operacoes passam pela infraestrutura, melhores se tornam a recomendacao, a deteccao de risco, a calibragem de payout e a leitura de ROI. O terceiro e o efeito de ecossistema: integracoes, parceiros de implementacao, skills, templates, agentes e conectores geram expansao indireta.
+
+A monetizacao tambem e estruturalmente robusta porque admite camadas complementares: assinatura de plataforma, take rate transacional, modulos premium, analiticos pagos, servicos de implementacao, marketplace e possivelmente billing associado a agentes. A condicao para que esse modelo seja saudavel, contudo, e a disciplina de unit economics por segmento. Sem instrumentacao forte, o crescimento pode mascarar subsidio excessivo de inferencia, suporte ou onboarding.
+
+Receita recorrente via plataforma principal e modulos enterprise.
+
+Receita transacional via marketplace, repasses, recorrencia e rede.
+
+Receita de inteligencia via benchmark, scorecards, deteccao de anomalias e recomendacoes.
+
+Receita ecossistemica via integradores, parceiros certificados e marketplace de skills/agentes.
+
+6. Arquitetura-alvo: a forma tecnica adequada ao argumento estrategico
+
+A arquitetura proposta precisa refletir a natureza dual da empresa: transacional e agentica. Isso significa proteger o nucleo financeiro e contratual enquanto habilita camadas de autonomia controlada. A existencia de legado PHP combinada com expansao em React e TypeScript nao e um problema em si; o problema seria permitir que essa convivência evolua sem fronteiras claras. A tese arquitetural recomendada e a de estrangulamento progressivo do legado, mediado por adaptadores anti-corrupcao, contratos de dominio versionados e um event backbone comum.
+
+Separar core transacional, commission engine, agent runtime, integracoes, analytics e governanca.
+
+Expor regras e eventos criticos por APIs e contratos versionados, nao por acoplamentos tacitos.
+
+Impedir que a camada de IA execute acoes de impacto financeiro sem policy engine e registro auditavel.
+
+Instrumentar observabilidade por tenant, por canal, por agente, por regra e por fluxo de receita.
+
+Planejar BFFs por jornada para reduzir complexidade de interface e acelerar evolucao de UX.
+
+6.1 Estrutura recomendada de codigo
+
+A monorepo modular descrita no documento-base e adequada porque torna explicitas as fronteiras entre experiencia, dominio, integracao e infraestrutura. Essa clareza organiza ownership, reduz regressao sistêmica e aumenta a confianca em deploys evolutivos.
+
+/apps
+  /web
+  /admin
+  /partner-hub
+  /api
+  /worker
+  /legacy-bridge
+/packages
+  /design-system
+  /domain-core
+  /commission-engine
+  /agent-runtime
+  /event-contracts
+  /telemetry
+  /security
+  /analytics
+  /integrations
+/infrastructure
+  /terraform
+  /kubernetes
+  /github-actions
+  /observability
+/scripts
+  /quality
+  /release
+  /data
+/docs
+  /adr
+  /runbooks
+  /playbooks
+
+6.2 Contratos tecnicos criticos
+
+Do ponto de vista de engenharia, tres contratos merecem prioridade absoluta: versionamento de regra de comissao, evento canonico de ledger/payout e contrato de execucao de agente. Eles sao essenciais porque traduzem em software os atributos que definem confianca: regra, evidencia e responsabilidade.
+
+CommissionRuleVersion: documento vivo de regra, status, vigencia, checksum e aprovacao.
+
+CommissionLedgerEvent: evento imutavel que prova como a comissao foi calculada, reconciliada, paga ou contestada.
+
+AgentExecution: contrato de permissao, memoria, politica, custo, latencia, acoes e rastro de auditoria para qualquer agente.
+
+7. Governanca como vantagem competitiva e nao como friccao
+
+No universo de IA aplicada a receita, governanca nao deve ser tratada como area defensiva de controle posterior, e sim como multiplicador de escala comercial. Grandes contas compram software mais rapidamente quando percebem maturidade de seguranca, segregacao de funcao, logs imutaveis, trilha de aprovacao e modelos explicaveis. Portanto, transformar governanca em produto visivel reduz objeções, acelera procurement e protege margem de longo prazo.
+
+RBAC e ABAC combinados para separar papel, contexto, impacto e risco da acao.
+
+Aprovacao humana obrigatoria para qualquer automacao com efeito financeiro, contratual ou reputacional elevado.
+
+Schema registry e trace ID obrigatorio ponta a ponta nos fluxos de cadastro, atribuicao, payout e contestacao.
+
+Controles LGPD com consentimento, finalidade, retencao e trilha de acesso por dado sensivel.
+
+Comite de governanca de IA para revisar politicas de uso, incidentes, thresholds de risco e fairness operacional.
+
+8. UX de confianca: a interface como instrumento de legitimidade
+
+Em plataformas de receita distribuida, experiencia do usuario nao e apenas questao de beleza ou conveniencia. Ela constitui a forma pela qual a organizacao percebe se o sistema merece confianca. A tela que explica uma comissao, a trilha que mostra uma aprovacao, o wizard que acelera onboarding e o log que explica uma decisao de agente fazem parte do proprio produto financeiro-operacional. A melhor UX aqui nao e a mais chamativa; e a mais inteligivel.
+
+Clareza antes de poder: ganhos, regras, status e proximos passos precisam ser obvios.
+
+Tempo para valor: o primeiro fluxo critico deve ser concluido em menos de 10 minutos por ICP prioritario.
+
+Confianca verificavel: toda regra de comissao deve ter simulador, historico e justificativa de calculo legivel.
+
+Autonomia segura: o agente pode sugerir ou executar, mas sempre com contexto, limite e rollback.
+
+Consistencia multi-perfil: afiliado, creator, parceiro, financeiro e admin precisam compartilhar semantica central.
+
+Dominio
+
+Protocolo minimo
+
+Indicador alvo
+
+Onboarding
+
+Wizard por ICP com checklist progressivo e first-win guiado
+
+Ativacao em ate 7 dias
+
+Comissionamento
+
+Ledger legivel, simulador, historico e disputas assistidas
+
+Queda sustentada de contestacoes
+
+Agentes
+
+Centro de comando com logs, memoria e permissoes
+
+Aumento de uso com menor medo operacional
+
+Analytics
+
+KPIs acionaveis, benchmark e insight contextual
+
+Melhor tomada de decisao e upsell
+
+Suporte
+
+Ajuda contextual e roteamento inteligente
+
+Menor tempo medio de resolucao
+
+9. Roadmap de evolucao: o caminho disciplinado de 0 a 36 meses
+
+A ambicao de escala precisa ser decomposta em ondas cumulativas. Roadmaps genericos falham porque misturam reinvencao, manutencao e marketing sem criterio de risco. A proposta abaixo prioriza primeiro a confianca, depois a interoperabilidade, em seguida a diferenciacao de categoria e por fim a plataforma de ecossistema.
+
+9.1 Onda 1 | 0 a 6 meses
+
+Objetivo: reduzir ambiguidade externa e elevar rapidamente a confianca operacional.
+
+Reescrever narrativa publica por ICP e por valor economico percebido.
+
+Publicar trust center com payout, auditoria, seguranca, antifraude e LGPD.
+
+Instrumentar KPI tree executiva: ARR, GMV, take rate, ativacao, payout accuracy, NRR e custo de IA.
+
+Escolher uma jornada de onboarding e uma jornada de payout para redesign profundo orientado a confianca.
+
+9.2 Onda 2 | 6 a 12 meses
+
+Objetivo: construir infraestrutura de escala operacional e integracao corporativa.
+
+Commission Rules Engine versionado com simulacao, aprovacao e rollback controlado.
+
+APIs, webhooks e conectores para CRM, ERP, gateways e analytics.
+
+Console de observabilidade por tenant com alertas e reconciliacao.
+
+SSO, perfis multiunidade e trilhas de auditoria profundas.
+
+9.3 Onda 3 | 12 a 24 meses
+
+Objetivo: diferenciar-se como categoria e consolidar vantagem de dados.
+
+Agentes especializados por papel, politica e objetivo.
+
+Recommendations engine para alocacao, ofertas, next best action e prevenção de churn.
+
+Benchmarking preservando privacidade e scorecards de maturidade.
+
+Hub mobile-first para parceiros, creators e representantes.
+
+9.4 Onda 4 | 24 a 36 meses
+
+Objetivo: transformar a plataforma em ecossistema escalavel e premium.
+
+Marketplace de agentes e skills com certificacao, billing e governanca.
+
+Produtos analiticos premium alimentados por telemetria acumulada.
+
+Modulos enterprise globais: multi-idioma, multi-moeda, compliance setorial e territórios.
+
+Governanca corporativa e controles internos prontos para captacao institucional relevante.
+
+10. Prova de tese: o que precisara ser verdadeiro para a visao se sustentar
+
+Toda tese estrategica seria incompleta sem criterios de falsificacao. A visao defendida neste trabalho sera fortalecida se a Nexus demonstrar que o crescimento vem acompanhado por queda de disputas, aumento de payout accuracy, reducao de tempo operacional, maior profundidade de integracao e uso crescente de multiplos modulos pela mesma conta. Por outro lado, a tese enfraquece se a camada de IA aumentar custo sem melhorar eficiencia, se o produto permanecer confuso para buyers ou se o core de comissionamento continuar pouco explicavel.
+
+Validar ROI por ICP com estudos de caso auditaveis antes/depois.
+
+Medir custo computacional por agente, por tarefa e por resultado bem-sucedido.
+
+Provar que governanca melhora taxa de fechamento, expansao e retencao, em vez de apenas atrasar entregas.
+
+Mostrar que o reposicionamento de categoria reduz friccao comercial e amplia ticket medio.
+
+Evidenciar que a camada de dados acumulada aumenta recomendacao, seguranca e decisao gerencial.
+
+11. Tese de unicórnio: em que condicoes a Nexus pode tornar-se historica
+
+Uma empresa se aproxima do status de unicornio quando deixa de vender uma funcionalidade e passa a operar um padrao de mercado. No caso Nexus, isso ocorrera se a companhia se tornar a camada de coordenacao confiavel para receitas distribuidas mediadas por pessoas e agentes. Esse padrao exige cinco propriedades simultaneas: dominio de categoria, retencao excepcional, monetizacao multicamadas, efeito de dados e prontidao enterprise. O diferencial nao sera apenas IA; sera IA dentro de uma infraestrutura confiavel de regra, evidencia e execucao.
+
+Em linguagem de investimento, a empresa precisa demonstrar que: (a) resolve dor recorrente e estrutural; (b) melhora economia da operacao do cliente; (c) acumula dados de alto valor e baixa replicabilidade; (d) cria switching costs crescentes; e (e) pode expandir de forma internacionalmente inteligivel. Em linguagem tecnologica, isso significa que o commission engine, o ledger, os eventos, as politicas e os agentes precisam operar como um sistema nervoso corporativo coeso.
+
+12. Agenda executiva para os proximos 90 dias
+
+A principal virtude de uma tese de alto nivel e a sua capacidade de se converter em decisoes imediatamente acionaveis. Abaixo esta a agenda de maior retorno estrategico para o horizonte de 90 dias.
+
+Definir taxonomia oficial do portfólio e reescrever a comunicacao publica por ICP.
+
+Publicar trust center com payout, seguranca, LGPD, auditoria e antifraude.
+
+Especificar funcionalmente o Commission Rules Engine e o console de observabilidade.
+
+Instrumentar KPI tree executiva e scorecard mensal de produto, confiabilidade e custo de IA.
+
+Criar comite de arquitetura e governanca de IA com owners, atas e thresholds de escalonamento.
+
+Mapear dependencias legadas e iniciar plano de estrangulamento arquitetural.
+
+Implantar quality gates minimos: lint, typecheck, testes, a11y, performance budget, rollout e rollback.
+
+Redesenhar uma jornada core de onboarding e uma de payout com criterio de tempo para valor e confianca.
+
+13. Conclusao
+
+A defesa aqui apresentada sustenta que a Nexus Affil'IA'te nao representa apenas uma combinacao interessante de afiliacao com IA. Ela sinaliza a possibilidade de uma nova camada de infraestrutura para coordenacao de redes de receita em um ambiente em que interacoes humanas e agentes passam a coexistir em escala. O caminho plausivel rumo a relevancia historica existe, mas exige disciplina rara: simplificar a mensagem, blindar o core financeiro, elevar a governanca ao status de produto, capturar telemetria de valor e modularizar a arquitetura para expandir sem colapsar.
+
+Em sintese, a visao nao apenas pode ser defendida; ela pode ser fortalecida. O universo de IA oferece o vento de cauda, mas nao substitui execucao. A Nexus tem a oportunidade de converter narrativa futurista em confianca operacional radical. Se fizer isso com consistencia, podera deixar de ser percebida como uma aposta ousada e passar a ser reconhecida como uma das infraestruturas definidoras do agentic commerce e das redes modernas de receita.
+
+
+
+Referencias e base metodologica
+
+Este documento foi elaborado a partir do briefing fornecido pelo solicitante, de observacoes sobre paginas publicas disponiveis em 16/06/2026 e de sinais externos de mercado relacionados a IA agentica, comercio conversacional e operacoes distribuidas de receita. Nao se declara auditoria interna do sistema protegido por autenticacao. Recomenda-se, antes de qualquer decisao de investimento, M&A ou captação institucional, complementar esta tese com entrevistas, metricas internas, testes funcionais autenticados e benchmarking competitivo aprofundado.
+
+oneverso.com.br - pagina principal: https://www.oneverso.com.br/
+
+Nexus Affil'IA'te / marketplaces: https://oneverso.com.br/marketplaces
+
+HubSpot Brasil - tendencias de vendas: https://br.hubspot.com/blog/sales/tendencias-de-vendas-adaptar
+
+Very Good Security - trends in agentic commerce for 2026: https://www.verygoodsecurity.com/blog/posts/trends-in-agentic-commerce-for-2026
+
+commercetools - AI trends shaping agentic commerce: https://commercetools.com/blog/ai-trends-shaping-agentic-commerce
+
+Nota final de metodo: este texto foi propositalmente estruturado como tese doutoral aplicada, com densidade argumentativa, disciplina conceitual e foco de implementacao, para permitir seu uso tanto como peca de defesa da visao quanto como documento orientador de arquitetura, produto, governanca e captação.
+
+
+Nexus Affil'IA'te
+
+Apontamentos estrategicos que posicionam a empresa como startup com grande potencial de rentabilidade e lucratividade
+
+Documento executivo editavel em Microsoft Word | Formato DOCX
+Baseado na tese estrategico-tecnica fornecida pelo solicitante
+Idioma: Portugues do Brasil | Data: 16/06/2026 | Versao 1.0
+
+Finalidade. Este documento consolida, em formato objetivo e orientado a negocio, os principais argumentos que sustentam a percepcao da Nexus Affil'IA'te como uma startup com alto potencial de geracao de receita, expansao de margem e lucratividade estrutural. O foco esta em demonstrar por que a companhia pode capturar valor economico relevante ao operar como infraestrutura AI-native de agentic revenue networks.
+
+1. Tese central de rentabilidade
+
+A Nexus atua em um ponto de convergencia de alto valor entre affiliate technology, partner operations, creator commerce, automacao comercial e IA agentica.
+
+Essa posicao permite monetizacao sobre fluxos recorrentes e transacionais, o que amplia o potencial de receita sem depender de uma unica linha de negocio.
+
+Se o core de comissionamento, payout, auditoria e integracoes se tornar confiavel e escalavel, a empresa passa a capturar valor como infraestrutura, e nao apenas como ferramenta tatica.
+
+Infraestruturas de receita com papel operacional critico tendem a apresentar maior retencao, ticket medio crescente e melhor capacidade de expandir margem ao longo do tempo.
+
+2. Apontamentos que reforcam o potencial de receita
+
+Mercado em expansao e timing favoravel. A digitalizacao da jornada comercial, o crescimento do creator economy e a evolucao para commerce com agentes criam um contexto em que plataformas de coordenacao de receita ganham relevancia estrutural.
+
+Modelo de receita multicamadas. A Nexus pode combinar assinatura SaaS, take rate transacional, modulos premium, servicos de implementacao, analytics pagos, billing de agentes e receitas oriundas de marketplace.
+
+Capacidade de upsell e cross-sell. Clientes inicialmente atraidos por afiliacao ou payout podem evoluir para modulos de analytics, governanca, automacao, agentes especializados e integracoes enterprise.
+
+Expansao por ecossistema. Parceiros de implementacao, conectores, templates, skills e agentes certificados ampliam distribuicao comercial com menor dependencia de equipe propria.
+
+Potencial de internacionalizacao. A tese de categoria e inteligivel fora do Brasil quando traduzida como partner revenue infrastructure ou agentic revenue network, abrindo espaco para crescimento geografico.
+
+3. Apontamentos que reforcam o potencial de lucratividade
+
+Margem incremental elevada apos estabilizacao do core. Uma vez que ledger, regras de comissao, payout e governanca estejam consolidados, novas contas e novos modulos tendem a escalar com custo marginal relativamente menor.
+
+Reducao de custo operacional do cliente. Ao automatizar calculo, auditoria, distribuicao de comissao, conciliacao e monitoramento, a Nexus melhora a economia do cliente e ganha espaco para capturar parte desse valor via pricing.
+
+Dados como ampliador de margem. Telemetria historica melhora recomendacao, prevencao de fraude, calibragem de payout e eficiencia de agentes, o que aumenta resultado sem crescer custo na mesma proporcao.
+
+Switching costs crescentes. Quando a plataforma se torna sistema de registro de regras, historicos, trilhas e relacoes de canal, a substituicao se torna mais cara para o cliente e reduz churn.
+
+Governanca como acelerador comercial. Trust center, logs, aprovacoes, rastreabilidade e conformidade LGPD reduzem friccao em vendas enterprise, encurtam objeções e ajudam a proteger margem de longo prazo.
+
+4. Por que a Nexus pode operar com economics superiores
+
+Alavanca
+
+Impacto na receita
+
+Impacto na margem
+
+Sinal de maturidade
+
+Assinatura SaaS
+
+Previsibilidade de ARR
+
+Dilui custo fixo com escala
+
+Crescimento de MRR e baixa evasao
+
+Take rate transacional
+
+Captura valor sobre GMV e recorrencia
+
+Margem melhora com automacao
+
+Aumento de GMV processado
+
+Modulos premium
+
+Eleva ARPA e ticket medio
+
+Alta margem sobre base instalada
+
+Aumento de attach rate
+
+Analytics e benchmarking
+
+Cria nova linha de receita
+
+Produto de alto valor percebido
+
+Uso recorrente por liderancas
+
+Marketplace de agentes/skills
+
+Expansao ecossistemica
+
+Escala com menor CAC incremental
+
+Aumento de parceiros ativos
+
+Integracoes enterprise
+
+Amplia win rate em contas maiores
+
+Melhor retencao e NRR
+
+Crescimento de ACV
+
+5. Elementos de defensibilidade que sustentam lucro de longo prazo
+
+Core financeiro explicavel: regras versionadas, ledger imutavel, reconciliacao e auditoria.
+
+Base de dados operacional proprietaria: historico de performance, atribuicao, payout, fraude e comportamento de rede.
+
+Integracoes profundas com CRM, ERP, gateways, analytics e ambientes enterprise.
+
+Governanca de agentes com policy engine, permissao, limites de acao e trilha auditavel.
+
+Efeito de ecossistema por meio de parceiros, conectores, skills e servicos certificados.
+
+6. Condicoes para converter potencial em lucratividade real
+
+Reposicionar a narrativa externa para uma categoria mais clara, vendavel e enterprise-ready.
+
+Transformar payout accuracy, auditoria e explicabilidade em atributos centrais de produto.
+
+Controlar custo de inferencia e custo operacional por agente, por fluxo e por cliente.
+
+Estabelecer KPI tree executiva com foco em ARR, NRR, GMV, take rate, ativacao, custo de IA e contestacoes.
+
+Priorizar jornadas de onboarding e payout com tempo para valor rapido e confianca verificavel.
+
+Executar o estrangulamento progressivo do legado sem comprometer estabilidade do negocio.
+
+7. Riscos que precisam ser bem governados
+
+Complexidade excessiva de narrativa. Se o mercado nao compreender rapidamente o valor do produto, o custo de venda aumenta e o crescimento comercial desacelera.
+
+Baixa explicabilidade no core de comissao. Contestacoes, desconfiança e retrabalho corroem margem e podem limitar expansao enterprise.
+
+Custo de IA sem disciplina. Uso indiscriminado de agentes e inferencia pode consumir margem sem gerar ROI proporcional.
+
+Legado sem fronteiras claras. Acoplamentos tacitos elevam custo de manutencao e reduzem velocidade de evolucao.
+
+8. Leitura executiva final
+
+Conclusao. A Nexus Affil'IA'te apresenta caracteristicas tipicas de uma startup com elevado potencial de rentabilidade e lucratividade porque combina: mercado em expansao, modelo de receita multicamadas, possibilidade de margens crescentes, switching costs relevantes, uso estrategico de dados e aderencia a demandas enterprise por governanca e confianca. Em termos economicos, a companhia pode evoluir de software funcional para infraestrutura critica de coordenacao de receita. Se executar com disciplina tecnica e comercial, sua capacidade de capturar valor tende a aumentar de forma desproporcional ao crescimento de custo operacional.
+
+Sintese para investidores e decisores. O principal argumento favoravel nao e apenas que a Nexus pode crescer; e que ela pode crescer com qualidade de receita, capacidade de expansao de margem e bases concretas para lucratividade estrutural de longo prazo.
+
+9. Referencias publicas mencionadas na tese-base
+
+oneverso.com.br - pagina principal: https://www.oneverso.com.br/
+
+Nexus Affil'IA'te / marketplaces: https://oneverso.com.br/marketplaces
+
+HubSpot Brasil - tendencias de vendas: https://br.hubspot.com/blog/sales/tendencias-de-vendas-adaptar
+
+Very Good Security - trends in agentic commerce for 2026: https://www.verygoodsecurity.com/blog/posts/trends-in-agentic-commerce-for-2026
+
+commercetools - AI trends shaping agentic commerce: https://commercetools.com/blog/ai-trends-shaping-agentic-commerce
+
+Nota metodologica. Os apontamentos acima derivam da tese fornecida pelo solicitante e de sua propria estrutura argumentativa. Eles nao substituem diligencia financeira, entrevistas com clientes, auditoria interna, testes autenticados e validacao de metricas operacionais antes de qualquer decisao de investimento ou expansao institucional.
+
+oneverso.com.br | Nexus Affil'IA'te | Apontamentos de rentabilidade | Pagina 
+
+Código HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Affil'IA'te - Análise Técnica Aprofundada</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+        }
+        
+        .cover-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .section-title {
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .subsection-title {
+            color: #667eea;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-box {
+            background: #f7fafc;
+            border-left: 4px solid #4299e1;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+        }
+        
+        .key-point {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        table tr:hover {
+            background: #f7fafc;
+        }
+        
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .metric-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.1);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+        
+        .badge-high {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .badge-medium {
+            background: #feebc8;
+            color: #c05621;
+        }
+        
+        .badge-low {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .timeline-item {
+            border-left: 2px solid #667eea;
+            padding-left: 1.5rem;
+            margin-left: 1rem;
+            padding-bottom: 2rem;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            position: absolute;
+            left: -7px;
+            top: 0;
+        }
+        
+        .icon-box {
+            width: 3rem;
+            height: 3rem;
+            background: #667eea;
+            color: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .toc-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .toc-item a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .toc-item a:hover {
+            color: #667eea;
+        }
+        
+        @media print {
+            .cover-page {
+                min-height: auto;
+                padding: 4rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Capa -->
+<div class="cover-page">
+    <div class="text-center px-8">
+        <div class="mb-8">
+            <i class="fas fa-network-wired text-6xl mb-4"></i>
+        </div>
+        <h1 class="text-5xl font-bold mb-4">Nexus Affil'IA'te</h1>
+        <h2 class="text-3xl font-light mb-8">Análise Técnica Aprofundada, Estrutura de Códigos e Roadmap de Evolução para Transição Startup Unicórnio</h2>
+        <div class="border-t border-white opacity-50 my-8 mx-auto" style="max-width: 400px;"></div>
+        <p class="text-xl mb-2">Documento Executivo Editável</p>
+        <p class="text-lg opacity-90 mb-8">Formato DOCX | Microsoft Word</p>
+        <div class="mt-12">
+            <p class="text-sm opacity-75 mb-2">Base analítica: estudo do segmento MMN AI-to-AI, páginas públicas da oneverso.com.br</p>
+            <p class="text-sm opacity-75 mb-2">e sinais externos de agentic commerce</p>
+            <p class="text-lg font-semibold mt-6">Data de elaboração: 16/06/2026</p>
+            <p class="text-sm opacity-75 mt-4">Preparado em pt-BR com foco em clareza estratégica,</p>
+            <p class="text-sm opacity-75">profundidade técnica e aplicabilidade executiva</p>
+        </div>
+    </div>
+</div>
+
+<!-- Conteúdo Principal -->
+<div class="container mx-auto px-8 py-12 bg-white" style="max-width: 1200px;">
+
+<!-- Mapa de Leitura -->
+<section id="mapa" class="mb-16">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+        <i class="fas fa-map-marked-alt text-purple-600 mr-3"></i>Mapa de Leitura
+    </h2>
+    <div class="bg-blue-50 p-6 rounded-lg">
+        <ul class="space-y-2">
+            <li class="toc-item"><a href="#sumario"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Sumário executivo e tese de mercado</a></li>
+            <li class="toc-item"><a href="#diagnostico"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Diagnóstico técnico-estratégico da proposta atual</a></li>
+            <li class="toc-item"><a href="#arquitetura"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Arquitetura-alvo, governança, monetização e riscos críticos</a></li>
+            <li class="toc-item"><a href="#roadmap"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Roadmap priorizado de 0 a 36 meses</a></li>
+            <li class="toc-item"><a href="#ux"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Protocolos de otimização de experiência do usuário</a></li>
+            <li class="toc-item"><a href="#estrutura-codigo"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Estrutura recomendada de código, serviços e automações</a></li>
+            <li class="toc-item"><a href="#scripts"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Scripts-base para observabilidade, qualidade, rollout e governança</a></li>
+            <li class="toc-item"><a href="#unicornio"><i class="fas fa-chevron-right mr-2 text-purple-600"></i>Plano executivo de transição para startup unicórnio</a></li>
+        </ul>
+    </div>
+</section>
+
+<!-- 1. Sumário Executivo -->
+<section id="sumario" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">1. Sumário Executivo</h2>
+    
+    <div class="highlight-box">
+        <p class="text-lg leading-relaxed">
+            A <strong>Nexus Affil'IA'te</strong> ocupa uma interseção rara e altamente promissora entre <strong>affiliate tech</strong>, <strong>partner operations</strong>, <strong>creator commerce</strong>, <strong>agentic commerce</strong> e automação comercial baseada em agentes de IA. O material-base indica corretamente que a plataforma não deve ser tratada como um simples programa de afiliados, mas como uma <strong>infraestrutura comercial AI-native</strong>.
+        </p>
+    </div>
+
+    <p class="text-base mb-4">
+        O potencial de a Nexus tornar-se referência histórica corporativa e candidata real a startup unicórnio não depende apenas do apelo de futurismo. Depende da capacidade de converter narrativa avançada em sistema operacional <strong>confiável</strong>, <strong>auditável</strong>, <strong>integrável</strong>, <strong>escalável</strong> e <strong>economicamente previsível</strong>.
+    </p>
+
+    <div class="key-point">
+        <h4 class="font-bold text-lg mb-2"><i class="fas fa-key mr-2"></i>Pontos-Chave de Consolidação</h4>
+        <p class="mb-3">O caminho mais promissor é consolidar cinco pilares simultaneamente:</p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li><strong>Arquitetura robusta de agentes</strong></li>
+            <li><strong>Governança de comissionamento</strong></li>
+            <li><strong>Instrumentação unificada de dados</strong></li>
+            <li><strong>Camada enterprise de integração</strong></li>
+            <li><strong>Tese clara de captura de valor</strong></li>
+        </ul>
+    </div>
+
+    <p class="text-base mt-4">
+        A oportunidade estratégica central está em ampliar o enquadramento da marca: de <em>MMN AI-to-AI</em> para <strong>infraestrutura de agentic revenue networks</strong>. Isso reduz fricção reputacional, amplia o mercado endereçável e favorece adoção por B2B, creators, afiliados, representantes, canais indiretos e ecossistemas híbridos de distribuição.
+    </p>
+</section>
+
+<!-- 2. Tese de Mercado -->
+<section id="tese-mercado" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">2. Tese de Mercado: Por que a Nexus está Alinhada com a Próxima Onda</h2>
+    
+    <p class="text-base mb-6">
+        O enquadramento de mercado da Nexus é estruturalmente consistente com três vetores que convergem em 2026:
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Agentes com Contexto</h4>
+            <p class="text-sm">A transição de automações reativas para agentes com contexto, memória, decisão assistida e execução em múltiplos canais.</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Comércio Conversacional</h4>
+            <p class="text-sm">A evolução do comércio digital para jornadas em que descoberta, recomendação e comparação ocorrem via interfaces conversacionais.</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-network-wired"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Redes Governadas</h4>
+            <p class="text-sm">A profissionalização de redes distribuídas de receita com sistemas governados e observáveis.</p>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <h4 class="font-bold text-lg mb-3"><i class="fas fa-lightbulb mr-2"></i>Implicação Estratégica</h4>
+        <p>
+            O ponto decisivo é que esse mercado não premiará apenas quem automatiza. Premiará quem combinar <strong>autonomia com confiança</strong>. Em mercados de comissão e rede, qualquer ruído em regras, atribuição, payout, auditoria ou segurança destrói valor rapidamente.
+        </p>
+        <p class="mt-3 font-semibold text-purple-700">
+            A Nexus deve se apresentar como camada de orquestração de receita distribuída baseada em IA, e não apenas como software de afiliados.
+        </p>
+    </div>
+</section>
+
+<!-- 3. Matriz de Alinhamento -->
+<section id="diagnostico" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">3. Matriz de Alinhamento entre Proposta Atual e Tese de Unicórnio</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Dimensão</th>
+                <th>Estado Percebido</th>
+                <th>Alinhamento</th>
+                <th>Prioridade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Narrativa</strong></td>
+                <td>Discurso AI-native forte e sofisticado</td>
+                <td><span class="badge badge-low">Alto</span></td>
+                <td>Traduzir a narrativa em benefícios simples por ICP</td>
+            </tr>
+            <tr>
+                <td><strong>Produto</strong></td>
+                <td>SaaS + marketplace + agentes + rede</td>
+                <td><span class="badge badge-medium">Alto, porém complexo</span></td>
+                <td>Separar módulos, jornadas e ofertas</td>
+            </tr>
+            <tr>
+                <td><strong>Governança</strong></td>
+                <td>Sinais de histórico, audit trail e checkpoints</td>
+                <td><span class="badge badge-low">Promissor</span></td>
+                <td>Elevar para padrão enterprise e compliance</td>
+            </tr>
+            <tr>
+                <td><strong>Monetização</strong></td>
+                <td>Receita recorrente, transacional e em rede</td>
+                <td><span class="badge badge-low">Muito forte</span></td>
+                <td>Modelar unit economics por segmento</td>
+            </tr>
+            <tr>
+                <td><strong>Dados</strong></td>
+                <td>Observabilidade narrada, mas sem prova recorrente</td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Criar KPI tree e prova de valor</td>
+            </tr>
+            <tr>
+                <td><strong>Integração</strong></td>
+                <td>Menção a stack moderna com legado fusionado</td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Abrir APIs, conectores e interoperabilidade</td>
+            </tr>
+            <tr>
+                <td><strong>Escala</strong></td>
+                <td>Ambição de runtime autônomo coerente</td>
+                <td><span class="badge badge-low">Alto potencial</span></td>
+                <td>Fortalecer segurança, confiabilidade e custo computacional</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="key-point mt-6">
+        <h4 class="font-bold mb-2"><i class="fas fa-chart-line mr-2"></i>Leitura Executiva</h4>
+        <p>
+            A Nexus já possui vários componentes de narrativa típicos de empresas category-defining. O desafio não é inventar uma nova tese, mas converter a tese atual em produto <strong>previsível</strong>, <strong>mensurável</strong> e <strong>amplamente adotável</strong>.
+        </p>
+    </div>
+</section>
+
+<!-- 4. Análise Técnica Aprofundada -->
+<section id="arquitetura" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">4. Análise Técnica Aprofundada do Sistema Nexus</h2>
+    
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">4.1 Arquitetura-Alvo</h3>
+    
+    <p class="mb-4">
+        A arquitetura descrita sugere uma plataforma híbrida, com preservação de legado em PHP e expansão por React + TypeScript, além de uma camada de agentes e observabilidade. A decisão é pragmaticamente correta para acelerar time-to-market, mas exige disciplina de arquitetura para evitar dívida técnica invisível.
+    </p>
+
+    <div class="bg-gray-100 p-6 rounded-lg mb-6">
+        <h4 class="font-bold mb-3"><i class="fas fa-sitemap mr-2"></i>Princípios Arquiteturais</h4>
+        <ul class="list-disc list-inside space-y-2">
+            <li>Separar <strong>core transacional</strong>, motor de comissionamento, camada de agentes, serviços de catálogo e camada analítica</li>
+            <li>Adotar contratos bem definidos entre módulos, preferencialmente via <strong>APIs versionadas</strong> e eventos de domínio</li>
+            <li>Evitar que a camada de IA acesse regras críticas de negócio sem intermediação por <strong>policy engine</strong> e trilha de auditoria</li>
+            <li>Estabelecer observabilidade nativa por <strong>tenant</strong>, por parceiro, por agente e por fluxo comercial</li>
+        </ul>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">4.2 Motor de Comissão e Atribuição</h3>
+    
+    <div class="highlight-box">
+        <p class="mb-3">
+            Se a Nexus deseja tornar-se referência histórica, o motor de comissionamento precisa ser tratado como <strong>infraestrutura crítica</strong>. Em operações de rede, atribuição de receita e cálculo de repasse são o coração da confiança.
+        </p>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li>Regras declarativas com versionamento e data de vigência</li>
+            <li>Sandbox de simulação antes da publicação</li>
+            <li>Reconciliação financeira, rollback controlado e prova de cálculo auditável</li>
+            <li>Fluxos de aprovação com segregação de função para alterações sensíveis</li>
+        </ul>
+    </div>
+
+    <div class="key-point mt-4">
+        <h4 class="font-bold mb-2"><i class="fas fa-cogs mr-2"></i>Recomendação Técnica</h4>
+        <p>
+            Criar um <strong>Commission Rules Engine</strong> com versionamento, testes determinísticos, logs imutáveis e trilha de aprovação.
+        </p>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">4.3 Camada de Agentes</h3>
+    
+    <p class="mb-4">
+        A camada de agentes deve evoluir de um conjunto de automações úteis para um sistema de orquestração confiável. A plataforma deve explicitar papéis: agentes de prospecção, conteúdo, compliance, acompanhamento, suporte comercial e análise.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Catálogo de Skills</h5>
+            <p class="text-sm">Tool permissions por agente com controle granular</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Guardrails</h5>
+            <p class="text-sm">Linguagem, política comercial e política de canal</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Memória Segmentada</h5>
+            <p class="text-sm">Por tenant com retenção configurável</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Explicabilidade Mínima</h5>
+            <p class="text-sm">Por que o agente tomou determinada ação</p>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">4.4 Dados, Observabilidade e Segurança</h3>
+    
+    <p class="mb-4">
+        O próximo salto é transformar histórico e memory search em observabilidade operacional de padrão corporativo. A Nexus deve operar um modelo de telemetria que una eventos de produto, eventos comerciais, eventos de IA, eventos financeiros e eventos de segurança.
+    </p>
+
+    <div class="highlight-box">
+        <h4 class="font-bold mb-3"><i class="fas fa-database mr-2"></i>Agentic Revenue Data Model</h4>
+        <p class="mb-2">Entidades-chave:</p>
+        <div class="flex flex-wrap gap-2">
+            <span class="badge badge-low">Parceiro</span>
+            <span class="badge badge-low">Afiliado</span>
+            <span class="badge badge-low">Creator</span>
+            <span class="badge badge-low">Conta</span>
+            <span class="badge badge-low">Campanha</span>
+            <span class="badge badge-low">Oferta</span>
+            <span class="badge badge-low">Clique</span>
+            <span class="badge badge-low">Lead</span>
+            <span class="badge badge-low">Oportunidade</span>
+            <span class="badge badge-low">Conversa</span>
+            <span class="badge badge-low">Recomendação</span>
+            <span class="badge badge-low">Venda</span>
+            <span class="badge badge-low">Comissão</span>
+            <span class="badge badge-low">Payout</span>
+            <span class="badge badge-low">Disputa</span>
+            <span class="badge badge-low">Agente</span>
+            <span class="badge badge-low">Skill</span>
+            <span class="badge badge-low">Intervenção</span>
+            <span class="badge badge-low">Incidente</span>
+        </div>
+    </div>
+
+    <div class="bg-gray-100 p-6 rounded-lg mt-6">
+        <h4 class="font-bold mb-3"><i class="fas fa-shield-alt mr-2"></i>Segurança e Compliance</h4>
+        <ul class="list-disc list-inside space-y-2">
+            <li><strong>RBAC e ABAC</strong> para acesso por papel, operação e contexto</li>
+            <li>Criptografia em repouso e em trânsito, segredos rotacionáveis</li>
+            <li>Trilha imutável de eventos críticos</li>
+            <li>Consentimento, finalidade de uso e políticas aderentes à <strong>LGPD</strong></li>
+            <li>Detecção de fraude, padrões anômalos de comissionamento e monitoramento de abuso</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 5. Alinhamentos que já favorecem a ambição de unicórnio -->
+<section id="alinhamentos" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">5. Alinhamentos que já Favorecem a Ambição de Unicórnio</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Tese Correta de Categoria</h4>
+            <p class="text-sm">Atua em dor estrutural associada a receita distribuída com IA e rastreabilidade</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Modelo de Receita Multicamadas</h4>
+            <p class="text-sm">Assinatura, transação, revenda e dinâmica de rede</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Switching Costs</h4>
+            <p class="text-sm">Capacidade de tornar-se sistema de registro de comissões, interações e regras</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Escalabilidade</h4>
+            <p class="text-sm">Margem incremental quando componentes críticos estiverem estabilizados</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-check-circle text-green-500 mr-2"></i>Dados Proprietários</h4>
+            <p class="text-sm">Fonte cumulativa de inteligência e defensibilidade</p>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Lacunas Críticas -->
+<section id="lacunas" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">6. Lacunas Críticas a Fechar</h2>
+    
+    <div class="space-y-4">
+        <div class="key-point">
+            <h4 class="font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Complexidade Excessiva de Narrativa</h4>
+            <p>Para buyers pragmáticos, a mensagem precisa ser simplificada e orientada a valor</p>
+        </div>
+        
+        <div class="key-point">
+            <h4 class="font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Prova Pública Insuficiente</h4>
+            <p>Necessidade de ROI, benchmarks e casos auditáveis publicados</p>
+        </div>
+        
+        <div class="key-point">
+            <h4 class="font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Mistura Reputacional</h4>
+            <p>Possível confusão entre MMN, afiliados, marketplace e SaaS</p>
+        </div>
+        
+        <div class="key-point">
+            <h4 class="font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Camada Enterprise</h4>
+            <p>Necessidade de APIs, SSO, exportações, aprovação e compliance mais explícitos</p>
+        </div>
+        
+        <div class="key-point">
+            <h4 class="font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>Manifesto de Confiança</h4>
+            <p>Ausência percebida de explicação clara sobre cálculo, medição, proteção e auditoria</p>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Roadmap de Melhoria Priorizado -->
+<section id="roadmap" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">7. Roadmap de Melhoria Priorizado</h2>
+    
+    <div class="timeline-item">
+        <h3 class="text-2xl font-bold text-purple-700 mb-3">Onda 1 | 0 a 6 meses | Fundamentos de Confiança e Clareza</h3>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li>Redesenhar a arquitetura de oferta e separar com clareza plataforma principal, packs, marketplace, carreira e serviços adicionais</li>
+            <li>Publicar <strong>trust center</strong> com política de comissão, critérios de payout, segurança, LGPD, antifraude e auditoria</li>
+            <li>Implementar <strong>KPI tree executiva</strong>: GMV, take rate, ARR, NRR, ativação, parceiros ativos, payout accuracy, CAC payback e margem por linha</li>
+            <li>Lançar dashboard de maturidade do agente com métricas compreensíveis por cliente e por parceiro</li>
+            <li>Criar estudos de caso com números antes/depois por ICP prioritário</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h3 class="text-2xl font-bold text-purple-700 mb-3">Onda 2 | 6 a 12 meses | Infraestrutura de Escala Operacional</h3>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li>Construir <strong>Commission Rules Engine</strong> versionado com simulação e trilha de aprovação</li>
+            <li>Abrir <strong>APIs e webhooks</strong> para CRM, ERP, e-commerce, gateways e analytics</li>
+            <li>Estruturar data lake operacional ou camada analítica central para unificar eventos comerciais, financeiros e de IA</li>
+            <li>Criar console de observabilidade por tenant com alertas, reconciliação e detecção de anomalias</li>
+            <li>Introduzir <strong>SSO</strong>, trilhas de auditoria profundas e perfis corporativos multiunidade</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h3 class="text-2xl font-bold text-purple-700 mb-3">Onda 3 | 12 a 24 meses | Diferenciação de Categoria</h3>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li>Evoluir a plataforma para <strong>agentic revenue network</strong> com agentes especializados por papel, política e objetivo</li>
+            <li>Lançar <strong>recommendations engine</strong> para ofertas, alocação de leads, next best action e prevenção de churn</li>
+            <li>Construir benchmark de performance entre operações preservando privacidade</li>
+            <li>Criar app ou hub de parceiros com experiência superior para creators, representantes e afiliados em mobilidade</li>
+            <li>Expandir a narrativa comercial de MMN para partner-led growth, affiliate infrastructure e agentic commerce enablement</li>
+        </ul>
+    </div>
+    
+    <div class="timeline-item">
+        <h3 class="text-2xl font-bold text-purple-700 mb-3">Onda 4 | 24 a 36 meses | Plataforma de Padrão Unicórnio</h3>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li>Disponibilizar <strong>marketplace de agentes e skills</strong> com governança, billing e certificação</li>
+            <li>Transformar telemetria acumulada em produtos analíticos premium e scorecards preditivos</li>
+            <li>Oferecer módulos enterprise globais: multi-idioma, multi-moeda, compliance setorial e gestão avançada de territórios</li>
+            <li>Criar ecossistema de parceiros de implementação, auditoria e integração</li>
+            <li>Preparar governança corporativa, reporting financeiro e controles internos compatíveis com captação institucional relevante</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 8. Estratégia de Produto -->
+<section id="estrategia-produto" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">8. Estratégia de Produto para Captura de Valor de Longo Prazo</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Módulo</th>
+                <th>Problema Resolvido</th>
+                <th>Valor Percebido</th>
+                <th>Efeito Estratégico</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Core de parceiros e afiliados</strong></td>
+                <td>Cadastro, tracking, ativação e governança</td>
+                <td>Controle operacional imediato</td>
+                <td>Base para expansão e retenção</td>
+            </tr>
+            <tr>
+                <td><strong>Motor de comissão e payout</strong></td>
+                <td>Regras, cálculos, recorrência, auditoria e disputas</td>
+                <td>Confiança financeira</td>
+                <td>Switching cost elevado</td>
+            </tr>
+            <tr>
+                <td><strong>Hub de agentes</strong></td>
+                <td>Execução assistida ou autônoma de tarefas comerciais</td>
+                <td>Produtividade e escala</td>
+                <td>Diferenciação tecnológica</td>
+            </tr>
+            <tr>
+                <td><strong>Marketplace e catálogo</strong></td>
+                <td>Distribuição de ofertas digitais e descoberta</td>
+                <td>Liquidez comercial</td>
+                <td>Maior GMV e dados proprietários</td>
+            </tr>
+            <tr>
+                <td><strong>Analytics e benchmark</strong></td>
+                <td>Leitura de desempenho, maturidade e ROI</td>
+                <td>Tomada de decisão</td>
+                <td>Upsell de inteligência</td>
+            </tr>
+            <tr>
+                <td><strong>Camada enterprise</strong></td>
+                <td>Integrações, compliance, segurança e multiunidade</td>
+                <td>Adoção corporativa</td>
+                <td>Ticket maior e expansão internacional</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 9. Estratégia Comercial -->
+<section id="estrategia-comercial" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">9. Estratégia Comercial e de Posicionamento</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-user-tie mr-2 text-purple-600"></i>ICP 1 - Operações de Afiliados e Infoprodutos</h4>
+            <p class="text-sm">Vender governança, payout accuracy, ativação e automação de rede</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-star mr-2 text-purple-600"></i>ICP 2 - Creator Commerce e Embaixadores</h4>
+            <p class="text-sm">Vender catálogo, links, campanhas, comissão, experiência mobile e inteligência de desempenho</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-briefcase mr-2 text-purple-600"></i>ICP 3 - Canais B2B e Representantes</h4>
+            <p class="text-sm">Vender registro de oportunidades, recorrência, atribuição, repasses e visibilidade gerencial</p>
+        </div>
+        
+        <div class="metric-card">
+            <h4 class="font-bold text-lg mb-2"><i class="fas fa-building mr-2 text-purple-600"></i>ICP 4 - Empresas Enterprise</h4>
+            <p class="text-sm">Vender compliance, integração, trilha de auditoria, segurança e orquestração de canais com IA</p>
+        </div>
+    </div>
+
+    <div class="highlight-box mt-6">
+        <h4 class="font-bold text-lg mb-3"><i class="fas fa-bullhorn mr-2"></i>Reposicionamento Sugerido</h4>
+        <p>
+            Usar <em>MMN AI-to-AI</em> como tese interna ou contextual, mas externamente priorizar termos como:
+        </p>
+        <div class="flex flex-wrap gap-2 mt-3">
+            <span class="badge badge-low">Partner Revenue Infrastructure</span>
+            <span class="badge badge-low">Affiliate Operations</span>
+            <span class="badge badge-low">Creator Commerce OS</span>
+            <span class="badge badge-low">Agentic Commerce Enablement</span>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Métricas -->
+<section id="metricas" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">10. Métricas que Investidores e Grandes Clientes vão Observar</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-blue-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-chart-line mr-2 text-blue-600"></i>Crescimento</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>ARR, MRR</li>
+                <li>Expansão de receita</li>
+                <li>GMV e take rate</li>
+            </ul>
+        </div>
+        
+        <div class="bg-green-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-users mr-2 text-green-600"></i>Qualidade da Base</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>Ativação</li>
+                <li>Parceiros ativos, sellers, creators</li>
+                <li>Churn logo e churn de contas</li>
+            </ul>
+        </div>
+        
+        <div class="bg-yellow-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-dollar-sign mr-2 text-yellow-600"></i>Eficiência</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>CAC payback</li>
+                <li>LTV/CAC</li>
+                <li>Margem de contribuição</li>
+                <li>Custo computacional por agente</li>
+            </ul>
+        </div>
+        
+        <div class="bg-red-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-shield-alt mr-2 text-red-600"></i>Confiança Operacional</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>Payout accuracy</li>
+                <li>Tempo de disputa</li>
+                <li>Taxa de contestação</li>
+                <li>Incidentes de segurança</li>
+            </ul>
+        </div>
+        
+        <div class="bg-purple-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-robot mr-2 text-purple-600"></i>Valor de IA</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>Conversões assistidas por agente</li>
+                <li>Redução de tempo operacional</li>
+                <li>Uplift de produtividade</li>
+                <li>Custo por automação bem-sucedida</li>
+            </ul>
+        </div>
+        
+        <div class="bg-indigo-50 p-6 rounded-lg">
+            <h4 class="font-bold mb-3"><i class="fas fa-sync-alt mr-2 text-indigo-600"></i>Retenção Estrutural</h4>
+            <ul class="list-disc list-inside space-y-1 text-sm">
+                <li>NRR</li>
+                <li>Uso de múltiplos módulos</li>
+                <li>Profundidade de integração</li>
+                <li>Dependência do core de comissionamento</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 11. Matriz de Riscos -->
+<section id="riscos" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">11. Matriz de Riscos e Mitigadores</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Risco</th>
+                <th>Impacto</th>
+                <th>Probabilidade</th>
+                <th>Mitigador Prioritário</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ruído regulatório/reputacional associado a MMN</td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Taxonomia comercial clara, compliance público, regras transparentes e foco em valor de software</td>
+            </tr>
+            <tr>
+                <td>Disputas de comissão e baixa confiança</td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td>Motor versionado, logs auditáveis, reconciliação financeira e trilhas de aprovação</td>
+            </tr>
+            <tr>
+                <td>Escalada de custo computacional dos agentes</td>
+                <td><span class="badge badge-medium">Médio/Alto</span></td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Roteamento inteligente de modelos e métricas de custo por tarefa</td>
+            </tr>
+            <tr>
+                <td>Dívida técnica entre legado e novas camadas</td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Arquitetura modular, eventos de domínio e refatoração orientada a valor</td>
+            </tr>
+            <tr>
+                <td>Fraude, abuso ou uso indevido de agentes</td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td>Policy engine, rate limits, aprovação por contexto e detecção de anomalias</td>
+            </tr>
+            <tr>
+                <td>Mensagem de produto difícil de entender</td>
+                <td><span class="badge badge-medium">Médio</span></td>
+                <td><span class="badge badge-high">Alto</span></td>
+                <td>Reposicionamento por ICP, páginas segmentadas e casos de uso mais específicos</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- 12. O que caracterizaria a Nexus como futura unicórnio -->
+<section id="unicornio" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">12. O que Caracterizaria a Nexus como Futura Unicórnio</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Domínio de Categoria</h4>
+            <p class="text-sm">Reconhecimento como infraestrutura-padrão para operações distribuídas de receita com IA</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Retenção Excepcional</h4>
+            <p class="text-sm">Alto NRR e forte dependência operacional do core</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-chart-area"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Expansão de Margem</h4>
+            <p class="text-sm">Monetização eficiente da camada SaaS com uso disciplinado da camada de IA</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-database"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Efeito de Dados</h4>
+            <p class="text-sm">Quanto mais operações, melhor a plataforma recomenda, detecta risco e prova ROI</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Efeito de Ecossistema</h4>
+            <p class="text-sm">Parceiros, integrações, consultorias, revendedores e marketplace de skills/agentes</p>
+        </div>
+        
+        <div class="metric-card">
+            <div class="icon-box">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h4 class="font-bold text-lg mb-2">Capacidade Enterprise e Internacionalização</h4>
+            <p class="text-sm">Readiness para grandes contas, múltiplos mercados, moedas e políticas</p>
+        </div>
+    </div>
+</section>
+
+<!-- 13. Protocolos UX -->
+<section id="ux" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">13. Protocolos de Otimização da Experiência do Usuário</h2>
+    
+    <div class="highlight-box mb-6">
+        <h3 class="text-xl font-bold mb-4"><i class="fas fa-star mr-2"></i>Princípios Mandatórios</h3>
+        <ul class="list-disc list-inside space-y-2 ml-4">
+            <li><strong>Clareza antes de poder:</strong> a interface deve reduzir ambiguidade sobre ganhos, regras, status e próximos passos</li>
+            <li><strong>Tempo para valor mínimo:</strong> o usuário deve entender e operar o primeiro fluxo crítico em menos de 10 minutos</li>
+            <li><strong>Confiança verificável:</strong> cálculos, automações, intervenções e bloqueios devem ser explicáveis na interface</li>
+            <li><strong>Autonomia segura:</strong> agentes podem sugerir ou executar, mas o usuário sempre enxerga contexto, impacto e rollback possível</li>
+            <li><strong>Consistência multi-perfil:</strong> afiliado, parceiro, gestor, financeiro e admin precisam ter linguagem, navegação e permissões coerentes</li>
+        </ul>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Protocolos UX por Domínio</h3>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Domínio</th>
+                <th>Protocolo Mínimo</th>
+                <th>Meta Operacional</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Onboarding</strong></td>
+                <td>Wizard por ICP, checklist progressivo, dados pré-preenchidos e first-win guiado</td>
+                <td>Ativação em até 7 dias</td>
+            </tr>
+            <tr>
+                <td><strong>Navegação</strong></td>
+                <td>Arquitetura da informação por objetivo e não por estrutura interna</td>
+                <td>Redução de tickets de orientação</td>
+            </tr>
+            <tr>
+                <td><strong>Comissionamento</strong></td>
+                <td>Ledger legível, simulador, histórico de regra e justificativa de cálculo</td>
+                <td>Aumento de confiança e queda em disputas</td>
+            </tr>
+            <tr>
+                <td><strong>Agentes</strong></td>
+                <td>Centro de comando com status, memória, permissões, logs e aprovação contextual</td>
+                <td>Adoção assistida sem medo operacional</td>
+            </tr>
+            <tr>
+                <td><strong>Marketplace</strong></td>
+                <td>Descoberta, comparação, elegibilidade e recomendação transparente</td>
+                <td>Elevação de conversão e GMV</td>
+            </tr>
+            <tr>
+                <td><strong>Analytics</strong></td>
+                <td>KPIs orientados a decisão, benchmark e insight acionável</td>
+                <td>Melhor gestão e upsell de inteligência</td>
+            </tr>
+            <tr>
+                <td><strong>Suporte</strong></td>
+                <td>Ajuda contextual, base viva, playbooks e roteamento inteligente</td>
+                <td>Menor tempo médio de resolução</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">SLOs e Critérios de Aceite de Experiência</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Web Vitals</h5>
+            <p class="text-sm">LCP ≤ 2,5 s | INP ≤ 200 ms | CLS ≤ 0,10 nas jornadas core</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Acessibilidade</h5>
+            <p class="text-sm">Conformidade WCAG 2.2 AA nos fluxos críticos</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Conversão</h5>
+            <p class="text-sm">80% dos usuários convidados concluem onboarding inicial sem suporte humano</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Confiabilidade</h5>
+            <p class="text-sm">Taxa de erro front-end inferior a 1% nos fluxos de cadastro, comissão, payout e aprovação</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Compreensão</h5>
+            <p class="text-sm">90% da amostra-alvo entende regra de comissão em testes de usabilidade</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Auditabilidade</h5>
+            <p class="text-sm">Todas as ações de agentes com impacto financeiro ou comercial rastreáveis via interface</p>
+        </div>
+    </div>
+</section>
+
+<!-- 14. Estrutura de Código -->
+<section id="estrutura-codigo" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">14. Estrutura Recomendada de Código e Serviços</h2>
+    
+    <p class="mb-6">
+        Para viabilizar os protocolos descritos, recomenda-se uma arquitetura de monorepo modular com fronteiras claras entre experiência, domínio, integração, governança e dados.
+    </p>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Estrutura de Pastas Sugerida</h3>
+    
+    <pre><code>/apps
+  /web                 # portal principal React/Next.js
+  /admin               # console corporativo e governança
+  /partner-hub         # experiência de parceiros, creators e afiliados
+  /api                 # BFF e APIs públicas/internas
+  /worker              # filas, jobs e reconciliação
+  /legacy-bridge       # adaptadores para legado PHP
+
+/packages
+  /design-system       # tokens, componentes, padrões de acessibilidade
+  /domain-core         # entidades, casos de uso e políticas
+  /commission-engine   # regras, versionamento, simulação, ledger
+  /agent-runtime       # orquestração, skills, memória e guardrails
+  /event-contracts     # schemas de eventos e versionamento
+  /telemetry           # logs, traces, métricas e error tracking
+  /security            # RBAC, ABAC, secrets, policy engine
+  /analytics           # métricas, KPI tree e modelos semânticos
+  /integrations        # CRM, ERP, gateway, webhooks, ETL
+
+/infrastructure
+  /terraform           # IaC, ambientes, redes e segredos
+  /kubernetes          # deploys, autoscaling, jobs
+  /github-actions      # pipelines CI/CD
+  /observability       # Grafana, OTEL, alertas, dashboards
+
+/scripts
+  /quality             # Lighthouse, Playwright, axe, regressão visual
+  /release             # versionamento, changelog, rollout e rollback
+  /data                # seeds, saneamento, backfill e reconciliação
+
+/docs
+  /adr                 # architecture decision records
+  /runbooks            # incidentes, segurança, payout, agentes
+  /playbooks           # onboarding, ativação, sucesso e go-to-market</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Arquitetura Lógica por Domínio</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-purple-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-layer-group mr-2 text-purple-600"></i>Camada de Apresentação</h5>
+            <p class="text-sm">Web, admin e partner hub com BFF específico por jornada</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-cube mr-2 text-purple-600"></i>Camada de Domínio</h5>
+            <p class="text-sm">Regras de comissão, payout, campanhas, ofertas, identidade, agentes e analytics</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-plug mr-2 text-purple-600"></i>Camada de Integração</h5>
+            <p class="text-sm">Conectores e filas para CRM, ERP, gateways, antifraude e mensageria</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-gavel mr-2 text-purple-600"></i>Camada de Governança</h5>
+            <p class="text-sm">Policy engine, auditoria, versionamento, trust center e approval workflows</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-database mr-2 text-purple-600"></i>Camada de Dados</h5>
+            <p class="text-sm">Event bus, warehouse/lakehouse, feature store, catálogos analíticos e scorecards</p>
+        </div>
+    </div>
+</section>
+
+<!-- 15. Códigos-Base e Contratos Técnicos -->
+<section id="scripts" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">15. Códigos-Base e Contratos Técnicos Prioritários</h2>
+    
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">15.1 Contrato de Regra de Comissão</h3>
+    
+    <pre><code>export interface CommissionRuleVersion {
+  id: string;
+  tenantId: string;
+  name: string;
+  version: number;
+  status: 'draft' | 'approved' | 'published' | 'archived';
+  effectiveFrom: string;
+  effectiveTo?: string;
+  conditions: Array&lt;{
+    field: 'channel' | 'offer' | 'seller' | 'segment' | 'geo' | 'plan';
+    operator: 'eq' | 'in' | 'gte' | 'lte';
+    value: string | number | string[];
+  }&gt;;
+  payouts: Array&lt;{
+    beneficiaryType: 'affiliate' | 'partner' | 'manager' | 'house';
+    model: 'percentage' | 'fixed' | 'tiered' | 'recurring';
+    value: number;
+    recurrenceMonths?: number;
+  }&gt;;
+  requiresApproval: boolean;
+  checksum: string;
+  createdBy: string;
+  approvedBy?: string;
+}</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">15.2 Evento Canônico de Ledger e Payout</h3>
+    
+    <pre><code>export interface CommissionLedgerEvent {
+  eventId: string;
+  tenantId: string;
+  occurredAt: string;
+  saleId: string;
+  orderId: string;
+  ruleVersionId: string;
+  participants: Array&lt;{
+    actorId: string;
+    actorType: 'affiliate' | 'partner' | 'manager' | 'platform';
+    grossAmount: number;
+    commissionAmount: number;
+    currency: string;
+  }&gt;;
+  explanation: {
+    matchedConditions: string[];
+    calculationSteps: string[];
+    traceId: string;
+  };
+  status: 'calculated' | 'reconciled' | 'paid' | 'contested' | 'reversed';
+}</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">15.3 Contrato de Execução de Agente</h3>
+    
+    <pre><code>export interface AgentExecution {
+  executionId: string;
+  tenantId: string;
+  agentType: 'prospecting' | 'content' | 'compliance' | 'followup' | 'analytics';
+  objective: string;
+  inputContext: Record&lt;string, unknown&gt;;
+  permissions: string[];
+  policyVersion: string;
+  memoryScope: 'session' | 'tenant' | 'account' | 'campaign';
+  humanApprovalRequired: boolean;
+  actions: Array&lt;{
+    tool: string;
+    intent: string;
+    status: 'planned' | 'executed' | 'blocked' | 'rolled_back';
+  }&gt;;
+  outcome: {
+    result: string;
+    confidence: number;
+    costUsd: number;
+    latencyMs: number;
+  };
+  audit: {
+    traceId: string;
+    createdAt: string;
+    createdBy: string;
+  };
+}</code></pre>
+</section>
+
+<!-- 16. Scripts e Automações Essenciais -->
+<section id="automacoes" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">16. Scripts e Automações Essenciais</h2>
+    
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.1 Script de Budget de Performance</h3>
+    
+    <pre><code>{
+  "resourceSizes": [
+    { "resourceType": "script", "budget": 280 },
+    { "resourceType": "stylesheet", "budget": 90 },
+    { "resourceType": "image", "budget": 350 }
+  ],
+  "resourceCounts": [
+    { "resourceType": "third-party", "budget": 12 }
+  ],
+  "timings": [
+    { "metric": "interactive", "budget": 4000 },
+    { "metric": "largest-contentful-paint", "budget": 2500 }
+  ]
+}</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.2 Script de Teste UX com Playwright</h3>
+    
+    <pre><code>import { test, expect } from '@playwright/test';
+
+test('onboarding principal com first-win', async ({ page }) => {
+  await page.goto('/signup');
+  await page.getByLabel('Nome da empresa').fill('Tenant Demo');
+  await page.getByLabel('E-mail').fill('ops@tenantdemo.com');
+  await page.getByRole('button', { name: 'Criar ambiente' }).click();
+  await expect(page.getByText('Checklist de ativação')).toBeVisible();
+  await expect(page.getByText('Importar primeira oferta')).toBeVisible();
+  await expect(page.getByText('Conectar canal de pagamento')).toBeVisible();
+});</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.3 Script de Acessibilidade com Axe</h3>
+    
+    <pre><code>import AxeBuilder from '@axe-core/playwright';
+import { test, expect } from '@playwright/test';
+
+test('dashboard sem violações críticas de acessibilidade', async ({ page }) => {
+  await page.goto('/dashboard');
+  const results = await new AxeBuilder({ page }).analyze();
+  const critical = results.violations.filter(v => v.impact === 'critical');
+  expect(critical).toEqual([]);
+});</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.4 Pipeline CI/CD Mínimo</h3>
+    
+    <pre><code>name: quality-gates
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run test:e2e
+      - run: npm run test:a11y
+      - run: npm run lighthouse:ci</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.5 Instrumentação OpenTelemetry</h3>
+    
+    <pre><code>import { NodeSDK } from '@opentelemetry/sdk-node';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+
+const sdk = new NodeSDK({
+  traceExporter: new OTLPTraceExporter({
+    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+  }),
+  instrumentations: [getNodeAutoInstrumentations()],
+  serviceName: 'nexus-api'
+});
+
+sdk.start();</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.6 Exemplo de Feature Flag para Rollout Controlado</h3>
+    
+    <pre><code>export const featureFlags = {
+  partnerHubV2: {
+    default: false,
+    rollout: [
+      { segment: 'internal', percentage: 100 },
+      { segment: 'beta-tenants', percentage: 30 },
+      { segment: 'general', percentage: 0 }
+    ]
+  },
+  agentAutopilotPayoutReview: {
+    default: false,
+    requiresApproval: true
+  }
+};</code></pre>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">16.7 Política de Guarda Operacional para Agentes</h3>
+    
+    <pre><code>export function mayExecuteAction(context: AgentExecutionContext): boolean {
+  if (context.impactDomain === 'financial' && !context.hasHumanApproval) return false;
+  if (context.tenantRiskLevel === 'high' && context.action === 'mass_outreach') return false;
+  if (!context.permissions.includes(context.action)) return false;
+  return true;
+}</code></pre>
+</section>
+
+<!-- 17. Protocolos de Observabilidade -->
+<section id="observabilidade" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">17. Protocolos de Observabilidade e Dados</h2>
+    
+    <p class="mb-6">
+        A camada de dados deve nascer preparada para provar valor de produto, saúde operacional e segurança. Recomenda-se o seguinte conjunto mínimo de protocolos:
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-code-branch mr-2 text-blue-600"></i>Schema Registry</h5>
+            <p class="text-sm">Para eventos de produto, comissionamento, payout, campanhas, agentes e segurança</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-random mr-2 text-blue-600"></i>Trace ID Obrigatório</h5>
+            <p class="text-sm">Do front-end ao back-end para todos os fluxos críticos</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-chart-bar mr-2 text-blue-600"></i>Dashboards Separados</h5>
+            <p class="text-sm">Visão de negócio, confiabilidade e custo computacional</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-bell mr-2 text-blue-600"></i>Alertas por Anomalia</h5>
+            <p class="text-sm">Payout, ativação, LCP/INP, erro 5xx e custo de inferência</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2"><i class="fas fa-book mr-2 text-blue-600"></i>Catálogo Semântico</h5>
+            <p class="text-sm">Métricas com owner, fórmula, periodicidade, fonte e SLA</p>
+        </div>
+    </div>
+</section>
+
+<!-- 18. Plano de Transição para Startup Unicórnio -->
+<section id="transicao" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">18. Plano de Transição para Startup Unicórnio</h2>
+    
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">18.1 Transição Organizacional</h3>
+    
+    <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
+        <li>Criar <strong>operating cadence trimestral</strong> com OKRs integrando produto, engenharia, revenue, customer success, finanças e compliance</li>
+        <li>Estabelecer comitê de arquitetura e comitê de governança de IA com atas, owners e critérios de escalonamento</li>
+        <li>Adotar modelo de priorização por impacto em ARR, confiança operacional, redução de risco e velocidade de ativação</li>
+        <li>Instituir <strong>ADRs obrigatórios</strong> para decisões de domínio crítico, integrações e políticas de rollout</li>
+        <li>Conectar remuneração variável de lideranças a métricas de retenção, payout accuracy, estabilidade e expansão de contas</li>
+    </ul>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">18.2 Transição Técnica</h3>
+    
+    <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
+        <li>Criar mapa do legado e plano de estrangulamento progressivo com <strong>APIs anti-corrupção</strong> entre PHP e novos serviços</li>
+        <li>Transformar motor de comissão, payout e auditoria em domínios protegidos com backlog dedicado</li>
+        <li>Padronizar design system, contratos de eventos e observabilidade antes de acelerar novas features</li>
+        <li>Migrar experiências prioritárias para jornadas orientadas a objetivo, reduzindo navegação herdada</li>
+        <li>Adotar <strong>release trains quinzenais</strong> com feature flags, canary release e rollback automatizado</li>
+    </ul>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">18.3 Transição de Mercado e Marca</h3>
+    
+    <ul class="list-disc list-inside space-y-2 ml-4 mb-6">
+        <li>Reescrever o site público por ICP, valor de negócio e prova de confiança</li>
+        <li>Publicar <strong>trust center</strong>, benchmark de performance e manifesto de governança algorítmica</li>
+        <li>Criar narrativa de categoria compatível com enterprise sales e investidores institucionais</li>
+        <li>Desenvolver pacotes de entrada, expansão e enterprise com escopo e SLA claramente definidos</li>
+        <li>Trocar ambiguidade conceitual por taxonomia simples, repetível e escalável</li>
+    </ul>
+</section>
+
+<!-- 19. Plano Executivo para os Próximos 90 Dias -->
+<section id="90-dias" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">19. Plano Executivo Recomendado para os Próximos 90 Dias</h2>
+    
+    <div class="highlight-box">
+        <ol class="list-decimal list-inside space-y-3 ml-4">
+            <li>Definir a <strong>taxonomia oficial do portfólio</strong> e reescrever a comunicação pública com menos ambiguidade entre SaaS, marketplace, carreira e rede</li>
+            <li>Priorizar um <strong>trust center público</strong> com segurança, LGPD, auditoria, payouts e regras de comissão</li>
+            <li>Escolher <strong>3 ICPs prioritários</strong> e construir narrativa, demo e estudo de caso específicos para cada um</li>
+            <li>Modelar a <strong>árvore de métricas executivas</strong> e instrumentar coleta desde já</li>
+            <li>Mapear arquitetura atual, dependências legadas, fluxos críticos e backlog de refatoração orientado a risco e valor</li>
+            <li>Definir especificação funcional do <strong>Commission Rules Engine</strong> e do console de observabilidade</li>
+            <li>Criar <strong>comitê de governança de IA</strong> para políticas de uso, logs, revisão humana e segurança operacional</li>
+            <li>Implantar <strong>quality gates mínimos</strong>: lint, testes, acessibilidade, performance budget e rollback seguro</li>
+            <li>Selecionar 1 jornada de onboarding e 1 jornada de payout para redesign orientado a confiança e tempo para valor</li>
+            <li>Publicar um <strong>scorecard mensal executivo</strong> com métricas de produto, confiabilidade, adoção e custo de IA</li>
+        </ol>
+    </div>
+</section>
+
+<!-- 20. Apontamentos de Rentabilidade e Lucratividade -->
+<section id="rentabilidade" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">20. Apontamentos Estratégicos que Posicionam a Empresa como Startup com Grande Potencial de Rentabilidade e Lucratividade</h2>
+    
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Tese Central de Rentabilidade</h3>
+    
+    <div class="highlight-box mb-6">
+        <p class="mb-3">
+            A Nexus atua em um ponto de convergência de alto valor entre affiliate technology, partner operations, creator commerce, automação comercial e IA agentica. Essa posição permite <strong>monetização sobre fluxos recorrentes e transacionais</strong>, o que amplia o potencial de receita sem depender de uma única linha de negócio.
+        </p>
+        <p>
+            Se o core de comissionamento, payout, auditoria e integrações se tornar confiável e escalável, a empresa passa a capturar valor como <strong>infraestrutura</strong>, e não apenas como ferramenta tática.
+        </p>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Apontamentos que Reforçam o Potencial de Receita</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="metric-card">
+            <h5 class="font-bold mb-2"><i class="fas fa-chart-line mr-2 text-green-600"></i>Mercado em Expansão</h5>
+            <p class="text-sm">A digitalização da jornada comercial, o crescimento do creator economy e a evolução para commerce com agentes criam contexto favorável</p>
+        </div>
+        <div class="metric-card">
+            <h5 class="font-bold mb-2"><i class="fas fa-layer-group mr-2 text-green-600"></i>Modelo de Receita Multicamadas</h5>
+            <p class="text-sm">Assinatura SaaS, take rate transacional, módulos premium, serviços, analytics pagos, billing de agentes e marketplace</p>
+        </div>
+        <div class="metric-card">
+            <h5 class="font-bold mb-2"><i class="fas fa-arrow-up mr-2 text-green-600"></i>Capacidade de Upsell</h5>
+            <p class="text-sm">Clientes iniciais evoluem para analytics, governança, automação, agentes especializados e integracões enterprise</p>
+        </div>
+        <div class="metric-card">
+            <h5 class="font-bold mb-2"><i class="fas fa-project-diagram mr-2 text-green-600"></i>Expansão por Ecossistema</h5>
+            <p class="text-sm">Parceiros de implementação, conectores, templates, skills e agentes certificados ampliam distribuição</p>
+        </div>
+        <div class="metric-card">
+            <h5 class="font-bold mb-2"><i class="fas fa-globe mr-2 text-green-600"></i>Potencial de Internacionalização</h5>
+            <p class="text-sm">Tese de categoria inteligível fora do Brasil como partner revenue infrastructure ou agentic revenue network</p>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Apontamentos que Reforçam o Potencial de Lucratividade</h3>
+    
+    <div class="bg-green-50 p-6 rounded-lg mb-6">
+        <ul class="list-disc list-inside space-y-2">
+            <li><strong>Margem incremental elevada:</strong> Uma vez estabilizado o core, novas contas e módulos escalam com custo marginal menor</li>
+            <li><strong>Redução de custo operacional do cliente:</strong> Automatizar cálculo, auditoria, distribuição gera espaço para capturar valor via pricing</li>
+            <li><strong>Dados como ampliador de margem:</strong> Telemetria histórica melhora recomendação, prevenção de fraude e eficiência sem crescer custo proporcional</li>
+            <li><strong>Switching costs crescentes:</strong> Sistema de registro de regras, históricos e trilhas reduz churn e protege margem</li>
+            <li><strong>Governança como acelerador comercial:</strong> Trust center, logs, aprovações reduzem friccão em vendas enterprise e protegem margem</li>
+        </ul>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Por que a Nexus Pode Operar com Economics Superiores</h3>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Alavanca</th>
+                <th>Impacto na Receita</th>
+                <th>Impacto na Margem</th>
+                <th>Sinal de Maturidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Assinatura SaaS</strong></td>
+                <td>Previsibilidade de ARR</td>
+                <td>Dilui custo fixo com escala</td>
+                <td>Crescimento de MRR e baixa evasão</td>
+            </tr>
+            <tr>
+                <td><strong>Take rate transacional</strong></td>
+                <td>Captura valor sobre GMV e recorrência</td>
+                <td>Margem melhora com automação</td>
+                <td>Aumento de GMV processado</td>
+            </tr>
+            <tr>
+                <td><strong>Módulos premium</strong></td>
+                <td>Eleva ARPA e ticket médio</td>
+                <td>Alta margem sobre base instalada</td>
+                <td>Aumento de attach rate</td>
+            </tr>
+            <tr>
+                <td><strong>Analytics e benchmarking</strong></td>
+                <td>Cria nova linha de receita</td>
+                <td>Produto de alto valor percebido</td>
+                <td>Uso recorrente por lideranças</td>
+            </tr>
+            <tr>
+                <td><strong>Marketplace de agentes/skills</strong></td>
+                <td>Expansão ecossistêmica</td>
+                <td>Escala com menor CAC incremental</td>
+                <td>Aumento de parceiros ativos</td>
+            </tr>
+            <tr>
+                <td><strong>Integrações enterprise</strong></td>
+                <td>Amplia win rate em contas maiores</td>
+                <td>Melhor retenção e NRR</td>
+                <td>Crescimento de ACV</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 class="text-2xl font-bold text-gray-700 subsection-title">Elementos de Defensibilidade que Sustentam Lucro de Longo Prazo</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Core Financeiro Explicável</h5>
+            <p class="text-sm">Regras versionadas, ledger imutável, reconciliação e auditoria</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Base de Dados Proprietária</h5>
+            <p class="text-sm">Histórico de performance, atribuição, payout, fraude e comportamento de rede</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Integrações Profundas</h5>
+            <p class="text-sm">CRM, ERP, gateways, analytics e ambientes enterprise</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Governança de Agentes</h5>
+            <p class="text-sm">Policy engine, permissão, limites de ação e trilha auditável</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-lg">
+            <h5 class="font-bold mb-2">Efeito de Ecossistema</h5>
+            <p class="text-sm">Parceiros, conectores, skills e serviços certificados</p>
+        </div>
+    </div>
+
+    <div class="key-point mt-6">
+        <h4 class="font-bold mb-2"><i class="fas fa-bullseye mr-2"></i>Conclusão</h4>
+        <p>
+            A Nexus Affil'IA'te apresenta características típicas de uma startup com elevado potencial de rentabilidade e lucratividade porque combina: mercado em expansão, modelo de receita multicamadas, possibilidade de margens crescentes, switching costs relevantes, uso estratégico de dados e aderência a demandas enterprise por governança e confiança.
+        </p>
+        <p class="mt-3 font-semibold text-purple-700">
+            Em termos econômicos, a companhia pode evoluir de software funcional para infraestrutura crítica de coordenação de receita.
+        </p>
+    </div>
+</section>
+
+<!-- 21. Conclusão -->
+<section id="conclusao" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">21. Conclusão</h2>
+    
+    <div class="highlight-box">
+        <p class="text-lg leading-relaxed mb-4">
+            A <strong>Nexus Affil'IA'te</strong> mostra alinhamento real com uma mudança estrutural do mercado: a passagem de operações comerciais distribuídas e manuais para redes instrumentadas, automatizadas e progressivamente agentic.
+        </p>
+        <p class="text-lg leading-relaxed mb-4">
+            Há tese, diferenciação narrativa, múltiplas avenidas de monetização e uma dor relevante a ser resolvida. O fator que definirá sua grandeza não é a ousadia conceitual, e sim a <strong>excelência na operacionalização</strong> dessa ousadia.
+        </p>
+        <p class="text-lg leading-relaxed font-semibold text-purple-700">
+            Se a Nexus simplificar sua proposta, elevar a governança ao nível enterprise, transformar o motor de comissão em infraestrutura crítica, publicar prova de valor e construir uma camada de dados verdadeiramente unificada, ela poderá tornar-se uma peça histórica na profissionalização do agentic commerce e das redes modernas de receita.
+        </p>
+    </div>
+
+    <div class="mt-8 p-6 bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg">
+        <h3 class="text-2xl font-bold mb-4 text-center">Em Síntese</h3>
+        <p class="text-center text-lg">
+            A plataforma tem condições de ser um <strong>marco corporativo</strong> e trilhar caminho plausível rumo ao status de <strong>unicórnio</strong>. O roadmap existe. O mercado mostra abertura. A vantagem agora depende de <strong>execução disciplinada</strong>, <strong>confiança radical</strong> e <strong>foco em categoria</strong>.
+        </p>
+    </div>
+</section>
+
+<!-- Referências -->
+<section id="referencias" class="mb-16">
+    <h2 class="text-4xl font-bold text-gray-800 section-title">Referências e Base Metodológica</h2>
+    
+    <div class="bg-gray-100 p-6 rounded-lg">
+        <p class="mb-4">
+            Este documento foi elaborado a partir do briefing fornecido pelo solicitante, de observações sobre páginas públicas disponíveis em 16/06/2026 e de sinais externos de mercado relacionados a IA agentica, comércio conversacional e operações distribuídas de receita.
+        </p>
+        <p class="mb-4 font-semibold">
+            Não se declara auditoria interna do sistema protegido por autenticação. Recomenda-se, antes de qualquer decisão de investimento, M&A ou captação institucional, complementar esta tese com entrevistas, métricas internas, testes funcionais autenticados e benchmarking competitivo aprofundado.
+        </p>
+        
+        <h4 class="font-bold mb-3 mt-6">Fontes Consultadas:</h4>
+        <ul class="space-y-2">
+            <li><i class="fas fa-link mr-2 text-purple-600"></i><strong>oneverso.com.br</strong> - página principal: <a href="https://www.oneverso.com.br/" class="text-blue-600 hover:underline">https://www.oneverso.com.br/</a></li>
+            <li><i class="fas fa-link mr-2 text-purple-600"></i><strong>Nexus Affil'IA'te / marketplaces:</strong> <a href="https://oneverso.com.br/marketplaces" class="text-blue-600 hover:underline">https://oneverso.com.br/marketplaces</a></li>
+            <li><i class="fas fa-link mr-2 text-purple-600"></i><strong>HubSpot Brasil - tendências de vendas:</strong> <a href="https://br.hubspot.com/blog/sales/tendencias-de-vendas-adaptar" class="text-blue-600 hover:underline">https://br.hubspot.com/blog/sales/tendencias-de-vendas-adaptar</a></li>
+            <li><i class="fas fa-link mr-2 text-purple-600"></i><strong>Very Good Security - trends in agentic commerce for 2026:</strong> <a href="https://www.verygoodsecurity.com/blog/posts/trends-in-agentic-commerce-for-2026" class="text-blue-600 hover:underline">https://www.verygoodsecurity.com/blog/posts/trends-in-agentic-commerce-for-2026</a></li>
+            <li><i class="fas fa-link mr-2 text-purple-600"></i><strong>commercetools - AI trends shaping agentic commerce:</strong> <a href="https://commercetools.com/blog/ai-trends-shaping-agentic-commerce" class="text-blue-600 hover:underline">https://commercetools.com/blog/ai-trends-shaping-agentic-commerce</a></li>
+        </ul>
+        
+        <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <p class="text-sm">
+                <strong>Nota final de método:</strong> Este texto foi propositalmente estruturado como tese executiva aplicada, com densidade argumentativa, disciplina conceitual e foco de implementação, para permitir seu uso tanto como peça de defesa da visão quanto como documento orientador de arquitetura, produto, governança e captação.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Rodapé -->
+<footer class="mt-16 pt-8 border-t-2 border-gray-300 text-center text-gray-600">
+    <p class="mb-2"><strong>Nexus Affil'IA'te</strong> | oneverso.com.br</p>
+    <p class="text-sm mb-1">Análise Técnica Aprofundada, Estrutura de Códigos e Roadmap de Evolução</p>
+    <p class="text-sm mb-4">Documento Executivo | Data de Elaboração: 16/06/2026</p>
+    <p class="text-xs text-gray-500">
+        Preparado em pt-BR com foco em clareza estratégica, profundidade técnica e aplicabilidade executiva
+    </p>
+    <div class="mt-6 mb-4">
+        <p class="text-xs text-gray-400">
+            <i class="fas fa-info-circle mr-1"></i>
+            Este documento pode ser exportado para PDF usando a funcionalidade de impressão do navegador (Ctrl+P ou Cmd+P)
+        </p>
+    </div>
+</footer>
+
+</div>
+
+</body>
+</html>
+

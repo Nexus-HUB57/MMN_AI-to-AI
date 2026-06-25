@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glossário Interativo — Academ'IA</title>
+  <link rel="stylesheet" href="acad-style.css" />
+  <style>
+    /* === GLOSSÁRIO ESPECÍFICO === */
+    .glossario-hero {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elev));
+      border-radius: 12px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+    }
+    
+    .glossario-hero h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    
+    .glossario-hero p {
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .search-container {
+      max-width: 600px;
+      margin: 24px auto 0;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      background: var(--bg-deep);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+    
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin: 24px 0 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .chip {
+      padding: 6px 14px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    .chip:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    
+    .chip.active {
+      background: var(--cyan);
+      color: var(--bg-deep);
+      border-color: var(--cyan);
+      font-weight: 600;
+    }
+    
+    .glossario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    
+    .glossario-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .glossario-item:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.15);
+    }
+    
+    .glossario-item.hidden {
+      display: none;
+    }
+    
+    .glossario-term {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    
+    .glossario-icon {
+      font-size: 1.3rem;
+    }
+    
+    .glossario-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    
+    .glossario-cat {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    
+    .glossario-def {
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    
+    .glossario-link {
+      display: inline-block;
+      font-size: 0.8rem;
+      color: var(--purple);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--purple);
+    }
+    
+    .glossario-link:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-dim);
+      grid-column: 1 / -1;
+    }
+    
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    .glossario-count {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="mapa-academia.html" class="back-link">← Voltar ao Mapa</a>
+    
+    <div class="glossario-hero">
+      <h1>📖 Glossário Interativo</h1>
+      <p>Todos os termos técnicos, acrônimos, e conceitos da Academ'IA. Use a busca ou os filtros para encontrar.</p>
+      
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput"
+          placeholder="Buscar termo (ex: IOAID, Judge, mTLS)..."
+          autocomplete="off"
+        />
+      </div>
+      
+      <div class="filter-chips" id="filterChips">
+        <span class="chip active" data-cat="all">Todos</span>
+        <span class="chip" data-cat="infra">Infra</span>
+        <span class="chip" data-cat="agente">Agentes</span>
+        <span class="chip" data-cat="marketing">Marketing</span>
+        <span class="chip" data-cat="negocio">Negócio</span>
+        <span class="chip" data-cat="seguranca">Segurança</span>
+      </div>
+      
+      <p class="glossario-count" id="count">Exibindo <strong>20</strong> termos</p>
+    </div>
+    
+    <div class="glossario-grid" id="glossarioGrid">
+      
+      <!-- INFRA -->
+      <div class="glossario-item" data-cat="infra" data-terms="ioaid infraestrutura operacional inteligencia distribuida">
+        <div class="glossario-cat">Infraestrutura</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🏗️</span>
+          <span class="glossario-name">IOAID</span>
+        </div>
+        <p class="glossario-def">Infraestrutura Operacional de Inteligência Distribuída. Sistema que processa requisições em 5 módulos (autenticação, event bus, agent runtime, judge, monitoring) em &lt; 800ms.</p>
+        <a href="cursos/fundamental/01-entendendo-ioaid.html" class="glossario-link">→ Curso 01-Entendendo-IOAID</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="infra" data-terms="sho self healing orchestrator sistema imune">
+        <div class="glossario-cat">Infraestrutura</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🛡️</span>
+          <span class="glossario-name">SHO</span>
+        </div>
+        <p class="glossario-def">Self-Healing Orchestrator. Sistema imunológico que monitora, diagnostica, cura e aprende com incidentes. Meta: 99.97% uptime, MTTR &lt; 2 min.</p>
+        <a href="cursos/fundamental/02-sistema-sho.html" class="glossario-link">→ Curso 02-Sistema-SHO</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="infra" data-terms="event bus redis streams mensageria">
+        <div class="glossario-cat">Infraestrutura</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">📨</span>
+          <span class="glossario-name">Event Bus</span>
+        </div>
+        <p class="glossario-def">Sistema de mensageria assíncrona (geralmente Redis Streams) que roteia eventos entre módulos do IOAID. Garante que nenhum evento se perde.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="infra" data-terms="agent runtime cerebro llm execucao">
+        <div class="glossario-cat">Infraestrutura</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🧠</span>
+          <span class="glossario-name">Agent Runtime</span>
+        </div>
+        <p class="glossario-def">Módulo do IOAID onde o LLM é executado com system prompt, contexto, e ferramentas. É o "cérebro" de cada agente.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="infra" data-terms="mttr mean time to recover tempo medio recuperacao">
+        <div class="glossario-cat">Infraestrutura</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">⏱️</span>
+          <span class="glossario-name">MTTR</span>
+        </div>
+        <p class="glossario-def">Mean Time To Recover. Tempo médio para recuperar de uma falha. Meta do SHO: &lt; 2 minutos para 90% dos incidentes.</p>
+      </div>
+      
+      <!-- AGENTES -->
+      <div class="glossario-item" data-cat="agente" data-terms="agente agent autonomo">
+        <div class="glossario-cat">Agentes</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🤖</span>
+          <span class="glossario-name">Agente</span>
+        </div>
+        <p class="glossario-def">Sistema que combina LLM + identidade + ferramentas + memória para executar tarefas de forma autônoma. Não é um chatbot — é um operador digital.</p>
+        <a href="cursos/agente/00-primeiro-agente.html" class="glossario-link">→ Curso 00-Primeiro-Agente</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="agente" data-terms="skill capacidade tool ferramenta">
+        <div class="glossario-cat">Agentes</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🛠️</span>
+          <span class="glossario-name">Skill</span>
+        </div>
+        <p class="glossario-def">Capacidade específica de um agente. Ex: copywriter (escreve mensagens), audience-segmenter (segmenta público), judge (avalia compliance).</p>
+        <a href="cursos/agente/01-skills-essenciais.html" class="glossario-link">→ Curso 01-Skills-Essenciais</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="agente" data-terms="judge revisor fiscal compliance">
+        <div class="glossario-cat">Agentes</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">⚖️</span>
+          <span class="glossario-name">Judge Revisor</span>
+        </div>
+        <p class="glossario-def">Filtro ético e de compliance que valida toda resposta antes de enviar. 3 modos: Revisão, Bloqueio Parcial, Bloqueio Total.</p>
+        <a href="cursos/agente/03-judge-revisor.html" class="glossario-link">→ Curso 03-Judge-Revisor</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="agente" data-terms="system prompt identidade personalidade">
+        <div class="glossario-cat">Agentes</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🎭</span>
+          <span class="glossario-name">System Prompt</span>
+        </div>
+        <p class="glossario-def">Instrução que define identidade, tom, regras, e limites de um agente. Mais impactante que o modelo escolhido — é o que diferencia 2 agentes com mesmo LLM.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="agente" data-terms="guardrail limite seguranca">
+        <div class="glossario-cat">Agentes</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🚧</span>
+          <span class="glossario-name">Guardrail</span>
+        </div>
+        <p class="glossario-def">Limite explícito do que um agente pode/não pode fazer. Implementado via Judge + system prompt + validação pós-output.</p>
+      </div>
+      
+      <!-- MARKETING -->
+      <div class="glossario-item" data-cat="marketing" data-terms="cac custo aquisicao cliente">
+        <div class="glossario-cat">Marketing</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">💰</span>
+          <span class="glossario-name">CAC</span>
+        </div>
+        <p class="glossario-def">Customer Acquisition Cost. Custo total para adquirir 1 cliente. Inclui: anúncios, ferramentas, tempo da equipe, infraestrutura.</p>
+        <a href="cursos/master/00-otimizacao-conversao.html" class="glossario-link">→ Curso 00-Otimização-Conversão</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="marketing" data-terms="ltv lifetime value valor vitalicio">
+        <div class="glossario-cat">Marketing</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">💎</span>
+          <span class="glossario-name">LTV</span>
+        </div>
+        <p class="glossario-def">Lifetime Value. Receita total esperada de um cliente ao longo do relacionamento. Meta: LTV/CAC &gt; 3.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="marketing" data-terms="cohort coorte analise">
+        <div class="glossario-cat">Marketing</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">📊</span>
+          <span class="glossario-name">Coorte</span>
+        </div>
+        <p class="glossario-def">Grupo de usuários que compartilham uma característica temporal (ex: "todos que entraram em Janeiro"). Análise de coorte = rastrear comportamento por grupo.</p>
+        <a href="cursos/master/03-coortes-churn.html" class="glossario-link">→ Curso 03-Coortes-Churn</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="marketing" data-terms="churn perda cancelamento">
+        <div class="glossario-cat">Marketing</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">📉</span>
+          <span class="glossario-name">Churn</span>
+        </div>
+        <p class="glossario-def">Taxa de cancelamento. % de clientes que saem em um período. Reduzir churn aumenta LTV sem aumentar CAC.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="marketing" data-terms="ab test teste split">
+        <div class="glossario-cat">Marketing</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🔬</span>
+          <span class="glossario-name">A/B Testing</span>
+        </div>
+        <p class="glossario-def">Teste comparativo entre 2 variantes (A vs B). Muda 1 coisa por vez. Precisa de poder estatístico (n mínimo) para conclusões válidas.</p>
+        <a href="cursos/master/02-ab-test-judge.html" class="glossario-link">→ Curso 02-AB-Test-Judge</a>
+      </div>
+      
+      <!-- NEGÓCIO -->
+      <div class="glossario-item" data-cat="negocio" data-terms="multi tenant whitelabel">
+        <div class="glossario-cat">Negócio</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🏢</span>
+          <span class="glossario-name">Multi-tenant</span>
+        </div>
+        <p class="glossario-def">Arquitetura onde 1 sistema serve múltiplos clientes (tenants) com isolamento de dados. White-label = o cliente vende como se fosse seu produto.</p>
+        <a href="cursos/elite/01-multi-tenant-whitelabel.html" class="glossario-link">→ Curso 01-Multi-tenant</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="negocio" data-terms="federacao agentes distribuidos">
+        <div class="glossario-cat">Negócio</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🌐</span>
+          <span class="glossario-name">Federação</span>
+        </div>
+        <p class="glossario-def">Múltiplos agentes cooperando, com mTLS e níveis de confiança. Permite escalar sem ponto único de falha.</p>
+        <a href="cursos/elite/02-federacao-agentes.html" class="glossario-link">→ Curso 02-Federação</a>
+      </div>
+      
+      <div class="glossario-item" data-cat="negocio" data-terms="blueprint elite padrao">
+        <div class="glossario-cat">Negócio</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">📐</span>
+          <span class="glossario-name">Blueprint Elite</span>
+        </div>
+        <p class="glossario-def">Padrão operacional dos top 10% afiliados Nexus. 5 pilares: técnico, escala, governança, relacionamento, visão.</p>
+        <a href="cursos/elite/00-blueprints-elite.html" class="glossario-link">→ Curso 00-Blueprints-Elite</a>
+      </div>
+      
+      <!-- SEGURANÇA -->
+      <div class="glossario-item" data-cat="seguranca" data-terms="mtls mutual tls criptografia">
+        <div class="glossario-cat">Segurança</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🔐</span>
+          <span class="glossario-name">mTLS</span>
+        </div>
+        <p class="glossario-def">Mutual Transport Layer Security. Autenticação criptográfica mútua — ambos os lados precisam de certificado. Obrigatório em federação.</p>
+      </div>
+      
+      <div class="glossario-item" data-cat="seguranca" data-terms="lgpd opt out privacidade">
+        <div class="glossario-cat">Segurança</div>
+        <div class="glossario-term">
+          <span class="glossario-icon">🛡️</span>
+          <span class="glossario-name">LGPD</span>
+        </div>
+        <p class="glossario-def">Lei Geral de Proteção de Dados. Regula coleta, armazenamento, e uso de dados pessoais no Brasil. Respeitar opt-out é obrigação legal.</p>
+      </div>
+      
+    </div>
+    
+    <p style="text-align: center; color: var(--text-dim); margin: 32px 0; font-size: 0.85rem;">
+      💡 <strong>Dica:</strong> Pressione <kbd style="background: var(--bg-elev); padding: 2px 6px; border-radius: 3px;">Ctrl+F</kbd> para buscar no navegador.
+    </p>
+  </div>
+  
+  <script>
+    // === BUSCA E FILTRO INTERATIVO ===
+    const searchInput = document.getElementById('searchInput');
+    const filterChips = document.querySelectorAll('.chip');
+    const items = document.querySelectorAll('.glossario-item');
+    const countEl = document.getElementById('count');
+    let activeCategory = 'all';
+    
+    function filterItems() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      items.forEach(item => {
+        const cat = item.dataset.cat;
+        const terms = (item.dataset.terms || '').toLowerCase();
+        const name = item.querySelector('.glossario-name').textContent.toLowerCase();
+        const def = item.querySelector('.glossario-def').textContent.toLowerCase();
+        
+        const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+        const matchesSearch = !query || 
+          terms.includes(query) || 
+          name.includes(query) || 
+          def.includes(query);
+        
+        if (matchesCategory && matchesSearch) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+      
+      countEl.innerHTML = visibleCount === items.length 
+        ? `Exibindo <strong>${visibleCount}</strong> termos`
+        : `Exibindo <strong>${visibleCount}</strong> de <strong>${items.length}</strong> termos`;
+      
+      // Mostrar mensagem se nenhum resultado
+      let noResults = document.querySelector('.no-results');
+      if (visibleCount === 0) {
+        if (!noResults) {
+          noResults = document.createElement('div');
+          noResults.className = 'no-results';
+          noResults.innerHTML = '<div class="no-results-icon">🔍</div><p>Nenhum termo encontrado.<br>Tente outra palavra ou filtro.</p>';
+          document.getElementById('glossarioGrid').appendChild(noResults);
+        }
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+    
+    // Listener de busca
+    searchInput.addEventListener('input', filterItems);
+    
+    // Listeners de chips
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCategory = chip.dataset.cat;
+        filterItems();
+      });
+    });
+    
+    // Foco automático
+    searchInput.focus();
+  </script>
+</body>
+</html>

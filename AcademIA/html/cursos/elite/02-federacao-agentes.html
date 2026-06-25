@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <link rel="stylesheet" href="../../acad-style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>02 · Federação de Agentes</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">02 · Federação de Agentes</h1>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp"
+alt="Capa — Federação de Agentes" />
+<figcaption aria-hidden="true">Capa — Federação de Agentes</figcaption>
+</figure>
+<p><strong>02 · Federação de Agentes</strong></p>
+<p><em>Trilha Elite · 60 minutos · Pré-requisito:
+01-Multi-tenant</em></p>
+<p><strong>Por Equipe Nexus · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este curso</strong></p>
+<p>Federação de agentes é a capacidade de <strong>múltiplos nós Nexus
+conversarem</strong> entre si, formando uma rede distribuída. É o que
+permite escalar além de um único afiliado, compartilhar skills entre
+equipes, e consultar dados de outros nós com consentimento. Em 60
+minutos, você vai entender como funciona o mTLS, os 3 níveis de
+confiança, e como configurar federação para sua operação.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é federação de agentes <strong>•</strong>
+2. A diferença entre multi-tenant e federação <strong>•</strong> 3. Como
+funciona o mTLS <strong>•</strong> 4. Os 3 níveis de confiança
+<strong>•</strong> 5. Como adicionar um nó à federação
+<strong>•</strong> 6. Operações cross-nó <strong>•</strong> 7. Segurança
+e compliance <strong>•</strong> 8. Quando NÃO federar <strong>•</strong>
+9. Federação para 3+ nós (avançado) <strong>•</strong> 10. Próximos
+passos na trilha Elite</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é federação de agentes</strong></p>
+<p><strong>Federação</strong> = 2 ou mais nós Nexus autônomos que se
+comunicam entre si de forma segura e autorizada.</p>
+<p>Cada nó: - É <strong>independente</strong>: pode cair sem derrubar os
+outros. - É <strong>autônomo</strong>: tem suas próprias skills,
+agentes, dados. - É <strong>conectado</strong>: pode consultar/processar
+dados de outros nós (com permissão).</p>
+<p><strong>Benefício:</strong> você não precisa centralizar tudo em 1
+servidor. Distribui carga, isola falhas, e permite colaboração entre
+afiliados.</p>
+<p><strong>2. A diferença entre multi-tenant e federação</strong></p>
+<p><strong>Multi-tenant:</strong> - 1 operador, N marcas. - Dados
+isolados por RLS. - Operador tem controle total.</p>
+<p><strong>Federação:</strong> - N operadores, cada um com sua marca. -
+Dados isolados por design. - Operadores têm autonomia, mas trocam dados
+com consentimento.</p>
+<p><strong>Quando usar cada:</strong> - <strong>Multi-tenant</strong>:
+você oferece serviço para várias marcas. - <strong>Federação</strong>:
+você quer colaborar com outros afiliados.</p>
+<p><strong>3. Como funciona o mTLS</strong></p>
+<p><strong>mTLS (Mutual TLS)</strong> = autenticação bidirecional com
+certificados.</p>
+<p>Em TLS normal (HTTPS), só o servidor se autentica. Em mTLS,
+<strong>cliente E servidor se autenticam mutuamente</strong>. Isso
+garante que: - Cliente sabe que está falando com o servidor certo. -
+Servidor sabe que está falando com o cliente certo.</p>
+<p><strong>Na prática:</strong> cada nó Nexus tem um par de chaves
+(pública + privada) emitido por uma <strong>CA Nexus</strong>. Quando 2
+nós federam, eles trocam chaves públicas. Toda comunicação é
+criptografada E autenticada.</p>
+<p><strong>Benefício:</strong> impossível um nó se passar por outro.
+Mesmo que um atacante intercepte, ele não tem a chave privada.</p>
+<p><strong>4. Os 3 níveis de confiança</strong></p>
+<p><strong>Nível 1 — Leitura pública</strong> - Nó A consulta nó B para
+dados públicos (catálogo, marketplace). - Sem aprovação necessária (pode
+ser feito automaticamente). - Latência: &lt; 500ms. - Exemplo: “esse
+produto existe no marketplace?”</p>
+<p><strong>Nível 2 — Leitura autorizada</strong> - Nó A consulta nó B
+para dados do nó (vendas, funis) com consentimento. - Requer aprovação
+de ambos os lados. - Latência: &lt; 2s. - Exemplo: “esse lead já foi
+atendido por outro afiliado?”</p>
+<p><strong>Nível 3 — Escrita autorizada</strong> - Nó A escreve em nome
+do nó B (campanha conjunta, divisão de comissão). - Requer aprovação de
+ambos os lados + auditoria. - Latência: &lt; 5s. - Exemplo: “publicar
+campanha em 2 nós simultaneamente”.</p>
+<p><strong>Todo nó começa no Nível 1. A subida de nível exige aprovação
+mútua.</strong></p>
+<p><strong>5. Como adicionar um nó à federação</strong></p>
+<p><strong>Caminho:</strong>
+<code>/dashboard/federation/invite</code></p>
+<p><strong>Passo 1</strong>: você emite um convite para o outro nó. -
+Especifica: tenant_id, nó alvo, nível de confiança solicitado.</p>
+<p><strong>Passo 2</strong>: o outro nó aceita. - Confirma: tenant_id,
+autoridade, logs de auditoria.</p>
+<p><strong>Passo 3</strong>: ambos os nós trocam chaves mTLS. -
+Automático via CA Nexus.</p>
+<p><strong>Passo 4</strong>: teste de comunicação. - Ping federado,
+request teste, validação de resposta.</p>
+<p><strong>Passo 5</strong>: produção. - Habilita as operações
+cross-nó.</p>
+<p><strong>Tempo total:</strong> ~1h se ambos os admins estão
+disponíveis.</p>
+<p><strong>6. Operações cross-nó</strong></p>
+<p><strong>Operação 1 — Deduplicação de leads</strong> - Antes de
+disparar, consulta: “esse lead existe em outro nó?” - Se sim, oferece o
+mesmo produto OU redireciona. - Custo: R$ 0,005 por consulta.</p>
+<p><strong>Operação 2 — Skills compartilhadas</strong> - Nó A usa skill
+<code>copywriter</code> do nó B (que tem versão melhor). - Cobrança: %
+da receita gerada pela skill compartilhada. - Custo: variável.</p>
+<p><strong>Operação 3 — Campanhas conjuntas</strong> - 2 nós lançam a
+mesma campanha simultaneamente, com públicos não-concorrentes. -
+Comissão: dividida conforme acordo. - Custo: nenhum (split).</p>
+<p><strong>Operação 4 — Catálogo unificado</strong> - 2 nós compartilham
+catálogo de produtos. - Cada nó vê os produtos do outro. - Custo:
+nenhum.</p>
+<p><strong>7. Segurança e compliance</strong></p>
+<p><strong>Boas práticas:</strong> - mTLS com rotação de chaves a cada
+90 dias. - Auditoria de operações federadas (quem consultou o quê,
+quando). - Limite de Nível 2 (consulta de dados) por hora/dia
+(anti-exfiltração). - Alerta se nó começar a fazer consultas
+anômalas.</p>
+<p><strong>Compliance:</strong> - LGPD: consentimento explícito do lead
+antes de compartilhar entre nós. - Auditoria: log imutável de toda
+operação federada (90 dias). - Reversibilidade: capacidade de revogar
+acesso a qualquer momento.</p>
+<p><strong>8. Quando NÃO federar</strong></p>
+<p><strong>Não federe se:</strong> - Você é solo e o nó vizinho é solo
+também (custo &gt; benefício). - Os 2 nós têm públicos 100% concorrentes
+(canibalização). - Você não tem admin para gerenciar federação (sozinho
+é inviável). - Sua receita mensal é &lt; R$ 10k (foco errado).</p>
+<p><strong>Federe se:</strong> - Você tem R$ 20k+ consistente. - O nó
+vizinho tem público não-concorrente. - Vocês podem se dividir a
+sobrecarga técnica. - Ambos têm admin dedicado.</p>
+<p><strong>9. Federação para 3+ nós (avançado)</strong></p>
+<p><strong>Com 3+ nós, a complexidade cresce.</strong> Você precisa
+decidir:</p>
+<p><strong>Topologia Estrela</strong>: 1 nó central coordena. (simples,
+mas ponto único de falha). <strong>Topologia Mesh</strong>: cada nó fala
+com todos. (complexo, mas robusto). <strong>Topologia
+Hierárquica</strong>: nós regionais + nó central. (balanceado).</p>
+<p><strong>Recomendação:</strong> comece com Estrela (2-3 nós), migre
+para Hierárquica (4-10 nós), Mesh apenas para 10+ nós.</p>
+<p><strong>Pinned mTLS</strong>: cada nó tem certificado pinned (não
+renovável sem aprovação). Para 3+ nós, <strong>essencial</strong>.</p>
+<p><strong>Health checks</strong>: cada nó verifica os outros a cada
+60s. Se nó X está down, roteia para fallback.</p>
+<p><strong>10. Próximos passos na trilha Elite</strong></p>
+<p>Você completou a <strong>Trilha Elite</strong>. Os próximos passos
+são:</p>
+<p><strong>Curto prazo (30 dias):</strong> - Aplicar 1 blueprint (A, B,
+ou C). - Mentorear 1 afiliado iniciante. - Publicar 1 case no blog.</p>
+<p><strong>Médio prazo (90 dias):</strong> - Configurar federação com 1
+nó vizinho. - Operar 2 tenants em white-label (se aplicável). - Atingir
+R$ 30k+/mês consistente.</p>
+<p><strong>Longo prazo (12 meses):</strong> - Ser referência na rede
+(Top 5%). - Construir produto próprio (curso, comunidade, evento). -
+Ajudar a treinar a próxima geração.</p>
+<p><strong>Recursos extras (cursos Elite):</strong> - <strong>Apostila
+01</strong>: Apresentação da Infraestrutura (mTLS, SHO, fed). -
+<strong>Apostila 02</strong>: Cases Reais (Marina, Carlos, Equipe
+Prime). - <strong>Apostila 04</strong>: Orquestração Híbrida. -
+<strong>Certificação CEN+</strong>: caminho formal para validar
+conhecimento Elite.</p>
+<hr />
+<p><strong>02 · Federação de Agentes</strong> — Trilha Elite · Última
+Trilha</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC
+BY-SA 4.0</em></p>
+  <script src="../../enhance.js"></script>
+</body>
+</html>

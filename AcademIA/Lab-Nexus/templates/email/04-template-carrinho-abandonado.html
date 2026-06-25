@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template Carrinho Abandonado · Nexus</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #f4f4f8; padding: 20px; }
+.email-container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.header { background: linear-gradient(120deg, #0A0E27 0%, #1A1A3E 100%); padding: 32px 24px; text-align: center; }
+.logo { color: #00FFFF; font-size: 24px; font-weight: 800; letter-spacing: 2px; }
+.tagline { color: #B8B8D0; font-size: 14px; margin-top: 8px; }
+.content { padding: 40px 32px; color: #2A2A3E; line-height: 1.7; }
+h1 { font-size: 28px; color: #0A0E27; margin-bottom: 16px; line-height: 1.2; }
+h2 { font-size: 18px; color: #673AB7; margin: 24px 0 12px; }
+.highlight-box { background: #FFF9E6; border-left: 4px solid #FF9800; padding: 16px; margin: 20px 0; border-radius: 4px; }
+.cta { display: inline-block; background: linear-gradient(120deg, #00BCD4 0%, #00ACC1 100%); color: #fff; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; margin: 16px 0; }
+.benefits { background: #f9f9fc; padding: 16px; border-radius: 8px; margin: 16px 0; }
+.benefit { display: flex; align-items: center; padding: 6px 0; font-size: 14px; }
+.benefit::before { content: "✓"; color: #00BCD4; font-weight: 700; margin-right: 12px; }
+.urgency { background: #FFEBEE; border: 1px dashed #F44336; padding: 12px; border-radius: 4px; text-align: center; margin: 16px 0; font-size: 14px; }
+.footer { background: #f4f4f8; padding: 24px; text-align: center; color: #888; font-size: 12px; }
+.footer a { color: #888; }
+.unsubscribe { font-size: 11px; margin-top: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+<div class="email-container">
+
+<div class="header">
+  <div class="logo">NEXUS</div>
+  <div class="tagline">Inteligência que opera. Você que escala.</div>
+</div>
+
+<div class="content">
+  <h1>Oi {{nome}}, seu lugar tá te esperando 👋</h1>
+
+  <p>Vi que você começou a se inscrever no <strong>{{nome_produto}}</strong> mas não finalizou.</p>
+
+  <p>Se aconteceu algo durante o checkout — uma dúvida, uma distração, qualquer coisa — sem stress. Mas preciso te dizer uma coisa:</p>
+
+  <div class="highlight-box">
+    <strong>Essa oferta é por tempo limitado.</strong> O desconto de {{desconto}}% expira em {{horas}}h.
+    Depois disso, o valor volta pra {{preco_original}}.
+  </div>
+
+  <h2>O que você ganha agora</h2>
+  <div class="benefits">
+    <div class="benefit">Acesso imediato a {{numero_modulos}} módulos práticos</div>
+    <div class="benefit">Agentes de IA operando na sua conta em 24h</div>
+    <div class="benefit">Suporte humano via WhatsApp</div>
+    <div class="benefit">Academia Nexus incluída (15 cursos + 40 ferramentas)</div>
+    <div class="benefit">Garantia de 30 dias — risco zero</div>
+  </div>
+
+  <p style="text-align: center; margin: 32px 0;">
+    <a href="{{link_checkout}}" class="cta">🚀 FINALIZAR MINHA INSCRIÇÃO</a>
+  </p>
+
+  <h2>Por que afiliados escolhem a Nexus</h2>
+  <p>São mais de 3.000 afiliados ativos que escalaram suas operações com agentes autônomos. A média? <strong>4.2x mais conversões em 90 dias</strong>.</p>
+
+  <div class="urgency">
+    ⏰ <strong>Faltam {{horas}}h</strong> para o desconto expirar
+  </div>
+
+  <p style="margin-top: 32px;">Se tiver qualquer dúvida, responde esse email que eu respondo pessoalmente.</p>
+
+  <p style="margin-top: 16px;">Abraço,<br><strong>{{nome_pessoa}}</strong><br>Time Nexus</p>
+</div>
+
+<div class="footer">
+  <p>Nexus Affil'IA'te · 2026</p>
+  <p>Você recebeu esse email porque começou uma inscrição em nosso produto.</p>
+  <div class="unsubscribe">
+    <a href="{{link_unsubscribe}}">Cancelar inscrição</a> ·
+    <a href="{{link_preferences}}">Preferências</a> ·
+    <a href="https://nexus-academy.io">Site oficial</a>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

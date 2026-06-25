@@ -18,6 +18,7 @@ import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./domains/xp/router";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { packsRouter } from "./routers/packsRouter";
+import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { skillsRouter } from "./routers/skillsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
@@ -166,6 +167,7 @@ export const appRouter = router({
   dropshipping: dropshippingRouter,
   logs: logRouter,
   marketplaces: marketplacesRouter,
+  marketplaceNexus: marketplaceNexusRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 /**
  * Nexus Academ'IA · Página de Lição
  * Exibe vídeo aula, apostila PDF, resumo e metadados com gating por nível.

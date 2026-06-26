@@ -5,6 +5,7 @@ export interface Context {
     id: number;
     role: string;
   };
+  db?: any;
   req?: Request;
   res?: Response;
 }

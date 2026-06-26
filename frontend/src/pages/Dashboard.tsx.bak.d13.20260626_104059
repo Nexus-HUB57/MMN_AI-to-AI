@@ -1,0 +1,1087 @@
+import { useMemo, useState } from "react";
+import { Link } from "wouter";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import DashboardLayout from "./DashboardLayout";
+import bgUser from "@/assets/bg-user.webp";
+import {
+  Activity,
+  ArrowRight,
+  BarChart3,
+  Bitcoin,
+  BookOpen,
+  Bot,
+  Calendar,
+  ChevronRight,
+  Copy,
+  Gift,
+  Hash,
+  Layers,
+  Lock,
+  Package,
+  ShoppingCart,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  Wallet,
+  Zap,
+} from "lucide-react";
+import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
+import { allocateBrlToBtc, isBtcLocked, getLevelLabel, getLevelSubtitle, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
+import { getAcademiaRuntimeSummary } from "@/lib/nexus-academia";
+// AGENT_LIVE_PANEL_V2
+import AgentLivePanel from "@/components/AgentLivePanel";
+import SalesFunnelDashboard from "../components/SalesFunnelDashboard";
+import AchievementsBadges from "../components/AchievementsBadges";
+import NotificationCenter from "../components/NotificationCenter";
+import { CommissionChart } from '../components/CommissionChart';
+import AcademiaPersonalTrail from "../components/AcademiaPersonalTrail";
+import AcademiaResume from "../components/AcademiaResume";
+import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
+import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
+import AcademiaPopular from "../components/AcademiaPopular";
+
+function RealCostCenter() {
+  const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
+    { months: 12 },
+    { refetchInterval: 60_000, retry: false }
+  );
+  if (cost?.isLoading) {
+    return <div className="text-sm text-slate-400 animate-pulse">Carregando central de custos...</div>;
+  }
+  const totalCents = Number(cost?.data?.totalYearCents || 0);
+  const byCat: Record<string, number> = (cost?.data?.byCategory as any) || {};
+  const entries: any[] = (cost?.data?.entries as any[]) || [];
+  const fmt = (cents: number) =>
+    "R$ " + (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const CATS = [
+    ["Aquisição de Packs", "Packs A² · AG · AO etc."],
+    ["Ativação Mensal", "Assinatura recorrente do programa"],
+    ["Compras Marketplace", "E-books, skills e bibliotecas"],
+    ["Custos SiSu", "Sub-Contas SiSu da Rede N.O."],
+  ] as const;
+
+  return (
+    <div className="mt-5 rounded-lg border border-rose-400/30 bg-rose-400/5 p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-300">
+            // CENTRAL DE CUSTOS · ANO {new Date().getFullYear()}
+          </p>
+          <h3 className="mt-1 text-base font-semibold text-white">
+            Extrato mensal de gastos do programa
+          </h3>
+          <p className="text-xs text-slate-400">
+            Aquisição de Packs, Ativação Mensal, Compras Marketplace e custos SiSu da Rede N.O.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
+          <p className="font-sans text-2xl font-bold text-rose-300">{fmt(totalCents)}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+        {CATS.map(([label, hint]) => (
+          <div key={label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
+            <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{label}</p>
+            <p className="mt-2 font-sans text-lg font-semibold text-white">
+              {fmt(byCat[label] || 0)}
+            </p>
+            <p className="mt-1 text-[10px] text-slate-500">{hint}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
+        <table className="w-full text-left text-[12px]">
+          <thead className="bg-obsidian-900/60 text-slate-400">
+            <tr>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Categoria</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Descrição</th>
+              <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
+            {entries.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-3 py-6 text-center text-slate-500 text-[11px]">
+                  Nenhuma movimentação registrada nos últimos 12 meses.
+                </td>
+              </tr>
+            )}
+            {entries.map((row, i) => (
+              <tr key={i} className="hover:bg-obsidian-800/40">
+                <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.period}</td>
+                <td className="px-3 py-2">{row.category}</td>
+                <td className="px-3 py-2 text-slate-400">{row.description}</td>
+                <td className="px-3 py-2 text-right font-mono text-rose-300">{fmt(row.amountCents)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
+        Extrato consolidado · valores reais das compras e ativações registradas
+      </p>
+    </div>
+  );
+}
+
+// SPRINTS_8_9_10_INJECTED
+
+const QUICK_ACTIONS = [
+  {
+    href: "/agents",
+    label: "Agente IA",
+    description: "Configurar e treinar agentes",
+    icon: Bot,
+    accent: "from-quantum-cyan/40 to-quantum-purple/40",
+  },
+  {
+    href: "/marketplaces?focus=monthly-activation",
+    label: "Ativação Mensal",
+    description: "Ative-se e se Qualifique aos Bônus e Comissões",
+    icon: Package,
+    accent: "from-amber-400/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/estoque",
+    label: "Meu Estoque",
+    description: "Meus Produtos · Produtos em Alta nas plataformas parceiras",
+    icon: ShoppingCart,
+    accent: "from-quantum-lime/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/marketplaces",
+    label: "Marketplaces",
+    description: "Nexus Storie, Hotmart, Shopee, Mercado Livre",
+    icon: ShoppingCart,
+    accent: "from-quantum-cyan/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/commissions",
+    label: "Comissões",
+    description: "Histórico em cascata 15 níveis",
+    icon: TrendingUp,
+    accent: "from-quantum-lime/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/content/calendar",
+    label: "Calendário Social",
+    description: "Posts programados pelo Genkit",
+    icon: Calendar,
+    accent: "from-quantum-purple/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/marketing/materials",
+    label: "Materiais",
+    description: "Banners, e-books e copies",
+    icon: BarChart3,
+    accent: "from-quantum-cyan/30 to-quantum-purple/20",
+  },
+  {
+    href: "/upgrades",
+    label: "Upgrades",
+    description: "Skills extras para seu agente",
+    icon: Sparkles,
+    accent: "from-quantum-purple/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/subscriptions",
+    label: "Nexus Partners Pack",
+    description: "Produto SaaS independente com contratação por assinatura",
+    icon: Users,
+    accent: "from-amber-400/30 to-quantum-purple/10",
+  },
+  {
+    href: "/academia",
+    label: "Nexus Academ'IA",
+    description: "Trilhas, Lab Nexus, Lib Nexus e progressão educacional",
+    icon: BookOpen,
+    accent: "from-quantum-purple/30 to-quantum-cyan/10",
+  },
+  {
+    href: "/marketplaces/ebooks",
+    label: "E-books IA",
+    description: "5 títulos a R$ 0,50 / revenda R$ 1,00",
+    icon: BookOpen,
+    accent: "from-quantum-lime/30 to-quantum-cyan/0",
+  },
+  {
+    href: "/sisu",
+    label: "Painel Sub-Redes (SiSu)",
+    description: "Sub-contas A² vinculadas ao seu CPF",
+    icon: Layers,
+    accent: "from-quantum-cyan/30 to-quantum-lime/0",
+  },
+];
+
+const RECENT_ACTIVITY = [
+  {
+    title: "Comissão de R$ 150,00",
+    detail: "Recebida no nível 2 da malha",
+    time: "há 5 min",
+    icon: TrendingUp,
+    tone: "good" as const,
+  },
+  {
+    title: "Maria S. entrou na sua rede",
+    detail: "Indicação direta via Minha Loja",
+    time: "há 28 min",
+    icon: Users,
+    tone: "info" as const,
+  },
+  {
+    title: "Bônus de carreira liberado",
+    detail: "Você atingiu o nível Ouro",
+    time: "há 2h",
+    icon: Star,
+    tone: "warn" as const,
+  },
+  {
+    title: "Venda confirmada no marketplace",
+    detail: "Pedido #1284 · R$ 89,90",
+    time: "há 6h",
+    icon: ShoppingCart,
+    tone: "good" as const,
+  },
+];
+
+const SYSTEM_STATUS = [
+  { label: "API tRPC", value: "online", tone: "good" as const },
+  { label: "Database", value: "ok", tone: "good" as const },
+  { label: "Redis cache", value: "warming", tone: "warn" as const },
+  { label: "Modo", value: "produção", tone: "info" as const },
+];
+
+function toneClasses(tone: "good" | "warn" | "info") {
+  if (tone === "good") return "text-quantum-lime";
+  if (tone === "warn") return "text-amber-300";
+  return "text-quantum-cyan";
+}
+
+function toneDot(tone: "good" | "warn" | "info") {
+  if (tone === "good") return "bg-quantum-lime shadow-[0_0_8px_#7CFFB2]";
+  if (tone === "warn") return "bg-amber-400 shadow-[0_0_8px_#FBBF24]";
+  return "bg-quantum-cyan shadow-[0_0_8px_#00E5FF]";
+}
+
+const MOCK_BTC_PRICE_BRL = 360000; // Preço referencial de cotação BTC/BRL
+
+export default function Dashboard() {
+  const [showCostCenter, setShowCostCenter] = useState(false);
+
+  const { user } = useAuth();
+  const { profile, refresh } = useMarketplaceProfile();
+  const [isCollecting, setIsCollecting] = useState(false);
+  const [showBtcModal, setShowBtcModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [btcAmountBrl, setBtcAmountBrl] = useState(100);
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+
+  const balance = profile.btcAllocated;
+  const btcLocked = isBtcLocked(profile);
+  const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
+  const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
+
+  const displayName = user?.name || "Afiliado IOAID · SaaS";
+  const displayEmail = user?.email || "usuario@demo.mmn.ai";
+  const displayRole = user?.role === "admin" ? "Administrador" : "Afiliado";
+
+  // -------------------------------------------------------------------------
+  // Identificadores públicos do Afiliado (Nexus SaaS · IOAID)
+  // -------------------------------------------------------------------------
+  // ID de Indicador: prefixo NX + primeiros 8 chars do user.id (sem hífens)
+  const referralId = useMemo(() => {
+    const raw = (user?.id || profile.userId || "").toString().replace(/[^A-Za-z0-9]/g, "");
+    return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
+  }, [user?.id, profile.userId]);
+
+  // Link de indicação público (Minha Loja / cadastro)
+  const referralLink = useMemo(() => {
+    if (typeof window === "undefined") return `/afiliado/${referralId}`;
+    return `${window.location.origin}/afiliado/${referralId}`;
+  }, [referralId]);
+
+  // -------------------------------------------------------------------------
+  // Saldo total (Comissões liberadas em R$ — base de saque)
+  // -------------------------------------------------------------------------
+  // Em produção este valor virá de `trpc.payments.getAvailableBalance`.
+  // Por enquanto consolidamos o saldo disponível mock (R$).
+  const totalBalanceBrl = 3450.0;
+  const totalBalanceLocked = totalBalanceBrl * 0.35; // 35% retido no ciclo até fechamento da janela
+  const totalBalanceAvailable = totalBalanceBrl - totalBalanceLocked;
+
+  const handleCopyReferral = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      toast.success("Link de indicação copiado");
+    } catch {
+      toast.error("Não foi possível copiar o link");
+    }
+  };
+
+  const handleRequestWithdraw = () => {
+    if (withdrawAmount <= 0) {
+      toast.error("Informe um valor maior que zero");
+      return;
+    }
+    if (withdrawAmount > totalBalanceAvailable) {
+      toast.error(`Valor acima do disponível (R$ ${totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })})`);
+      return;
+    }
+    // Em produção: trpc.payments.requestWithdrawal.mutate({ amount: withdrawAmount * 100 })
+    toast.success(`Solicitação de saque de R$ ${withdrawAmount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })} enviada. Janela oficial: dia 10 a 15 de cada mês.`);
+    setShowWithdrawModal(false);
+    setWithdrawAmount(0);
+  };
+
+  const handleHarvest = () => {
+    setIsCollecting(true);
+    setTimeout(() => {
+      setIsCollecting(false);
+      refresh();
+    }, 1200);
+  };
+
+  const handleConfirmBtcAllocation = () => {
+    if (btcAmountBrl <= 0) return;
+    allocateBrlToBtc(profile, btcAmountBrl * 100, MOCK_BTC_PRICE_BRL);
+    refresh();
+    setShowBtcModal(false);
+  };
+
+  return (
+    <DashboardLayout>
+      <NotificationCenter />
+      <AcademiaPushOptIn />
+      <AcademiaResume />
+      <AgentLivePanel variant="compact" />
+      <div className="relative space-y-8 font-sans antialiased">
+        {/* Background atmosférico fixo do backoffice usuário */}
+        <div
+          className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: `url(${bgUser})` }}
+          aria-hidden="true"
+        />
+        <div className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-obsidian/85 via-obsidian/70 to-obsidian" aria-hidden="true" />
+        {/* Sub-header técnico */}
+        <header className="flex flex-col gap-4 border-b border-obsidian-700 pb-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+              // PEER_SESSION_ACTIVE
+            </p>
+            <h1 className="mt-2 font-sans text-2xl font-bold tracking-tight text-white">
+              Bem-vindo de volta,{" "}
+              <span className="text-quantum-cyan">{displayName.split(" ")[0]}</span>
+            </h1>
+            <p className="mt-1 text-sm text-slate-400">
+              {displayEmail} · {displayRole} · NEXUS_NODE // CONEXÃO_ESTÁVEL
+            </p>
+            <div className="mt-3 inline-flex flex-wrap items-center gap-2 rounded-md border border-quantum-cyan/30 bg-quantum-cyan/5 px-3 py-1.5 font-mono text-[11px] text-quantum-cyan">
+              <Hash size={12} />
+              <span className="uppercase tracking-widest text-[10px] text-slate-400">ID de Indicador</span>
+              <span className="font-bold tracking-wider text-white">{referralId}</span>
+              <button
+                type="button"
+                onClick={handleCopyReferral}
+                className="ml-1 inline-flex items-center gap-1 rounded border border-quantum-cyan/30 px-2 py-0.5 text-[10px] uppercase tracking-widest hover:bg-quantum-cyan/15"
+                title="Copiar link de indicação"
+              >
+                <Copy size={10} /> Copiar link
+              </button>
+            </div>
+            <div className="mt-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Qualificação atual</p>
+              <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
+              <p className="mt-1 text-sm text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row">
+            <button
+              onClick={handleHarvest}
+              disabled={isCollecting}
+              className={`inline-flex items-center justify-center gap-2 rounded border px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition-all ${
+                isCollecting
+                  ? "animate-pulse border-amber-400/60 bg-amber-400/10 text-amber-300"
+                  : "border-quantum-cyan/40 bg-quantum-cyan/10 text-quantum-cyan hover:bg-quantum-cyan/20"
+              }`}
+            >
+              <Zap size={14} />
+              {isCollecting ? "Sincronizando nós…" : "Colher ganhos dos agentes"}
+            </button>
+            <Link
+              href="/agents"
+              className="inline-flex items-center justify-center gap-2 rounded border border-quantum-purple/40 bg-quantum-purple/10 px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-quantum-purple transition hover:bg-quantum-purple/20"
+            >
+              <Bot size={14} /> Painel do Agente
+            </Link>
+          </div>
+        </header>
+
+        {/* KPIs principais */}
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {/* SALDO TOTAL (R$) · com botão Solicitar Saque */}
+          <div className="rounded-lg border border-quantum-lime/40 bg-gradient-to-br from-quantum-lime/10 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-lime/60 hover:shadow-quantum">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                  // Saldo Total · BRL
+                </p>
+                <p className="mt-3 font-sans text-3xl font-bold text-quantum-lime">
+                  R$ {totalBalanceBrl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">
+                <Wallet size={16} />
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+              <div className="rounded border border-quantum-lime/20 bg-quantum-lime/5 px-2 py-1.5">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Disponível</p>
+                <p className="font-mono font-semibold text-quantum-lime">
+                  R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded border border-amber-400/20 bg-amber-400/5 px-2 py-1.5">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Retido (ciclo)</p>
+                <p className="font-mono font-semibold text-amber-300">
+                  R$ {totalBalanceLocked.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 rounded-xl border border-quantum-cyan/20 bg-quantum-cyan/5 px-3 py-3">
+              <p className="text-[9px] uppercase tracking-widest text-slate-500">BTC em custódia Binânce</p>
+              <p className="mt-2 text-lg font-semibold text-white">{balance.toFixed(4)} BTC</p>
+              <p className="mt-1 text-xs text-slate-400">~ R$ {(balance * MOCK_BTC_PRICE_BRL).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} alocados em IA Core</p>
+              <p className="mt-2 text-[10px] uppercase tracking-widest text-quantum-cyan">{btcLocked ? `Cong. até ${profile.btcLockUntil?.slice(0, 10)} · 90d` : `Pronto para nova alocação`}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setWithdrawAmount(Number(totalBalanceAvailable.toFixed(2)));
+                setShowWithdrawModal(true);
+              }}
+              disabled={totalBalanceAvailable <= 0}
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-md border border-quantum-lime/40 bg-quantum-lime/15 px-3 py-2 font-mono text-[11px] uppercase tracking-widest text-quantum-lime transition hover:bg-quantum-lime/25 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Wallet size={12} /> Solicitar Saque
+            </button>
+            <p className="mt-2 text-[10px] text-slate-500">
+              Janela oficial: dia 10 a 15 de cada mês · PIX/BeYour Banker
+            </p>
+          </div>
+          {/* PAINEL FUNDIDO — Sub-IAs + Rendimento médio P2P */}
+          <div className="rounded-lg border border-quantum-purple/30 bg-gradient-to-br from-quantum-purple/10 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-purple/60 hover:shadow-quantum">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+              // Colmeia · Sub-IAs + Rendimento P2P
+            </p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <div>
+                <p className="font-sans text-3xl font-bold text-white">
+                  147 <span className="text-sm text-quantum-purple">Nodes</span>
+                </p>
+                <p className="mt-1 text-[11px] text-slate-400">12 ativos · 24h</p>
+              </div>
+              <div className="text-right">
+                <p className="font-sans text-2xl font-bold text-quantum-lime">+12.4%</p>
+                <p className="mt-1 text-[11px] text-slate-400">média P2P · 24h</p>
+              </div>
+            </div>
+            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-obsidian-900">
+              <div className="h-full w-[62%] bg-gradient-to-r from-quantum-purple to-quantum-lime" />
+            </div>
+            <p className="mt-2 text-[10px] uppercase tracking-widest text-slate-500">
+              Saúde da malha: 62% de eficiência média
+            </p>
+          </div>
+
+          {/* PAINEL FEED — notícias e notificações */}
+          <div className="rounded-lg border border-quantum-cyan/30 bg-gradient-to-br from-quantum-cyan/5 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/60 hover:shadow-quantum">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                // Feed · Notícias & Notificações
+              </p>
+              <span className="inline-flex items-center gap-1 rounded border border-quantum-cyan/30 bg-quantum-cyan/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-quantum-cyan">
+                Live
+              </span>
+            </div>
+            <ul className="mt-3 space-y-2 text-[12px] leading-tight">
+              <li className="flex items-start gap-2 rounded border border-quantum-lime/20 bg-quantum-lime/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-lime" />
+                <div>
+                  <p className="text-white">Comissão N1 creditada</p>
+                  <p className="text-[10px] text-slate-400">há 12 min · ciclo atual</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-quantum-cyan/20 bg-quantum-cyan/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-cyan" />
+                <div>
+                  <p className="text-white">Novo afiliado entrou na sua rede</p>
+                  <p className="text-[10px] text-slate-400">há 38 min · N2</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-quantum-purple/20 bg-quantum-purple/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-purple" />
+                <div>
+                  <p className="text-white">Pack Nexus Affil&apos;IA&apos;te atualizado</p>
+                  <p className="text-[10px] text-slate-400">há 2h · plataforma</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-amber-400/20 bg-amber-400/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
+                <div>
+                  <p className="text-white">Janela de saque abre dia 10</p>
+                  <p className="text-[10px] text-slate-400">PIX/BeYour Banker</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        {/* Grafo + Quick actions */}
+        <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+          {/* Painel grafo */}
+          <div className="relative min-h-[320px] overflow-hidden rounded-lg border border-obsidian-700 bg-obsidian-800/30 p-6 backdrop-blur">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+                // FILTRO_GRAFO: AFILIADOS_MAGNETIC_FORCE
+              </p>
+              <span className="inline-flex items-center gap-2 rounded border border-quantum-cyan/30 bg-quantum-cyan/5 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-quantum-cyan">
+                <Activity size={10} /> Realtime
+              </span>
+            </div>
+
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div className="relative flex h-56 w-56 items-center justify-center">
+                <div className="absolute inset-0 rounded-full border border-obsidian-700" />
+                <div className="absolute inset-6 rounded-full border border-quantum-cyan/30 animate-slow-pulse" />
+                <div className="absolute inset-14 rounded-full border border-quantum-purple/20" />
+                <div className="h-6 w-6 rounded-full bg-gradient-to-br from-quantum-cyan to-quantum-purple shadow-[0_0_20px_rgba(0,229,255,0.6)]" />
+                {/* Nós orbitando */}
+                <span className="absolute h-2.5 w-2.5 rounded-full bg-quantum-cyan shadow-[0_0_10px_#00E5FF] animate-orbit" />
+                <span
+                  className="absolute h-2 w-2 rounded-full bg-quantum-purple shadow-[0_0_10px_#8B5CF6] animate-orbit"
+                  style={{ animationDelay: "-4s", animationDuration: "10s" }}
+                />
+                <span
+                  className="absolute h-1.5 w-1.5 rounded-full bg-quantum-lime shadow-[0_0_10px_#7CFFB2] animate-orbit"
+                  style={{ animationDelay: "-8s", animationDuration: "16s" }}
+                />
+              </div>
+            </div>
+
+            <div className="absolute bottom-4 left-4 right-4 rounded border border-obsidian-700 bg-obsidian-900/80 p-3 text-[11px] text-slate-400 backdrop-blur">
+              <span className="font-mono uppercase tracking-widest text-quantum-cyan">
+                Algoritmo gravitacional ativo
+              </span>
+              <p className="mt-1 leading-relaxed">
+                Os nós se auto-organizam conforme o volume de transações recebidas na malha MMN. Mais
+                tração em uma colmeia atrai novos sub-agentes automaticamente.
+              </p>
+            </div>
+          </div>
+
+          {/* System status */}
+          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-6 backdrop-blur">
+            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+              // STATUS_DA_INFRA
+            </p>
+            <h3 className="mt-2 font-sans text-lg font-semibold text-white">Saúde do Sistema</h3>
+            <p className="mt-1 text-xs text-slate-400">
+              Monitoramento em tempo real do bootstrap IOAID · SaaS.
+            </p>
+
+            <div className="mt-5 space-y-2">
+              {SYSTEM_STATUS.map((line) => (
+                <div
+                  key={line.label}
+                  className="flex items-center justify-between rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-2"
+                >
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+                    {line.label}
+                  </span>
+                  <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest">
+                    <span className={`h-2 w-2 rounded-full ${toneDot(line.tone)}`} />
+                    <span className={toneClasses(line.tone)}>{line.value}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* GANHOS ACUMULADOS · Histórico + Extrato anual */}
+        <section className="rounded-lg border border-quantum-lime/30 bg-gradient-to-br from-quantum-lime/5 via-obsidian-800/40 to-obsidian-800/40 p-6 backdrop-blur">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-lime">
+                // GANHOS ACUMULADOS · ANO {new Date().getFullYear()}
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-white">Histórico & Extrato consolidado</h2>
+              <p className="text-xs text-slate-400">
+                Soma de todas as fontes de ganho do programa no ano corrente.
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
+              <p className="font-sans text-3xl font-bold text-quantum-lime">
+                R$ {(38450).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+            {[
+              { label: "Comissões diretas", value: 18250.5 },
+              { label: "Bônus de rede", value: 9620.0 },
+              { label: "Rendimento P2P", value: 7180.25 },
+              { label: "Recompensas/Pack", value: 3399.25 },
+            ].map((item) => (
+              <div key={item.label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
+                <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{item.label}</p>
+                <p className="mt-2 font-sans text-lg font-semibold text-white">
+                  R$ {item.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
+            <table className="w-full text-left text-[12px]">
+              <thead className="bg-obsidian-900/60 text-slate-400">
+                <tr>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Origem</th>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Movimento</th>
+                  <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor (R$)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
+                {[
+                  { p: "Jun/2026", o: "Comissão N1", m: "Crédito", v: 1280.5 },
+                  { p: "Mai/2026", o: "Bônus de rede", m: "Crédito", v: 980.0 },
+                  { p: "Mai/2026", o: "Rendimento P2P", m: "Crédito", v: 612.25 },
+                  { p: "Abr/2026", o: "Recompensa Pack", m: "Crédito", v: 450.0 },
+                  { p: "Mar/2026", o: "Comissão N2", m: "Crédito", v: 740.75 },
+                  { p: "Fev/2026", o: "Comissão N3", m: "Crédito", v: 318.4 },
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-obsidian-800/40">
+                    <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.p}</td>
+                    <td className="px-3 py-2">{row.o}</td>
+                    <td className="px-3 py-2">{row.m}</td>
+                    <td className="px-3 py-2 text-right font-mono text-quantum-lime">
+                      R$ {row.v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
+            Extrato anual consolidado · valores líquidos creditados na carteira
+          </p>
+
+          <div className="mt-5 flex flex-wrap items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCostCenter((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-lg border border-quantum-lime/40 bg-quantum-lime/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-quantum-lime transition hover:bg-quantum-lime/20"
+            >
+              {showCostCenter ? "Ocultar Central de Custos" : "Central de Custos"}
+            </button>
+          </div>
+
+          {showCostCenter && (
+            <RealCostCenter />
+          )}
+        </section>
+
+        {/* Quick actions */}
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+                // ATALHOS
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-white">Ações rápidas</h2>
+            </div>
+            <Link
+              href="/utilities"
+              className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-widest text-slate-400 hover:text-quantum-cyan"
+            >
+              ver todas <ChevronRight size={12} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {QUICK_ACTIONS.map(({ href, label, description, icon: Icon, accent }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group relative overflow-hidden rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition-all hover:-translate-y-0.5 hover:border-quantum-cyan/40 hover:shadow-quantum"
+              >
+                <div
+                  className={`pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-gradient-to-br ${accent} opacity-0 blur-2xl transition-opacity group-hover:opacity-100`}
+                />
+                <div className="flex items-center justify-between">
+                  <div className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                    <Icon size={16} />
+                  </div>
+                  <ArrowRight
+                    size={14}
+                    className="text-slate-500 transition-transform group-hover:translate-x-1 group-hover:text-quantum-cyan"
+                  />
+                </div>
+                <p className="mt-4 font-sans text-sm font-semibold text-white">{label}</p>
+                <p className="mt-1 text-xs text-slate-400">{description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-2">
+          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.14),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/20">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div data-partners-block="subscribers-only" className="hidden">
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// NEXUS_PARTNERS_PACK</p>
+                <h2 className="mt-2 text-2xl font-bold text-white">Painel Nexus Partners Pack</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                  Produto SaaS independente da jornada PD/SCC, contratado por assinatura e com painel operacional próprio para parceiros, comissões, tiers e benefícios.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-amber-200">
+                6–48 meses · recorrência
+              </span>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Modalidades</p>
+                <p className="mt-2 text-xl font-bold text-white">Start · Growth · Enterprise</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Comissão elegível</p>
+                <p className="mt-2 text-xl font-bold text-white">5%–15% recorrente</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Painéis</p>
+                <p className="mt-2 text-xl font-bold text-white">Assinatura + Operação</p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4 text-sm text-slate-200">
+              <p className="font-semibold text-quantum-cyan">Regra de ativação aplicada</p>
+              <p className="mt-2 leading-6">O Nexus Partners Pack aparece no dashboard como produto comercial autônomo. O acesso ao catálogo e à contratação fica disponível após autenticação; a operação diária segue em painéis dedicados de assinatura e parceiros.</p>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/subscriptions" className="inline-flex items-center gap-2 rounded-lg border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-4 py-2.5 text-sm font-bold text-obsidian shadow-quantum transition-all hover:-translate-y-0.5">
+                Assinar / contratar <ArrowRight size={14} />
+              </Link>
+              <Link href="/partners" className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                Abrir painel partners
+              </Link>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.20),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/20">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-purple">// NEXUS_ACADEMIA</p>
+                <h2 className="mt-2 text-2xl font-bold text-white">Painel Nexus Academ'IA</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                  Hub educacional integrado ao runtime, com trilhas, Lab Nexus, Lib Nexus, webinars, treinamentos e entitlement refletido no agente.
+                </p>
+              </div>
+              <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-white ${academiaSummary.tier.badgeTone}`}>
+                {academiaSummary.tier.label}
+              </span>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Trilhas liberadas</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.unlockedTrackCount} / 4</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Skills mapeadas</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.unlockedSkills}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Acesso atual</p>
+                <p className="mt-2 text-xl font-bold text-white">{academiaSummary.tier.labAccess}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-quantum-purple/20 bg-quantum-purple/10 p-4 text-sm text-slate-200">
+              <p className="font-semibold text-quantum-purple">Regra de ativação aplicada</p>
+              <p className="mt-2 leading-6">A abertura da Academ'IA acompanha a evolução do afiliado no PD/SCC: Fundamental para cadastrados, trilha Agente no 1º ciclo ativo, Master após consolidação de ciclos e Elite na camada estratégica mais alta.</p>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/academia" className="inline-flex items-center gap-2 rounded-lg border border-quantum-purple/40 bg-gradient-to-r from-quantum-purple to-quantum-cyan px-4 py-2.5 text-sm font-bold text-white shadow-quantum transition-all hover:-translate-y-0.5">
+                Abrir Academ'IA <ArrowRight size={14} />
+              </Link>
+              <Link href="/skills" className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10">
+                Ver skills
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Recent activity */}
+        <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-6 backdrop-blur">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
+                  // STREAM_DE_EVENTOS
+                </p>
+                <h3 className="mt-1 text-lg font-semibold text-white">Atividade recente</h3>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded border border-quantum-cyan/30 bg-quantum-cyan/10 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-quantum-cyan">
+                <Activity size={10} /> live
+              </span>
+            </div>
+
+            <ul className="mt-5 space-y-3">
+              {RECENT_ACTIVITY.map(({ title, detail, time, icon: Icon, tone }) => (
+                <li
+                  key={title}
+                  className="flex items-start gap-3 rounded border border-obsidian-700 bg-obsidian-900/40 p-3"
+                >
+                  <span
+                    className={`mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-md border ${
+                      tone === "good"
+                        ? "border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime"
+                        : tone === "warn"
+                          ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                          : "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan"
+                    }`}
+                  >
+                    <Icon size={14} />
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">{title}</p>
+                    <p className="text-xs text-slate-400">{detail}</p>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    {time}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-lg border border-obsidian-700 bg-gradient-to-br from-quantum-cyan/5 via-obsidian-800 to-quantum-purple/10 p-6 backdrop-blur">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-purple">
+                // RECOMPENSAS
+              </p>
+              <h3 className="mt-2 font-sans text-xl font-semibold text-white">
+                Próximo nível: {progress.nextPack?.shortName ?? "Topo do plano"}
+              </h3>
+              <p className="mt-2 text-sm text-slate-400">
+                Faltam {Math.max(0, progress.xpTarget - progress.xpCurrent).toLocaleString("pt-BR")} XP e {Math.max(0, progress.directTarget - progress.directCurrent)} diretos para liberar o próximo upgrade.
+              </p>
+            </div>
+            <Link
+              href="/bonus"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-4 py-2.5 text-sm font-bold text-obsidian shadow-quantum transition-all hover:-translate-y-0.5 hover:shadow-quantum-strong"
+            >
+              <Gift size={14} /> Ver recompensas
+            </Link>
+          </div>
+        </section>
+      </div>
+
+      {/* MODAL: Solicitar Saque */}
+      {showWithdrawModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowWithdrawModal(false)}>
+          <div
+            className="relative w-full max-w-lg rounded-2xl border border-quantum-lime/40 bg-obsidian-900 p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowWithdrawModal(false)}
+              className="absolute right-3 top-3 text-slate-400 hover:text-white"
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-quantum-lime/10 text-quantum-lime">
+                <Wallet size={20} />
+              </span>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-lime">// SAQUE BRL</p>
+                <h2 className="text-lg font-semibold text-white">Solicitar Saque</h2>
+              </div>
+            </div>
+            <p className="mt-4 text-sm text-slate-300">
+              Saques são processados na <strong className="text-quantum-lime">janela oficial entre o dia 10 e 15 de cada mês</strong> via PIX/BeYour Banker, conforme PIX cadastrado no seu perfil.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
+              <div className="rounded-lg border border-quantum-lime/30 bg-quantum-lime/5 p-3">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Saldo disponível</p>
+                <p className="mt-1 font-mono text-lg font-bold text-quantum-lime">
+                  R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+              <div className="rounded-lg border border-amber-400/30 bg-amber-400/5 p-3">
+                <p className="text-[9px] uppercase tracking-widest text-slate-500">Retido no ciclo</p>
+                <p className="mt-1 font-mono text-lg font-bold text-amber-300">
+                  R$ {totalBalanceLocked.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 space-y-3">
+              <label className="block text-xs uppercase tracking-widest text-slate-400" htmlFor="withdrawAmount">
+                Valor a sacar (BRL)
+              </label>
+              <input
+                id="withdrawAmount"
+                type="number"
+                min={0}
+                step={10}
+                value={withdrawAmount}
+                onChange={(event) => setWithdrawAmount(Number(event.target.value) || 0)}
+                className="w-full rounded-lg border border-obsidian-700 bg-obsidian-800 px-3 py-2 text-white focus:border-quantum-lime focus:outline-none"
+              />
+              <p className="text-xs text-slate-400">
+                Mínimo R$ 50,00 · máximo R$ {totalBalanceAvailable.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleRequestWithdraw}
+                disabled={withdrawAmount <= 0}
+                className="inline-flex items-center gap-2 rounded-lg border border-quantum-lime/40 bg-gradient-to-r from-quantum-lime to-quantum-cyan px-4 py-2 text-sm font-bold text-obsidian shadow-quantum disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Wallet size={14} /> Confirmar solicitação
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowWithdrawModal(false)}
+                className="inline-flex items-center gap-2 rounded-lg border border-obsidian-700 bg-obsidian-800 px-4 py-2 text-sm text-slate-200 hover:border-quantum-lime/30"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showBtcModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => setShowBtcModal(false)}>
+          <div
+            className="relative w-full max-w-lg rounded-2xl border border-quantum-cyan/30 bg-obsidian-900 p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowBtcModal(false)}
+              className="absolute right-3 top-3 text-slate-400 hover:text-white"
+              aria-label="Fechar"
+            >
+              ×
+            </button>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-quantum-cyan/10 text-quantum-cyan">
+                <Bitcoin size={20} />
+              </span>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// CUSTÓDIA BINÂNCE</p>
+                <h2 className="text-lg font-semibold text-white">Alocar BRL em BTC</h2>
+              </div>
+            </div>
+            <p className="mt-4 text-sm text-slate-300">
+              A conversão BRL/BTC é realizada via custody address da Binânce. O valor convertido fica
+              <strong className="text-quantum-cyan"> congelado por 90 dias </strong> antes de poder ser sacado.
+            </p>
+            <div className="mt-5 space-y-3">
+              <label className="block text-xs uppercase tracking-widest text-slate-400" htmlFor="btcAmount">Valor a alocar (BRL)</label>
+              <input
+                id="btcAmount"
+                type="number"
+                min={10}
+                step={10}
+                value={btcAmountBrl}
+                onChange={(event) => setBtcAmountBrl(Number(event.target.value) || 0)}
+                className="w-full rounded-lg border border-obsidian-700 bg-obsidian-800 px-3 py-2 text-white focus:border-quantum-cyan focus:outline-none"
+              />
+              <p className="text-xs text-slate-400">
+                Equivalente estimado: {(btcAmountBrl / MOCK_BTC_PRICE_BRL).toFixed(8)} BTC · cotação referencial R$ {MOCK_BTC_PRICE_BRL.toLocaleString("pt-BR")}
+              </p>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={handleConfirmBtcAllocation}
+                disabled={btcAmountBrl <= 0}
+                className="inline-flex items-center gap-2 rounded-lg border border-quantum-cyan/40 bg-gradient-to-r from-quantum-cyan to-quantum-purple px-4 py-2 text-sm font-bold text-obsidian shadow-quantum disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Lock size={14} /> Confirmar alocação (lock {BTC_LOCK_DAYS}d)
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowBtcModal(false)}
+                className="inline-flex items-center gap-2 rounded-lg border border-obsidian-700 bg-obsidian-800 px-4 py-2 text-sm text-slate-200 hover:border-quantum-cyan/30"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* sprints-7-10-block · D12 UX_PREMIUM */}
+      <div className="grid gap-4 my-6" style={{gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))'}}>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-cyan-300 text-sm font-semibold tracking-wide">📊 Comissões</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">tempo real</span>
+          </div>
+          <CommissionChart />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-purple-300 text-sm font-semibold tracking-wide">🎯 Funil de Vendas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">pipeline</span>
+          </div>
+          <SalesFunnelDashboard />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-amber-300 text-sm font-semibold tracking-wide">🏆 Conquistas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">progresso</span>
+          </div>
+          <AchievementsBadges />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">ao vivo</span>
+          </div>
+          <NotificationCenter />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 my-6">
+        <AcademiaPersonalTrail />
+        <AcademiaWhatsNew />
+      </div>
+
+      <div className="my-6">
+        <AcademiaPopular />
+      </div>
+
+    </DashboardLayout>
+  );
+}

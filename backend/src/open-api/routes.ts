@@ -1193,5 +1193,6 @@ export function createNexusOpenApiRouter() {
     });
   });
 
+
   return router;
 }

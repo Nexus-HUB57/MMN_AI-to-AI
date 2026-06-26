@@ -22,9 +22,21 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Nexus Affil'IA'te · Plataforma SaaS + Nexus Partners Pack" />
     <meta name="twitter:description" content="Nexus Partners Pack: produto independente, contratado exclusivamente por assinatura (Start, Growth, Enterprise)." />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0a0a1c" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  
+    <script>
+      // Nexus Academ'IA SW — registra apenas em produção
+      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .catch(() => { /* silent — não bloquear UX */ });
+        });
+      }
+    </script>
+</body>
 </html>

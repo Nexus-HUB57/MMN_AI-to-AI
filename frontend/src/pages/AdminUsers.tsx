@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Edit2, Search, Shield, User } from "lucide-react";
+import { Lock, Search, Shield, User } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ export default function AdminUsers() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
-  const [selectedUser, setSelectedUser] = useState<{ id: number; role: UserRole } | null>(null);
 
   const usersQuery = trpc.admin.listUsers.useQuery({
     page,
@@ -31,16 +30,9 @@ export default function AdminUsers() {
     role: roleFilter === "all" ? undefined : roleFilter,
   });
 
-  const updateUserMutation = trpc.admin.updateUser.useMutation({
-    onSuccess: () => {
-      toast.success("Papel do usuário atualizado com sucesso");
-      usersQuery.refetch();
-      setSelectedUser(null);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao atualizar papel do usuário");
-    },
-  });
+  const handleRoleEditBlocked = () => {
+    toast.info("Promoção ou alteração de papel administrativo foi bloqueada neste backoffice.");
+  };
 
   const users = usersQuery.data?.users || [];
   const pagination = usersQuery.data?.pagination;
@@ -50,15 +42,6 @@ export default function AdminUsers() {
     const regular = users.filter((user) => user.role === "user").length;
     return { admins, regular, total: pagination?.total || 0 };
   }, [pagination?.total, users]);
-
-  const handleUpdateRole = () => {
-    if (!selectedUser) return;
-
-    updateUserMutation.mutate({
-      id: selectedUser.id,
-      role: selectedUser.role,
-    });
-  };
 
   return (
     <AdminDashboardLayout>
@@ -189,10 +172,12 @@ export default function AdminUsers() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setSelectedUser({ id: user.id, role: user.role })}
+                        onClick={handleRoleEditBlocked}
+                        disabled
+                        title="Alteração de papel administrativo desabilitada"
                       >
-                        <Edit2 size={16} />
-                        <span className="ml-2">Editar papel</span>
+                        <Lock size={16} />
+                        <span className="ml-2">Papel bloqueado</span>
                       </Button>
                     </td>
                   </tr>
@@ -232,36 +217,20 @@ export default function AdminUsers() {
           </div>
         </Card>
 
-        {selectedUser && (
-          <Card className="bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900">Atualizar papel do usuário</h3>
-            <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Novo papel</label>
-                <Select
-                  value={selectedUser.role}
-                  onValueChange={(value: UserRole) => setSelectedUser((current) => current ? { ...current, role: value } : current)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">Usuário</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex gap-3">
-                <Button onClick={handleUpdateRole} disabled={updateUserMutation.isPending}>
-                  {updateUserMutation.isPending ? "Salvando..." : "Salvar alteração"}
-                </Button>
-                <Button variant="outline" onClick={() => setSelectedUser(null)}>
-                  Cancelar
-                </Button>
-              </div>
+        <Card className="bg-white p-4 shadow-sm border-amber-200 bg-amber-50/50">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 rounded-full bg-amber-100 p-2 text-amber-700">
+              <Lock size={16} />
             </div>
-          </Card>
-        )}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Papel administrativo protegido</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Promoção, despromoção ou troca de papel admin foi desabilitada na interface e no backend.
+                Qualquer ajuste de acesso administrativo exige configuração protegida fora do fluxo operacional.
+              </p>
+            </div>
+          </div>
+        </Card>
       </div>
     </AdminDashboardLayout>
   );

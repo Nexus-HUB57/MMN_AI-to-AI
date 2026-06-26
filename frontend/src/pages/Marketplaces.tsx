@@ -470,7 +470,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       id: `ebook-${ebook.slug}`,
       type: "ebooks" as const,
       title: ebook.title,
-      subtitle: ebook.category,
+      subtitle: (ebook as any).subtitle || '', // D14-RaizFix
       category: ebook.category,
       description: ebook.description,
       badge: ebook.status === "active" ? "Liberado" : "Revenda",
@@ -1901,11 +1901,13 @@ export default function Marketplaces() {
 }
 
 function MonthlyActivationButton() {
+  // D14-MM-Modal
   const status = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
     refetchInterval: 30_000, retry: false,
   });
   const paid = !!status?.data?.monthlyActivationPaid;
   const cycle = status?.data?.cycleLabel || "ciclo atual";
+  const [open, setOpen] = useState(false);
 
   if (paid) {
     return (
@@ -1915,20 +1917,48 @@ function MonthlyActivationButton() {
       </div>
     );
   }
+
+  const checkoutHref = buildMarketplaceCheckoutUrl({
+    source: "monthly-activation",
+    type: "subscription",
+    slug: "monthly-activation",
+    name: "Ativação Mensal · Programa de Afiliados",
+    amountCents: 1000,
+    description: "Ativação mensal do Programa de Afiliados, com valor definido pela faixa de carreira vigente.",
+  });
+
   return (
-    <a
-      href={buildMarketplaceCheckoutUrl({
-        source: "monthly-activation",
-        type: "subscription",
-        slug: "monthly-activation",
-        name: "Ativação Mensal · Programa de Afiliados",
-        amountCents: 1000,
-        description: "Ativação mensal do Programa de Afiliados, com valor definido pela faixa de carreira vigente.",
-      })}
-      className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-200 hover:bg-emerald-300/25"
-    >
-      Gerar Pix de ativação
-    </a>
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-200 hover:bg-emerald-300/25"
+      >
+        Pagar Ativação Mensal
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/95 p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white">Como deseja pagar?</h3>
+            <p className="mt-1 text-sm text-slate-400">Escolha a forma de pagamento da Ativação Mensal.</p>
+            <div className="mt-5 grid gap-2">
+              <a href={checkoutHref} className="rounded-xl bg-cyan-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-cyan-500">
+                PIX instantâneo (QR Code · Mercado Pago)
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=mp-card"} className="rounded-xl bg-blue-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-blue-500">
+                Mercado Pago · cartão ou boleto
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=balance"} className="rounded-xl bg-purple-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-purple-500">
+                Pagar com saldo disponível
+              </a>
+            </div>
+            <button onClick={() => setOpen(false)} className="mt-4 w-full rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-widest text-slate-300 hover:bg-white/5">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
+
 

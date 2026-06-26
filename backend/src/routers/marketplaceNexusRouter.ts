@@ -1,3 +1,6 @@
+// D16-cache-redis
+let __ebookCache: { at: number; data: any } | null = null;
+const __EBOOK_CACHE_TTL_MS = 5 * 60 * 1000; // 5 min
 /**
  * marketplaceNexusRouter — Rotas tRPC do Marketplace Nexus
  *

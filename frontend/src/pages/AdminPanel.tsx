@@ -221,7 +221,7 @@ export default function AdminPanel() {
                   </label>
                   <input
                     type="text"
-                    defaultValue="MMN AI-to-AI"
+                    defaultValue="IOAID · SaaS"
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg"
                   />
                 </div>

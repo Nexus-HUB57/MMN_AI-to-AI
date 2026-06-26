@@ -1,117 +1,104 @@
-// SPRINT10_NOTIFICATION_CENTER_V2 — eventos reais (academia + dashboard)
-import { useEffect, useMemo, useState } from "react";
+// D11 NOTIFICATION_CENTER_DYNAMIC — feed em tempo real do backend
+import { useMemo, useState } from "react";
 import { trpc } from "../lib/trpc";
 
-interface Notification {
-  id: string;
-  type: "success" | "info" | "warning" | "error";
-  title: string;
-  message: string;
-  timestamp: number;
-  href?: string;
-}
-
 export default function NotificationCenter() {
-  const yt = trpc.academiaEad.youtubeSyncStatus.useQuery(undefined, {
-    retry: false,
-    staleTime: 5 * 60_000,
-    refetchOnWindowFocus: false,
-  });
-  const dash = trpc.dashboard.getMyDashboard.useQuery(undefined, {
-    retry: false,
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
+  const q = (trpc as any).dashboardStatus?.getNotifications?.useQuery?.(
+    { limit: 20 },
+    { refetchInterval: 45_000, refetchOnWindowFocus: true, retry: false }
+  );
+  const data = q?.data;
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
-  const [open, setOpen] = useState(false);
 
-  const notifications = useMemo<Notification[]>(() => {
-    const out: Notification[] = [];
+  const notifications = useMemo(() => {
+    const list = (data?.notifications || []) as Array<any>;
+    return list.filter((n) => !dismissed.has(n.id));
+  }, [data, dismissed]);
 
-    // Notificação de sistema (boot)
-    out.push({
-      id: "system-boot",
-      type: "info",
-      title: "Sistema Online",
-      message: "Nexus Hub operacional. Agentes IA prontos.",
-      timestamp: Date.now(),
-    });
+  if (!data && !q?.isLoading) {
+    return (
+      <div className="text-sm text-slate-400 px-1 py-2">
+        Sem novas notificações no momento.
+      </div>
+    );
+  }
 
-    // Notificação Academ'IA — vídeos unlisted
-    const ytData: any = yt.data;
-    if (ytData?.configured && ytData?.connected) {
-      const count = (ytData.latestVideos || []).length;
-      if (count > 0) {
-        out.push({
-          id: "yt-videos-ready",
-          type: "success",
-          title: "Academ'IA · Vídeos publicados",
-          message: `${count} vídeo(s) disponíveis no canal oficial @NexusAffilIAte-w9p.`,
-          timestamp: Date.now(),
-          href: "/academia/ead/curso",
-        });
-      }
-    }
-
-    // Notificações Dashboard — comissões pendentes
-    const dd: any = dash.data;
-    if (dd?.pendingCommissions && Number(dd.pendingCommissions) > 0) {
-      out.push({
-        id: "commissions-pending",
-        type: "warning",
-        title: "Comissões pendentes",
-        message: `Você possui R$ ${(Number(dd.pendingCommissions) / 100).toFixed(2)} em comissões aguardando confirmação.`,
-        timestamp: Date.now(),
-        href: "/dashboard",
-      });
-    }
-
-    return out.filter((n) => !dismissed.has(n.id));
-  }, [yt.data, dash.data, dismissed]);
+  if (q?.isLoading) {
+    return (
+      <div className="text-sm text-slate-400 px-1 py-2 animate-pulse">
+        Sincronizando notificações...
+      </div>
+    );
+  }
 
   const dismiss = (id: string) => setDismissed((s) => new Set([...s, id]));
-  const unread = notifications.length;
+  const colorOf = (t: string) =>
+    t === "success" ? "border-emerald-400/40 bg-emerald-500/5"
+    : t === "warning" ? "border-amber-400/40 bg-amber-500/5"
+    : t === "error" ? "border-rose-400/40 bg-rose-500/5"
+    : "border-slate-400/30 bg-slate-500/5";
+  const dotOf = (t: string) =>
+    t === "success" ? "bg-emerald-400"
+    : t === "warning" ? "bg-amber-400"
+    : t === "error" ? "bg-rose-400"
+    : "bg-slate-400";
+
+  if (notifications.length === 0) {
+    return (
+      <div className="text-sm text-slate-400 px-1 py-2">
+        Nenhuma notificação ativa.
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      <button
-        onClick={() => setOpen(!open)}
-        className="relative p-3 bg-white dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-800 hover:scale-105 transition"
-        aria-label="Notificações"
-      >
-        🔔
-        {unread > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-            {unread}
-          </span>
-        )}
-      </button>
-      {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 max-h-96 overflow-y-auto">
-          <div className="p-3 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-            <h4 className="font-bold text-gray-900 dark:text-white">Notificações</h4>
-            <button onClick={() => setOpen(false)} className="text-gray-500 hover:text-gray-700">✕</button>
-          </div>
-          {notifications.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">Nenhuma notificação</div>
-          ) : (
-            notifications.map((n) => (
-              <div key={n.id} className="p-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="font-semibold text-sm text-gray-900 dark:text-white">{n.title}</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{n.message}</div>
-                    {n.href && (
-                      <a href={n.href} className="text-[11px] text-blue-500 hover:underline mt-1 inline-block">Abrir</a>
-                    )}
-                  </div>
-                  <button onClick={() => dismiss(n.id)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
+    <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+      {notifications.map((n) => (
+        <div
+          key={n.id}
+          className={"rounded-lg border px-3 py-2 text-[12px] " + colorOf(n.type)}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start gap-2 flex-1 min-w-0">
+              <span
+                className={"inline-block h-2 w-2 rounded-full mt-1.5 " + dotOf(n.type)}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-slate-100 truncate">{n.title}</div>
+                <div className="text-slate-400 text-[11px] mt-0.5 leading-snug">{n.message}</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">
+                  {timeAgo(n.timestamp)}
+                  {n.href && (
+                    <>
+                      {" · "}
+                      <a href={n.href} className="text-quantum-cyan hover:underline">abrir</a>
+                    </>
+                  )}
                 </div>
               </div>
-            ))
-          )}
+            </div>
+            <button
+              onClick={() => dismiss(n.id)}
+              className="text-slate-500 hover:text-slate-300 text-xs px-1"
+              aria-label="Dispensar"
+            >
+              ×
+            </button>
+          </div>
         </div>
-      )}
+      ))}
     </div>
   );
+}
+
+function timeAgo(iso: string): string {
+  const t = new Date(iso).getTime();
+  const dt = Math.max(0, Date.now() - t);
+  const m = Math.floor(dt / 60000);
+  if (m < 1) return "agora";
+  if (m < 60) return `há ${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `há ${h} h`;
+  const d = Math.floor(h / 24);
+  return `há ${d} d`;
 }

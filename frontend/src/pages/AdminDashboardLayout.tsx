@@ -9,10 +9,16 @@ import {
   CreditCard,
   AlertCircle,
   FileText,
+  GraduationCap,
   LogOut,
   Menu,
   X,
   Calendar,
+  CheckCircle2,
+  Cpu,
+  Sparkles,
+  LayoutDashboard,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -29,7 +35,13 @@ const MENU_ITEMS = [
   { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
+  { label: "Academia EAD", path: "/admin/academia", icon: GraduationCap },
   { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
+  { label: "Aprovações", path: "/admin/approvals", icon: CheckCircle2 },
+  { label: "Status Sistema", path: "/admin/status", icon: Cpu },
+  { label: "Skills", path: "/admin/skills", icon: Sparkles },
+  { label: "Painel Operacional", path: "/admin/panel", icon: LayoutDashboard },
+  { label: "Configurações", path: "/admin/config", icon: Settings },
 ];
 
 export default function AdminDashboardLayout({ children }: AdminDashboardLayoutProps) {
@@ -59,7 +71,7 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
       >
         {/* Logo */}
         <div className="p-4 border-b border-slate-700 flex items-center justify-between">
-          {sidebarOpen && <h1 className="text-xl font-bold">MMNAI Admin</h1>}
+          {sidebarOpen && <h1 className="text-xl font-bold">IOAID · SaaS Admin</h1>}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-1 hover:bg-slate-800 rounded"

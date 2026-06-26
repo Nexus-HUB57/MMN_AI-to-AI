@@ -58,6 +58,7 @@ export function resolveSubscriptionIdFromPayload(payload: Record<string, unknown
   return null;
 }
 
+// Transição automática Partners Pack -> Ativação Mensal acionada via cron/billing.
 export async function processMercadoPagoSubscriptionWebhook(input: {
   body: Record<string, unknown>;
   query?: Record<string, unknown>;

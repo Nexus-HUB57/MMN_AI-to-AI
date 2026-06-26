@@ -43,6 +43,47 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 
+import { trpc } from "../lib/trpc";
+// NEXUS_ONBOARDING_V2
+import OnboardingBundle from "@/components/OnboardingBundle";
+
+
+import CommandPalette from "../components/CommandPalette";
+import { ThemeToggle } from "../components/ThemeProvider";
+import { useFocusMode } from "../hooks/useFocusMode";
+function DashboardStatusIndicators() {
+  const status = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+    retry: false,
+  });
+  const agentActive = !!status?.data?.agentActive;
+  const monthlyPaid = !!status?.data?.monthlyActivationPaid;
+  const dot = (on: boolean, label: string) => (
+    <div className="flex items-center gap-1.5">
+      <span
+        className={
+          "inline-block h-2.5 w-2.5 rounded-full " +
+          (on
+            ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)] animate-pulse"
+            : "bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.7)]")
+        }
+        aria-label={(on ? "Ativo: " : "Pendente: ") + label}
+        title={(on ? "Ativo: " : "Pendente: ") + label}
+      />
+      <span className="hidden md:inline text-[10px] uppercase tracking-widest text-slate-300/80">
+        {label}
+      </span>
+    </div>
+  );
+  return (
+    <div className="ml-3 hidden sm:flex items-center gap-3 border-l border-white/10 pl-3">
+      {dot(agentActive, "Agente")}
+      {dot(monthlyPaid, "Ativação")}
+    </div>
+  );
+}
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -60,7 +101,9 @@ interface NavGroup {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, loading, logout } = useAuth();
+  
+  useFocusMode();
+const { user, loading, logout } = useAuth();
   const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -86,187 +129,50 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => window.clearTimeout(timer);
   }, [userMenuOpen]);
 
+  // NEXUS_HUBS_V2 — 3 Hubs: Operar / Crescer / Conta
   const navGroups: NavGroup[] = [
     {
-      title: "Geral",
+      title: "🧠 Operar — Agente & Conteúdo",
       items: [
-        {
-          label: "Dashboard",
-          href: "/dashboard",
-          icon: <BarChart3 className="w-5 h-5" />,
-        },
-        {
-          label: "Rede Binária N.O",
-          href: "/network",
-          icon: <Network className="w-5 h-5" />,
-        },
-        {
-          label: "Comissões",
-          href: "/commissions",
-          icon: <TrendingUp className="w-5 h-5" />,
-        },
-        {
-          label: "Carreira / XP",
-          href: "/career",
-          icon: <Trophy className="w-5 h-5" />,
-        },
-        {
-          label: "Pagamentos",
-          href: "/payments",
-          icon: <Wallet className="w-5 h-5" />,
-        },
-        {
-          label: "Checkout PIX",
-          href: "/pix/checkout",
-          icon: <QrCode className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Histórico PIX",
-          href: "/pix/history",
-          icon: <History className="w-5 h-5" />,
-        },
-        {
-          label: "Bônus & Recompensas",
-          href: "/bonus",
-          icon: <Star className="w-5 h-5" />,
-        },
+        { label: "Painel do Agente", href: "/agents", icon: <Cpu className="w-5 h-5" />, badge: "Live" },
+        { label: "Skills do Agente", href: "/skills", icon: <Sparkles className="w-5 h-5" />, badge: "25" },
+        { label: "Sincronizar IA", href: "/agents/sync", icon: <Globe className="w-5 h-5" /> },
+        { label: "Orquestrador", href: "/orchestrator", icon: <Network className="w-5 h-5" /> },
+        { label: "Hub de Conteúdo", href: "/content-hub", icon: <BookOpen className="w-5 h-5" /> },
+        { label: "Gerador de Conteúdo", href: "/content/generation", icon: <Sparkles className="w-5 h-5" /> },
+        { label: "Calendário Social", href: "/content/calendar", icon: <Calendar className="w-5 h-5" /> },
+        { label: "Materiais", href: "/marketing/materials", icon: <Image className="w-5 h-5" /> },
+        { label: "Contas Sociais", href: "/social/accounts", icon: <MessageSquare className="w-5 h-5" /> },
       ],
     },
     {
-      title: "Agente IA",
+      title: "🚀 Crescer — Vendas & Rede",
       items: [
-        {
-          label: "Painel do Agente",
-          href: "/agents",
-          icon: <Cpu className="w-5 h-5" />,
-          badge: "Beta",
-        },
-        {
-          label: "Sincronizar IA",
-          href: "/agents/sync",
-          icon: <Globe className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Orquestrador",
-          href: "/orchestrator",
-          icon: <Globe className="w-5 h-5" />,
-        },
-        {
-          label: "Packs Nexus",
-          href: "/packs",
-          icon: <Package className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Skills Nexus",
-          href: "/skills",
-          icon: <Sparkles className="w-5 h-5" />,
-          badge: "Plano",
-        },
-        {
-          label: "Upgrades",
-          href: "/upgrades",
-          icon: <Zap className="w-5 h-5" />,
-        },
+        { label: "Marketplace Nexus", href: "/marketplaces", icon: <ShoppingCart className="w-5 h-5" />, badge: "201" },
+        { label: "Minha Loja", href: "/minha-loja", icon: <Globe className="w-5 h-5" /> },
+        { label: "Meu Estoque", href: "/estoque", icon: <Box className="w-5 h-5" /> },
+        { label: "Rastreamento", href: "/tracking/links", icon: <Link2 className="w-5 h-5" /> },
+        { label: "Dropshipping", href: "/dropshipping/orders", icon: <Package className="w-5 h-5" /> },
+        { label: "Rede Binária N.O", href: "/network", icon: <Network className="w-5 h-5" /> },
+        { label: "Sub-Redes (SiSu)", href: "/sisu", icon: <Network className="w-5 h-5" /> },
+        { label: "Comissões", href: "/commissions", icon: <TrendingUp className="w-5 h-5" /> },
+        { label: "Carreira / XP", href: "/career", icon: <Trophy className="w-5 h-5" /> },
+        { label: "Bônus & Recompensas", href: "/bonus", icon: <Star className="w-5 h-5" /> },
+        { label: "Analytics", href: "/utilities", icon: <LineChart className="w-5 h-5" /> },
       ],
     },
     {
-      title: "Nexus Hubs",
+      title: "👤 Conta — Gestão & Pagamentos",
       items: [
-        {
-          label: "Nexus Partners Pack",
-          href: "/subscriptions",
-          icon: <Briefcase className="w-5 h-5" />,
-          badge: "SaaS",
-        },
-        {
-          label: "Painel Partners",
-          href: "/partners",
-          icon: <Users className="w-5 h-5" />,
-          badge: "API",
-        },
-        {
-          label: "Nexus Academ'IA",
-          href: "/academia",
-          icon: <BookOpen className="w-5 h-5" />,
-          badge: "Trilhas",
-        },
-      ],
-    },
-    {
-      title: "Marketing",
-      items: [
-        {
-          label: "Hub de Conteúdo",
-          href: "/content-hub",
-          icon: <BookOpen className="w-5 h-5" />,
-        },
-        {
-          label: "Calendário Social",
-          href: "/content/calendar",
-          icon: <Calendar className="w-5 h-5" />,
-        },
-        {
-          label: "Materiais",
-          href: "/marketing/materials",
-          icon: <Image className="w-5 h-5" />,
-        },
-        {
-          label: "Contas Sociais",
-          href: "/social/accounts",
-          icon: <MessageSquare className="w-5 h-5" />,
-        },
-        {
-          label: "Rastreamento de Links",
-          href: "/tracking/links",
-          icon: <Link2 className="w-5 h-5" />,
-        },
-        {
-          label: "Minha Loja",
-          href: "/minha-loja",
-          icon: <Globe className="w-5 h-5" />,
-        },
-      ],
-    },
-    {
-      title: "Loja & Operações",
-      items: [
-        {
-          label: "Marketplace Nexus",
-          href: "/marketplaces",
-          icon: <ShoppingCart className="w-5 h-5" />,
-          badge: "XP",
-        },
-        {
-          label: "E-books (Revenda)",
-          href: "/marketplaces/ebooks",
-          icon: <BookOpen className="w-5 h-5" />,
-          badge: "R$ 0,50",
-        },
-        {
-          label: "Meu Estoque",
-          href: "/estoque",
-          icon: <Box className="w-5 h-5" />,
-          badge: "Novo",
-        },
-        {
-          label: "Sub-Redes (SiSu)",
-          href: "/sisu",
-          icon: <Network className="w-5 h-5" />,
-          badge: "CPF",
-        },
-        {
-          label: "Dropshipping",
-          href: "/dropshipping/orders",
-          icon: <Box className="w-5 h-5" />,
-        },
-        {
-          label: "Analytics",
-          href: "/utilities",
-          icon: <LineChart className="w-5 h-5" />,
-        },
+        { label: "Dashboard", href: "/dashboard", icon: <BarChart3 className="w-5 h-5" /> },
+        { label: "Packs Nexus", href: "/packs", icon: <Package className="w-5 h-5" /> },
+        { label: "Upgrades", href: "/upgrades", icon: <Zap className="w-5 h-5" /> },
+        { label: "Pagamentos", href: "/payments", icon: <Wallet className="w-5 h-5" /> },
+        { label: "Checkout PIX", href: "/pix/checkout", icon: <QrCode className="w-5 h-5" /> },
+        { label: "Histórico PIX", href: "/pix/history", icon: <History className="w-5 h-5" /> },
+        { label: "Subscriptions", href: "/subscriptions", icon: <Briefcase className="w-5 h-5" /> },
+        { label: "Partners (API)", href: "/partners", icon: <Users className="w-5 h-5" /> },
+        { label: "Academ'IA", href: "/academia", icon: <BookOpen className="w-5 h-5" /> },
       ],
     },
   ];
@@ -362,13 +268,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Zap className="w-4 h-4 text-background" />
               </div>
               <span className="text-lg font-bold gradient-text hidden sm:inline">
-                MMNAI
+                IOAID · SaaS
               </span>
+              <DashboardStatusIndicators />
             </button>
           </div>
 
           {/* User Menu */}
-          <DropdownMenu modal={false} open={userMenuOpen} onOpenChange={setUserMenuOpen}>
+          <div className="flex items-center gap-1"><ThemeToggle /><DropdownMenu modal={false} open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -466,9 +373,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu></div>
         </div>
       </header>
+      <CommandPalette />
 
       {/* Sidebar */}
       <aside
@@ -523,7 +431,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 min-h-screen">
+      <main className="lg:ml-64 pt-16 min-h-screen ux-page-mount">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
@@ -534,6 +442,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+        <OnboardingBundle />
     </div>
   );
 }

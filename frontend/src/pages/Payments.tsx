@@ -260,6 +260,11 @@ export default function Payments() {
                 <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-green-400 transition-colors" />
               </button>
             </div>
+            {/* D14-BTC converter */}
+            <div className="mt-2">
+              <BRLBTCConverter />
+            </div>
+
           </div>
         )}
 

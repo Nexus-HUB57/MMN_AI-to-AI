@@ -15,7 +15,8 @@ import {
  * - markActivationPaid: marca ativação mensal como paga (chamado pelo webhook MP)
  */
 export const dashboardStatusRouter = router({
-  getStatus: protectedProcedure.query(async ({ ctx }) => {
+    getStatus: protectedProcedure.query(async ({ ctx }) => {
+    // D14-XP
     const affiliate = await getAffiliateByUserId(ctx.user.id);
     const agent = await getAgentByUserId(ctx.user.id);
 
@@ -25,21 +26,35 @@ export const dashboardStatusRouter = router({
         monthlyActivationPaid: false,
         cycleLabel: cycleLabel(new Date()),
         affiliateLevel: null,
+        totalXp: 0,
+        currentLevel: 1,
+        monthlyXp: 0,
       };
     }
 
     const now = new Date();
     const cycle = cycleLabel(now);
     const yearMonth = cycle;
-
-    // Buscar ativação mensal paga no ciclo vigente
     const paid = await checkMonthlyActivationPaid(ctx.db, affiliate.id, yearMonth);
+
+    // XP (paridade R$1 = 1XP)
+    let xpRow: any = null;
+    try {
+      const res: any = await ctx.db.execute(
+        `SELECT "totalXp", "currentLevel", "monthlyXp" FROM affiliate_xp WHERE "affiliateId" = $1 LIMIT 1`,
+        [affiliate.id] as any
+      );
+      xpRow = (res?.rows ?? res ?? [])[0] ?? null;
+    } catch {}
 
     return {
       agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")),
       monthlyActivationPaid: paid,
       cycleLabel: cycle,
       affiliateLevel: (affiliate as any).level || (affiliate as any).tier || "Afiliado I",
+      totalXp: Number(xpRow?.totalXp ?? 0),
+      currentLevel: Number(xpRow?.currentLevel ?? 1),
+      monthlyXp: Number(xpRow?.monthlyXp ?? 0),
     };
   }),
 

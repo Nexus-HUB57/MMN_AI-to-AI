@@ -729,4 +729,22 @@ export const pixRouter = router({
 
       return { ok: true, confirmation };
     }),
+
+  getPaymentStatus: protectedProcedure
+    .input(z.object({ paymentId: z.string().nullable().optional() }))
+    .query(async ({ ctx, input }) => {
+      // D14-PIX-status
+      if (!input.paymentId) return { status: null, paymentId: null };
+      try {
+        const res: any = await ctx.db.execute(
+          `SELECT id, status FROM marketplace_orders WHERE payment_id = $1 OR id = $1 LIMIT 1`,
+          [input.paymentId] as any
+        );
+        const row = (res?.rows ?? res ?? [])[0];
+        return { status: row?.status ?? null, paymentId: input.paymentId };
+      } catch (e) {
+        return { status: null, paymentId: input.paymentId, error: String((e as any)?.message ?? e) };
+      }
+    }),
+
 });

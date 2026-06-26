@@ -106,6 +106,28 @@ export default function PixCheckout() {
   const [checkoutSession, setCheckoutSession] = useState<MarketplaceCheckoutSession | null>(null);
   const [hasRequestedCheckout, setHasRequestedCheckout] = useState(false);
 
+  // D14-PIX poll
+  const pixPaymentId = checkoutSession?.pix.paymentId ?? null;
+  const [pixStatus, setPixStatus] = useState<string | null>(null);
+  const pixStatusQuery = (trpc as any).pix?.getPaymentStatus?.useQuery
+    ? (trpc as any).pix.getPaymentStatus.useQuery(
+        { paymentId: pixPaymentId },
+        {
+          enabled: !!pixPaymentId && pixStatus !== 'paid',
+          refetchInterval: !!pixPaymentId && pixStatus !== 'paid' ? 5000 : false,
+        }
+      )
+    : null;
+  useEffect(() => {
+    const s = (pixStatusQuery?.data as any)?.status;
+    if (!s) return;
+    setPixStatus(s);
+    if (s === 'paid' || s === 'approved') {
+      setFeedback("✅ Pagamento PIX confirmado! +" + Math.floor((checkoutSession?.amount ?? 0)) + " XP creditado.");
+    }
+  }, [pixStatusQuery?.data, checkoutSession?.amount]);
+
+
   const createCheckoutMutation = trpc.pix.createMarketplaceCheckout.useMutation();
   const catalogQuery = trpc.subscriptions.catalog.useQuery(undefined, {
     staleTime: 1000 * 60 * 5,

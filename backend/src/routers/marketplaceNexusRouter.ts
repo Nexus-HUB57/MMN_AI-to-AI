@@ -1,3 +1,31 @@
+// D17-redis-cache
+import IORedis from "ioredis";
+const __redisD17 = (() => {
+  try {
+    if (!process.env.REDIS_URL) return null;
+    const r = new IORedis(process.env.REDIS_URL, {
+      maxRetriesPerRequest: 1,
+      enableOfflineQueue: false,
+      lazyConnect: true,
+    } as any);
+    r.on("error", (e: any) => console.warn("[D17-redis-cache] err:", e?.message));
+    return r;
+  } catch { return null; }
+})();
+const __EBOOK_CACHE_KEY = "d17:ebooks:v1";
+const __EBOOK_CACHE_TTL = 300; // 5 min
+
+async function __readEbookCacheRedis() {
+  if (!__redisD17) return null;
+  try {
+    const v = await __redisD17.get(__EBOOK_CACHE_KEY);
+    return v ? JSON.parse(v) : null;
+  } catch { return null; }
+}
+async function __writeEbookCacheRedis(data: any) {
+  if (!__redisD17) return;
+  try { await __redisD17.set(__EBOOK_CACHE_KEY, JSON.stringify(data), "EX", __EBOOK_CACHE_TTL); } catch {}
+}
 // D16-cache-redis
 let __ebookCache: { at: number; data: any } | null = null;
 const __EBOOK_CACHE_TTL_MS = 5 * 60 * 1000; // 5 min
@@ -48,8 +76,17 @@ const ctxUserId = (ctx: { user?: { id?: number | string } }) => {
 
 export const marketplaceNexusRouter = router({
   listEbooks: publicProcedure
+    // D17-redis-cache-wrap
     .input(z.object({ unlockPackSlug: z.string().optional() }).optional())
-    .query(async ({ input }) => listEbooks({ unlockPackSlug: input?.unlockPackSlug })),
+    .query(async ({ input }) => {
+      // Sem filtro: cache compartilhado (200KB de payload). Com filtro: bypass.
+      if (input?.unlockPackSlug) return listEbooks({ unlockPackSlug: input.unlockPackSlug });
+      const hit = await __readEbookCacheRedis();
+      if (hit) return hit;
+      const fresh = await listEbooks({});
+      await __writeEbookCacheRedis(fresh);
+      return fresh;
+    }),
 
   listPacks: publicProcedure.query(async () => listPacksPublic()),
 

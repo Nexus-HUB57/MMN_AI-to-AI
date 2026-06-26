@@ -208,6 +208,21 @@ app.post("/webhooks/mercadopago", async (req, res) => {
                 [order.id]
               );
               await client.query("COMMIT");
+              // D17-bullmq-enqueue : enfileira processamento da comissão
+              try {
+                const { enqueueCommissionProcessing } = await import("./config/queue");
+                const total = Number(order.total_cents || 0);
+                if (total > 0 && enqueueCommissionProcessing) {
+                  await enqueueCommissionProcessing({
+                    commissionType: "marketplace_sale",
+                    amount: total / 100,
+                    userId: order.user_id,
+                    orderId: order.id,
+                  }).catch((e: any) => console.warn("[D17-bullmq-enqueue]", e?.message));
+                }
+              } catch (e: any) {
+                console.warn("[D17-bullmq-enqueue init]", e?.message);
+              }
 
               // Envia e-mail "Pagamento Confirmado"
               try {

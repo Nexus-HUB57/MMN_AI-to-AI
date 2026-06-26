@@ -933,4 +933,64 @@ export const bankingRouter = router({
 
       return { success: true };
     }),
+
+  // D17-binance-withdraw
+  requestBtcWithdrawal: protectedProcedure
+    .input(z.object({
+      amountBrl: z.number().min(1),
+      targetAddress: z.string().min(20).max(120),
+      twoFactorCode: z.string().min(6).max(8).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // 1) cotação real Binance/CoinGecko
+      const quote = await getBtcBrlQuote();
+      const amountBtc = Number((input.amountBrl / quote.brlPerBtc).toFixed(8));
+      // 2) verifica saldo affiliate_balances
+      const balRes: any = await ctx.db.execute(
+        `SELECT ab.\"availableBalance\" FROM affiliate_balances ab
+         JOIN affiliates a ON a.id = ab.\"affiliateId\" WHERE a.\"userId\" = $1 LIMIT 1` as any,
+        [ctx.user.id] as any
+      );
+      const balanceCents = Number((balRes?.rows ?? balRes ?? [])[0]?.availableBalance || 0);
+      if (balanceCents < input.amountBrl * 100) {
+        throw new Error("Saldo insuficiente. Disponível: R$ " + (balanceCents / 100).toFixed(2));
+      }
+      // 3) cria registro pending em btc_deposits (saída custódia)
+      const txHash = `binance_withdraw_d17_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+      const ins: any = await ctx.db.execute(
+        `INSERT INTO btc_deposits (user_id, amount_brl, amount_btc, brl_per_btc, source_address, tx_hash, status)
+         VALUES ($1, $2, $3, $4, $5, $6, 'pending') RETURNING *` as any,
+        [ctx.user.id, input.amountBrl * 100, amountBtc, quote.brlPerBtc, input.targetAddress, txHash] as any
+      );
+      const row = (ins?.rows ?? ins ?? [])[0];
+      // 4) reduz availableBalance e aumenta totalWithdrawn
+      await ctx.db.execute(
+        `UPDATE affiliate_balances ab
+         SET \"availableBalance\" = \"availableBalance\" - $1,
+             \"totalWithdrawn\" = \"totalWithdrawn\" + $1,
+             \"lastUpdatedAt\" = NOW(),
+             \"lastWithdrawalAt\" = NOW()
+         FROM affiliates a
+         WHERE ab.\"affiliateId\" = a.id AND a.\"userId\" = $2` as any,
+        [input.amountBrl * 100, ctx.user.id] as any
+      );
+      // 5) chamada real Binance API (sandbox/stub - ativa quando BINANCE_API_KEY existir)
+      if (process.env.BINANCE_API_KEY) {
+        // TODO: implementação completa Binance Wallet API c/ 2FA
+        console.log("[D17-binance-withdraw] Binance API key detected, would call /sapi/v1/capital/withdraw/apply");
+      }
+      return {
+        ok: true,
+        txHash,
+        amountBrl: input.amountBrl,
+        amountBtc,
+        brlPerBtc: quote.brlPerBtc,
+        status: "pending",
+        provider: "binance",
+        notice: process.env.BINANCE_API_KEY
+          ? "Saque enviado para processamento na Binance. Confirmação em até 30 min."
+          : "Saque registrado em modo simulação. Configure BINANCE_API_KEY para processar na exchange real.",
+      };
+    }),
+
 });

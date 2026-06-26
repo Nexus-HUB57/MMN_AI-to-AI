@@ -153,6 +153,41 @@ export const dashboardStatusRouter = router({
         total += e.amountCents;
       }
 
+      
+      // D15-CC-marketplace : adiciona pedidos do marketplace_orders
+      try {
+        const mpRes: any = await ctx.db.execute(sql`
+          SELECT mo.id, mo.total_cents, mo.payment_status, mo.payment_method,
+                 mo.external_reference, mo.metadata, mo.created_at, mo.paid_at
+          FROM marketplace_orders mo
+          JOIN affiliates a ON a."userId" = mo.user_id
+          WHERE a.id = ${affiliate.id}
+            AND mo.payment_status IN ('paid','approved')
+            AND COALESCE(mo.paid_at, mo.created_at) >= NOW() - (${input.months} || ' months')::interval
+          ORDER BY COALESCE(mo.paid_at, mo.created_at) DESC
+          LIMIT 200
+        `);
+        const mpRows = (mpRes?.rows ?? mpRes ?? []) as any[];
+        for (const o of mpRows) {
+          const ref = String(o.external_reference || "");
+          const meta = (typeof o.metadata === "string" ? JSON.parse(o.metadata||"{}") : (o.metadata||{})) as any;
+          const isMonthly = ref.includes("monthly-activation") || meta?.source === "monthly-activation" || meta?.slug === "monthly-activation";
+          const isPack = ref.includes("pack-") || meta?.type === "pack";
+          const category = isMonthly ? "Ativação Mensal" : (isPack ? "Aquisição de Packs" : "Compras Marketplace");
+          const dateRef = o.paid_at || o.created_at;
+          const period = new Date(dateRef).toLocaleString("pt-BR", { month: "short", year: "numeric" }).replace(".", "");
+          entries.push({
+            period,
+            category,
+            description: meta?.name || ref || ("Pedido " + o.id),
+            amountCents: Number(o.total_cents || 0),
+            createdAt: new Date(dateRef).toISOString(),
+          });
+        }
+      } catch (e) {
+        console.error("[D15-CC-marketplace]", (e as any)?.message);
+      }
+
       return {
         totalYearCents: total,
         byCategory,
@@ -310,18 +345,35 @@ async function checkMonthlyActivationPaid(
   affiliateId: number,
   cycle: string
 ): Promise<boolean> {
+  // D15-MM-marketplace
   try {
+    // 1) Tenta no marketplace_orders (origem real dos pagamentos MP/PIX)
+    const mp = await db.execute(sql`
+      SELECT 1 FROM marketplace_orders mo
+      JOIN affiliates a ON a."userId" = mo.user_id
+      WHERE a.id = ${affiliateId}
+        AND mo.payment_status IN ('paid','approved')
+        AND (mo.external_reference ILIKE '%monthly-activation%'
+             OR mo.metadata->>'source' = 'monthly-activation'
+             OR mo.metadata->>'slug' = 'monthly-activation')
+        AND to_char(COALESCE(mo.paid_at, mo.created_at), 'TMMonth YYYY') = ${cycle}
+      LIMIT 1
+    `);
+    const mpList = (mp as any).rows || (mp as any);
+    if (mpList && mpList.length > 0) return true;
+
+    // 2) Fallback: tabela orders (compatibilidade)
     const rows = await db.execute(sql`
       SELECT 1 FROM orders
-      WHERE affiliate_id = ${affiliateId}
-        AND metadata->>'source' = 'monthly-activation'
+      WHERE "affiliateId" = ${affiliateId}
         AND status IN ('paid','delivered','confirmed','approved')
-        AND to_char(created_at, 'TMMonth YYYY') = ${cycle}
+        AND to_char("createdAt", 'TMMonth YYYY') = ${cycle}
       LIMIT 1
     `);
     const list = (rows as any).rows || (rows as any);
-    return list && list.length > 0;
-  } catch {
+    return !!(list && list.length > 0);
+  } catch (e) {
+    console.error("[checkMonthlyActivationPaid]", (e as any)?.message);
     return false;
   }
 }

@@ -400,6 +400,9 @@ export default function Dashboard() {
               <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
               <p className="mt-1 text-sm text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
             </div>
+            {/* D15-XP-card */}
+            <DashboardXpBadge />
+
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
             <button
@@ -1084,5 +1087,25 @@ export default function Dashboard() {
       </div>
 
     </DashboardLayout>
+  );
+}
+
+// D15-XP-card component
+function DashboardXpBadge() {
+  const status: any = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, { retry: false });
+  const totalXp = Number(status?.data?.totalXp || 0);
+  const monthlyXp = Number(status?.data?.monthlyXp || 0);
+  const currentLevel = Number(status?.data?.currentLevel || 1);
+  // Paridade D15: R$1 = 100 XP
+  const totalXpScaled = totalXp; // já vem em unidade XP correta do backend (multiplicado * 100)
+  return (
+    <div className="mt-3 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 px-4 py-3">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Nível XP</p>
+        <span className="rounded-full border border-quantum-cyan/40 bg-quantum-cyan/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-quantum-cyan">L{currentLevel}</span>
+      </div>
+      <p className="mt-2 text-2xl font-bold text-quantum-cyan">{totalXpScaled.toLocaleString("pt-BR")} XP</p>
+      <p className="mt-1 text-[11px] text-slate-400">+{monthlyXp.toLocaleString("pt-BR")} XP no ciclo · paridade R$1 = 100 XP</p>
+    </div>
   );
 }

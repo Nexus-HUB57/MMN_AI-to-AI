@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Interativo — Academ'IA</title>
+  <link rel="stylesheet" href="acad-style.css" />
+  <style>
+    body { max-width: 900px; }
+    
+    .quiz-hero {
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elev));
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quiz-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at center, var(--accent) 0%, transparent 50%);
+      opacity: 0.1;
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.1; }
+      50% { transform: scale(1.2); opacity: 0.15; }
+    }
+    
+    .quiz-hero h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .quiz-hero p {
+      color: var(--fg-muted);
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .course-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    
+    .course-btn {
+      padding: 16px;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-family: inherit;
+      color: var(--fg);
+    }
+    
+    .course-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+    }
+    
+    .course-btn.active {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.1);
+    }
+    
+    .course-btn .course-num {
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .course-btn .course-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    .course-btn .course-progress {
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      margin-top: 6px;
+    }
+    
+    .course-btn .course-progress.done {
+      color: var(--accent-green);
+    }
+    
+    .quiz-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      display: none;
+    }
+    
+    .quiz-container.active {
+      display: block;
+      animation: slideIn 0.4s ease;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .quiz-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .quiz-progress-text {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+    }
+    
+    .quiz-progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-elev);
+      border-radius: 3px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+    
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+      transition: width 0.4s ease;
+      border-radius: 3px;
+    }
+    
+    .quiz-score {
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    
+    .question {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: var(--bg-elev);
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+    
+    .question-number {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .option {
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      color: var(--fg);
+      text-align: left;
+      font-size: 0.95rem;
+      position: relative;
+    }
+    
+    .option:hover:not(.disabled) {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.05);
+      transform: translateX(4px);
+    }
+    
+    .option.selected {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.1);
+    }
+    
+    .option.correct {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.15);
+    }
+    
+    .option.incorrect {
+      border-color: var(--accent-red);
+      background: rgba(239, 68, 68, 0.15);
+    }
+    
+    .option.disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+    
+    .option .option-letter {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      text-align: center;
+      line-height: 22px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+    
+    .option.correct .option-letter {
+      background: var(--accent-green);
+      color: white;
+      border-color: var(--accent-green);
+    }
+    
+    .option.incorrect .option-letter {
+      background: var(--accent-red);
+      color: white;
+      border-color: var(--accent-red);
+    }
+    
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      display: none;
+    }
+    
+    .feedback.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .feedback.correct {
+      border-left: 3px solid var(--accent-green);
+      color: var(--accent-green);
+    }
+    
+    .feedback.incorrect {
+      border-left: 3px solid var(--accent-red);
+      color: var(--accent-red);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .quiz-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-elev);
+      color: var(--fg);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    
+    .btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: var(--bg);
+    }
+    
+    .results {
+      text-align: center;
+      padding: 32px;
+    }
+    
+    .results-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--bg);
+      position: relative;
+    }
+    
+    .results-circle.perfect { background: var(--accent-green); }
+    .results-circle.good { background: var(--accent); }
+    .results-circle.ok { background: var(--accent-gold); }
+    .results-circle.bad { background: var(--accent-red); }
+    
+    .results-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .results-message {
+      color: var(--fg-muted);
+      margin-bottom: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-hero">
+    <h1>🎯 Quiz Interativo</h1>
+    <p>Teste seu conhecimento após cada curso. 10 questões por quiz, com feedback detalhado e explicação.</p>
+  </div>
+  
+  <h2 style="color: var(--accent); margin-bottom: 16px;">📚 Escolha um curso</h2>
+  <div class="course-selector" id="courseSelector">
+    <!-- Gerado via JS -->
+  </div>
+  
+  <div class="quiz-container" id="quizContainer">
+    <div class="quiz-progress">
+      <span class="quiz-progress-text" id="progressText">Questão 1 de 10</span>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="progressFill" style="width: 0%;"></div>
+      </div>
+      <span class="quiz-score" id="scoreText">0 ✅</span>
+    </div>
+    
+    <div id="questionArea"></div>
+    
+    <div class="quiz-actions">
+      <button class="btn" id="btnPrev" disabled>← Anterior</button>
+      <button class="btn btn-primary" id="btnNext">Próxima →</button>
+    </div>
+  </div>
+  
+  <div class="quiz-container" id="resultsContainer">
+    <div class="results" id="resultsContent"></div>
+    <div class="quiz-actions">
+      <button class="btn" onclick="resetQuiz()">🔄 Tentar de novo</button>
+      <button class="btn btn-primary" onclick="goBack()">← Voltar aos cursos</button>
+    </div>
+  </div>
+  
+  <script src="enhance.js"></script>
+  <script>
+    // === BANCO DE QUIZZES ===
+    const QUIZZES = {
+      'f00': {
+        titulo: '00 · Boas-vindas ao Nexus',
+        trilha: 'Fundamental',
+        questoes: [
+          {
+            q: 'Qual é o papel principal do SHO no ecossistema Nexus?',
+            options: [
+              'Gerenciar banco de dados',
+              'Self-Healing Orchestrator — sistema que se auto-cura',
+              'Criar conteúdo para redes sociais',
+              'Fazer backup de arquivos'
+            ],
+            correct: 1,
+            feedback: 'SHO = Self-Healing Orchestrator. É o sistema imunológico do ecossistema, com 4 papéis: monitora, diagnostica, cura e aprende.'
+          },
+          {
+            q: 'O que significa "operar" no contexto do Nexus (vs. "aprender")?',
+            options: [
+              'Decorar conceitos teóricos',
+              'Assistir vídeos no YouTube',
+              'Implantar e rodar sistemas em produção',
+              'Fazer cursos online'
+            ],
+            correct: 2,
+            feedback: 'A Academ\'IA é uma academia de operadores. Você não decora — você implanta, executa, e opera. Em 90 dias, seu agente está rodando 24/7.'
+          },
+          {
+            q: 'Quantas trilhas a Academ\'IA possui?',
+            options: ['2', '3', '4', '6'],
+            correct: 2,
+            feedback: '4 trilhas: Fundamental (4 cursos), Agente (4), Master (4), Elite (3). Total: 15 cursos.'
+          },
+          {
+            q: 'Qual é a meta do SLA mínimo do IOAID para latência?',
+            options: ['< 8 segundos', '< 800 milissegundos', '< 5 minutos', '< 1 hora'],
+            correct: 1,
+            feedback: 'IOAID tem SLA < 800ms para 95% das requisições. É o que diferencia um sistema "operacional" de um "lento".'
+          },
+          {
+            q: 'Qual destes NÃO é uma das 4 partes de um agente?',
+            options: ['Cérebro (LLM)', 'Identidade (system prompt)', 'Banco de dados relacional', 'Ferramentas (APIs)'],
+            correct: 2,
+            feedback: 'As 4 partes são: cérebro (LLM), identidade (system prompt), ferramentas (APIs), e memória (contexto). Banco de dados é parte da infra, não do agente.'
+          },
+          {
+            q: 'O que significa "trilha progressiva"?',
+            options: [
+              'Cada curso pode ser feito em qualquer ordem',
+              'Os cursos têm pré-requisitos e ordem recomendada',
+              'Todos os cursos têm o mesmo nível',
+              'A trilha muda todo mês'
+            ],
+            correct: 1,
+            feedback: 'Trilha progressiva significa: cada curso prepara para o próximo. Você começa pela Fundamental (F00) e vai até Elite (E02). Sem pular.'
+          },
+          {
+            q: 'Qual é a principal diferença entre um chatbot tradicional e um agente agêntico?',
+            options: [
+              'O chatbot é pago, o agente é grátis',
+              'O chatbot responde, o agente age (executa tarefas)',
+              'O chatbot é em inglês, o agente é em português',
+              'Não há diferença'
+            ],
+            correct: 1,
+            feedback: 'Chatbot responde perguntas. Agente age: toma decisões, executa ações, chama ferramentas. Essa é a diferença fundamental.'
+          },
+          {
+            q: 'Em 90 dias, qual é o resultado esperado de quem segue a trilha?',
+            options: [
+              'Vira PhD em IA',
+              'Tem agente pessoal + 7 telas + 18 skills + campanhas automatizadas + painel dominado',
+              'Ganha R$ 1 milhão',
+              'Faz 100 cursos online'
+            ],
+            correct: 1,
+            feedback: 'A meta dos 90 dias é concreta: agente pessoal rodando, 7 telas funcionando, 18 skills prontas, 1ª campanha automatizada, painel dominado. Sem promessas mágicas.'
+          },
+          {
+            q: 'O que é o "Judge Revisor"?',
+            options: [
+              'Um juiz de tribunal',
+              'Um filtro ético/compliance que valida toda resposta',
+              'Um modelo de IA genérico',
+              'Um tipo de banco de dados'
+            ],
+            correct: 1,
+            feedback: 'Judge Revisor é o filtro de compliance. Toda resposta passa por ele antes de ser enviada. Tem 3 modos: Revisão, Bloqueio Parcial, Bloqueio Total.'
+          },
+          {
+            q: 'Qual é a filosofia central da Academ\'IA?',
+            options: [
+              'Aprender o máximo possível',
+              'Operar sistemas reais, não decorar conteúdo',
+              'Ganhar dinheiro rápido',
+              'Fazer network com outros alunos'
+            ],
+            correct: 1,
+            feedback: 'A filosofia é: "Você não vai aprender IA. Você vai se tornar IA." Operar sistemas reais, em produção, é o objetivo.'
+          },
+        ]
+      },
+      'f01': {
+        titulo: '01 · Entendendo o IOAID',
+        trilha: 'Fundamental',
+        questoes: [
+          {
+            q: 'Quantos módulos compõem o IOAID?',
+            options: ['3', '5', '7', '10'],
+            correct: 1,
+            feedback: '5 módulos: autenticação, event bus, agent runtime, judge, monitoring. Cada um com papel claro.'
+          },
+          {
+            q: 'O que é "auditável" no contexto do IOAID?',
+            options: [
+              'O sistema passa por auditoria externa',
+              'Cada requisição é registrada e rastreável',
+              'O sistema é caro de operar',
+              'O sistema usa blockchain'
+            ],
+            correct: 1,
+            feedback: 'Auditável = cada requisição fica registrada. Você sabe exatamente o que foi feito, quando, e por quê. Essencial para compliance.'
+          },
+          {
+            q: 'Qual a função do "Agent Runtime"?',
+            options: [
+              'Gerenciar autenticação de usuários',
+              'Executar o LLM com prompt, contexto e ferramentas',
+              'Fazer backup do banco',
+              'Enviar e-mails'
+            ],
+            correct: 1,
+            feedback: 'Agent Runtime é o "cérebro" do agente. Recebe o system prompt + contexto + ferramentas, executa o LLM, retorna resposta.'
+          },
+          {
+            q: 'O que significa "escalável"?',
+            options: [
+              'O sistema é caro',
+              'Funciona com 10 ou 10 milhões de requisições',
+              'O sistema é difícil de usar',
+              'O sistema usa GPU'
+            ],
+            correct: 1,
+            feedback: 'Escalável = funciona com 10 ou 10 milhões de requisições. IOAID escala horizontalmente (adiciona mais réplicas conforme demanda).'
+          },
+          {
+            q: 'O que é o "Event Bus"?',
+            options: [
+              'Um ônibus escolar',
+              'Sistema de mensageria assíncrona (Redis Streams)',
+              'Um protocolo de rede',
+              'Uma API do WhatsApp'
+            ],
+            correct: 1,
+            feedback: 'Event Bus é o carteiro. Usa Redis Streams para rotear mensagens entre módulos de forma assíncrona e confiável.'
+          },
+          {
+            q: 'Qual a função do "Monitoring"?',
+            options: [
+              'Monitorar a temperatura do servidor',
+              'Logs, métricas e alertas em tempo real',
+              'Espionar usuários',
+              'Bloquear ataques'
+            ],
+            correct: 1,
+            feedback: 'Monitoring é o "olho que tudo vê". Coleta logs, métricas, traces. Se algo falhar, alerta em < 30s.'
+          },
+          {
+            q: 'O que significa "reversível" no contexto do IOAID?',
+            options: [
+              'O sistema pode ser desfeito',
+              'Cada ação tem um "desfazer" correspondente',
+              'O sistema pode voltar no tempo',
+              'O sistema roda em ambos os sentidos'
+            ],
+            correct: 1,
+            feedback: 'Reversível = cada ação tem um "desfazer". Você pode reverter uma campanha problemática. Essencial para evitar danos.'
+          },
+          {
+            q: 'Por que "distribuída" é uma decisão técnica (não marketing)?',
+            options: [
+              'É uma buzzword',
+              'Porque escalar horizontalmente exige módulos independentes',
+              'Porque todo sistema distribuído é lento',
+              'Porque é mais bonito'
+            ],
+            correct: 1,
+            feedback: 'Distribuída = cada módulo roda de forma independente. Permite escalar cada parte conforme demanda (ex: 10 event buses, 2 judges). Marketing seria "centralizada".'
+          },
+          {
+            q: 'Qual a latência esperada do IOAID em condições normais?',
+            options: ['< 8 segundos', '< 800 milissegundos', '< 5 minutos', '< 1 hora'],
+            correct: 1,
+            feedback: '< 800ms para 95% das requisições. Se passar de 1s, há gargalo em algum módulo. Use o painel de monitoring para identificar.'
+          },
+          {
+            q: 'Como o IOAID se relaciona com o SHO?',
+            options: [
+              'São a mesma coisa',
+              'SHO é o sistema imunológico que protege o IOAID',
+              'IOAID protege o SHO',
+              'Não têm relação'
+            ],
+            correct: 1,
+            feedback: 'IOAID é o sistema operacional. SHO é o sistema imunológico. SHO monitora o IOAID e cura incidentes automaticamente.'
+          },
+        ]
+      },
+      'a00': {
+        titulo: '00 · Seu Primeiro Agente',
+        trilha: 'Agente',
+        questoes: [
+          {
+            q: 'Quais são as 4 partes de um agente?',
+            options: [
+              'CPU, RAM, disco, rede',
+              'Cérebro, identidade, ferramentas, memória',
+              'Frontend, backend, banco, API',
+              'Login, senha, e-mail, celular'
+            ],
+            correct: 1,
+            feedback: 'As 4 partes: Cérebro (LLM), Identidade (system prompt), Ferramentas (APIs), Memória (contexto). O resto é orquestração.'
+          },
+          {
+            q: 'O que é o "system prompt"?',
+            options: [
+              'O comando que liga o computador',
+              'A instrução que define identidade, tom, regras do agente',
+              'O nome do agente',
+              'A senha do banco de dados'
+            ],
+            correct: 1,
+            feedback: 'System prompt é a "alma" do agente. Define quem ele é, como fala, o que pode/não pode fazer. Mais impactante que o modelo escolhido.'
+          },
+          {
+            q: 'Qual a diferença entre agente e skill?',
+            options: [
+              'Não há diferença',
+              'Agente é o sistema completo, skill é uma capacidade específica',
+              'Skill é mais caro',
+              'Agente só funciona em inglês'
+            ],
+            correct: 1,
+            feedback: 'Agente = sistema completo (cérebro + identidade + ferramentas + memória). Skill = uma capacidade específica dentro do agente (ex: copywriter).'
+          },
+          {
+            q: 'O que é um "guardrail"?',
+            options: [
+              'Um tipo de cerca',
+              'Limite explícito do que o agente pode/não pode fazer',
+              'Um banco de dados',
+              'Uma API do WhatsApp'
+            ],
+            correct: 1,
+            feedback: 'Guardrail = limite explícito. Implementado via Judge + system prompt + validação pós-output. Garante que o agente não saia do controle.'
+          },
+          {
+            q: 'Qual a memória de curto prazo típica de um agente?',
+            options: [
+              'Banco SQL completo',
+              'Array das últimas N mensagens',
+              'Disco rígido',
+              'E-mail'
+            ],
+            correct: 1,
+            feedback: 'Memória de curto prazo = array das últimas N mensagens (típico: 10-20). Simples, rápido, suficiente para conversas. Memória de longo prazo requer vector DB.'
+          },
+          {
+            q: 'Por que o system prompt importa mais que o modelo?',
+            options: [
+              'O modelo é irrelevante',
+              '2 agentes com mesmo LLM podem ter comportamentos completamente diferentes baseado no prompt',
+              'Porque system prompt é mais bonito',
+              'Porque modelo é caro'
+            ],
+            correct: 1,
+            feedback: 'Já vi casos: GPT-3.5 com prompt excelente > GPT-4 com prompt genérico. O prompt molda comportamento. O modelo é só a "matéria-prima".'
+          },
+          {
+            q: 'O que é uma "tool" no contexto de agente?',
+            options: [
+              'Um martelo',
+              'API que o agente pode chamar (consultar preço, agendar, enviar)',
+              'Um tipo de banco de dados',
+              'Um plugin do navegador'
+            ],
+            correct: 1,
+            feedback: 'Tool = API que o agente pode invocar. Ex: consultar preço, agendar compromisso, enviar e-mail. É como o agente "age no mundo".'
+          },
+          {
+            q: 'Quando NÃO usar um agente?',
+            options: [
+              'Sempre use agente',
+              'Quando a tarefa é trivial e determinística (ex: somar 2 números)',
+              'Quando o cliente é VIP',
+              'Quando você tem dinheiro'
+            ],
+            correct: 1,
+            feedback: 'Para tarefas triviais (somar 2 números), use código puro. Agente é para tarefas que requerem interpretação, contexto, e flexibilidade. Não é bala de prata.'
+          },
+          {
+            q: 'Qual o tempo recomendado para o primeiro setup completo?',
+            options: ['5 minutos', '30 minutos', '2 horas', '1 semana'],
+            correct: 1,
+            feedback: '30 minutos para o setup básico (criar agente + 3 skills + Judge). Para 1 hora, dá pra fazer deploy em produção. Para 4-6 horas, dá pra customizar tudo.'
+          },
+          {
+            q: 'O que é o Judge em modo "Bloqueio Total"?',
+            options: [
+              'Bloqueia o sistema inteiro',
+              'Bloqueia 100% das mensagens que violam regras (sem revisão)',
+              'Bloqueia o usuário',
+              'Bloqueia a internet'
+            ],
+            correct: 1,
+            feedback: 'Bloqueio Total = 100% das mensagens que violam regras são bloqueadas automaticamente, sem revisão humana. Ideal para nicho sensível (saúde, finanças).'
+          },
+        ]
+      },
+    };
+    
+    // === STATE ===
+    let currentCourse = null;
+    let currentQuestionIdx = 0;
+    let answers = []; // array de índices selecionados
+    let score = 0;
+    
+    function renderCourseSelector() {
+      const container = document.getElementById('courseSelector');
+      const completed = JSON.parse(localStorage.getItem('academia-quizzes') || '{}');
+      
+      container.innerHTML = Object.entries(QUIZZES).map(([id, quiz]) => {
+        const isDone = completed[id];
+        const score = completed[id]?.score;
+        return `
+          <button class="course-btn ${isDone ? 'done' : ''}" data-id="${id}" onclick="startQuiz('${id}')">
+            <div class="course-num">${quiz.trilha} · ${id.toUpperCase()}</div>
+            <div class="course-name">${quiz.titulo.replace(/^\d+\s·\s/, '')}</div>
+            <div class="course-progress ${isDone ? 'done' : ''}">
+              ${isDone ? `✅ ${score}% concluído` : '10 questões'}
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+    
+    function startQuiz(courseId) {
+      currentCourse = courseId;
+      currentQuestionIdx = 0;
+      answers = new Array(QUIZZES[courseId].questoes.length).fill(null);
+      score = 0;
+      
+      document.getElementById('quizContainer').classList.add('active');
+      document.getElementById('resultsContainer').classList.remove('active');
+      
+      // Hide selector scroll
+      document.getElementById('courseSelector').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      renderQuestion();
+    }
+    
+    function renderQuestion() {
+      const quiz = QUIZZES[currentCourse];
+      const q = quiz.questoes[currentQuestionIdx];
+      const selected = answers[currentQuestionIdx];
+      const answered = selected !== null;
+      const isCorrect = selected === q.correct;
+      
+      document.getElementById('progressText').textContent = `Questão ${currentQuestionIdx + 1} de ${quiz.questoes.length}`;
+      document.getElementById('progressFill').style.width = `${((currentQuestionIdx + 1) / quiz.questoes.length) * 100}%`;
+      document.getElementById('scoreText').textContent = `${score} ✅`;
+      
+      const letters = ['A', 'B', 'C', 'D'];
+      
+      document.getElementById('questionArea').innerHTML = `
+        <div class="question">
+          <div class="question-number">Questão ${currentQuestionIdx + 1}</div>
+          <div class="question-text">${q.q}</div>
+          <div class="options">
+            ${q.options.map((opt, i) => {
+              let classes = 'option';
+              if (answered) {
+                classes += ' disabled';
+                if (i === q.correct) classes += ' correct';
+                else if (i === selected) classes += ' incorrect';
+              } else if (selected === i) {
+                classes += ' selected';
+              }
+              return `
+                <button class="${classes}" onclick="selectOption(${i})" ${answered ? 'disabled' : ''}>
+                  <span class="option-letter">${letters[i]}</span>
+                  ${opt}
+                </button>
+              `;
+            }).join('')}
+          </div>
+          ${answered ? `
+            <div class="feedback show ${isCorrect ? 'correct' : 'incorrect'}">
+              <strong>${isCorrect ? '✅ Correto!' : '❌ Incorreto.'}</strong> ${q.feedback}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      document.getElementById('btnPrev').disabled = currentQuestionIdx === 0;
+      document.getElementById('btnNext').textContent = currentQuestionIdx === quiz.questoes.length - 1 ? 'Ver resultado →' : 'Próxima →';
+    }
+    
+    function selectOption(optionIdx) {
+      const q = QUIZZES[currentCourse].questoes[currentQuestionIdx];
+      answers[currentQuestionIdx] = optionIdx;
+      
+      if (optionIdx === q.correct) {
+        score++;
+      }
+      
+      renderQuestion();
+    }
+    
+    function nextQuestion() {
+      const quiz = QUIZZES[currentCourse];
+      if (currentQuestionIdx < quiz.questoes.length - 1) {
+        currentQuestionIdx++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+    
+    function prevQuestion() {
+      if (currentQuestionIdx > 0) {
+        currentQuestionIdx--;
+        renderQuestion();
+      }
+    }
+    
+    function showResults() {
+      const quiz = QUIZZES[currentCourse];
+      const pct = Math.round((score / quiz.questoes.length) * 100);
+      
+      let circleClass = 'bad';
+      if (pct === 100) circleClass = 'perfect';
+      else if (pct >= 80) circleClass = 'good';
+      else if (pct >= 60) circleClass = 'ok';
+      
+      let title = '';
+      let message = '';
+      if (pct === 100) {
+        title = '🏆 Perfeito!';
+        message = 'Você dominou completamente este curso. Pronto para o próximo.';
+      } else if (pct >= 80) {
+        title = '🎉 Excelente!';
+        message = 'Você tem domínio sólido do conteúdo. Revise as poucas que errou e siga em frente.';
+      } else if (pct >= 60) {
+        title = '👍 Bom trabalho';
+        message = 'Você acertou a maioria. Recomendamos revisar o curso antes de avançar.';
+      } else {
+        title = '📚 Precisa revisar';
+        message = 'Você ainda não tem base sólida. Recomendamos refazer o curso antes de tentar o quiz novamente.';
+      }
+      
+      // Salvar no localStorage
+      const completed = JSON.parse(localStorage.getItem('academia-quizzes') || '{}');
+      completed[currentCourse] = {
+        score: pct,
+        timestamp: Date.now(),
+        answers: answers
+      };
+      localStorage.setItem('academia-quizzes', JSON.stringify(completed));
+      
+      document.getElementById('quizContainer').classList.remove('active');
+      document.getElementById('resultsContainer').classList.add('active');
+      
+      document.getElementById('resultsContent').innerHTML = `
+        <div class="results-circle ${circleClass}">${pct}%</div>
+        <h2 class="results-title">${title}</h2>
+        <p class="results-message">${message}</p>
+        <p style="color: var(--fg-muted); margin-bottom: 16px;">
+          Você acertou <strong style="color: var(--accent-green);">${score}</strong> de <strong>${quiz.questoes.length}</strong> questões.
+        </p>
+        <p style="color: var(--fg-muted);">
+          <strong>Curso:</strong> ${quiz.titulo}<br>
+          <strong>Trilha:</strong> ${quiz.trilha}
+        </p>
+      `;
+      
+      renderCourseSelector(); // Atualizar visual
+    }
+    
+    function resetQuiz() {
+      startQuiz(currentCourse);
+    }
+    
+    function goBack() {
+      document.getElementById('resultsContainer').classList.remove('active');
+      document.getElementById('courseSelector').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Listeners
+    document.getElementById('btnNext').addEventListener('click', nextQuestion);
+    document.getElementById('btnPrev').addEventListener('click', prevQuestion);
+    
+    // Inicializar
+    renderCourseSelector();
+    
+    console.log('🎯 Quiz Interativo carregado. Cursos disponíveis:', Object.keys(QUIZZES).length);
+  </script>
+</body>
+</html>

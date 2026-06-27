@@ -193,6 +193,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           icon: <BookOpen className="w-5 h-5" />,
           badge: "Trilhas",
         },
+        {
+          label: "Meetings Nexus",
+          href: "/academia/meetings",
+          icon: <Calendar className="w-5 h-5" />,
+          badge: "Live",
+        },
       ],
     },
     {

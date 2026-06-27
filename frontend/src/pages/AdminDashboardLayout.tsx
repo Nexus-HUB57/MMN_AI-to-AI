@@ -9,6 +9,7 @@ import {
   CreditCard,
   AlertCircle,
   FileText,
+  GraduationCap,
   LogOut,
   Menu,
   X,
@@ -29,6 +30,8 @@ const MENU_ITEMS = [
   { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
   { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
   { label: "Materiais", path: "/admin/materials", icon: FileText },
+  { label: "Academia EAD", path: "/admin/academia", icon: GraduationCap },
+  { label: "Meetings", path: "/admin/meetings", icon: Calendar },
   { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
 ];
 

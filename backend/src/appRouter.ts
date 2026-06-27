@@ -41,6 +41,8 @@ import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
+import { academiaEadRouter } from "./routers/academiaEadRouter";
+import { meetingRouter } from "./routers/meetingRouter";
 
 export const appRouter = router({
   system: router({
@@ -151,6 +153,8 @@ export const appRouter = router({
         pix: true,
         nexus: true,
         subscriptions: true,
+        academiaEad: true,
+        meetings: true,
       },
     })),
   }),
@@ -178,6 +182,8 @@ export const appRouter = router({
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
   labNexus: labNexusRouter,
+  academiaEad: academiaEadRouter,
+  meetings: meetingRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

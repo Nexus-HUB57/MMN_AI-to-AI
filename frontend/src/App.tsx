@@ -2,7 +2,7 @@ import { Toaster } from "sonner";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Route, Switch, Redirect } from "wouter";
+import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -37,7 +37,13 @@ import OrchestratorDashboard from "@/pages/OrchestratorDashboard";
 import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
-import AcademiaDashboard from "@/pages/AcademiaDashboard";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminAcademia from "@/pages/AdminAcademia";
+import AdminMeetings from "@/pages/AdminMeetings";
+import AcademiaHub from "@/pages/AcademiaHub";
+import AcademiaSection from "@/pages/AcademiaSection";
+import AcademiaLesson from "@/pages/AcademiaLesson";
+import MeetingHub from "@/pages/MeetingHub";
 import LabChatbot from "@/pages/LabChatbot";
 import NotFound from "@/pages/NotFound";
 
@@ -52,9 +58,7 @@ function Router() {
       <Route path="/marketplaces" component={Marketplaces} />
       <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />
-      <Route path="/minha-loja" component={AffiliateMiniSite} />
-      {/* Rota legada /minisite — redirect 301-equivalente (90d) para /minha-loja */}
-      <Route path="/minisite">{() => <Redirect to="/minha-loja" />}</Route>
+      <Route path="/minisite" component={AffiliateMiniSite} />
       <Route path="/afiliado/:code" component={AffiliateMiniSite} />
       <Route path="/pix/checkout" component={PixCheckout} />
       <Route path="/pix/history" component={PixHistory} />
@@ -71,7 +75,14 @@ function Router() {
       <Route path="/orchestrator" component={OrchestratorDashboard} />
       <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
-      <Route path="/academia" component={AcademiaDashboard} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/academia" component={AdminAcademia} />
+      <Route path="/admin/meetings" component={AdminMeetings} />
+      <Route path="/academia" component={AcademiaHub} />
+      <Route path="/academia/meetings" component={MeetingHub} />
+      <Route path="/academia/ead/:slug" component={AcademiaSection} />
+      <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />
       <Route path="/academia/lab-nexus" component={LabChatbot} />
       <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />

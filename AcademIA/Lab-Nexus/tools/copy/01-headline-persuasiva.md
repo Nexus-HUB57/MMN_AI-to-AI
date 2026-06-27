@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "01 · Headline Persuasiva"
 description: "Geração de headlines de alta conversão para anúncios, e-mails e landing pages"
 tags: [lab-nexus, copy, headline, conversao]

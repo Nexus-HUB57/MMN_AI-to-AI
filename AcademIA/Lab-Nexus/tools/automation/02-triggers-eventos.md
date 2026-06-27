@@ -1,3 +1,12 @@
+---
+title: "02-triggers-eventos"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "02 · Triggers de Eventos"
 description: "Como criar automações baseadas em eventos (gatilhos) com n8n e Make"
 tags: [lab-nexus, automation, triggers, eventos, n8n, make]

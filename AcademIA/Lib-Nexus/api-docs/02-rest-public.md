@@ -5,7 +5,7 @@ tags: [lib-nexus, api-docs, rest, public, canonico, integracao]
 category: api-docs
 version: "1.0"
 last_review: "2026-06-02"
-status: canonico
+status: official
 ---
 
 # 🌐 API REST Pública

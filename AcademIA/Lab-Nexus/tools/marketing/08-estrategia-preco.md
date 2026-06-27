@@ -1,3 +1,12 @@
+---
+title: "08-estrategia-preco"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "08 · Estratégia de Precificação"
 description: "Framework para definir preço de produto digital com ancoragem e elasticidade"
 tags: [lab-nexus, marketing, pricing, ancoragem, estrategia]

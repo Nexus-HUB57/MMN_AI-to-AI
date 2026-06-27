@@ -1,3 +1,14 @@
+---
+title: "06-dashboard-kpis"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
+<!-- placeholders-doc -->
+
 title: "06 · Dashboard de KPIs"
 description: "Os 15 KPIs essenciais de marketing digital + 5 dashboards modelo + queries"
 tags: [lab-nexus, analytics, kpi, dashboard, metricas]

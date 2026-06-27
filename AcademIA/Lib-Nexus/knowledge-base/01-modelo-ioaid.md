@@ -5,7 +5,7 @@ tags: [lib-nexus, knowledge-base, ioaid, arquitetura, canonico]
 category: knowledge-base
 version: "1.0"
 last_review: "2026-06-02"
-status: canonico
+status: official
 ---
 
 # 🏛️ Modelo IOAID · Arquitetura em 5 Camadas

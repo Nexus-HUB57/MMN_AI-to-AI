@@ -1,3 +1,12 @@
+---
+title: "07-post-instagram"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "07 · Post Instagram Carrossel"
 description: "Roteiro de carrossel educativo para Instagram (7-10 slides)"
 tags: [lab-nexus, copy, instagram, carrossel, social]

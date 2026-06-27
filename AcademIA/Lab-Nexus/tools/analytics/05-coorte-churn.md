@@ -1,3 +1,12 @@
+---
+title: "Exemplo"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "05 · Análise de Coorte e Churn"
 description: "Como criar tabelas de coorte, calcular retenção e prever churn com dados"
 tags: [lab-nexus, analytics, coorte, churn, retencao, ltv]

@@ -1,3 +1,12 @@
+---
+title: "04-atribuicao-multitouch"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "04 · Atribuição Multi-touch"
 description: "Modelos de atribuição (first-touch, last-touch, linear, time-decay, data-driven) e como escolher"
 tags: [lab-nexus, analytics, atribuicao, multi-touch, mta]

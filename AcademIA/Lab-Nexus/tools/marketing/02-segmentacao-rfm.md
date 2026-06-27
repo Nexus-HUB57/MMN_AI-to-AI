@@ -1,3 +1,12 @@
+---
+title: "02-segmentacao-rfm"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "02 · Segmentação RFM"
 description: "Análise RFM (Recência, Frequência, Monetário) para segmentar leads e clientes"
 tags: [lab-nexus, marketing, segmentacao, rfm, ltv]

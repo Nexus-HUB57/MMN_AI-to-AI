@@ -1,3 +1,12 @@
+---
+title: "04-pixel-eventos"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "04 · Pixel e Tracking de Eventos"
 description: "Setup completo de pixel (Meta, Google, TikTok) + eventos customizados + consent mode"
 tags: [lab-nexus, automation, pixel, tracking, meta-pixel, gtag]

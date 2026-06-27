@@ -1,3 +1,12 @@
+---
+title: "Exemplo"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "07 · Recuperador de Carrinho"
 description: "Sistema automatizado de recuperação de carrinho abandonado (e-mail + WhatsApp + ads)"
 tags: [lab-nexus, automation, carrinho, recuperacao, abandoned-cart]

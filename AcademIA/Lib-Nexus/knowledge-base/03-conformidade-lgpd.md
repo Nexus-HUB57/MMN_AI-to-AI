@@ -5,7 +5,7 @@ tags: [lib-nexus, knowledge-base, lgpd, conformidade, canonico, legal]
 category: knowledge-base
 version: "1.0"
 last_review: "2026-06-02"
-status: canonico
+status: official
 ---
 
 # 🛡️ Conformidade LGPD · Mapeamento Canônico

@@ -1,3 +1,12 @@
+---
+title: "03-thumb-youtube"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "03 · Thumbnail YouTube"
 description: "Como criar thumbnails de alta CTR (8-15%) para YouTube"
 tags: [lab-nexus, design, youtube, thumbnail, video]

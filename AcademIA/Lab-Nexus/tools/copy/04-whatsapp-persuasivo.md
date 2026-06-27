@@ -1,3 +1,12 @@
+---
+title: "04-whatsapp-persuasivo"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "04 · WhatsApp Persuasivo"
 description: "Scripts de mensagens WhatsApp para prospecção, nutrição e fechamento"
 tags: [lab-nexus, copy, whatsapp, persuasivo, disparo]

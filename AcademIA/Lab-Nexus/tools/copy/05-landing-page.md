@@ -1,3 +1,12 @@
+---
+title: "05-landing-page"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "05 · Landing Page de Alta Conversão"
 description: "Estrutura completa de LP testada em 50+ produtos digitais"
 tags: [lab-nexus, copy, landing-page, conversao]

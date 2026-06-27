@@ -1,3 +1,12 @@
+---
+title: "01-webhooks-payload"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "01 · Webhooks — Payloads Validados"
 description: "Payloads validados de webhooks (Hotmart, Kiwify, Stripe, Eduzz, Shopee) + handlers"
 tags: [lab-nexus, automation, webhook, hotmart, kiwify, stripe]

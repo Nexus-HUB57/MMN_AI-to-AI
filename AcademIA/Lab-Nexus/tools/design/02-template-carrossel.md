@@ -1,3 +1,12 @@
+---
+title: "02-template-carrossel"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "02 · Template de Carrossel Instagram"
 description: "Estrutura visual + specs técnicos + 3 templates prontos para carrossel IG"
 tags: [lab-nexus, design, instagram, carrossel, template]

@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Análise de Coorte e Churn"
 description: "Analisar tabela de coorte e identificar padrões de retenção/churn"
 tags: [lab-nexus, prompt, analise, coorte, churn]

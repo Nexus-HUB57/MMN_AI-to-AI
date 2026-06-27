@@ -1,3 +1,12 @@
+---
+title: "Exemplo"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "01 · Experimento A/B"
 description: "Metodologia de A/B test estatisticamente válido para landing pages, e-mails e copy"
 tags: [lab-nexus, analytics, ab-test, experimentacao, estatistica]

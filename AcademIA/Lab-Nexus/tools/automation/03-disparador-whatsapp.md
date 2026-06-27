@@ -1,3 +1,12 @@
+---
+title: "03-disparador-whatsapp"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "03 · Disparador de WhatsApp"
 description: "Como configurar disparo em massa no WhatsApp Business com aquecimento e LGPD"
 tags: [lab-nexus, automation, whatsapp, disparo, aquecimento]

@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Benchmark Competitivo"
 description: "Analisar concorrentes e identificar posicionamento e oportunidades"
 tags: [lab-nexus, prompt, estrategia, benchmark, concorrencia]

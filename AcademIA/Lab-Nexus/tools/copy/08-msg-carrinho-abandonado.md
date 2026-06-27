@@ -1,3 +1,12 @@
+---
+title: "08-msg-carrinho-abandonado"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "08 · Mensagem de Carrinho Abandonado"
 description: "Sequência de 3 mensagens (e-mail + WhatsApp) para recuperar vendas perdidas"
 tags: [lab-nexus, copy, carrinho, abandoned-cart, recuperacao]

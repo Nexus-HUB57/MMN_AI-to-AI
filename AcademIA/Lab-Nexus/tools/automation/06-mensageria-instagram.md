@@ -1,3 +1,12 @@
+---
+title: "06-mensageria-instagram"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "06 · Mensageria Instagram (DM)"
 description: "Setup de DM automation com ManyChat + integração com CRM + qualificação"
 tags: [lab-nexus, automation, instagram, dm, manychat]

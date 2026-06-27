@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Análise de Funil de Conversão"
 description: "Analisar funil multi-estágio e identificar gargalos prioritários"
 tags: [lab-nexus, prompt, analise, funil, conversao]

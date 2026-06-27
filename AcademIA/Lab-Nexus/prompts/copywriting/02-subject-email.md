@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Subject Line de E-mail"
 description: "Gerar 5 subject lines com taxa de abertura acima de 35%"
 tags: [lab-nexus, prompt, copywriting, email, subject-line]

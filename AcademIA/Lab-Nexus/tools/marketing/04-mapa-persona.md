@@ -1,3 +1,12 @@
+---
+title: "1. IDENTIFICAÇÃO"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "04 · Mapa de Persona"
 description: "Template completo de Buyer Persona com dados demográficos, psicográficos e jornada"
 tags: [lab-nexus, marketing, persona, icp, buyer-persona]

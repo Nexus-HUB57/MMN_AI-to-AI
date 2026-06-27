@@ -1,3 +1,12 @@
+---
+title: "Contexto"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "01 · Planejador Editorial"
 description: "Calendário editorial mensal para redes sociais e blog"
 tags: [lab-nexus, marketing, editorial, calendario, planejamento]

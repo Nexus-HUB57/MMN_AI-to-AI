@@ -1,3 +1,12 @@
+---
+title: "10-anuncio-facebook"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "10 · Anúncio Facebook/Meta Ads"
 description: "Estrutura completa de copy para anúncios Meta (Feed, Stories, Reels)"
 tags: [lab-nexus, copy, ads, facebook, meta, instagram]

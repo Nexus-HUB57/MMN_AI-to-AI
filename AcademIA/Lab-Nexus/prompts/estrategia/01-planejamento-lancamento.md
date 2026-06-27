@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Planejamento de Lançamento"
 description: "Criar plano completo de lançamento (7-30 dias) com timeline e assets"
 tags: [lab-nexus, prompt, estrategia, lancamento, planejamento]

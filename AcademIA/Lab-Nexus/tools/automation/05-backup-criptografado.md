@@ -1,3 +1,12 @@
+---
+title: "/opt/nexus/scripts/backup.sh"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "05 · Backup Criptografado"
 description: "Estratégia de backup 3-2-1 com criptografia AES-256 para dados críticos"
 tags: [lab-nexus, automation, backup, criptografia, seguranca]

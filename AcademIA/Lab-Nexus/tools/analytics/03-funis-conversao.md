@@ -1,3 +1,12 @@
+---
+title: "Exemplo"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "03 · Funis de Conversão (Funnel Analysis)"
 description: "Análise completa de funil: identificar drop-off, gargalos e oportunidades"
 tags: [lab-nexus, analytics, funil, drop-off, gargalo]

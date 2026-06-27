@@ -1,3 +1,12 @@
+---
+title: "02-email-frio"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "02 · E-mail Frio B2B"
 description: "Templates de e-mail frio para prospecção B2B de alto ticket"
 tags: [lab-nexus, copy, email, b2b, outbound]

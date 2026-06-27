@@ -1,3 +1,12 @@
+---
+title: "Contexto"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "07 · Pesquisa Competitiva"
 description: "Framework para mapear concorrentes, posicionamento e oportunidades"
 tags: [lab-nexus, marketing, pesquisa, competitivo, swot]

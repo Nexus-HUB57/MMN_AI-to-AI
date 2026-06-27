@@ -1,3 +1,12 @@
+---
+title: "C — Context (Contexto)"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "12 · Prompt para IA (Meta-prompt)"
 description: "Framework para escrever prompts de alta qualidade para os agentes Nexus"
 tags: [lab-nexus, copy, prompt-engineering, meta-prompt, ia]

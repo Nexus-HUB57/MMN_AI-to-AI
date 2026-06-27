@@ -1,3 +1,12 @@
+---
+title: "04-capa-thumb-vsl"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "04 · Capa e Thumbnail de VSL"
 description: "Thumb de Video Sales Letter (VSL) para YouTube + LP de vendas"
 tags: [lab-nexus, design, vsl, video, capa, thumb]

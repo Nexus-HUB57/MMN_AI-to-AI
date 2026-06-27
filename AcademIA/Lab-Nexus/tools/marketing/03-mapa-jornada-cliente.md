@@ -1,3 +1,12 @@
+---
+title: "Contexto"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "03 · Mapa de Jornada do Cliente"
 description: "Customer Journey Map completo com touchpoints, emoções e oportunidades"
 tags: [lab-nexus, marketing, jornada, customer-journey, cjm]

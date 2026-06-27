@@ -1,3 +1,12 @@
+---
+title: "05-segmentacao-lista"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "05 · Segmentação de Lista"
 description: "Como segmentar lista de e-mail/WhatsApp para campanhas eficazes"
 tags: [lab-nexus, marketing, segmentacao, lista, email, whatsapp]

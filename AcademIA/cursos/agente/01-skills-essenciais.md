@@ -7,6 +7,8 @@ tags: [skills, copywriter, audience-segmenter, prompt, segmentacao]
 last_updated: 2026-06-02
 ---
 
+<!-- placeholders-doc -->
+
 # ⚙️ 01 · Skills essenciais: copywriter + audience-segmenter
 
 > **Tempo:** 25 min · **Nível:** Agente · **Pré-requisitos:** 00 - Seu primeiro agente

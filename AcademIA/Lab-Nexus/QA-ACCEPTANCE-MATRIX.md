@@ -1,3 +1,12 @@
+---
+title: "QA + Acceptance Matrix · Chat Bot Lab Nexus"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 # QA + Acceptance Matrix · Chat Bot Lab Nexus
 
 ## Patches P0 sincronizados

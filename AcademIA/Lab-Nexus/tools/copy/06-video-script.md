@@ -1,3 +1,12 @@
+---
+title: "06-video-script"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "06 · Script de VSL (Video Sales Letter)"
 description: "Roteiro de vídeo de vendas de alta conversão, 15-30 min"
 tags: [lab-nexus, copy, vsl, video, vendas]

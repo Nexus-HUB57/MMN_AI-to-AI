@@ -1,3 +1,12 @@
+---
+title: "PAPEL"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "Prompt — Headline Persuasiva (5 Variantes)"
 description: "Prompt testado para gerar 5 headlines de alta conversão"
 tags: [lab-nexus, prompt, copywriting, headline]

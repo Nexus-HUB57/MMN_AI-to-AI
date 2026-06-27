@@ -5,7 +5,7 @@ tags: [lib-nexus, best-practices, error-handling, canonico]
 category: best-practices
 version: "1.0"
 last_review: "2026-06-02"
-status: canonico
+status: official
 ---
 
 # ⚠️ Best Practices · Error Handling

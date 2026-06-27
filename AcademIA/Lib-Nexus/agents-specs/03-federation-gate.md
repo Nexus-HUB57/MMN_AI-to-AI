@@ -5,7 +5,7 @@ tags: [lib-nexus, agents-specs, federation, pii, multi-tenant, canonico]
 category: agents-specs
 version: "1.0"
 last_review: "2026-06-02"
-status: canonico
+status: official
 ---
 
 # 🌐 Especificação · Federation Gate (PII Gate)

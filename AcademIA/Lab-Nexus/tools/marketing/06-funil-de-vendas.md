@@ -1,3 +1,12 @@
+---
+title: "INPUTS"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "06 · Funil de Vendas Completo"
 description: "Arquitetura de funil de alta conversão com 3 camadas (topo, meio, fundo)"
 tags: [lab-nexus, marketing, funil, conversao, estrutura]

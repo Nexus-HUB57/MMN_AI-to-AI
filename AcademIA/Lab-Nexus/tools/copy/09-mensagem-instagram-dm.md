@@ -1,3 +1,12 @@
+---
+title: "09-mensagem-instagram-dm"
+description: "Material oficial Academ'IA · lab-nexus"
+tags: [lab-nexus, academia]
+version: 1.0.0
+last_updated: 2026-06-24
+status: official
+---
+
 title: "09 · Mensagem Instagram DM"
 description: "Script de DM para qualificação de leads vindos do Instagram"
 tags: [lab-nexus, copy, instagram, dm, lead-qualification]

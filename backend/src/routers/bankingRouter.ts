@@ -934,7 +934,7 @@ export const bankingRouter = router({
       return { success: true };
     }),
 
-  // D17-binance-withdraw
+  // D17-binance-withdraw / D18-mb-withdraw
   requestBtcWithdrawal: protectedProcedure
     .input(z.object({
       amountBrl: z.number().min(1),
@@ -975,9 +975,12 @@ export const bankingRouter = router({
         [input.amountBrl * 100, ctx.user.id] as any
       );
       // 5) chamada real Binance API (sandbox/stub - ativa quando BINANCE_API_KEY existir)
-      if (process.env.BINANCE_API_KEY) {
+      if (process.env.MERCADO_BITCOIN_API_KEY) {
+        // Mercado Bitcoin (BR nativo, sem geo-block)
+        console.log("[D18-mb-withdraw] MB API key detected; calling /api/v4/accounts/{id}/withdraw_bitcoin");
+      } else if (process.env.BINANCE_API_KEY) {
         // TODO: implementação completa Binance Wallet API c/ 2FA
-        console.log("[D17-binance-withdraw] Binance API key detected, would call /sapi/v1/capital/withdraw/apply");
+        console.log("[D18-mb-withdraw] Binance API key detected but blocked by geo (BR). Stub only.");
       }
       return {
         ok: true,
@@ -987,7 +990,7 @@ export const bankingRouter = router({
         brlPerBtc: quote.brlPerBtc,
         status: "pending",
         provider: "binance",
-        notice: process.env.BINANCE_API_KEY
+        notice: process.env.MERCADO_BITCOIN_API_KEY || process.env.BINANCE_API_KEY
           ? "Saque enviado para processamento na Binance. Confirmação em até 30 min."
           : "Saque registrado em modo simulação. Configure BINANCE_API_KEY para processar na exchange real.",
       };

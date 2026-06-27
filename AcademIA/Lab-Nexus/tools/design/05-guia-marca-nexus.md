@@ -3,9 +3,11 @@ title: "05-guia-marca-nexus"
 description: "Material oficial Academ'IA · lab-nexus"
 tags: [lab-nexus, academia]
 version: 1.0.0
-last_updated: 2026-06-24
+last_updated: 2026-06-27
 status: official
 ---
+
+<!-- placeholders-doc -->
 
 title: "05 · Guia de Marca Nexus"
 description: "Brand book resumido: cores, tipografia, voz, tom, aplicações e restrições"

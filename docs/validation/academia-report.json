@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-06-24T21:57:02.981Z",
+  "generatedAt": "2026-06-27T21:37:16.411Z",
   "stats": {
-    "totalFiles": 199,
+    "totalFiles": 258,
     "apostilas": 54,
     "roteiros": 15,
-    "withFrontmatter": 199,
-    "officialStatus": 114,
+    "withFrontmatter": 258,
+    "officialStatus": 150,
     "catalogMatched": 70,
     "placeholdersFound": 0
   },
   "summary": {
     "errors": 0,
-    "warnings": 80,
+    "warnings": 122,
     "passed": true
   },
   "issues": [
@@ -178,6 +178,138 @@
       "message": "status ausente"
     },
     {
+      "file": "AcademIA/apostilas/01-apresentacao-infraestrutura.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/01-apresentacao-infraestrutura.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/02-cases-orquestracao-autonoma.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/02-cases-orquestracao-autonoma.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/03-infra-operacional-ia.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/03-infra-operacional-ia.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/04-orquestracao-hibrida-agentes.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/04-orquestracao-hibrida-agentes.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/05-sete-telas-essenciais.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/05-sete-telas-essenciais.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/06-setup-agente-pessoal.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/06-setup-agente-pessoal.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/07-18-skills-operacionais.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/07-18-skills-operacionais.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/08-rotina-disparo-agente.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/08-rotina-disparo-agente.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/09-campanhas-automatizadas.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/09-campanhas-automatizadas.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/10-jornada-completa-afiliado.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/10-jornada-completa-afiliado.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/README.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/apostilas/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
       "file": "AcademIA/certificacoes/00-modelo-avaliacao.md",
       "level": "warn",
       "code": "missing-status",
@@ -256,13 +388,31 @@
       "message": "status ausente"
     },
     {
+      "file": "AcademIA/cursos/fundamental/01-entendendo-ioaid-slides.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
       "file": "AcademIA/cursos/fundamental/01-entendendo-ioaid.md",
       "level": "warn",
       "code": "missing-status",
       "message": "status ausente"
     },
     {
+      "file": "AcademIA/cursos/fundamental/02-sistema-sho-slides.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
       "file": "AcademIA/cursos/fundamental/02-sistema-sho.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/fundamental/03-painel-afiliado-slides.md",
       "level": "warn",
       "code": "missing-status",
       "message": "status ausente"
@@ -293,6 +443,12 @@
     },
     {
       "file": "AcademIA/cursos/master/03-coortes-churn.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/personas/alencar/identity.md",
       "level": "warn",
       "code": "missing-status",
       "message": "status ausente"
@@ -478,6 +634,78 @@
       "message": "status ausente"
     },
     {
+      "file": "AcademIA/videos/README.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/00-boas-vindas-academia-roteiro.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/00-boas-vindas-academia-roteiro.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/01-entendendo-ioaid-roteiro.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/01-entendendo-ioaid-roteiro.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/02-sho-sistema-imune-roteiro.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/02-sho-sistema-imune-roteiro.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/03-painel-afiliado-roteiro.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/03-painel-afiliado-roteiro.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/04-primeiro-agente-roteiro.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/videos/roteiros/04-primeiro-agente-roteiro.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
       "file": "AcademIA/webinars/README.md",
       "level": "warn",
       "code": "missing-status",
@@ -494,6 +722,30 @@
       "level": "warn",
       "code": "missing-status",
       "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-04-skills-em-producao.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-04-skills-em-producao.md",
+      "level": "warn",
+      "code": "invalid-status",
+      "message": "status inválido: planejado"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-05-multi-tenant.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-05-multi-tenant.md",
+      "level": "warn",
+      "code": "invalid-status",
+      "message": "status inválido: planejado"
     }
   ]
 }

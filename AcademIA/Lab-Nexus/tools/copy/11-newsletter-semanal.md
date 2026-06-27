@@ -3,7 +3,7 @@ title: "11-newsletter-semanal"
 description: "Material oficial Academ'IA · lab-nexus"
 tags: [lab-nexus, academia]
 version: 1.0.0
-last_updated: 2026-06-24
+last_updated: 2026-06-27
 status: official
 ---
 

@@ -1,0 +1,499 @@
+{
+  "generatedAt": "2026-06-24T21:57:02.981Z",
+  "stats": {
+    "totalFiles": 199,
+    "apostilas": 54,
+    "roteiros": 15,
+    "withFrontmatter": 199,
+    "officialStatus": 114,
+    "catalogMatched": 70,
+    "placeholdersFound": 0
+  },
+  "summary": {
+    "errors": 0,
+    "warnings": 80,
+    "passed": true
+  },
+  "issues": [
+    {
+      "file": "AcademIA/CHANGELOG.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/INDEX.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/prompts/analise/03-diagnostico-funil-completo.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/prompts/analise/03-diagnostico-funil-completo.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/prompts/estrategia/03-posicionamento-competitivo.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/prompts/estrategia/03-posicionamento-competitivo.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/tools/copy/13-disparo-sms-conversacional.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lab-Nexus/tools/marketing/09-plano-conteudo-90-dias.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/agents-specs/00-base-agent.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/agents-specs/01-marketing-agent.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/agents-specs/02-judge-revisor.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/agents-specs/03-federation-gate.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/api-docs/00-trpc-overview.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/api-docs/01-webhooks.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/api-docs/02-rest-public.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/best-practices/00-prompt-engineering.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/best-practices/01-error-handling.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/best-practices/02-performance.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/knowledge-base/00-glossario.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/knowledge-base/01-modelo-ioaid.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/knowledge-base/02-taxonomia-skills.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/Lib-Nexus/knowledge-base/03-conformidade-lgpd.md",
+      "level": "warn",
+      "code": "missing-last-updated",
+      "message": "last_updated ausente"
+    },
+    {
+      "file": "AcademIA/RESUMO_EXECUTIVO.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/certificacoes/00-modelo-avaliacao.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/certificacoes/CEN-certificacao-estrategista-nexus.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/certificacoes/CEN-plus-certificacao-elite-nexus.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/certificacoes/CON-certificacao-operador-nexus.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/certificacoes/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/agente/00-primeiro-agente.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/agente/01-skills-essenciais.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/agente/02-disparo-whatsapp.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/agente/03-judge-revisor.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/elite/00-blueprints-elite.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/elite/01-multi-tenant-whitelabel.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/elite/02-federacao-agentes.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/fundamental/00-boas-vindas.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/fundamental/01-entendendo-ioaid.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/fundamental/02-sistema-sho.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/fundamental/03-painel-afiliado.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/master/00-otimizacao-conversao.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/master/01-funis-lifecycle.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/master/02-ab-test-judge.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/cursos/master/03-coortes-churn.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-CRISES-gestao-crise-autonomia.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-CRISES-gestao-crise-ban-whatsapp.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-CRISES-gestao-crise-data-loss.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-EMAIL-operacao-diaria.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-LANCAMENTO-lancamento-7-dias.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-LGPD-direitos-titular.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/PB-WHATSAPP-operacao-diaria.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/playbooks/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/sync/MCP-CONFIG.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/treinamentos/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/treinamentos/WS-01-oficina-copy-persuasivo.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/treinamentos/WS-02-oficina-funil-completo.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/treinamentos/WS-03-oficina-webhook-integracao.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/01-ativar-2fa.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/02-configurar-dispatcher.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/03-ler-relatorio-autonomia.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/04-criar-primeiro-agente.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/05-aprovar-sugestao-judge.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/06-disparar-campanha-whatsapp.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/07-convidar-afiliado-rede.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/08-primeiro-ab-test.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/09-ler-tabela-coorte.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/10-webhook-hotmart.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/11-instancia-multitenant.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/12-federa#U00e7#U00e3o-2-nos.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/12-federação-2-nos.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/13-federação-3-nos-mtls-pinned.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/14-ler-skill-manifest.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/tutoriais/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/webinars/README.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-01-lancamento-ioaid.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    },
+    {
+      "file": "AcademIA/webinars/WB-2026-02-sho-em-producao.md",
+      "level": "warn",
+      "code": "missing-status",
+      "message": "status ausente"
+    }
+  ]
+}

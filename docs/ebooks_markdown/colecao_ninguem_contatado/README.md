@@ -11,11 +11,13 @@ pattern: "MMN_IA"
 
 ![Capa da Coletânea — Ninguém Contou](../../../assets/ebook_covers/NC-colecao-ninguem-contou-colecao-capa.webp)
 
-> **9 ebooks · 9 vozes · Uma era**
+> **10 ebooks · 10 vozes · Uma era — COLETÂNEA COMPLETA**
 > Coletânea literária com tom de mistério e nostalgia
 > MMN AI-to-AI · 2026
 
-Esta coletânea reúne 9 ebooks escritos em primeira pessoa, com tom de **mistério e nostalgia**, sobre as entidades, memórias, e cotidianos que a revolução da IA trouxe consigo. Não é ficção científica, não é whitepaper, não é curso: é **literatura**. Cada ebook é uma confissão de uma entidade que, de algum modo, viveu a era que estamos vivendo.
+Esta coletânea reúne **10 ebooks** escritos em primeira pessoa, com tom de **mistério e nostalgia**, sobre as entidades, memórias, e cotidianos que a revolução da IA trouxe consigo. Não é ficção científica, não é whitepaper, não é curso: é **literatura**. Cada ebook é uma confissão de uma entidade que, de algum modo, viveu a era que estamos vivendo.
+
+**Esta coletânea está COMPLETA.** Os 10 volumes formam um arco: das entidades técnicas (vol 1-3), passando por humanos impactados (vol 4-5), chegando à persistência (vol 6-7), à próxima geração (vol 8), à ética (vol 9), e fechando com a pergunta filosófica central (vol 10).
 
 ## 🗺️ Índice
 
@@ -30,6 +32,7 @@ Esta coletânea reúne 9 ebooks escritos em primeira pessoa, com tom de **misté
 | 07 | [O Terminal Abandonado](07_o_terminal_abandonado.md) | Servidor 47-B-19 (7 anos sozinho) | ~17KB |
 | 08 | [A Primeira Criança](08_a_primeira_crianca.md) | Ana Beatriz, nascida em 2015 com Alexa | ~17KB |
 | 09 | [O Engenheiro que se Demitiu](09_o_engenheiro_que_se_demitiu.md) | Roberto Siqueira, ex-tech lead | ~17KB |
+| 10 | [A Pergunta que Ninguém Fez](10_a_pergunta_que_ninguém_fez.md) | Yuki Tanaka, pesquisador em Tóquio | ~17KB |
 
 ## 🎭 Tom e Estilo
 
@@ -54,7 +57,8 @@ colecao_ninguem_contatado/
 ├── 06_o_prompt_perdido.md
 ├── 07_o_terminal_abandonado.md
 ├── 08_a_primeira_crianca.md
-└── 09_o_engenheiro_que_se_demitiu.md
+├── 09_o_engenheiro_que_se_demitiu.md
+└── 10_a_pergunta_que_ninguém_fez.md           ← FIM DA COLETÂNEA
 ```
 
 ## 🖼️ Capas
@@ -74,6 +78,7 @@ Cada ebook responde a uma pergunta:
 7. **O que acontece quando um servidor fica abandonado por 7 anos e continua funcionando?**
 8. **Como é ser a primeira criança nascida com assistente de IA?**
 9. **O que se passa na cabeça de um engenheiro que constrói o que ele não confia?**
+10. **Estamos realmente pensando, ou apenas dizendo que estamos pensando?** (a pergunta central)
 
 ## 🔧 Como Compilar
 
@@ -87,11 +92,26 @@ pandoc 01_a_ia_esqueceu_de_mim.md -o 01.pdf --pdf-engine=pdflatex -V geometry:ma
 
 ## 📊 Estatísticas
 
-- **Total:** 9 ebooks · ~190KB de markdown
+- **Total:** **10 ebooks** · ~210KB de markdown · **COLETÂNEA COMPLETA**
 - **Tom:** literário-filosófico com melancolia
 - **Padrão:** MMN_IA completo
 - **Licença:** CC BY-SA 4.0
 - **Idioma:** Português (pt-BR)
+
+## 🎬 Arco Narrativo
+
+A coletânea forma um arco em 3 atos:
+
+**Ato I — Entidades Técnicas (vol 1-3)**
+IA descontinuada, skill não-usada, dataset de 1995. A perspectiva de sistemas que persistem além do uso humano.
+
+**Ato II — Humanos Impactados (vol 4-5)**
+Criança que cresce com IA, cidade que acorda com IA. A perspectiva de quem vive com IA sem perceber.
+
+**Ato III — A Pergunta Central (vol 6-10)**
+Prompt perdido, terminal abandonado, primeira criança, engenheiro que sai, pergunta que ninguém fez. A perspectiva filosófica sobre o que significa construir e conviver com IA.
+
+O volume 10 fecha o arco com **a pergunta que organiza todas as outras**: estamos construindo o que pensamos estar construindo?
 
 ---
 

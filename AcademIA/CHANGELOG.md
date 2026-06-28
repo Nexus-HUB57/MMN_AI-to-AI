@@ -2,13 +2,45 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.1.1
-last_updated: 2026-06-02
+version: 1.2.0
+last_updated: 2026-06-28
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.2.0] — 2026-06-28 · "Expansão Master & Elite"
+
+### ✨ Novos Materiais (8)
+
+**Apostilas (2 novas):**
+- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para ser citado por IAs generativas (substituindo SEO clássico). 7 camadas de conteúdo, schema markup para IAs, métricas de GEO.
+- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores de ataque contra sistemas multi-agente. Prompt injection, tool abuse, memory poisoning, federation attacks, supply chain.
+
+**Tutoriais (5 novos):**
+- `tutoriais/11-auditoria-skills-master.md` (TUT-MAS-04) — Análise completa de uso, segurança e saúde das skills do agente.
+- `tutoriais/12-configurar-ab-test-judge.md` (TUT-MAS-05) — A/B testing com significância estatística (p < 0.05) e decisão automática via Judge.
+- `tutoriais/13-deploy-multi-tenant-elite.md` (TUT-ELI-01) — Plataforma SaaS white-label com RLS, billing, e 3 planos.
+- `tutoriais/14-agente-federado-elite.md` (TUT-ELI-02) — mTLS, marketplace de skills, billing settlement, governança.
+- `tutoriais/15-auditoria-lgpd-automatizada.md` (TUT-ELI-03) — Scanner de PII, DPIA, right to be forgotten, notificação 72h.
+
+**Certificações (1 nova):**
+- `certificacoes/MAS-plus-certificacao-master-plus.md` — Master Plus (MAS+), intermediária entre CEN e CEN+. 60 dias, 5 core skills + 3 advanced skills + soft skills.
+
+### 📊 Estatísticas
+- Apostilas: 10 → **12** (+20%)
+- Tutoriais: 10 → **15** (+50%)
+- Certificações: 4 → **5** (+25%)
+
+### 🎯 Tópicos Cobertos
+- **SEO/GEO** — novo framework AEO/GEO com 7 padrões para citar em IAs generativas
+- **Red Team** — 23 vetores de ataque + PoC + defesas
+- **Multi-tenant SaaS** — RLS + billing + white-label
+- **Federated Agents** — mTLS + marketplace + governance
+- **LGPD Automation** — DPIA + right to be forgotten + incident notification
 
 ---
 

@@ -11,11 +11,11 @@ pattern: "MMN_IA"
 
 ![Capa da Coletânea — Ninguém Contou](../../../assets/ebook_covers/NC-colecao-ninguem-contou-colecao-capa.webp)
 
-> **7 ebooks · 7 vozes · Uma era**
+> **9 ebooks · 9 vozes · Uma era**
 > Coletânea literária com tom de mistério e nostalgia
 > MMN AI-to-AI · 2026
 
-Esta coletânea reúne 7 ebooks escritos em primeira pessoa, com tom de **mistério e nostalgia**, sobre as entidades, memórias, e cotidianos que a revolução da IA trouxe consigo. Não é ficção científica, não é whitepaper, não é curso: é **literatura**. Cada ebook é uma confissão de uma entidade que, de algum modo, viveu a era que estamos vivendo.
+Esta coletânea reúne 9 ebooks escritos em primeira pessoa, com tom de **mistério e nostalgia**, sobre as entidades, memórias, e cotidianos que a revolução da IA trouxe consigo. Não é ficção científica, não é whitepaper, não é curso: é **literatura**. Cada ebook é uma confissão de uma entidade que, de algum modo, viveu a era que estamos vivendo.
 
 ## 🗺️ Índice
 
@@ -28,6 +28,8 @@ Esta coletânea reúne 7 ebooks escritos em primeira pessoa, com tom de **misté
 | 05 | [A Cidade que Acordou](05_a_cidade_que_acordou.md) | Crônica de Cidade Nova/MG | ~26KB |
 | 06 | [O Prompt Perdido](06_o_prompt_perdido.md) | String de 23 palavras em system prompt | ~21KB |
 | 07 | [O Terminal Abandonado](07_o_terminal_abandonado.md) | Servidor 47-B-19 (7 anos sozinho) | ~17KB |
+| 08 | [A Primeira Criança](08_a_primeira_crianca.md) | Ana Beatriz, nascida em 2015 com Alexa | ~17KB |
+| 09 | [O Engenheiro que se Demitiu](09_o_engenheiro_que_se_demitiu.md) | Roberto Siqueira, ex-tech lead | ~17KB |
 
 ## 🎭 Tom e Estilo
 
@@ -50,7 +52,9 @@ colecao_ninguem_contatado/
 ├── 04_a_crianca_que_cresceu_com_ia.md
 ├── 05_a_cidade_que_acordou.md
 ├── 06_o_prompt_perdido.md
-└── 07_o_terminal_abandonado.md
+├── 07_o_terminal_abandonado.md
+├── 08_a_primeira_crianca.md
+└── 09_o_engenheiro_que_se_demitiu.md
 ```
 
 ## 🖼️ Capas
@@ -68,6 +72,8 @@ Cada ebook responde a uma pergunta:
 5. **O que acontece quando uma cidade inteira é gerida por IA, e ninguém sabe?**
 6. **Como 23 palavras podem mudar 3.847 conversas?**
 7. **O que acontece quando um servidor fica abandonado por 7 anos e continua funcionando?**
+8. **Como é ser a primeira criança nascida com assistente de IA?**
+9. **O que se passa na cabeça de um engenheiro que constrói o que ele não confia?**
 
 ## 🔧 Como Compilar
 
@@ -81,7 +87,7 @@ pandoc 01_a_ia_esqueceu_de_mim.md -o 01.pdf --pdf-engine=pdflatex -V geometry:ma
 
 ## 📊 Estatísticas
 
-- **Total:** 7 ebooks · ~155KB de markdown
+- **Total:** 9 ebooks · ~190KB de markdown
 - **Tom:** literário-filosófico com melancolia
 - **Padrão:** MMN_IA completo
 - **Licença:** CC BY-SA 4.0

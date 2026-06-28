@@ -1,16 +1,15 @@
 import { publicProcedure, router } from "./config/trpc";
 import { agenticRouter } from "./routers/agenticRouter";
-import { auditZkRouter } from './routers/auditZkRouter';
 import { agentsRouter } from "./routers/agentsRouter";
 import { agentRuntimeRouter } from "./domains/agent-runtime/router";
 import { authRouter } from "./domains/auth/router";
 import { aiContentHubRouter } from "./routers/aiContentHubRouter";
 import { contentGenerationRouter } from "./routers/contentGenerationRouter";
 import { dashboardRouter } from "./routers/dashboardRouter";
-import { dashboardStatusRouter } from "./routers/dashboardStatusRouter";
 import { dropshippingRouter } from "./routers/dropshippingRouter";
 import { logRouter } from "./routers/logRouter";
 import { marketplacesRouter } from "./domains/marketplace/router";
+import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { affiliateRouter as mmnRouter } from "./domains/affiliate/router";
 import { observabilityRouter } from "./routers/observabilityRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
@@ -20,9 +19,6 @@ import { socialRouter } from "./routers/socialRouter";
 import { xpRouter } from "./domains/xp/router";
 import { upgradesRouter } from "./routers/upgradesRouter";
 import { packsRouter } from "./routers/packsRouter";
-import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
-import { marketplaceConnectionsRouter } from "./routers/marketplaceConnectionsRouter";
-import { packEntitlementsRouter } from "./routers/packEntitlementsRouter";
 import { skillsRouter } from "./routers/skillsRouter";
 import { newsletterRouter } from "./routers/newsletterRouter";
 import { cmsRouter } from "./routers/cmsRouter";
@@ -40,8 +36,6 @@ import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
-import { partnersIntakeRouter } from "./routers/partnersIntakeRouter";
-import { partnersDeliveryRouter } from "./routers/partnersDeliveryRouter";
 import { subscriptionsRouter } from "./domains/subscriptions/router";
 import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
@@ -49,7 +43,8 @@ import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
 import { academiaEadRouter } from "./routers/academiaEadRouter";
-import { affiliateStoreRouter } from "./routers/affiliateStoreRouter";
+import { meetingRouter } from "./routers/meetingRouter";
+import { a2aRouter } from "./agentic/a2a/router";
 
 export const appRouter = router({
   system: router({
@@ -118,8 +113,6 @@ export const appRouter = router({
   }),
 
   auth: authRouter,
-  affiliateStore: affiliateStoreRouter,
-  academiaEad: academiaEadRouter,
 
   bootstrap: router({
     status: publicProcedure.query(() => ({
@@ -162,6 +155,9 @@ export const appRouter = router({
         pix: true,
         nexus: true,
         subscriptions: true,
+        academiaEad: true,
+        meetings: true,
+        a2a: true,
       },
     })),
   }),
@@ -174,13 +170,10 @@ export const appRouter = router({
   aiContentHub: aiContentHubRouter,
   content: contentGenerationRouter,
   dashboard: dashboardRouter,
-  dashboardStatus: dashboardStatusRouter,
   dropshipping: dropshippingRouter,
   logs: logRouter,
   marketplaces: marketplacesRouter,
   marketplaceNexus: marketplaceNexusRouter,
-  marketplaceConnections: marketplaceConnectionsRouter,
-  packEntitlements: packEntitlementsRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,
@@ -192,9 +185,10 @@ export const appRouter = router({
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
-  partnersIntake: partnersIntakeRouter,
-  partnersDelivery: partnersDeliveryRouter,
   labNexus: labNexusRouter,
+  academiaEad: academiaEadRouter,
+  meetings: meetingRouter,
+  a2a: a2aRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,
@@ -213,7 +207,6 @@ export const appRouter = router({
   agentSkillsRuntime: agentSkillsRuntimeRouter,
   pix: pixRouter,
   nexus: nexusOperationsRouter,
-  auditZk: auditZkRouter,
 });
 
 export type AppRouter = typeof appRouter;

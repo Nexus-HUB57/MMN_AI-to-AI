@@ -43,6 +43,11 @@ import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
 import { academiaEadRouter } from "./routers/academiaEadRouter";
 import { meetingRouter } from "./routers/meetingRouter";
+import { a2aRouter } from "./agentic/a2a/router";
+import { ceoAiRouter } from "./agentic/ceo-ai/router";
+import { skillMarketplaceRouter } from "./domains/skillMarketplace/router";
+import { judgeFederationRouter } from "./agentic/judge-federation/router";
+import { governanceLoopRouter } from "./agentic/governance-loop/router";
 
 export const appRouter = router({
   system: router({
@@ -155,6 +160,11 @@ export const appRouter = router({
         subscriptions: true,
         academiaEad: true,
         meetings: true,
+        a2a: true,
+        ceoAi: true,
+        skillMarketplace: true,
+        judgeFederation: true,
+        governanceLoop: true,
       },
     })),
   }),
@@ -184,6 +194,11 @@ export const appRouter = router({
   labNexus: labNexusRouter,
   academiaEad: academiaEadRouter,
   meetings: meetingRouter,
+  a2a: a2aRouter,
+  ceoAi: ceoAiRouter,
+  skillMarketplace: skillMarketplaceRouter,
+  judgeFederation: judgeFederationRouter,
+  governanceLoop: governanceLoopRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

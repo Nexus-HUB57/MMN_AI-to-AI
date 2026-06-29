@@ -41,6 +41,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import AdminAcademia from "@/pages/AdminAcademia";
 import AdminMeetings from "@/pages/AdminMeetings";
 import AdminGovernance from "@/pages/AdminGovernance";
+import AdminFederation from "@/pages/AdminFederation";
 import AcademiaHub from "@/pages/AcademiaHub";
 import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
@@ -81,6 +82,7 @@ function Router() {
       <Route path="/admin/academia" component={AdminAcademia} />
       <Route path="/admin/meetings" component={AdminMeetings} />
       <Route path="/admin/governance" component={AdminGovernance} />
+      <Route path="/admin/federation" component={AdminFederation} />
       <Route path="/academia" component={AcademiaHub} />
       <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />

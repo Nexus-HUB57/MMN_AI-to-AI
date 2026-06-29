@@ -48,6 +48,7 @@ import { ceoAiRouter } from "./agentic/ceo-ai/router";
 import { skillMarketplaceRouter } from "./domains/skillMarketplace/router";
 import { judgeFederationRouter } from "./agentic/judge-federation/router";
 import { governanceLoopRouter } from "./agentic/governance-loop/router";
+import { multiTenantRouter } from "./agentic/multi-tenant/router";
 
 export const appRouter = router({
   system: router({
@@ -165,6 +166,7 @@ export const appRouter = router({
         skillMarketplace: true,
         judgeFederation: true,
         governanceLoop: true,
+        multiTenant: true,
       },
     })),
   }),
@@ -199,6 +201,7 @@ export const appRouter = router({
   skillMarketplace: skillMarketplaceRouter,
   judgeFederation: judgeFederationRouter,
   governanceLoop: governanceLoopRouter,
+  multiTenant: multiTenantRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

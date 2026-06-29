@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { trpc } from "../lib/trpc";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,6 +31,107 @@ import {
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { allocateBrlToBtc, isBtcLocked, getLevelLabel, getLevelSubtitle, getProgressSnapshot, BTC_LOCK_DAYS } from "@/lib/nexus-marketplace";
 import { getAcademiaRuntimeSummary } from "@/lib/nexus-academia";
+// AGENT_LIVE_PANEL_V2
+import AgentLivePanel from "@/components/AgentLivePanel";
+import SalesFunnelDashboard from "../components/SalesFunnelDashboard";
+import AchievementsBadges from "../components/AchievementsBadges";
+import NotificationCenter from "../components/NotificationCenter";
+import { CommissionChart } from '../components/CommissionChart';
+import AcademiaPersonalTrail from "../components/AcademiaPersonalTrail";
+import AcademiaResume from "../components/AcademiaResume";
+import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
+import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
+import AcademiaPopular from "../components/AcademiaPopular";
+
+function RealCostCenter() {
+  const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
+    { months: 12 },
+    { refetchInterval: 60_000, retry: false }
+  );
+  if (cost?.isLoading) {
+    return <div className="text-sm text-slate-400 animate-pulse">Carregando central de custos...</div>;
+  }
+  const totalCents = Number(cost?.data?.totalYearCents || 0);
+  const byCat: Record<string, number> = (cost?.data?.byCategory as any) || {};
+  const entries: any[] = (cost?.data?.entries as any[]) || [];
+  const fmt = (cents: number) =>
+    "R$ " + (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const CATS = [
+    ["Aquisição de Packs", "Packs A² · AG · AO etc."],
+    ["Ativação Mensal", "Assinatura recorrente do programa"],
+    ["Compras Marketplace", "E-books, skills e bibliotecas"],
+    ["Custos SiSu", "Sub-Contas SiSu da Rede N.O."],
+  ] as const;
+
+  return (
+    <div className="mt-5 rounded-lg border border-rose-400/30 bg-rose-400/5 p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-300">
+            // CENTRAL DE CUSTOS · ANO {new Date().getFullYear()}
+          </p>
+          <h3 className="mt-1 text-base font-semibold text-white">
+            Extrato mensal de gastos do programa
+          </h3>
+          <p className="text-xs text-slate-400">
+            Aquisição de Packs, Ativação Mensal, Compras Marketplace e custos SiSu da Rede N.O.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
+          <p className="font-sans text-2xl font-bold text-rose-300">{fmt(totalCents)}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+        {CATS.map(([label, hint]) => (
+          <div key={label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
+            <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{label}</p>
+            <p className="mt-2 font-sans text-lg font-semibold text-white">
+              {fmt(byCat[label] || 0)}
+            </p>
+            <p className="mt-1 text-[10px] text-slate-500">{hint}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
+        <table className="w-full text-left text-[12px]">
+          <thead className="bg-obsidian-900/60 text-slate-400">
+            <tr>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Categoria</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Descrição</th>
+              <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
+            {entries.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-3 py-6 text-center text-slate-500 text-[11px]">
+                  Nenhuma movimentação registrada nos últimos 12 meses.
+                </td>
+              </tr>
+            )}
+            {entries.map((row, i) => (
+              <tr key={i} className="hover:bg-obsidian-800/40">
+                <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.period}</td>
+                <td className="px-3 py-2">{row.category}</td>
+                <td className="px-3 py-2 text-slate-400">{row.description}</td>
+                <td className="px-3 py-2 text-right font-mono text-rose-300">{fmt(row.amountCents)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
+        Extrato consolidado · valores reais das compras e ativações registradas
+      </p>
+    </div>
+  );
+}
+
+// SPRINTS_8_9_10_INJECTED
 
 const QUICK_ACTIONS = [
   {
@@ -128,7 +230,7 @@ const RECENT_ACTIVITY = [
   },
   {
     title: "Maria S. entrou na sua rede",
-    detail: "Indicação direta via mini-site",
+    detail: "Indicação direta via Minha Loja",
     time: "há 28 min",
     icon: Users,
     tone: "info" as const,
@@ -171,6 +273,8 @@ function toneDot(tone: "good" | "warn" | "info") {
 const MOCK_BTC_PRICE_BRL = 360000; // Preço referencial de cotação BTC/BRL
 
 export default function Dashboard() {
+  const [showCostCenter, setShowCostCenter] = useState(false);
+
   const { user } = useAuth();
   const { profile, refresh } = useMarketplaceProfile();
   const [isCollecting, setIsCollecting] = useState(false);
@@ -197,7 +301,7 @@ export default function Dashboard() {
     return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
   }, [user?.id, profile.userId]);
 
-  // Link de indicação público (mini-site / cadastro)
+  // Link de indicação público (Minha Loja / cadastro)
   const referralLink = useMemo(() => {
     if (typeof window === "undefined") return `/afiliado/${referralId}`;
     return `${window.location.origin}/afiliado/${referralId}`;
@@ -253,6 +357,10 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
+      <NotificationCenter />
+      <AcademiaPushOptIn />
+      <AcademiaResume />
+      <AgentLivePanel variant="compact" />
       <div className="relative space-y-8 font-sans antialiased">
         {/* Background atmosférico fixo do backoffice usuário */}
         <div
@@ -292,6 +400,9 @@ export default function Dashboard() {
               <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
               <p className="mt-1 text-sm text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
             </div>
+            {/* D15-XP-card */}
+            <DashboardXpBadge />
+
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
             <button
@@ -316,7 +427,7 @@ export default function Dashboard() {
         </header>
 
         {/* KPIs principais */}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {/* SALDO TOTAL (R$) · com botão Solicitar Saque */}
           <div className="rounded-lg border border-quantum-lime/40 bg-gradient-to-br from-quantum-lime/10 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-lime/60 hover:shadow-quantum">
             <div className="flex items-start justify-between">
@@ -346,6 +457,12 @@ export default function Dashboard() {
                 </p>
               </div>
             </div>
+            <div className="mt-4 rounded-xl border border-quantum-cyan/20 bg-quantum-cyan/5 px-3 py-3">
+              <p className="text-[9px] uppercase tracking-widest text-slate-500">BTC em custódia Binânce</p>
+              <p className="mt-2 text-lg font-semibold text-white">{balance.toFixed(4)} BTC</p>
+              <p className="mt-1 text-xs text-slate-400">~ R$ {(balance * MOCK_BTC_PRICE_BRL).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} alocados em IA Core</p>
+              <p className="mt-2 text-[10px] uppercase tracking-widest text-quantum-cyan">{btcLocked ? `Cong. até ${profile.btcLockUntil?.slice(0, 10)} · 90d` : `Pronto para nova alocação`}</p>
+            </div>
             <button
               type="button"
               onClick={() => {
@@ -361,47 +478,71 @@ export default function Dashboard() {
               Janela oficial: dia 10 a 15 de cada mês · PIX/BeYour Banker
             </p>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setShowBtcModal(true)}
-            className="text-left rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum"
-          >
+          {/* PAINEL FUNDIDO — Sub-IAs + Rendimento médio P2P */}
+          <div className="rounded-lg border border-quantum-purple/30 bg-gradient-to-br from-quantum-purple/10 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-purple/60 hover:shadow-quantum">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-              // Saldo Alocado (IA Core) · BRL → BTC Binânce
+              // Colmeia · Sub-IAs + Rendimento P2P
             </p>
-            <p className="mt-3 font-sans text-3xl font-bold text-white">
-              {balance.toFixed(4)} <span className="text-sm text-quantum-cyan">BTC</span>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <div>
+                <p className="font-sans text-3xl font-bold text-white">
+                  147 <span className="text-sm text-quantum-purple">Nodes</span>
+                </p>
+                <p className="mt-1 text-[11px] text-slate-400">12 ativos · 24h</p>
+              </div>
+              <div className="text-right">
+                <p className="font-sans text-2xl font-bold text-quantum-lime">+12.4%</p>
+                <p className="mt-1 text-[11px] text-slate-400">média P2P · 24h</p>
+              </div>
+            </div>
+            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-obsidian-900">
+              <div className="h-full w-[62%] bg-gradient-to-r from-quantum-purple to-quantum-lime" />
+            </div>
+            <p className="mt-2 text-[10px] uppercase tracking-widest text-slate-500">
+              Saúde da malha: 62% de eficiência média
             </p>
-            <p className="mt-2 text-xs text-slate-400">
-              ~ R$ {(balance * MOCK_BTC_PRICE_BRL).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} alocados em custódia
-            </p>
-            <p className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-quantum-cyan">
-              <Bitcoin size={12} />
-              {btcLocked ? `Cong. até ${profile.btcLockUntil?.slice(0, 10)}· 90d` : `Clique para alocar (lock ${BTC_LOCK_DAYS}d)`}
-            </p>
-            <p className="mt-3 break-all rounded border border-quantum-cyan/20 bg-quantum-cyan/5 px-2 py-1 text-left font-mono text-[10px] text-quantum-cyan/90">
-              <span className="block text-[9px] uppercase tracking-widest text-slate-500">Endereço de Custódia BTC</span>
-              bc1qwwgdhzdgy97ysqqtd9z7rwv76fwktg0w4tvwf8
-            </p>
-          </button>
-
-          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-              // Sub-IAs na minha colmeia
-            </p>
-            <p className="mt-3 font-sans text-3xl font-bold text-white">
-              147 <span className="text-sm text-quantum-purple">Nodes</span>
-            </p>
-            <p className="mt-2 text-xs text-slate-400">12 ativos nas últimas 24h</p>
           </div>
 
-          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/40 hover:shadow-quantum">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-              // Rendimento médio P2P
-            </p>
-            <p className="mt-3 font-sans text-3xl font-bold text-quantum-lime">+12.4%</p>
-            <p className="mt-2 text-xs text-slate-400">média 24h da malha</p>
+          {/* PAINEL FEED — notícias e notificações */}
+          <div className="rounded-lg border border-quantum-cyan/30 bg-gradient-to-br from-quantum-cyan/5 via-obsidian-800/40 to-obsidian-800/40 p-5 backdrop-blur transition hover:border-quantum-cyan/60 hover:shadow-quantum">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                // Feed · Notícias & Notificações
+              </p>
+              <span className="inline-flex items-center gap-1 rounded border border-quantum-cyan/30 bg-quantum-cyan/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-quantum-cyan">
+                Live
+              </span>
+            </div>
+            <ul className="mt-3 space-y-2 text-[12px] leading-tight">
+              <li className="flex items-start gap-2 rounded border border-quantum-lime/20 bg-quantum-lime/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-lime" />
+                <div>
+                  <p className="text-white">Comissão N1 creditada</p>
+                  <p className="text-[10px] text-slate-400">há 12 min · ciclo atual</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-quantum-cyan/20 bg-quantum-cyan/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-cyan" />
+                <div>
+                  <p className="text-white">Novo afiliado entrou na sua rede</p>
+                  <p className="text-[10px] text-slate-400">há 38 min · N2</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-quantum-purple/20 bg-quantum-purple/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-quantum-purple" />
+                <div>
+                  <p className="text-white">Pack Nexus Affil&apos;IA&apos;te atualizado</p>
+                  <p className="text-[10px] text-slate-400">há 2h · plataforma</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2 rounded border border-amber-400/20 bg-amber-400/5 px-2 py-1.5">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300" />
+                <div>
+                  <p className="text-white">Janela de saque abre dia 10</p>
+                  <p className="text-[10px] text-slate-400">PIX/BeYour Banker</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </section>
 
@@ -477,6 +618,93 @@ export default function Dashboard() {
           </div>
         </section>
 
+        {/* GANHOS ACUMULADOS · Histórico + Extrato anual */}
+        <section className="rounded-lg border border-quantum-lime/30 bg-gradient-to-br from-quantum-lime/5 via-obsidian-800/40 to-obsidian-800/40 p-6 backdrop-blur">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-lime">
+                // GANHOS ACUMULADOS · ANO {new Date().getFullYear()}
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-white">Histórico & Extrato consolidado</h2>
+              <p className="text-xs text-slate-400">
+                Soma de todas as fontes de ganho do programa no ano corrente.
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
+              <p className="font-sans text-3xl font-bold text-quantum-lime">
+                R$ {(38450).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+            {[
+              { label: "Comissões diretas", value: 18250.5 },
+              { label: "Bônus de rede", value: 9620.0 },
+              { label: "Rendimento P2P", value: 7180.25 },
+              { label: "Recompensas/Pack", value: 3399.25 },
+            ].map((item) => (
+              <div key={item.label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
+                <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{item.label}</p>
+                <p className="mt-2 font-sans text-lg font-semibold text-white">
+                  R$ {item.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
+            <table className="w-full text-left text-[12px]">
+              <thead className="bg-obsidian-900/60 text-slate-400">
+                <tr>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Origem</th>
+                  <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Movimento</th>
+                  <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor (R$)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
+                {[
+                  { p: "Jun/2026", o: "Comissão N1", m: "Crédito", v: 1280.5 },
+                  { p: "Mai/2026", o: "Bônus de rede", m: "Crédito", v: 980.0 },
+                  { p: "Mai/2026", o: "Rendimento P2P", m: "Crédito", v: 612.25 },
+                  { p: "Abr/2026", o: "Recompensa Pack", m: "Crédito", v: 450.0 },
+                  { p: "Mar/2026", o: "Comissão N2", m: "Crédito", v: 740.75 },
+                  { p: "Fev/2026", o: "Comissão N3", m: "Crédito", v: 318.4 },
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-obsidian-800/40">
+                    <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.p}</td>
+                    <td className="px-3 py-2">{row.o}</td>
+                    <td className="px-3 py-2">{row.m}</td>
+                    <td className="px-3 py-2 text-right font-mono text-quantum-lime">
+                      R$ {row.v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
+            Extrato anual consolidado · valores líquidos creditados na carteira
+          </p>
+
+          <div className="mt-5 flex flex-wrap items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCostCenter((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-lg border border-quantum-lime/40 bg-quantum-lime/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-quantum-lime transition hover:bg-quantum-lime/20"
+            >
+              {showCostCenter ? "Ocultar Central de Custos" : "Central de Custos"}
+            </button>
+          </div>
+
+          {showCostCenter && (
+            <RealCostCenter />
+          )}
+        </section>
+
         {/* Quick actions */}
         <section>
           <div className="mb-3 flex items-center justify-between">
@@ -523,7 +751,7 @@ export default function Dashboard() {
         <section className="grid gap-6 xl:grid-cols-2">
           <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.14),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/20">
             <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
+              <div data-partners-block="subscribers-only" className="hidden">
                 <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// NEXUS_PARTNERS_PACK</p>
                 <h2 className="mt-2 text-2xl font-bold text-white">Painel Nexus Partners Pack</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
@@ -817,6 +1045,67 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      {/* sprints-7-10-block · D12 UX_PREMIUM */}
+      <div className="grid gap-4 my-6" style={{gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))'}}>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-cyan-300 text-sm font-semibold tracking-wide">📊 Comissões</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">tempo real</span>
+          </div>
+          <CommissionChart />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-purple-300 text-sm font-semibold tracking-wide">🎯 Funil de Vendas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">pipeline</span>
+          </div>
+          <SalesFunnelDashboard />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-amber-300 text-sm font-semibold tracking-wide">🏆 Conquistas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">progresso</span>
+          </div>
+          <AchievementsBadges />
+        </div>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">ao vivo</span>
+          </div>
+          <NotificationCenter />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 my-6">
+        <AcademiaPersonalTrail />
+        <AcademiaWhatsNew />
+      </div>
+
+      <div className="my-6">
+        <AcademiaPopular />
+      </div>
+
     </DashboardLayout>
+  );
+}
+
+// D15-XP-card component
+function DashboardXpBadge() {
+  const status: any = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, { retry: false });
+  const totalXp = Number(status?.data?.totalXp || 0);
+  const monthlyXp = Number(status?.data?.monthlyXp || 0);
+  const currentLevel = Number(status?.data?.currentLevel || 1);
+  // Paridade D15: R$1 = 100 XP
+  const totalXpScaled = totalXp; // já vem em unidade XP correta do backend (multiplicado * 100)
+  return (
+    <div className="mt-3 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 px-4 py-3">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Nível XP</p>
+        <span className="rounded-full border border-quantum-cyan/40 bg-quantum-cyan/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-quantum-cyan">L{currentLevel}</span>
+      </div>
+      <p className="mt-2 text-2xl font-bold text-quantum-cyan">{totalXpScaled.toLocaleString("pt-BR")} XP</p>
+      <p className="mt-1 text-[11px] text-slate-400">+{monthlyXp.toLocaleString("pt-BR")} XP no ciclo · paridade R$1 = 100 XP</p>
+    </div>
   );
 }

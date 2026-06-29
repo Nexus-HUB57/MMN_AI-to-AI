@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/10_Automatizar_Hotmart_Shopee_MercadoLivre.webp)
+![Capa](../../assets/ebook_covers/curso_universo_ia/10_Automatizar_Hotmart_Shopee_MercadoLivre.webp)
 
 **Como automatizar Hotmart, Shopee e Mercado Livre?**
 

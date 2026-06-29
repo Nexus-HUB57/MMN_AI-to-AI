@@ -258,3 +258,28 @@ ul {
     gap: 4px;
   }
 }
+
+/* V17 — UX polish global */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus ring acessível para navegação por teclado */
+:where(a, button, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid #06b6d4; /* cyan-500 */
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Linha-clamp utility (se Tailwind não tiver) */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

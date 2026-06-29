@@ -40,6 +40,32 @@ export default function AdminSettings() {
     },
   });
 
+  const clearRuntimeCacheMutation = trpc.admin.clearRuntimeCache.useMutation({
+    onSuccess: (payload: any) => {
+      toast.success(payload?.message || "Cache invalidado com sucesso");
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao limpar cache");
+    },
+  });
+
+  const previewGoLiveResetMutation = trpc.admin.previewGoLiveReset.useMutation();
+
+  const resetGoLiveOperationalDataMutation = trpc.admin.resetGoLiveOperationalData.useMutation({
+    onSuccess: (payload: any) => {
+      const deleted = payload?.deleted ?? {};
+      const summary = Object.entries(deleted)
+        .filter(([, value]) => Number(value) > 0)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(" · ");
+      toast.success(summary ? `Reset go-live concluído — ${summary}` : "Reset go-live concluído");
+      refetch();
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao resetar dados operacionais");
+    },
+  });
+
   const [formData, setFormData] = useState({
     platformName: "",
     supportEmail: "",
@@ -80,6 +106,35 @@ export default function AdminSettings() {
   const handleRestoreOfficial = () => {
     setCommissionLevels(DEFAULT_OFFICIAL_LEVELS);
     toast.success("Regramento oficial Nexus SaaS · IOAID restaurado (5 níveis · Matriz Forçada)");
+  };
+
+  const handleClearCache = () => {
+    clearRuntimeCacheMutation.mutate();
+  };
+
+  const handleResetGoLive = () => {
+    previewGoLiveResetMutation.mutate(undefined, {
+      onSuccess: (payload: any) => {
+        const counts = payload?.counts ?? {};
+        const details = Object.entries(counts)
+          .filter(([, value]) => Number(value) > 0)
+          .map(([key, value]) => `• ${key}: ${value}`)
+          .join("\n");
+        const accepted = window.confirm(
+          `Este reset irá remover SOMENTE dados operacionais de teste.\n\n${details || 'Nenhum dado de teste encontrado.'}\n\nUsuários/admins reais serão preservados.\n\nClique OK para continuar.`
+        );
+        if (!accepted) return;
+        const typed = window.prompt('Digite exatamente RESETAR GO LIVE para confirmar o reset controlado.');
+        if ((typed || '').trim() !== 'RESETAR GO LIVE') {
+          toast.error('Confirmação inválida. Nenhuma alteração foi aplicada.');
+          return;
+        }
+        resetGoLiveOperationalDataMutation.mutate({ confirmationText: typed });
+      },
+      onError: (error: any) => {
+        toast.error(error?.message || 'Erro ao preparar prévia do reset go-live');
+      },
+    });
   };
 
   const apiStatus = (settings as any)?.apiStatus ?? {};
@@ -313,14 +368,27 @@ export default function AdminSettings() {
           <p className="text-sm text-red-700 mb-4">
             Estas ações são irreversíveis. Tenha certeza antes de prosseguir.
           </p>
-          <div className="flex gap-3">
-            <Button variant="destructive" size="sm">
-              Limpar Cache
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleClearCache}
+              disabled={clearRuntimeCacheMutation.isPending}
+            >
+              {clearRuntimeCacheMutation.isPending ? "Limpando..." : "Limpar Cache"}
             </Button>
-            <Button variant="destructive" size="sm">
-              Resetar Configurações
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleResetGoLive}
+              disabled={previewGoLiveResetMutation.isPending || resetGoLiveOperationalDataMutation.isPending}
+            >
+              {previewGoLiveResetMutation.isPending || resetGoLiveOperationalDataMutation.isPending ? "Resetando..." : "Resetar Configurações"}
             </Button>
           </div>
+          <p className="mt-3 text-xs text-red-700">
+            Escopo atual do reset go-live: comissões, saldos, pedidos de teste, progresso e visualizações. Usuários e admins reais são preservados.
+          </p>
         </Card>
       </div>
     </AdminDashboardLayout>

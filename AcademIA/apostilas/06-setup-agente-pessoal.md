@@ -181,4 +181,74 @@ Se todos os itens estão marcados: **seu agente está pronto para produção**. 
 
 **Setup Completo do Agente Pessoal** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Setup do Agente Pessoal
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Setup completo**
+
+Siga o tutorial e suba seu agente pessoal em docker. Tempo esperado: 30-60 min.
+
+**Exercício 2 — Identidade**
+
+Escreva um system prompt de 200+ palavras para SEU agente (não copie template). Teste 5 prompts diferentes.
+
+**Exercício 3 — Skills**
+
+Instale 3 skills do catálogo. Para cada, customize o prompt interno para seu nicho.
+
+**Exercício 4 — Judge**
+
+Configure o Judge com 5 regras do seu nicho. Teste 10 prompts adversariais.
+
+**Exercício 5 — Backup**
+
+Faça backup completo do setup (volume, config, identity). Documente o restore.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são os pré-requisitos de hardware/software?
+2. Qual a diferença entre 'system prompt' e 'few-shot examples'?
+3. Como versionar a identidade do agente (controle de mudança)?
+4. O que fazer se o Judge bloquear muitas mensagens (falsos positivos)?
+5. Como migrar de 'pessoal' para 'equipe' (multi-usuário)?
+6. Qual a política de segurança recomendada (secrets, logs, acesso)?
+7. Como monitorar uso de tokens e custos?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

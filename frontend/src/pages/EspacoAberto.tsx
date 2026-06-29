@@ -57,7 +57,7 @@ const eventos = [
 const cursos = [
   {
     id: 1,
-    titulo: "Básico do MMNAI",
+    titulo: "Básico do IOAID · SaaS",
     modulo: 5,
     duracaoTotal: "2h 30min",
     progresso: 75,

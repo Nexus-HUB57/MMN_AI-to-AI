@@ -121,6 +121,28 @@ export default function Commissions() {
           </p>
         </div>
 
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="p-5 border-border/60 bg-card/70">
+            <p className="text-xs uppercase tracking-[0.24em] text-text-muted">Programa afiliado</p>
+            <h2 className="mt-2 text-lg font-semibold text-foreground">Rede binária</h2>
+            <p className="mt-3 text-2xl font-bold text-emerald-400">{formatCurrency(stats?.total)}</p>
+            <p className="mt-2 text-sm text-text-secondary">Volume agregado da malha antes do bloco Nexus Partners Pack.</p>
+          </Card>
+          <Card className="p-5 border-border/60 bg-card/70">
+            <p className="text-xs uppercase tracking-[0.24em] text-text-muted">Programa afiliado</p>
+            <h2 className="mt-2 text-lg font-semibold text-foreground">Vendas diretas</h2>
+            <p className="mt-3 text-2xl font-bold text-accent-cyan">{formatCurrency(stats?.confirmed)}</p>
+            <p className="mt-2 text-sm text-text-secondary">Comissões já confirmadas por vendas qualificadas.</p>
+          </Card>
+          <Card className="p-5 border-border/60 bg-card/70">
+            <p className="text-xs uppercase tracking-[0.24em] text-text-muted">Programa afiliado</p>
+            <h2 className="mt-2 text-lg font-semibold text-foreground">Bônus e campanhas</h2>
+            <p className="mt-3 text-2xl font-bold text-amber-400">{formatCurrency(stats?.paid)}</p>
+            <p className="mt-2 text-sm text-text-secondary">Resumo operacional dos bônus já liquidados no ciclo.</p>
+          </Card>
+        </div>
+
         {catalogQuery.data?.plans?.length ? (
           <div className="grid gap-4 lg:grid-cols-3">
             {(catalogQuery.data.plans as Array<any>).map((plan) => (

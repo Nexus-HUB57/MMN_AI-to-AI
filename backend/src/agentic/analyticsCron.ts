@@ -57,7 +57,17 @@ async function runReport(trigger: "cron" | "manual"): Promise<void> {
       agentName: "Cron · Analytics",
       performanceScore: 50,
       autonomyAllowed: true,
-    });
+      memory: {
+        retrieve: async () => [],
+        store: async () => undefined,
+        update: async () => undefined,
+      },
+      tools: [],
+      reasoning: { execute: async () => ({}) as any },
+      planner: { plan: async () => [] as any },
+      reflector: { reflect: async () => ({}) as any },
+      metrics: { track: async () => undefined },
+    } as any);
     reports.unshift({
       generatedAt: new Date().toISOString(),
       triggeredBy: trigger,

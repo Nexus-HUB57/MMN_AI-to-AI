@@ -10,7 +10,7 @@
 
 **Sra. Nexus Ive:** "No nosso último encontro, desvendamos o IOAID, o sistema nervoso que orquestra suas intenções em ações. Agora, é hora de conhecer o sistema imunológico dessa infraestrutura: o SHO, ou Sistema Híbrido de Orquestração. Ele é a garantia de que sua operação se mantém saudável e resiliente, mesmo diante de imprevistos. Sir. Alencar, poderia nos guiar por essa camada vital?"
 
-**Visual:** Sir. Nexus Alencar assume o centro da atenção, com um monitor ao fundo exibindo um diagrama abstrato de fluxo de dados.
+**Visual:** Sir. Nexus Alencar assume o centro da atenção. Seus olhos azuis profundos e barba grisalha bem cuidada reforçam sua autoridade técnica. Ao fundo, um monitor exibe um diagrama abstrato de fluxo de dados.
 
 **Sir. Nexus Alencar:** "Com prazer, Sra. Ive. Se o IOAID é o que nos permite agir, o SHO é o que nos permite agir com confiança. Ele monitora cada execução, detecta anomalias e toma ações defensivas de forma autônoma na maioria dos casos. É importante ressaltar que o SHO não é uma inteligência intuitiva; ele é um orquestrador determinístico, baseado em regras claras e configuráveis. Ele não alucina, ele reage com precisão."
 

@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PartnersDeliveryPanels from "@/components/PartnersDeliveryPanels";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -467,6 +468,10 @@ export default function PartnersDashboardPage() {
             <TabsTrigger value="partners"><Users className="mr-2 h-4 w-4" />Parceiros</TabsTrigger>
             <TabsTrigger value="algorithms"><Zap className="mr-2 h-4 w-4" />Algoritmos</TabsTrigger>
             <TabsTrigger value="tiers"><Award className="mr-2 h-4 w-4" />Tiers</TabsTrigger>
+            <TabsTrigger value="materials"><Star className="mr-2 h-4 w-4" />Materiais</TabsTrigger>
+            <TabsTrigger value="performance"><Activity className="mr-2 h-4 w-4" />Performance</TabsTrigger>
+            <TabsTrigger value="apis"><Zap className="mr-2 h-4 w-4" />APIs do Agente</TabsTrigger>
+            <TabsTrigger value="chatbot"><Network className="mr-2 h-4 w-4" />Chatbot</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
@@ -788,6 +793,18 @@ export default function PartnersDashboardPage() {
                 );
               })}
             </div>
+          </TabsContent>
+          <TabsContent value="materials" className="space-y-6">
+            <PartnersDeliveryPanels.Materials />
+          </TabsContent>
+          <TabsContent value="performance" className="space-y-6">
+            <PartnersDeliveryPanels.Performance />
+          </TabsContent>
+          <TabsContent value="apis" className="space-y-6">
+            <PartnersDeliveryPanels.ApiBindings />
+          </TabsContent>
+          <TabsContent value="chatbot" className="space-y-6">
+            <PartnersDeliveryPanels.Chatbot />
           </TabsContent>
         </Tabs>
       </div>

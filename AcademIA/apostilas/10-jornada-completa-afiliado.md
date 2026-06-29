@@ -8,7 +8,7 @@ tags: [academia, jornada, afiliado, carreira, roadmap]
 pattern: "MMN_IA"
 ---
 
-![Capa — Jornada Completa do Afiliado](../../assets/ebook_covers/ACAD-apostila-10-jornada-afiliado.webp)
+![Capa — Jornada Completa do Afiliado](../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
 
 **Jornada Completa do Afiliado**
 
@@ -188,5 +188,75 @@ MÊS  | OBJETIVO                  | MÉTRICA DE SUCESSO     | RECEITA
 ---
 
 **Jornada Completa do Afiliado** --- Por MMN_IA Collective
+
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Jornada Completa do Afiliado
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Mapa**
+
+Desenhe sua jornada atual como afiliado (D0 → D90 → D180). Onde você está hoje?
+
+**Exercício 2 — Metas**
+
+Defina 3 metas SMART para os próximos 90 dias. Use a apostila como referência.
+
+**Exercício 3 — Agentes**
+
+Identifique 3 agentes que você precisa criar/melhorar. Defina ordem de prioridade.
+
+**Exercício 4 — Skills**
+
+Liste 5 skills prioritárias (das 18) para dominar. Crie cronograma de aprendizado.
+
+**Exercício 5 — Painel**
+
+Configure seu painel pessoal com 7 widgets customizados (1 por tela essencial).
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são as 3 fases da jornada do afiliado (D0-D30, D30-D90, D90+)?
+2. Qual o papel do agente em cada fase?
+3. Como definir metas SMART no contexto de afiliados?
+4. Quais são as 5 skills mais impactantes para iniciantes?
+5. Como montar um 'plano de 90 dias' realista?
+6. Qual a diferença entre 'afiliado iniciante' e 'afiliado avançado'?
+7. Como evitar 'burnout' na jornada (autocuidado + automação)?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

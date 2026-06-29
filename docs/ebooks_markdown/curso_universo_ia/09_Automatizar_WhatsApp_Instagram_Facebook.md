@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/09_Automatizar_WhatsApp_Instagram_Facebook.webp)
+![Capa](../../assets/ebook_covers/curso_universo_ia/09_Automatizar_WhatsApp_Instagram_Facebook.webp)
 
 **Como automatizar WhatsApp, Instagram e Facebook?**
 

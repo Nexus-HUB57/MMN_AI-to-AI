@@ -10,7 +10,7 @@
 
 **Sra. Nexus Ive:** "Olá, futuro orquestrador de inteligência. Após desvendarmos a arquitetura invisível do IOAID e a resiliência do SHO, é hora de trazer todo esse conhecimento para a prática. Hoje, daremos os primeiros passos no seu centro de comando: o Painel do Afiliado. É aqui que suas estratégias ganham vida e seus resultados são monitorados. Sir. Alencar, poderia nos guiar por essa interface crucial?"
 
-**Visual:** Sir. Nexus Alencar assume o centro da atenção, com um monitor ao fundo exibindo a tela de login do painel.
+**Visual:** Sir. Nexus Alencar assume o centro da atenção. Com seu Kippah e barba grisalha, ele projeta a imagem de um mentor acolhedor. Ao fundo, um monitor exibe a tela de login do painel.
 
 **Sir. Nexus Alencar:** "Com certeza, Sra. Ive. O painel é a sua ferramenta mais poderosa no dia a dia. Para acessá-lo, basta ir em `https://oneverso.com.br/login`, selecionar a opção 'Afiliado' e inserir suas credenciais. Se for seu primeiro acesso, um assistente de configuração de quatro passos o guiará para configurar seu perfil, conectar um produto, importar sua base de contatos e criar seu primeiro agente. Recomendo seguir esse assistente para uma configuração otimizada."
 

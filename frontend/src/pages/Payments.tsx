@@ -190,9 +190,6 @@ export default function Payments() {
         {/* Tab Content */}
         {activeTab === 'balance' && (
           <div className="space-y-6">
-            {/* Correção #4 — Conversor BRL ⇄ BTC (Custódia Binance) visível na aba Saldo */}
-            <BRLBTCConverter />
-
             {/* Balance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gradient-to-br from-green-900/50 to-green-800/30 rounded-xl p-6 border border-green-700/50">
@@ -263,6 +260,11 @@ export default function Payments() {
                 <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-green-400 transition-colors" />
               </button>
             </div>
+            {/* D14-BTC converter */}
+            <div className="mt-2">
+              <BRLBTCConverter />
+            </div>
+
           </div>
         )}
 

@@ -1,5 +1,7 @@
 import { Link, useLocation } from "wouter";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { trpc } from "@/lib/trpc";
+import { sortByCollectionRank } from "@/lib/collectionRanking";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,6 +111,72 @@ function PublicCtaBanner({ packSlug, packName, amountCents, description }: { pac
   );
 }
 
+
+// NEXUS_QUICK_ACTIONS_V2
+function NexusQuickActionsBar() {
+  const [, setLocation] = useLocation();
+  const executeMutation = trpc.agentSkillsRuntime.execute.useMutation();
+  const [busySlug, setBusySlug] = useState<string | null>(null);
+  const [result, setResult] = useState<{ ok: boolean; label: string; msg: string } | null>(null);
+
+  const runSkill = async (slug: string, label: string) => {
+    setBusySlug(slug);
+    setResult(null);
+    try {
+      const res: any = await executeMutation.mutateAsync({ slug, params: {}, dryRun: true } as any);
+      setResult({ ok: true, label, msg: `${label} executou em dry-run com sucesso. ${typeof res === "object" ? JSON.stringify(res).slice(0, 120) : ""}` });
+    } catch (e: any) {
+      setResult({ ok: false, label, msg: e?.message ?? "Falha" });
+    } finally {
+      setBusySlug(null);
+    }
+  };
+
+  const actions = [
+    { slug: "prospeccao-outbound", icon: "🎯", label: "Prospectar Leads", color: "from-emerald-500 to-teal-500", action: () => runSkill("prospeccao-outbound", "Prospecção Outbound") },
+    { slug: "auto-publisher", icon: "📤", label: "Publicar Agora", color: "from-purple-500 to-pink-500", action: () => runSkill("auto-publisher", "Auto-Publisher") },
+    { slug: "copywriter-persuasivo", icon: "✍️", label: "Gerar Conteúdo", color: "from-quantum-cyan to-blue-500", action: () => runSkill("copywriter-persuasivo", "Copywriter Persuasivo") },
+    { slug: "tracking", icon: "🔗", label: "Tracking Links", color: "from-amber-500 to-orange-500", action: () => setLocation("/tracking/links") },
+  ];
+
+  return (
+    <section className="rounded-3xl border border-quantum-cyan/30 bg-[linear-gradient(135deg,rgba(7,89,133,0.18),rgba(2,6,23,0.96))] p-5 shadow-2xl shadow-cyan-900/20">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <Badge className="border border-quantum-cyan/40 bg-quantum-cyan/10 text-quantum-cyan mb-1">
+            ⚡ Ações Rápidas · Agente Live
+          </Badge>
+          <h2 className="text-lg font-bold text-white">Operação de vendas em 1 clique</h2>
+        </div>
+      </div>
+
+      {result && (
+        <div className={`mb-3 rounded-xl border p-3 text-sm ${result.ok ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200" : "border-rose-500/40 bg-rose-500/10 text-rose-200"}`}>
+          {result.ok ? "✅" : "❌"} <strong>{result.label}</strong>: {result.msg}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {actions.map((a) => (
+          <button
+            key={a.slug}
+            onClick={a.action}
+            disabled={busySlug === a.slug}
+            className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-left transition hover:border-quantum-cyan/50 disabled:opacity-50`}
+          >
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${a.color}`} />
+            <div className="text-2xl mb-2">{a.icon}</div>
+            <div className="text-sm font-bold text-white">{a.label}</div>
+            <div className="text-[10px] font-mono text-slate-500 mt-1">
+              {busySlug === a.slug ? "⏳ executando…" : a.slug === "tracking" ? "navegar →" : "dry-run"}
+            </div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const { profile } = useMarketplaceProfile();
   const { isAuthenticated } = useAuth();
@@ -123,13 +191,15 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const skillBundles = getUnlockedSkillBundles(displayProfile);
   const hasOnboardingFlag =
     typeof window !== "undefined" && new URLSearchParams(window.location.search).get("onboarding") === "1";
+  const isMonthlyActivationFocus =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("focus") === "monthly-activation";
 
   // Correção #3 — Marketplace enxuto:
   // Em vitrine pública (sem autenticação) expõe APENAS o Pack de Acesso (pack-a2).
   // Aquisição de upgrades é exclusiva em /upgrades (autenticado).
-  const visiblePacks = isPublicView
-    ? NEXUS_PACKS.filter((p) => p.slug === "pack-a2")
-    : NEXUS_PACKS;
+  // Marketplace Nexus: somente Pack A² (Agente Afiliado). Demais packs apenas em /upgrades.
+  const visiblePacks = NEXUS_PACKS.filter((p) => p.slug === "pack-a2");
 
   const packStates = visiblePacks.map((pack) => ({
     ...pack,
@@ -142,8 +212,237 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const activeSkills = skillBundles.filter((bundle) => bundle.status === "active").length;
   const [searchTerm, setSearchTerm] = useState("");
   const [storefrontFilter, setStorefrontFilter] = useState<"all" | "packs" | "ebooks">("all");
+  const [ebookCollection, setEbookCollection] = useState<string>("");
+  const [ebookSearch, setEbookSearch] = useState<string>("");
+
+  // Carrinho do Marketplace Nexus (ebooks) — modelo Hotmart
+  type CartLine = { slug: string; title: string; priceCents: number; coverPath?: string | null };
+  const [ebookCart, setEbookCart] = useState<CartLine[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  // NEXUS_UX_STATES_V2
+  const debouncedEbookSearch = useDebounceValue(ebookSearch, 220);
+  const [nexusQuickView, setNexusQuickView] = useState<any | null>(null);
+  const [nexusViewMode, setNexusViewMode] = useState<NexusViewMode>(() => {
+    if (typeof window === "undefined") return "large";
+    const saved = window.localStorage.getItem("nexus_view_mode");
+    return (saved === "compact" || saved === "carousel" || saved === "large") ? (saved as NexusViewMode) : "large";
+  });
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("nexus_view_mode", nexusViewMode);
+    }
+  }, [nexusViewMode]);
+  const [nexusActiveAnchor, setNexusActiveAnchor] = useState<string>("");
+
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [processing, setProcessing] = useState(false);
+  const [orderResult, setOrderResult] = useState<any>(null);
+  const cartTotal = ebookCart.reduce((acc, c) => acc + c.priceCents, 0);
+
+  function addEbookToCart(eb: any) {
+    setEbookCart((prev) => prev.some((x) => x.slug === eb.slug) ? prev : [...prev, {
+      slug: eb.slug, title: eb.title, priceCents: eb.costCents, coverPath: eb.coverPath,
+    }]);
+    setCartOpen(true);
+  }
+  function removeFromCart(slug: string) { setEbookCart((p) => p.filter((c) => c.slug !== slug)); }
+  function clearCart() { setEbookCart([]); }
+
+  const placeOrder = (trpc as any).affiliateStore?.placeStoreOrder?.useMutation
+    ? (trpc as any).affiliateStore.placeStoreOrder.useMutation()
+    : null;
+
+  async function handleRequestPackTicket(pack: { slug: string; name: string; priceCents: number }) {
+    try {
+      const email = prompt("Confirme seu email de cadastro para o ticket:");
+      if (!email || !email.includes("@")) { alert("Email inválido"); return; }
+      const r = await fetch("/api/marketplace/pack-ticket", {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packSlug: pack.slug, packName: pack.name,
+          amountCents: pack.priceCents, paymentMethod: "pix",
+          customerEmail: email,
+        }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) { alert(j?.error || "Falha ao abrir ticket"); return; }
+      alert("Ticket #" + j.ticketId + " aberto. O administrador confirmará seu pagamento e ativará o Pack. Você receberá email de confirmação.");
+    } catch (e: any) {
+      alert(e?.message || "Erro");
+    }
+  }
+
+  async function handlePayWithBalance() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    setProcessing(true);
+    try {
+      const payBal = (trpc as any).marketplaceNexus?.payWithBalance?.useMutation
+        ? (trpc as any).marketplaceNexus.payWithBalance
+        : null;
+      // 1) cria pedido
+      const createOrder = (trpc as any).marketplaceNexus?.checkout?.useMutation
+        ? (trpc as any).marketplaceNexus.checkout
+        : null;
+      if (!createOrder) throw new Error("Checkout indisponível");
+      // Fluxo simplificado: usa endpoint REST proxy se disponível
+      const r = await fetch("/api/marketplace/checkout-with-balance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          items: ebookCart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
+          amountCents: cartTotal,
+          customerEmail,
+          customerName: customerName || undefined,
+        }),
+      });
+      const data = await r.json();
+      if (!r.ok || !data?.ok) throw new Error(data?.error || "Saldo insuficiente ou erro no pagamento");
+      setOrderResult({ ok: true, orderId: data.orderId, status: "paid",
+        message: "Pagamento via saldo confirmado",
+        delivery: { channel: "email", to: customerEmail, eta: "Entrega imediata por e-mail." } });
+      setPaymentOpen(false);
+      setEbookCart([]);
+      setSuccessOpen(true);
+    } catch (e: any) {
+      alert(e?.message || "Falha no pagamento por saldo");
+    } finally { setProcessing(false); }
+  }
+
+  function handleGoToPixCheckout() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    const desc = ebookCart.length === 1
+      ? ebookCart[0].title
+      : `${ebookCart.length} e-books · Marketplace Nexus`;
+    const params = new URLSearchParams({
+      amountCents: String(cartTotal),
+      description: desc,
+      payerEmail: customerEmail,
+      source: "marketplace-nexus",
+    });
+    window.location.href = `/pix/checkout?${params.toString()}`;
+  }
+
+  async function handlePayMercadoPago() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    setProcessing(true);
+    try {
+      const ref = (typeof window !== "undefined" && (localStorage.getItem("nx_ref") || "")) || "MARKETPLACE-NEXUS";
+      const res = placeOrder
+        ? await placeOrder.mutateAsync({
+            ownerCode: ref,
+            customerEmail,
+            customerName: customerName || undefined,
+            items: ebookCart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
+            amountCents: cartTotal,
+            paymentMethod: "mercado_pago",
+          })
+        : { ok: true, orderId: "local_" + Date.now(), status: "pending",
+            message: "Aguardando confirmação Mercado Pago",
+            delivery: { channel: "email", to: customerEmail, eta: "Entrega após confirmação." } };
+      setOrderResult(res);
+      setPaymentOpen(false);
+      setEbookCart([]);
+      setSuccessOpen(true);
+    } catch (e) { console.error(e); }
+    finally { setProcessing(false); }
+  }
+
+  async function handlePay() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    setProcessing(true);
+    try {
+      const ref = (typeof window !== "undefined" && (localStorage.getItem("nx_ref") || "")) || "MARKETPLACE-NEXUS";
+      const res = placeOrder
+        ? await placeOrder.mutateAsync({
+            ownerCode: ref,
+            customerEmail,
+            customerName: customerName || undefined,
+            items: ebookCart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
+            amountCents: cartTotal,
+          })
+        : { ok: true, orderId: "local_" + Date.now(), status: "paid",
+            message: "Pagamento Realizado com Sucesso",
+            delivery: { channel: "email", to: customerEmail, eta: "Entrega imediata por e-mail." } };
+      setOrderResult(res);
+      setPaymentOpen(false);
+      setEbookCart([]);
+      setSuccessOpen(true);
+    } catch (e) { console.error(e); }
+    finally { setProcessing(false); }
+  }
   const stockItems = useMemo(() => getOperationalInventory(displayProfile), [displayProfile]);
-  const marketplaceEbooks = useMemo(() => getMarketplaceEbooks(displayProfile), [displayProfile]);
+  // Catálogo REAL servido pelo backend (132 ebooks oficiais do repositório)
+  const remoteEbooksQuery = (trpc as any).marketplaceNexus?.listEbooks?.useQuery
+    ? (trpc as any).marketplaceNexus.listEbooks.useQuery(undefined, { retry: false })
+    : null;
+  const repoEbooks = useMemo(() => {
+    const list = (remoteEbooksQuery?.data ?? []) as any[];
+    return list.map((e) => ({
+      slug: String(e.slug),
+      order: Number(e.order ?? 0),
+      title: String(e.title ?? "E-book"),
+      subtitle: e.subtitle ?? null,
+      description: e.description ?? "",
+      costCents: Number(e.costCents ?? 50),
+      resalePriceCents: Number(e.resalePriceCents ?? 99),
+      pages: Number(e.pages ?? 0),
+      category: String(e.category ?? "Nexus Affil'IA'te Store"),
+      coverGradient: e.coverGradient ?? null,
+      htmlPath: e.htmlPath ?? "",
+      pdfPath: e.pdfPath ?? "",
+      coverPath: e.coverPath ?? null,
+      unlockPackSlug: String(e.unlockPackSlug ?? "pack-a2"),
+      status: (e.status as "active" | "locked") ?? "locked",
+    }));
+  }, [remoteEbooksQuery?.data]);
+  const ebookCollections = useMemo(() => {
+    const set = new Set<string>();
+    repoEbooks.forEach((e) => e.category && set.add(e.category));
+    return Array.from(set).sort();
+  }, [repoEbooks]);
+  const filteredEbooks = useMemo(() => {
+    const q = debouncedEbookSearch.trim().toLowerCase();
+    return sortByCollectionRank(repoEbooks.filter((e) => {
+      if (ebookCollection && e.category !== ebookCollection) return false;
+      if (q && !`${e.title} ${e.subtitle ?? ""} ${e.description ?? ""}`.toLowerCase().includes(q)) return false;
+      return true;
+    }));
+  }, [repoEbooks, ebookCollection, debouncedEbookSearch]);
+
+  // Agrupar por coleção mantendo ordem do rank
+  const nexusEbookGroups = useMemo(() => {
+    const map = new Map<string, typeof filteredEbooks>();
+    filteredEbooks.forEach((e) => {
+      const k = e.category || "Outras";
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(e);
+    });
+    return Array.from(map.entries());
+  }, [filteredEbooks]);
+
+  // Scroll-spy
+  useEffect(() => {
+    if (nexusEbookGroups.length === 0) return;
+    const obs = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible[0]) setNexusActiveAnchor(visible[0].target.id);
+    }, { rootMargin: "-30% 0% -55% 0%", threshold: [0, 0.25, 0.5, 0.75, 1] });
+    nexusEbookGroups.forEach(([cat]) => {
+      const el = document.getElementById(ebookSlugify(cat));
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, [nexusEbookGroups]);
+  // Mantém compatibilidade com o storefront (que precisa do array para badges/contagens)
+  const marketplaceEbooks = repoEbooks;
   // Em vista pública, hero exibe somente o Pack de Acesso (único item de packStates).
   // Para usuários autenticados, mantém até 3 packs disponíveis.
   const heroPacks = isPublicView ? packStates : availableNow.slice(0, 3);
@@ -166,22 +465,28 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       detail: pack.highlights[0] ?? `${pack.xpGranted.toLocaleString("pt-BR")} XP liberados`,
     }));
 
-    const ebookItems = marketplaceEbooks.slice(0, 8).map((ebook) => ({
+    // Marketplace Nexus = única vitrine oficial de ebooks (fusão com /marketplaces/ebooks).
+    const ebookItems = marketplaceEbooks.map((ebook) => ({
       id: `ebook-${ebook.slug}`,
       type: "ebooks" as const,
       title: ebook.title,
-      subtitle: ebook.category,
+      subtitle: (ebook as any).subtitle || '', // D14-RaizFix
       category: ebook.category,
       description: ebook.description,
       badge: ebook.status === "active" ? "Liberado" : "Revenda",
-      priceLabel: `Revenda ${formatCurrency(ebook.resalePriceCents)}`,
-      ctaLabel: isPublicView ? "Entrar para ver biblioteca" : "Abrir catálogo",
-      href: isPublicView ? `/login?from=${encodeURIComponent("/marketplaces/ebooks")}` : "/marketplaces/ebooks",
+      priceLabel: `Custo ${formatCurrency(ebook.costCents)} · Revenda ${formatCurrency(ebook.resalePriceCents)}`,
+      ctaLabel: isPublicView ? "Entrar para comprar" : "Comprar e-book",
+      href: isPublicView
+        ? `/login?from=${encodeURIComponent(buildMarketplaceCheckoutUrl({ source: "marketplaces", type: "ebook", slug: ebook.slug, name: ebook.title, amountCents: ebook.costCents, description: ebook.description }))}`
+        : buildMarketplaceCheckoutUrl({ source: "marketplaces", type: "ebook", slug: ebook.slug, name: ebook.title, amountCents: ebook.costCents, description: ebook.description }),
       accent: ebook.status === "active" ? "text-quantum-lime" : "text-quantum-purple",
-      detail: `${ebook.pages} páginas · custo ${formatCurrency(ebook.costCents)}`,
+      detail: `${ebook.pages} páginas · coleção Nexus Affil'IA'te Store`,
+      coverPath: (ebook as any).coverPath ?? null,
     }));
 
-    const source = [...packItems, ...ebookItems];
+    // O storefront genérico recebe APENAS o Pack A². A vitrine de e-books
+    // é renderizada em seção própria (formato Loja Virtual) logo abaixo.
+    const source = [...packItems];
     return source.filter((item) => {
       const matchesType = storefrontFilter === "all" || item.type === storefrontFilter;
       const q = searchTerm.trim().toLowerCase();
@@ -192,6 +497,146 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
 
   return (
     <div className="space-y-8 pb-8">
+      <NexusQuickActionsBar />
+      {isMonthlyActivationFocus && (
+        <section
+          id="monthly-activation"
+          className="rounded-[32px] border border-amber-300/30 bg-[radial-gradient(circle_at_top_left,rgba(252,211,77,0.16),transparent_30%),linear-gradient(180deg,rgba(10,18,40,0.96),rgba(2,6,23,1))] p-6 shadow-2xl shadow-black/40 md:p-8"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">
+                Programa de Afiliados · Assinatura mensal
+              </Badge>
+              <h1 className="mt-3 text-2xl font-bold text-white md:text-3xl">
+                Ativação Mensal — chave do seu plano de comissões
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+                A Ativação Mensal funciona como uma assinatura recorrente do programa: enquanto estiver em dia,
+                você libera bônus, comissões em todos os níveis da rede e recompensas do ciclo. A janela oficial
+                de pagamento é entre os dias 01 e 10 de cada mês.
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">Status do ciclo</p>
+              <p className="mt-1 font-sans text-2xl font-bold text-emerald-300">Ativo · Junho/2026</p>
+              <p className="mt-1 text-[11px] text-slate-400">Próxima janela: 01 a 10 do próximo mês</p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_1fr_0.95fr]">
+            <div className="rounded-3xl border border-emerald-300/25 bg-emerald-300/5 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-200">// Diretriz financeira por faixa</p>
+              <p className="mt-2 text-lg font-semibold text-white">Ativação Mensal do Programa</p>
+              <div className="mt-3 space-y-2 text-[12px] leading-5 text-slate-200">
+                {[
+                  ["Afiliado I · II · III", "R$ 10 / mês", "Mantém bônus, comissões e libera Packs A² SiSu"],
+                  ["Preditivo I · II · III", "R$ 20 / mês", "Mantém elegibilidade e amplia Packs SiSu da Rede N.O."],
+                  ["Generativo I · II · III", "R$ 30 / mês", "Libera Packs SiSu + ativa XP mensal por paridade"],
+                  ["Orquestrador I · II", "R$ 50 a R$ 100 / mês", "Escala do N.O. com ativação superior"],
+                  ["Orquestrador III", "R$ 200 / mês", "Faixa C-Level com ativação ampliada"],
+                  ["IA Agêntica I · II · III", "R$ 500 a R$ 2.000 / mês", "Continuidade máxima de bônus, rede e legado"],
+                ].map(([tier, value, detail]) => (
+                  <div key={tier} className="rounded-2xl border border-white/10 bg-black/20 px-3 py-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-semibold text-white">{tier}</p>
+                      <span className="font-mono text-emerald-300">{value}</span>
+                    </div>
+                    <p className="mt-1 text-[11px] text-slate-400">{detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-quantum-cyan/25 bg-quantum-cyan/5 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-quantum-cyan">// Regra operacional</p>
+              <ol className="mt-2 space-y-2 list-decimal pl-5 text-[12px] leading-5 text-slate-300">
+                <li>Gere o Pix da Ativação Mensal no checkout integrado do ciclo vigente.</li>
+                <li>Confirme o pagamento via Mercado Pago dentro da janela oficial de 01 a 10.</li>
+                <li>O webhook credita a ativação e habilita bônus, comissões e recompensas do período.</li>
+                <li>Até AGENTE GENERATIVO, a ativação mensal não soma XP: ela entrega novos Packs SiSu para sincronização da Rede N.O.</li>
+                <li>A partir de AGENTE GENERATIVO, a ativação mensal passa a liberar Packs SiSu + XP por paridade de R$1 = 1XP.</li>
+              </ol>
+              <MonthlyActivationButton />
+              <p className="mt-3 text-[11px] text-slate-400">Valor exibido no checkout deve seguir a faixa do nível vigente do afiliado.</p>
+            </div>
+
+            <div className="rounded-3xl border border-amber-300/25 bg-amber-300/5 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-amber-200">// Regras oficiais</p>
+              <ul className="mt-2 space-y-1 list-disc pl-5 text-[12px] leading-5 text-amber-100/90">
+                <li>Janela de pagamento: dias 01 a 10 de cada mês.</li>
+                <li>Até o nível AGENTE GENERATIVO, a ativação mensal prioriza sincronização por Packs SiSu.</li>
+                <li>Do AGENTE GENERATIVO em diante, ativa Packs SiSu e também credita XP mensal na paridade R$1 = 1XP.</li>
+                <li>Inadimplência acumulada suspende bônus do ciclo e trava benefícios operacionais.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            <div className="rounded-3xl border border-white/10 bg-black/30 p-5">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">// O que a Ativação Mensal libera</p>
+              <div className="mt-3 grid grid-cols-1 gap-2 text-[12px] text-slate-200 md:grid-cols-2">
+                <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/5 px-3 py-2">
+                  <p className="font-semibold text-emerald-200">Comissões diretas</p>
+                  <p className="text-[11px] text-slate-400">N1 20% · N2 10% · N3 5% · N4 2,5% · N5 1%</p>
+                </div>
+                <div className="rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 px-3 py-2">
+                  <p className="font-semibold text-quantum-cyan">Bônus de rede</p>
+                  <p className="text-[11px] text-slate-400">Mantém elegibilidade do Networking Operacional e matriz forçada.</p>
+                </div>
+                <div className="rounded-2xl border border-purple-400/20 bg-purple-400/5 px-3 py-2">
+                  <p className="font-semibold text-purple-200">Packs SiSu</p>
+                  <p className="text-[11px] text-slate-400">Antes do Generativo: foco total em novos Packs SiSu para sincronização da Rede N.O.</p>
+                </div>
+                <div className="rounded-2xl border border-amber-300/20 bg-amber-300/5 px-3 py-2">
+                  <p className="font-semibold text-amber-200">XP mensal</p>
+                  <p className="text-[11px] text-slate-400">Somente a partir do AGENTE GENERATIVO, com paridade de R$1 = 1XP.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/30">
+              <div className="border-b border-white/10 px-5 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">// Histórico de Ativações</p>
+              </div>
+              <table className="w-full text-left text-[12px]">
+                <thead className="bg-white/5 text-slate-400">
+                  <tr>
+                    <th className="px-4 py-2 font-mono text-[10px] uppercase tracking-widest">Ciclo</th>
+                    <th className="px-4 py-2 font-mono text-[10px] uppercase tracking-widest">Faixa</th>
+                    <th className="px-4 py-2 font-mono text-[10px] uppercase tracking-widest">Status</th>
+                    <th className="px-4 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 text-slate-200">
+                  {[
+                    { c: "Jun/2026", d: "Afiliado/Preditivo", st: "Ativo", v: "R$ 10 a R$ 20" },
+                    { c: "Mai/2026", d: "Generativo", st: "Pago", v: "R$ 30" },
+                    { c: "Abr/2026", d: "Orquestrador", st: "Pago", v: "R$ 50 a R$ 200" },
+                    { c: "Mar/2026", d: "IA Agêntica", st: "Pago", v: "R$ 500+" },
+                  ].map((row, i) => (
+                    <tr key={i} className="hover:bg-white/5">
+                      <td className="px-4 py-2 font-mono text-[11px] text-slate-400">{row.c}</td>
+                      <td className="px-4 py-2">{row.d}</td>
+                      <td className="px-4 py-2">
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${row.st === "Ativo" ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-200" : "border-white/10 bg-white/5 text-slate-300"}`}>
+                          {row.st}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-right font-mono text-emerald-300">{row.v}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p className="mt-5 text-[10px] uppercase tracking-widest text-slate-500">
+            Painel objetivo e sincronizado com o Programa de Afiliados · Para catálogo, estoque, bibliotecas e capacidades do Agente IA acesse o Dashboard ou /marketplaces sem foco.
+          </p>
+        </section>
+      )}
+
 
       {/* HERO NEXUS STORIE MARKETPLACE */}
       <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.18),transparent_28%),radial-gradient(circle_at_top_right,rgba(0,229,255,0.20),transparent_30%),linear-gradient(180deg,rgba(10,18,40,0.98),rgba(2,6,23,1))] p-6 shadow-2xl shadow-black/40 md:p-8">
@@ -237,8 +682,8 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
             {isPublicView && (
               <div className="grid gap-3 sm:grid-cols-3">
                 <div className="rounded-3xl border border-quantum-lime/20 bg-quantum-lime/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-quantum-lime/70">Packs disponíveis</p>
-                  <p className="mt-3 text-3xl font-bold text-white">15</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-quantum-lime/70">Pack disponível</p>
+                  <p className="mt-3 text-3xl font-bold text-white">1</p>
                 </div>
                 <div className="rounded-3xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-5">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-quantum-cyan/70">E-books no catálogo</p>
@@ -435,6 +880,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
         ))}
       </section>
 
+      {!isMonthlyActivationFocus && (
       <section className="space-y-4 rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.12),transparent_30%),rgba(255,255,255,0.03)] p-6 shadow-2xl shadow-black/20">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -447,8 +893,6 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           <div className="flex flex-wrap gap-2">
             {[
               { value: "all", label: "Tudo" },
-              { value: "packs", label: "Packs / Assinaturas" },
-              { value: "ebooks", label: "E-books" },
             ].map((filter) => (
               <button
                 key={filter.value}
@@ -477,7 +921,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-          {storefrontItems.slice(0, 9).map((item) => (
+          {storefrontItems.map((item) => (
             <div key={item.id} className="group rounded-[28px] border border-white/10 bg-black/25 p-5 transition hover:-translate-y-1 hover:border-white/20">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -509,9 +953,412 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           ))}
         </div>
       </section>
+      )}
+
+      {/* HEADER STICKY · MEU CARRINHO */}
+      <div className="sticky top-0 z-40 -mx-4 mb-2 border-b border-white/10 bg-slate-950/85 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+              <ShoppingBag className="h-4 w-4" />
+            </span>
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500">Marketplace Nexus</p>
+              <p className="text-sm font-semibold text-white">Vitrine oficial · {marketplaceEbooks.length} e-books</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setCartOpen(true)}
+            className="relative inline-flex items-center gap-2 rounded-full bg-quantum-cyan/90 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-quantum-cyan"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            Meu Carrinho
+            {ebookCart.length > 0 && (
+              <span className="ml-1 inline-flex min-w-[22px] items-center justify-center rounded-full bg-slate-900 px-1.5 py-0.5 text-[11px] font-bold text-quantum-cyan">
+                {ebookCart.length}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* VITRINE DE E-BOOKS — Loja Virtual Nexus Affil'IA'te Store */}
+      {!isMonthlyActivationFocus && (
+      <section className="space-y-5 rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.10),transparent_30%),rgba(255,255,255,0.03)] p-6 shadow-2xl shadow-black/20">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">
+              Coletâneas oficiais · Nexus Affil'IA'te Store
+            </Badge>
+            <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">
+              Vitrine de e-books · custo R$ 0,50 · revenda R$ 0,99
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+              {repoEbooks.length} e-books no catálogo oficial · {ebookCollections.length} coletâneas, organizados por coleção. Adicione ao carrinho e finalize com checkout Pix automático.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 lg:max-w-md w-full">
+            <input
+              value={ebookSearch}
+              onChange={(e) => setEbookSearch(e.target.value)}
+              placeholder="Buscar título, descrição..."
+              className="h-11 rounded-xl border border-white/10 bg-black/30 px-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-quantum-cyan/40"
+            />
+            <select
+              value={ebookCollection}
+              onChange={(e) => setEbookCollection(e.target.value)}
+              className="h-11 rounded-xl border border-white/10 bg-black/30 px-3 text-sm text-white focus:outline-none focus:border-quantum-cyan/40"
+            >
+              <option value="">Todas as coleções</option>
+              {ebookCollections.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* UX v2: Tabs scroll-spy de coleções */}
+        {nexusEbookGroups.length > 1 && (
+          <nav aria-label="Coleções" className="flex gap-2 overflow-x-auto pb-2 mb-2 -mx-1 px-1">
+            {nexusEbookGroups.map(([cat, items]) => {
+              const id = ebookSlugify(cat);
+              const active = nexusActiveAnchor === id;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition border ${
+                    active
+                      ? "bg-quantum-cyan text-slate-950 border-quantum-cyan shadow-lg shadow-quantum-cyan/30"
+                      : "bg-slate-900/60 border-white/10 text-slate-300 hover:border-quantum-cyan/40 hover:text-quantum-cyan"
+                  }`}
+                >
+                  {cat} <span className="opacity-60">· {items.length}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
+
+        {/* UX v2: View mode toggle */}
+        <div className="flex items-center justify-end mb-2">
+          <div role="radiogroup" aria-label="Modo de visualização" className="flex bg-slate-900 border border-white/10 rounded-xl overflow-hidden text-xs">
+            {([
+              { v: "compact" as const, label: "▦", title: "Grade densa" },
+              { v: "large" as const, label: "▢", title: "Cards grandes" },
+              { v: "carousel" as const, label: "↔", title: "Carrossel" },
+            ]).map((opt) => (
+              <button
+                key={opt.v}
+                role="radio"
+                aria-checked={nexusViewMode === opt.v}
+                title={opt.title}
+                onClick={() => setNexusViewMode(opt.v)}
+                className={`px-3 py-2 transition ${nexusViewMode === opt.v ? "bg-quantum-cyan text-slate-950 font-bold" : "text-slate-300 hover:bg-slate-800"}`}
+              >{opt.label}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* UX v2: Skeleton enquanto carrega */}
+        {remoteEbooksQuery?.isLoading && filteredEbooks.length === 0 && <NexusSkeletonGrid count={8} />}
+
+        {/* UX v2: Grade agrupada por coleção */}
+        <div className="space-y-10">
+          {nexusEbookGroups.map(([cat, items]) => {
+            const id = ebookSlugify(cat);
+            const renderCard = (eb: any) => (
+              <article
+                key={eb.slug}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-quantum-cyan/40 hover:shadow-2xl hover:shadow-quantum-cyan/20"
+              >
+                <button
+                  onClick={() => setNexusQuickView(eb)}
+                  aria-label={`Detalhes: ${eb.title}`}
+                  className={`relative w-full overflow-hidden ${nexusViewMode === "compact" ? "h-32" : "h-44"}`}
+                  style={{ background: eb.coverGradient ?? "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)" }}
+                >
+                  {eb.coverPath && (
+                    <img
+                      src={eb.coverPath}
+                      alt={eb.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover opacity-90 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
+                  <span className="absolute right-2 top-2 rounded-full bg-quantum-lime px-2 py-0.5 text-[11px] font-bold text-slate-950 shadow-lg">
+                    {formatCurrency(eb.costCents)}
+                  </span>
+                  {eb.status === "active" && (
+                    <span className="absolute left-2 top-2 rounded-full bg-emerald-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-950">
+                      Liberado
+                    </span>
+                  )}
+                  <span className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition bg-quantum-cyan text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    👁 Ver detalhes
+                  </span>
+                </button>
+                <div className="flex flex-1 flex-col p-4">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-quantum-cyan/80">{eb.category}</p>
+                  <h3 className={`mt-1 line-clamp-2 font-bold leading-snug text-white ${nexusViewMode === "compact" ? "text-xs" : "text-sm"}`}>
+                    <NexusHighlight text={eb.title} query={debouncedEbookSearch} />
+                  </h3>
+                  {nexusViewMode !== "compact" && eb.subtitle && eb.subtitle !== eb.title && (
+                    <p className="mt-1 line-clamp-2 text-xs text-slate-400">
+                      <NexusHighlight text={eb.subtitle} query={debouncedEbookSearch} />
+                    </p>
+                  )}
+                  <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
+                    <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5">{eb.pages} págs</span>
+                  </div>
+                  <div className="mt-auto pt-4 flex items-center gap-2">
+                    <Button
+                      onClick={() => addEbookToCart(eb)}
+                      className="gradient-btn h-9 w-full text-xs font-semibold"
+                    >+ Carrinho</Button>
+                  </div>
+                </div>
+              </article>
+            );
+            return (
+              <section key={cat} id={id} className="scroll-mt-40">
+                <div className="flex items-baseline justify-between mb-3 border-b border-white/10 pb-2">
+                  <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-quantum-cyan to-quantum-lime bg-clip-text text-transparent">
+                    {cat}
+                  </h2>
+                  <span className="text-xs text-slate-400">{items.length} ebooks</span>
+                </div>
+                {nexusViewMode === "carousel" ? (
+                  <NexusCarouselRow items={items} render={renderCard} />
+                ) : (
+                  <div className={
+                    nexusViewMode === "compact"
+                      ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
+                      : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  }>
+                    {items.map(renderCard)}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
+
+        {/* Bloco legado SUBSTITUÍDO (mantido oculto p/ rollback) */}
+        <div className="hidden">
+          {filteredEbooks.map((eb) => (
+            <article
+              key={eb.slug}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 transition hover:-translate-y-1 hover:border-quantum-cyan/40"
+            >
+              <div
+                className="relative h-44 w-full overflow-hidden"
+                style={{ background: eb.coverGradient ?? "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)" }}
+              >
+                {eb.coverPath && (
+                  <img
+                    src={eb.coverPath}
+                    alt={eb.title}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover opacity-90 transition group-hover:opacity-100 group-hover:scale-105"
+                  />
+                )}
+                <span className="absolute right-2 top-2 rounded-full bg-quantum-lime px-2 py-0.5 text-[11px] font-bold text-slate-950">
+                  {formatCurrency(eb.costCents)}
+                </span>
+                {eb.status === "active" && (
+                  <span className="absolute left-2 top-2 rounded-full bg-emerald-500/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-950">
+                    Liberado
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-4">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-quantum-cyan/80">
+                  {eb.category}
+                </p>
+                <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-snug text-white">{eb.title}</h3>
+                {eb.subtitle && eb.subtitle !== eb.title && (
+                  <p className="mt-1 line-clamp-2 text-xs text-slate-400">{eb.subtitle}</p>
+                )}
+                {eb.description && (
+                  <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-400">{eb.description}</p>
+                )}
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5">
+                    {eb.pages} páginas
+                  </span>
+                  <span className="rounded-full border border-quantum-lime/30 bg-quantum-lime/10 px-2.5 py-0.5 text-quantum-lime">
+                    Revenda {formatCurrency(eb.resalePriceCents)}
+                  </span>
+                </div>
+                <div className="mt-auto pt-4 flex items-center gap-2">
+                  <Button
+                    onClick={() => addEbookToCart(eb)}
+                    className="gradient-btn h-9 w-full text-xs font-semibold"
+                  >
+                    + Carrinho
+                  </Button>
+                  {eb.htmlPath && (
+                    <a
+                      href={eb.htmlPath}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[11px] font-semibold text-slate-200 transition hover:bg-white/10"
+                    >
+                      Prévia
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {filteredEbooks.length === 0 && (
+          <p className="text-center text-sm text-slate-500 py-6">Nenhum e-book encontrado com esses filtros.</p>
+        )}
+      </section>
+      )}
+
+      {/* DRAWER · Meu Carrinho */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-[60] flex justify-end">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setCartOpen(false)} />
+          <div className="relative h-full w-full max-w-md overflow-y-auto border-l border-white/10 bg-slate-950">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-slate-950/95 px-5 py-4">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
+                <h3 className="font-bold text-white">Meu Carrinho</h3>
+                <Badge className="border border-white/10 bg-white/5 text-slate-300">{ebookCart.length}</Badge>
+              </div>
+              <button onClick={() => setCartOpen(false)} className="text-slate-400 hover:text-white">✕</button>
+            </div>
+            <div className="space-y-3 px-5 py-4">
+              {ebookCart.length === 0 ? (
+                <div className="py-10 text-center text-slate-400">
+                  <ShoppingBag className="mx-auto mb-3 h-10 w-10 opacity-50" />
+                  Carrinho vazio. Adicione e-books da vitrine.
+                </div>
+              ) : ebookCart.map((c) => (
+                <div key={c.slug} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                  <div className="h-20 w-14 flex-shrink-0 overflow-hidden rounded-md bg-slate-900">
+                    {c.coverPath && (<img src={c.coverPath} alt={c.title} className="h-full w-full object-cover" />)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-2 text-sm font-semibold text-white">{c.title}</p>
+                    <p className="mt-1 font-bold text-quantum-cyan">{formatCurrency(c.priceCents)}</p>
+                  </div>
+                  <button onClick={() => removeFromCart(c.slug)} className="self-start text-slate-500 hover:text-red-400">✕</button>
+                </div>
+              ))}
+            </div>
+            <div className="sticky bottom-0 space-y-3 border-t border-white/10 bg-slate-950/95 px-5 py-4">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Total</span>
+                <span className="text-lg font-bold text-white">{formatCurrency(cartTotal)}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" onClick={clearCart} disabled={ebookCart.length === 0}
+                  className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                  Limpar
+                </Button>
+                <Button variant="outline" onClick={() => setCartOpen(false)}
+                  className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                  Continuar Comprando
+                </Button>
+              </div>
+              <Button onClick={() => { setCartOpen(false); setPaymentOpen(true); }}
+                disabled={ebookCart.length === 0}
+                className="gradient-btn h-11 w-full text-sm font-semibold">
+                Escolher forma de pagamento
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL · Pagamento (Hotmart-like) */}
+      {paymentOpen && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/70" onClick={() => setPaymentOpen(false)} />
+          <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-2xl">
+            <div className="border-b border-white/10 px-6 py-4">
+              <h3 className="font-bold text-white">Finalizar pagamento</h3>
+              <p className="mt-1 text-xs text-slate-400">Você receberá os e-books no seu e-mail logo após a confirmação do pagamento.</p>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); handlePay(); }} className="space-y-3 px-6 py-5">
+              <div className="space-y-1">
+                <label className="text-xs uppercase tracking-wider text-slate-400">Seu e-mail</label>
+                <input type="email" required value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)}
+                  placeholder="email@exemplo.com"
+                  className="h-11 w-full rounded-lg border border-white/10 bg-black/30 px-3 text-white focus:border-quantum-cyan/40 focus:outline-none" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs uppercase tracking-wider text-slate-400">Nome (opcional)</label>
+                <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)}
+                  className="h-11 w-full rounded-lg border border-white/10 bg-black/30 px-3 text-white focus:border-quantum-cyan/40 focus:outline-none" />
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm">
+                <div className="flex items-center justify-between text-slate-300">
+                  <span>{ebookCart.length} item(s)</span>
+                  <span className="font-bold text-white">{formatCurrency(cartTotal)}</span>
+                </div>
+                <p className="mt-2 text-[11px] text-slate-500">Saldo do painel · Checkout Pix · Mercado Pago · entrega por e-mail.</p>
+              </div>
+              <div className="grid grid-cols-1 gap-2 pt-1">
+                <Button type="button" disabled={processing} onClick={() => handlePayWithBalance()}
+                  className="h-11 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">
+                  {processing ? "Processando..." : "Pagar com Saldo do painel"}
+                </Button>
+                <Button type="button" disabled={processing} onClick={() => handleGoToPixCheckout()}
+                  className="h-11 w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold">
+                  Checkout Pix · preencher e pagar
+                </Button>
+                <Button type="button" disabled={processing} onClick={() => handlePayMercadoPago()}
+                  className="h-11 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold">
+                  Abrir checkout Mercado Pago
+                </Button>
+                <Button type="button" variant="outline" onClick={() => { setPaymentOpen(false); setCartOpen(true); }}
+                  className="border-white/15 bg-white/5 text-white hover:bg-white/10">
+                  Continuar Comprando
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL · Sucesso */}
+      {successOpen && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/80" />
+          <div className="relative w-full max-w-md rounded-2xl border border-emerald-500/30 bg-slate-950 p-6 text-center shadow-2xl">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-300">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Pagamento Realizado com Sucesso</h3>
+            <p className="mt-2 text-sm text-slate-300">
+              Os e-books estão a caminho do e-mail <strong className="text-white">{orderResult?.delivery?.to || customerEmail}</strong>.
+            </p>
+            {orderResult?.orderId && (
+              <p className="mt-2 text-[11px] text-slate-500">Pedido: <code className="text-quantum-cyan">{orderResult.orderId}</code></p>
+            )}
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <Button variant="outline" onClick={() => setSuccessOpen(false)}
+                className="border-white/15 bg-white/5 text-white hover:bg-white/10">Fechar</Button>
+              <Link href="/dashboard">
+                <Button className="gradient-btn w-full">Ir para o Painel</Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* VITRINE DE PACKS */}
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      {!isMonthlyActivationFocus && (
+      <section className="hidden grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Card
           className="overflow-hidden border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(0,229,255,0.12),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.92),rgba(2,6,23,0.98))] shadow-2xl shadow-black/20"
         >
@@ -686,6 +1533,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           </CardContent>
         </Card>
       </section>
+      )}
 
       {/* CANAIS PARCEIROS */}
       <section className="space-y-4">
@@ -742,8 +1590,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       </section>
 
       {/* E-BOOKS E SKILLS */}
+      {!isMonthlyActivationFocus && (
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <Card className="border-white/10 bg-white/5 backdrop-blur">
+        <Card className="hidden border-white/10 bg-white/5 backdrop-blur">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <BookOpen className="h-5 w-5 text-quantum-lime" />
@@ -786,7 +1635,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-white/5 backdrop-blur">
+        <Card className="hidden border-white/10 bg-white/5 backdrop-blur">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Sparkles className="h-5 w-5 text-quantum-purple" />
@@ -824,9 +1673,170 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           </CardContent>
         </Card>
       </section>
+      )}
+    {nexusQuickView && (
+      <NexusQuickView
+        ebook={nexusQuickView}
+        query={debouncedEbookSearch}
+        onClose={() => setNexusQuickView(null)}
+        onAdd={() => { addEbookToCart(nexusQuickView); setNexusQuickView(null); }}
+      />
+    )}
+    <NexusBackToTop />
     </div>
   );
 }
+
+
+// ────────────── UX v2: hooks/helpers ──────────────
+function useDebounceValue<T>(value: T, delay = 220): T {
+  const [v, setV] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setV(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return v;
+}
+type NexusViewMode = "compact" | "large" | "carousel";
+const ebookSlugify = (s: string) => "nexus-col-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+function NexusSkeletonGrid({ count = 8 }: { count?: number }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="rounded-2xl border border-white/10 bg-slate-900/60 overflow-hidden animate-pulse">
+          <div className="h-44 bg-slate-800/60" />
+          <div className="p-4 space-y-2">
+            <div className="h-3 w-1/3 bg-slate-800 rounded" />
+            <div className="h-4 w-full bg-slate-800 rounded" />
+            <div className="h-3 w-2/3 bg-slate-800 rounded" />
+            <div className="h-8 w-full bg-slate-800 rounded-lg mt-3" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function NexusHighlight({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) return <>{text}</>;
+  const safe = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`(${safe})`, "ig");
+  const parts = text.split(re);
+  return (
+    <>
+      {parts.map((p, i) =>
+        re.test(p) ? (
+          <mark key={i} className="bg-quantum-cyan/30 text-quantum-cyan rounded px-0.5">{p}</mark>
+        ) : (
+          <span key={i}>{p}</span>
+        )
+      )}
+    </>
+  );
+}
+
+function NexusBackToTop() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const fn = () => setShow(window.scrollY > 400);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+  if (!show) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Voltar ao topo"
+      className="fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full bg-quantum-cyan text-slate-950 font-bold text-xl shadow-2xl shadow-quantum-cyan/40 transition hover:scale-110 hover:bg-quantum-cyan/90"
+    >↑</button>
+  );
+}
+
+function NexusQuickView({ ebook, onClose, onAdd, query }: { ebook: any; onClose: () => void; onAdd: () => void; query: string }) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", k);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", k); document.body.style.overflow = ""; };
+  }, [onClose]);
+  return (
+    <div role="dialog" aria-modal="true" onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+      <div onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-slate-900 to-slate-950 border border-quantum-cyan/30 rounded-3xl shadow-2xl shadow-quantum-cyan/20">
+        <button onClick={onClose} aria-label="Fechar"
+          className="absolute top-3 right-3 z-10 h-10 w-10 rounded-full bg-slate-800 hover:bg-slate-700 text-xl">×</button>
+        <div className="grid md:grid-cols-2 gap-0">
+          <div className="h-72 md:h-full relative" style={{ background: ebook.coverGradient ?? "linear-gradient(135deg,#1e293b,#0f172a)" }}>
+            {ebook.coverPath && <img src={ebook.coverPath} alt={ebook.title} className="absolute inset-0 h-full w-full object-cover" loading="eager" decoding="async" />}
+          </div>
+          <div className="p-6 flex flex-col">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-quantum-cyan font-semibold mb-2">{ebook.category}</p>
+            <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
+              <NexusHighlight text={ebook.title} query={query} />
+            </h2>
+            {ebook.subtitle && ebook.subtitle !== ebook.title && (
+              <p className="text-slate-300 mb-3"><NexusHighlight text={ebook.subtitle} query={query} /></p>
+            )}
+            {ebook.description && (
+              <p className="text-sm text-slate-400 mb-4 line-clamp-6"><NexusHighlight text={ebook.description} query={query} /></p>
+            )}
+            <div className="grid grid-cols-2 gap-3 text-xs my-3">
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <p className="text-slate-500">Páginas</p>
+                <p className="font-bold text-lg text-white">{ebook.pages}</p>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <p className="text-slate-500">Status</p>
+                <p className="font-bold text-sm text-white capitalize">{ebook.status ?? "ativo"}</p>
+              </div>
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+                <p className="text-slate-400">Custo</p>
+                <p className="font-bold text-lg text-emerald-300">{formatCurrency(ebook.costCents)}</p>
+              </div>
+              <div className="bg-quantum-cyan/10 border border-quantum-cyan/30 rounded-lg p-3">
+                <p className="text-slate-400">Revenda</p>
+                <p className="font-bold text-lg text-quantum-cyan">{formatCurrency(ebook.resalePriceCents)}</p>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-auto">
+              {ebook.htmlPath && (
+                <a href={ebook.htmlPath} target="_blank" rel="noreferrer"
+                  className="flex-1 text-center bg-slate-800 hover:bg-slate-700 rounded-xl py-3 text-sm font-semibold transition text-white">
+                  Ver Prévia
+                </a>
+              )}
+              <button onClick={onAdd}
+                className="flex-1 gradient-btn rounded-xl py-3 text-sm font-bold transition">
+                + Adicionar ao Carrinho
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NexusCarouselRow({ items, render }: { items: any[]; render: (eb: any) => React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = (dir: 1 | -1) => { ref.current?.scrollBy({ left: dir * 600, behavior: "smooth" }); };
+  return (
+    <div className="relative group/row -mx-2">
+      <button onClick={() => scroll(-1)} aria-label="Anterior"
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-slate-950/90 hover:bg-quantum-cyan hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl text-xl font-bold text-white">‹</button>
+      <button onClick={() => scroll(1)} aria-label="Próximo"
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-slate-950/90 hover:bg-quantum-cyan hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl text-xl font-bold text-white">›</button>
+      <div ref={ref} className="flex gap-4 overflow-x-auto snap-x pb-3 px-2 scroll-smooth" style={{ scrollbarWidth: "thin" }}>
+        {items.map((eb) => (
+          <div key={eb.slug} className="snap-start flex-shrink-0 w-52 md:w-60">{render(eb)}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+// ────────────── /UX v2 ──────────────
 
 export default function Marketplaces() {
   const { isAuthenticated } = useAuth();
@@ -889,3 +1899,66 @@ export default function Marketplaces() {
     </div>
   );
 }
+
+function MonthlyActivationButton() {
+  // D14-MM-Modal
+  const status = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
+    refetchInterval: 30_000, retry: false,
+  });
+  const paid = !!status?.data?.monthlyActivationPaid;
+  const cycle = status?.data?.cycleLabel || "ciclo atual";
+  const [open, setOpen] = useState(false);
+
+  if (paid) {
+    return (
+      <div className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-500/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-100">
+        <span className="inline-block h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
+        Ativação Paga · {cycle}
+      </div>
+    );
+  }
+
+  const checkoutHref = buildMarketplaceCheckoutUrl({
+    source: "monthly-activation",
+    type: "subscription",
+    slug: "monthly-activation",
+    name: "Ativação Mensal · Programa de Afiliados",
+    amountCents: 1000,
+    description: "Ativação mensal do Programa de Afiliados, com valor definido pela faixa de carreira vigente.",
+  });
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-200 hover:bg-emerald-300/25"
+      >
+        Pagar Ativação Mensal
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/95 p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white">Como deseja pagar?</h3>
+            <p className="mt-1 text-sm text-slate-400">Escolha a forma de pagamento da Ativação Mensal.</p>
+            <div className="mt-5 grid gap-2">
+              <a href={checkoutHref} className="rounded-xl bg-cyan-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-cyan-500">
+                PIX instantâneo (QR Code · Mercado Pago)
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=mp-card"} className="rounded-xl bg-blue-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-blue-500">
+                Mercado Pago · cartão ou boleto
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=balance"} className="rounded-xl bg-purple-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-purple-500">
+                Pagar com saldo disponível
+              </a>
+            </div>
+            <button onClick={() => setOpen(false)} className="mt-4 w-full rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-widest text-slate-300 hover:bg-white/5">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+

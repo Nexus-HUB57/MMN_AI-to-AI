@@ -61,7 +61,7 @@ export type InsertScript = typeof scripts.$inferInsert;
 export const generationHistory = mysqlTable("generation_history", {
   id: int("id").autoincrement().primaryKey(),
   projectId: int("projectId").notNull(),
-  type: mysqlEnum("type", ["script", "image"]).notNull(),
+  type: mysqlEnum("type", ["script", "image", "video"]).notNull(),
   status: mysqlEnum("status", ["pending", "success", "failed"]).notNull(),
   result: json("result"),
   error: text("error"),

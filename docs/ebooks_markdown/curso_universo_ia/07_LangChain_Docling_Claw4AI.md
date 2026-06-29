@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/07_LangChain_Docling_Claw4AI.webp)
+![Capa](../../assets/ebook_covers/curso_universo_ia/07_LangChain_Docling_Claw4AI.webp)
 
 **O que é LangChain, Docling e Claw4AI?**
 

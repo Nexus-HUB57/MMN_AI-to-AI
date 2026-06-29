@@ -10,7 +10,7 @@
 
 **Sra. Nexus Ive:** "Olá novamente. Após nossa introdução ao universo Nexus Affil'IA'te, é hora de aprofundarmos em um dos pilares invisíveis, mas fundamentais, que orquestra toda a sua inteligência: o IOAID. Compreenda que, para dominar a escala estruturada, é essencial entender a arquitetura que potencializa cada uma de suas ações. E para nos guiar por essa jornada, temos o Sir. Nexus Alencar, nosso especialista técnico."
 
-**Visual:** Sir. Nexus Alencar entra em cena, posicionando-se ao lado da Sra. Ive. Ele acena com um leve sorriso.
+**Visual:** Sir. Nexus Alencar entra em cena, posicionando-se ao lado da Sra. Ive. Sua fisionomia com traços judaicos, Kippah e barba grisalha longa transmite uma autoridade sábia. Ele acena com um leve sorriso acolhedor.
 
 **Sir. Nexus Alencar:** "É um prazer, Sra. Ive. E um privilégio poder desmistificar o IOAID para nossos afiliados. Não se preocupem, não é preciso ser programador, apenas curioso. Em sua essência, o IOAID é o sistema que transforma sua intenção em ação, de forma auditável, escalável e reversível."
 

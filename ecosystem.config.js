@@ -1,3 +1,25 @@
+// __ENV_LOADER__
+const fs = require('fs');
+const path = require('path');
+function loadEnvFile() {
+  const envPath = path.resolve(__dirname, '.env');
+  const env = {};
+  if (!fs.existsSync(envPath)) return env;
+  for (const raw of fs.readFileSync(envPath,'utf8').split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const eq = line.indexOf('=');
+    if (eq < 1) continue;
+    const k = line.slice(0,eq).trim();
+    let v = line.slice(eq+1);
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1,-1);
+    env[k] = v;
+  }
+  return env;
+}
+const FILE_ENV = loadEnvFile();
+const SHARED_ENV = Object.assign({}, FILE_ENV);
+
 // ============================================
 // MMN AI-to-AI — PM2 Ecosystem Configuration
 // Deploy Hostgator VPS - oneverso.com.br
@@ -12,15 +34,15 @@ module.exports = {
       name: 'mmn-api',
       script: 'backend/dist/index.js',
       cwd: './',
-      instances: 2,  // = nº de vCPUs do VPS
+      instances: 2 /* D18-cluster */,  // = nº de vCPUs do VPS
       exec_mode: 'cluster',
       autorestart: true,
       watch: false,
       max_memory_restart: '700M',  // ~35% dos 2GB disponíveis após SO
-      env: {
+      env: Object.assign({}, SHARED_ENV, {
         NODE_ENV: 'production',
         PORT: 3001  // Nginx proxia /api/ → 3001
-      },
+      }),
       error_file: './logs/api-error.log',
       out_file: './logs/api-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
@@ -42,10 +64,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      env: {
-        NODE_ENV: 'production',
-        QUEUE_NAME: 'content-generation'
-      },
+      env: Object.assign({}, SHARED_ENV, { NODE_ENV: 'production',
+        QUEUE_NAME: 'content-generation' }),
       error_file: './logs/worker-content-error.log',
       out_file: './logs/worker-content-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
@@ -66,10 +86,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      env: {
-        NODE_ENV: 'production',
-        QUEUE_NAME: 'commission-processing'
-      },
+      env: Object.assign({}, SHARED_ENV, { NODE_ENV: 'production',
+        QUEUE_NAME: 'commission-processing' }),
       error_file: './logs/worker-commissions-error.log',
       out_file: './logs/worker-commissions-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
@@ -90,10 +108,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      env: {
-        NODE_ENV: 'production',
-        QUEUE_NAME: 'marketplace-sync'
-      },
+      env: Object.assign({}, SHARED_ENV, { NODE_ENV: 'production',
+        QUEUE_NAME: 'marketplace-sync' }),
       error_file: './logs/worker-marketplace-error.log',
       out_file: './logs/worker-marketplace-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
@@ -114,10 +130,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '512M',
-      env: {
-        NODE_ENV: 'production',
-        QUEUE_NAME: 'order-processing'
-      },
+      env: Object.assign({}, SHARED_ENV, { NODE_ENV: 'production',
+        QUEUE_NAME: 'order-processing' }),
       error_file: './logs/worker-orders-error.log',
       out_file: './logs/worker-orders-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',

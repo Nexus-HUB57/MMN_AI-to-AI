@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import {
   Activity,
   AlertTriangle,
+  Brain,
   CheckCircle2,
   Clock,
   Filter,
@@ -26,6 +27,7 @@ import {
   RotateCcw,
   ShieldCheck,
   Sparkles,
+  TrendingDown,
   TrendingUp,
   XCircle,
 } from "lucide-react";
@@ -168,6 +170,12 @@ export default function AdminGovernance() {
     { refetchInterval: 15_000 },
   );
 
+  // M5 Learning
+  const learningQuery = trpc.governanceLoop.learning.useQuery(undefined, {
+    refetchInterval: 30_000,
+  });
+  const learning = (learningQuery.data as any)?.learning;
+
   // Mutations
   const proposeMutation = trpc.governanceLoop.propose.useMutation({
     onSuccess: (data: any) => {
@@ -292,6 +300,106 @@ export default function AdminGovernance() {
             loading={isLoading}
           />
         </div>
+
+        {/* M5 · Aprendizado do Niko Nexus */}
+        {learning && learning.totalSamples > 0 && (
+          <Card className="p-4 border-violet-500/30 bg-gradient-to-br from-violet-500/5 to-transparent">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <Brain className="h-5 w-5 text-violet-500" />
+                Aprendizado do Niko Nexus
+                <Badge variant="outline" className="ml-1 border-violet-500/40 text-violet-600 dark:text-violet-300 text-xs">
+                  M5 · RAG Loop
+                </Badge>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {learning.totalSamples} amostras · atualizado em tempo real
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+              <div className="rounded-md border bg-background/40 p-3">
+                <div className="text-xs text-muted-foreground">Approval Rate global</div>
+                <div className="text-xl font-semibold text-emerald-600 dark:text-emerald-300">
+                  {(learning.overallApprovalRate * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div className="rounded-md border bg-background/40 p-3">
+                <div className="text-xs text-muted-foreground">Execution Rate</div>
+                <div className="text-xl font-semibold text-blue-600 dark:text-blue-300">
+                  {(learning.overallExecutionRate * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div className="rounded-md border bg-background/40 p-3">
+                <div className="text-xs text-muted-foreground">Rollback Rate</div>
+                <div className="text-xl font-semibold text-rose-600 dark:text-rose-300">
+                  {(learning.overallRollbackRate * 100).toFixed(1)}%
+                </div>
+              </div>
+            </div>
+
+            {/* Tabela por kind */}
+            <div className="rounded-md border overflow-hidden">
+              <table className="w-full text-xs">
+                <thead className="bg-muted/40">
+                  <tr>
+                    <th className="text-left p-2">Kind</th>
+                    <th className="text-right p-2">Amostras</th>
+                    <th className="text-right p-2">Approval %</th>
+                    <th className="text-right p-2">Quality med</th>
+                    <th className="text-right p-2">Risk med</th>
+                    <th className="text-center p-2">Confiança</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(learning.kinds as any[]).map((k) => (
+                    <tr key={k.kind} className="border-t">
+                      <td className="p-2 font-mono">{KIND_LABEL[k.kind as GovernedKind] ?? k.kind}</td>
+                      <td className="p-2 text-right font-mono">{k.samples}</td>
+                      <td className="p-2 text-right font-mono">
+                        {(k.approveBias * 100).toFixed(0)}%
+                      </td>
+                      <td className="p-2 text-right font-mono">{k.qualityAvg.toFixed(3)}</td>
+                      <td className="p-2 text-right font-mono">{k.riskAvg.toFixed(3)}</td>
+                      <td className="p-2 text-center">
+                        <Badge
+                          variant="outline"
+                          className={
+                            k.confidenceLevel === "high"
+                              ? "border-emerald-500/40 text-emerald-700 dark:text-emerald-300"
+                              : k.confidenceLevel === "medium"
+                                ? "border-amber-500/40 text-amber-700 dark:text-amber-300"
+                                : "border-slate-500/40 text-slate-700 dark:text-slate-300"
+                          }
+                        >
+                          {k.confidenceLevel}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Alertas de drift */}
+            {learning.driftAlerts && learning.driftAlerts.length > 0 && (
+              <div className="mt-3 space-y-1">
+                <div className="text-xs font-semibold text-rose-600 dark:text-rose-300 flex items-center gap-1">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Drift detectado pelo Niko
+                </div>
+                {(learning.driftAlerts as any[]).map((a, i) => (
+                  <div key={i} className="text-xs text-muted-foreground">
+                    {a.type === "approval-drop" && <TrendingDown className="h-3 w-3 inline mr-1 text-rose-500" />}
+                    {a.type === "risk-spike" && <TrendingUp className="h-3 w-3 inline mr-1 text-amber-500" />}
+                    {a.type === "rollback-spike" && <AlertTriangle className="h-3 w-3 inline mr-1 text-orange-500" />}
+                    <span className="font-mono">{KIND_LABEL[a.kind as GovernedKind] ?? a.kind}</span> · {a.detail}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        )}
 
         {/* Distribuição por kind */}
         {kindDistribution.length > 0 && (

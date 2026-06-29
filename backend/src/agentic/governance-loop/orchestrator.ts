@@ -26,6 +26,7 @@ import { governanceRepository, computeAuditDigest } from "./repository";
 import { judgeRegistry } from "../judge-federation/registry";
 import { signWithJudgeKey } from "../judge-federation/keys";
 import { evaluateQuorum, type JudgeVote } from "../judge-federation/quorum";
+import { getCalibratedHeuristic } from "./feedbackLearner";
 
 // ─── Util ──────────────────────────────────────────────────────────────────
 
@@ -78,10 +79,12 @@ async function collectAutoVotes(
 ): Promise<JudgeVote[]> {
   const nodes = await judgeRegistry.list();
   const activeNodes = nodes.filter((n) => n.active);
-  const heur = HEURISTICS[action.kind] ?? {
-    approveBias: 0.6,
-    qualityBase: 0.7,
-    riskBase: 0.3,
+  // M5: heurística calibrada dinamicamente pelo aprendizado do Niko Nexus
+  const calibrated = await getCalibratedHeuristic(action.kind);
+  const heur = {
+    approveBias: calibrated.approveBias,
+    qualityBase: calibrated.qualityBase,
+    riskBase: calibrated.riskBase,
   };
 
   const votes: JudgeVote[] = [];

@@ -19,6 +19,7 @@ import {
 } from "../../config/trpc";
 import { GovernanceLoop } from "./orchestrator";
 import { governedActionKindSchema } from "./types";
+import { computeLearning, getCalibratedHeuristic } from "./feedbackLearner";
 
 export const governanceLoopRouter = router({
   /** Saúde + estatísticas */
@@ -121,5 +122,19 @@ export const governanceLoopRouter = router({
     .mutation(async ({ input }) => {
       const updated = await GovernanceLoop.markRolledBack(input.actionId, input.log);
       return { ok: updated !== null, record: updated };
+    }),
+
+  /** M5 · Aprendizado consolidado do Niko Nexus (público para o dashboard) */
+  learning: publicProcedure.query(async () => {
+    const learning = await computeLearning();
+    return { ok: true, learning };
+  }),
+
+  /** M5 · Heurística calibrada para um kind específico */
+  heuristic: publicProcedure
+    .input(z.object({ kind: governedActionKindSchema }))
+    .query(async ({ input }) => {
+      const heuristic = await getCalibratedHeuristic(input.kind);
+      return { ok: true, kind: input.kind, heuristic };
     }),
 });

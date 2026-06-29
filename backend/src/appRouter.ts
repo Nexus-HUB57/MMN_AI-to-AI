@@ -49,6 +49,11 @@ import { skillMarketplaceRouter } from "./domains/skillMarketplace/router";
 import { judgeFederationRouter } from "./agentic/judge-federation/router";
 import { governanceLoopRouter } from "./agentic/governance-loop/router";
 import { multiTenantRouter } from "./agentic/multi-tenant/router";
+import { cSuiteRouter } from "./agentic/c-suite-bridge/router";
+import { bootstrapCSuite } from "./agentic/c-suite-bridge/bootstrap";
+
+// Bootstrap C-Suite ao carregar appRouter (idempotente)
+bootstrapCSuite().catch(() => undefined);
 
 export const appRouter = router({
   system: router({
@@ -167,6 +172,7 @@ export const appRouter = router({
         judgeFederation: true,
         governanceLoop: true,
         multiTenant: true,
+        cSuite: true,
       },
     })),
   }),
@@ -202,6 +208,7 @@ export const appRouter = router({
   judgeFederation: judgeFederationRouter,
   governanceLoop: governanceLoopRouter,
   multiTenant: multiTenantRouter,
+  cSuite: cSuiteRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

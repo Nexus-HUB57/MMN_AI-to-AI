@@ -88,13 +88,26 @@ async function invokeRemoteJudge(
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const body = {
-      protocol: "a2a/1.0",
-      skill: "judge.vote",
-      requesterId: "ceo-ai:niko-nexus",
-      requesterOperator: "Nexus Affil'IA'te",
-      payload,
-    };
+    // Detecta se o endpoint é tRPC interno (próprio backend) ou A2A externo
+    const isInternalTrpc = node.endpoint.includes("/api/trpc/");
+
+    const body = isInternalTrpc
+      ? {
+          // Formato tRPC: campos no top-level
+          nodeId: node.nodeId,
+          payloadId: payload.payloadId,
+          payloadDigest: payload.payloadDigest,
+          kind: payload.kind,
+          rationale: payload.rationale,
+        }
+      : {
+          // Formato A2A externo: envelope com payload aninhado
+          protocol: "a2a/1.0",
+          skill: "judge.vote",
+          requesterId: "ceo-ai:niko-nexus",
+          requesterOperator: "Nexus Affil'IA'te",
+          payload,
+        };
 
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -115,7 +128,11 @@ async function invokeRemoteJudge(
       return { vote: null, error: `http-${res.status}` };
     }
 
-    const data = (await res.json()) as {
+    const raw = (await res.json()) as any;
+    // tRPC wrapper: result.data contém o payload real
+    const data = (raw?.result?.data ?? raw) as {
+      ok?: boolean;
+      error?: string;
       decision?: "approve" | "review" | "block";
       qualityScore?: number;
       riskScore?: number;
@@ -123,6 +140,11 @@ async function invokeRemoteJudge(
       signature?: string;
       signedAt?: string;
     };
+
+    // Se tRPC retornou erro de business logic
+    if (data.ok === false) {
+      return { vote: null, error: data.error ?? "business-error" };
+    }
 
     if (
       !data.decision ||

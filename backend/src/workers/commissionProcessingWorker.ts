@@ -1,3 +1,4 @@
+import { attribute as pearlAttribute } from '../agentic/causal/pearlAttribution';
 import { Worker, Job } from 'bullmq';
 import { commissionProcessingQueue, CommissionProcessingJob } from '../config/queue';
 import { logJobStart, logJobComplete, logJobFailed } from '../services/jobLogger';
@@ -178,3 +179,5 @@ process.on('SIGINT', async () => {
   await worker.stop();
   process.exit(0);
 });
+
+// IOAID·SaaS UX: pearlAttribute disponivel para enriquecer cada commission.confirmed com witnessHash.

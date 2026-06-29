@@ -20,7 +20,6 @@ A Academ'IA funde três pilares em um único HUB:
 - 📚 **Academ'IA Core**: Cursos, treinamentos e certificações progressivas.
 - 🧪 **Lab Nexus**: HUB Central de Ferramentas IA (prompts, templates, workflows n8n/Make).
 - 📖 **Lib Nexus**: Biblioteca canônica de referência técnica (knowledge base, specs, API docs).
-- 👤 **Personas**: Identidade e diretrizes de atuação dos Agentes Nexus (Sra. Nexus Ive, Sir. Nexus Alencar).
 
 ## 🏛️ Arquitetura do HUB
 
@@ -28,29 +27,8 @@ A Academ'IA funde três pilares em um único HUB:
 AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian Ready)
 ├── README.md                      # Este arquivo — Manual Geral, governança e regras de níveis
 ├── INDEX.md                       # Índice semântico e mapeamento de habilidades transversais
-├── personas/                      # Identidade e diretrizes de atuação dos Agentes
-│   ├── sra_nexus_ive.md           # Ficha de Identidade da Sra. Nexus Ive
-│   ├── diretrizes_voz_sra_nexus_ive.md # Guia de voz e atuação
-│   ├── diretrizes_interacao_ive_alencar.md # Guia de co-atuação (Ive & Alencar)
-│   ├── sra_nexus_ive.png          # Avatar visual
-│   ├── voz_sra_nexus_ive.wav      # Amostra de voz oficial
-│   └── dialogo_ive_alencar.wav    # Amostra de diálogo em dupla
-│   └── alencar/                   # Pasta Completa: Sir Nexus Alencar
-│       ├── identity.md            # Ficha de Identidade
-│       ├── sir_nexus_alencar.png   # Imagem Oficial
-│       ├── voz_sir_nexus_alencar.wav # Voz Oficial
-│       ├── roteiro-aula01.md      # Roteiro Aula 01
-│       └── slides-aula01.md       # Slides Aula 01
 ├── cursos/                        # Conteúdo Markdown estruturado das Trilhas de Aprendizado
 │   ├── fundamental/               # Nível 1: Boas-vindas, IOAID, Sistema SHO e Uso do Painel
-│   │   ├── 00-boas-vindas.md
-│   │   ├── 01-introducao-sra-nexus-ive.md
-│   │   ├── aula01/                # Aula 01: Entendendo o IOAID
-│   │   │   ├── roteiro-aula01.md
-│   │   │   └── slides-aula01.md
-│   │   └── aula02/                # Aula 02: Dominando o SHO
-│   │       ├── roteiro-aula02.md
-│   │       └── slides-aula02.md
 │   ├── agente/                    # Nível 2: Setup de Agentes, Skills base, WhatsApp e Judge Revisor
 │   ├── master/                    # Nível 3: Otimização, Lifecycle, A/B Testing e Análise de Coortes
 │   └── elite/                     # Nível 4: Multi-tenant, White-label e Federação de Agentes Zero-Trust
@@ -59,10 +37,8 @@ AcademIA/                          # HUB de Conhecimento & Sabedoria (Obsidian R
 ├── webinars/                      # Gravações de eventos e lives
 ├── tutoriais/                     # How-to rápidos (15 min)
 ├── playbooks/                     # Manuais de operação para crises e campanhas
-│   └── otimizacao-campanhas-sho.md # Playbook: Otimização de Campanhas com SHO
 ├── Lab-Nexus/                     # HUB Central de Ferramentas IA
 │   ├── tools/                     # 38 ferramentas categorizadas
-│   │   └── categorizacao-ferramentas.md # Guia: Ferramentas Categorizadas
 │   ├── prompts/                   # Biblioteca de Prompts testados
 │   ├── templates/                 # Templates ricos editáveis
 │   └── workflows/                 # Blueprints de workflows operacionais

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Progresso — Academ'IA</title>
+  <link rel="stylesheet" href="acad-style.css" />
+  <style>
+    body { max-width: 1200px; }
+    
+    .progresso-hero {
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elev));
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progresso-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      opacity: 0.15;
+    }
+    
+    .progresso-hero h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .progresso-hero p {
+      color: var(--fg-muted);
+      position: relative;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+    }
+    
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    
+    .stat-num.green { color: var(--accent-green); }
+    .stat-num.gold { color: var(--accent-gold); }
+    .stat-num.purple { color: var(--accent-purple); }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
+    
+    .trilha-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .trilha-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .trilha-badge {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--bg);
+    }
+    
+    .fundamental .trilha-badge { background: var(--accent); }
+    .agente .trilha-badge { background: #4DA8FF; }
+    .master .trilha-badge { background: var(--accent-gold); }
+    .elite .trilha-badge { background: var(--accent-purple); }
+    
+    .trilha-info {
+      flex: 1;
+    }
+    
+    .trilha-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .trilha-progress-bar {
+      height: 8px;
+      background: var(--bg-elev);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    
+    .trilha-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+      transition: width 0.5s ease;
+      border-radius: 4px;
+    }
+    
+    .cursos-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    
+    .curso-check {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-elev);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    .curso-check:hover {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.05);
+    }
+    
+    .curso-check.completed {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    
+    .curso-check.completed .curso-name {
+      text-decoration: line-through;
+      color: var(--fg-muted);
+    }
+    
+    .curso-check input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+    }
+    
+    .curso-name {
+      flex: 1;
+      font-size: 0.95rem;
+    }
+    
+    .curso-link {
+      color: var(--fg-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    
+    .curso-link:hover {
+      color: var(--accent);
+    }
+    
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 32px 0;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--fg);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .btn-primary:hover {
+      background: var(--accent-purple);
+      border-color: var(--accent-purple);
+      color: var(--bg);
+    }
+    
+    .btn-danger {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+    
+    .btn-danger:hover {
+      background: var(--accent-red);
+      color: white;
+    }
+    
+    .achievements {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+    
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .achievement {
+      text-align: center;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--bg-elev);
+      border: 2px solid var(--border);
+      opacity: 0.4;
+      transition: all 0.3s ease;
+    }
+    
+    .achievement.unlocked {
+      opacity: 1;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+    }
+    
+    .achievement-icon {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+    }
+    
+    .achievement-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--fg);
+    }
+    
+    .achievement.unlocked .achievement-name {
+      color: var(--accent-gold);
+    }
+    
+    .achievement-desc {
+      font-size: 0.7rem;
+      color: var(--fg-muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="progresso-hero">
+    <h1>📊 Meu Progresso</h1>
+    <p>Acompanhe sua jornada na Academia Nexus. Os dados ficam salvos no seu navegador (localStorage).</p>
+  </div>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📚</div>
+      <div class="stat-num" id="stat-cursos">0</div>
+      <div class="stat-label">Cursos completos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📖</div>
+      <div class="stat-num green" id="stat-apostilas">0</div>
+      <div class="stat-label">Apostilas lidas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎥</div>
+      <div class="stat-num purple" id="stat-webinars">0</div>
+      <div class="stat-label">Webinars assistidos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-num gold" id="stat-progresso">0%</div>
+      <div class="stat-label">Progresso geral</div>
+    </div>
+  </div>
+  
+  <!-- TRILHAS -->
+  <div class="trilha-section fundamental">
+    <div class="trilha-header">
+      <div class="trilha-badge">F</div>
+      <div class="trilha-info">
+        <div class="trilha-name">Trilha Fundamental</div>
+        <div style="color: var(--fg-muted); font-size: 0.9rem;" id="fundamental-text">0 de 4 cursos completos</div>
+      </div>
+    </div>
+    <div class="trilha-progress-bar">
+      <div class="trilha-progress-fill" id="fundamental-bar" style="width: 0%;"></div>
+    </div>
+    <div class="cursos-checklist" id="fundamental-checklist">
+      <!-- Gerado via JS -->
+    </div>
+  </div>
+  
+  <div class="trilha-section agente">
+    <div class="trilha-header">
+      <div class="trilha-badge">A</div>
+      <div class="trilha-info">
+        <div class="trilha-name">Trilha Agente</div>
+        <div style="color: var(--fg-muted); font-size: 0.9rem;" id="agente-text">0 de 4 cursos completos</div>
+      </div>
+    </div>
+    <div class="trilha-progress-bar">
+      <div class="trilha-progress-fill" id="agente-bar" style="width: 0%;"></div>
+    </div>
+    <div class="cursos-checklist" id="agente-checklist"></div>
+  </div>
+  
+  <div class="trilha-section master">
+    <div class="trilha-header">
+      <div class="trilha-badge">M</div>
+      <div class="trilha-info">
+        <div class="trilha-name">Trilha Master</div>
+        <div style="color: var(--fg-muted); font-size: 0.9rem;" id="master-text">0 de 4 cursos completos</div>
+      </div>
+    </div>
+    <div class="trilha-progress-bar">
+      <div class="trilha-progress-fill" id="master-bar" style="width: 0%;"></div>
+    </div>
+    <div class="cursos-checklist" id="master-checklist"></div>
+  </div>
+  
+  <div class="trilha-section elite">
+    <div class="trilha-header">
+      <div class="trilha-badge">E</div>
+      <div class="trilha-info">
+        <div class="trilha-name">Trilha Elite</div>
+        <div style="color: var(--fg-muted); font-size: 0.9rem;" id="elite-text">0 de 3 cursos completos</div>
+      </div>
+    </div>
+    <div class="trilha-progress-bar">
+      <div class="trilha-progress-fill" id="elite-bar" style="width: 0%;"></div>
+    </div>
+    <div class="cursos-checklist" id="elite-checklist"></div>
+  </div>
+  
+  <div class="actions-bar">
+    <button class="btn btn-primary" onclick="exportarProgresso()">📤 Exportar meu progresso</button>
+    <button class="btn" onclick="importarProgresso()">📥 Importar</button>
+    <button class="btn btn-danger" onclick="resetarProgresso()">🗑️ Resetar tudo</button>
+  </div>
+  
+  <!-- ACHIEVEMENTS -->
+  <div class="achievements">
+    <h2 style="color: var(--accent-gold);">🏆 Conquistas</h2>
+    <p style="color: var(--fg-muted); font-size: 0.9rem;">Complete marcos para desbloquear conquistas.</p>
+    <div class="achievement-grid" id="achievements">
+      <!-- Gerado via JS -->
+    </div>
+  </div>
+  
+  <!-- APOSTILAS & WEBINARS -->
+  <div class="trilha-section" style="margin-top: 24px;">
+    <div class="trilha-header">
+      <div class="trilha-badge" style="background: var(--accent-gold);">📖</div>
+      <div class="trilha-info">
+        <div class="trilha-name">Apostilas & Webinars</div>
+        <div style="color: var(--fg-muted); font-size: 0.9rem;" id="extras-text">Marque conforme for completando</div>
+      </div>
+    </div>
+    <div class="cursos-checklist" id="extras-checklist"></div>
+  </div>
+  
+  <script src="enhance.js"></script>
+  <script>
+    // === DEFINIÇÃO DE CONTEÚDO ===
+    const TRILHAS = {
+      fundamental: {
+        nome: 'Fundamental',
+        cursos: [
+          { id: 'f00', name: '00 · Boas-vindas ao Nexus', href: 'cursos/fundamental/00-boas-vindas.html' },
+          { id: 'f01', name: '01 · Entendendo o IOAID', href: 'cursos/fundamental/01-entendendo-ioaid.html' },
+          { id: 'f02', name: '02 · Sistema SHO', href: 'cursos/fundamental/02-sistema-sho.html' },
+          { id: 'f03', name: '03 · Painel do Afiliado', href: 'cursos/fundamental/03-painel-afiliado.html' },
+        ]
+      },
+      agente: {
+        nome: 'Agente',
+        cursos: [
+          { id: 'a00', name: '00 · Seu Primeiro Agente', href: 'cursos/agente/00-primeiro-agente.html' },
+          { id: 'a01', name: '01 · Skills Essenciais', href: 'cursos/agente/01-skills-essenciais.html' },
+          { id: 'a02', name: '02 · Disparando no WhatsApp', href: 'cursos/agente/02-disparo-whatsapp.html' },
+          { id: 'a03', name: '03 · Lendo o Judge Revisor', href: 'cursos/agente/03-judge-revisor.html' },
+        ]
+      },
+      master: {
+        nome: 'Master',
+        cursos: [
+          { id: 'm00', name: '00 · Otimização de Conversão', href: 'cursos/master/00-otimizacao-conversao.html' },
+          { id: 'm01', name: '01 · Funis e Lifecycle', href: 'cursos/master/01-funis-lifecycle.html' },
+          { id: 'm02', name: '02 · A/B Testing com Judge', href: 'cursos/master/02-ab-test-judge.html' },
+          { id: 'm03', name: '03 · Coortes e Churn', href: 'cursos/master/03-coortes-churn.html' },
+        ]
+      },
+      elite: {
+        nome: 'Elite',
+        cursos: [
+          { id: 'e00', name: '00 · Blueprints Elite', href: 'cursos/elite/00-blueprints-elite.html' },
+          { id: 'e01', name: '01 · Multi-tenant e White-label', href: 'cursos/elite/01-multi-tenant-whitelabel.html' },
+          { id: 'e02', name: '02 · Federação de Agentes', href: 'cursos/elite/02-federacao-agentes.html' },
+        ]
+      },
+      extras: {
+        nome: 'Extras',
+        items: [
+          { id: 'ap01', name: '📖 Apostila 01 · Infraestrutura', href: 'apostilas/01-apresentacao-infraestrutura.html' },
+          { id: 'ap02', name: '📖 Apostila 02 · Cases Orquestração', href: 'apostilas/02-cases-orquestracao-autonoma.html' },
+          { id: 'ap03', name: '📖 Apostila 03 · Infra Operacional', href: 'apostilas/03-infra-operacional-ia.html' },
+          { id: 'ap04', name: '📖 Apostila 04 · Orquestração Híbrida', href: 'apostilas/04-orquestracao-hibrida-agentes.html' },
+          { id: 'ap05', name: '📖 Apostila 05 · 7 Telas Essenciais', href: 'apostilas/05-sete-telas-essenciais.html' },
+          { id: 'ap06', name: '📖 Apostila 06 · Setup Agente', href: 'apostilas/06-setup-agente-pessoal.html' },
+          { id: 'ap07', name: '📖 Apostila 07 · 18 Skills', href: 'apostilas/07-18-skills-operacionais.html' },
+          { id: 'ap08', name: '📖 Apostila 08 · Rotina Disparo', href: 'apostilas/08-rotina-disparo-agente.html' },
+          { id: 'ap09', name: '📖 Apostila 09 · Campanhas', href: 'apostilas/09-campanhas-automatizadas.html' },
+          { id: 'ap10', name: '📖 Apostila 10 · Jornada Afiliado', href: 'apostilas/10-jornada-completa-afiliado.html' },
+          { id: 'wb01', name: '🎥 WB-2026-01 · Lançamento IOAID', href: 'webinars/WB-2026-01-lancamento-ioaid.html' },
+          { id: 'wb02', name: '🎥 WB-2026-02 · SHO em Produção', href: 'webinars/WB-2026-02-sho-em-producao.html' },
+          { id: 'wb03', name: '🎥 WB-2026-03 · Academia Open House', href: 'webinars/WB-2026-03-academia-open-house.html' },
+        ]
+      }
+    };
+    
+    const ACHIEVEMENTS = [
+      { id: 'first-step', icon: '👣', name: 'Primeiro passo', desc: 'Complete 1 curso', check: (p) => p.totalCursos >= 1 },
+      { id: 'fundamentalist', icon: '🎓', name: 'Fundamentalista', desc: 'Trilha Fundamental completa', check: (p) => p.trilhas.fundamental === 4 },
+      { id: 'agent-builder', icon: '🤖', name: 'Construtor', desc: 'Trilha Agente completa', check: (p) => p.trilhas.agente === 4 },
+      { id: 'optimizer', icon: '⚡', name: 'Otimizador', desc: 'Trilha Master completa', check: (p) => p.trilhas.master === 4 },
+      { id: 'elite', icon: '👑', name: 'Elite', desc: 'Todas as 4 trilhas', check: (p) => p.trilhas.fundamental === 4 && p.trilhas.agente === 4 && p.trilhas.master === 4 && p.trilhas.elite === 3 },
+      { id: 'reader', icon: '📚', name: 'Leitor voraz', desc: '5 apostilas lidas', check: (p) => p.apostilas >= 5 },
+      { id: 'bibliophile', icon: '📖', name: 'Bibliófilo', desc: 'Todas as 10 apostilas', check: (p) => p.apostilas === 10 },
+      { id: 'web-watcher', icon: '🎬', name: 'Cinéfilo', desc: '3 webinars assistidos', check: (p) => p.webinars === 3 },
+      { id: 'completionist', icon: '🌟', name: 'Completionist', desc: '100% completo', check: (p) => p.progresso === 100 },
+    ];
+    
+    // === STATE ===
+    let state = JSON.parse(localStorage.getItem('academia-progresso') || '{}');
+    if (!state.cursos) state.cursos = {};
+    if (!state.extras) state.extras = {};
+    if (!state.timestamp) state.timestamp = Date.now();
+    
+    function save() {
+      state.timestamp = Date.now();
+      localStorage.setItem('academia-progresso', JSON.stringify(state));
+      render();
+    }
+    
+    function toggleCurso(id) {
+      state.cursos[id] = !state.cursos[id];
+      save();
+    }
+    
+    function toggleExtra(id) {
+      state.extras[id] = !state.extras[id];
+      save();
+    }
+    
+    function getProgresso() {
+      let cursos = 0, apostilas = 0, webinars = 0;
+      const trilhasCount = { fundamental: 0, agente: 0, master: 0, elite: 0 };
+      
+      for (const t in TRILHAS) {
+        if (t === 'extras') continue;
+        TRILHAS[t].cursos.forEach(c => {
+          if (state.cursos[c.id]) {
+            cursos++;
+            trilhasCount[t]++;
+          }
+        });
+      }
+      
+      TRILHAS.extras.items.forEach(item => {
+        if (state.extras[item.id]) {
+          if (item.id.startsWith('ap')) apostilas++;
+          if (item.id.startsWith('wb')) webinars++;
+        }
+      });
+      
+      const totalItens = 15 + 13; // 15 cursos + 10 apostilas + 3 webinars
+      const completos = cursos + apostilas + webinars;
+      const progresso = Math.round((completos / totalItens) * 100);
+      
+      return { cursos, apostilas, webinars, trilhas: trilhasCount, progresso, totalCursos: cursos };
+    }
+    
+    // === RENDER ===
+    function render() {
+      const p = getProgresso();
+      
+      // Stats
+      document.getElementById('stat-cursos').textContent = p.cursos;
+      document.getElementById('stat-apostilas').textContent = p.apostilas;
+      document.getElementById('stat-webinars').textContent = p.webinars;
+      document.getElementById('stat-progresso').textContent = p.progresso + '%';
+      
+      // Trilhas
+      for (const t of ['fundamental', 'agente', 'master', 'elite']) {
+        const total = TRILHAS[t].cursos.length;
+        const done = p.trilhas[t];
+        const pct = Math.round((done / total) * 100);
+        document.getElementById(`${t}-bar`).style.width = pct + '%';
+        document.getElementById(`${t}-text`).textContent = `${done} de ${total} cursos completos`;
+        
+        const checklist = document.getElementById(`${t}-checklist`);
+        checklist.innerHTML = TRILHAS[t].cursos.map(c => {
+          const checked = state.cursos[c.id] ? 'checked' : '';
+          const completedClass = state.cursos[c.id] ? 'completed' : '';
+          return `
+            <div class="curso-check ${completedClass}" data-id="${c.id}">
+              <input type="checkbox" ${checked} onchange="toggleCurso('${c.id}')">
+              <span class="curso-name">${c.name}</span>
+              <a href="${c.href}" class="curso-link" target="_blank">→</a>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Extras
+      const extrasChecklist = document.getElementById('extras-checklist');
+      extrasChecklist.innerHTML = TRILHAS.extras.items.map(item => {
+        const checked = state.extras[item.id] ? 'checked' : '';
+        const completedClass = state.extras[item.id] ? 'completed' : '';
+        return `
+          <div class="curso-check ${completedClass}" data-id="${item.id}">
+            <input type="checkbox" ${checked} onchange="toggleExtra('${item.id}')">
+            <span class="curso-name">${item.name}</span>
+            <a href="${item.href}" class="curso-link" target="_blank">→</a>
+          </div>
+        `;
+      }).join('');
+      
+      const totalExtras = p.apostilas + p.webinars;
+      document.getElementById('extras-text').textContent = `${totalExtras} de 13 itens completos (${p.apostilas} apostilas, ${p.webinars} webinars)`;
+      
+      // Achievements
+      const achEl = document.getElementById('achievements');
+      achEl.innerHTML = ACHIEVEMENTS.map(a => {
+        const unlocked = a.check(p);
+        return `
+          <div class="achievement ${unlocked ? 'unlocked' : ''}">
+            <div class="achievement-icon">${a.icon}</div>
+            <div class="achievement-name">${a.name}</div>
+            <div class="achievement-desc">${a.desc}</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function exportarProgresso() {
+      const data = JSON.stringify(state, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `academia-progresso-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    function importarProgresso() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const imported = JSON.parse(evt.target.result);
+            if (imported.cursos || imported.extras) {
+              state = imported;
+              save();
+              alert('✅ Progresso importado com sucesso!');
+            } else {
+              alert('❌ Arquivo inválido.');
+            }
+          } catch (err) {
+            alert('❌ Erro ao ler arquivo: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+    
+    function resetarProgresso() {
+      if (confirm('⚠️ Tem certeza? Isso vai apagar TODO o seu progresso.')) {
+        state = { cursos: {}, extras: {}, timestamp: Date.now() };
+        save();
+      }
+    }
+    
+    // Initial render
+    render();
+    
+    console.log('📊 Sistema de progresso Academ\'IA inicializado.');
+    console.log(`Progresso atual: ${getProgresso().progresso}%`);
+  </script>
+</body>
+</html>

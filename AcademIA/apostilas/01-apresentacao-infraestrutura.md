@@ -50,6 +50,8 @@ O Nexus tem cinco "sistemas" anatômicos:
 - **Rede neural** — Federação Multi-Tenant. A forma como vários Nexus conversam entre si, formando uma rede distribuída.
 - **Consciência** — Judge Revisor. O componente que avalia a saída do sistema antes dela virar ação irreversível.
 
+![Diagrama — O Nexus como Organismo Vivo](../../assets/ebook_covers/ACAD-diagrama-01-infraestrutura-macro.png)
+
 A beleza do desenho é que **nenhum desses sistemas é central**. Cada um pode falhar individualmente sem matar o organismo. A redundância é a regra, não a exceção.
 
 **2. IOAID: o sistema nervoso**

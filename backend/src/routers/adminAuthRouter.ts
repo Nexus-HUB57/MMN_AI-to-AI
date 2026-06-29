@@ -22,7 +22,7 @@ import { publicProcedure, router } from "../trpc/trpc";
 
 const DEFAULT_TTL_SECONDS = 12 * 60 * 60; // 12h
 const ADMIN_SUBJECT = "nexus-admin-core";
-const ADMIN_DISPLAY_LABEL = "Equipe Nexus Affil'IA'te";
+const ADMIN_DISPLAY_LABEL = "Lucas Thomaz";
 
 interface AdminTokenPayload {
   sub: typeof ADMIN_SUBJECT;

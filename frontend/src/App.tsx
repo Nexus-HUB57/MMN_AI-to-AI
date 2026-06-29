@@ -58,6 +58,7 @@ import AdminCommissions from "@/pages/AdminCommissions";
 import AdminApprovals from "@/pages/AdminApprovals";
 import AdminRuntime from "@/pages/AdminRuntime";
 import AdminSettings from "@/pages/AdminSettings";
+import AdminPackTickets from "@/pages/AdminPackTickets";
 import AdminPanel from "@/pages/AdminPanel";
 import AdminSkills from "@/pages/AdminSkills";
 import AdminAgentDetails from "@/pages/AdminAgentDetails";
@@ -142,7 +143,8 @@ function Router() {
       <Route path="/admin/status" component={AdminRuntime} />
       <Route path="/admin/runtime" component={AdminRuntime} />
       <Route path="/admin/config" component={AdminSettings} />
-      <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/pack-tickets" component={AdminPackTickets} />
+          <Route path="/admin/settings" component={AdminSettings} />
       <Route path="/admin/panel" component={AdminPanel} />
       <Route path="/admin/skills" component={AdminSkills} />
       <Route path="/admin/agents/:agentId" component={AdminAgentDetails} />

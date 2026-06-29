@@ -1,283 +1,150 @@
 ---
 title: "02 · Federação de Agentes"
 level: elite
-duration: 60min
-prerequisites: ["01-multi-tenant-whitelabel"]
-tags: [federacao, agentes, mTLS, multi-node, escalacao]
-last_updated: 2026-06-15
-version: "2.0.0"
-pattern: "MMN_IA"
+duration: 75min
+prerequisites: ["elite/01-multi-tenant-whitelabel"]
+tags: [federacao, mtls, ed25519, pii-gating, trust-scoring, lgpd, gdpr]
+last_updated: 2026-06-02
 ---
 
-![Capa — Federação de Agentes](../../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
-
-**02 · Federação de Agentes**
-
-*Trilha Elite · 60 minutos · Pré-requisito: 01-Multi-tenant*
-
-**Por Equipe Nexus · Academ'IA**
-
-Nexus Affil'IA'te · 2026
-
-**Sobre este curso**
-
-Federação de agentes é a capacidade de **múltiplos nós Nexus conversarem** entre si, formando uma rede distribuída. É o que permite escalar além de um único afiliado, compartilhar skills entre equipes, e consultar dados de outros nós com consentimento. Em 60 minutos, você vai entender como funciona o mTLS, os 3 níveis de confiança, e como configurar federação para sua operação.
-
----
-
-## ⚡ TL;DR — Resumo Executivo
-
-> Federação é a fase final: múltiplos agentes cooperando, com mTLS (criptografia mútua), 3 níveis de confiança, e topologia documentada. Curso técnico, último da jornada, para quem quer operar em escala.
-
-### 🗺️ Posição na Trilha
-
-**Anterior:** [← 01-multi-tenant-whitelabel](01-multi-tenant-whitelabel.md)
-**Próximo:** _(fim da trilha — parabenize-se!)_
-
-
-
-**Sumário**
-
-> **•** 1. O que é federação de agentes
-> **•** 2. A diferença entre multi-tenant e federação
-> **•** 3. Como funciona o mTLS
-> **•** 4. Os 3 níveis de confiança
-> **•** 5. Como adicionar um nó à federação
-> **•** 6. Operações cross-nó
-> **•** 7. Segurança e compliance
-> **•** 8. Quando NÃO federar
-> **•** 9. Federação para 3+ nós (avançado)
-> **•** 10. Próximos passos na trilha Elite
-
----
-
-**1. O que é federação de agentes**
-
-**Federação** = 2 ou mais nós Nexus autônomos que se comunicam entre si de forma segura e autorizada.
-
-Cada nó:
-- É **independente**: pode cair sem derrubar os outros.
-- É **autônomo**: tem suas próprias skills, agentes, dados.
-- É **conectado**: pode consultar/processar dados de outros nós (com permissão).
-
-**Benefício:** você não precisa centralizar tudo em 1 servidor. Distribui carga, isola falhas, e permite colaboração entre afiliados.
-
-**2. A diferença entre multi-tenant e federação**
-
-**Multi-tenant:**
-- 1 operador, N marcas.
-- Dados isolados por RLS.
-- Operador tem controle total.
-
-**Federação:**
-- N operadores, cada um com sua marca.
-- Dados isolados por design.
-- Operadores têm autonomia, mas trocam dados com consentimento.
-
-**Quando usar cada:**
-- **Multi-tenant**: você oferece serviço para várias marcas.
-- **Federação**: você quer colaborar com outros afiliados.
-
-**3. Como funciona o mTLS**
-
-**mTLS (Mutual TLS)** = autenticação bidirecional com certificados.
-
-Em TLS normal (HTTPS), só o servidor se autentica. Em mTLS, **cliente E servidor se autenticam mutuamente**. Isso garante que:
-- Cliente sabe que está falando com o servidor certo.
-- Servidor sabe que está falando com o cliente certo.
-
-**Na prática:** cada nó Nexus tem um par de chaves (pública + privada) emitido por uma **CA Nexus**. Quando 2 nós federam, eles trocam chaves públicas. Toda comunicação é criptografada E autenticada.
-
-**Benefício:** impossível um nó se passar por outro. Mesmo que um atacante intercepte, ele não tem a chave privada.
-
-**4. Os 3 níveis de confiança**
-
-**Nível 1 — Leitura pública**
-- Nó A consulta nó B para dados públicos (catálogo, marketplace).
-- Sem aprovação necessária (pode ser feito automaticamente).
-- Latência: < 500ms.
-- Exemplo: "esse produto existe no marketplace?"
-
-**Nível 2 — Leitura autorizada**
-- Nó A consulta nó B para dados do nó (vendas, funis) com consentimento.
-- Requer aprovação de ambos os lados.
-- Latência: < 2s.
-- Exemplo: "esse lead já foi atendido por outro afiliado?"
-
-**Nível 3 — Escrita autorizada**
-- Nó A escreve em nome do nó B (campanha conjunta, divisão de comissão).
-- Requer aprovação de ambos os lados + auditoria.
-- Latência: < 5s.
-- Exemplo: "publicar campanha em 2 nós simultaneamente".
-
-**Todo nó começa no Nível 1. A subida de nível exige aprovação mútua.**
-
-**5. Como adicionar um nó à federação**
-
-**Caminho:** `/dashboard/federation/invite`
-
-**Passo 1**: você emite um convite para o outro nó.
-- Especifica: tenant_id, nó alvo, nível de confiança solicitado.
-
-**Passo 2**: o outro nó aceita.
-- Confirma: tenant_id, autoridade, logs de auditoria.
-
-**Passo 3**: ambos os nós trocam chaves mTLS.
-- Automático via CA Nexus.
-
-**Passo 4**: teste de comunicação.
-- Ping federado, request teste, validação de resposta.
-
-**Passo 5**: produção.
-- Habilita as operações cross-nó.
-
-**Tempo total:** ~1h se ambos os admins estão disponíveis.
-
-**6. Operações cross-nó**
-
-**Operação 1 — Deduplicação de leads**
-- Antes de disparar, consulta: "esse lead existe em outro nó?"
-- Se sim, oferece o mesmo produto OU redireciona.
-- Custo: R$ 0,005 por consulta.
-
-**Operação 2 — Skills compartilhadas**
-- Nó A usa skill `copywriter` do nó B (que tem versão melhor).
-- Cobrança: % da receita gerada pela skill compartilhada.
-- Custo: variável.
-
-**Operação 3 — Campanhas conjuntas**
-- 2 nós lançam a mesma campanha simultaneamente, com públicos não-concorrentes.
-- Comissão: dividida conforme acordo.
-- Custo: nenhum (split).
-
-**Operação 4 — Catálogo unificado**
-- 2 nós compartilham catálogo de produtos.
-- Cada nó vê os produtos do outro.
-- Custo: nenhum.
-
-**7. Segurança e compliance**
-
-**Boas práticas:**
-- mTLS com rotação de chaves a cada 90 dias.
-- Auditoria de operações federadas (quem consultou o quê, quando).
-- Limite de Nível 2 (consulta de dados) por hora/dia (anti-exfiltração).
-- Alerta se nó começar a fazer consultas anômalas.
-
-**Compliance:**
-- LGPD: consentimento explícito do lead antes de compartilhar entre nós.
-- Auditoria: log imutável de toda operação federada (90 dias).
-- Reversibilidade: capacidade de revogar acesso a qualquer momento.
-
-**8. Quando NÃO federar**
-
-**Não federe se:**
-- Você é solo e o nó vizinho é solo também (custo > benefício).
-- Os 2 nós têm públicos 100% concorrentes (canibalização).
-- Você não tem admin para gerenciar federação (sozinho é inviável).
-- Sua receita mensal é < R$ 10k (foco errado).
-
-**Federe se:**
-- Você tem R$ 20k+ consistente.
-- O nó vizinho tem público não-concorrente.
-- Vocês podem se dividir a sobrecarga técnica.
-- Ambos têm admin dedicado.
-
-**9. Federação para 3+ nós (avançado)**
-
-**Com 3+ nós, a complexidade cresce.** Você precisa decidir:
-
-**Topologia Estrela**: 1 nó central coordena. (simples, mas ponto único de falha).
-**Topologia Mesh**: cada nó fala com todos. (complexo, mas robusto).
-**Topologia Hierárquica**: nós regionais + nó central. (balanceado).
-
-**Recomendação:** comece com Estrela (2-3 nós), migre para Hierárquica (4-10 nós), Mesh apenas para 10+ nós.
-
-**Pinned mTLS**: cada nó tem certificado pinned (não renovável sem aprovação). Para 3+ nós, **essencial**.
-
-**Health checks**: cada nó verifica os outros a cada 60s. Se nó X está down, roteia para fallback.
-
-**10. Próximos passos na trilha Elite**
-
-Você completou a **Trilha Elite**. Os próximos passos são:
-
-**Curto prazo (30 dias):**
-- Aplicar 1 blueprint (A, B, ou C).
-- Mentorear 1 afiliado iniciante.
-- Publicar 1 case no blog.
-
-**Médio prazo (90 dias):**
-- Configurar federação com 1 nó vizinho.
-- Operar 2 tenants em white-label (se aplicável).
-- Atingir R$ 30k+/mês consistente.
-
-**Longo prazo (12 meses):**
-- Ser referência na rede (Top 5%).
-- Construir produto próprio (curso, comunidade, evento).
-- Ajudar a treinar a próxima geração.
-
-**Recursos extras (cursos Elite):**
-- **Apostila 01**: Apresentação da Infraestrutura (mTLS, SHO, fed).
-- **Apostila 02**: Cases Reais (Marina, Carlos, Equipe Prime).
-- **Apostila 04**: Orquestração Híbrida.
-- **Certificação CEN+**: caminho formal para validar conhecimento Elite.
+# 🌐 02 · Federação de Agentes
+
+> **Tempo:** 75 min · **Nível:** Elite · **Pré-requisitos:** 01 - Multi-tenant
+
+## O que é federação
+
+**Federação** = agentes em máquinas diferentes (ou regiões diferentes) que se autenticam mutuamente, trocam tarefas e constroem confiança ao longo do tempo.
+
+No Nexus, a federação herda o design do **Ruflo Agent Federation** (referência: docs da Ruflo/Claude-Flow):
+
+```
+Seu Agente --> [ Remove PII ] --> [ Assina mensagem ] --> [ Canal criptografado ]
+                   │                    │                       │
+                   ▼                    ▼                       ▼
+              LGPD-safe         ed25519 / mTLS         WebSocket / WSS
+                   │
+                   ▼
+Outro Agente <-- [ Bloqueia injection ] <-- [ Verifica identidade ]
+                   │                            │
+                   ▼                            ▼
+              AIDefence                    Trust scoring
+```
+
+## Os 5 pilares da federação Nexus
+
+| Pilar | Implementação |
+|---|---|
+| **Identidade** | mTLS + ed25519 challenge-response |
+| **PII-gating** | 14 tipos de detecção (BLOCK, REDACT, HASH, PASS) |
+| **Trust scoring** | 0.4×success + 0.2×uptime + 0.2×threat + 0.2×integrity |
+| **Compliance** | HIPAA, SOC2, GDPR, LGPD — trilhas imutáveis |
+| **Mesh opcional** | WireGuard entre nós confiáveis |
+
+## Como iniciar uma federação
+
+### Passo 1 — Inicializar
+
+```bash
+npx nexus federation init
+
+# Gera ~/.nexus/federation/{keypair.pem, node-id, audit.log}
+```
+
+### Passo 2 — Conectar a outro nó
+
+```bash
+npx nexus federation join wss://partner.example.com:8443
+
+# mTLS handshake → trust level: "untrusted" (início)
+```
+
+### Passo 3 — Enviar primeira tarefa
+
+```bash
+npx nexus federation send \
+  --to partner \
+  --type task-request \
+  --message "Analyze este dataset de vendas — retorna coortes mensais"
+```
+
+## Trust levels (5 estágios)
+
+```
+  untrusted  ──►  low  ──►  standard  ──►  high  ──►  elite
+       │              │           │            │           │
+       │              │           │            │           └─► full access + audit
+       │              │           │            └─► read memory + write tasks
+       │              │           └─► execute tasks
+       │              └─► read public discovery
+       └─► só vê que você existe
+```
+
+> **Upgrade** requer histórico (mínimo 30 dias, success rate > 90%).
+> **Downgrade** é instantâneo em caso de mau comportamento.
+
+## PII-gating em ação
+
+Quando você envia uma tarefa federada, antes de sair do seu nó:
+
+```typescript
+// Pseudocódigo federation-gate
+const piiTypes = ["email", "phone", "cpf", "cnpj", "ssn", "address", "credit_card", ...];
+
+for (const chunk of message.chunks) {
+  for (const type of piiTypes) {
+    const detected = detect(chunk, type);
+    if (detected) {
+      switch (policy[type]) {
+        case "BLOCK": throw new PIIBlockedError(type);
+        case "REDACT": chunk = redact(chunk, type);
+        case "HASH": chunk = hash(chunk, type);
+        case "PASS": /* noop */;
+      }
+    }
+  }
+}
+```
+
+**Configuração por trust level:**
+
+| Trust | Política padrão |
+|---|---|
+| untrusted | BLOCK em todos os PIIs |
+| low | REDACT para email/phone |
+| standard | HASH para identificadores |
+| high+ | PASS (com auditoria) |
+
+## Auditoria
+
+Toda mensagem federada gera um registro imutável:
+
+```json
+{
+  "ts": "2026-06-02T08:22:07Z",
+  "from_node": "node-abc",
+  "to_node": "node-xyz",
+  "trust_at_send": "standard",
+  "pii_actions": ["REDACT:email", "HASH:phone"],
+  "msg_hash": "sha256:...",
+  "compliance_mode": "LGPD"
+}
+```
+
+> A trilha é buscável via **HNSW** (RAG semântico).
+
+## 🎯 Exercício
+
+1. Levante **2 nós Nexus locais** (containers Docker)
+2. `federation init` em cada um
+3. Conecte um ao outro
+4. Envie uma tarefa simples: "qual a data atual?"
+5. Observe: PII-gating, trust score, audit log
+6. Documente em `Lab-Nexus/workflows/federation/`
+
+## 🎓 Você completou a trilha Elite!
+
+Volte para a home da Academ'IA ou explore o Lab Nexus e a Lib Nexus para se aprofundar.
 
 ---
 
-**02 · Federação de Agentes** --- Trilha Elite · Última Trilha
-
----
-
-## 🎯 Exercícios Práticos — Curso: Federação de Agentes
-
-> **Tempo sugerido:** 45-90 minutos
-> **Formato:** individual, com consulta ao painel/ambiente real
-> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
-
-**Exercício 1 — Topologia**
-
-Desenhe a topologia da sua federação (quais agentes, como se conectam, mTLS ou não). Documente em 1 página.
-
-**Exercício 2 — mTLS**
-
-Configure mTLS entre 2 agentes de teste. Use certificados auto-assinados. Documente o processo.
-
-**Exercício 3 — Níveis de confiança**
-
-Defina os 3 níveis de confiança da sua federação. Quais agentes vão em cada nível?
-
----
-
-## ✅ Checklist de Conclusão
-
-Marque conforme for completando:
-
-- [ ] Li o curso inteiro sem pular seções.
-- [ ] Fiz os 3 exercícios práticos.
-- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
-- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
-- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
-- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
-
----
-
-## 🧠 Auto-Avaliação (5 questões)
-
-Tente responder **sem consultar o curso**. Depois, valide:
-
-1. O que é mTLS e por que é obrigatório em federação?
-2. Qual a diferença entre federação federada e mesh?
-3. Como revogar acesso a 1 agente sem afetar a federação?
-4. Qual o risco de uma cadeia de confiança longa (3+ hops)?
-5. Como auditar comunicações entre agentes federados?
-
----
-
-## 🚀 Próximos Passos Recomendados
-
-1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
-2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
-3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
-4. **Avançar:** siga para o próximo curso da trilha.
-
-
-*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*
+**Versão 1.0** · Atualizado 2026-06-02 · Fonte: `Lib-Nexus/agents-specs/federation.md` + Ruflo federation design

@@ -134,7 +134,7 @@ export default function OrchestratorDashboard() {
               </Badge>
               <h1 className="text-3xl font-bold text-white md:text-4xl">Painel do Orquestrador</h1>
               <p className="max-w-3xl text-sm leading-6 text-slate-300 md:text-base">
-                Gestão operacional do Agente IA: objetivos, filas de execução, RAG e auditoria. Quando a API do backend está temporariamente indisponível, o painel exibe um <strong>estado de fallback</strong> coerente em vez de erros JSON.
+                Acompanhe o que o seu agente está fazendo agora, quais automações estão em andamento e quais objetivos merecem atenção. Quando a integração estiver em atualização, o painel continua legível sem expor mensagens técnicas.
               </p>
             </div>
             <Link href="/agents">
@@ -190,9 +190,9 @@ export default function OrchestratorDashboard() {
         <div className="grid gap-6 xl:grid-cols-[1.3fr_1fr]">
           <Card className="border-white/10 bg-white/5 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-white">Histórico de objetivos</CardTitle>
+              <CardTitle className="text-white">Ações automáticas do seu agente</CardTitle>
               <CardDescription className="text-slate-400">
-                Cada objetivo dispara skills do agente conforme o nível de carreira atual.
+                Cada objetivo gera tarefas práticas que o agente prioriza de acordo com o seu nível e contexto operacional.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -220,9 +220,9 @@ export default function OrchestratorDashboard() {
 
           <Card className="border-quantum-cyan/30 bg-quantum-cyan/5 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-white">Novo objetivo</CardTitle>
+              <CardTitle className="text-white">Nova ação guiada</CardTitle>
               <CardDescription className="text-slate-300">
-                Cria um goal que será materializado em micro-skills pelo agente.
+                Cadastre uma ação clara para o agente transformar em execução automática.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -275,9 +275,9 @@ export default function OrchestratorDashboard() {
         </div>
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs text-slate-400">
-          <p className="font-semibold text-quantum-cyan">📊 Status das filas</p>
+          <p className="font-semibold text-quantum-cyan">📊 Status das automações</p>
           <p className="mt-1">
-            Quando a API estiver online, as métricas acima vêm direto do BullMQ do backend. O painel não exibe mais erros de JSON: na ausência da API, mostramos um estado seguro com dados de demonstração.
+            Quando as integrações estiverem disponíveis, as métricas refletem a operação em tempo real. Se algum serviço estiver em atualização, o painel mantém mensagens úteis para o usuário sem expor detalhes internos.
           </p>
         </section>
       </div>

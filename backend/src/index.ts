@@ -139,11 +139,138 @@ app.get("/metrics", metricsHandler);
 
 app.post("/webhooks/mercadopago", async (req, res) => {
   try {
-    const result = await processMercadoPagoSubscriptionWebhook({
-      body: (req.body ?? {}) as Record<string, unknown>,
-      query: req.query as Record<string, unknown>,
-    });
-    res.status(200).json(result);
+    const body = (req.body ?? {}) as Record<string, any>;
+    const query = req.query as Record<string, any>;
+    // 1) Roda o processamento de assinatura existente (não rompe contrato anterior)
+    let subscriptionResult: any = null;
+    try {
+      subscriptionResult = await processMercadoPagoSubscriptionWebhook({ body, query });
+    } catch {}
+
+    // 2) Detecta payment.approved (notificações tipo "payment")
+    const topic = String(body?.type || body?.action || query?.topic || "").toLowerCase();
+    const paymentId = body?.data?.id || body?.id || query?.id || null;
+    let marketplaceResult: any = null;
+
+    if ((topic.includes("payment") || topic === "payment.created" || topic === "payment.updated") && paymentId) {
+      try {
+        // Consulta MP para confirmar status real (se token disponível)
+        const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || "";
+        let mpPayment: any = null;
+        if (mpToken) {
+          const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+            headers: { Authorization: `Bearer ${mpToken}` }
+          });
+          if (mpResp.ok) mpPayment = await mpResp.json();
+        }
+        const status = String(mpPayment?.status || body?.status || "").toLowerCase();
+        const externalRef = mpPayment?.external_reference || body?.external_reference || null;
+
+        if (status === "approved" && externalRef) {
+          // Atualiza pedido + entrega + envia email
+          const client = await _balancePool.connect();
+          try {
+            await client.query("BEGIN");
+            const o = await client.query(
+              `SELECT id, user_id, status, payment_status, total_cents, metadata
+               FROM marketplace_orders WHERE id=$1 OR external_reference=$1 LIMIT 1`,
+              [externalRef]
+            );
+            if (o.rowCount === 0) {
+              await client.query("ROLLBACK");
+              marketplaceResult = { ok: false, reason: "order_not_found", externalRef };
+            } else {
+              const order = o.rows[0];
+              if (order.payment_status !== "paid") {
+                await client.query(
+                  `UPDATE marketplace_orders
+                   SET payment_status='paid', status='paid', payment_id=$2,
+                       payment_method='mercado_pago', paid_at=NOW(), updated_at=NOW()
+                   WHERE id=$1`,
+                  [order.id, String(paymentId)]
+                );
+              }
+              // Carrega itens e tenta entregar
+              const items = await client.query(
+                `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
+                [order.id]
+              );
+              for (const it of items.rows) {
+                await client.query(
+                  `INSERT INTO marketplace_user_library (user_id, ebook_slug, source_order_id, source_type, delivered, acquired_at)
+                   VALUES ($1, $2, $3, 'ebook', TRUE, NOW())
+                   ON CONFLICT DO NOTHING`,
+                  [order.user_id, it.item_slug, order.id]
+                );
+              }
+              await client.query(
+                `UPDATE marketplace_orders SET status='delivered', delivered_at=NOW(), updated_at=NOW() WHERE id=$1`,
+                [order.id]
+              );
+              await client.query("COMMIT");
+              // D17-bullmq-enqueue : enfileira processamento da comissão
+              try {
+                const { enqueueCommissionProcessing } = await import("./config/queue");
+                const total = Number(order.total_cents || 0);
+                if (total > 0 && enqueueCommissionProcessing) {
+                  await enqueueCommissionProcessing({
+                    commissionType: "marketplace_sale",
+                    amount: total / 100,
+                    userId: order.user_id,
+                    orderId: order.id,
+                  }).catch((e: any) => console.warn("[D17-bullmq-enqueue]", e?.message));
+                }
+              } catch (e: any) {
+                console.warn("[D17-bullmq-enqueue init]", e?.message);
+              }
+
+              // Envia e-mail "Pagamento Confirmado"
+              try {
+                let customerEmail = "";
+                let customerName = "";
+                try {
+                  const meta = order.metadata ? (typeof order.metadata === "string" ? JSON.parse(order.metadata) : order.metadata) : {};
+                  customerEmail = meta?.email || meta?.customerEmail || "";
+                  customerName = meta?.customerName || meta?.name || "";
+                } catch {}
+                if (!customerEmail) {
+                  const u = await _balancePool.query(`SELECT email, name FROM users WHERE id=$1 LIMIT 1`, [order.user_id]);
+                  customerEmail = u.rows?.[0]?.email || "";
+                  customerName = customerName || u.rows?.[0]?.name || "";
+                }
+                if (customerEmail) {
+                  const tpl = renderPaymentConfirmedEmail({
+                    customerName, orderId: order.id, amountCents: Number(order.total_cents || 0),
+                    paymentMethod: "Mercado Pago",
+                    items: items.rows.map((r: any) => ({
+                      slug: r.item_slug, title: r.title,
+                      priceCents: Number(r.unit_price_cents || 0),
+                    })),
+                  });
+                  await sendEmail({ to: customerEmail, subject: tpl.subject, html: tpl.html });
+                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: customerEmail };
+                } else {
+                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: null };
+                }
+              } catch (mailErr: any) {
+                console.error("[mp-webhook-email]", mailErr?.message);
+                marketplaceResult = { ok: true, orderId: order.id, mailError: mailErr?.message };
+              }
+            }
+          } catch (txErr: any) {
+            try { await client.query("ROLLBACK"); } catch {}
+            console.error("[mp-webhook-tx]", txErr?.message);
+            marketplaceResult = { ok: false, error: txErr?.message };
+          } finally {
+            client.release();
+          }
+        }
+      } catch (e: any) {
+        console.error("[mp-webhook-payment]", e?.message);
+      }
+    }
+
+    res.status(200).json({ ok: true, subscription: subscriptionResult, marketplace: marketplaceResult });
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -164,6 +291,33 @@ app.post("/webhooks/hotmart", async (req, res) => {
       provider: "hotmart",
       action: "ignored",
       error: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
+
+app.all("/webhooks/shopee", async (req, res) => {
+  try {
+    const body = (req.body && typeof req.body === "object") ? (req.body as Record<string, unknown>) : {};
+    console.log("[Shopee Push] callback", {
+      method: req.method,
+      event: body?.code ?? body?.type ?? body?.push_type ?? null,
+      keys: Object.keys(body).slice(0, 12),
+      at: new Date().toISOString(),
+    });
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({
+      ok: true,
+      provider: "shopee",
+      received: true,
+      callbackUrl: process.env.SHOPEE_PUSH_CALLBACK_URL || "https://oneverso.com.br/webhooks/shopee",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (_error) {
+    return res.status(200).json({
+      ok: true,
+      provider: "shopee",
+      received: false,
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -903,6 +1057,419 @@ registerAuditSubscribers();
 registerPartnersEventHandlers();
 initializeCron();
 
+
+// === MARKETPLACE BALANCE CHECKOUT (D1 hardening) ===
+import { Pool } from "pg";
+import { sendEmail, renderMarketplaceDeliveryEmail, renderPackTicketCreatedEmailAdmin, renderPackApprovedEmail, renderPackRejectedEmail, renderPaymentConfirmedEmail } from "./services/emailService";
+const _balancePool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+app.post("/api/marketplace/checkout-with-balance", async (req: any, res: any) => {
+  try {
+    const userId = (req as any).user?.id || (req as any).session?.userId;
+    if (!userId) return res.status(401).json({ ok: false, error: "Autenticação requerida" });
+    const body = req.body || {};
+    const amountCents = Number(body.amountCents || 0);
+    const customerEmail = String(body.customerEmail || "");
+    if (!amountCents || amountCents <= 0) return res.status(400).json({ ok: false, error: "Valor inválido" });
+    if (!customerEmail.includes("@")) return res.status(400).json({ ok: false, error: "Email obrigatório" });
+
+    const client = await _balancePool.connect();
+    try {
+      await client.query("BEGIN");
+      const balRow = await client.query(
+        `SELECT id, "availableBalance" FROM affiliate_balances WHERE "affiliateId"=$1 FOR UPDATE`,
+        [userId]
+      );
+      const available = Number(balRow.rows?.[0]?.availableBalance || 0);
+      if (available < amountCents) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ ok: false, error: "Saldo insuficiente" });
+      }
+      // Debita saldo
+      await client.query(
+        `UPDATE affiliate_balances SET "availableBalance" = "availableBalance" - $1,
+         "totalWithdrawn" = COALESCE("totalWithdrawn",0) + $1,
+         "lastUpdatedAt" = NOW() WHERE "affiliateId"=$2`,
+        [amountCents, userId]
+      );
+      // Cria pedido pago (uuid gerado via gen_random_uuid)
+      const orderRow = await client.query(
+        `INSERT INTO marketplace_orders (id, user_id, status, subtotal_cents, total_cents,
+           payment_method, payment_status, external_reference, metadata, paid_at, created_at, updated_at)
+         VALUES (gen_random_uuid(), $1, 'paid', $2, $2, 'balance', 'paid', $3, $4, NOW(), NOW(), NOW())
+         RETURNING id`,
+        [userId, amountCents, "marketplace-nexus", JSON.stringify({ email: customerEmail, items: body.items || [] })]
+      );
+      const orderId = orderRow.rows[0].id;
+      // Insere itens
+      for (const it of (body.items || [])) {
+        await client.query(
+          `INSERT INTO marketplace_order_items (order_id, item_type, item_slug, title, unit_price_cents, quantity, metadata, created_at)
+           VALUES ($1, 'ebook', $2, $3, $4, 1, $5, NOW())`,
+          [orderId, String(it.slug || ''), String(it.title || ''), Number(it.priceCents || 0), JSON.stringify({})]
+        );
+        // Entrega na biblioteca do usuário
+        // D7: tenta resolver source_pack_slug a partir do catálogo de ebooks
+        let resolvedPack: string | null = null;
+        try {
+          const eR = await client.query(`SELECT unlock_pack_slug FROM marketplace_ebooks WHERE slug=$1 LIMIT 1`, [String(it.slug || '')]);
+          resolvedPack = eR.rows?.[0]?.unlock_pack_slug || null;
+        } catch {}
+        await client.query(
+          `INSERT INTO marketplace_user_library (user_id, ebook_slug, source_order_id, source_type, source_pack_slug, delivered, acquired_at)
+           VALUES ($1, $2, $3, 'ebook', $4, TRUE, NOW())
+           ON CONFLICT DO NOTHING`,
+          [userId, String(it.slug || ''), orderId, resolvedPack]
+        );
+      }
+      await client.query(
+        `UPDATE marketplace_orders SET status='delivered', delivered_at=NOW(), updated_at=NOW() WHERE id=$1`,
+        [orderId]
+      );
+      await client.query("COMMIT");
+      // Fila de email (best-effort: log apenas — integração real via worker)
+      try {
+        // D7: enriquece itens com PDF/HTML reais
+        const enrichedItems = await Promise.all((body.items || []).map(async (i: any) => {
+          let htmlUrl = i.htmlUrl, pdfUrl = i.pdfUrl, coverUrl = i.coverUrl;
+          try {
+            const eR = await _balancePool.query(`SELECT html_path, pdf_path, cover_path FROM marketplace_ebooks WHERE slug=$1 LIMIT 1`, [String(i.slug || '')]);
+            const row = eR.rows?.[0];
+            if (row) {
+              const baseHtml = row.html_path || row.htmlPath;
+              const basePdf = row.pdf_path || row.pdfPath;
+              const baseCover = row.cover_path || row.coverPath;
+              if (baseHtml) htmlUrl = baseHtml.startsWith("http") ? baseHtml : `https://oneverso.com.br${baseHtml.startsWith("/") ? "" : "/"}${baseHtml}`;
+              if (basePdf) pdfUrl = basePdf.startsWith("http") ? basePdf : `https://oneverso.com.br${basePdf.startsWith("/") ? "" : "/"}${basePdf}`;
+              if (baseCover) coverUrl = baseCover.startsWith("http") ? baseCover : `https://oneverso.com.br${baseCover.startsWith("/") ? "" : "/"}${baseCover}`;
+            }
+          } catch {}
+          return {
+            slug: String(i.slug || ""),
+            title: String(i.title || ""),
+            priceCents: Number(i.priceCents || 0),
+            htmlUrl, pdfUrl, coverUrl,
+          };
+        }));
+        const { subject, html } = renderMarketplaceDeliveryEmail({
+          customerName: body.customerName,
+          orderId,
+          totalCents: amountCents,
+          items: enrichedItems,
+        });
+        await sendEmail({ to: customerEmail, subject, html });
+      } catch (mailErr: any) {
+        console.error("[marketplace-email]", mailErr?.message || mailErr);
+      }
+      return res.json({ ok: true, orderId, status: "delivered", delivery: { channel: "email", to: customerEmail } });
+    } catch (e: any) {
+      await client.query("ROLLBACK");
+      return res.status(500).json({ ok: false, error: e?.message || "Erro interno" });
+    } finally {
+      client.release();
+    }
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message || "Erro interno" });
+  }
+});
+// === END MARKETPLACE BALANCE CHECKOUT ===
+
+
+// === PACK TICKETS (D2 hardening) ===
+const _packPool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+// cria tabela on-boot (idempotente)
+(async () => {
+  try {
+    await _packPool.query(`
+      CREATE TABLE IF NOT EXISTS marketplace_pack_tickets (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL,
+        user_name VARCHAR(160),
+        user_email VARCHAR(180) NOT NULL,
+        pack_slug VARCHAR(80) NOT NULL,
+        pack_name VARCHAR(180) NOT NULL,
+        amount_cents INTEGER NOT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        payment_method VARCHAR(40),
+        payment_proof_url TEXT,
+        admin_notes TEXT,
+        reviewed_by INTEGER,
+        reviewed_at TIMESTAMP,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS pack_tickets_status_idx ON marketplace_pack_tickets(status);
+      CREATE INDEX IF NOT EXISTS pack_tickets_user_idx ON marketplace_pack_tickets(user_id);
+    `);
+    console.log("[pack-tickets] table ready");
+  } catch (e: any) {
+    console.error("[pack-tickets] table init error", e?.message);
+  }
+})();
+
+function isAdminReq(req: any) {
+  const role = req?.user?.role || req?.session?.role;
+  return role === "admin" || role === "owner";
+}
+
+// Cria ticket de aquisição de Pack
+app.post("/api/marketplace/pack-ticket", async (req: any, res: any) => {
+  try {
+    const userId = req?.user?.id || req?.session?.userId;
+    if (!userId) return res.status(401).json({ ok: false, error: "Autenticação requerida" });
+    const { packSlug, packName, amountCents, paymentMethod } = req.body || {};
+    const userName = req?.user?.name || req?.session?.userName || "";
+    const userEmail = req?.user?.email || req?.session?.userEmail || "";
+    if (!packSlug || !packName || !amountCents || !userEmail) {
+      return res.status(400).json({ ok: false, error: "Campos obrigatórios faltando" });
+    }
+    const row = await _packPool.query(
+      `INSERT INTO marketplace_pack_tickets
+       (user_id, user_name, user_email, pack_slug, pack_name, amount_cents, payment_method, status)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,'pending') RETURNING id`,
+      [userId, userName, userEmail, packSlug, packName, Number(amountCents), paymentMethod || "pix"]
+    );
+    const ticketId = row.rows[0].id;
+    // Email para admin
+    try {
+      const adminTo = process.env.ADMIN_NOTIFY_EMAIL || process.env.SMTP_USER || "";
+      if (adminTo) {
+        const tpl = renderPackTicketCreatedEmailAdmin({
+          ticketId, userId, userName, userEmail, packSlug, packName, amountCents: Number(amountCents)
+        });
+        await sendEmail({ to: adminTo, subject: tpl.subject, html: tpl.html });
+      }
+    } catch {}
+    return res.json({ ok: true, ticketId, status: "pending" });
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+
+// Lista tickets (admin)
+app.get("/api/admin/pack-tickets", async (req: any, res: any) => {
+  try {
+    if (!isAdminReq(req)) return res.status(401).json({ ok: false, error: "Admin requerido" });
+    const status = req.query.status || "pending";
+    const r = await _packPool.query(
+      `SELECT * FROM marketplace_pack_tickets WHERE status=$1 ORDER BY created_at DESC LIMIT 200`,
+      [status]
+    );
+    return res.json({ ok: true, tickets: r.rows });
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+
+// Aprova ticket (admin)
+app.post("/api/admin/pack-tickets/:id/approve", async (req: any, res: any) => {
+  try {
+    if (!isAdminReq(req)) return res.status(401).json({ ok: false, error: "Admin requerido" });
+    const id = parseInt(req.params.id, 10);
+    const reviewer = req?.user?.id || 0;
+    const adminNotes = req.body?.notes || null;
+    const r = await _packPool.query(
+      `UPDATE marketplace_pack_tickets SET status='approved', reviewed_by=$1, reviewed_at=NOW(),
+       updated_at=NOW(), admin_notes=COALESCE($3, admin_notes)
+       WHERE id=$2 AND status='pending' RETURNING *`,
+      [reviewer, id, adminNotes]
+    );
+    if (r.rowCount === 0) return res.status(404).json({ ok: false, error: "Ticket não encontrado ou já processado" });
+    const t = r.rows[0];
+    // Ativa pack
+    try {
+      // pack_id resolution: tenta achar via slug; se não houver, registra metadata
+      const pack = await _packPool.query(`SELECT id FROM packs WHERE slug=$1 LIMIT 1`, [t.pack_slug]).catch(() => ({ rows: [] } as any));
+      const packId = pack?.rows?.[0]?.id || 0;
+      await _packPool.query(
+        `INSERT INTO pack_activations (affiliate_id, pack_id, status, payment_method, amount_paid, activated_at, metadata, created_at, updated_at)
+         VALUES ($1,$2,'active',$3,$4,NOW(),$5,NOW(),NOW())`,
+        [t.user_id, packId, t.payment_method || 'manual', t.amount_cents, JSON.stringify({ ticketId: t.id, packSlug: t.pack_slug })]
+      );
+    } catch (actErr: any) {
+      console.error("[pack-tickets] activate err", actErr?.message);
+    }
+    // Email confirmação
+    try {
+      const tpl = renderPackApprovedEmail({ userName: t.user_name || "afiliado", packName: t.pack_name, packSlug: t.pack_slug });
+      await sendEmail({ to: t.user_email, subject: tpl.subject, html: tpl.html });
+    } catch {}
+    return res.json({ ok: true, ticket: r.rows[0] });
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+
+// Rejeita ticket (admin)
+app.post("/api/admin/pack-tickets/:id/reject", async (req: any, res: any) => {
+  try {
+    if (!isAdminReq(req)) return res.status(401).json({ ok: false, error: "Admin requerido" });
+    const id = parseInt(req.params.id, 10);
+    const reviewer = req?.user?.id || 0;
+    const reason = req.body?.reason || null;
+    const r = await _packPool.query(
+      `UPDATE marketplace_pack_tickets SET status='rejected', reviewed_by=$1, reviewed_at=NOW(),
+       updated_at=NOW(), admin_notes=$3
+       WHERE id=$2 AND status='pending' RETURNING *`,
+      [reviewer, id, reason]
+    );
+    if (r.rowCount === 0) return res.status(404).json({ ok: false, error: "Ticket não encontrado ou já processado" });
+    const t = r.rows[0];
+    try {
+      const tpl = renderPackRejectedEmail({ userName: t.user_name || "afiliado", packName: t.pack_name, reason });
+      await sendEmail({ to: t.user_email, subject: tpl.subject, html: tpl.html });
+    } catch {}
+    return res.json({ ok: true, ticket: r.rows[0] });
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+// === END PACK TICKETS ===
+
+
+// === ADMIN MANUAL MARK PAID (D3) ===
+app.post("/api/admin/marketplace/orders/:id/mark-paid", async (req: any, res: any) => {
+  try {
+    if (!isAdminReq(req)) return res.status(401).json({ ok: false, error: "Admin requerido" });
+    const orderId = req.params.id;
+    const paymentId = req.body?.paymentId || ("manual-" + Date.now());
+    const client = await _balancePool.connect();
+    try {
+      await client.query("BEGIN");
+      const o = await client.query(`SELECT * FROM marketplace_orders WHERE id=$1`, [orderId]);
+      if (o.rowCount === 0) { await client.query("ROLLBACK"); return res.status(404).json({ ok: false, error: "Pedido não encontrado" }); }
+      const order = o.rows[0];
+      await client.query(
+        `UPDATE marketplace_orders SET status='paid', payment_status='paid', payment_id=$2,
+           payment_method='manual', paid_at=NOW(), updated_at=NOW() WHERE id=$1`,
+        [orderId, paymentId]
+      );
+      const items = await client.query(
+        `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
+        [orderId]
+      );
+      for (const it of items.rows) {
+        await client.query(
+          `INSERT INTO marketplace_user_library (user_id, ebook_slug, source_order_id, source_type, delivered, acquired_at)
+           VALUES ($1, $2, $3, 'ebook', TRUE, NOW()) ON CONFLICT DO NOTHING`,
+          [order.user_id, it.item_slug, orderId]
+        );
+      }
+      await client.query(`UPDATE marketplace_orders SET status='delivered', delivered_at=NOW() WHERE id=$1`, [orderId]);
+      await client.query("COMMIT");
+      // Email
+      try {
+        const u = await _balancePool.query(`SELECT email, name FROM users WHERE id=$1`, [order.user_id]);
+        const customerEmail = u.rows?.[0]?.email;
+        const customerName = u.rows?.[0]?.name;
+        if (customerEmail) {
+          const tpl = renderPaymentConfirmedEmail({
+            customerName, orderId, amountCents: Number(order.total_cents || 0),
+            paymentMethod: "Confirmação Manual (Admin)",
+            items: items.rows.map((r: any) => ({ slug: r.item_slug, title: r.title, priceCents: Number(r.unit_price_cents || 0) })),
+          });
+          await sendEmail({ to: customerEmail, subject: tpl.subject, html: tpl.html });
+        }
+      } catch {}
+      res.json({ ok: true, orderId, delivered: items.rows.length });
+    } catch (e: any) {
+      try { await client.query("ROLLBACK"); } catch {}
+      res.status(500).json({ ok: false, error: e?.message });
+    } finally {
+      client.release();
+    }
+  } catch (e: any) {
+    res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+// === END ADMIN MANUAL MARK PAID ===
+
+// === ADMIN SIMULATE PAID (D7) ===
+app.post("/api/admin/marketplace/orders/:id/simulate-paid", async (req: any, res: any) => {
+  try {
+    if (!isAdminReq(req)) return res.status(401).json({ ok: false, error: "Admin requerido" });
+    const orderId = req.params.id;
+    const fakePayId = "simulated-" + Date.now();
+    const client = await _balancePool.connect();
+    try {
+      await client.query("BEGIN");
+      const oR = await client.query(`SELECT * FROM marketplace_orders WHERE id=$1`, [orderId]);
+      if (oR.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ ok: false, error: "Pedido não encontrado" });
+      }
+      const order = oR.rows[0];
+      await client.query(
+        `UPDATE marketplace_orders SET status='paid', payment_status='paid', payment_id=$2,
+          payment_method=COALESCE(payment_method,'mercado_pago'), paid_at=NOW(), updated_at=NOW() WHERE id=$1`,
+        [orderId, fakePayId]
+      );
+      const itemsR = await client.query(
+        `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
+        [orderId]
+      );
+      for (const it of itemsR.rows) {
+        let resolvedPack: string | null = null;
+        try {
+          const eR = await client.query(`SELECT unlock_pack_slug FROM marketplace_ebooks WHERE slug=$1 LIMIT 1`, [it.item_slug]);
+          resolvedPack = eR.rows?.[0]?.unlock_pack_slug || null;
+        } catch {}
+        await client.query(
+          `INSERT INTO marketplace_user_library (user_id, ebook_slug, source_order_id, source_type, source_pack_slug, delivered, acquired_at)
+           VALUES ($1, $2, $3, 'ebook', $4, TRUE, NOW()) ON CONFLICT DO NOTHING`,
+          [order.user_id, it.item_slug, orderId, resolvedPack]
+        );
+      }
+      await client.query(`UPDATE marketplace_orders SET status='delivered', delivered_at=NOW() WHERE id=$1`, [orderId]);
+      await client.query("COMMIT");
+      // Resolve destinatário
+      let customerEmail = "";
+      let customerName = "";
+      try {
+        const meta = typeof order.metadata === "string" ? JSON.parse(order.metadata) : (order.metadata || {});
+        customerEmail = meta?.email || meta?.customerEmail || "";
+        customerName = meta?.customerName || "";
+      } catch {}
+      if (!customerEmail) {
+        const u = await _balancePool.query(`SELECT email, name FROM users WHERE id=$1`, [order.user_id]);
+        customerEmail = u.rows?.[0]?.email || "";
+        customerName = customerName || u.rows?.[0]?.name || "";
+      }
+      let emailResult: any = null;
+      if (customerEmail) {
+        const enriched = await Promise.all(itemsR.rows.map(async (it: any) => {
+          let htmlUrl, pdfUrl, coverUrl;
+          try {
+            const eR = await _balancePool.query(`SELECT html_path, pdf_path, cover_path FROM marketplace_ebooks WHERE slug=$1 LIMIT 1`, [it.item_slug]);
+            const row = eR.rows?.[0];
+            if (row) {
+              if (row.html_path) htmlUrl = row.html_path.startsWith("http") ? row.html_path : `https://oneverso.com.br${row.html_path.startsWith("/") ? "" : "/"}${row.html_path}`;
+              if (row.pdf_path) pdfUrl = row.pdf_path.startsWith("http") ? row.pdf_path : `https://oneverso.com.br${row.pdf_path.startsWith("/") ? "" : "/"}${row.pdf_path}`;
+              if (row.cover_path) coverUrl = row.cover_path.startsWith("http") ? row.cover_path : `https://oneverso.com.br${row.cover_path.startsWith("/") ? "" : "/"}${row.cover_path}`;
+            }
+          } catch {}
+          return { slug: it.item_slug, title: it.title, priceCents: Number(it.unit_price_cents || 0), htmlUrl, pdfUrl, coverUrl };
+        }));
+        const tpl = renderPaymentConfirmedEmail({
+          customerName, orderId, amountCents: Number(order.total_cents || 0),
+          paymentMethod: "Mercado Pago (simulado)",
+          items: enriched,
+        });
+        emailResult = await sendEmail({ to: customerEmail, subject: tpl.subject, html: tpl.html });
+      }
+      return res.json({ ok: true, orderId, delivered: itemsR.rows.length, emailResult });
+    } catch (txErr: any) {
+      try { await client.query("ROLLBACK"); } catch {}
+      return res.status(500).json({ ok: false, error: txErr?.message });
+    } finally {
+      client.release();
+    }
+  } catch (e: any) {
+    return res.status(500).json({ ok: false, error: e?.message });
+  }
+});
+// === END ADMIN SIMULATE PAID ===
 app.listen(PORT, () => {
   console.log(`MMN AI-to-AI backend full ativo em http://localhost:${PORT}`);
   if (HAS_PUBLIC_BUNDLE) {

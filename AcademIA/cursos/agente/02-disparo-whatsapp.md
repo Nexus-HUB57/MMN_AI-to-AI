@@ -2,274 +2,143 @@
 title: "02 · Disparando no WhatsApp"
 level: agente
 duration: 30min
-prerequisites: ["01-skills-essenciais"]
-tags: [whatsapp, disparo, campanha, compliance, anti-ban]
-last_updated: 2026-06-13
-version: "2.0.0"
-pattern: "MMN_IA"
+prerequisites: ["agente/01-skills-essenciais"]
+tags: [whatsapp, disparo, meta-api, templates, lgpd, ban, kill-switch]
+last_updated: 2026-06-02
 ---
 
-![Capa — Disparando no WhatsApp](../../../assets/ebook_covers/ACAD-apostila-08-rotina-disparo-agente.webp)
+# 📱 02 · Disparando no WhatsApp
 
-**02 · Disparando no WhatsApp**
+> **Tempo:** 30 min · **Nível:** Agente · **Pré-requisitos:** 01 - Skills essenciais
 
-*Trilha Agente · 30 minutos · Pré-requisito: 01-Skills Essenciais*
+## ⚠️ Antes de tudo: LGPD e Template Approval
 
-**Por Equipe Nexus · Academ'IA**
+> **Regra de ouro do Nexus:** toda mensagem no WhatsApp passa por **template approval + opt-in verificado.**
+> **Quebrar isso = ban permanente do número.**
 
-Nexus Affil'IA'te · 2026
+Certifique-se:
 
-**Sobre este curso**
+- [ ] Cada contato tem `opted_in: true` e `opted_in_at < 12 meses`
+- [ ] O template foi aprovado pelo WhatsApp Business
+- [ ] Você tem base legal registrada (consentimento, contrato, legítimo interesse)
 
-Você já tem coortes, copy, e Judge configurado. Agora é hora de **disparar**. Mas disparar no WhatsApp sem estratégia é como pilotar sem bússola: pode dar certo uma vez, mas a segunda acaba em ban. Este curso ensina o protocolo seguro, o agendamento, a personalização, e as 7 regras de ouro anti-ban. Para a rotina diária, consulte a **Apostila 08** (Rotina de Disparo). Para os modelos de campanha prontos, a **Apostila 09**.
-
----
-
-## ⚡ TL;DR — Resumo Executivo
-
-> Aqui é onde o agente ganha dinheiro: disparar no WhatsApp com Judge em modo Revisão. Você vai aprender setup, segmentação (frio/morno/quente), métricas de 24h, e como respeitar os limites da Meta.
-
-### 🗺️ Posição na Trilha
-
-**Anterior:** [← 01-skills-essenciais](01-skills-essenciais.md)
-**Próximo:** [→ 03-judge-revisor](03-judge-revisor.md)
-
-
-
-**Sumário**
-
-> **•** 1. O que é um "disparo" no Nexus
-> **•** 2. Anatomia de uma campanha de WhatsApp
-> **•** 3. Configurando a primeira campanha
-> **•** 4. Agendamento e frequência
-> **•** 5. Personalização com placeholders
-> **•** 6. As 7 regras de ouro anti-ban
-> **•** 7. Monitoramento pós-disparo
-> **•** 8. O que fazer se o número for banido
-> **•** 9. Escala progressiva
-> **•** 10. Próximo curso
-
----
-
-**1. O que é um "disparo" no Nexus**
-
-Um "disparo" no Nexus é uma **campanha de envio de mensagens** que combina:
-- **Coorte**: o público (ex: 500 frios).
-- **Copy**: a mensagem (gerada por copywriter ou escrita).
-- **Agendamento**: quando enviar (data + hora).
-- **Frequência**: única ou recorrente.
-- **Judge**: revisão automática antes do envio.
-
-O disparo é **assíncrono**: você configura, o sistema executa, e você é notificado quando termina.
-
-**2. Anatomia de uma campanha de WhatsApp**
+## Como funciona o dispatcher WhatsApp no Nexus
 
 ```
-[Campanha: Reativação_Natal_2026]
-  ├── Coorte: frios (60+ dias)
-  ├── Copy: "Oi [nome]! ..."
-  ├── Agendamento: 2026-12-20 às 10h
-  ├── Frequência: única
-  ├── Judge: Conservador LGPD
-  ├── Rate limit: 80 msg/segundo
-  ├── Personalização: nome + último_produto
-  └── Notificação: e-mail + dashboard
+Skill auto-publisher
+        │
+        ▼
+┌────────────────────┐
+│ WhatsApp Dispatcher │  (backend/src/agentic/skills/dispatcher.ts)
+└────────┬───────────┘
+         │ fila BullMQ
+         ▼
+┌────────────────────┐
+│  WhatsApp Business │  (API oficial Meta)
+└────────┬───────────┘
+         │ eventos
+         ▼
+   delivered / read / replied
 ```
 
-**3. Configurando a primeira campanha**
+## Passo a passo — primeiro disparo
 
-**Caminho:** `/dashboard/dispatch/new`
+### 1. Conecte o WhatsApp Business
 
-**Passo a passo:**
+```
+Configurações → Integrações → WhatsApp
+- Escaneie QR
+- Autorize os templates (pode levar 24h)
+```
 
-1. **Nome**: use padrão `Objetivo_Coorte_Data` (ex: `Reativacao_Frios_20260613`).
-2. **Coorte**: selecione uma (sugestão: 200-500 contatos para começar).
-3. **Objetivo da mensagem** (linguagem natural): descreva o que quer.
-4. **Gerar Copy com Skill** (botão) — copywriter cria 3 variações.
-5. **Escolher a melhor** (ou editar).
-6. **Configurar agendamento** (próxima seção).
-7. **Configurar Judge** (template ou custom).
-8. **Revisar preview** — veja como vai ficar no celular.
-9. **Aprovar**.
+### 2. Crie o template (se ainda não tem)
 
-**4. Agendamento e frequência**
+Exemplo de template aprovado:
 
-**Quando agendar?**
+```
+Olá {{1}}, tudo bem?
 
-| Horário | Janela de atenção | Boa para |
-|---------|-------------------|----------|
-| 8h-10h | Alta (pessoas começando o dia) | Boas-vindas, lembretes |
-| 10h-12h | Média-alta | Promoções, ofertas |
-| 14h-17h | Baixa (trabalho) | Evitar |
-| 19h-21h | Alta (relaxamento) | Reativação, vendas |
-| 21h-23h | Média, mas arriscada | Evitar (respeitar sono) |
+Sou {{2}}, afiliado Nexus. Vi que você se interessou por {{3}}
+e quero te mandar uma condição especial.
 
-**Recomendação:** agende 2 disparos/dia, 1 de manhã (10h) e 1 à noite (19h), com copy diferente.
+Posso te enviar? Responda SIM para receber.
 
-**Frequência:**
+— {{2}}
+```
 
-- **Única**: 1 disparo, sem repetição. Use para testes ou promoções pontuais.
-- **Recorrente**: a cada N dias, com mesma copy. Use para campanhas de nutrição.
-- **Gatilho comportamental**: quando lead fizer X, dispara Y. Use para pós-venda e recompra.
+**Categorias aceitas:** `marketing` (com opt-in) ou `utility` (transacional).
 
-**5. Personalização com placeholders**
+### 3. Configure o agente para usar WhatsApp
 
-A copywriter gera mensagens com **placeholders** que o sistema preenche por contato:
+```typescript
+{
+  skills: ["copywriter-persuasivo", "audience-segmenter", "auto-publisher"],
+  dispatcher: "whatsapp",
+  riskLimit: 50,        // R$ 50 máximo por batch
+  confidenceThreshold: 0.75,
+  template: "promo_especial_v1"  // aprovado pela Meta
+}
+```
 
-| Placeholder | Substituído por | Exemplo |
-|-------------|------------------|---------|
-| `[nome]` | Primeiro nome do contato | "Marina" |
-| `[ultimo_produto]` | Produto mais recente visualizado/comprado | "Curso de Copy" |
-| `[data_ultimo_contato]` | Data da última interação | "12/04/2026" |
-| `[coorte]` | Nome da coorte | "Frios" |
-| `[empresa]` | Nome da empresa (se cadastrado) | "Nexus Brasil" |
+### 4. Limite de volume
 
-**Como ativar:** na config do copywriter, marque "Personalização" + escolha quais placeholders usar.
+| Estágio | Limite |
+|---|---|
+| Cold start | máx **50 mensagens/dia** |
+| Após 7 dias sem ban | até **500/dia** |
+| Após 30 dias, CTR > 5% | até **5.000/dia** |
+| Scale Elite | sem limite, mas com auto-pause se CTR cair |
 
-**Impacto:** mensagens personalizadas têm **+35% de taxa de abertura** vs. mensagens genéricas.
+### 5. Acompanhe a fila
 
-**6. As 7 regras de ouro anti-ban**
+```
+Admin Runtime → Fila WhatsApp
+- Pendentes
+- Enviadas (últimas 24h)
+- Lidas
+- Respondidas
+- Banidas (crítico — pause imediatamente)
+```
 
-**Regra 1 — Consentimento**
-Só mande para quem consentiu receber. Sem exceção. Isso é LGPD + política Meta.
+## Métricas que importam
 
-**Regra 2 — Opt-out fácil**
-Toda mensagem deve ter "responda SAIR para parar de receber" (ou similar).
+| Métrica | Referência saudável | Ação se pior |
+|---|---|---|
+| Delivery rate | > 95% | Verificar opt-in |
+| Read rate | > 70% | Trocar horário de envio |
+| Reply rate | > 8% | Melhorar copy / hook |
+| **Block rate** | **< 1%** | **PARAR e revisar template** |
+| CTR (link) | > 5% | Testar novo hook |
 
-**Regra 3 — Horário**
-Nunca envie entre 21h e 8h (respeite o sono do lead).
+## 🚨 Red flags (pause e investigue)
 
-**Regra 4 — Frequência**
-Máximo 2 mensagens/dia/lead, exceto em lançamento (3-4 por 3 dias no máximo).
+- Block rate **> 2%** por dia
+- Read rate **< 30%**
+- Templates **reprovados** pela Meta
+- Pico de `whatsapp.opt_out` (pessoas saindo)
 
-**Regra 5 — Volume progressivo**
-Comece com 50/dia, suba para 200/dia, depois 500. Nunca saia de 0 para 1000 de uma vez (algoritmo Meta detecta).
+**Comando de emergência:**
 
-**Regra 6 — Conteúdo**
-Nunca inclua:
-- Link encurtado (bit.ly, tinyurl) — Meta sinaliza como spam.
-- Número de telefone na primeira mensagem.
-- Anexo pesado (> 5MB).
-- Pedido de senha ou dados sensíveis.
+```
+Admin Runtime → [seu agente] → "KILL SWITCH"
+```
 
-**Regra 7 — Conteúdo bloqueado**
-Nunca prometa:
-- Cura de doenças.
-- Ganhos garantidos (ex: "ganhe R$ 10.000 por dia").
-- Esquemas de pirâmide.
-- Conteúdo adulto.
+> Isso para todos os envios pendentes em **< 30s**.
 
-**Quebrar qualquer regra = ban em 7-14 dias.**
+## 🎯 Exercício
 
-**7. Monitoramento pós-disparo**
+1. Configure o dispatcher WhatsApp
+2. Crie 1 template `promo_especial_v1`
+3. Envie para **20 contatos** do segmento `quentes_30d`
+4. Aguarde 48h
+5. Documente: delivery, read, reply, CTR
 
-Após o disparo, monitore em `/dashboard/dispatch/<id>`:
+> 🎯 **Meta pessoal:** delivery > 95%, reply > 10%, CTR > 5%.
 
-- **Enviadas**: contador (deve chegar ao total).
-- **Bloqueadas pelo Judge**: se > 20%, copy inadequada.
-- **Taxa de entrega** (em 1h): > 95% é meta.
-- **Taxa de abertura** (em 24h): > 70% é meta.
-- **Taxa de resposta** (em 48h): > 5% é meta.
+## ⏭️ Próximo passo
 
-**Sinais de alerta:**
-
-- Latência > 10s: problema técnico.
-- Entrega < 90%: número ou template banido.
-- Resposta < 1%: copy ruim, reescreva.
-- Bloqueio de lead > 1%: copy agressiva, suavize.
-
-**8. O que fazer se o número for banido**
-
-**Sintomas:**
-- Mensagens não chegam mais.
-- Você vê o número como "banido" no painel.
-- Leads reportam "número não está no WhatsApp".
-
-**Passo a passo:**
-
-1. **Pare todos os disparos imediatamente**.
-2. **Identifique a causa** (qual campanha ou copy foi a culpada).
-3. **Abra ticket de suporte** com print do erro.
-4. **Ative número backup** (se você tem 2 chips, use o segundo).
-5. **Aguarde 24-72h** para Meta analisar o pedido de unban.
-6. **Re-aprove** as campanhas com copy corrigida.
-
-**Prevenção:** tenha **sempre 2 números** (titular + backup). O backup roda enquanto o titular está em risco.
-
-**9. Escala progressiva**
-
-**Semana 1**: 50 disparos/dia, 1 coorte, 1 horário.
-**Semana 2-3**: 200 disparos/dia, 2 coortes, 2 horários.
-**Semana 4+**: 500+ disparos/dia, 3+ coortes, 2 horários.
-
-**Quando você está pronto para 1.000+ disparos/dia:** considere plano Pro e configurar shadow testing para validar mudanças.
-
-**10. Próximo curso**
-
-👉 [`03-judge-revisor.md`](03-judge-revisor.md) — Lendo o Judge Revisor · 30 min
-
-**Recursos extras:**
-- **Apostila 08**: Rotina de Disparo (manhã/tarde/noite + semanal).
-- **Apostila 09**: Campanhas Automatizadas (3 modelos WhatsApp + 2 Instagram).
-- **Playbook PB-WHATSAPP**: operação diária.
+👉 [**03 · Lendo o Judge Revisor**](03-judge-revisor.md)
 
 ---
 
-**02 · Disparando no WhatsApp** --- Trilha Agente
-
----
-
-## 🎯 Exercícios Práticos — Curso: Disparo no WhatsApp
-
-> **Tempo sugerido:** 45-90 minutos
-> **Formato:** individual, com consulta ao painel/ambiente real
-> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
-
-**Exercício 1 — Setup real**
-
-Configure 1 campanha real de WhatsApp para 50 contatos (lista quente). Use o Judge em modo "Revisão". Avalie.
-
-**Exercício 2 — Segmentação**
-
-Crie 3 listas de público (frio, morno, quente) com critérios claros. Dispare mensagens diferentes para cada.
-
-**Exercício 3 — Métricas**
-
-Após 24h, meça: taxa de abertura, resposta, conversão. Compare com baseline anterior. Identifique o principal gargalo.
-
----
-
-## ✅ Checklist de Conclusão
-
-Marque conforme for completando:
-
-- [ ] Li o curso inteiro sem pular seções.
-- [ ] Fiz os 3 exercícios práticos.
-- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
-- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
-- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
-- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
-
----
-
-## 🧠 Auto-Avaliação (5 questões)
-
-Tente responder **sem consultar o curso**. Depois, valide:
-
-1. Por que NÃO disparar sem o Judge em modo "Bloqueio Total"?
-2. Qual o limite diário de mensagens permitido pela Meta?
-3. Como configurar fallback para Telegram quando WhatsApp cai?
-4. Qual a taxa de conversão esperada em lista fria (vs. quente)?
-5. O que é "opt-out" e como respeitar?
-
----
-
-## 🚀 Próximos Passos Recomendados
-
-1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
-2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
-3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
-4. **Avançar:** siga para o próximo curso da trilha.
-
-
-*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*
+**Versão 1.0** · Atualizado 2026-06-02 · Fonte: `backend/src/agentic/skills/dispatcher.ts` + `autoPublisher.ts`

@@ -2,245 +2,134 @@
 title: "00 · Otimização de Conversão"
 level: master
 duration: 45min
-prerequisites: ["03-judge-revisor"]
-tags: [conversao, cac, ltv, otimizacao, funil]
-last_updated: 2026-06-15
-version: "2.0.0"
-pattern: "MMN_IA"
+prerequisites: ["agente"]
+tags: [conversao, ctr, cac, ltv, roi-attributor, ab-test, funil]
+last_updated: 2026-06-02
 ---
 
-![Capa — Otimização de Conversão](../../../assets/ebook_covers/ACAD-apostila-09-campanhas-automatizadas.webp)
+# 📈 00 · Otimização de Conversão
 
-**00 · Otimização de Conversão**
+> **Tempo:** 45 min · **Nível:** Master · **Pré-requisitos:** Nível Agente completo
 
-*Trilha Master · 45 minutos · Pré-requisito: 03-Judge Revisor*
-
-**Por Equipe Nexus · Academ'IA**
-
-Nexus Affil'IA'te · 2026
-
-**Sobre este curso**
-
-Você chegou na Trilha Master. Aqui, o jogo muda: não é mais "como usar o agente", é "como **ganhar mais dinheiro com o mesmo agente**". Otimização de conversão é a arte de melhorar cada elo do funil — do primeiro clique à recompra — para que o mesmo volume de tráfego gere mais receita. Em 45 minutos, você vai dominar CAC, LTV, e as 5 alavancas que movem esses números.
-
----
-
-## ⚡ TL;DR — Resumo Executivo
-
-> Bem-vindo à Trilha Master. Aqui você sai de operador para otimizador. Vai aprender a calcular CAC, LTV, identificar as 5 alavancas de conversão (copy, oferta, página, timing, follow-up), e construir hipóteses testáveis.
-
-### 🗺️ Posição na Trilha
-
-**Anterior:** [← ../agente/03-judge-revisor](../agente/03-judge-revisor.md)
-**Próximo:** [→ 01-funis-lifecycle](01-funis-lifecycle.md)
-
-
-
-**Sumário**
-
-> **•** 1. O que é otimização de conversão (e o que não é)
-> **•** 2. As 5 métricas que importam
-> **•** 3. CAC: o que é e como reduzir
-> **•** 4. LTV: como aumentar
-> **•** 5. As 5 alavancas de otimização
-> **•** 6. Onde aplicar cada alavanca no funil
-> **•** 7. A/B testing como método
-> **•** 8. Erros clássicos de otimização
-> **•** 9. Quando parar de otimizar
-> **•** 10. Próximo curso
-
----
-
-**1. O que é otimização de conversão (e o que não é)**
-
-Otimização de conversão é **melhorar a eficiência** do funil de vendas. Você tem o mesmo tráfego, o mesmo produto, o mesmo agente. O que muda é a forma como cada etapa é executada, e isso muda o resultado.
-
-**O que NÃO é otimização:**
-- ❌ Mudar o produto (isso é pivot, não otimização).
-- ❌ Aumentar tráfego sem melhorar o funil (gasta mais, ganha proporcionalmente).
-- ❌ Mudar de nicho a cada 30 dias (imaturidade).
-- ❌ "Hack" de WhatsApp (spam, clickbait, claim falso) queima a base.
-
-**O QUE é otimização:**
-- ✅ Copy que converte mais.
-- ✅ Timing que maximiza atenção.
-- ✅ Coortes certas priorizadas.
-- ✅ Judge calibrado.
-- ✅ Funil sem atrito.
-
-**2. As 5 métricas que importam**
-
-Quando você está otimizando, monitore 5 números (não mais):
-
-1. **CAC** (Custo de Aquisição de Cliente) — R$ por cliente novo.
-2. **LTV** (Lifetime Value) — R$ total por cliente ao longo do tempo.
-3. **Taxa de Conversão** — % de leads que viram clientes.
-4. **Tempo até Conversão** — dias entre primeiro contato e compra.
-5. **Taxa de Recompra** — % de clientes que voltam a comprar.
-
-Essas 5 métricas, otimizadas, **compõem** a saúde do seu negócio.
-
-**3. CAC: o que é e como reduzir**
-
-**Fórmula:** `CAC = (Custo total de marketing + custo operacional do agente) / Número de clientes novos`
-
-**Exemplo:** se você gastou R$ 1.000 em tráfego + R$ 200 em operação do agente no mês, e ganhou 50 clientes, seu CAC é R$ 24.
-
-**Como reduzir CAC:**
-
-**A — Melhorar a copy** (topo de funil): taxa de abertura +35% = menos impressões necessárias.
-**B — Segmentar a base** (meio de funil): mensagem certa para pessoa certa = mais conversão com mesmo tráfego.
-**C — Aumentar conversão de lead** (fundo de funil): página de vendas otimizada.
-**D — Aumentar recompra** (pós-venda): sem novo tráfego, você ganha 1 cliente extra = CAC dilui.
-
-**Meta realista:** CAC < 30% do LTV.
-
-**4. LTV: como aumentar**
-
-**Fórmula:** `LTV = (Receita média por compra × Frequência de compra × Tempo de retenção)`
-
-**Exemplo:** cliente compra R$ 100/mês por 12 meses em média = LTV R$ 1.200.
-
-**Como aumentar LTV:**
-
-**A — Upsell**: oferecer produto de ticket maior para clientes satisfeitos.
-**B — Cross-sell**: oferecer produto complementar.
-**C — Recompra programática**: lembrete de reposição (cosméticos, suplementos).
-**D — Programa de fidelidade**: pontos que viram desconto.
-**E — Conteúdo de valor**: newsletter que mantém a marca na cabeça.
-
-**Meta realista:** LTV > 3× CAC.
-
-**5. As 5 alavancas de otimização**
-
-**Alavanca 1 — Copy**
-- Maior impacto isolado: copy melhor → +20-50% conversão.
-- Como otimizar: A/B test constante, 3 variações por campanha.
-
-**Alavanca 2 — Timing**
-- Mudar horário de envio pode aumentar abertura em +30%.
-- Como otimizar: testar 3 janelas (manhã, almoço, noite).
-
-**Alavanca 3 — Segmentação**
-- Mensagem certa para pessoa certa = +50% conversão vs. mensagem genérica.
-- Como otimizar: criar 3+ coortes e personalizar copy por coorte.
-
-**Alavanca 4 — Oferta**
-- Bônus, garantia, escassez, prova social — cada um adiciona +10-30% conversão.
-- Como otimizar: empilhar 3-4 elementos na página de vendas.
-
-**Alavanca 5 — Follow-up**
-- Lead não converteu na 1ª mensagem? Follow-up em 48h aumenta +20% conversão.
-- Como otimizar: configurar sequência automática (skill `automation-cron-trigger`).
-
-**6. Onde aplicar cada alavanca no funil**
+## O funil Nexus (visão master)
 
 ```
-[TOPO]     Copy + Timing + Oferta
-[MID]      Segmentação + Copy
-[FUNDO]    Oferta + Follow-up
-[PÓS]      Upsell + Recompra
+        IMPRESSÕES           (Meta Ads / Orgânico)
+             │
+             ▼
+        CLIQUES              (link de afiliado)
+             │
+             ▼
+        VISITAS              (landing)
+             │
+             ▼
+        LEADS                (captura: e-mail / WhatsApp)
+             │
+             ▼
+        QUALIFICADOS         (audience-segmenter)
+             │
+             ▼
+        CONVERSÕES           (compra confirmada)
+             │
+             ▼
+        CLIENTES             (LTV, recompra, indicação)
 ```
 
-A maioria dos afiliados foca no topo. **O maior ROI está no meio e no fundo**, onde o lead já demonstrou interesse.
+> Cada elo tem perda esperada. Seu trabalho é mover **1–2 pontos percentuais** em cada elo por ciclo.
 
-**7. A/B testing como método**
+## As 5 alavancas
 
-**Nunca otimize sem testar.** O método é:
+| # | Alavanca | Skill principal | Ganho típico |
+|---|---|---|---|
+| 1 | **Hook de copy** | `copywriter-persuasivo` | +15–30% CTR |
+| 2 | **Segmentação** | `audience-segmenter` | +20% reply rate |
+| 3 | **Timing de envio** | `auto-publisher` | +10% read rate |
+| 4 | **Oferta/CTA** | `pricing-optimizer` | +5–15% conversão |
+| 5 | **Reativação** | `lifecycle-orchestrator` | +30% LTV em inativos |
 
-1. **Hipótese**: "se mudarmos X, esperamos Y".
-2. **Variação A** (controle): versão atual.
-3. **Variação B** (teste): versão com mudança.
-4. **Randomizar**: 50% dos leads recebe A, 50% recebe B.
-5. **Aguardar 95% de significância estatística** (não menos).
-6. **Promover** o vencedor ou descartar (se diferença < 5%).
+## O ciclo de otimização contínua
 
-A skill `analytics-ab-test` automatiza a análise.
+```
+   ┌──────────┐
+   │  Medir   │
+   └────┬─────┘
+        │
+        ▼
+   ┌──────────┐
+   │  Hipótese│  (mudar 1 variável)
+   └────┬─────┘
+        │
+        ▼
+   ┌──────────┐
+   │  Testar  │  (A/B com judge + coortes)
+   └────┬─────┘
+        │
+        ▼
+   ┌──────────┐
+   │  Aprender│  (atualizar memória do agente)
+   └────┬─────┘
+        │
+        └──────► (volta para "Medir")
+```
 
-**8. Erros clássicos de otimização**
+> **Regra de ouro:** mude **1 variável por vez**. Caso contrário, você não sabe o que causou o quê.
 
-- **Erro 1**: Otimizar sem medir. Você não sabe se melhorou.
-- **Erro 2**: Mudar 3 variáveis ao mesmo tempo. Você não sabe o que causou a melhora.
-- **Erro 3**: Parar o teste cedo por "achar que já tem vencedor". Falso positivo.
-- **Erro 4**: Otimizar micro-métricas (ex: taxa de clique) sem olhar macro (ex: receita).
-- **Erro 5**: Ignorar o Judge na otimização. Copy agressiva converte no curto mas queima a base.
-- **Erro 6**: Otimizar para a média. Otimize para os top 20% e os bottom 20%, não o meio.
+## Onde olhar primeiro (diagnóstico em 5 min)
 
-**9. Quando parar de otimizar**
+Abra **Analytics → Funil Completo** e responda:
 
-Você está otimizando demais quando:
-- Mudanças geram < 1% de variação.
-- A/B test demora > 30 dias para convergir.
-- Você está otimizando coortes com < 100 contatos.
-- O Judge está reprovando mais de 30% (sinal de over-optimization).
+| Pergunta | Se resposta for "ruim" |
+|---|---|
+| CTR da copy principal < 3%? | Testar 3 hooks novos (`copywriter-persuasivo`) |
+| Read rate WhatsApp < 50%? | Trocar horário (regra: 9h, 12h, 19h) |
+| Reply rate < 5%? | Segmentar melhor (`audience-segmenter`) |
+| Conversão lead→cliente < 2%? | Revisar oferta (`pricing-optimizer`) |
+| Recompra 30d < 10%? | Ativar `lifecycle-orchestrator` |
 
-Regra prática: **otimize por 90 dias, depois mantenha por 90 dias, depois mude de estratégia**.
+## Como rodar um A/B test sério
 
-**10. Próximo curso**
+### Passo 1 — Defina a hipótese
 
-👉 [`01-funis-lifecycle.md`](01-funis-lifecycle.md) — Funis e Lifecycle · 45 min
+```
+"SE mudar o hook de 'Em 90 dias' PARA 'Em 30 dias',
+ ENTÃO o reply rate vai subir pelo menos 20%."
+```
 
-**Recursos extras:**
-- **Apostila 09**: Campanhas Automatizadas (modelos testados).
-- **Apostila 07**: Skill `analytics-cohort` (a mais útil pra otimização).
+### Passo 2 — Configure 2 coortes
+
+- **Coorte A** (50%): copy original
+- **Coorte B** (50%): copy com hook novo
+- **Randomização:** por `contact_id` (determinística, hash)
+
+### Passo 3 — Volume mínimo
+
+```
+n = (Z_α/2 + Z_β)² × 2p(1-p) / d²
+
+Para detectar d=0.05 (5pp), α=0.05, β=0.80:
+n ≈ 1.500 por coorte
+```
+
+> Se sua lista é menor, o teste **não tem poder estatístico**. Espere acumular.
+
+### Passo 4 — Decida com `roi-attributor`
+
+A skill `roi-attributor` faz **atribuição multi-touch** e responde: *"esse lead converteu por causa de qual campanha?"*. Use o output dela para tomar a decisão final.
+
+## 🎯 Exercício (1 semana)
+
+1. Escolha **1 elo do funil** com maior perda
+2. Formule **1 hipótese clara**
+3. Configure A/B test com 2 coortes
+4. Aguarde volume mínimo
+5. Documente: hipótese, resultado, aprendizado, próximo passo
+
+> **Entrega:** postar no `#academy-master` do Discord Nexus com 1 print do funil antes/depois.
+
+## ⏭️ Próximo passo
+
+👉 [**01 · Funis e lifecycle**](01-funis-lifecycle.md)
 
 ---
 
-**00 · Otimização de Conversão** --- Trilha Master
-
----
-
-## 🎯 Exercícios Práticos — Curso: Otimização de Conversão
-
-> **Tempo sugerido:** 45-90 minutos
-> **Formato:** individual, com consulta ao painel/ambiente real
-> **Entrega:** não há prova formal; use este espaço para fixar o aprendizado
-
-**Exercício 1 — Auditoria CAC/LTV**
-
-Calcule seu CAC e LTV atuais (use a planilha do curso). Qual a relação LTV/CAC? Está acima de 3?
-
-**Exercício 2 — Funil**
-
-Desenhe seu funil atual (lead → MQL → SQL → cliente). Para cada etapa, anote a taxa de conversão e onde está o gargalo.
-
-**Exercício 3 — 5 alavancas**
-
-Liste 5 alavancas (copy, oferta, página, timing, follow-up) que você pode mexer esta semana. Defina hipótese + métrica de sucesso.
-
----
-
-## ✅ Checklist de Conclusão
-
-Marque conforme for completando:
-
-- [ ] Li o curso inteiro sem pular seções.
-- [ ] Fiz os 3 exercícios práticos.
-- [ ] Respondi às 5 questões de auto-avaliação (mentalmente, sem colar).
-- [ ] Anotei 1 dúvida que surgiu (para perguntar no webinar ou fórum).
-- [ ] Identifiquei 1 ação concreta que vou tomar nas próximas 24h.
-- [ ] Compartilhei meu progresso com pelo menos 1 pessoa (mentor, par, ou comunidade).
-
----
-
-## 🧠 Auto-Avaliação (5 questões)
-
-Tente responder **sem consultar o curso**. Depois, valide:
-
-1. O que é CAC e como calcular corretamente (incluindo custo de oportunidade)?
-2. Qual a relação LTV/CAC saudável para um afiliado?
-3. Cite 3 alavancas de otimização com maior ROI no curto prazo.
-4. Qual a diferença entre "otimização de funil" e "otimização de página"?
-5. Como evitar "otimização local" que piora o global?
-
----
-
-## 🚀 Próximos Passos Recomendados
-
-1. **Aplicar imediatamente:** pegue 1 insight deste curso e aplique HOJE.
-2. **Medir em 7 dias:** meça o impacto (mesmo que qualitativo).
-3. **Compartilhar:** documente o que aprendeu (post, conversa, diário).
-4. **Avançar:** siga para o próximo curso da trilha.
-
-
-*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*
+**Versão 1.0** · Atualizado 2026-06-02 · Fonte: `backend/src/agentic/skills/roiAttributor.ts` + `abTestDesigner.ts`

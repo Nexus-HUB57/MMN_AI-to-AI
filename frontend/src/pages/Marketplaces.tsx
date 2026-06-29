@@ -256,6 +256,103 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
     ? (trpc as any).affiliateStore.placeStoreOrder.useMutation()
     : null;
 
+  async function handleRequestPackTicket(pack: { slug: string; name: string; priceCents: number }) {
+    try {
+      const email = prompt("Confirme seu email de cadastro para o ticket:");
+      if (!email || !email.includes("@")) { alert("Email inválido"); return; }
+      const r = await fetch("/api/marketplace/pack-ticket", {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packSlug: pack.slug, packName: pack.name,
+          amountCents: pack.priceCents, paymentMethod: "pix",
+          customerEmail: email,
+        }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) { alert(j?.error || "Falha ao abrir ticket"); return; }
+      alert("Ticket #" + j.ticketId + " aberto. O administrador confirmará seu pagamento e ativará o Pack. Você receberá email de confirmação.");
+    } catch (e: any) {
+      alert(e?.message || "Erro");
+    }
+  }
+
+  async function handlePayWithBalance() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    setProcessing(true);
+    try {
+      const payBal = (trpc as any).marketplaceNexus?.payWithBalance?.useMutation
+        ? (trpc as any).marketplaceNexus.payWithBalance
+        : null;
+      // 1) cria pedido
+      const createOrder = (trpc as any).marketplaceNexus?.checkout?.useMutation
+        ? (trpc as any).marketplaceNexus.checkout
+        : null;
+      if (!createOrder) throw new Error("Checkout indisponível");
+      // Fluxo simplificado: usa endpoint REST proxy se disponível
+      const r = await fetch("/api/marketplace/checkout-with-balance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          items: ebookCart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
+          amountCents: cartTotal,
+          customerEmail,
+          customerName: customerName || undefined,
+        }),
+      });
+      const data = await r.json();
+      if (!r.ok || !data?.ok) throw new Error(data?.error || "Saldo insuficiente ou erro no pagamento");
+      setOrderResult({ ok: true, orderId: data.orderId, status: "paid",
+        message: "Pagamento via saldo confirmado",
+        delivery: { channel: "email", to: customerEmail, eta: "Entrega imediata por e-mail." } });
+      setPaymentOpen(false);
+      setEbookCart([]);
+      setSuccessOpen(true);
+    } catch (e: any) {
+      alert(e?.message || "Falha no pagamento por saldo");
+    } finally { setProcessing(false); }
+  }
+
+  function handleGoToPixCheckout() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    const desc = ebookCart.length === 1
+      ? ebookCart[0].title
+      : `${ebookCart.length} e-books · Marketplace Nexus`;
+    const params = new URLSearchParams({
+      amountCents: String(cartTotal),
+      description: desc,
+      payerEmail: customerEmail,
+      source: "marketplace-nexus",
+    });
+    window.location.href = `/pix/checkout?${params.toString()}`;
+  }
+
+  async function handlePayMercadoPago() {
+    if (!customerEmail.includes("@") || ebookCart.length === 0) return;
+    setProcessing(true);
+    try {
+      const ref = (typeof window !== "undefined" && (localStorage.getItem("nx_ref") || "")) || "MARKETPLACE-NEXUS";
+      const res = placeOrder
+        ? await placeOrder.mutateAsync({
+            ownerCode: ref,
+            customerEmail,
+            customerName: customerName || undefined,
+            items: ebookCart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
+            amountCents: cartTotal,
+            paymentMethod: "mercado_pago",
+          })
+        : { ok: true, orderId: "local_" + Date.now(), status: "pending",
+            message: "Aguardando confirmação Mercado Pago",
+            delivery: { channel: "email", to: customerEmail, eta: "Entrega após confirmação." } };
+      setOrderResult(res);
+      setPaymentOpen(false);
+      setEbookCart([]);
+      setSuccessOpen(true);
+    } catch (e) { console.error(e); }
+    finally { setProcessing(false); }
+  }
+
   async function handlePay() {
     if (!customerEmail.includes("@") || ebookCart.length === 0) return;
     setProcessing(true);
@@ -373,7 +470,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       id: `ebook-${ebook.slug}`,
       type: "ebooks" as const,
       title: ebook.title,
-      subtitle: ebook.category,
+      subtitle: (ebook as any).subtitle || '', // D14-RaizFix
       category: ebook.category,
       description: ebook.description,
       badge: ebook.status === "active" ? "Liberado" : "Revenda",
@@ -460,19 +557,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 <li>Até AGENTE GENERATIVO, a ativação mensal não soma XP: ela entrega novos Packs SiSu para sincronização da Rede N.O.</li>
                 <li>A partir de AGENTE GENERATIVO, a ativação mensal passa a liberar Packs SiSu + XP por paridade de R$1 = 1XP.</li>
               </ol>
-              <Link
-                href={buildMarketplaceCheckoutUrl({
-                  source: "monthly-activation",
-                  type: "subscription",
-                  slug: "monthly-activation",
-                  name: "Ativação Mensal · Programa de Afiliados",
-                  amountCents: 1000,
-                  description: "Ativação mensal do Programa de Afiliados, com valor definido pela faixa de carreira vigente.",
-                })}
-                className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-200 hover:bg-emerald-300/25"
-              >
-                Gerar Pix de ativação
-              </Link>
+              <MonthlyActivationButton />
               <p className="mt-3 text-[11px] text-slate-400">Valor exibido no checkout deve seguir a faixa do nível vigente do afiliado.</p>
             </div>
 
@@ -1187,7 +1272,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
               <Button onClick={() => { setCartOpen(false); setPaymentOpen(true); }}
                 disabled={ebookCart.length === 0}
                 className="gradient-btn h-11 w-full text-sm font-semibold">
-                Pagamento · Pix automático
+                Escolher forma de pagamento
               </Button>
             </div>
           </div>
@@ -1200,8 +1285,8 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
           <div className="absolute inset-0 bg-black/70" onClick={() => setPaymentOpen(false)} />
           <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-2xl">
             <div className="border-b border-white/10 px-6 py-4">
-              <h3 className="font-bold text-white">Finalizar com Pix automático</h3>
-              <p className="mt-1 text-xs text-slate-400">Você receberá os e-books no seu e-mail logo após a confirmação.</p>
+              <h3 className="font-bold text-white">Finalizar pagamento</h3>
+              <p className="mt-1 text-xs text-slate-400">Você receberá os e-books no seu e-mail logo após a confirmação do pagamento.</p>
             </div>
             <form onSubmit={(e) => { e.preventDefault(); handlePay(); }} className="space-y-3 px-6 py-5">
               <div className="space-y-1">
@@ -1220,16 +1305,24 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                   <span>{ebookCart.length} item(s)</span>
                   <span className="font-bold text-white">{formatCurrency(cartTotal)}</span>
                 </div>
-                <p className="mt-2 text-[11px] text-slate-500">Pix automático · Mercado Pago · entrega digital por e-mail.</p>
+                <p className="mt-2 text-[11px] text-slate-500">Saldo do painel · Checkout Pix · Mercado Pago · entrega por e-mail.</p>
               </div>
-              <div className="grid grid-cols-2 gap-2 pt-1">
+              <div className="grid grid-cols-1 gap-2 pt-1">
+                <Button type="button" disabled={processing} onClick={() => handlePayWithBalance()}
+                  className="h-11 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold">
+                  {processing ? "Processando..." : "Pagar com Saldo do painel"}
+                </Button>
+                <Button type="button" disabled={processing} onClick={() => handleGoToPixCheckout()}
+                  className="h-11 w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold">
+                  Checkout Pix · preencher e pagar
+                </Button>
+                <Button type="button" disabled={processing} onClick={() => handlePayMercadoPago()}
+                  className="h-11 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold">
+                  Abrir checkout Mercado Pago
+                </Button>
                 <Button type="button" variant="outline" onClick={() => { setPaymentOpen(false); setCartOpen(true); }}
                   className="border-white/15 bg-white/5 text-white hover:bg-white/10">
                   Continuar Comprando
-                </Button>
-                <Button type="submit" disabled={processing}
-                  className="gradient-btn font-semibold">
-                  {processing ? "Processando..." : "Pagar agora"}
                 </Button>
               </div>
             </form>
@@ -1806,3 +1899,66 @@ export default function Marketplaces() {
     </div>
   );
 }
+
+function MonthlyActivationButton() {
+  // D14-MM-Modal
+  const status = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
+    refetchInterval: 30_000, retry: false,
+  });
+  const paid = !!status?.data?.monthlyActivationPaid;
+  const cycle = status?.data?.cycleLabel || "ciclo atual";
+  const [open, setOpen] = useState(false);
+
+  if (paid) {
+    return (
+      <div className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-400/60 bg-emerald-500/20 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-100">
+        <span className="inline-block h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
+        Ativação Paga · {cycle}
+      </div>
+    );
+  }
+
+  const checkoutHref = buildMarketplaceCheckoutUrl({
+    source: "monthly-activation",
+    type: "subscription",
+    slug: "monthly-activation",
+    name: "Ativação Mensal · Programa de Afiliados",
+    amountCents: 1000,
+    description: "Ativação mensal do Programa de Afiliados, com valor definido pela faixa de carreira vigente.",
+  });
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/15 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-emerald-200 hover:bg-emerald-300/25"
+      >
+        Pagar Ativação Mensal
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/95 p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white">Como deseja pagar?</h3>
+            <p className="mt-1 text-sm text-slate-400">Escolha a forma de pagamento da Ativação Mensal.</p>
+            <div className="mt-5 grid gap-2">
+              <a href={checkoutHref} className="rounded-xl bg-cyan-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-cyan-500">
+                PIX instantâneo (QR Code · Mercado Pago)
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=mp-card"} className="rounded-xl bg-blue-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-blue-500">
+                Mercado Pago · cartão ou boleto
+              </a>
+              <a href={checkoutHref + (checkoutHref.includes("?") ? "&" : "?") + "method=balance"} className="rounded-xl bg-purple-600 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-purple-500">
+                Pagar com saldo disponível
+              </a>
+            </div>
+            <button onClick={() => setOpen(false)} className="mt-4 w-full rounded-lg border border-white/10 px-3 py-2 text-xs uppercase tracking-widest text-slate-300 hover:bg-white/5">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+

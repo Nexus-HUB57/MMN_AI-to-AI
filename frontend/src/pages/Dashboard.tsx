@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { trpc } from "../lib/trpc";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -41,6 +42,95 @@ import AcademiaResume from "../components/AcademiaResume";
 import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
+
+function RealCostCenter() {
+  const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
+    { months: 12 },
+    { refetchInterval: 60_000, retry: false }
+  );
+  if (cost?.isLoading) {
+    return <div className="text-sm text-slate-400 animate-pulse">Carregando central de custos...</div>;
+  }
+  const totalCents = Number(cost?.data?.totalYearCents || 0);
+  const byCat: Record<string, number> = (cost?.data?.byCategory as any) || {};
+  const entries: any[] = (cost?.data?.entries as any[]) || [];
+  const fmt = (cents: number) =>
+    "R$ " + (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const CATS = [
+    ["Aquisição de Packs", "Packs A² · AG · AO etc."],
+    ["Ativação Mensal", "Assinatura recorrente do programa"],
+    ["Compras Marketplace", "E-books, skills e bibliotecas"],
+    ["Custos SiSu", "Sub-Contas SiSu da Rede N.O."],
+  ] as const;
+
+  return (
+    <div className="mt-5 rounded-lg border border-rose-400/30 bg-rose-400/5 p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-300">
+            // CENTRAL DE CUSTOS · ANO {new Date().getFullYear()}
+          </p>
+          <h3 className="mt-1 text-base font-semibold text-white">
+            Extrato mensal de gastos do programa
+          </h3>
+          <p className="text-xs text-slate-400">
+            Aquisição de Packs, Ativação Mensal, Compras Marketplace e custos SiSu da Rede N.O.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
+          <p className="font-sans text-2xl font-bold text-rose-300">{fmt(totalCents)}</p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+        {CATS.map(([label, hint]) => (
+          <div key={label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
+            <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{label}</p>
+            <p className="mt-2 font-sans text-lg font-semibold text-white">
+              {fmt(byCat[label] || 0)}
+            </p>
+            <p className="mt-1 text-[10px] text-slate-500">{hint}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
+        <table className="w-full text-left text-[12px]">
+          <thead className="bg-obsidian-900/60 text-slate-400">
+            <tr>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Categoria</th>
+              <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Descrição</th>
+              <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
+            {entries.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-3 py-6 text-center text-slate-500 text-[11px]">
+                  Nenhuma movimentação registrada nos últimos 12 meses.
+                </td>
+              </tr>
+            )}
+            {entries.map((row, i) => (
+              <tr key={i} className="hover:bg-obsidian-800/40">
+                <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.period}</td>
+                <td className="px-3 py-2">{row.category}</td>
+                <td className="px-3 py-2 text-slate-400">{row.description}</td>
+                <td className="px-3 py-2 text-right font-mono text-rose-300">{fmt(row.amountCents)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
+        Extrato consolidado · valores reais das compras e ativações registradas
+      </p>
+    </div>
+  );
+}
+
 // SPRINTS_8_9_10_INJECTED
 
 const QUICK_ACTIONS = [
@@ -269,15 +359,8 @@ export default function Dashboard() {
     <DashboardLayout>
       <NotificationCenter />
       <AcademiaPushOptIn />
-      <AcademiaPersonalTrail />
       <AcademiaResume />
-      <AcademiaWhatsNew />
-      <AcademiaPopular />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <SalesFunnelDashboard />
-        <AchievementsBadges />
-      </div>
-            <AgentLivePanel variant="compact" />
+      <AgentLivePanel variant="compact" />
       <div className="relative space-y-8 font-sans antialiased">
         {/* Background atmosférico fixo do backoffice usuário */}
         <div
@@ -317,6 +400,9 @@ export default function Dashboard() {
               <p className="mt-2 text-lg font-semibold text-white">{getLevelLabel(profile.currentLevel)}</p>
               <p className="mt-1 text-sm text-slate-400">{getLevelSubtitle(profile.currentLevel)}</p>
             </div>
+            {/* D15-XP-card */}
+            <DashboardXpBadge />
+
           </div>
           <div className="flex flex-col items-stretch gap-2 sm:flex-row">
             <button
@@ -615,94 +701,7 @@ export default function Dashboard() {
           </div>
 
           {showCostCenter && (
-            <div className="mt-5 rounded-lg border border-rose-400/30 bg-rose-400/5 p-5">
-              <div className="flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-rose-300">
-                    // CENTRAL DE CUSTOS · ANO {new Date().getFullYear()}
-                  </p>
-                  <h3 className="mt-1 text-base font-semibold text-white">Extrato mensal de gastos do programa</h3>
-                  <p className="text-xs text-slate-400">
-                    Aquisição de Packs, Ativação Mensal, Compras Marketplace e custos SiSu da Rede N.O.
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">Total ano</p>
-                  <p className="font-sans text-2xl font-bold text-rose-300">
-                    R$ {(4860).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-                {[
-                  { label: "Aquisição de Packs", value: 1450.0, hint: "Packs A² · AG · AO etc." },
-                  { label: "Ativação Mensal", value: 360.0, hint: "Assinatura recorrente do programa" },
-                  { label: "Compras Marketplace", value: 980.5, hint: "E-books, skills e bibliotecas" },
-                  { label: "Custos SiSu", value: 2069.5, hint: "Sub-Contas SiSu da Rede N.O." },
-                ].map((item) => (
-                  <div key={item.label} className="rounded border border-obsidian-700 bg-obsidian-900/40 px-3 py-3">
-                    <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500">{item.label}</p>
-                    <p className="mt-2 font-sans text-lg font-semibold text-white">
-                      R$ {item.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </p>
-                    <p className="mt-1 text-[10px] text-slate-500">{item.hint}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 rounded-lg border border-white/10 bg-black/30 p-4 text-[12px] leading-6 text-slate-300">
-                <p className="font-semibold text-white">// Sobre os Custos SiSu</p>
-                <p className="mt-2">
-                  SiSu (Sistema Sustentável de Sub-Contas) representa os custos associados aos Packs adicionais (A² SiSu, AG SiSu, AO SiSu)
-                  utilizados para sincronização e fortalecimento da Rede N.O. Esses custos não são tarifas adicionais: são aquisições efetivas
-                  de novos Packs entregues à estrutura do afiliado para acelerar a expansão e a elegibilidade às próximas faixas de carreira.
-                </p>
-                <ul className="mt-3 list-disc pl-5 text-slate-400">
-                  <li>Pack A² SiSu — sub-contas alinhadas à base operacional do afiliado.</li>
-                  <li>Pack AG SiSu — sub-contas direcionadas à fase Generativa da Rede.</li>
-                  <li>Pack AO SiSu — sub-contas estratégicas da fase Orquestrador / Liderança.</li>
-                </ul>
-              </div>
-
-              <div className="mt-5 overflow-hidden rounded border border-obsidian-700">
-                <table className="w-full text-left text-[12px]">
-                  <thead className="bg-obsidian-900/60 text-slate-400">
-                    <tr>
-                      <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Período</th>
-                      <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Categoria</th>
-                      <th className="px-3 py-2 font-mono text-[10px] uppercase tracking-widest">Descrição</th>
-                      <th className="px-3 py-2 text-right font-mono text-[10px] uppercase tracking-widest">Valor (R$)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-obsidian-700/60 text-slate-300">
-                    {[
-                      { p: "Jun/2026", c: "Ativação Mensal", d: "Assinatura do ciclo · faixa Afiliado", v: 10.0 },
-                      { p: "Jun/2026", c: "Custos SiSu", d: "Pack A² SiSu · sincronização Rede N.O.", v: 10.0 },
-                      { p: "Mai/2026", c: "Aquisição de Packs", d: "Pack AG · upgrade Generativo", v: 250.0 },
-                      { p: "Mai/2026", c: "Compras Marketplace", d: "E-books · biblioteca de revenda", v: 89.9 },
-                      { p: "Abr/2026", c: "Custos SiSu", d: "Pack AG SiSu · expansão Generativa", v: 250.0 },
-                      { p: "Abr/2026", c: "Ativação Mensal", d: "Assinatura do ciclo · faixa Generativo", v: 30.0 },
-                      { p: "Mar/2026", c: "Aquisição de Packs", d: "Pack A²II · upgrade base", v: 30.0 },
-                      { p: "Fev/2026", c: "Compras Marketplace", d: "Skills adicionais · catálogo Nexus", v: 49.9 },
-                    ].map((row, i) => (
-                      <tr key={i} className="hover:bg-obsidian-800/40">
-                        <td className="px-3 py-2 font-mono text-[11px] text-slate-400">{row.p}</td>
-                        <td className="px-3 py-2">{row.c}</td>
-                        <td className="px-3 py-2">{row.d}</td>
-                        <td className="px-3 py-2 text-right font-mono text-rose-300">
-                          R$ {row.v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <p className="mt-3 text-[10px] uppercase tracking-widest text-slate-500">
-                Extrato mensal de custos · valores debitados/aplicados na operação do afiliado
-              </p>
-            </div>
+            <RealCostCenter />
           )}
         </section>
 
@@ -1046,26 +1045,67 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-      {/* sprints-7-10-block */}
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))', gap:'18px', margin:'24px 0'}}>
-        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
-          <h3 style={{margin:'0 0 12px', color:'#22d3ee', fontSize:'16px'}}>📊 Comissões</h3>
+      {/* sprints-7-10-block · D12 UX_PREMIUM */}
+      <div className="grid gap-4 my-6" style={{gridTemplateColumns:'repeat(auto-fit,minmax(320px,1fr))'}}>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-cyan-300 text-sm font-semibold tracking-wide">📊 Comissões</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">tempo real</span>
+          </div>
           <CommissionChart />
         </div>
-        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
-          <h3 style={{margin:'0 0 12px', color:'#a855f7', fontSize:'16px'}}>🎯 Funil de Vendas</h3>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-purple-300 text-sm font-semibold tracking-wide">🎯 Funil de Vendas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">pipeline</span>
+          </div>
           <SalesFunnelDashboard />
         </div>
-        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
-          <h3 style={{margin:'0 0 12px', color:'#f59e0b', fontSize:'16px'}}>🏆 Conquistas</h3>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-amber-300 text-sm font-semibold tracking-wide">🏆 Conquistas</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">progresso</span>
+          </div>
           <AchievementsBadges />
         </div>
-        <div style={{background:'#0d0d22', border:'1px solid #20203a', borderRadius:'14px', padding:'18px'}}>
-          <h3 style={{margin:'0 0 12px', color:'#10b981', fontSize:'16px'}}>🔔 Notificações</h3>
+        <div className="ux-glass ux-lift rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">ao vivo</span>
+          </div>
           <NotificationCenter />
         </div>
       </div>
 
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 my-6">
+        <AcademiaPersonalTrail />
+        <AcademiaWhatsNew />
+      </div>
+
+      <div className="my-6">
+        <AcademiaPopular />
+      </div>
+
     </DashboardLayout>
+  );
+}
+
+// D15-XP-card component
+function DashboardXpBadge() {
+  const status: any = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, { retry: false });
+  const totalXp = Number(status?.data?.totalXp || 0);
+  const monthlyXp = Number(status?.data?.monthlyXp || 0);
+  const currentLevel = Number(status?.data?.currentLevel || 1);
+  // Paridade D15: R$1 = 100 XP
+  const totalXpScaled = totalXp; // já vem em unidade XP correta do backend (multiplicado * 100)
+  return (
+    <div className="mt-3 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 px-4 py-3">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500">Nível XP</p>
+        <span className="rounded-full border border-quantum-cyan/40 bg-quantum-cyan/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-quantum-cyan">L{currentLevel}</span>
+      </div>
+      <p className="mt-2 text-2xl font-bold text-quantum-cyan">{totalXpScaled.toLocaleString("pt-BR")} XP</p>
+      <p className="mt-1 text-[11px] text-slate-400">+{monthlyXp.toLocaleString("pt-BR")} XP no ciclo · paridade R$1 = 100 XP</p>
+    </div>
   );
 }

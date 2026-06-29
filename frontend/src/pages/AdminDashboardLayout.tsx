@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Calendar,
+  ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -32,6 +33,7 @@ const MENU_ITEMS = [
   { label: "Materiais", path: "/admin/materials", icon: FileText },
   { label: "Academia EAD", path: "/admin/academia", icon: GraduationCap },
   { label: "Meetings", path: "/admin/meetings", icon: Calendar },
+  { label: "Governance", path: "/admin/governance", icon: ShieldCheck },
   { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
 ];
 

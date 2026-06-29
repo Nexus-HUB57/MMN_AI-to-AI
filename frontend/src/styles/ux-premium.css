@@ -1,0 +1,213 @@
+/* D12 UX_PREMIUM — animações, glass-morphism, skeleton, focus ring */
+
+/* ===== Animações base ===== */
+@keyframes ux-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ux-shimmer {
+  0%   { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+@keyframes ux-pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+@keyframes ux-spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes ux-bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@keyframes ux-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+  50%      { box-shadow: 0 0 18px 2px rgba(52,211,153,0.35); }
+}
+
+.ux-fade-in { animation: ux-fade-in 0.32s ease-out both; }
+.ux-fade-in-delay-1 { animation: ux-fade-in 0.4s 0.08s ease-out both; }
+.ux-fade-in-delay-2 { animation: ux-fade-in 0.4s 0.16s ease-out both; }
+.ux-fade-in-delay-3 { animation: ux-fade-in 0.4s 0.24s ease-out both; }
+.ux-pulse-soft     { animation: ux-pulse-soft 2.6s ease-in-out infinite; }
+.ux-bounce-soft    { animation: ux-bounce-soft 2.2s ease-in-out infinite; }
+.ux-glow-emerald   { animation: ux-glow 2.4s ease-in-out infinite; }
+
+/* ===== Glass morphism ===== */
+.ux-glass {
+  background: linear-gradient(180deg, rgba(13,13,34,0.62), rgba(13,13,34,0.45));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.ux-glass-strong {
+  background: linear-gradient(180deg, rgba(13,13,34,0.85), rgba(13,13,34,0.7));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+/* ===== Hover lift + scale ===== */
+.ux-lift {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.ux-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(34,211,238,0.18);
+  border-color: rgba(34,211,238,0.35);
+}
+.ux-tap { transition: transform 0.12s ease; }
+.ux-tap:active { transform: scale(0.97); }
+
+/* ===== Gradient text refinado ===== */
+.ux-gradient-text {
+  background: linear-gradient(120deg, #22d3ee 0%, #a78bfa 45%, #f472b6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  animation: ux-gradient-shift 6s ease-in-out infinite;
+}
+@keyframes ux-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ===== Skeleton loader ===== */
+.ux-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.10) 20%,
+    rgba(255,255,255,0.04) 40%
+  );
+  background-size: 1000px 100%;
+  animation: ux-shimmer 1.8s linear infinite;
+  border-radius: 8px;
+}
+
+/* ===== Focus ring premium ===== */
+.ux-focus:focus-visible,
+button.ux-focus:focus-visible,
+a.ux-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.35), 0 0 0 1px rgba(34,211,238,0.85);
+  border-radius: 8px;
+}
+
+/* ===== Scrollbar refinada ===== */
+.ux-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.ux-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+.ux-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(34,211,238,0.4), rgba(167,139,250,0.4));
+  border-radius: 8px;
+}
+.ux-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(34,211,238,0.7), rgba(167,139,250,0.7));
+}
+
+/* ===== KPI sparkline svg ===== */
+.ux-spark path { transition: stroke-width 0.2s ease; }
+.ux-spark:hover path { stroke-width: 2.5; }
+
+/* ===== Command palette ===== */
+.ux-cmd-backdrop {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(2,6,23,0.78);
+  backdrop-filter: blur(6px);
+  animation: ux-fade-in 0.18s ease-out both;
+}
+.ux-cmd-panel {
+  position: fixed; left: 50%; top: 18vh;
+  transform: translateX(-50%);
+  width: min(640px, 92vw); z-index: 101;
+  background: linear-gradient(180deg, #0d0d22 0%, #0a0a1c 100%);
+  border: 1px solid rgba(34,211,238,0.25);
+  border-radius: 16px;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+  animation: ux-fade-in 0.22s 0.04s ease-out both;
+  overflow: hidden;
+}
+
+/* ===== Tooltip premium ===== */
+.ux-tooltip {
+  position: relative;
+}
+.ux-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 5px 10px;
+  background: rgba(8,12,28,0.96);
+  color: #cbd5e1;
+  font-size: 11px;
+  border: 1px solid rgba(34,211,238,0.25);
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 50;
+}
+.ux-tooltip:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== Página: micro animação ao montar ===== */
+.ux-page-mount > * { animation: ux-fade-in 0.32s ease-out both; }
+.ux-page-mount > *:nth-child(2) { animation-delay: 0.06s; }
+.ux-page-mount > *:nth-child(3) { animation-delay: 0.12s; }
+.ux-page-mount > *:nth-child(4) { animation-delay: 0.18s; }
+.ux-page-mount > *:nth-child(5) { animation-delay: 0.24s; }
+.ux-page-mount > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ===== Acessibilidade — respeitar prefers-reduced-motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+
+/* ===== D13 ===== Light theme & Focus mode ===== */
+.ux-light {
+  color-scheme: light;
+}
+.ux-light body,
+.ux-light .bg-background {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+.ux-light .ux-glass {
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(248,250,252,0.75)) !important;
+  border-color: rgba(15,23,42,0.08) !important;
+  color: #0f172a;
+}
+.ux-light .ux-glass-strong {
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.92)) !important;
+  border-color: rgba(15,23,42,0.12) !important;
+  color: #0f172a;
+}
+.ux-light .text-slate-300 { color: #475569 !important; }
+.ux-light .text-slate-400 { color: #64748b !important; }
+.ux-light .text-slate-500 { color: #94a3b8 !important; }
+.ux-light .text-white { color: #0f172a !important; }
+.ux-light .text-slate-200 { color: #1e293b !important; }
+.ux-light .text-slate-100 { color: #0f172a !important; }
+
+.ux-focus-mode .lg\:flex.lg\:flex-shrink-0,
+.ux-focus-mode aside,
+.ux-focus-mode nav[class*="sidebar"],
+.ux-focus-mode [data-sidebar] {
+  display: none !important;
+}
+.ux-focus-mode main {
+  margin-left: 0 !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busca — Academ'IA</title>
+  <link rel="stylesheet" href="acad-style.css" />
+  <style>
+    .search-hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elev));
+      border-radius: 12px;
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+    }
+    
+    .search-hero h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    
+    .big-search {
+      max-width: 700px;
+      margin: 24px auto 0;
+      position: relative;
+    }
+    
+    .big-search input {
+      width: 100%;
+      padding: 18px 24px 18px 56px;
+      font-size: 1.2rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--fg);
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    
+    .big-search input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+    }
+    
+    .big-search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      color: var(--fg-muted);
+    }
+    
+    .search-tip {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+    }
+    
+    .results {
+      display: grid;
+      gap: 12px;
+    }
+    
+    .result {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .result:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(6, 182, 212, 0.15);
+    }
+    
+    .result-tipo {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    
+    .result-tipo.curso { background: var(--accent); color: #000; }
+    .result-tipo.apostila { background: var(--accent-gold); color: #000; }
+    .result-tipo.webinar { background: var(--accent-red); color: #fff; }
+    .result-tipo.roteiro { background: var(--accent-purple); color: #fff; }
+    
+    .result-titulo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    
+    .result-trilha {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      margin-bottom: 8px;
+    }
+    
+    .result-snippet {
+      font-size: 0.9rem;
+      color: var(--fg);
+      line-height: 1.5;
+    }
+    
+    .result-snippet mark {
+      background: rgba(6, 182, 212, 0.3);
+      color: var(--accent);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--fg-muted);
+    }
+    
+    .no-results-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+    
+    .suggestions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    
+    .suggestion {
+      padding: 6px 12px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .suggestion:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .stats {
+      text-align: center;
+      color: var(--fg-muted);
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="search-hero">
+    <h1>🔍 Busca Global</h1>
+    <p>Pesquise em <strong>15 cursos</strong>, <strong>10 apostilas</strong>, <strong>3 webinars</strong> e <strong>roteiros</strong>.</p>
+    
+    <div class="big-search">
+      <span class="big-search-icon">🔎</span>
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Digite: IOAID, SHO, judge, CAC, mTLS..."
+        autofocus
+      />
+    </div>
+    
+    <p class="search-tip">
+      💡 Dica: pressione <kbd>Ctrl</kbd>+<kbd>K</kbd> em qualquer página para abrir a busca.
+    </p>
+  </div>
+  
+  <p class="stats" id="stats"></p>
+  
+  <div class="results" id="results">
+    <div class="no-results">
+      <div class="no-results-icon">👆</div>
+      <p>Digite acima para começar a buscar.</p>
+      <div class="suggestions">
+        <span class="suggestion" data-q="IOAID">IOAID</span>
+        <span class="suggestion" data-q="SHO">SHO</span>
+        <span class="suggestion" data-q="judge">judge</span>
+        <span class="suggestion" data-q="agente">agente</span>
+        <span class="suggestion" data-q="whatsapp">whatsapp</span>
+        <span class="suggestion" data-q="CAC">CAC</span>
+        <span class="suggestion" data-q="mTLS">mTLS</span>
+        <span class="suggestion" data-q="skill">skill</span>
+        <span class="suggestion" data-q="churn">churn</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Índice embutido (gerado em build, mas aqui escrito manualmente para demo) -->
+  <script id="searchIndex" type="application/json">
+  [
+    {"tipo": "curso", "trilha": "Fundamental", "titulo": "Boas-vindas ao Nexus", "href": "cursos/fundamental/00-boas-vindas.html", "keywords": ["boas vindas", "nexus", "introdução", "ecossistema"]},
+    {"tipo": "curso", "trilha": "Fundamental", "titulo": "Entendendo o IOAID", "href": "cursos/fundamental/01-entendendo-ioaid.html", "keywords": ["ioaid", "infraestrutura", "5 módulos", "autenticação", "event bus", "agent runtime", "judge", "monitoring"]},
+    {"tipo": "curso", "trilha": "Fundamental", "titulo": "Sistema SHO", "href": "cursos/fundamental/02-sistema-sho.html", "keywords": ["sho", "self healing", "orchestrator", "sistema imune", "mttr", "uptime"]},
+    {"tipo": "curso", "trilha": "Fundamental", "titulo": "Painel do Afiliado", "href": "cursos/fundamental/03-painel-afiliado.html", "keywords": ["painel", "afiliado", "7 telas", "dashboard", "métricas"]},
+    {"tipo": "curso", "trilha": "Agente", "titulo": "Seu Primeiro Agente", "href": "cursos/agente/00-primeiro-agente.html", "keywords": ["primeiro agente", "setup", "docker", "system prompt", "tool", "memória"]},
+    {"tipo": "curso", "trilha": "Agente", "titulo": "Skills Essenciais", "href": "cursos/agente/01-skills-essenciais.md", "keywords": ["skill", "copywriter", "audience segmenter", "18 skills"]},
+    {"tipo": "curso", "trilha": "Agente", "titulo": "Disparando no WhatsApp", "href": "cursos/agente/02-disparo-whatsapp.html", "keywords": ["whatsapp", "disparo", "broadcast", "lista", "segmentação", "judge"]},
+    {"tipo": "curso", "trilha": "Agente", "titulo": "Lendo o Judge Revisor", "href": "cursos/agente/03-judge-revisor.html", "keywords": ["judge", "revisor", "compliance", "revisão", "bloqueio"]},
+    {"tipo": "curso", "trilha": "Master", "titulo": "Otimização de Conversão", "href": "cursos/master/00-otimizacao-conversao.html", "keywords": ["conversão", "cac", "ltv", "otimização", "5 alavancas"]},
+    {"tipo": "curso", "trilha": "Master", "titulo": "Funis e Lifecycle", "href": "cursos/master/01-funis-lifecycle.html", "keywords": ["funil", "lifecycle", "jornada", "lead", "ativação", "retenção", "advocacy"]},
+    {"tipo": "curso", "trilha": "Master", "titulo": "A/B Testing com Judge", "href": "cursos/master/02-ab-test-judge.html", "keywords": ["ab test", "teste", "hipótese", "estatística", "p-value", "significância"]},
+    {"tipo": "curso", "trilha": "Master", "titulo": "Coortes e Churn", "href": "cursos/master/03-coortes-churn.html", "keywords": ["coorte", "churn", "matriz", "retenção", "lifetime"]},
+    {"tipo": "curso", "trilha": "Elite", "titulo": "Blueprints Elite", "href": "cursos/elite/00-blueprints-elite.html", "keywords": ["blueprint", "elite", "top 10", "5 pilares"]},
+    {"tipo": "curso", "trilha": "Elite", "titulo": "Multi-tenant e White-label", "href": "cursos/elite/01-multi-tenant-whitelabel.html", "keywords": ["multi-tenant", "white label", "isolamento", "saas"]},
+    {"tipo": "curso", "trilha": "Elite", "titulo": "Federação de Agentes", "href": "cursos/elite/02-federacao-agentes.html", "keywords": ["federação", "mtls", "agentes distribuídos", "confiança"]},
+    {"tipo": "apostila", "trilha": "Infra", "titulo": "Apresentação da Infraestrutura", "href": "apostilas/01-apresentacao-infraestrutura.html", "keywords": ["infraestrutura", "ioaid", "setup", "postgres", "redis", "docker"]},
+    {"tipo": "apostila", "trilha": "Cases", "titulo": "Cases Reais de Orquestração", "href": "apostilas/02-cases-orquestracao-autonoma.html", "keywords": ["case", "orquestração", "autônoma", "loja", "academia", "ecommerce"]},
+    {"tipo": "apostila", "trilha": "Infra", "titulo": "Infra Operacional de IA", "href": "apostilas/03-infra-operacional-ia.html", "keywords": ["infra", "operacional", "prometheus", "grafana", "monitoramento"]},
+    {"tipo": "apostila", "trilha": "Avançado", "titulo": "Orquestração Híbrida de Agentes", "href": "apostilas/04-orquestracao-hibrida-agentes.html", "keywords": ["orquestração híbrida", "agentes", "protocolo", "estado", "failover"]},
+    {"tipo": "apostila", "trilha": "Painel", "titulo": "As 7 Telas Essenciais", "href": "apostilas/05-sete-telas-essenciais.html", "keywords": ["7 telas", "painel", "dashboard", "widgets"]},
+    {"tipo": "apostila", "trilha": "Prática", "titulo": "Setup do Agente Pessoal", "href": "apostilas/06-setup-agente-pessoal.html", "keywords": ["setup", "agente pessoal", "tutorial", "troubleshooting"]},
+    {"tipo": "apostila", "trilha": "Catálogo", "titulo": "As 18 Skills Operacionais", "href": "apostilas/07-18-skills-operacionais.html", "keywords": ["18 skills", "catálogo", "skills operacionais"]},
+    {"tipo": "apostila", "trilha": "Operação", "titulo": "Rotina de Disparo com Agente", "href": "apostilas/08-rotina-disparo-agente.html", "keywords": ["rotina", "disparo", "agente", "whatsapp", "telegram", "judge"]},
+    {"tipo": "apostila", "trilha": "Marketing", "titulo": "Campanhas Automatizadas", "href": "apostilas/09-campanhas-automatizadas.html", "keywords": ["campanha", "automatizada", "marketing", "soft launch", "escala"]},
+    {"tipo": "apostila", "trilha": "Estratégia", "titulo": "Jornada Completa do Afiliado", "href": "apostilas/10-jornada-completa-afiliado.html", "keywords": ["jornada", "afiliado", "90 dias", "metas smart"]},
+    {"tipo": "webinar", "trilha": "Ao Vivo", "titulo": "WB-2026-01 · Lançamento IOAID", "href": "webinars/WB-2026-01-lancamento-ioaid.html", "keywords": ["ioaid", "lançamento", "ao vivo", "demo"]},
+    {"tipo": "webinar", "trilha": "Gravado", "titulo": "WB-2026-02 · SHO em Produção", "href": "webinars/WB-2026-02-sho-em-producao.html", "keywords": ["sho", "produção", "incidentes", "métricas"]},
+    {"tipo": "webinar", "trilha": "Gravado", "titulo": "WB-2026-03 · Academia Open House", "href": "webinars/WB-2026-03-academia-open-house.html", "keywords": ["academia", "open house", "tour", "mentores"]}
+  ]
+  </script>
+  
+  <script>
+    const index = JSON.parse(document.getElementById('searchIndex').textContent);
+    const input = document.getElementById('searchInput');
+    const resultsEl = document.getElementById('results');
+    const statsEl = document.getElementById('stats');
+    
+    // Suporte a ?q= na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQ = urlParams.get('q');
+    if (initialQ) {
+      input.value = initialQ;
+    }
+    
+    function search(query) {
+      if (!query || query.length < 2) {
+        resultsEl.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">👆</div>
+            <p>Digite acima para começar a buscar.</p>
+            <div class="suggestions">
+              <span class="suggestion" data-q="IOAID">IOAID</span>
+              <span class="suggestion" data-q="SHO">SHO</span>
+              <span class="suggestion" data-q="judge">judge</span>
+              <span class="suggestion" data-q="agente">agente</span>
+              <span class="suggestion" data-q="whatsapp">whatsapp</span>
+              <span class="suggestion" data-q="CAC">CAC</span>
+              <span class="suggestion" data-q="mTLS">mTLS</span>
+              <span class="suggestion" data-q="skill">skill</span>
+            </div>
+          </div>
+        `;
+        statsEl.textContent = '';
+        attachSuggestionListeners();
+        return;
+      }
+      
+      const q = query.toLowerCase();
+      const matches = index.filter(item => {
+        return item.titulo.toLowerCase().includes(q) ||
+               item.keywords.some(k => k.toLowerCase().includes(q)) ||
+               item.trilha.toLowerCase().includes(q);
+      });
+      
+      statsEl.innerHTML = matches.length > 0 
+        ? `Encontrados <strong>${matches.length}</strong> resultados para "<strong>${query}</strong>"`
+        : '';
+      
+      if (matches.length === 0) {
+        resultsEl.innerHTML = `
+          <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <p>Nenhum resultado para "<strong>${query}</strong>".</p>
+            <p style="margin-top: 8px;">Tente termos mais genéricos como "agente", "skill", "judge".</p>
+          </div>
+        `;
+        return;
+      }
+      
+      resultsEl.innerHTML = matches.map(item => {
+        const tituloHtml = highlight(item.titulo, q);
+        return `
+          <a href="${item.href}" class="result">
+            <span class="result-tipo ${item.tipo}">${item.tipo}</span>
+            <div class="result-trilha">📍 ${item.trilha}</div>
+            <div class="result-titulo">${tituloHtml}</div>
+            <div class="result-snippet">Palavras-chave: ${item.keywords.slice(0, 5).map(k => 
+              k.toLowerCase().includes(q) ? `<mark>${k}</mark>` : k
+            ).join(' · ')}</div>
+          </a>
+        `;
+      }).join('');
+    }
+    
+    function highlight(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    function attachSuggestionListeners() {
+      document.querySelectorAll('.suggestion').forEach(el => {
+        el.addEventListener('click', () => {
+          input.value = el.dataset.q;
+          search(el.dataset.q);
+        });
+      });
+    }
+    
+    let timeout;
+    input.addEventListener('input', (e) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => search(e.target.value), 200);
+    });
+    
+    attachSuggestionListeners();
+    
+    // Buscar inicial se tiver query
+    if (initialQ) {
+      search(initialQ);
+    }
+  </script>
+  
+  <script src="enhance.js"></script>
+</body>
+</html>

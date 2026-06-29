@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <link rel="stylesheet" href="../../acad-style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01 · Entendendo o IOAID</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">01 · Entendendo o IOAID</h1>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp"
+alt="Capa — Entendendo o IOAID" />
+<figcaption aria-hidden="true">Capa — Entendendo o IOAID</figcaption>
+</figure>
+<p><strong>01 · Entendendo o IOAID</strong></p>
+<p><em>Trilha Fundamental · 20 minutos · Pré-requisito:
+00-Boas-vindas</em></p>
+<p><strong>Por Equipe Nexus · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este curso</strong></p>
+<p>Agora que você conhece o ecossistema, é hora de descer um nível e
+entender o coração técnico de tudo: o <strong>IOAID</strong>
+(Infraestrutura Operacional de Inteligência Distribuída). Em 20 minutos,
+você vai entender o que é o IOAID, como ele processa cada requisição, e
+como usar isso para tomar melhores decisões como afiliado. Não precisa
+ser programador — apenas curioso.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é IOAID em uma frase <strong>•</strong>
+2. Por que “distribuída”? <strong>•</strong> 3. Os 5 módulos do IOAID
+<strong>•</strong> 4. O fluxo completo de uma requisição
+<strong>•</strong> 5. Como o IOAID conversa com seu agente
+<strong>•</strong> 6. O papel do Judge Revisor <strong>•</strong> 7.
+Autenticação e segurança <strong>•</strong> 8. Latência e SLA: o que
+esperar <strong>•</strong> 9. Como o IOAID impacta sua operação diária
+<strong>•</strong> 10. Próximo curso</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é IOAID em uma frase</strong></p>
+<p><strong>IOAID é o sistema que pega uma intenção sua (“quero disparar
+mensagem de Natal para meus 800 contatos frios”) e a executa de forma
+auditável, escalável, e reversível.</strong></p>
+<p>Três palavras-chave: <strong>auditável</strong> (você sabe o que foi
+feito), <strong>escalável</strong> (funciona com 10 ou 10.000 contatos),
+<strong>reversível</strong> (você pode desfazer ações
+problemáticas).</p>
+<p><strong>2. Por que “distribuída”?</strong></p>
+<p>A palavra “distribuída” não é marketing. É uma decisão técnica com
+implicações:</p>
+<ul>
+<li><strong>Sem ponto único de falha</strong>: se um nó cai, os outros
+continuam. Você não fica offline porque o servidor central caiu.</li>
+<li><strong>Latência local</strong>: requisições são processadas no seu
+nó, não em datacenter distante. Resultado: &lt; 2s para 95% das
+ações.</li>
+<li><strong>Privacidade</strong>: seus dados de lead ficam no seu nó.
+Você tem controle total.</li>
+<li><strong>Escala horizontal</strong>: adicionar mais afiliados =
+adicionar mais nós = mais capacidade global.</li>
+</ul>
+<p><strong>3. Os 5 módulos do IOAID</strong></p>
+<p>O IOAID é organizado em 5 módulos, cada um com responsabilidade
+única:</p>
+<p><strong>M1 — Ingestion</strong> (Recepção) - Recebe requisições
+externas: webhooks, APIs, comandos do painel. - Valida autenticação
+(token, mTLS). - Valida parâmetros (formato, ranges). - Devolve um
+<code>request_id</code> único para rastreamento. - Latência média:
+50-100ms.</p>
+<p><strong>M2 — Routing</strong> (Roteamento) - Decide qual agente/skill
+deve processar. - Lê o <code>skill-manifest.json</code> para entender
+capacidades. - Encadeia skills quando necessário. - Define fallback se a
+skill primária falhar. - Latência média: 50-200ms.</p>
+<p><strong>M3 — Execution</strong> (Execução) - Roda a skill em
+<strong>sandbox isolado</strong> (memória, CPU, network restritos). -
+Captura todos os side-effects. - Aplica timeout (default 30s). - Mata
+loops infinitos automaticamente. - Latência média: 200ms-15s (depende da
+skill).</p>
+<p><strong>M4 — Persistence</strong> (Persistência) - Registra input,
+decisão, output, custo, latência. - Alimenta telemetria (Métricas + Logs
++ Traces). - Permite replay de qualquer execução. - Mantém log de
+custódia (auditável). - Latência média: 100-500ms.</p>
+<p><strong>M5 — Response</strong> (Resposta) - Devolve o resultado com
+metadados. - Inclui selo de aprovação do Judge. - Inclui log de custódia
+para compliance. - Notifica webhook (se configurado). - Latência média:
+50-100ms.</p>
+<p><strong>4. O fluxo completo de uma requisição</strong></p>
+<p>Vamos acompanhar um disparo de WhatsApp, do clique ao envio:</p>
+<p><strong>Passo 1</strong>: Você clica “Disparar Natal” no painel.</p>
+<p><strong>Passo 2</strong>: Painel envia
+<code>POST /api/v1/dispatch</code> para M1 (Ingestion). - Token validado
+✓ - Parâmetros validados (mensagem, base, agendamento) ✓ -
+<code>request_id = req_a8f3e2c1</code> devolvido.</p>
+<p><strong>Passo 3</strong>: M2 (Routing) decide. - Lê
+<code>whatsapp-sender</code> no skill-manifest. - Identifica: precisa de
+<code>audience-segmenter</code> + <code>copy-personalizer</code> +
+<code>whatsapp-sender</code>. - Encadeia.</p>
+<p><strong>Passo 4</strong>: M3 (Execution) executa. -
+<code>audience-segmenter</code> filtra base → 800 contatos qualificados.
+- <code>copy-personalizer</code> personaliza cada mensagem. -
+<code>whatsapp-sender</code> enfileira com rate-limit (80 msg/s).</p>
+<p><strong>Passo 5</strong>: Judge Revisor avalia cada mensagem. -
+Bloqueia as com spam, claim não suportado, ou tom agressivo. - Aprova as
+demais.</p>
+<p><strong>Passo 6</strong>: M4 (Persistence) registra. - Cada envio
+vira linha no log. - Telemetria atualizada.</p>
+<p><strong>Passo 7</strong>: M5 (Response) responde ao painel. - “798 de
+800 enviadas. 2 bloqueadas pelo Judge (spam). Revise.”</p>
+<p><strong>Tempo total</strong>: ~14 segundos para 800 mensagens.</p>
+<p><strong>5. Como o IOAID conversa com seu agente</strong></p>
+<p>Seu agente é a “interface” entre você e o IOAID. Quando você
+configura o agente, está essencialmente dizendo ao IOAID: “para ações do
+tipo X, use essas skills, com esses parâmetros, sob essas regras”.</p>
+<p>O IOAID <strong>não decide</strong> o que fazer — ele executa o que o
+agente manda. A inteligência do “o que fazer” está no agente (que pode
+usar LLM). A inteligência do “como executar” está no IOAID.</p>
+<p><strong>6. O papel do Judge Revisor</strong></p>
+<p>O Judge Revisor é um LLM menor (3B parâmetros) que <strong>revisão
+saídas antes de virarem ação</strong>. Ele é o filtro final.</p>
+<p>Em produção, o Judge revisa: - Mensagens de WhatsApp (bloqueia spam,
+valida LGPD). - Outputs de skill (verifica se faz sentido). - Decisões
+críticas (ex: “vale a pena tentar de novo?”).</p>
+<p>O Judge tem <strong>3 níveis de bloqueio</strong>: - 🟢
+<strong>Aprovado</strong>: ação segue. - 🟡 <strong>Alerta</strong>:
+ação segue, mas marca para revisão humana depois. - 🔴
+<strong>Bloqueado</strong>: ação não segue, requer aprovação manual.</p>
+<p><strong>7. Autenticação e segurança</strong></p>
+<p>O IOAID usa <strong>3 camadas de autenticação</strong>:</p>
+<p><strong>Camada 1 — API Token</strong>: seu token pessoal (gere em
+<code>/dashboard/settings/api</code>). <strong>Camada 2 — mTLS</strong>:
+para comunicação entre nós federados. <strong>Camada 3 — Rate
+Limit</strong>: previne abuso (60 req/min por padrão).</p>
+<p>Boas práticas: - Nunca compartilhe seu token. - Use token separado
+para cada aplicação. - Revogue tokens antigos em
+<code>/dashboard/settings/api/revoke</code>.</p>
+<p><strong>8. Latência e SLA: o que esperar</strong></p>
+<p>O SLA do IOAID é <strong>&lt; 2 segundos para 95% das ações</strong>.
+Mas isso varia:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Tipo de ação</th>
+<th>Latência típica</th>
+<th>SLA prometido</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Disparo em massa (100 mensagens)</td>
+<td>2-5s</td>
+<td>&lt; 8s</td>
+</tr>
+<tr class="even">
+<td>Disparo em massa (1000 mensagens)</td>
+<td>5-15s</td>
+<td>&lt; 20s</td>
+</tr>
+<tr class="odd">
+<td>Análise de coorte</td>
+<td>1-3s</td>
+<td>&lt; 5s</td>
+</tr>
+<tr class="even">
+<td>Geração de copy</td>
+<td>2-5s</td>
+<td>&lt; 8s</td>
+</tr>
+<tr class="odd">
+<td>Judge Revisão (1 msg)</td>
+<td>200-500ms</td>
+<td>&lt; 1s</td>
+</tr>
+<tr class="even">
+<td>Cold start de skill nova</td>
+<td>5-10s</td>
+<td>&lt; 15s</td>
+</tr>
+</tbody>
+</table>
+<p>Se você está vendo latência consistentemente &gt; 10s, <strong>abrir
+ticket de suporte</strong>.</p>
+<p><strong>9. Como o IOAID impacta sua operação diária</strong></p>
+<p>Na prática, o IOAID impacta sua operação em 5 pontos:</p>
+<ol type="1">
+<li><strong>Confiabilidade</strong>: o sistema não cai. SLA 99.7%.</li>
+<li><strong>Escalabilidade</strong>: você não precisa se preocupar com
+volume. O IOAID escala automaticamente.</li>
+<li><strong>Auditabilidade</strong>: cada ação fica registrada. Você
+pode auditar o que quiser.</li>
+<li><strong>Reveribilidade</strong>: ações problemáticas podem ser
+revertidas (ex: recall de campanha).</li>
+<li><strong>Observabilidade</strong>: você tem dashboards em tempo real
+de tudo.</li>
+</ol>
+<p><strong>10. Próximo curso</strong></p>
+<p>👉 <a href="02-sistema-sho.md"><code>02-sistema-sho.md</code></a> —
+Sistema SHO · 15 min</p>
+<p>Para aprofundamento, ver também: - <strong>Apostila 01</strong>:
+Apresentação Oficial da Infraestrutura (tour completo). -
+<strong>Apostila 03</strong>: Infraestrutura Operacional de IA (custos e
+telemetria).</p>
+<hr />
+<p><strong>01 · Entendendo o IOAID</strong> — Trilha Fundamental</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC
+BY-SA 4.0</em></p>
+  <script src="../../enhance.js"></script>
+</body>
+</html>

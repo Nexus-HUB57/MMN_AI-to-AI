@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-05-22" />
+  <title>WB-2026-02 · SHO em Produção</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">WB-2026-02 · SHO em Produção</h1>
+<p class="date">2026-05-22</p>
+</header>
+<figure>
+<img
+src="../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp"
+alt="Capa — SHO em Produção" />
+<figcaption aria-hidden="true">Capa — SHO em Produção</figcaption>
+</figure>
+<p><strong>WB-2026-02 · SHO em Produção</strong></p>
+<p><em>Webinar expandido em apostila — o Self-Healing Orchestrator em
+ambiente de produção real</em></p>
+<p><strong>Palestrante:</strong> Eng. SHO + Estrategista convidado
+<strong>Data original:</strong> 22/05/2026 · <strong>Duração:</strong>
+75 min</p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre esta apostila</strong></p>
+<p>Esta é a versão expandida do webinar WB-2026-02. O webinar original
+apresentou o SHO (Self-Healing Orchestrator) em ambiente de produção,
+com 3 cases reais de incidentes resolvidos autonomamente. Esta apostila
+documenta o conteúdo técnico em profundidade, com os protocolos, os logs
+reais, e as lições aprendidas.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é o SHO na prática <strong>•</strong> 2.
+Os 3 modos de operação <strong>•</strong> 3. Anatomia de uma decisão do
+SHO <strong>•</strong> 4. Case 1 — Resiliência de skill de copy
+<strong>•</strong> 5. Case 2 — Contenção de campanha problemática
+<strong>•</strong> 6. Case 3 — Quarentena de nó federado
+<strong>•</strong> 7. Configuração recomendada por porte
+<strong>•</strong> 8. Logs e telemetria <strong>•</strong> 9. Limites e
+quando escalar para humano <strong>•</strong> 10. Q&amp;A completo</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é o SHO na prática</strong></p>
+<p>O SHO (Self-Healing Orchestrator) é o <strong>sistema
+imunológico</strong> da infraestrutura Nexus. Ele monitora todas as
+execuções, detecta anomalias, e toma ações defensivas <strong>sem
+intervenção humana</strong> em 90%+ dos casos.</p>
+<p>O SHO não é um LLM. É um <strong>orquestrador determinístico</strong>
+baseado em regras. Ele sabe: - Quando uma skill está falhando mais do
+que o aceitável. - Quando uma campanha está saindo dos limites de
+compliance. - Quando um nó federado está comprometido. - Quando uma
+métrica de saúde degrada.</p>
+<p>E ele age: retry, fallback, contenção, quarentena.</p>
+<p><strong>2. Os 3 modos de operação</strong></p>
+<p><strong>Modo Saturação (normal)</strong> - Execução padrão. - Cada
+decisão é registrada, cada anomalia é flagada. - SHO não interfere.</p>
+<p><strong>Modo Contenção (anomalia detectada)</strong> - SHO isola a
+skill defeituosa. - Redireciona tráfego para fallback. - Alerta: amarelo
+no dashboard.</p>
+<p><strong>Modo Quarentena (falha grave)</strong> - SHO bloqueia novas
+execuções. - Abre ticket de suporte automaticamente. - Alerta: vermelho
+no dashboard. - <strong>Humano precisa intervir</strong>.</p>
+<p>A passagem entre modos é <strong>automática</strong>, baseada em
+thresholds configuráveis.</p>
+<p><strong>3. Anatomia de uma decisão do SHO</strong></p>
+<p>Quando uma skill executa, o SHO observa: - Latência (p50, p95, p99).
+- Taxa de erro (últimas 100 execuções). - Custo em tokens. - Aprovação
+do Judge. - Latência de rede (em chamada a APIs externas).</p>
+<p>Critérios de contenção (configurável, defaults razoáveis): - Latência
+&gt; 10s por 3 execuções seguidas. - Taxa de erro &gt; 15% em janela de
+100 execuções. - Judge reprovando &gt; 50% em janela de 50 execuções. -
+Custo &gt; R$ 0.10 por execução individual. - Latência de API externa
+&gt; 5s.</p>
+<p>Quando <strong>2 ou mais</strong> critérios disparam, SHO entra em
+<strong>Modo Contenção</strong>.</p>
+<p><strong>4. Case 1 — Resiliência de skill de copy</strong></p>
+<p><strong>Incidente:</strong> Em 18/04/2026, a skill
+<code>copywriter-whatsapp</code> começou a retornar mensagens com tom
+agressivo após uma atualização do LLM subjacente.</p>
+<p><strong>Detecção:</strong> SHO notou que o Judge começou a reprovar
+47% das mensagens (vs. baseline de 6%). Threshold: &gt; 30% em 50
+execuções = contenção.</p>
+<p><strong>Ação do SHO:</strong> 1. Marcou a skill como suspeita. 2.
+Pausou novas execuções. 3. Roteou execuções para a skill
+<code>copywriter-email</code> (fallback configurado), com adaptação
+automática de tom (de email para WhatsApp). 4. Abriu ticket de
+prioridade média.</p>
+<p><strong>Resolução humana:</strong> 2 horas. Equipe técnica reverteu a
+versão do LLM. SHO validou a correção (Judge voltou a reprovar &lt; 10%)
+e promoveu a versão estável.</p>
+<p><strong>Impacto:</strong> zero mensagens problemáticas chegaram a
+leads. 100% dos disparos foram roteados para fallback.</p>
+<p><strong>5. Case 2 — Contenção de campanha problemática</strong></p>
+<p><strong>Incidente:</strong> Em 03/05/2026, um afiliado configurou uma
+campanha de reativação de frios, mas a coorte estava com 90% de números
+banidos/inválidos.</p>
+<p><strong>Detecção:</strong> SHO notou que a taxa de falha de entrega
+subiu de 2% para 38% em 15 minutos.</p>
+<p><strong>Ação do SHO:</strong> 1. Pausou a campanha. 2. Alertou o
+afiliado (banner amarelo). 3. Sugeriu limpar a base via skill
+<code>audience-segmenter</code> (regra: remover inválidos). 4. Não abriu
+ticket (era erro de configuração, não bug).</p>
+<p><strong>Resolução humana:</strong> 12 minutos. Afiliado limpou a
+base, re-aprovou a campanha. SHO validou a entrega &gt; 95% e
+re-ativou.</p>
+<p><strong>Impacto:</strong> 1 campanha pausada preventivamente. 0 leads
+receberam mensagem com erro.</p>
+<p><strong>6. Case 3 — Quarentena de nó federado</strong></p>
+<p><strong>Incidente:</strong> Em 11/05/2026, um nó federado começou a
+fazer chamadas suspeitas (volume 50x o normal, IPs em geolocalização
+inesperada).</p>
+<p><strong>Detecção:</strong> SHO notou anomalia no padrão de uso
+(volume + latência + IP).</p>
+<p><strong>Ação do SHO:</strong> 1. Quarentenou o nó (bloqueou novas
+requisições). 2. Manteve consultas para preservar estado. 3. Abriu
+ticket de prioridade ALTA. 4. Notificou administrador da rede.</p>
+<p><strong>Resolução humana:</strong> 4 horas. Verificou-se que o nó
+tinha sido comprometido (credenciais vazadas). Foi feita rotação de
+mTLS, auditoria de logs, e re-ativação supervisionada.</p>
+<p><strong>Impacto:</strong> 0 dados vazaram. O isolamento evitou
+propagação para outros nós da federação.</p>
+<p><strong>7. Configuração recomendada por porte</strong></p>
+<p><strong>Solo Afiliado (1 pessoa)</strong> - SHO em modo padrão. -
+Alertas: e-mail + dashboard. - Sem federação. - Threshold de contenção:
+conservador.</p>
+<p><strong>Pequena Equipe (2-5 pessoas)</strong> - SHO em modo padrão. -
+Alertas: e-mail + dashboard + Slack. - Federação opcional (Nível 1). -
+Threshold de contenção: padrão.</p>
+<p><strong>Média Equipe (6-20 pessoas)</strong> - SHO em modo com 1
+camada extra de log. - Alertas: e-mail + dashboard + Slack + SMS (apenas
+severidade alta). - Federação Nível 1-2. - Threshold de contenção:
+ajustável por skill.</p>
+<p><strong>Grande Operação (20+ pessoas)</strong> - SHO em modo avançado
+com shadow testing. - Alertas: integração com PagerDuty/OpsGenie. -
+Federação Nível 1-3. - Threshold de contenção: fino, com dashboards de
+tuning.</p>
+<p><strong>8. Logs e telemetria</strong></p>
+<p>Cada decisão do SHO gera um log estruturado:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-05-22T10:34:22Z&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sho_decision_id&quot;</span><span class="fu">:</span> <span class="st">&quot;sho_a8f3e2c1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;skill_id&quot;</span><span class="fu">:</span> <span class="st">&quot;copywriter-whatsapp&quot;</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;modo_anterior&quot;</span><span class="fu">:</span> <span class="st">&quot;saturacao&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;modo_novo&quot;</span><span class="fu">:</span> <span class="st">&quot;contencao&quot;</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;criterios_disparados&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;judge_reprovacao_50pct&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;acao_tomada&quot;</span><span class="fu">:</span> <span class="st">&quot;pausar_skill_rotear_fallback&quot;</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;fallback_usado&quot;</span><span class="fu">:</span> <span class="st">&quot;copywriter-email&quot;</span><span class="fu">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;humano_notificado&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;resolvido_autonomamente&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duracao_contencao_ms&quot;</span><span class="fu">:</span> <span class="dv">7200000</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Esses logs são <strong>imutáveis</strong> (append-only) e ficam
+disponíveis por 90 dias para auditoria.</p>
+<p><strong>9. Limites e quando escalar para humano</strong></p>
+<p>O SHO <strong>não</strong> toma decisões sobre: - <strong>Valores
+éticos</strong> (ex: campanha polêmica). Escala para humano. -
+<strong>Mudanças de produto</strong> (ex: descontinuar). Escala para
+humano. - <strong>Compliance</strong> (ex: mudança em LGPD). Escala para
+humano. - <strong>Decisões de alto valor</strong> (ex: contrato com
+parceiro). Escala para humano.</p>
+<p>A regra é: <strong>SHO lida com anomalias operacionais; humanos lidam
+com decisões estratégicas</strong>.</p>
+<p><strong>10. Q&amp;A completo</strong></p>
+<p><strong>P1: Posso desativar o SHO?</strong> R: Pode, mas não
+recomendamos. Sem SHO, falhas propagam. 99% dos afiliados deixa
+ativado.</p>
+<p><strong>P2: SHO decide sozinho se a mensagem é spam?</strong> R: SHO
+detecta padrões (volume, frequência, taxa de bloqueio). O
+<strong>Judge</strong> é quem avalia o conteúdo.</p>
+<p><strong>P3: Quanto custa o SHO?</strong> R: Está incluso no plano.
+Não há cobrança adicional.</p>
+<p><strong>P4: SHO tem alucinações?</strong> R: SHO é determinístico,
+baseado em regras. Não tem LLM. Não alucina.</p>
+<p><strong>P5: Como configuro o threshold de contenção?</strong> R: Em
+<code>/dashboard/sho/config</code>. Sugerimos começar com defaults e
+ajustar após 30 dias de operação.</p>
+<p><strong>P6: SHO pode entrar em loop?</strong> R: SHO tem proteções
+anti-loop (circuit breaker). Se o SHO entra em contenção e a contenção
+não resolve em 1h, escala para humano.</p>
+<p><strong>P7: Como exporto logs do SHO?</strong> R: Via API REST
+(<code>/api/v1/sho/logs?start=...&amp;end=...</code>) ou download CSV em
+<code>/dashboard/sho/export</code>.</p>
+<p><strong>P8: SHO monitora custos?</strong> R: Sim. SHO pode pausar
+execução se o custo diário da skill ultrapassar 80% do orçamento
+configurado.</p>
+<p><strong>P9: Como o SHO se comunica com o Judge?</strong> R: Via canal
+interno. SHO observa o output do Judge; Judge é independente na decisão
+de aprovar/reprovar.</p>
+<p><strong>P10: SHO funciona em federação?</strong> R: Sim. SHO monitora
+também chamadas entre nós federados. Anomalias em 1 nó disparam
+contenção só local (não derrubam a federação inteira).</p>
+<hr />
+<p><strong>WB-2026-02 · SHO em Produção</strong> — Versão Apostila
+Expandida</p>
+<p><em>MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC
+BY-SA 4.0</em></p>
+  <script src="../enhance.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { adminProcedure, publicProcedure, router } from "../../config/trpc";
 import { signWithJudgeKey } from "./keys";
 import { judgeRegistry } from "./registry";
+import { remoteJudgeRegistry } from "./remoteJudgeClient";
 import {
   evaluateQuorum,
   judgeVoteSchema,
@@ -23,11 +24,70 @@ function digest(payload: unknown): string {
 }
 
 export const judgeFederationRouter = router({
+  /** M7 · Lista de nós remotos (sem apiKey) */
+  remoteList: publicProcedure.query(async () => {
+    const nodes = await remoteJudgeRegistry.list();
+    return {
+      ok: true,
+      total: nodes.length,
+      active: nodes.filter((n) => n.active).length,
+      nodes,
+    };
+  }),
+
+  /** M7 · Registrar novo nó remoto (admin) */
+  remoteRegister: adminProcedure
+    .input(
+      z.object({
+        nodeId: z.string().min(3),
+        name: z.string().min(1),
+        operator: z.string().min(1),
+        endpoint: z.string().url(),
+        publicKeyPem: z.string().min(40),
+        trustLevel: z.enum(["sandbox", "verified", "elite"]).default("sandbox"),
+        active: z.boolean().default(true),
+        apiKey: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const node = await remoteJudgeRegistry.register(input);
+      return { ok: true, node };
+    }),
+
+  /** M7 · Ativar/desativar nó remoto (admin) */
+  remoteSetActive: adminProcedure
+    .input(z.object({ nodeId: z.string(), active: z.boolean() }))
+    .mutation(async ({ input }) => {
+      const node = await remoteJudgeRegistry.setActive(input.nodeId, input.active);
+      return { ok: true, node };
+    }),
+
+  /** M7 · Remover nó remoto (admin) */
+  remoteRemove: adminProcedure
+    .input(z.object({ nodeId: z.string() }))
+    .mutation(async ({ input }) => {
+      const removed = await remoteJudgeRegistry.remove(input.nodeId);
+      return { ok: removed };
+    }),
+
+  /** M7 · Test ping a nó remoto (admin) */
+  remotePing: adminProcedure
+    .input(z.object({ nodeId: z.string() }))
+    .mutation(async ({ input }) => {
+      const result = await remoteJudgeRegistry.testPing(input.nodeId);
+      return { ok: result.ok, ...result };
+    }),
+
   /** Saúde + status da federação */
   status: publicProcedure.query(async () => {
     const nodes = await judgeRegistry.listFull();
+    const remoteNodes = await remoteJudgeRegistry.list();
     return {
       ok: true,
+      remote: {
+        total: remoteNodes.length,
+        active: remoteNodes.filter((n) => n.active).length,
+      },
       service: "judge-federation",
       timestamp: new Date().toISOString(),
       nodeCount: nodes.length,

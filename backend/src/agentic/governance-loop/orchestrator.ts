@@ -27,6 +27,7 @@ import { judgeRegistry } from "../judge-federation/registry";
 import { signWithJudgeKey } from "../judge-federation/keys";
 import { evaluateQuorum, type JudgeVote } from "../judge-federation/quorum";
 import { getCalibratedHeuristic } from "./feedbackLearner";
+import { collectRemoteVotes, remoteJudgeRegistry } from "../judge-federation/remoteJudgeClient";
 
 // ─── Util ──────────────────────────────────────────────────────────────────
 
@@ -179,8 +180,29 @@ export const GovernanceLoop = {
       payload: action.payload,
     });
 
-    const votes = await collectAutoVotes(action, payloadDigest);
-    const knownNodes = await judgeRegistry.list();
+    // M7: votos remotos via A2A (paralelo aos locais)
+    const localVotes = await collectAutoVotes(action, payloadDigest);
+    const remoteResult = await collectRemoteVotes({
+      payloadId: action.actionId,
+      payloadDigest,
+      kind: action.kind,
+      rationale: action.rationale,
+    });
+    const votes = [...localVotes, ...remoteResult.votes];
+
+    const knownLocalNodes = await judgeRegistry.list();
+    const remoteNodes = await remoteJudgeRegistry.listFull();
+    const knownNodes = [
+      ...knownLocalNodes,
+      ...remoteNodes
+        .filter((n) => n.active)
+        .map((n) => ({
+          nodeId: n.nodeId,
+          publicKeyPem: n.publicKeyPem,
+          trustLevel: n.trustLevel,
+          active: n.active,
+        })),
+    ];
 
     const quorumOutcome = evaluateQuorum(
       {
@@ -229,6 +251,10 @@ export const GovernanceLoop = {
         payloadDigest,
         votesCollected: votes.length,
         nodesAvailable: knownNodes.filter((n) => n.active).length,
+        localVotes: localVotes.length,
+        remoteVotes: remoteResult.votes.length,
+        remoteAttempts: remoteResult.remoteAttempts,
+        remoteErrors: remoteResult.remoteErrors,
       },
     };
   },

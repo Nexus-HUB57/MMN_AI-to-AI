@@ -2,13 +2,52 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.2.0
-last_updated: 2026-06-24
+version: 1.2.2
+last_updated: 2026-06-26
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.2.2] — 2026-06-26 · "Expansão Pedagógica + Workflows"
+
+### ✨ Adicionado
+
+- 📚 **6 tutoriais novos** (`tutoriais/`):
+  - `15-debugar-agente-lento.md` — diagnóstico de latência em 5 passos
+  - `16-criar-skill-customizada.md` — skill custom com testes TypeScript
+  - `17-integrar-meta-ads.md` — integração Meta Marketing API
+  - `18-configurar-backup-automatico.md` — backup 3-2-1
+  - `19-ler-metricas-sho.md` — 8 métricas-chave do SHO
+  - `20-exportar-relatorio-mensal.md` — relatórios executivos
+- 🎮 **2 playbooks novos** (`playbooks/`):
+  - `PB-LANCAMENTO-black-friday.md` — playbook completo 11 dias
+  - `PB-ONBOARDING-novo-afiliado.md` — onboarding 14 dias com metas
+- 🎤 **2 webinars novos** (`webinars/`):
+  - `WB-2026-04-agentes-autonomos-prod.md` — cases reais em produção
+  - `WB-2026-05-federacao-multi-tenant.md` — solo → enterprise
+- 🔄 **2 workflows novos** (`Lab-Nexus/workflows/`):
+  - `make/02-workflow-recovery-carrinho.json` — recuperação multi-canal
+  - `n8n/03-workflow-onboarding-trial.md` — trial → pago
+- 🧠 **3 prompts novos** (`Lab-Nexus/prompts/`):
+  - `analise/04-diagnostico-churn-preventivo.md` — diagnóstico de churn
+  - `copywriting/03-copy-headline-anuncio.md` — 5 headlines com framework
+  - `copywriting/04-script-vsl.md` — VSL 15-25min completo
+  - `estrategia/04-plano-conteudo-90-dias.md` — calendário trimestral
+
+### 📊 Métricas
+
+| | v1.2.0 | v1.2.2 |
+|---|---|---|
+| Tutoriais | 14 | 20 |
+| Playbooks | 8 | 10 |
+| Webinars | 4 | 6 |
+| Workflows | 3 | 5 |
+| Prompts | 8 | 11 |
+| Tools | 44 | 44 |
 
 ---
 

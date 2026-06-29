@@ -2,15 +2,15 @@
 title: "INDEX · Academ'IA"
 description: "Índice semântico e mapeamento de habilidades transversais"
 tags: [index, knowledge-map, transversal-skills]
-version: 1.2.1
-last_updated: 2026-06-24
+version: 1.2.2
+last_updated: 2026-06-26
 ---
 
 # 📑 ÍNDICE · Academ'IA
 
 > **Mapa completo do HUB.** Use `Ctrl/Cmd+F` para busca rápida ou tags transversais para correlação semântica via Obsidian.
 
-> **Versão 1.2.1** · Última atualização 2026-06-24 · **15 cursos · 10 apostilas · 41 tools · 8 prompts · 6 templates · 3 workflows · 14 tutoriais · 8 playbooks · 4 webinars · 8 treinamentos/workshops · 5 certificações**
+> **Versão 1.2.2** · Última atualização 2026-06-26 · **15 cursos · 10 apostilas · 44 tools · 11 prompts · 6 templates · 5 workflows · 20 tutoriais · 10 playbooks · 6 webinars · 8 treinamentos/workshops · 5 certificações**
 > 
 > 👉 **Novo?** Leia primeiro o [`RESUMO_EXECUTIVO.md`](RESUMO_EXECUTIVO.md) (TL;DR de 1 página).
 > 👉 **Histórico de versões:** [`CHANGELOG.md`](CHANGELOG.md)

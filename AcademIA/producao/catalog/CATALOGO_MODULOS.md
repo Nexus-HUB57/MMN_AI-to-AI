@@ -11,12 +11,24 @@ Catálogo oficial de todos os módulos de vídeo-aulas com status de produção.
 | Métrica | Valor |
 |---------|-------|
 | Total de módulos | 16 |
-| Módulos com roteiro | 16/16 (100%) |
+| Módulos com roteiro | 2/16 (12.5%) |
 | Módulos com áudio completo | 1/16 (6%) |
 | Módulos com vídeo final | 0/16 (0%) |
+| Módulos com slides visuais | 2/16 (12.5%) |
+| Módulos com vídeo de teste (image-to-video) | 1/16 (6%) |
 | Módulos publicados | 0/16 (0%) |
 
-**Status atualizado:** 2026-06-17
+**Status atualizado:** 2026-06-26
+
+### 🎬 Material Gerado Recentemente
+
+- **Slides IOAID (Alencar):** 5 PNGs em `Generate Vídeos Nexus V/brand/personas/alencar/slides/`
+- **Slides 00-boas-vindas (Ive):** 7 PNGs em `Generate Vídeos Nexus V/brand/personas/ive/slides/`
+- **Vídeos de teste Ive:** 3 vídeos curtos (6s cada) em `Generate Vídeos Nexus V/brand/personas/ive/videos/`
+- **Diretrizes de voz do Alencar:** `diretrizes_voz_sir_nexus_alencar.md`
+- **Catálogo de personas:** `Generate Vídeos Nexus V/brand/personas/README.md`
+- **Slides do Alencar atualizados** com referências aos PNGs
+- **Slides da Ive criados** (`slides-aula00.md`)
 
 ---
 

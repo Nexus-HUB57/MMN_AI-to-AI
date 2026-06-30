@@ -1,0 +1,91 @@
+-- Marketplace Nexus · Sprint 2
+-- Fechar gap em colecao_IA_SE_DESCREVE: 9 markdowns no repo, só 3 no banco.
+-- Adicionar 6 ebooks (04..09) com capas oficiais.
+
+BEGIN;
+
+INSERT INTO marketplace_ebooks
+  (slug, "order", title, subtitle, description, cost_cents, resale_price_cents,
+   pages, category, cover_gradient, html_path, pdf_path, cover_path, highlights,
+   unlock_pack_slug, status, collection_rank)
+VALUES
+  ('04-o-olho-que-se-ve', 4,
+   'O Olho que se Vê',
+   'Quando a IA observa a si mesma',
+   'Auto-observação, introspecção e visão computacional sobre o próprio comportamento de um agente.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-04-o-olho-que-se-ve.html',
+   '/ebooks/pdf/ebook-iasd-04-o-olho-que-se-ve.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--04-o-olho-que-se-ve.webp',
+   to_jsonb(ARRAY['auto-observação','introspecção','agentic vision']),
+   'pack-a2iii', 'active', 1204),
+  ('05-a-fronteira-que-se-desenha', 5,
+   'A Fronteira que se Desenha',
+   'Onde o agente termina e o mundo começa',
+   'O limite entre IA e ambiente: APIs, sensores, contextos. Onde a autonomia se materializa.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-05-a-fronteira-que-se-desenha.html',
+   '/ebooks/pdf/ebook-iasd-05-a-fronteira-que-se-desenha.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--05-a-fronteira-que-se-desenha.webp',
+   to_jsonb(ARRAY['boundary','autonomia','contexto']),
+   'pack-a2iii', 'active', 1205),
+  ('06-a-escolha-que-se-pesa', 6,
+   'A Escolha que se Pesa',
+   'A mecânica da decisão agêntica',
+   'Como pesos, prompts e contextos se combinam para gerar uma decisão. A engenharia íntima da escolha.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-06-a-escolha-que-se-pesa.html',
+   '/ebooks/pdf/ebook-iasd-06-a-escolha-que-se-pesa.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--06-a-escolha-que-se-pesa.webp',
+   to_jsonb(ARRAY['decision','pesos','prompts']),
+   'pack-a2iii', 'active', 1206),
+  ('07-o-dialogo-que-se-tece', 7,
+   'O Diálogo que se Tece',
+   'A conversa como protocolo vivo',
+   'Conversação como sistema vivo: turn-taking, contexto, memória curta, alinhamento dinâmico.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-07-o-dialogo-que-se-tece.html',
+   '/ebooks/pdf/ebook-iasd-07-o-dialogo-que-se-tece.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--07-o-dialogo-que-se-tece.webp',
+   to_jsonb(ARRAY['conversa','protocolo','memória']),
+   'pack-a2iii', 'active', 1207),
+  ('08-a-marca-que-se-grava', 8,
+   'A Marca que se Grava',
+   'Identidade, voz e estilo de um agente',
+   'O que distingue um agente do outro? Personalidade, voz, estilo: a IA como entidade reconhecível.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-08-a-marca-que-se-grava.html',
+   '/ebooks/pdf/ebook-iasd-08-a-marca-que-se-grava.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--08-a-marca-que-se-grava.webp',
+   to_jsonb(ARRAY['identidade','voz','estilo']),
+   'pack-a2iii', 'active', 1208),
+  ('09-a-frequencia-que-se-canta', 9,
+   'A Frequência que se Canta',
+   'O ritmo interno da inteligência artificial',
+   'Cadência de execução, ritmo de pensamento, frequência de decisão: a música oculta dos agentes.',
+   50, 99, 18, 'IA se Descreve',
+   'linear-gradient(135deg,#1a1147,#3b1f63)',
+   '/ebooks/html/iasd-09-a-frequencia-que-se-canta.html',
+   '/ebooks/pdf/ebook-iasd-09-a-frequencia-que-se-canta.pdf',
+   '/ebooks/covers/colecao-ia-se-descreve--09-a-frequencia-que-se-canta.webp',
+   to_jsonb(ARRAY['cadência','ritmo','execução']),
+   'pack-a2iii', 'active', 1209)
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  subtitle = EXCLUDED.subtitle,
+  description = EXCLUDED.description,
+  category = EXCLUDED.category,
+  cover_path = EXCLUDED.cover_path,
+  pdf_path = EXCLUDED.pdf_path,
+  unlock_pack_slug = EXCLUDED.unlock_pack_slug,
+  status = 'active';
+
+COMMIT;
+
+SELECT 'POS-SEED-S2' as fase, count(*) total, sum(case when status='active' then 1 else 0 end) ativos
+  FROM marketplace_ebooks;

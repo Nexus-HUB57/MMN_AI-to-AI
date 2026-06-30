@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import bgAdmin from "@/assets/bg-admin.webp";
+import { trpc } from "@/lib/trpc";
 import {
   Activity,
   AlertCircle,
@@ -61,48 +62,28 @@ function KPICard({ icon: Icon, label, value, change, trend, accent }: KPIProps) 
   );
 }
 
-const MOCK_USERS = [
-  {
-    id: 1,
-    name: "Equipe Nexus Affil'IA'te",
-    email: "equipe-restrita@nexus.internal",
-    role: "admin" as const,
-    status: "active" as const,
-    createdAt: "2025-04-12",
-  },
-  {
-    id: 2,
-    name: "Maria Silva",
-    email: "maria@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-04-23",
-  },
-  {
-    id: 3,
-    name: "João Pereira",
-    email: "joao@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-05-02",
-  },
-  {
-    id: 4,
-    name: "Ana Costa",
-    email: "ana@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "suspended" as const,
-    createdAt: "2025-05-10",
-  },
-  {
-    id: 5,
-    name: "Pedro Lima",
-    email: "pedro@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-05-18",
-  },
-];
+// Helpers de formatação
+function formatBRL(value: number): string {
+  if (!Number.isFinite(value)) return "R$ 0";
+  if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `R$ ${(value / 1_000).toFixed(0)}k`;
+  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function formatNumber(value: number): string {
+  if (!Number.isFinite(value)) return "0";
+  return value.toLocaleString("pt-BR");
+}
+
+function formatDate(d: Date | string | null | undefined): string {
+  if (!d) return "—";
+  try {
+    const dt = typeof d === "string" ? new Date(d) : d;
+    return dt.toLocaleDateString("pt-BR");
+  } catch {
+    return "—";
+  }
+}
 
 const HEATMAP_BLOCKS = Array.from({ length: 28 * 8 }).map((_, i) => {
   // Pseudo-random determinístico para SSR-friendly
@@ -123,14 +104,35 @@ function heatColor(level: string) {
 export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Dados reais do backend
+  const metricsQuery = trpc.admin.getDashboardMetrics.useQuery(undefined, {
+    refetchInterval: 30_000,
+  });
+  const usersQuery = trpc.admin.listUsers.useQuery(
+    { page: 1, limit: 10, search: searchTerm || undefined },
+    { keepPreviousData: true },
+  );
+
+  const metrics = metricsQuery.data;
+  const usersData = usersQuery.data?.users ?? [];
+  const totalUsersDb = usersQuery.data?.pagination.total ?? 0;
+
   const filteredUsers = useMemo(
     () =>
-      MOCK_USERS.filter((u) => {
+      usersData.filter((u) => {
         const q = searchTerm.toLowerCase();
-        return u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+        return (
+          (u.name?.toLowerCase() ?? "").includes(q) ||
+          (u.email?.toLowerCase() ?? "").includes(q)
+        );
       }),
-    [searchTerm],
+    [usersData, searchTerm],
   );
+
+  const kpiTotalUsers = metrics ? formatNumber(metrics.totalUsers) : "…";
+  const kpiActiveAffiliates = metrics ? formatNumber(metrics.activeAffiliates) : "…";
+  const kpiCommissionsPaid = metrics ? formatBRL(metrics.totalCommissionsPaid) : "…";
+  const kpiCommissionsPending = metrics ? formatBRL(metrics.totalCommissionsPending) : "…";
 
   return (
     <AdminDashboardLayout>
@@ -176,33 +178,25 @@ export default function AdminDashboard() {
           <KPICard
             icon={Users}
             label="Total de usuários"
-            value="15.482"
-            change="+12% no mês"
-            trend="up"
+            value={kpiTotalUsers}
             accent="bg-quantum-cyan/30"
           />
           <KPICard
             icon={TrendingUp}
             label="Afiliados ativos"
-            value="12.108"
-            change="+8% no mês"
-            trend="up"
+            value={kpiActiveAffiliates}
             accent="bg-quantum-lime/30"
           />
           <KPICard
             icon={DollarSign}
             label="Comissões pagas"
-            value="R$ 2.5M"
-            change="+23% no mês"
-            trend="up"
+            value={kpiCommissionsPaid}
             accent="bg-quantum-purple/30"
           />
           <KPICard
             icon={AlertCircle}
             label="Comissões pendentes"
-            value="R$ 184k"
-            change="-5% no mês"
-            trend="down"
+            value={kpiCommissionsPending}
             accent="bg-amber-400/30"
           />
         </section>
@@ -282,14 +276,14 @@ export default function AdminDashboard() {
             <div className="mt-5 flex items-center justify-between rounded border border-obsidian-700 bg-obsidian-900/40 px-4 py-3">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Volume total</p>
-                <p className="mt-1 font-sans text-2xl font-bold text-quantum-cyan">R$ 2.5M</p>
+                <p className="mt-1 font-sans text-2xl font-bold text-quantum-cyan">{kpiCommissionsPaid}</p>
               </div>
               <TrendingUp size={28} className="text-quantum-cyan" />
             </div>
 
             <div className="mt-3 grid grid-cols-3 gap-3 text-center">
               <div className="rounded border border-obsidian-700 bg-amber-400/5 p-3">
-                <p className="font-sans text-lg font-bold text-amber-300">184k</p>
+                <p className="font-sans text-lg font-bold text-amber-300">{metrics ? formatBRL(metrics.totalCommissionsPending).replace("R$ ", "") : "…"}</p>
                 <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">pendentes</p>
               </div>
               <div className="rounded border border-obsidian-700 bg-quantum-lime/5 p-3">
@@ -382,64 +376,77 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((u) => (
-                  <tr
-                    key={u.id}
-                    className="border-b border-obsidian-700/60 transition-colors hover:bg-obsidian-900/40"
-                  >
-                    <td className="px-3 py-3">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-xs font-bold text-quantum-cyan">
-                          {u.name
-                            .split(" ")
-                            .slice(0, 2)
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                        <span className="font-medium text-white">{u.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-3 py-3 text-slate-400">{u.email}</td>
-                    <td className="px-3 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
-                          u.role === "admin"
-                            ? "border-quantum-purple/40 bg-quantum-purple/10 text-quantum-purple"
-                            : "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan"
-                        }`}
-                      >
-                        {u.role === "admin" ? <Shield size={10} /> : <Users size={10} />}
-                        {u.role}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
-                          u.status === "active"
-                            ? "border-quantum-lime/40 bg-quantum-lime/10 text-quantum-lime"
-                            : "border-red-400/40 bg-red-400/10 text-red-400"
-                        }`}
-                      >
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            u.status === "active" ? "bg-quantum-lime" : "bg-red-400"
-                          }`}
-                        />
-                        {u.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3 font-mono text-xs text-slate-500">{u.createdAt}</td>
-                    <td className="px-3 py-3 text-right">
-                      <Link
-                        href={`/admin/users`}
-                        className="inline-flex items-center gap-1 rounded border border-obsidian-700 bg-obsidian-900/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition hover:border-quantum-cyan/40 hover:text-quantum-cyan"
-                      >
-                        <Eye size={10} /> ver
-                      </Link>
+                {usersQuery.isLoading && (
+                  <tr>
+                    <td colSpan={6} className="px-3 py-6 text-center text-sm text-slate-500">
+                      Carregando usuários reais…
                     </td>
                   </tr>
-                ))}
-                {filteredUsers.length === 0 && (
+                )}
+                {!usersQuery.isLoading && filteredUsers.map((u) => {
+                  const name = u.name ?? u.email ?? "—";
+                  const initials = name
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((n: string) => n[0])
+                    .join("")
+                    .toUpperCase();
+                  const isActive = !!u.lastSignedIn;
+                  return (
+                    <tr
+                      key={u.id}
+                      className="border-b border-obsidian-700/60 transition-colors hover:bg-obsidian-900/40"
+                    >
+                      <td className="px-3 py-3">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-xs font-bold text-quantum-cyan">
+                            {initials || "NA"}
+                          </span>
+                          <span className="font-medium text-white">{name}</span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 text-slate-400">{u.email}</td>
+                      <td className="px-3 py-3">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
+                            u.role === "admin"
+                              ? "border-quantum-purple/40 bg-quantum-purple/10 text-quantum-purple"
+                              : "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan"
+                          }`}
+                        >
+                          {u.role === "admin" ? <Shield size={10} /> : <Users size={10} />}
+                          {u.role}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
+                            isActive
+                              ? "border-quantum-lime/40 bg-quantum-lime/10 text-quantum-lime"
+                              : "border-slate-500/40 bg-slate-500/10 text-slate-400"
+                          }`}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              isActive ? "bg-quantum-lime" : "bg-slate-500"
+                            }`}
+                          />
+                          {isActive ? "active" : "pending"}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 font-mono text-xs text-slate-500">{formatDate(u.createdAt as any)}</td>
+                      <td className="px-3 py-3 text-right">
+                        <Link
+                          href={`/admin/users`}
+                          className="inline-flex items-center gap-1 rounded border border-obsidian-700 bg-obsidian-900/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition hover:border-quantum-cyan/40 hover:text-quantum-cyan"
+                        >
+                          <Eye size={10} /> ver
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {!usersQuery.isLoading && filteredUsers.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-3 py-6 text-center text-sm text-slate-500">
                       Nenhum usuário corresponde ao filtro.
@@ -451,7 +458,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
-            <span>// mostrando {filteredUsers.length} de {MOCK_USERS.length} (dados demo)</span>
+            <span>// mostrando {filteredUsers.length} de {formatNumber(totalUsersDb)} (dados reais)</span>
             <Link
               href="/admin/users"
               className="inline-flex items-center gap-1 text-quantum-cyan hover:text-white"

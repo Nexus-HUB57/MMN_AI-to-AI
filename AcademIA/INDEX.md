@@ -209,3 +209,33 @@ Trilha de 17 tutoriais para execução mão na massa.
 **Mantido por:** MMN_IA Collective · Academ'IA
 **Versão:** 1.2.0 · **Data:** 2026-06-28
 **Licença:** Interno Nexus Affil'IA'te
+
+## 📚 [`apostilas/`](apostilas/) — Apostilas Técnicas Práticas (Junho 2026)
+
+> 10 apostilas técnicas no padrão Nexus Affil'IA'te MMN_IA — Shakespeare/PHD Harvard. Cada uma com ≥ 22 páginas, código real, exercícios práticos, glossário, projeto integrador. Disponíveis em HTML, PDF e Markdown.
+
+### 🥉 Trilhas (Programas Estruturados)
+
+- [`T1 — Trilha Fundamental: IA para Afiliados Nexus`](apostilas/html/T1-trilha-fundamental-ia.html) — Júnior · 20h · 8 módulos
+- [`T2 — Trilha Elite: Engenharia de IA em Produção`](apostilas/html/T2-trilha-elite-engenharia.html) — Pleno · 40h · 10 módulos
+- [`T3 — Trilha Master: Arquitetura de Sistemas Agentic`](apostilas/html/T3-trilha-master-arquitetura.html) — Sênior · 60h · 12 módulos
+- [`T4 — Trilha Master: Mentoria e Liderança Técnica`](apostilas/html/T4-trilha-master-mentoria.html) — Sênior+ · 30h · 8 módulos
+
+### 💎 Cursos Práticos (Hands-on)
+
+| Código | Curso | Nível | Carga | Módulos |
+|--------|-------|-------|-------|---------|
+| [`C1`](apostilas/html/C1-curso-rag-pratico.html) | RAG do Zero à Produção | Intermediário | 8h | 7 |
+| [`C2`](apostilas/html/C2-curso-agents-langgraph.html) | Agents com LangGraph | Intermediário | 12h | 8 |
+| [`C3`](apostilas/html/C3-curso-prompt-engineering.html) | Prompt Engineering Production-Ready | Júnior/Pleno | 6h | 7 |
+| [`C4`](apostilas/html/C4-curso-vector-db.html) | Vector Databases para Devs | Intermediário | 8h | 7 |
+| [`C5`](apostilas/html/C5-curso-voice-ai.html) | Voice AI (J.A.R.V.I.S.) | Intermediário | 10h | 8 |
+| [`C6`](apostilas/html/C6-curso-multimodal-rag.html) | Multimodal RAG | Avançado | 12h | 8 |
+
+### 📦 Formatos disponíveis
+
+Cada apostila está disponível em 3 formatos:
+- **HTML**: `/apostilas/html/` — fonte editável
+- **PDF**: `/apostilas/apostilas_pdf/` — pronto para impressão/distribuição
+- **Markdown**: `/apostilas/apostilas_md/` — GitHub-friendly, fácil de versionar
+

@@ -16,28 +16,54 @@ import {
   Calendar,
   ShieldCheck,
   Globe,
+  Settings,
+  Activity,
+  CheckSquare,
+  Sparkles,
+  Ticket,
+  TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useRoute } from "wouter";
+import { useLocation } from "wouter";
 
 interface AdminDashboardLayoutProps {
   children: React.ReactNode;
 }
 
-const MENU_ITEMS = [
-  { label: "Dashboard", path: "/admin", icon: BarChart3 },
-  { label: "Usuários", path: "/admin/users", icon: Users },
-  { label: "Comissões", path: "/admin/commissions", icon: Percent },
-  { label: "Rede", path: "/admin/network", icon: Network },
-  { label: "Pagamentos", path: "/admin/payments", icon: CreditCard },
-  { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle },
-  { label: "Materiais", path: "/admin/materials", icon: FileText },
-  { label: "Academia EAD", path: "/admin/academia", icon: GraduationCap },
-  { label: "Meetings", path: "/admin/meetings", icon: Calendar },
-  { label: "Governance", path: "/admin/governance", icon: ShieldCheck },
-  { label: "Federation", path: "/admin/federation", icon: Globe },
-  { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
+type MenuItem = {
+  label: string;
+  path: string;
+  icon: typeof BarChart3;
+  group?: string;
+};
+
+const MENU_ITEMS: MenuItem[] = [
+  // Operação
+  { label: "Dashboard", path: "/admin", icon: BarChart3, group: "Operação" },
+  { label: "Status do Sistema", path: "/admin/status", icon: Activity, group: "Operação" },
+  { label: "Aprovações", path: "/admin/approvals", icon: CheckSquare, group: "Operação" },
+  { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar, group: "Operação" },
+  // Negócio
+  { label: "Usuários", path: "/admin/users", icon: Users, group: "Negócio" },
+  { label: "Rede", path: "/admin/network", icon: Network, group: "Negócio" },
+  { label: "Comissões", path: "/admin/commissions", icon: Percent, group: "Negócio" },
+  { label: "Pagamentos", path: "/admin/payments", icon: CreditCard, group: "Negócio" },
+  { label: "Inadimplentes", path: "/admin/delinquents", icon: AlertCircle, group: "Negócio" },
+  { label: "Pack Tickets", path: "/admin/pack-tickets", icon: Ticket, group: "Negócio" },
+  // Conteúdo
+  { label: "Materiais", path: "/admin/materials", icon: FileText, group: "Conteúdo" },
+  { label: "Academia EAD", path: "/admin/academia", icon: GraduationCap, group: "Conteúdo" },
+  { label: "Academia Analytics", path: "/admin/academia/analytics", icon: TrendingUp, group: "Conteúdo" },
+  { label: "Meetings", path: "/admin/meetings", icon: Calendar, group: "Conteúdo" },
+  // Agentic
+  { label: "Skills", path: "/admin/skills", icon: Sparkles, group: "Agentic" },
+  { label: "Governance", path: "/admin/governance", icon: ShieldCheck, group: "Agentic" },
+  { label: "Federation", path: "/admin/federation", icon: Globe, group: "Agentic" },
+  // Sistema
+  { label: "Configurações", path: "/admin/settings", icon: Settings, group: "Sistema" },
 ];
+
+const GROUP_ORDER = ["Operação", "Negócio", "Conteúdo", "Agentic", "Sistema"];
 
 export default function AdminDashboardLayout({ children }: AdminDashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -56,6 +82,11 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
     );
   }
 
+  const grouped = GROUP_ORDER.map((g) => ({
+    group: g,
+    items: MENU_ITEMS.filter((i) => i.group === g),
+  })).filter((g) => g.items.length > 0);
+
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
@@ -70,31 +101,41 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-1 hover:bg-slate-800 rounded"
+            aria-label="Toggle sidebar"
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
-        {/* Menu Items */}
-        <nav className="flex-1 p-4 space-y-2">
-          {MENU_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const isActive = location === item.path;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded transition-colors ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-300 hover:bg-slate-800"
-                }`}
-              >
-                <Icon size={20} />
-                {sidebarOpen && <span>{item.label}</span>}
-              </button>
-            );
-          })}
+        {/* Menu Items (agrupado) */}
+        <nav className="flex-1 p-3 overflow-y-auto space-y-3">
+          {grouped.map((section) => (
+            <div key={section.group} className="space-y-1">
+              {sidebarOpen && (
+                <p className="px-3 pt-2 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
+                  {section.group}
+                </p>
+              )}
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = location === item.path;
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => navigate(item.path)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded transition-colors text-sm ${
+                      isActive
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-300 hover:bg-slate-800"
+                    }`}
+                  >
+                    <Icon size={18} />
+                    {sidebarOpen && <span className="truncate">{item.label}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* User Info */}
@@ -118,24 +159,7 @@ export default function AdminDashboardLayout({ children }: AdminDashboardLayoutP
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {MENU_ITEMS.find((item) => item.path === location)?.label || "Painel Administrativo"}
-          </h2>
-          <div className="text-sm text-gray-600">
-            {new Date().toLocaleDateString("pt-BR")}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-auto bg-gray-50">
-          <div className="p-6">
-            {children}
-          </div>
-        </div>
-      </div>
+      <div className="flex-1 overflow-y-auto">{children}</div>
     </div>
   );
 }

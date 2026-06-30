@@ -42,6 +42,22 @@ import AdminAcademia from "@/pages/AdminAcademia";
 import AdminMeetings from "@/pages/AdminMeetings";
 import AdminGovernance from "@/pages/AdminGovernance";
 import AdminFederation from "@/pages/AdminFederation";
+import AdminUsers from "@/pages/AdminUsers";
+import AdminCommissions from "@/pages/AdminCommissions";
+import AdminNetwork from "@/pages/AdminNetwork";
+import AdminPayments from "@/pages/AdminPayments";
+import AdminDelinquents from "@/pages/AdminDelinquents";
+import AdminMaterials from "@/pages/AdminMaterials";
+import AdminScheduler from "@/pages/AdminScheduler";
+import AdminSchedules from "@/pages/AdminSchedules";
+import AdminApprovals from "@/pages/AdminApprovals";
+import AdminSettings from "@/pages/AdminSettings";
+import AdminSkills from "@/pages/AdminSkills";
+import AdminRuntime from "@/pages/AdminRuntime";
+import AdminPackTickets from "@/pages/AdminPackTickets";
+import AdminAcademiaAnalytics from "@/pages/AdminAcademiaAnalytics";
+import AdminPanel from "@/pages/AdminPanel";
+import AdminAgentDetails from "@/pages/AdminAgentDetails";
 import AcademiaHub from "@/pages/AcademiaHub";
 import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
@@ -80,9 +96,27 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/academia" component={AdminAcademia} />
+      <Route path="/admin/academia/analytics" component={AdminAcademiaAnalytics} />
       <Route path="/admin/meetings" component={AdminMeetings} />
       <Route path="/admin/governance" component={AdminGovernance} />
       <Route path="/admin/federation" component={AdminFederation} />
+      <Route path="/admin/users" component={AdminUsers} />
+      <Route path="/admin/commissions" component={AdminCommissions} />
+      <Route path="/admin/network" component={AdminNetwork} />
+      <Route path="/admin/payments" component={AdminPayments} />
+      <Route path="/admin/delinquents" component={AdminDelinquents} />
+      <Route path="/admin/materials" component={AdminMaterials} />
+      <Route path="/admin/scheduler" component={AdminScheduler} />
+      <Route path="/admin/schedules" component={AdminSchedules} />
+      <Route path="/admin/approvals" component={AdminApprovals} />
+      <Route path="/admin/status" component={AdminRuntime} />
+      <Route path="/admin/runtime" component={AdminRuntime} />
+      <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/skills" component={AdminSkills} />
+      <Route path="/admin/pack-tickets" component={AdminPackTickets} />
+      <Route path="/admin/agents/:agentId" component={AdminAgentDetails} />
+      <Route path="/admin/panel" component={AdminPanel} />
+      <Route path="/marketplace" component={Marketplaces} />
       <Route path="/academia" component={AcademiaHub} />
       <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />

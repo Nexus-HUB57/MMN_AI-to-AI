@@ -594,6 +594,9 @@
 # PostgreSQL
 **/*.backup
 **/*.sql
+!database/migrations/*.sql
+!backend/migrations/*.sql
+!_marketplace_nexus_release/**/*.sql
 
 # MongoDB
 **/dump/

@@ -51,6 +51,7 @@ import { governanceLoopRouter } from "./agentic/governance-loop/router";
 import { multiTenantRouter } from "./agentic/multi-tenant/router";
 import { cSuiteRouter } from "./agentic/c-suite-bridge/router";
 import { bootstrapCSuite } from "./agentic/c-suite-bridge/bootstrap";
+import { nexusRagRouter } from "./routers/nexusRagRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -173,6 +174,7 @@ export const appRouter = router({
         governanceLoop: true,
         multiTenant: true,
         cSuite: true,
+        nexusRag: true,
       },
     })),
   }),
@@ -209,6 +211,7 @@ export const appRouter = router({
   governanceLoop: governanceLoopRouter,
   multiTenant: multiTenantRouter,
   cSuite: cSuiteRouter,
+  nexusRag: nexusRagRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

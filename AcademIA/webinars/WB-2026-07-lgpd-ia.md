@@ -10,7 +10,7 @@ pattern: "MMN_IA"
 status: "planejado"
 ---
 
-![Capa — LGPD + IA](../../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
+![Capa — LGPD + IA](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
 
 **WB-2026-07 · LGPD + IA: Como Não Ser Multado em R$ 50M**
 

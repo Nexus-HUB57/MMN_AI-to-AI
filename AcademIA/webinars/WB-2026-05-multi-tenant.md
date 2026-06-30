@@ -10,7 +10,7 @@ pattern: "MMN_IA"
 status: "planejado"
 ---
 
-![Capa — Multi-Tenant e White-Label](../../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
+![Capa — Multi-Tenant e White-Label](../../assets/ebook_covers/ACAD-apostila-01-apresentacao-infraestrutura.webp)
 
 **WB-2026-05 · Multi-Tenant e White-Label: Quando Vale a Pena Escalar**
 

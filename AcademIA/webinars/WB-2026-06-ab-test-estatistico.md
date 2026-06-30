@@ -10,7 +10,7 @@ pattern: "MMN_IA"
 status: "planejado"
 ---
 
-![Capa — A/B Testing Estatístico](../../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
+![Capa — A/B Testing Estatístico](../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
 
 **WB-2026-06 · A/B Testing Estatístico: Como Não Ser Enganado pelos Seus Próprios Dados**
 

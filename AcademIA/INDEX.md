@@ -239,3 +239,35 @@ Cada apostila está disponível em 3 formatos:
 - **PDF**: `/apostilas/apostilas_pdf/` — pronto para impressão/distribuição
 - **Markdown**: `/apostilas/apostilas_md/` — GitHub-friendly, fácil de versionar
 
+
+## 🎓 [`apostilas/certificacao/`](apostilas/certificacao/) — Hub de Certificação (Junho 2026)
+
+> Sistema oficial de avaliação e emissão de certificados AcademIA. 10 quizzes (1 por apostila), modelo de certificado com QR de verificação.
+
+### 📋 Quizzes disponíveis
+
+Cada apostila tem um quiz de 10 questões (8 objetivas + 2 dissertativas). Duração e critério de aprovação variam por categoria:
+
+| Código | Quiz | Duração | Aprovação | HTML | PDF |
+|--------|------|---------|-----------|------|-----|
+| T1 | Quiz Trilha Fundamental | 20 min | ≥7/10 | [HTML](apostilas/certificacao/quiz-T1.html) | [PDF](apostilas/certificacao/pdf/quiz-T1.pdf) |
+| T2 | Quiz Trilha Elite | 45 min | ≥8/10 | [HTML](apostilas/certificacao/quiz-T2.html) | [PDF](apostilas/certificacao/pdf/quiz-T2.pdf) |
+| T3 | Quiz Trilha Master Arquitetura | 60 min | ≥8/10 | [HTML](apostilas/certificacao/quiz-T3.html) | [PDF](apostilas/certificacao/pdf/quiz-T3.pdf) |
+| T4 | Quiz Trilha Master Mentoria | 30 min | ≥7/10 | [HTML](apostilas/certificacao/quiz-T4.html) | [PDF](apostilas/certificacao/pdf/quiz-T4.pdf) |
+| C1-C6 | Quizzes Cursos Práticos | 15-30 min | ≥7-8/10 | [Hub](apostilas/certificacao/index.html) | PDFs disponíveis |
+
+### 📜 Modelo de Certificado
+
+Exemplo oficial de certificado AcademIA, com QR de verificação, selo digital e assinatura autoral:
+
+- [📄 Ver exemplo (HTML)](apostilas/certificacao/certificado-exemplo.html)
+- [📥 Download PDF](apostilas/certificacao/pdf/certificado-exemplo.pdf)
+
+**Como obter seu certificado:**
+1. Complete o projeto integrador da apostila
+2. Baixe o quiz correspondente
+3. Responda todas as 10 questões (duração indicada)
+4. Submeta via portal AcademIA ou e-mail `certificacao@nexus-hub57.ai`
+5. Análise em até 48h. Se aprovado, receba o PDF oficial com QR de verificação
+6. Validade: 2 anos · Pré-requisito para próximas trilhas
+

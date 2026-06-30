@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado AcademIA — Aluno Exemplar Nexus</title>
+    <style>
+@page { size: A4 landscape; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Georgia', serif; background: #fafafa; }
+.cert {
+    width: 297mm; height: 210mm; padding: 30mm 25mm;
+    background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+    border: 8px double #1e1b4b;
+    margin: 0 auto; position: relative; text-align: center;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+.cert::before {
+    content: ''; position: absolute; top: 12mm; left: 12mm; right: 12mm; bottom: 12mm;
+    border: 1px solid #4338ca;
+}
+.cert .header { position: absolute; top: 20mm; left: 0; right: 0; }
+.cert .header h1 { font-size: 2.2rem; color: #1e1b4b; letter-spacing: 3px; }
+.cert .header .subtitle { font-size: 0.9rem; color: #64748b; margin-top: 0.5rem; letter-spacing: 2px; }
+.cert .body { margin-top: 25mm; max-width: 600px; }
+.cert .body .label { font-size: 1rem; color: #64748b; font-style: italic; margin-bottom: 0.8rem; }
+.cert .body .name { font-size: 2.6rem; color: #1e1b4b; font-weight: bold; margin: 0.5rem 0; font-family: 'Brush Script MT', cursive; }
+.cert .body .achievement { font-size: 1rem; color: #475569; margin-top: 1.5rem; line-height: 1.8; }
+.cert .body .course-name { font-size: 1.4rem; color: #4338ca; font-weight: bold; margin: 0.5rem 0; }
+.cert .footer { position: absolute; bottom: 22mm; left: 0; right: 0; display: flex; justify-content: space-around; align-items: center; }
+.cert .footer .sign { text-align: center; font-size: 0.85rem; color: #475569; }
+.cert .footer .sign .line { width: 200px; border-top: 1px solid #1e1b4b; margin: 0 auto 0.3rem; }
+.cert .footer .sign strong { display: block; color: #1e1b4b; font-size: 0.95rem; }
+.cert .qr { position: absolute; bottom: 12mm; right: 12mm; font-size: 0.7rem; color: #94a3b8; }
+.cert .seal { position: absolute; top: 18mm; right: 18mm; width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #4338ca, #1e1b4b); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; line-height: 1.1; transform: rotate(-15deg); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+<div class="cert">
+    <div class="header">
+        <h1>ACADEMIA · NEXUS HUB57</h1>
+        <div class="subtitle">CERTIFICADO DE CONCLUSÃO</div>
+    </div>
+    <div class="seal">SELO<br>OFICIAL<br>NEXUS</div>
+    <div class="body">
+        <div class="label">Certificamos que</div>
+        <div class="name">Aluno Exemplar Nexus</div>
+        <div class="achievement">concluiu com aproveitamento a avaliação da apostila</div>
+        <div class="course-name">Trilha Fundamental: IA para Afiliados</div>
+        <div class="achievement">Categoria <strong>Fundamental</strong> · ISBN AC-FUND-01<br>com carga horária de <strong>40 horas</strong> e aproveitamento ≥ 7/10</div>
+    </div>
+    <div class="footer">
+        <div class="sign">
+            <div class="line"></div>
+            <strong>Shakespeare da Atualidade</strong>
+            PHD nível Harvard do Universo AI<br>
+            Autor &amp; Mentor AcademIA
+        </div>
+        <div class="sign">
+            <div class="line"></div>
+            <strong>AcademIA · Nexus HUB57</strong>
+            Plataforma Educacional<br>
+            CNPJ XX.XXX.XXX/0001-XX
+        </div>
+    </div>
+    <div class="qr">
+        Verificação: <strong>NEXUS-AC-FUND-2026-ABCD1234</strong><br>
+        https://academia.nexus-hub57.ai/verify/NEXUS-AC-FUND-2026-ABCD1234<br>
+        Emitido em 30/06/2026
+    </div>
+</div>
+</body>
+</html>

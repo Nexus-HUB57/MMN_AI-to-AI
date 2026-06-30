@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Hub de Certificação AcademIA</title>
+    <style>
+body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%); color: white; padding: 3rem; min-height: 100vh; }
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.subtitle { font-size: 1.1rem; opacity: 0.85; margin-bottom: 2rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
+.card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.2s; }
+.card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.15); }
+.card h3 { color: white; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.card .meta { font-size: 0.85rem; opacity: 0.8; margin-bottom: 1rem; }
+.card .badge { display: inline-block; background: #10b981; color: white; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.75rem; font-weight: bold; }
+.card a { display: inline-block; background: white; color: #1e1b4b; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 0.8rem; }
+.info { background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎓 Hub de Certificação AcademIA</h1>
+    <p class="subtitle">Sistema oficial de avaliação e emissão de certificados · 10 apostilas · Shakespeare/PHD Harvard</p>
+    
+    <div class="info">
+        <h3>Como funciona</h3>
+        <ol style="margin-left:1.5rem;margin-top:0.5rem;">
+            <li>Escolha a apostila que você completou (projeto integrador entregue).</li>
+            <li>Baixe o quiz em HTML ou PDF.</li>
+            <li>Responda todas as 10 questões em até 290 minutos totais.</li>
+            <li>Submeta via portal AcademIA ou e-mail.</li>
+            <li>Análise em até 48h. Se aprovado (≥7/10), receba o certificado em PDF com QR de verificação.</li>
+        </ol>
+    </div>
+    
+    <h2 style="margin-top:2rem;">Quizzes disponíveis</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Trilha Fundamental: IA para Afiliados</h3>
+            <div class="meta">ISBN AC-FUND-01 · 20 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#10b981">Fundamental</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-T1.html">📝 HTML</a>
+                <a href="pdf/quiz-T1.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Trilha Elite: Engenharia de IA em Produção</h3>
+            <div class="meta">ISBN AC-ELITE-01 · 45 min · Aprovação ≥8/10</div>
+            <span class="badge" style="background:#3b82f6">Elite</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-T2.html">📝 HTML</a>
+                <a href="pdf/quiz-T2.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Trilha Master: Arquitetura de Sistemas Agentic</h3>
+            <div class="meta">ISBN AC-MASTER-01 · 60 min · Aprovação ≥8/10</div>
+            <span class="badge" style="background:#7c3aed">Master</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-T3.html">📝 HTML</a>
+                <a href="pdf/quiz-T3.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Trilha Master: Mentoria e Liderança Técnica</h3>
+            <div class="meta">ISBN AC-MASTER-02 · 30 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#7c3aed">Master</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-T4.html">📝 HTML</a>
+                <a href="pdf/quiz-T4.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: RAG do Zero à Produção</h3>
+            <div class="meta">ISBN AC-CURSO-01 · 20 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#f59e0b">Curso Prático</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C1.html">📝 HTML</a>
+                <a href="pdf/quiz-C1.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: Agents com LangGraph</h3>
+            <div class="meta">ISBN AC-CURSO-02 · 25 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#f59e0b">Curso Prático</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C2.html">📝 HTML</a>
+                <a href="pdf/quiz-C2.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: Prompt Engineering Production-Ready</h3>
+            <div class="meta">ISBN AC-CURSO-03 · 15 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#f59e0b">Curso Prático</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C3.html">📝 HTML</a>
+                <a href="pdf/quiz-C3.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: Vector Databases para Devs</h3>
+            <div class="meta">ISBN AC-CURSO-04 · 20 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#f59e0b">Curso Prático</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C4.html">📝 HTML</a>
+                <a href="pdf/quiz-C4.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: Voice AI (J.A.R.V.I.S.)</h3>
+            <div class="meta">ISBN AC-CURSO-05 · 25 min · Aprovação ≥7/10</div>
+            <span class="badge" style="background:#f59e0b">Curso Prático</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C5.html">📝 HTML</a>
+                <a href="pdf/quiz-C5.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Curso: Multimodal RAG</h3>
+            <div class="meta">ISBN AC-CURSO-06 · 30 min · Aprovação ≥8/10</div>
+            <span class="badge" style="background:#ef4444">Curso Avançado</span>
+            <div style="margin-top:0.8rem;">
+                <a href="quiz-C6.html">📝 HTML</a>
+                <a href="pdf/quiz-C6.pdf" style="margin-left:0.5rem;">📄 PDF</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info" style="margin-top:2rem;">
+        <h3>📜 Modelo de Certificado</h3>
+        <p>Veja um exemplo de certificado oficial AcademIA:</p>
+        <a href="certificado-exemplo.html" style="background:white;color:#1e1b4b;padding:0.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;margin-top:0.5rem;">Ver Certificado Exemplo</a>
+        <a href="pdf/certificado-exemplo.pdf" style="background:white;color:#1e1b4b;padding:0.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;margin-top:0.5rem;margin-left:0.5rem;">Download PDF</a>
+    </div>
+    
+    <div class="info">
+        <h3>📊 Estatísticas</h3>
+        <p>• 10 quizzes · 100 questões totais (80 objetivas + 20 dissertativas)<br>
+           • 10 certificados únicos · QR de verificação · Validade 2 anos<br>
+           • Tempo total estimado para concluir todas as certificações: 290 min<br>
+           • Emissão automática via portal ou manual via e-mail</p>
+    </div>
+</div>
+</body>
+</html>

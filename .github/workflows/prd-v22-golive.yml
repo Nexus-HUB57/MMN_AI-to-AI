@@ -8,7 +8,7 @@ on:
         required: true
         default: 'GO-LIVE'
       skip_frontend_build:
-        description: 'Pular build frontend (rebuild manual)?'
+        description: 'Pular build frontend?'
         required: false
         default: 'false'
   push:
@@ -18,6 +18,9 @@ on:
 env:
   REMOTE_APP: /var/www/oneverso/current
   REMOTE_REPO: /var/www/oneverso/repo
+  VPS_HOST: 143.95.213.237
+  VPS_PORT: 22022
+  VPS_USER: root
 
 jobs:
   deploy:
@@ -30,55 +33,70 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔑 Setup SSH via Secrets
+      - name: 🔑 Setup SSH key
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
-          cat > ~/.ssh/config <<EOF
-          Host nexus-prod
-            HostName ${{ secrets.VPS_HOST }}
-            Port ${{ secrets.VPS_PORT }}
-            User root
-            IdentityFile ~/.ssh/deploy_key
-            StrictHostKeyChecking no
-            UserKnownHostsFile /dev/null
-            ConnectTimeout 15
-          EOF
-          echo "SSH configurado para ${{ secrets.VPS_HOST }}:${{ secrets.VPS_PORT }}"
+          # Validar formato da chave
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo "❌ VPS_SSH_PRIVATE_KEY não parece ser uma chave OpenSSH válida"
+            echo "Primeira linha (mascarada):"
+            head -1 ~/.ssh/deploy_key | sed 's/./*/g'
+            exit 1
+          fi
+          # Configurar known_hosts
+          ssh-keyscan -p $VPS_PORT $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "✅ SSH key preparada (chave de $(wc -l < ~/.ssh/deploy_key) linhas)"
 
-      - name: 🩺 Pré-check conexão
+      - name: 🩺 Pré-check conexão SSH
         run: |
-          ssh nexus-prod "echo '✅ Conectado' && uname -a && pm2 list --no-color | head -15"
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -o ConnectTimeout=15 \
+              $VPS_USER@$VPS_HOST \
+              "echo '✅ Conectado' && uname -a && pm2 list --no-color | head -15"
 
       - name: 🗄️ Backup PostgreSQL
         run: |
-          ssh nexus-prod "sudo -u postgres pg_dump nexus_prod | gzip > /var/backups/oneverso-pre-prd-v22-$(date +%Y%m%d_%H%M%S).sql.gz && ls -lh /var/backups/oneverso-pre-prd-v22-*.sql.gz | tail -1"
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+              "sudo -u postgres pg_dump nexus_prod | gzip > /var/backups/oneverso-pre-prd-v22-\$(date +%Y%m%d_%H%M%S).sql.gz && ls -lh /var/backups/oneverso-pre-prd-v22-*.sql.gz | tail -1"
 
       - name: 📤 Upload artefatos v2.2
         run: |
-          scp docs/migrations/2026-07-01_prd_v22.sql nexus-prod:/tmp/prd_v22_migration.sql
-          scp scripts/deploy/frontend_patches_v22.py nexus-prod:/tmp/prd_v22_frontend.py
+          scp -i ~/.ssh/deploy_key -P $VPS_PORT -o StrictHostKeyChecking=no \
+              docs/migrations/2026-07-01_prd_v22.sql \
+              $VPS_USER@$VPS_HOST:/tmp/prd_v22_migration.sql
+          scp -i ~/.ssh/deploy_key -P $VPS_PORT -o StrictHostKeyChecking=no \
+              scripts/deploy/frontend_patches_v22.py \
+              $VPS_USER@$VPS_HOST:/tmp/prd_v22_frontend.py
 
       - name: 🛢️ Executar migration SQL
         run: |
-          ssh nexus-prod "sudo -u postgres psql -d nexus_prod -f /tmp/prd_v22_migration.sql 2>&1 | tail -30" | tee migration.log
-          echo "═══ Validação ═══"
-          grep -E 'admin_count|meeting_signals|commission_rules|settings_email' migration.log || true
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+              "sudo -u postgres psql -d nexus_prod -f /tmp/prd_v22_migration.sql 2>&1 | tail -30" | tee migration.log
+          echo "═══ Validação métricas ═══"
+          grep -E 'admin_count|meeting_signals|commission_rules|settings_email|marketplace_orders|materials' migration.log || true
 
       - name: 🎨 Aplicar patches frontend
         run: |
-          ssh nexus-prod "cd ${{ env.REMOTE_APP }} && FRONTEND_PATH=${{ env.REMOTE_APP }}/frontend/src python3 /tmp/prd_v22_frontend.py"
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+              "cd $REMOTE_APP && FRONTEND_PATH=$REMOTE_APP/frontend/src python3 /tmp/prd_v22_frontend.py"
 
-      - name: 🏗️ Build frontend (vite)
+      - name: 🏗️ Build frontend
         if: github.event.inputs.skip_frontend_build != 'true'
         run: |
-          ssh nexus-prod "cd ${{ env.REMOTE_APP }}/frontend && npm run build 2>&1 | tail -15"
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+              "cd $REMOTE_APP/frontend && npm run build 2>&1 | tail -15"
 
       - name: 🔄 Restart PM2
         run: |
-          ssh nexus-prod "pm2 restart mmn-api && sleep 3 && pm2 list --no-color"
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+              "pm2 restart mmn-api && sleep 3 && pm2 list --no-color"
 
       - name: 🧪 Smoke tests
         run: |
@@ -92,19 +110,19 @@ jobs:
           [ "$FAILED" = "0" ] && echo "✅ Todos endpoints 200 OK" || { echo "❌ $FAILED endpoints falharam"; exit 1; }
 
       - name: 🏷️ Tag v2.2.0
-        if: startsWith(github.ref, 'refs/tags/') == false
+        if: startsWith(github.ref, 'refs/tags/') == false && success()
         run: |
           git config user.name "Helena Nexus"
           git config user.email "helena@nexus-affiliate.ai"
           git tag -f v2.2.0
-          git push origin v2.2.0 --force
+          git push origin v2.2.0 --force || true
 
-      - name: 📊 Sumário Go Live
+      - name: 📊 Sumário
         if: always()
         run: |
           echo "════════════════════════════════════════"
           echo "🚀 PRD v2.2.0 — Nexus AffilIAte"
           echo "Owner: Helena Nexus (CMO/AI)"
+          echo "Host: $VPS_HOST:$VPS_PORT"
           echo "Health: https://oneverso.com.br/api/health"
-          echo "Tag: v2.2.0"
           echo "════════════════════════════════════════"

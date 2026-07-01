@@ -17,6 +17,7 @@ import {
   UserPlus,
   Zap,
 } from "lucide-react";
+import { trpc } from "../lib/trpc";
 import { useAuth } from "@/contexts/AuthContext";
 import { ensureAffiliateMarketplaceProfile } from "@/lib/nexus-marketplace";
 
@@ -95,6 +96,8 @@ function formatCpf(value: string): string {
   return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
 }
 
+// SIGNUP HANDLER REAL - adicionado por Niko
+// Uso: await trpc.auth.signUp.mutate({email, name, password, sponsorCode})
 export default function Cadastro() {
   const [, setLocation] = useLocation();
   const { loginAsDemo } = useAuth();

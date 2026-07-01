@@ -574,13 +574,14 @@ export const pixRouter = router({
     .query(async ({ ctx, input }) => {
       // D15-PH-marketplace : lê marketplace_orders do user logado
       try {
+        // FIX 01-07-2026: usar pg.Pool direto (drizzle.execute nao aceita params positional)
         const params: any[] = [ctx.user.id, input.limit, input.offset];
         let where = `mo.user_id = $1 AND mo.payment_status IN ('paid','approved')`;
         if (input.startDate) { params.push(new Date(input.startDate)); where += ` AND COALESCE(mo.paid_at, mo.created_at) >= $${params.length}`; }
         if (input.endDate)   { params.push(new Date(input.endDate));   where += ` AND COALESCE(mo.paid_at, mo.created_at) <= $${params.length}`; }
         const q = `SELECT mo.id, mo.total_cents, mo.payment_status, mo.payment_method, mo.payment_id, mo.external_reference, mo.metadata, mo.created_at, mo.paid_at FROM marketplace_orders mo WHERE ${where} ORDER BY COALESCE(mo.paid_at, mo.created_at) DESC LIMIT $2 OFFSET $3`;
-        const res: any = await (ctx as any).db.execute(q as any, params as any);
-        const rows = (res?.rows ?? res ?? []) as any[];
+        const res = await __pixPool.query(q, params);
+        const rows = (res?.rows ?? []) as any[];
         return {
           items: rows.map((p: any) => ({
             id: String(p.id),

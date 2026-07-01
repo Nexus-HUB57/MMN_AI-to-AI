@@ -1,7 +1,7 @@
 import { adminProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { eq, desc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
+import { eq, desc, asc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
 import { users, affiliates, commissions, payments, network, orders, products } from "../../../database/schemas/schema-final";
 
 /**
@@ -26,6 +26,7 @@ export const adminRouter = router({
       limit: z.number().default(20),
       role: z.enum(["user", "admin"]).optional(),
       search: z.string().optional(),
+      includeTestData: z.boolean().default(false),
     }))
     .query(async ({ ctx, input }) => {
       const offset = (input.page - 1) * input.limit;
@@ -38,6 +39,10 @@ export const adminRouter = router({
         conditions.push(
           sql`(${users.name} LIKE ${`%${input.search}%`} OR ${users.email} LIKE ${`%${input.search}%`})`
         );
+      }
+      // FIX 01-07-2026: excluir test data por default
+      if (!input.includeTestData) {
+        conditions.push(sql`COALESCE("users"."is_test_data", FALSE) = FALSE`);
       }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -703,4 +708,150 @@ export const adminRouter = router({
       recentJoins: allAffiliates.length, // Simplificado
     };
   }),
+
+  // ============ NETWORK TOPOLOGY (real) ============
+  /**
+   * Topologia da malha multinível derivada de affiliates.sponsorId.
+   * Retorna nós ativos, conexões totais, sponsors únicos, profundidade média.
+   */
+  getNetworkTopology: adminProcedure.query(async ({ ctx }) => {
+    // Buscar todas as relações sponsor -> affiliate
+    const rows = await ctx.db.select({
+      affiliateId: affiliates.id,
+      sponsorId: affiliates.sponsorId,
+      status: affiliates.status,
+    }).from(affiliates);
+
+    const activeNodes = rows.filter(r => r.status === "active").length;
+    const connections = rows.filter(r => r.sponsorId !== null).length;
+    const uniqueSponsors = new Set(
+      rows.filter(r => r.sponsorId !== null).map(r => r.sponsorId)
+    ).size;
+
+    // Calcular profundidade média via BFS a partir das raízes (sem sponsor)
+    const childrenOf = new Map<number, number[]>();
+    for (const r of rows) {
+      if (r.sponsorId !== null) {
+        const arr = childrenOf.get(r.sponsorId) ?? [];
+        arr.push(r.affiliateId);
+        childrenOf.set(r.sponsorId, arr);
+      }
+    }
+    const roots = rows.filter(r => r.sponsorId === null).map(r => r.affiliateId);
+    let depthSum = 0;
+    let depthCount = 0;
+    let maxDepth = 0;
+    for (const root of roots) {
+      const queue: Array<{ id: number; depth: number }> = [{ id: root, depth: 1 }];
+      while (queue.length) {
+        const { id, depth } = queue.shift()!;
+        depthSum += depth;
+        depthCount += 1;
+        if (depth > maxDepth) maxDepth = depth;
+        const children = childrenOf.get(id) ?? [];
+        for (const c of children) queue.push({ id: c, depth: depth + 1 });
+      }
+    }
+    const avgDepth = depthCount > 0 ? depthSum / depthCount : 0;
+
+    return {
+      activeNodes,
+      connections,
+      uniqueSponsors,
+      avgDepth: Number(avgDepth.toFixed(2)),
+      maxDepth,
+      totalAffiliates: rows.length,
+      rootCount: roots.length,
+    };
+  }),
+
+  // ============ COMMISSIONS BREAKDOWN (real) ============
+  /**
+   * Breakdown de comissões por status (pending, paid, confirmed) e nível.
+   */
+  getCommissionsBreakdown: adminProcedure.query(async ({ ctx }) => {
+    const allCommissions = await ctx.db.select().from(commissions);
+    const allPayments = await ctx.db.select().from(payments);
+
+    const pendingCents = allCommissions
+      .filter(c => c.status === "pending")
+      .reduce((sum, c) => sum + c.amount, 0);
+    const paidCents = allCommissions
+      .filter(c => c.status === "paid")
+      .reduce((sum, c) => sum + c.amount, 0);
+    const confirmedCents = allPayments
+      .filter(p => p.status === "confirmed")
+      .reduce((sum, p) => sum + p.amount, 0);
+    const totalVolumeCents = pendingCents + paidCents + confirmedCents;
+
+    // Por nível (1..5)
+    const byLevel: Record<number, { count: number; amountCents: number }> = {};
+    for (let lvl = 1; lvl <= 5; lvl++) {
+      const lvlCommissions = allCommissions.filter(c => c.level === lvl);
+      byLevel[lvl] = {
+        count: lvlCommissions.length,
+        amountCents: lvlCommissions.reduce((s, c) => s + c.amount, 0),
+      };
+    }
+
+    return {
+      pendingCents,
+      paidCents,
+      confirmedCents,
+      totalVolumeCents,
+      byLevel,
+      commissionCount: allCommissions.length,
+      paymentCount: allPayments.length,
+    };
+  }),
+
+  // ============ HEATMAP (real, derivado de affiliates) ============
+  /**
+   * Heatmap da malha em grid (rows x cols).
+   * Cada célula = atividade agregada de um bucket de afiliados.
+   * Atividade = lastSignedIn recente OU comissão recente.
+   */
+  getHeatmap: adminProcedure
+    .input(z.object({ rows: z.number().min(1).max(20).default(8), cols: z.number().min(1).max(40).default(28) }).optional())
+    .query(async ({ ctx, input }) => {
+      const rowsN = input?.rows ?? 8;
+      const colsN = input?.cols ?? 28;
+      const total = rowsN * colsN;
+
+      const affiliatesList = await ctx.db.select().from(affiliates).orderBy(asc(affiliates.id));
+      const usersList = await ctx.db.select().from(users);
+      const userById = new Map(usersList.map(u => [u.id, u]));
+
+      const now = Date.now();
+      const DAY = 86_400_000;
+
+      // Distribuir afiliados em buckets do grid
+      const grid: Array<{ level: "off" | "low" | "med" | "high"; activity: number }> = [];
+      for (let i = 0; i < total; i++) {
+        const sliceStart = Math.floor((i / total) * affiliatesList.length);
+        const sliceEnd = Math.floor(((i + 1) / total) * affiliatesList.length);
+        const slice = affiliatesList.slice(sliceStart, sliceEnd);
+
+        let activity = 0;
+        for (const a of slice) {
+          const u = userById.get(a.userId);
+          if (a.status === "active") activity += 1;
+          if (u?.lastSignedIn) {
+            const days = (now - new Date(u.lastSignedIn).getTime()) / DAY;
+            if (days < 1) activity += 3;
+            else if (days < 7) activity += 2;
+            else if (days < 30) activity += 1;
+          }
+          if ((a.totalCommissions ?? 0) > 0) activity += 2;
+        }
+
+        let level: "off" | "low" | "med" | "high" = "off";
+        if (activity >= 6) level = "high";
+        else if (activity >= 3) level = "med";
+        else if (activity >= 1) level = "low";
+        grid.push({ level, activity });
+      }
+
+      return { rows: rowsN, cols: colsN, cells: grid };
+    }),
 });

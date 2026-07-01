@@ -220,6 +220,16 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const [ebookCart, setEbookCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
+  // Fix bug 404 /marketplaces/cart: abrir cart automaticamente via ?openCart=1
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("openCart") === "1") {
+        setCartOpen(true);
+      }
+    }
+  }, []);
+
   // NEXUS_UX_STATES_V2
   const debouncedEbookSearch = useDebounceValue(ebookSearch, 220);
   const [nexusQuickView, setNexusQuickView] = useState<any | null>(null);

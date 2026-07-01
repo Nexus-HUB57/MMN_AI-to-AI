@@ -82,6 +82,8 @@ export function readMarketplaceCheckoutIntent(): MarketplaceCheckoutIntent | nul
   if (typeof window === "undefined") return null;
 
   const params = new URLSearchParams(window.location.search);
+
+  // 1. Formato preferido: intent codificado base64
   const encodedIntent = params.get("intent");
   if (encodedIntent) {
     try {
@@ -93,10 +95,32 @@ export function readMarketplaceCheckoutIntent(): MarketplaceCheckoutIntent | nul
         return normalized;
       }
     } catch {
-      // fallback para session storage
+      // fallback para params soltos ou session storage
     }
   }
 
+  // 2. Fallback: query params soltos (amountCents, description, payerEmail, source, name, slug)
+  const amountCentsParam = params.get("amountCents");
+  const descriptionParam = params.get("description");
+  if (amountCentsParam) {
+    const amountCents = Number.parseInt(amountCentsParam, 10);
+    if (Number.isFinite(amountCents) && amountCents > 0) {
+      const looseIntent: MarketplaceCheckoutIntent = {
+        source: (params.get("source") as any) || "marketplaces",
+        type: (params.get("type") as any) || "produto",
+        slug: params.get("slug") || "ebook-checkout",
+        name: params.get("name") || descriptionParam || "Produto Nexus",
+        amountCents,
+        description: descriptionParam || params.get("name") || "Pagamento Nexus",
+        payerEmail: params.get("payerEmail") || undefined,
+      } as any;
+      const normalized = normalizeIntent(looseIntent);
+      persistIntent(normalized);
+      return normalized;
+    }
+  }
+
+  // 3. Ultima opcao: session storage (usuario voltou pra pagina)
   const stored = safeJsonParse<MarketplaceCheckoutIntent>(window.sessionStorage.getItem(MARKETPLACE_CHECKOUT_STORAGE_KEY));
   return stored ? normalizeIntent(stored) : null;
 }

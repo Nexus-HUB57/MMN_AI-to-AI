@@ -668,4 +668,88 @@ export const authRouter = router({
         provider: input.provider,
       };
     }),
+
+  signUp: publicProcedure
+    .input(z.object({
+      email: z.string().email(),
+      name: z.string().min(3),
+      password: z.string().min(8).optional(),
+      sponsorCode: z.string().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { Pool } = await import("pg");
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const client = await pool.connect();
+
+      try {
+        await client.query("BEGIN");
+
+        const cfgRes = await client.query(
+          "SELECT key, value FROM niko_sandbox_config WHERE key IN ('private_mode', 'registration_allowed', 'founders_whitelist')"
+        );
+        const cfg: Record<string, any> = {};
+        cfgRes.rows.forEach((r: any) => {
+          try { cfg[r.key] = JSON.parse(r.value); } catch { cfg[r.key] = r.value; }
+        });
+
+        const privateMode = cfg.private_mode === true || cfg.private_mode === "true";
+        const regAllowed = cfg.registration_allowed === true || cfg.registration_allowed === "true";
+        const whitelist: string[] = Array.isArray(cfg.founders_whitelist) ? cfg.founders_whitelist : [];
+
+        if (privateMode && !regAllowed) {
+          const emailLower = input.email.toLowerCase();
+          const isWhitelisted = whitelist.some((w: string) => w.toLowerCase() === emailLower);
+          if (!isWhitelisted) {
+            throw new Error("Cadastros externos temporariamente pausados. Sistema em modo convite privado.");
+          }
+        }
+
+        const dupRes = await client.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [input.email]);
+        if (dupRes.rows.length > 0) {
+          throw new Error("Este email ja esta cadastrado.");
+        }
+
+        const userIns = await client.query(
+          "INSERT INTO users (\"openId\", name, email, role, is_test_data, \"createdAt\", \"updatedAt\") VALUES ($1, $2, $3, 'affiliate', false, NOW(), NOW()) RETURNING id",
+          ["signup-" + input.email.replace(/[^a-zA-Z0-9]/g, "-") + "-" + Date.now(), input.name, input.email]
+        );
+        const userId = userIns.rows[0].id;
+
+        const seqRes = await client.query("SELECT COUNT(*)::int AS c FROM affiliates WHERE (is_test_data = false OR is_test_data IS NULL) AND \"affiliateCode\" LIKE 'NX-%'");
+        const nextNum = String(((seqRes.rows[0] && seqRes.rows[0].c) || 0) + 1).padStart(5, "0");
+        const affCode = "NX-" + nextNum;
+
+        const affIns = await client.query(
+          "INSERT INTO affiliates (\"affiliateCode\", \"userId\", status, \"createdAt\", \"updatedAt\", is_test_data) VALUES ($1, $2, 'active', NOW(), NOW(), false) RETURNING id",
+          [affCode, userId]
+        );
+        const affId = affIns.rows[0].id;
+
+        await client.query(
+          "INSERT INTO niko_operational_memory (episode_type, subject, decision, rationale, autonomy_level, linked_metrics) VALUES ('signup', $1, $2, 'Cadastro autonomo via authRouter.signUp - modo privado whitelist', 'execute_low', $3::jsonb)",
+          [
+            "signup-" + affCode + "-" + Date.now(),
+            "user_signed_up",
+            JSON.stringify({ userId, affId, affCode, email: input.email, sponsorCode: input.sponsorCode })
+          ]
+        );
+
+        await client.query("COMMIT");
+
+        return {
+          ok: true,
+          userId,
+          affiliateId: affId,
+          affiliateCode: affCode,
+          message: "Cadastro realizado com sucesso!",
+        };
+      } catch (e: any) {
+        await client.query("ROLLBACK");
+        throw new Error(e.message || "Erro no cadastro");
+      } finally {
+        client.release();
+        await pool.end();
+      }
+    }),
+
 });

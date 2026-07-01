@@ -32,6 +32,7 @@ import { commissionsRouter } from "./domains/commissions/router";
 import { approvalsRouter } from "./routers/approvalsRouter";
 import { aiSyncRouter } from "./routers/aiSyncRouter";
 import { cronRouter } from "./domains/cron/router";
+import { nexusRagRouter } from "./routers/nexusRagRouter";
 import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
@@ -201,6 +202,7 @@ export const appRouter = router({
   commissions: commissionsRouter,
   approvals: approvalsRouter,
   cron: cronRouter,
+  nexusRag: nexusRagRouter,
   performance: performanceRouter,
   health: healthRouter,
   adminAuth: adminAuthRouter,

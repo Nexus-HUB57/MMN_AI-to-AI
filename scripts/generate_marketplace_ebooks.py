@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import re
 import shutil
 import unicodedata
@@ -13,7 +14,8 @@ from typing import Iterable
 import markdown
 from weasyprint import HTML
 
-ROOT = Path('/var/www/oneverso/repo')
+# Permite override via env: ROOT_DIR=... python3 scripts/generate_marketplace_ebooks.py
+ROOT = Path(os.environ.get('ROOT_DIR') or Path(__file__).resolve().parents[1])
 EBOOKS_ROOT = ROOT / 'docs' / 'ebooks_markdown'
 PUBLIC_ROOT = ROOT / 'frontend' / 'public' / 'ebooks'
 PUBLIC_PDF = PUBLIC_ROOT / 'pdf'

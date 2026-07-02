@@ -128,6 +128,7 @@ export interface MarketplaceEbook {
   highlights: string[];
   unlockPackSlug: string;
   sourceMarkdown?: string;
+  coverPublicPath?: string;
 }
 
 export interface ExternalMarketplaceChannel {

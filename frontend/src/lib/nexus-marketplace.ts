@@ -207,7 +207,7 @@ export interface ProgressSnapshot {
   directProgress: number;
   directProgressPct?: number;
   directRemaining?: number;
-  nextLevel?: { label: string; subtitle?: string } | null;
+  nextLevel?: { label: string; subtitle?: string; requiredXp?: number; requiredDirects?: number } | null;
 }
 
 export const MARKETPLACE_PROFILE_STORAGE_KEY = "mmn-ai-marketplace-profile";

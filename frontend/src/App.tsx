@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
+import OnboardingFundadores from "@/pages/OnboardingFundadores";
 import Login from "@/pages/Login";
 import Logout from "@/pages/Logout";
 import Cadastro from "@/pages/Cadastro";
@@ -71,6 +72,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/onboarding-fundadores" component={OnboardingFundadores} />
+      <Route path="/fundadores" component={OnboardingFundadores} />
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />

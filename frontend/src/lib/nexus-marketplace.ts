@@ -127,6 +127,7 @@ export interface MarketplaceEbook {
   pdfPath: string;
   highlights: string[];
   unlockPackSlug: string;
+  sourceMarkdown?: string;
 }
 
 export interface ExternalMarketplaceChannel {

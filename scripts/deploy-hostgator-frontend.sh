@@ -129,6 +129,10 @@ set ssl:verify-certificate yes
 set ssl:check-hostname no
 set ftp:ssl-allow yes
 set ftp:ssl-protect-data yes
+set net:timeout 15
+set net:max-retries 3
+set net:reconnect-interval-base 5
+set mirror:use-pget-n 5
 open -u $HOSTGATOR_USER,$HOSTGATOR_PASS $HOSTGATOR_HOST
 lcd $DIST_DIR
 cd $HOSTGATOR_REMOTE_PATH
@@ -141,7 +145,7 @@ mirror --reverse --delete --verbose --dry-run
   log_warn "Executando em modo DRY-RUN (nenhuma alteração será aplicada)."
 else
   LFTP_CMDS+="
-mirror --reverse --delete --parallel=4 --verbose
+mirror --reverse --delete --parallel=10 --use-cache --no-empty-dirs --verbose
 "
 fi
 

@@ -551,8 +551,8 @@ export default function AdminSchedules() {
 
     return successRates.map((rate: any) => {
       const job = jobs.find((candidate) => candidate.jobType === rate.jobType);
-      const stuck = stuckByJobType.get(rate.jobType);
-      const failure = failuresByJobType.get(rate.jobType);
+      const stuck = stuckByJobType.get(rate.jobType) as any;
+      const failure = failuresByJobType.get(rate.jobType) as any;
       const totalRuns7d = Number(rate?.window7d?.total ?? 0);
       const totalRuns30d = Number(rate?.window30d?.total ?? 0);
       const successCount7d = Number(rate?.window7d?.success ?? 0);

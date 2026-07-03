@@ -336,522 +336,58 @@ export const adminRouter = router({
    */
   getNetworkTree: adminProcedure
     .input(z.object({
-      userId: z.number().optional(),
-      affiliateId: z.number().optional(),
-      maxDepth: z.number().default(3),
-    }))
-    .query(async ({ ctx, input }) => {
-      const getUserId = async () => {
-        if (input.userId) return input.userId;
-        if (input.affiliateId) {
-          const [aff] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, input.affiliateId));
-          return aff?.userId;
+      rootAffiliateId: z.number().optional(),
+      maxDepth: z.number().min(1).max(10).default(3),
+    }).optional())
+    .query(async ({ input }) => {
+      const { Pool } = await import("pg");
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const client = await pool.connect();
+      try {
+        // Se não passar rootAffiliateId, usa Lucas (NX-FOUNDER-001)
+        let rootId = input?.rootAffiliateId;
+        if (!rootId) {
+          const rootRes = await client.query(
+            `SELECT id FROM affiliates WHERE "affiliateCode" = 'NX-FOUNDER-001' LIMIT 1`
+          );
+          rootId = rootRes.rows[0]?.id ?? null;
         }
-        return null;
-      };
+        if (!rootId) return { root: null, nodes: [], totalNodes: 0, directs: 0 };
 
-      const sponsorId = await getUserId();
-      if (!sponsorId) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "userId ou affiliateId requerido" });
+        const maxDepth = input?.maxDepth ?? 3;
+        // Query recursiva (CTE) para pegar toda a árvore até maxDepth
+        const treeRes = await client.query(`
+          WITH RECURSIVE tree AS (
+            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId", 
+                   u.name, u.email, 1 AS depth
+            FROM affiliates a
+            JOIN users u ON u.id = a."userId"
+            WHERE a.id = $1
+            UNION ALL
+            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId",
+                   u.name, u.email, t.depth + 1
+            FROM affiliates a
+            JOIN users u ON u.id = a."userId"
+            JOIN tree t ON a."sponsorId" = t.id
+            WHERE t.depth < $2 AND a.is_test_data = false
+          )
+          SELECT id, "affiliateCode" AS code, "userId", "sponsorId", name, email, depth
+          FROM tree
+          ORDER BY depth, id
+        `, [rootId, maxDepth]);
+
+        const nodes = treeRes.rows;
+        const root = nodes.find((n: any) => n.depth === 1) ?? null;
+        const directs = nodes.filter((n: any) => n.depth === 2).length;
+        return {
+          root,
+          nodes,
+          totalNodes: nodes.length,
+          directs,
+        };
+      } finally {
+        client.release();
+        await pool.end();
       }
-
-      const buildTree = async (sponsorId: number, depth: number): Promise<any[]> => {
-        if (depth > (input.maxDepth || 3)) return [];
-
-        const downline = await ctx.db.select({
-          userId: network.userId,
-          level: network.level,
-        }).from(network).where(eq(network.sponsorId, sponsorId));
-
-        const tree = [];
-        for (const member of downline) {
-          const [user] = await ctx.db.select().from(users).where(eq(users.id, member.userId));
-          const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, member.userId));
-
-          tree.push({
-            userId: member.userId,
-            name: user?.name || "Unknown",
-            email: user?.email,
-            level: member.level,
-            affiliateCode: affiliate?.affiliateCode,
-            status: affiliate?.status,
-            children: await buildTree(member.userId, depth + 1),
-          });
-        }
-
-        return tree;
-      };
-
-      return buildTree(sponsorId, 0);
-    }),
-
-  /**
-   * Estatísticas da rede
-   */
-  getNetworkStats: adminProcedure.query(async ({ ctx }) => {
-    const [totalUsers] = await ctx.db.select({ count: count() }).from(users);
-    const [totalAffiliates] = await ctx.db.select({ count: count() }).from(affiliates);
-    const [activeAffiliates] = await ctx.db.select({ count: count() }).from(affiliates).where(eq(affiliates.status, "active"));
-
-    // Calcular uplines únicos (sponsors)
-    const allNetwork = await ctx.db.select().from(network);
-    const uniqueSponsors = new Set(allNetwork.map(n => n.sponsorId));
-
-    return {
-      totalUsers: Number(totalUsers.count),
-      totalAffiliates: Number(totalAffiliates.count),
-      activeAffiliates: Number(activeAffiliates.count),
-      totalConnections: allNetwork.length,
-      uniqueSponsors: uniqueSponsors.size,
-    };
-  }),
-
-  // ============ ORDERS & PRODUCTS ============
-
-  /**
-   * Listar pedidos
-   */
-  listOrders: adminProcedure
-    .input(z.object({
-      page: z.number().default(1),
-      limit: z.number().default(20),
-      status: z.enum(["pending", "confirmed", "shipped", "delivered", "cancelled", "refunded"]).optional(),
-      marketplace: z.string().optional(),
-    }))
-    .query(async ({ ctx, input }) => {
-      const offset = (input.page - 1) * input.limit;
-
-      const conditions = [];
-      if (input.status) conditions.push(eq(orders.status, input.status));
-      if (input.marketplace) conditions.push(eq(orders.marketplace, input.marketplace));
-
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
-      const [ordersList, [{ total }]] = await Promise.all([
-        ctx.db.select().from(orders)
-          .where(whereClause)
-          .orderBy(desc(orders.createdAt))
-          .limit(input.limit)
-          .offset(offset),
-        ctx.db.select({ total: count() }).from(orders).where(whereClause),
-      ]);
-
-      return {
-        orders: ordersList,
-        pagination: {
-          page: input.page,
-          limit: input.limit,
-          total: Number(total),
-          totalPages: Math.ceil(Number(total) / input.limit),
-        },
-      };
-    }),
-
-  /**
-   * Estatísticas de vendas
-   */
-  getSalesStats: adminProcedure.query(async ({ ctx }) => {
-    const allOrders = await ctx.db.select().from(orders);
-
-    const byMarketplace = allOrders.reduce((acc, o) => {
-      acc[o.marketplace] = (acc[o.marketplace] || 0) + o.amount;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return {
-      totalOrders: allOrders.length,
-      totalRevenue: allOrders.reduce((sum, o) => sum + o.amount, 0),
-      totalCommissions: allOrders.reduce((sum, o) => sum + o.commissionAmount, 0),
-      byStatus: {
-        pending: allOrders.filter(o => o.status === "pending").length,
-        confirmed: allOrders.filter(o => o.status === "confirmed").length,
-        shipped: allOrders.filter(o => o.status === "shipped").length,
-        delivered: allOrders.filter(o => o.status === "delivered").length,
-        cancelled: allOrders.filter(o => o.status === "cancelled").length,
-      },
-      byMarketplace,
-    };
-  }),
-
-  // ============ PLATFORM SETTINGS ============
-
-  /**
-   * Buscar configurações da plataforma
-   */
-  getSettings: adminProcedure.query(async ({ ctx }) => {
-    // -----------------------------------------------------------------------
-    // Nexus SaaS · IOAID — Regramento oficial de comissionamento
-    // Fonte: docs/planning/Age.txt (Clube de Vantagens · Revenda Multilevel)
-    // -----------------------------------------------------------------------
-    // Estrutura: Matriz Forçada com profundidade máxima de 5 Níveis.
-    // Sem percentual padrão: cada nível tem seu próprio percentual oficial.
-    // -----------------------------------------------------------------------
-    return {
-      platformName: "Nexus SaaS · IOAID",
-      supportEmail: "suporte@nexus-saas.com.br",
-      // Sem comissão padrão — cada nível é regido pelo regramento oficial
-      defaultCommission: null,
-      networkModel: "forced_matrix",
-      commissionLevels: [
-        {
-          level: 1,
-          percentage: 20,
-          label: "1º Nível",
-          description: "20% de Participação sobre Resultados do N.O 1º Nível (Multilevel)",
-        },
-        {
-          level: 2,
-          percentage: 10,
-          label: "2º Nível",
-          description: "10% de Participação sobre Resultados do N.O 2º Nível (Multilevel)",
-        },
-        {
-          level: 3,
-          percentage: 5,
-          label: "3º Nível",
-          description: "5% de Participação sobre Resultados do N.O 3º Nível (Multilevel)",
-        },
-        {
-          level: 4,
-          percentage: 2.5,
-          label: "4º Nível",
-          description: "2,5% de Participação sobre Resultados do N.O 4º Nível (Multilevel)",
-        },
-        {
-          level: 5,
-          percentage: 1,
-          label: "5º Nível",
-          description: "1% de Participação sobre Resultados do N.O 5º Nível (Multilevel)",
-        },
-      ],
-      // Matriz Forçada padronizada em 5 níveis
-      maxNetworkDepth: 5,
-      compressionEnabled: true,
-      apiStatus: {
-        gemini: Boolean(process.env.GEMINI_API_KEY),
-        openai: Boolean(process.env.OPENAI_API_KEY),
-        database: Boolean(process.env.DATABASE_URL),
-        redis: Boolean(process.env.REDIS_URL),
-        hotmart: Boolean(process.env.HOTMART_CLIENT_ID),
-        shopee: Boolean((process.env.SHOPEE_AFFILIATE_ID && process.env.SHOPEE_AFFILIATE_USERNAME) || (process.env.SHOPEE_PARTNER_ID && process.env.SHOPEE_PARTNER_KEY && (process.env.SHOPEE_REDIRECT_URI || process.env.SHOPEE_PUSH_CALLBACK_URL))),
-      },
-    };
-  }),
-
-  /**
-   * Atualizar configurações
-   */
-  updateSettings: adminProcedure
-    .input(z.object({
-      platformName: z.string().optional(),
-      supportEmail: z.string().email().optional(),
-      defaultCommission: z.number().min(0).max(100).nullable().optional(),
-      maxNetworkDepth: z.number().min(1).max(20).optional(),
-      compressionEnabled: z.boolean().optional(),
-      commissionLevels: z
-        .array(
-          z.object({
-            level: z.number().int().min(1).max(20),
-            percentage: z.number().min(0).max(100),
-            label: z.string().optional(),
-            description: z.string().optional(),
-          }),
-        )
-        .optional(),
-    }))
-    .mutation(async ({ input }) => {
-      // Em produção, salvaria em tabela de configurações
-      console.log("Settings updated:", input);
-      return { success: true, message: "Configurações atualizadas" };
-    }),
-
-  /**
-   * Limpar cache de runtime (seguro para produção).
-   */
-  clearRuntimeCache: adminProcedure
-    .mutation(async () => {
-      const clearedAt = new Date().toISOString();
-      (globalThis as any).__ONEVERSO_ADMIN_CACHE_CLEARED_AT = clearedAt;
-      return {
-        success: true,
-        clearedAt,
-        message: "Cache de runtime invalidado com sucesso. Se necessário, atualize o navegador com Ctrl+F5.",
-      };
-    }),
-
-  /**
-   * Prévia do reset operacional de go-live.
-   * Escopo: comissões, saldos, pedidos de teste (admin/zero), progresso e views.
-   */
-  previewGoLiveReset: adminProcedure
-    .mutation(async ({ ctx }) => {
-      const raw: any = await ctx.db.execute(sql`
-        SELECT
-          (SELECT count(*)::int FROM public.commissions) AS commissions,
-          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
-          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
-          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
-          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
-          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
-          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
-          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
-          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
-          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
-          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
-      `);
-      const row: any = Array.isArray(raw) ? raw[0] : (raw?.rows?.[0] ?? {});
-      const getNum = (key: string) => Number(row?.[key] ?? 0);
-      return {
-        success: true,
-        scope: 'Somente dados operacionais de teste',
-        confirmationText: 'RESETAR GO LIVE',
-        callbackUrl: process.env.SHOPEE_PUSH_CALLBACK_URL || 'https://oneverso.com.br/webhooks/shopee',
-        counts: {
-          commissions: getNum('commissions'),
-          affiliateBalances: getNum('affiliate_balances'),
-          affiliatePerformance: getNum('affiliate_performance'),
-          affiliateXp: getNum('affiliate_xp'),
-          lessonProgress: getNum('lesson_progress'),
-          lessonViews: getNum('lesson_views'),
-          lessonCompletionStats: getNum('lesson_completion_stats'),
-          paymentsHomolog: getNum('payments_homolog'),
-          marketplaceOrdersTest: getNum('marketplace_orders_test'),
-          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
-          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
-        },
-      };
-    }),
-
-  /**
-   * Reset controlado para go-live real.
-   * Preserva usuários/admins/config-base; remove apenas dados operacionais de teste.
-   */
-  resetGoLiveOperationalData: adminProcedure
-    .input(z.object({ confirmationText: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      if ((input.confirmationText || '').trim() !== 'RESETAR GO LIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Digite exatamente RESETAR GO LIVE para confirmar.' });
-      }
-      const previewRaw: any = await ctx.db.execute(sql`
-        SELECT
-          (SELECT count(*)::int FROM public.commissions) AS commissions,
-          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
-          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
-          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
-          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
-          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
-          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
-          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
-          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
-          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
-          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
-      `);
-      const row: any = Array.isArray(previewRaw) ? previewRaw[0] : (previewRaw?.rows?.[0] ?? {});
-      const getNum = (key: string) => Number(row?.[key] ?? 0);
-
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0`);
-      await ctx.db.execute(sql`DELETE FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%'`);
-      await ctx.db.execute(sql`DELETE FROM public.lesson_views`);
-      await ctx.db.execute(sql`DELETE FROM public.lesson_progress`);
-      await ctx.db.execute(sql`DELETE FROM public.commissions`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_balances`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_performance`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_xp`);
-
-      return {
-        success: true,
-        resetAt: new Date().toISOString(),
-        scope: 'Somente dados operacionais de teste',
-        deleted: {
-          commissions: getNum('commissions'),
-          affiliateBalances: getNum('affiliate_balances'),
-          affiliatePerformance: getNum('affiliate_performance'),
-          affiliateXp: getNum('affiliate_xp'),
-          lessonProgress: getNum('lesson_progress'),
-          lessonViews: getNum('lesson_views'),
-          lessonCompletionStats: getNum('lesson_completion_stats'),
-          paymentsHomolog: getNum('payments_homolog'),
-          marketplaceOrdersTest: getNum('marketplace_orders_test'),
-          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
-          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
-        },
-      };
-    }),
-
-  // ============ DASHBOARD ============
-
-  /**
-   * Métricas do dashboard admin
-   */
-  getDashboardMetrics: adminProcedure.query(async ({ ctx }) => {
-    const [
-      [totalUsers],
-      [totalAffiliates],
-      [activeAffiliates],
-    ] = await Promise.all([
-      ctx.db.select({ count: count() }).from(users),
-      ctx.db.select({ count: count() }).from(affiliates),
-      ctx.db.select({ count: count() }).from(affiliates).where(eq(affiliates.status, "active")),
-    ]);
-
-    const allCommissions = await ctx.db.select().from(commissions);
-    const allPayments = await ctx.db.select().from(payments);
-
-    return {
-      totalUsers: Number(totalUsers.count),
-      totalAffiliates: Number(totalAffiliates.count),
-      activeAffiliates: Number(activeAffiliates.count),
-      totalCommissionsPending: allCommissions.filter(c => c.status === "pending").reduce((sum, c) => sum + c.amount, 0),
-      totalCommissionsPaid: allPayments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + p.amount, 0),
-      recentJoins: allAffiliates.length, // Simplificado
-    };
-  }),
-
-  // ============ NETWORK TOPOLOGY (real) ============
-  /**
-   * Topologia da malha multinível derivada de affiliates.sponsorId.
-   * Retorna nós ativos, conexões totais, sponsors únicos, profundidade média.
-   */
-  getNetworkTopology: adminProcedure.query(async ({ ctx }) => {
-    // Buscar todas as relações sponsor -> affiliate
-    const rows = await ctx.db.select({
-      affiliateId: affiliates.id,
-      sponsorId: affiliates.sponsorId,
-      status: affiliates.status,
-    }).from(affiliates);
-
-    const activeNodes = rows.filter(r => r.status === "active").length;
-    const connections = rows.filter(r => r.sponsorId !== null).length;
-    const uniqueSponsors = new Set(
-      rows.filter(r => r.sponsorId !== null).map(r => r.sponsorId)
-    ).size;
-
-    // Calcular profundidade média via BFS a partir das raízes (sem sponsor)
-    const childrenOf = new Map<number, number[]>();
-    for (const r of rows) {
-      if (r.sponsorId !== null) {
-        const arr = childrenOf.get(r.sponsorId) ?? [];
-        arr.push(r.affiliateId);
-        childrenOf.set(r.sponsorId, arr);
-      }
-    }
-    const roots = rows.filter(r => r.sponsorId === null).map(r => r.affiliateId);
-    let depthSum = 0;
-    let depthCount = 0;
-    let maxDepth = 0;
-    for (const root of roots) {
-      const queue: Array<{ id: number; depth: number }> = [{ id: root, depth: 1 }];
-      while (queue.length) {
-        const { id, depth } = queue.shift()!;
-        depthSum += depth;
-        depthCount += 1;
-        if (depth > maxDepth) maxDepth = depth;
-        const children = childrenOf.get(id) ?? [];
-        for (const c of children) queue.push({ id: c, depth: depth + 1 });
-      }
-    }
-    const avgDepth = depthCount > 0 ? depthSum / depthCount : 0;
-
-    return {
-      activeNodes,
-      connections,
-      uniqueSponsors,
-      avgDepth: Number(avgDepth.toFixed(2)),
-      maxDepth,
-      totalAffiliates: rows.length,
-      rootCount: roots.length,
-    };
-  }),
-
-  // ============ COMMISSIONS BREAKDOWN (real) ============
-  /**
-   * Breakdown de comissões por status (pending, paid, confirmed) e nível.
-   */
-  getCommissionsBreakdown: adminProcedure.query(async ({ ctx }) => {
-    const allCommissions = await ctx.db.select().from(commissions);
-    const allPayments = await ctx.db.select().from(payments);
-
-    const pendingCents = allCommissions
-      .filter(c => c.status === "pending")
-      .reduce((sum, c) => sum + c.amount, 0);
-    const paidCents = allCommissions
-      .filter(c => c.status === "paid")
-      .reduce((sum, c) => sum + c.amount, 0);
-    const confirmedCents = allPayments
-      .filter(p => p.status === "confirmed")
-      .reduce((sum, p) => sum + p.amount, 0);
-    const totalVolumeCents = pendingCents + paidCents + confirmedCents;
-
-    // Por nível (1..5)
-    const byLevel: Record<number, { count: number; amountCents: number }> = {};
-    for (let lvl = 1; lvl <= 5; lvl++) {
-      const lvlCommissions = allCommissions.filter(c => c.level === lvl);
-      byLevel[lvl] = {
-        count: lvlCommissions.length,
-        amountCents: lvlCommissions.reduce((s, c) => s + c.amount, 0),
-      };
-    }
-
-    return {
-      pendingCents,
-      paidCents,
-      confirmedCents,
-      totalVolumeCents,
-      byLevel,
-      commissionCount: allCommissions.length,
-      paymentCount: allPayments.length,
-    };
-  }),
-
-  // ============ HEATMAP (real, derivado de affiliates) ============
-  /**
-   * Heatmap da malha em grid (rows x cols).
-   * Cada célula = atividade agregada de um bucket de afiliados.
-   * Atividade = lastSignedIn recente OU comissão recente.
-   */
-  getHeatmap: adminProcedure
-    .input(z.object({ rows: z.number().min(1).max(20).default(8), cols: z.number().min(1).max(40).default(28) }).optional())
-    .query(async ({ ctx, input }) => {
-      const rowsN = input?.rows ?? 8;
-      const colsN = input?.cols ?? 28;
-      const total = rowsN * colsN;
-
-      const affiliatesList = await ctx.db.select().from(affiliates).orderBy(asc(affiliates.id));
-      const usersList = await ctx.db.select().from(users);
-      const userById = new Map(usersList.map(u => [u.id, u]));
-
-      const now = Date.now();
-      const DAY = 86_400_000;
-
-      // Distribuir afiliados em buckets do grid
-      const grid: Array<{ level: "off" | "low" | "med" | "high"; activity: number }> = [];
-      for (let i = 0; i < total; i++) {
-        const sliceStart = Math.floor((i / total) * affiliatesList.length);
-        const sliceEnd = Math.floor(((i + 1) / total) * affiliatesList.length);
-        const slice = affiliatesList.slice(sliceStart, sliceEnd);
-
-        let activity = 0;
-        for (const a of slice) {
-          const u = userById.get(a.userId);
-          if (a.status === "active") activity += 1;
-          if (u?.lastSignedIn) {
-            const days = (now - new Date(u.lastSignedIn).getTime()) / DAY;
-            if (days < 1) activity += 3;
-            else if (days < 7) activity += 2;
-            else if (days < 30) activity += 1;
-          }
-          if ((a.totalCommissions ?? 0) > 0) activity += 2;
-        }
-
-        let level: "off" | "low" | "med" | "high" = "off";
-        if (activity >= 6) level = "high";
-        else if (activity >= 3) level = "med";
-        else if (activity >= 1) level = "low";
-        grid.push({ level, activity });
-      }
-
-      return { rows: rowsN, cols: colsN, cells: grid };
     }),
 });

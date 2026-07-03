@@ -15,7 +15,7 @@
  */
 
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '../config/trpc';
+import { router, publicProcedure, protectedProcedure, adminProcedure } from '../config/trpc';
 import {
   skillRegistry,
   nexusSkillExecutor,
@@ -226,7 +226,7 @@ export const nexusOperationsRouter = router({
   /**
    * Executa skill via API (para testes e integração)
    */
-  executeSkill: protectedProcedure
+  executeSkill: adminProcedure  // Onda 9: admin pode executar skills manualmente
     .input(ExecuteSkillSchema)
     .mutation(async ({ ctx, input }) => {
       const context = {

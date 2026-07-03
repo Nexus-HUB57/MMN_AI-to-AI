@@ -5,141 +5,9 @@ type ApprovalType = "new_affiliate" | "profile_update" | "career_upgrade" | "spe
 type ApprovalPriority = "low" | "medium" | "high" | "urgent";
 type ApprovalStatus = "pending" | "approved" | "rejected";
 
-const pendingApprovals = [
-  {
-    id: 1,
-    type: "new_affiliate" as ApprovalType,
-    priority: "medium" as ApprovalPriority,
-    status: "pending" as const,
-    userId: 201,
-    userName: "Roberto Almeida",
-    userEmail: "roberto@example.com",
-    affiliateCode: "ROBERTO006",
-    sponsorName: "João Silva",
-    sponsorCode: "JOAO001",
-    submittedAt: new Date("2026-05-18T10:00:00Z"),
-    data: {
-      plan: "premium",
-      initialInvestment: 500.0,
-      documentNumber: "123.456.789-00",
-      phone: "(11) 99999-9999",
-    },
-  },
-  {
-    id: 2,
-    type: "career_upgrade" as ApprovalType,
-    priority: "high" as ApprovalPriority,
-    status: "pending" as const,
-    userId: 202,
-    userName: "Fernanda Lima",
-    userEmail: "fernanda@example.com",
-    affiliateCode: "FERNANDA007",
-    sponsorName: "Maria Santos",
-    sponsorCode: "MARIA002",
-    submittedAt: new Date("2026-05-17T14:30:00Z"),
-    data: {
-      currentLevel: 3,
-      requestedLevel: 4,
-      achievements: ["100 sales", "5 downline members"],
-    },
-  },
-  {
-    id: 3,
-    type: "profile_update" as ApprovalType,
-    priority: "low" as ApprovalPriority,
-    status: "pending" as const,
-    userId: 203,
-    userName: "Marcos Pereira",
-    userEmail: "marcos@example.com",
-    affiliateCode: "MARCOS008",
-    sponsorName: "Pedro Costa",
-    sponsorCode: "PEDRO003",
-    submittedAt: new Date("2026-05-16T09:15:00Z"),
-    data: {
-      field: "bank_account",
-      oldValue: "Banco do Brasil",
-      newValue: "NuBank",
-    },
-  },
-  {
-    id: 4,
-    type: "special_request" as ApprovalType,
-    priority: "urgent" as ApprovalPriority,
-    status: "pending" as const,
-    userId: 204,
-    userName: "Julia Costa",
-    userEmail: "julia@example.com",
-    affiliateCode: "JULIA009",
-    sponsorName: "Ana Oliveira",
-    sponsorCode: "ANA004",
-    submittedAt: new Date("2026-05-19T08:45:00Z"),
-    data: {
-      requestType: "custom_commission",
-      requestedPercentage: 15,
-      justification: "Alto volume de vendas",
-    },
-  },
-  {
-    id: 5,
-    type: "new_affiliate" as ApprovalType,
-    priority: "medium" as ApprovalPriority,
-    status: "pending" as const,
-    userId: 205,
-    userName: "Ricardo Souza",
-    userEmail: "ricardo@example.com",
-    affiliateCode: "RICARDO010",
-    sponsorName: "Carlos Mendes",
-    sponsorCode: "CARLOS005",
-    submittedAt: new Date("2026-05-19T16:00:00Z"),
-    data: {
-      plan: "basic",
-      initialInvestment: 200.0,
-    },
-  },
-];
+const pendingApprovals: any[] = []; // Onda 9: mocks removidos, DB real via approvals table
 
-const processedApprovals = [
-  {
-    id: 101,
-    type: "new_affiliate" as ApprovalType,
-    priority: "medium" as ApprovalPriority,
-    status: "approved" as const,
-    userId: 101,
-    userName: "João Silva",
-    userEmail: "joao@example.com",
-    affiliateCode: "JOAO001",
-    sponsorName: "Nexus Prime",
-    sponsorCode: "NEXUS000",
-    submittedAt: new Date("2026-05-13T11:00:00Z"),
-    processedBy: "admin@nexus.com",
-    processedAt: new Date("2026-05-15T10:30:00Z"),
-    notes: "Documentação verificada",
-    data: {
-      plan: "premium",
-      initialInvestment: 500.0,
-    },
-  },
-  {
-    id: 102,
-    type: "career_upgrade" as ApprovalType,
-    priority: "high" as ApprovalPriority,
-    status: "rejected" as const,
-    userId: 102,
-    userName: "Maria Santos",
-    userEmail: "maria@example.com",
-    affiliateCode: "MARIA002",
-    sponsorName: "João Silva",
-    sponsorCode: "JOAO001",
-    submittedAt: new Date("2026-05-12T09:00:00Z"),
-    processedBy: "admin@nexus.com",
-    processedAt: new Date("2026-05-14T18:15:00Z"),
-    notes: "Não atende aos requisitos mínimos",
-    data: {
-      currentLevel: 2,
-      requestedLevel: 4,
-    },
-  },
-];
+const processedApprovals: any[] = []; // Onda 9: mocks removidos
 
 const buildAudit = (params: {
   domain: "approvals";
@@ -171,13 +39,13 @@ const buildHistory = (approval: {
     {
       action: "submitted",
       by: "system",
-      at: approval.submittedAt || new Date("2026-05-18T10:00:00Z"),
+      at: approval.submittedAt || new Date("2026-05-18T10:0:0Z"),
       notes: "Solicitação recebida e enviada para triagem administrativa",
     },
     {
       action: "review_queue",
       by: "backoffice.bot",
-      at: approval.submittedAt || new Date("2026-05-18T10:15:00Z"),
+      at: approval.submittedAt || new Date("2026-05-18T10:15:0Z"),
       notes: "Item classificado para fila operacional",
     },
   ];
@@ -186,7 +54,7 @@ const buildHistory = (approval: {
     history.push({
       action: "approved",
       by: approval.processedBy || "admin@nexus.com",
-      at: approval.processedAt || new Date("2026-05-15T10:30:00Z"),
+      at: approval.processedAt || new Date("2026-05-15T10:30:0Z"),
       notes: approval.notes || "Solicitação aprovada",
     });
   }
@@ -195,7 +63,7 @@ const buildHistory = (approval: {
     history.push({
       action: "rejected",
       by: approval.processedBy || "admin@nexus.com",
-      at: approval.processedAt || new Date("2026-05-14T18:15:00Z"),
+      at: approval.processedAt || new Date("2026-05-14T18:15:0Z"),
       notes: approval.notes || "Solicitação rejeitada",
     });
   }

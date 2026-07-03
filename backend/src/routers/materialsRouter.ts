@@ -43,42 +43,9 @@ export const materialsRouter = router({
       // Para desenvolvimento, retornamos dados mock
       // Em produção, isso viria de uma tabela materials no banco
       const mockMaterials = [
-        {
-          id: 1,
-          title: "Banner Principal - Black Friday",
-          type: "banner",
-          status: "active",
-          url: "https://oneverso.com.br/ebooks/01-fundamentos-da-ia.html",
-          thumbnail: "https://example.com/banners/bf2026-thumb.png",
-          createdAt: new Date("2026-05-10"),
-          createdBy: "admin",
-          downloads: 156,
-          categories: ["black-friday", "promocao"],
-        },
-        {
-          id: 2,
-          title: "E-book: Guia do Afiliado Iniciante",
-          type: "ebook",
-          status: "active",
-          url: "https://oneverso.com.br/ebooks/pdf/01-fundamentos-da-ia.pdf",
-          thumbnail: "https://example.com/ebooks/guia-afiliado-cover.jpg",
-          createdAt: new Date("2026-04-20"),
-          createdBy: "admin",
-          downloads: 423,
-          categories: ["educacao", "guias"],
-        },
-        {
-          id: 3,
-          title: "Post Instagram - Produto Premium",
-          type: "social_media",
-          status: "active",
-          url: "https://oneverso.com.br/ebooks/pdf/02-modelos-de-linguagem.pdf",
-          thumbnail: "https://example.com/social/post-premium-thumb.jpg",
-          createdAt: new Date("2026-05-15"),
-          createdBy: "admin",
-          downloads: 89,
-          categories: ["instagram", "produto"],
-        },
+        
+        
+        
         {
           id: 4,
           title: "Apresentação: Oportunidade de Negócio",
@@ -142,7 +109,7 @@ export const materialsRouter = router({
       // Mock data - em produção buscaria do banco
       const mockMaterial = {
         id: input.id,
-        title: "Banner Principal - Black Friday",
+        title: "",  // Onda 9: mock removido
         type: "banner",
         status: "active",
         url: "https://oneverso.com.br/ebooks/01-fundamentos-da-ia.html",
@@ -506,7 +473,7 @@ export const materialsRouter = router({
         {
           id: 4,
           title: "Treinamento em Liderança Distribuída",
-          author: "Fernanda Lima",
+          author: "",  // Onda 9: mock removido
           description:
             "Desenvolva sua rede com lideranças autônomas, OKRs e cadência operacional.",
           category: "lideranca",
@@ -624,23 +591,40 @@ export const materialsRouter = router({
    * Estatísticas de materiais
    */
   getStats: publicProcedure.query(async () => {
-    return {
-      total: 156,
-      byType: {
-        banner: 45,
-        ebook: 23,
-        video: 18,
-        presentation: 12,
-        social_media: 35,
-        email_template: 15,
-        other: 8,
-      },
-      byStatus: {
-        active: 120,
-        draft: 28,
-        archived: 8,
-      },
-      totalDownloads: 4567,
-    };
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const client = await pool.connect();
+    try {
+      const res = await client.query(`
+        SELECT
+          COUNT(*)::int AS total,
+          COUNT(*) FILTER (WHERE type='banner')::int AS banner,
+          COUNT(*) FILTER (WHERE type='ebook')::int AS ebook,
+          COUNT(*) FILTER (WHERE type='video')::int AS video,
+          COUNT(*) FILTER (WHERE type='presentation')::int AS presentation,
+          COUNT(*) FILTER (WHERE type='social_media')::int AS social_media,
+          COUNT(*) FILTER (WHERE type='email_template')::int AS email_template,
+          COUNT(*) FILTER (WHERE type='other')::int AS other,
+          COUNT(*) FILTER (WHERE status='active')::int AS active,
+          COUNT(*) FILTER (WHERE status='draft')::int AS draft,
+          COUNT(*) FILTER (WHERE status='archived')::int AS archived,
+          COALESCE(SUM(downloads)::int, 0) AS total_downloads
+        FROM materials
+      `);
+      const s = res.rows[0];
+      return {
+        total: s.total,
+        byType: {
+          banner: s.banner, ebook: s.ebook, video: s.video,
+          presentation: s.presentation, social_media: s.social_media,
+          email_template: s.email_template, other: s.other,
+        },
+        byStatus: { active: s.active, draft: s.draft, archived: s.archived },
+        totalDownloads: s.total_downloads,
+      };
+    } finally {
+      client.release();
+      await pool.end();
+    }
   }),
 });

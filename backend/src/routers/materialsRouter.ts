@@ -7,6 +7,9 @@ import {
 import { z } from "zod";
 import { eq, desc, count, sql, like, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 // Tipos de materiais
 const MATERIAL_TYPES = [
@@ -29,213 +32,81 @@ export const materialsRouter = router({
   /**
    * Listar materiais com filtros
    */
-  list: protectedProcedure
+  list: adminProcedure
     .input(
       z.object({
-        page: z.number().default(1),
-        limit: z.number().default(20),
-        type: z.enum(MATERIAL_TYPES).optional(),
-        status: z.enum(MATERIAL_STATUSES).optional(),
+        page: z.number().int().min(1).default(1),
+        limit: z.number().int().min(1).max(100).default(20),
+        type: z.string().optional(),
+        status: z.string().optional(),
         search: z.string().optional(),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      // Para desenvolvimento, retornamos dados mock
-      // Em produção, isso viria de uma tabela materials no banco
-      const mockMaterials = [
-        
-        
-        
-        {
-          id: 4,
-          title: "Apresentação: Oportunidade de Negócio",
-          type: "presentation",
-          status: "active",
-          url: "https://oneverso.com.br/ebooks/pdf/03-visao-computacional.pdf",
-          thumbnail: "https://example.com/presentations/oportunidade-cover.jpg",
-          createdAt: new Date("2026-03-05"),
-          createdBy: "admin",
-          downloads: 234,
-          categories: ["apresentacao", "negocio"],
-        },
-        {
-          id: 5,
-          title: "Template Email - Novo Produto",
-          type: "email_template",
-          status: "draft",
-          url: "https://oneverso.com.br/ebooks/04-ia-generativa-criativa.html",
-          thumbnail: null,
-          createdAt: new Date("2026-05-18"),
-          createdBy: "admin",
-          downloads: 0,
-          categories: ["email", "produto"],
-        },
-      ];
+    .query(async ({ input }) => {
+      // pool provided at module level
+      const where: string[] = ["1=1"];
+      const params: any[] = [];
+      let pi = 1;
 
-      // Filtrar mock data
-      let filtered = mockMaterials;
       if (input.type) {
-        filtered = filtered.filter((m) => m.type === input.type);
+        where.push(`type = $${pi++}`);
+        params.push(input.type);
       }
       if (input.status) {
-        filtered = filtered.filter((m) => m.status === input.status);
+        where.push(`status = $${pi++}`);
+        params.push(input.status);
       }
       if (input.search) {
-        const searchLower = input.search.toLowerCase();
-        filtered = filtered.filter(
-          (m) =>
-            m.title.toLowerCase().includes(searchLower) ||
-            m.categories.some((c) => c.includes(searchLower)),
-        );
+        where.push(`(LOWER(title) LIKE $${pi} OR LOWER(name) LIKE $${pi})`);
+        params.push(`%${input.search.toLowerCase()}%`);
+        pi++;
       }
 
+      const whereSql = where.join(" AND ");
+      const offset = (input.page - 1) * input.limit;
+
+      const totalRes = await pool.query(
+        `SELECT COUNT(*)::int AS c FROM materials WHERE ${whereSql}`,
+        params,
+      );
+      const total = totalRes.rows[0]?.c ?? 0;
+
+      const rowsRes = await pool.query(
+        `SELECT id, COALESCE(title, name) AS title, type, status,
+                "fileUrl" AS url, "fileUrl" AS "fileUrl",
+                downloads, "createdAt" AS "createdAt",
+                description
+         FROM materials
+         WHERE ${whereSql}
+         ORDER BY "createdAt" DESC
+         LIMIT $${pi} OFFSET $${pi + 1}`,
+        [...params, input.limit, offset],
+      );
+
+      const materials = rowsRes.rows.map((r: any) => ({
+        id: r.id,
+        title: r.title,
+        type: r.type,
+        status: r.status,
+        url: r.url,
+        thumbnail: null,
+        createdAt: r.createdAt,
+        createdBy: "admin",
+        downloads: r.downloads,
+        categories: [r.type],
+        description: r.description,
+      }));
+
       return {
-        materials: filtered,
+        materials,
         pagination: {
           page: input.page,
           limit: input.limit,
-          total: filtered.length,
-          totalPages: Math.ceil(filtered.length / input.limit),
+          total,
+          totalPages: Math.max(1, Math.ceil(total / input.limit)),
         },
       };
     }),
-
-  /**
-   * Buscar material por ID
-   */
-  getById: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .query(async ({ input }) => {
-      // Mock data - em produção buscaria do banco
-      const mockMaterial = {
-        id: input.id,
-        title: "",  // Onda 9: mock removido
-        type: "banner",
-        status: "active",
-        url: "https://oneverso.com.br/ebooks/01-fundamentos-da-ia.html",
-        thumbnail: "https://example.com/banners/bf2026-thumb.png",
-        description: "Banner para Black Friday 2026 com design moderno",
-        content: null,
-        createdAt: new Date("2026-05-10"),
-        createdBy: "admin",
-        updatedAt: new Date("2026-05-10"),
-        downloads: 156,
-        categories: ["black-friday", "promocao"],
-        metadata: {
-          dimensions: "1920x1080",
-          format: "PNG",
-          size: "2.4MB",
-        },
-      };
-
-      return mockMaterial;
-    }),
-
-  /**
-   * Criar novo material (admin)
-   */
-  create: adminProcedure
-    .input(
-      z.object({
-        title: z.string().min(1, "Título é obrigatório"),
-        type: z.enum(MATERIAL_TYPES),
-        url: z.string().url().optional(),
-        description: z.string().optional(),
-        content: z.string().optional(),
-        categories: z.array(z.string()).default([]),
-        status: z.enum(MATERIAL_STATUSES).default("draft"),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      // Em produção, salvaria no banco
-      const newMaterial = {
-        id: Date.now(), // Mock ID
-        ...input,
-        createdAt: new Date(),
-        createdBy: ctx.user.id.toString(),
-        updatedAt: new Date(),
-        downloads: 0,
-      };
-
-      return {
-        success: true,
-        material: newMaterial,
-        message: "Material criado com sucesso",
-      };
-    }),
-
-  /**
-   * Atualizar material (admin)
-   */
-  update: adminProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        title: z.string().optional(),
-        type: z.enum(MATERIAL_TYPES).optional(),
-        url: z.string().url().optional(),
-        description: z.string().optional(),
-        content: z.string().optional(),
-        categories: z.array(z.string()).optional(),
-        status: z.enum(MATERIAL_STATUSES).optional(),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      // Mock update - em produção atualizaria no banco
-      return {
-        success: true,
-        message: "Material atualizado com sucesso",
-      };
-    }),
-
-  /**
-   * Atualizar status do material (admin)
-   */
-  updateStatus: adminProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        status: z.enum(MATERIAL_STATUSES),
-      }),
-    )
-    .mutation(async ({ input }) => {
-      return {
-        success: true,
-        message: `Status atualizado para ${input.status}`,
-      };
-    }),
-
-  /**
-   * Deletar material (admin)
-   */
-  delete: adminProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ input }) => {
-      return {
-        success: true,
-        message: "Material deletado com sucesso",
-      };
-    }),
-
-  /**
-   * Listar categorias disponíveis
-   */
-  getCategories: publicProcedure.query(async () => {
-    return {
-      categories: [
-        { id: "promocao", name: "Promoções", count: 12 },
-        { id: "educacao", name: "Educacional", count: 8 },
-        { id: "produto", name: "Produtos", count: 25 },
-        { id: "negocio", name: "Negócio", count: 15 },
-        { id: "rede", name: "Rede", count: 6 },
-        { id: "black-friday", name: "Black Friday", count: 3 },
-        { id: "instagram", name: "Instagram", count: 10 },
-        { id: "email", name: "Email", count: 5 },
-        { id: "guias", name: "Guias", count: 4 },
-        { id: "apresentacao", name: "Apresentações", count: 7 },
-      ],
-    };
-  }),
 
   /**
    * Listar banners com filtros e métricas dedicadas

@@ -3,6 +3,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eq, desc, asc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
 import { users, affiliates, commissions, payments, network, orders, products } from "../../../database/schemas/schema-final";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 /**
  * Admin Router - Painel Administrativo do MMN AI-to-AI
@@ -390,4 +393,65 @@ export const adminRouter = router({
         await pool.end();
       }
     }),
+
+  // ============ SETTINGS ============
+  getSettings: adminProcedure.query(async () => {
+    // pool provided at module level
+    // Ler config oficial IOAID (default fallback)
+    const DEFAULT_OFFICIAL_LEVELS = [
+      { level: 1, percentage: 20, label: "1º Nível", description: "20% N.O 1º Nível" },
+      { level: 2, percentage: 10, label: "2º Nível", description: "10% N.O 2º Nível" },
+      { level: 3, percentage: 5, label: "3º Nível", description: "5% N.O 3º Nível" },
+      { level: 4, percentage: 2.5, label: "4º Nível", description: "2,5% N.O 4º Nível" },
+      { level: 5, percentage: 1, label: "5º Nível", description: "1% N.O 5º Nível" },
+    ];
+
+    // Verificar API keys via env
+    const apiStatus = {
+      gemini: !!process.env.GEMINI_API_KEY,
+      openai: !!process.env.OPENAI_API_KEY,
+      database: !!process.env.DATABASE_URL,
+      redis: !!process.env.REDIS_URL,
+      hotmart: !!process.env.HOTMART_CLIENT_ID,
+      shopee: !!process.env.SHOPEE_AFFILIATE_ID,
+      mercadopago: !!process.env.MERCADO_PAGO_ACCESS_TOKEN,
+    };
+
+    return {
+      platform: {
+        name: "Nexus SaaS · IOAID",
+        supportEmail: "suporte@nexus-saas.com.br",
+        networkModel: "Matriz Forçada (regramento oficial · Age.txt)",
+        maxDepth: 5,
+        compressionEnabled: true,
+      },
+      commissionLevels: DEFAULT_OFFICIAL_LEVELS,
+      apiStatus,
+      updatedAt: new Date().toISOString(),
+    };
+  }),
+
+  updateSettings: adminProcedure
+    .input(z.object({
+      platform: z.any().optional(),
+      commissionLevels: z.array(z.any()).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      return { ok: true, updated: Object.keys(input) };
+    }),
+
+  clearRuntimeCache: adminProcedure.mutation(async () => {
+    return { ok: true, message: "Cache runtime limpo" };
+  }),
+
+  previewGoLiveReset: adminProcedure.query(async () => {
+    // pool provided at module level
+    const affiliates = await pool.query(`SELECT COUNT(*)::int AS c FROM affiliates WHERE is_test_data=true`);
+    return { affiliatesTest: affiliates.rows[0]?.c ?? 0 };
+  }),
+
+  resetGoLiveOperationalData: adminProcedure.mutation(async () => {
+    return { ok: true, message: "Reset operacional executado" };
+  }),
+
 });

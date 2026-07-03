@@ -1,4 +1,5 @@
 /**
+import SlaDashboardCard from "../components/SlaDashboardCard";
  * Nexus Affil'IA'te · Painel Sistema Orquestrador
  *
  * Visao em tempo real de toda a equipe C-Suite e dos agentes operacionais.

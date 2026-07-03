@@ -25,7 +25,8 @@ type NetworkTreeNode = {
 };
 
 function countNodes(nodes: NetworkTreeNode[]): number {
-  return nodes.reduce((sum, node) => sum + 1 + countNodes(node.children || []), 0);
+  if (!Array.isArray(nodes)) return 0;
+  return nodes.reduce((sum, node) => sum + 1 + countNodes(Array.isArray(node?.children) ? node.children : []), 0);
 }
 
 function getTreeDepth(nodes: NetworkTreeNode[]): number {

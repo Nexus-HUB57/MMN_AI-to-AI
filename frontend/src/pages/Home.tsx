@@ -27,6 +27,8 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import { FoundersCounter } from "@/components/FoundersCounter";
+import { PrivateModeBanner } from "@/components/PrivateModeBanner";
 import bgHome from "@/assets/bg-home.webp";
 
 const NAV_LINKS = [
@@ -242,6 +244,9 @@ const CONTACTS = [
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-obsidian text-foreground overflow-hidden font-sans antialiased selection:bg-quantum-cyan/30">
+      <PrivateModeBanner />
+      <FoundersCounter />
+
       {/* Hero background */}
       <div
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-50"
@@ -782,6 +787,7 @@ export default function Home() {
       </footer>
 
         <HomePersonasAcademia />
+        <HomeCalendarioIA />
       </div>
   );
 }
@@ -830,6 +836,79 @@ function HomePersonasAcademia() {
     </section>
   );
 }
+
+function HomeCalendarioIA() {
+  const eventos = [
+    { data: "07/07/2026", dia: "SEG", titulo: "Meeting Genesis · C-Suite AI", categoria: "nexus", desc: "Primeira reunião oficial C-Suite Nexus Affil'IA'te · Formato A (chat copiloto)", link: "/admin/orchestrator" },
+    { data: "15/07/2026", dia: "TER", titulo: "AWS re:Invent 2026 · Preview", categoria: "global", desc: "Preview técnico do maior evento AWS · Foco Generative AI + Bedrock" },
+    { data: "22/07/2026", dia: "TER", titulo: "OpenAI DevDay 2026", categoria: "global", desc: "Anúncios oficiais OpenAI · Novos modelos + APIs" },
+    { data: "01/08/2026", dia: "SEX", titulo: "Nexus Sprint Review · Onda 8", categoria: "nexus", desc: "Review interna Sprint 2 do COO Otávio · Marketplace + Batch 1 metrics" },
+    { data: "15/08/2026", dia: "SEX", titulo: "Anthropic Claude Sonnet 4.5", categoria: "research", desc: "Papers recentes de alignment e constitutional AI" },
+    { data: "05/09/2026", dia: "SEX", titulo: "Nexus Batch 2 · 100 fundadores", categoria: "business", desc: "Lançamento do segundo batch de fundadores · Meta 1000 afiliados" },
+    { data: "20/09/2026", dia: "DOM", titulo: "NeurIPS 2026 · Submission Deadline", categoria: "research", desc: "Prazo submissão papers Nexus Federation Judge (agentic governance)" },
+    { data: "01/10/2026", dia: "QUA", titulo: "Product Hunt Launch · Nexus", categoria: "product", desc: "Lançamento oficial no Product Hunt · Rumo ao unicórnio 🚀" },
+  ];
+
+  const CATEGORY_COLORS: Record<string, {bg: string; border: string; text: string; label: string}> = {
+    nexus:    { bg: "bg-cyan-500/10",   border: "border-cyan-500/30",   text: "text-cyan-300",   label: "Nexus" },
+    global:   { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-300", label: "Global" },
+    research: { bg: "bg-blue-500/10",   border: "border-blue-500/30",   text: "text-blue-300",   label: "Research" },
+    business: { bg: "bg-emerald-500/10",border: "border-emerald-500/30",text: "text-emerald-300",label: "Business" },
+    product:  { bg: "bg-amber-500/10",  border: "border-amber-500/30",  text: "text-amber-300",  label: "Product" },
+  };
+
+  return (
+    <section id="calendario-ia" className="relative overflow-hidden py-16 px-6 sm:px-10 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950/40 backdrop-blur">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 text-center">
+          <span className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-widest text-cyan-300 border border-cyan-500/40 rounded-full bg-cyan-500/5">
+            📅 Calendário IA · Nexus + Global
+          </span>
+          <h2 className="mt-4 text-3xl sm:text-4xl font-bold text-white">
+            Próximos <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Marcos</span>
+          </h2>
+          <p className="mt-3 text-slate-400 max-w-2xl mx-auto">
+            Eventos curados do ecossistema IA + próximos passos do Nexus Affil'IA'te · atualizado semanalmente pelo COO Otávio
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {eventos.map((ev, i) => {
+            const cat = CATEGORY_COLORS[ev.categoria] || CATEGORY_COLORS.nexus;
+            return (
+              <div
+                key={i}
+                className={`rounded-2xl ${cat.bg} border ${cat.border} p-5 backdrop-blur transition-all hover:scale-[1.02] hover:border-white/40`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 flex flex-col items-center justify-center rounded-xl bg-black/40 border border-white/10 px-3 py-2 min-w-[80px]">
+                    <div className="text-xs font-mono text-slate-400">{ev.dia}</div>
+                    <div className="text-sm font-bold text-white">{ev.data.split("/").slice(0,2).join("/")}</div>
+                    <div className="text-xs text-slate-500">{ev.data.split("/")[2]}</div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`text-xs font-mono ${cat.text} uppercase tracking-wider`}>{cat.label}</span>
+                    </div>
+                    <h3 className="text-white font-semibold text-lg leading-tight">{ev.titulo}</h3>
+                    <p className="text-slate-400 text-sm mt-1 leading-snug">{ev.desc}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 text-center text-xs text-slate-500">
+          Curadoria: <span className="text-cyan-400">Otávio Nexus Ops</span> · COO/AI · Trust: elite · ed25519 handshake
+          <br />
+          Próxima atualização: <span className="text-slate-400">cron.calendarioIaRefresh</span> (Onda 8+)
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 
 function IOAIDSection() {

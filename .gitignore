@@ -231,6 +231,8 @@
 # Gatsby files
 **/.cache/
 **/public
+!frontend/public/
+!frontend/public/**
 
 # Vue.js
 **/dist/
@@ -594,6 +596,9 @@
 # PostgreSQL
 **/*.backup
 **/*.sql
+!database/migrations/*.sql
+!backend/migrations/*.sql
+!_marketplace_nexus_release/**/*.sql
 
 # MongoDB
 **/dump/
@@ -932,4 +937,31 @@ frontend/nexus-partners/
 # Workspace cruzado problemático que multiplica testes via npm workspaces
 **/node_modules_root/
 
-node_modules/
+# Academ'IA · Opção C: assets pesados (imagens, áudios, vídeos) ficam apenas no VPS
+AcademIA/marca/personas/**/*.png
+AcademIA/marca/personas/**/*.jpg
+AcademIA/marca/personas/**/*.jpeg
+AcademIA/marca/personas/**/*.webp
+AcademIA/marca/personas/**/*.wav
+AcademIA/marca/personas/**/*.mp3
+AcademIA/marca/personas/**/*.mp4
+AcademIA/personas/**/*.png
+AcademIA/personas/**/*.jpg
+AcademIA/personas/**/*.jpeg
+AcademIA/personas/**/*.webp
+AcademIA/personas/**/*.wav
+AcademIA/personas/**/*.mp3
+AcademIA/personas/**/*.mp4
+AcademIA/producao/assets/**/*.png
+AcademIA/producao/assets/**/*.jpg
+AcademIA/producao/assets/**/*.jpeg
+AcademIA/producao/assets/**/*.webp
+AcademIA/producao/assets/**/*.wav
+AcademIA/producao/assets/**/*.mp3
+AcademIA/producao/assets/**/*.mp4
+AcademIA/videos/**/*.mp4
+AcademIA/videos/**/*.webm
+
+# pacotes/temporários
+deploy/*.tar.gz
+apostilas-academia-nexus.zip

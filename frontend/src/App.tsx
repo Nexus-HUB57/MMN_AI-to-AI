@@ -3,6 +3,7 @@ import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Route, Switch } from "wouter";
+import useFirstAccessGate from "@/hooks/useFirstAccessGate";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -69,6 +70,7 @@ import LabChatbot from "@/pages/LabChatbot";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
+  useFirstAccessGate();
   return (
     <Switch>
       <Route path="/" component={Home} />

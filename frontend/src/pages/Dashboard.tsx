@@ -43,6 +43,7 @@ import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 
+import AffiliateStatusLights from "@/components/AffiliateStatusLights";
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -391,6 +392,7 @@ export default function Dashboard() {
             </Link>
           </div>
         </header>
+        <AffiliateStatusLights />
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

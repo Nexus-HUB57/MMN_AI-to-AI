@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
+import FirstAccessBanner from "@/components/FirstAccessBanner";
 import {
   EXTERNAL_MARKETPLACES,
   NEXUS_PACKS,
@@ -1859,6 +1860,7 @@ export default function Marketplaces() {
   if (isAuthenticated) {
     return (
       <DashboardLayout>
+        <FirstAccessBanner />
         <MarketplacesContent isPublicView={false} />
       </DashboardLayout>
     );

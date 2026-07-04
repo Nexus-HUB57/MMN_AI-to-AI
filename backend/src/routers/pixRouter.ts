@@ -534,6 +534,41 @@ export const pixRouter = router({
         warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com a chave PIX manual.`);
       }
 
+      // ONDA 14 FIX: criar marketplace_order para webhook rastrear
+      try {
+        const _pgPool = new PgPoolForHook({ connectionString: process.env.DATABASE_URL });
+        const client = await _pgPool.connect();
+        try {
+          await client.query("BEGIN");
+          const orderId = externalReference;
+          const exists = await client.query(
+            `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$1 LIMIT 1`,
+            [orderId]
+          );
+          if ((exists.rowCount ?? 0) === 0) {
+            await client.query(
+              `INSERT INTO marketplace_orders (id, user_id, status, payment_status, subtotal_cents, total_cents, payment_method, external_reference, metadata, is_test_data) VALUES ($1, $2, 'pending', 'pending', $3, $3, 'mercado_pago', $1, $4::jsonb, false)`,
+              [orderId, runtimeUser.id, input.amountCents, JSON.stringify({source: input.source ?? "marketplace", type: input.type, slug: input.slug, name: input.name, description: input.description, payerEmail, payerName})]
+            );
+            await client.query(
+              `INSERT INTO marketplace_order_items (order_id, item_slug, title, unit_price_cents, quantity, item_type) VALUES ($1, $2, $3, $4, 1, $5)`,
+              [orderId, input.slug, input.name, input.amountCents, input.type]
+            );
+            console.log(`[ONDA14] marketplace_order criada: ${orderId} user=${runtimeUser.id} amount=${input.amountCents}`);
+          }
+          await client.query("COMMIT");
+        } catch (dbErr) {
+          try { await client.query("ROLLBACK"); } catch {}
+          console.error("[ONDA14] Erro criando marketplace_order:", dbErr);
+          warnings.push("Erro registrando pedido: " + String(dbErr));
+        } finally {
+          try { client.release(); } catch {}
+          try { await _pgPool.end(); } catch {}
+        }
+      } catch (poolErr) {
+        console.error("[ONDA14] Pool erro:", poolErr);
+      }
+
       return result;
     }),
 

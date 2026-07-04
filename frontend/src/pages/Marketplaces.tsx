@@ -329,17 +329,18 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
     const desc = ebookCart.length === 1
       ? ebookCart[0].title
       : `${ebookCart.length} e-books · Marketplace Nexus`;
-    const params = new URLSearchParams({
-      amountCents: String(cartTotal),
+    // ONDA 15 FIX: usar buildMarketplaceCheckoutUrl para persistir intent completo (base64 + localStorage)
+    const url = buildMarketplaceCheckoutUrl({
+      source: "marketplace-nexus",
+      type: "ebook" as any,
+      slug: ebookCart[0]?.slug ?? "ebook-checkout",
+      name: desc,
+      amountCents: cartTotal,
       description: desc,
       payerEmail: customerEmail,
-      payerName: customerName || "",
-      source: "marketplace-nexus",
-      slug: ebookCart[0]?.slug ?? "ebook-checkout",
-      type: "ebook",
-      name: desc,
-    });
-    window.location.href = `/pix/checkout?${params.toString()}`;
+      payerName: customerName || undefined,
+    } as any);
+    window.location.href = url;
   }
 
   async function handlePayMercadoPago() {

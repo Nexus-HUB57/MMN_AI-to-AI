@@ -417,9 +417,9 @@ export const pixRouter = router({
         warnings.push("Documento do pagador inválido para o Mercado Pago. O checkout continuará com fallback PIX manual.");
       }
 
-      const externalReference = input.subscriptionId
-        ? `subscription:${input.subscriptionId}:${runtimeUser.id}:${Date.now()}`
-        : `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
+      // ONDA 15 FIX: gerar UUID curto (36 chars max para caber em varchar(36))
+      const _rand = () => Math.random().toString(36).slice(2, 10);
+      const externalReference = `${runtimeUser.id}-${Date.now().toString(36)}-${_rand()}`.slice(0, 36);
       const fallbackPix = {
         pixKey: MARKETPLACE_PIX_KEY,
         keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
@@ -540,7 +540,8 @@ export const pixRouter = router({
         const client = await _pgPool.connect();
         try {
           await client.query("BEGIN");
-          const orderId = externalReference;
+          const orderId = `mp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+          // externalReference completo fica em external_reference para lookup
           const exists = await client.query(
             `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$1 LIMIT 1`,
             [orderId]

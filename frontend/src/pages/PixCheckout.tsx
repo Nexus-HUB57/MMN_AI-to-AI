@@ -99,7 +99,8 @@ export default function PixCheckout() {
 
   const [amount, setAmount] = useState(defaultAmount);
   const [description, setDescription] = useState(defaultDescription);
-  const [payerEmail, setPayerEmail] = useState(user?.email ?? "");
+  const [payerName, setPayerName] = useState<string>((checkoutIntent as any)?.payerName ?? user?.name ?? "");
+  const [payerEmail, setPayerEmail] = useState((checkoutIntent as any)?.payerEmail ?? user?.email ?? "");
   const [payerDocument, setPayerDocument] = useState(user?.cpf ?? "");
   const [copiedPixCode, setCopiedPixCode] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);

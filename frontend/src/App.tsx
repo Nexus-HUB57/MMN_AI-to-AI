@@ -5,13 +5,13 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
-import OnboardingFundadores from "@/pages/OnboardingFundadores";
 import Login from "@/pages/Login";
 import Logout from "@/pages/Logout";
 import Cadastro from "@/pages/Cadastro";
 import Dashboard from "@/pages/Dashboard";
 import Marketplaces from "@/pages/Marketplaces";
 import Estoque from "@/pages/Estoque";
+import MinhaLoja from "@/pages/MinhaLoja";
 import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import PixCheckout from "@/pages/PixCheckout";
 import PixHistory from "@/pages/PixHistory";
@@ -72,8 +72,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/onboarding-fundadores" component={OnboardingFundadores} />
-      <Route path="/fundadores" component={OnboardingFundadores} />
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
@@ -81,6 +79,7 @@ function Router() {
       <Route path="/marketplaces" component={Marketplaces} />
       <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />
+      <Route path="/minha-loja" component={MinhaLoja} />
       <Route path="/minisite" component={AffiliateMiniSite} />
       <Route path="/afiliado/:code" component={AffiliateMiniSite} />
       <Route path="/pix/checkout" component={PixCheckout} />

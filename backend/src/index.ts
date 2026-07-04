@@ -281,6 +281,60 @@ app.post("/webhooks/mercadopago", async (req, res) => {
   }
 });
 
+
+// ONDA 15: REST endpoint para polling status pagamento
+app.get("/api/pix/status", async (req, res) => {
+  try {
+    const paymentId = String(req.query.paymentId || "");
+    if (!paymentId) return res.status(400).json({ error: "missing paymentId" });
+    
+    // 1) Query no DB local primeiro
+    const localOrder = await _balancePool.query(
+      `SELECT id, payment_status, paid_at, delivered_at 
+       FROM marketplace_orders 
+       WHERE payment_id=$1 OR external_reference=$1 
+       LIMIT 1`,
+      [paymentId]
+    );
+    
+    if ((localOrder.rowCount ?? 0) > 0) {
+      const row = localOrder.rows[0];
+      return res.json({
+        paymentId,
+        status: row.payment_status,
+        paid: row.payment_status === "paid",
+        paidAt: row.paid_at,
+        deliveredAt: row.delivered_at,
+        source: "local",
+      });
+    }
+    
+    // 2) Consultar Mercado Pago se token disponível
+    const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || "";
+    if (mpToken && paymentId.match(/^\d+$/)) {
+      try {
+        const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+          headers: { Authorization: `Bearer ${mpToken}` }
+        });
+        if (mpResp.ok) {
+          const mp = await mpResp.json();
+          return res.json({
+            paymentId,
+            status: mp.status,
+            paid: mp.status === "approved",
+            externalReference: mp.external_reference,
+            source: "mp_api",
+          });
+        }
+      } catch {}
+    }
+    
+    return res.json({ paymentId, status: "pending", paid: false, source: "unknown" });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || "erro desconhecido" });
+  }
+});
+
 app.post("/webhooks/hotmart", async (req, res) => {
   try {
     const result = await processHotmartSubscriptionWebhook((req.body ?? {}) as Record<string, unknown>);

@@ -333,7 +333,11 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       amountCents: String(cartTotal),
       description: desc,
       payerEmail: customerEmail,
+      payerName: customerName || "",
       source: "marketplace-nexus",
+      slug: ebookCart[0]?.slug ?? "ebook-checkout",
+      type: "ebook",
+      name: desc,
     });
     window.location.href = `/pix/checkout?${params.toString()}`;
   }

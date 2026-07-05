@@ -56,6 +56,9 @@ import { nexusRagRouter } from "./routers/nexusRagRouter";
 import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { orchestratorAdminRouter } from "./routers/orchestratorAdminRouter";
 import { onda1Router } from "./routers/onda1Router";
+import { autoHealEngineRouter } from "./routers/autoHealEngineRouter";
+import { governanceLoopExecutorRouter } from "./routers/governanceLoopExecutorRouter";
+import { nikoCapitalRouter } from "./routers/nikoCapitalRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -241,6 +244,9 @@ export const appRouter = router({
   agentSkillsRuntime: agentSkillsRuntimeRouter,
   pix: pixRouter,
   nexus: nexusOperationsRouter,
+  autoHealEngine: autoHealEngineRouter,
+  governanceLoopExecutor: governanceLoopExecutorRouter,
+  nikoCapital: nikoCapitalRouter,
 });
 
 export type AppRouter = typeof appRouter;

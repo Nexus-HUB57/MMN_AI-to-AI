@@ -63,8 +63,8 @@ export const academiaPublicRouter = router({
         params.push(input.offset); const offsetP = params.length;
 
         const q = await pool.query(`
-          SELECT lesson_id, title, subtitle, section_slug, level, duration,
-                 tags, featured, sort_order, cover_url, thumbnail_url,
+          SELECT lesson_id, title, subtitle, section_slug, level, NULL::text AS duration,
+                 tags, featured, sort_order, cover_url, thumbnail_url, NULL::text AS duration,
                  md_url, html_url, pdf_url, youtube_video_id, published_at
           FROM academia_lessons
           ${where}
@@ -178,7 +178,7 @@ export const academiaPublicRouter = router({
       const q = await pool.query(`
         SELECT lp.lesson_id, lp.watched_seconds, lp.duration_s, lp.last_position,
                lp.completed, lp.completed_at, lp.updated_at,
-               al.title, al.section_slug, al.cover_url, al.duration
+               al.title, al.section_slug, al.cover_url, NULL::text AS duration
         FROM lesson_progress lp
         JOIN academia_lessons al ON al.lesson_id = lp.lesson_id
         WHERE lp.user_id = $1
@@ -278,7 +278,7 @@ export const academiaPublicRouter = router({
         const updatedBy = (ctx as any).user?.email ?? 'admin';
         const q = await pool.query(`
           INSERT INTO academia_lessons (
-            lesson_id, title, subtitle, section_slug, level, duration,
+            lesson_id, title, subtitle, section_slug, level, NULL::text AS duration,
             md_url, html_url, pdf_url, cover_url, thumbnail_url, youtube_video_id,
             tags, is_published, featured, sort_order, updated_by, published_at
           )

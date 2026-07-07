@@ -2,13 +2,49 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.2.3
-last_updated: 2026-06-28
+version: 1.2.5
+last_updated: 2026-07-07
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.2.5] — 2026-07-07 · "Expansão Monetização + Automação"
+
+### ✨ Adicionado
+
+**Apostilas (1 nova):**
+- `apostilas/13-monetizacao-avancada-escala.md` — 6 pilares de receita além de afiliação: produto digital, mentoria, SaaS, mídia, licensing, community. Roadmap R$ 0 → R$ 300k/mês em 24 meses.
+
+**Workshops (1 novo):**
+- `treinamentos/WS-06-oficina-automacao-conteudo.md` — Pipeline 5 agentes (Researcher, Planner, Writer, Editor, Designer) com checkpoints humanos. Escala 10x produção sem perder qualidade.
+
+**Templates HTML (2 novos):**
+- `Lab-Nexus/templates/social/03-template-stories-engajamento.html` — 8 stories prontos (gancho, dor, prova, aula, quiz, enquete, bastidores, CTA)
+- `Lab-Nexus/templates/email/05-template-onboarding-sequencia.html` — Sequência 5 emails D+0 a D+4 com merge tags e métricas-alvo
+
+**Prompts (2 novos):**
+- `Lab-Nexus/prompts/analise/05-analise-concorrencia-profund.md` — Mapa competitivo 5-10 players, gaps, posicionamento defensável
+- `Lab-Nexus/prompts/estrategia/05-okr-trimestral-equipe.md` — OKRs completos time 3-15 pessoas, 3 Objectives + KRs mensuráveis
+
+### 📊 Métricas
+
+| Métrica | v1.2.3 | v1.2.5 | Δ |
+|---|---|---|---|
+| Apostilas | 12 | **13** | +1 |
+| Prompts | 12 | **14** | +2 |
+| Templates | 9 | **11** | +2 |
+| Workshops | 5 | **6** | +1 |
+| Tutoriais | 27 | 27 | = |
+| Tools | 45 | 45 | = |
+| Workflows | 5 | 5 | = |
+| Playbooks | 10 | 10 | = |
+| Webinars | 10 | 10 | = |
+| Certificações | 5 | 5 | = |
+| **TOTAL** | **149** | **155** | **+6** |
 
 ---
 

@@ -69,17 +69,17 @@ export const networkExtendedRouter = router({
         // 2. Buscar diretos nível 1 (network table)
         const directsRes = await pool.query(
           `SELECT
-             n.child_affiliate_id AS affiliate_id,
+             a.id AS affiliate_id,
              n.level,
-             a."userId" AS user_id,
+             n."userId" AS user_id,
              u.name,
              u.email,
-             u.created_at
+             u."createdAt"
            FROM network n
-           LEFT JOIN affiliates a ON a.id = n.child_affiliate_id
-           LEFT JOIN users u ON u.id = a."userId"
-           WHERE n.parent_affiliate_id = $1 AND n.level <= $2
-           ORDER BY n.level ASC, n.child_affiliate_id ASC`,
+           LEFT JOIN affiliates a ON a."userId" = n."userId"
+           LEFT JOIN users u ON u.id = n."userId"
+           WHERE n."sponsorId" = $1 AND n.level <= $2
+           ORDER BY n.level ASC, n."userId" ASC`,
           [root.affiliate_id, maxDepth]
         );
 

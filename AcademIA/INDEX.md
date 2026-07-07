@@ -271,3 +271,30 @@ Exemplo oficial de certificado AcademIA, com QR de verificação, selo digital e
 5. Análise em até 48h. Se aprovado, receba o PDF oficial com QR de verificação
 6. Validade: 2 anos · Pré-requisito para próximas trilhas
 
+
+## 💰 [`apostilas/landing_pages/`](apostilas/landing_pages/) — Landing Pages de Venda (Junho 2026)
+
+> 10 landing pages no padrão Nexus HUB57 — copy persuasivo, prova social, e CTA forte. Cada uma foca em uma apostila da AcademIA e tem URL de checkout integrada ao Marketplace Nexus.
+
+| Slug | Landing | HTML | PDF |
+|------|---------|------|-----|
+| T1 | Trilha Fundamental | [HTML](apostilas/landing_pages/landing-t1-fundamental.html) | [PDF](apostilas/landing_pages/pdf/landing-t1-fundamental.pdf) |
+| T2 | Trilha Elite | [HTML](apostilas/landing_pages/landing-t2-elite.html) | [PDF](apostilas/landing_pages/pdf/landing-t2-elite.pdf) |
+| T3 | Trilha Master Arquitetura | [HTML](apostilas/landing_pages/landing-t3-master-arq.html) | [PDF](apostilas/landing_pages/pdf/landing-t3-master-arq.pdf) |
+| T4 | Trilha Master Mentoria | [HTML](apostilas/landing_pages/landing-t4-master-mentoria.html) | [PDF](apostilas/landing_pages/pdf/landing-t4-master-mentoria.pdf) |
+| C1 | Curso RAG Prático | [HTML](apostilas/landing_pages/landing-c1-rag.html) | [PDF](apostilas/landing_pages/pdf/landing-c1-rag.pdf) |
+| C2 | Curso Agents LangGraph | [HTML](apostilas/landing_pages/landing-c2-langgraph.html) | [PDF](apostilas/landing_pages/pdf/landing-c2-langgraph.pdf) |
+| C3 | Curso Prompt Engineering | [HTML](apostilas/landing_pages/landing-c3-prompt.html) | [PDF](apostilas/landing_pages/pdf/landing-c3-prompt.pdf) |
+| C4 | Curso Vector DB | [HTML](apostilas/landing_pages/landing-c4-vectordb.html) | [PDF](apostilas/landing_pages/pdf/landing-c4-vectordb.pdf) |
+| C5 | Curso Voice AI | [HTML](apostilas/landing_pages/landing-c5-voice.html) | [PDF](apostilas/landing_pages/pdf/landing-c5-voice.pdf) |
+| C6 | Curso Multimodal RAG | [HTML](apostilas/landing_pages/landing-c6-multimodal.html) | [PDF](apostilas/landing_pages/pdf/landing-c6-multimodal.pdf) |
+
+**Estrutura de cada landing (7 páginas):**
+1. Hero com headline + preço + CTA principal
+2. Para quem é + dores + benefícios + stats
+3. Conteúdo programático (módulos completos) + bônus
+4. Prova social (depoimentos) + resultados médios
+5. Tabela de preços (Básico vs Premium) + CTA
+6. FAQ + Garantia 30 dias
+7. CTA final (urgência)
+

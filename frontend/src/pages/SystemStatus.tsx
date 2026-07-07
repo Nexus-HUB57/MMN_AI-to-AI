@@ -412,7 +412,7 @@ export default function SystemStatus() {
       {/* Footer */}
       <footer className="border-t border-gray-800 mt-8 py-4 px-6">
         <div className="max-w-7xl mx-auto text-center text-sm text-gray-500">
-          <p>Nexus System AfilIAte-AI • v1.0.9 • MMN AI-to-AI Platform</p>
+          <p>Nexus System AfilIAte-AI • v1.0.9 • IOAID · SaaS Platform</p>
         </div>
       </footer>
     </div>

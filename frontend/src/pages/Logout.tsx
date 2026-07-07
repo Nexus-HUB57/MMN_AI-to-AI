@@ -119,7 +119,7 @@ export default function Logout() {
           <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-cyan to-accent-green flex items-center justify-center">
             <Zap className="w-3 h-3 text-background" />
           </div>
-          <span className="text-sm font-semibold gradient-text">MMNAI</span>
+          <span className="text-sm font-semibold gradient-text">IOAID · SaaS</span>
         </div>
       </div>
     </div>

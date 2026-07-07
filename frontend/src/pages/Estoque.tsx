@@ -159,6 +159,14 @@ export default function Estoque() {
   const [tab, setTab] = useState<Tab>("produtos");
   const [catalogVersion, setCatalogVersion] = useState(0);
 
+  // D7: consulta inventário REAL do backend (marketplace_user_library + packs ativos)
+  const myInventoryQuery = (trpc as any).affiliateStore?.myInventory?.useQuery
+    ? (trpc as any).affiliateStore.myInventory.useQuery(undefined, { refetchOnMount: true, retry: false })
+    : null;
+  const dbInventory = (myInventoryQuery?.data?.items ?? []) as any[];
+  const dbActivePacks = (myInventoryQuery?.data?.activePacks ?? []) as string[];
+
+
   const showcaseProfile = useMemo(
     () => resolveShowcaseMarketplaceProfile(profile, isAuthenticated),
     [isAuthenticated, profile],
@@ -177,7 +185,41 @@ export default function Estoque() {
     },
   );
 
-  const stockItems = useMemo(() => getOperationalInventory(showcaseProfile), [showcaseProfile]);
+  const stockItems = useMemo(() => {
+    const fromProfile = getOperationalInventory(showcaseProfile);
+    // Mescla packs ativos vindos do DB
+    const profilePacks = new Set(showcaseProfile.activePackSlugs || []);
+    const extraFromDb: OperationalStockItem[] = [];
+    for (const p of dbActivePacks) {
+      if (!profilePacks.has(p)) {
+        extraFromDb.push({
+          id: `stock-pack-${p}`,
+          type: "pack",
+          title: p.toUpperCase(),
+          description: "Pack ativo entregue após compra (DB).",
+          quantity: 1,
+          badge: p,
+          sourcePackSlug: p,
+          availableForAgent: true,
+        } as any);
+      }
+    }
+    // Itens individuais comprados via marketplace (ebooks da library)
+    const ebookItems: OperationalStockItem[] = dbInventory.map((e: any) => ({
+      id: `stock-ebook-${e.slug}`,
+      type: "ebook",
+      title: e.title || e.slug,
+      description: e.subtitle || e.description || "E-book entregue pelo Marketplace Nexus",
+      quantity: 1,
+      badge: "E-book",
+      sourcePackSlug: e.unlockPackSlug || "",
+      availableForAgent: true,
+      coverPath: e.coverPath,
+      htmlPath: e.htmlPath,
+      pdfPath: e.pdfPath,
+    } as any));
+    return [...fromProfile, ...extraFromDb, ...ebookItems];
+  }, [showcaseProfile, dbInventory, dbActivePacks]);
   const myProducts = stockItems.filter((item) => isSyncableItem(item));
   const packsActivated = stockItems.filter((item) => item.type === "pack");
 

@@ -2,18 +2,19 @@
 title: "INDEX · Academ'IA"
 description: "Índice semântico e mapeamento de habilidades transversais"
 tags: [index, knowledge-map, transversal-skills]
-version: 1.2.2
-last_updated: 2026-06-26
+version: 1.2.3
+last_updated: 2026-06-28
 ---
 
 # 📑 ÍNDICE · Academ'IA
 
 > **Mapa completo do HUB.** Use `Ctrl/Cmd+F` para busca rápida ou tags transversais para correlação semântica via Obsidian.
 
-> **Versão 1.2.2** · Última atualização 2026-06-26 · **15 cursos · 10 apostilas · 44 tools · 11 prompts · 6 templates · 5 workflows · 20 tutoriais · 10 playbooks · 6 webinars · 8 treinamentos/workshops · 5 certificações**
-> 
+> **Versão 1.2.3** · Última atualização 2026-06-28 · **15 cursos · 12 apostilas · 44 tools · 11 prompts · 6 templates · 5 workflows · 25 tutoriais · 10 playbooks · 8 webinars · 8 treinamentos/workshops · 6 certificações**
+
 > 👉 **Novo?** Leia primeiro o [`RESUMO_EXECUTIVO.md`](RESUMO_EXECUTIVO.md) (TL;DR de 1 página).
 > 👉 **Histórico de versões:** [`CHANGELOG.md`](CHANGELOG.md)
+> 👉 **Novidades desta versão (1.2.0):** 2 apostilas novas (SEO/GEO + Segurança Ofensiva), 5 tutoriais avançados (Master/Elite), 1 certificação nova (Master Plus).
 
 ## 🧭 Atalhos de Onboarding
 
@@ -23,22 +24,10 @@ last_updated: 2026-06-26
 | 🤖 Quer configurar rotinas autônomas | [`cursos/agente/00-primeiro-agente.md`](cursos/agente/00-primeiro-agente.md) | 30 min |
 | 📊 Quer otimizar conversão e CAC | [`cursos/master/00-otimizacao-conversao.md`](cursos/master/00-otimizacao-conversao.md) | 45 min |
 | 💎 Top 10% da rede | [`cursos/elite/00-blueprints-elite.md`](cursos/elite/00-blueprints-elite.md) | 60 min |
+| 🔍 Quer dominar SEO/GEO | [`apostilas/11-seo-marketing-conteudo-ia.md`](apostilas/11-seo-marketing-conteudo-ia.md) | 45 min |
+| 🔒 Quer pentest/red team | [`apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md`](apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md) | 60 min |
 | 🧪 Quer ferramentas prontas | [`Lab-Nexus/tools/`](Lab-Nexus/tools/) | Prático |
 | 📖 Quer consultar referência técnica | [`Lib-Nexus/knowledge-base/`](Lib-Nexus/knowledge-base/) | Direto |
-| 📕 Quer formação estruturada | [`apostilas/`](apostilas/) | Sequencial |
-
-## 📕 [`apostilas/`](apostilas/) — 10 Apostilas Oficiais (NOVO · 2026)
-
-- [01 - Apresentação Oficial da Infraestrutura](apostilas/01-apresentacao-infraestrutura.md) ✅ NOVO
-- [02 - Cases Reais de Orquestração Autônoma](apostilas/02-cases-orquestracao-autonoma.md) ✅ NOVO
-- [03 - Infraestrutura Operacional de IA](apostilas/03-infra-operacional-ia.md) ✅ NOVO
-- [04 - Orquestração Híbrida de Agentes](apostilas/04-orquestracao-hibrida-agentes.md) ✅ NOVO
-- [05 - As 7 Telas Essenciais do Dia a Dia](apostilas/05-sete-telas-essenciais.md) ✅ NOVO
-- [06 - Setup Completo do Agente Pessoal](apostilas/06-setup-agente-pessoal.md) ✅ NOVO
-- [07 - As 18 Skills Operacionais Base](apostilas/07-18-skills-operacionais.md) ✅ NOVO
-- [08 - Rotina de Disparo com Agente](apostilas/08-rotina-disparo-agente.md) ✅ NOVO
-- [09 - Campanhas Automatizadas (Whatsapp/Instagram)](apostilas/09-campanhas-automatizadas.md) ✅ NOVO
-- [10 - Jornada Completa do Afiliado](apostilas/10-jornada-completa-afiliado.md) ✅ NOVO
 
 ## 📘 Trilhas de Cursos
 
@@ -73,83 +62,150 @@ Para Top 10% — blueprints internos e operação avançada.
 - [01 - Multi-tenant e white-label](cursos/elite/01-multi-tenant-whitelabel.md) ✅
 - [02 - Federação de agentes](cursos/elite/02-federacao-agentes.md) ✅
 
+## 📚 [`apostilas/`](apostilas/) — Apostilas Temáticas
+
+Trilha completa de 12 apostilas. Para estudo aprofundado de temas específicos.
+
+| # | Apostila | Nível | Tags principais |
+|---|----------|-------|------------------|
+| 01 | Apresentação da Infraestrutura | Fundamental | arquitetura, nexus |
+| 02 | Cases de Orquestração Autônoma | Fundamental | cases, produção |
+| 03 | Infra Operacional de IA | Fundamental | devops, runtime |
+| 04 | Orquestração Híbrida de Agentes | Agente | multi-agent, skills |
+| 05 | Sete Telas Essenciais | Fundamental | ui, dashboard |
+| 06 | Setup do Agente Pessoal | Agente | setup, primeiro-agente |
+| 07 | 18 Skills Operacionais | Agente | skills, essenciais |
+| 08 | Rotina de Disparo do Agente | Agente | whatsapp, dispatcher |
+| 09 | Campanhas Automatizadas | Agente | campaigns, automation |
+| 10 | Jornada Completa do Afiliado | Master | carreira, roadmap |
+| **11** | **SEO & Marketing de Conteúdo para IA** | **Master** | **seo, geo, ai-search** |
+| **12** | **Segurança Ofensiva: Pentest com Agentes IA** | **Elite** | **pentest, owasp, red-team** |
+
+## 🛠️ [`tutoriais/`](tutoriais/) — Tutoriais Práticos
+
+Trilha de 17 tutoriais para execução mão na massa.
+
+### Nível Fundamental/Agente (TUT-01 a TUT-08)
+1. [Como ativar 2FA](tutoriais/01-ativar-2fa.md)
+2. [Configurar Dispatcher](tutoriais/02-configurar-dispatcher.md)
+3. [Ler Relatório de Autonomia](tutoriais/03-ler-relatorio-autonomia.md)
+4. [Criar Primeiro Agente](tutoriais/04-criar-primeiro-agente.md)
+5. [Aprovar Sugestão do Judge](tutoriais/05-aprovar-sugestao-judge.md)
+6. [Disparar Campanha WhatsApp](tutoriais/06-disparar-campanha-whatsapp.md)
+7. [Convidar Afiliado para Rede](tutoriais/07-convidar-afiliado-rede.md)
+
+### Nível Master (TUT-08 a TUT-12)
+8. [Primeiro A/B Test](tutoriais/08-primeiro-ab-test.md)
+9. [Ler Tabela de Coorte](tutoriais/09-ler-tabela-coorte.md)
+10. [Webhook do Hotmart](tutoriais/10-webhook-hotmart.md)
+11. **Auditoria de Skills** (NOVO) — análise completa do seu agente
+12. **Configurar A/B Test com Judge** (NOVO) — estatística aplicada
+
+### Nível Elite (TUT-13 a TUT-15)
+13. **Deploy Multi-tenant White-label** (NOVO) — RLS + provisioning
+14. **Agente Federado Multi-node** (NOVO) — mTLS + marketplace
+15. **Auditoria LGPD Automatizada** (NOVO) — DPIA + right to be forgotten
+
 ## 🎬 [`treinamentos/`](treinamentos/) — Workshops práticos
 
 - **WS-01** — Oficina de Copy Persuasivo
 - **WS-02** — Oficina de Funil Completo
 - **WS-03** — Oficina de Webhook + Integração
+- **WS-04** — Oficina SHO Avançado
+- **WS-05** — Oficina Federação de Agentes
 
 ## 🏆 [`certificacoes/`](certificacoes/) — Sistema de Certificação
 
-- **CON** — Certificação Operador Nexus
-- **CEN** — Certificação Estrategista Nexus
-- **CEN+** — Certificação Elite Nexus
-- **Modelo de avaliação** — Critérios e rubrica
+| Código | Certificação | Nível | Pré-req |
+|--------|--------------|-------|---------|
+| **CON** | Certificação Operador Nexus | Fundamental | nenhum |
+| **CEN** | Certificação Estrategista Nexus | Agente | CON + Top 50% |
+| **MAS+** | **Certificação Master Plus** | **Master+** | **CEN + Top 25%** |
+| **CEN+** | Certificação Elite Nexus | Elite | CEN + Top 10% |
 
-## 📡 [`webinars/`](webinars/) — Gravações (apostilas expandidas em 12/06/2026)
+**Trilha de progressão:** `CON → CEN → MAS+ → CEN+ → Elite Architect`
 
-- **WB-2026-01** — Lançamento do IOAID ✅ (apostila expandida)
-- **WB-2026-02** — SHO em produção ✅ (apostila expandida)
-- **WB-2026-03** — Academ'IA Open House (🟡 15/06/2026) ✅ (apostila expandida)
+## 📡 [`webinars/`](webinars/) — Gravações
 
-## ⚡ [`tutoriais/`](tutoriais/) — How-to rápidos (14 tutoriais)
+- **WB-2026-01** — Lançamento do IOAID
+- **WB-2026-02** — SHO em produção
+- **WB-2026-03** — Academ'IA Open House
+- **WB-2026-04** — Skills em produção
+- **WB-2026-05** — Multi-tenant
+- **WB-2026-06** — A/B test estatístico
+- **WB-2026-07** — LGPD & IA
 
-- Como criar seu primeiro agente
-- Como aprovar uma sugestão do judge
-- Como ler o relatório de autonomia
-- Como convidar um afiliado para a rede
-- Como configurar federação entre 2 nós
-- Como escalar federação para 3+ nós com mTLS pinned
-- Como ler e usar o skill-manifest.json
+## 📋 [`playbooks/`](playbooks/) — Operação Guiada
 
-## 📕 [`playbooks/`](playbooks/) — Manuais de operação
+- **PB-CRISES-gestao-crise-autonomia**
+- **PB-CRISES-gestao-crise-ban-whatsapp**
+- **PB-CRISES-gestao-crise-data-loss**
+- **PB-EMAIL-operacao-diaria**
+- **PB-LANCAMENTO-lancamento-7-dias**
+- **PB-LGPD-direitos-titular**
+- **PB-WHATSAPP-operacao-diaria**
+- **otimizacao-campanhas-sho**
 
-- **PB-LANCAMENTO** — Lançamento 7 dias
-- **PB-WHATSAPP** — Operação diária WhatsApp
-- **PB-EMAIL** — Operação diária E-mail
-- **PB-LGPD** — Direitos do Titular (compliance)
-- **PB-CRISES** — Gestão de crises (ban WhatsApp, data loss, autonomia)
+## 🧪 [`Lab-Nexus/`](Lab-Nexus/) — Ferramentas Prontas
 
-## 🧪 [`Lab-Nexus/`](Lab-Nexus/) — HUB de Ferramentas IA
+- **prompts/** — 8 prompts canônicos
+- **templates/** — Email, landing, social media
+- **tools/** — Analytics, automation, copy, design, marketing
+- **workflows/** — Fluxos multi-etapa
 
-### `tools/` — 40 Ferramentas categorizadas
-- [`marketing/`](Lab-Nexus/tools/marketing/) — 9 ferramentas
-- [`copy/`](Lab-Nexus/tools/copy/) — 13 ferramentas (inclui SMS)
-- [`analytics/`](Lab-Nexus/tools/analytics/) — 6 ferramentas
-- [`automation/`](Lab-Nexus/tools/automation/) — 7 ferramentas
-- [`design/`](Lab-Nexus/tools/design/) — 5 ferramentas
+## 📖 [`Lib-Nexus/`](Lib-Nexus/) — Base Canônica
 
-### `prompts/` — 8 prompts testados
-- `copywriting/` — 2 prompts para geração de copy
-- `analise/` — 3 prompts para análise de dados
-- `estrategia/` — 3 prompts para planejamento estratégico
+- **agents-specs/** — Especificações técnicas de agentes
+- **api-docs/** — Documentação de APIs (tRPC, etc)
+- **best-practices/** — Padrões recomendados
+- **knowledge-base/** — Base de conhecimento técnico
 
-### `templates/`
-- `email/` — Templates HTML editáveis
-- `landing/` — Templates de landing pages
-- `social/` — Templates para redes sociais
+## 🎭 [`personas/`](personas/) — Identidade Visual e Voz
 
-### `workflows/`
-- `n8n/` — Blueprints de automação
-- `make/` — Blueprints Make/Integromat
+- **Sra. Nexus Ive** — Persona matriarcal/estrategista
+- **Sir. Nexus Alencar** — Persona técnica/mestre
+- Diretrizes de voz, interação, e estilo
 
-## 📖 [`Lib-Nexus/`](Lib-Nexus/) — Biblioteca Canônica
+## 📊 Estatísticas da Academ'IA
 
-- [`knowledge-base/`](Lib-Nexus/knowledge-base/) — Conceitos, glossário, taxonomias
-- [`agents-specs/`](Lib-Nexus/agents-specs/) — Contratos de agentes
-- [`api-docs/`](Lib-Nexus/api-docs/) — Referência de APIs
-- [`best-practices/`](Lib-Nexus/best-practices/) — Padrões recomendados
+| Tipo | Quantidade |
+|------|-----------|
+| Cursos (4 trilhas) | 15 |
+| Apostilas | 12 |
+| Tutoriais | 15 |
+| Treinamentos/Workshops | 7 |
+| Webinars | 9 |
+| Playbooks | 9 |
+| Certificações | 4 |
+| Skills (Lab-Nexus) | 38+ |
+| Prompts canônicos | 8+ |
+| Personas | 2 |
+| Vídeos-aulas (15 módulos) | 15 |
+| **Total de materiais** | **100+** |
 
-## 🔄 [`sync/`](sync/) — Bridge com Agentes
+## 🔗 Integrações Externas
 
-- [`agent-bridge.json`](sync/agent-bridge.json) — Mapeamento Academ'IA ↔ Runtime
-- [`skill-manifest.json`](sync/skill-manifest.json) — Skills por trilha
-- [`MCP-CONFIG.md`](sync/MCP-CONFIG.md) — Configuração do Model Context Protocol
+- **Generate Vídeos Nexus V** — pipeline automatizado de geração de vídeo-aulas
+- **OneVerso API** — backend multi-tenant
+- **Fase 7, 8, 9** — implementações backend do Nexus
+- **Coleção MMN_IA para IA** (docs/ebooks_markdown/) — 50+ ebooks temáticos
 
-## 🏷️ Tags Transversais Cadastradas
+## 🗺️ Roadmap Próximas Versões
 
-`#operacao` `#copy` `#agentes` `#skills` `#whatsapp` `#disparo` `#funil` `#a-b-test` `#lgpd` `#monetizacao` `#marketplace` `#hotmart` `#shopee` `#automacao` `#analise` `#certificacao` `#whitelabel` `#federacao` `#judge` `#sho` `#ioaid` `#multi-tenant` `#coorte` `#churn` `#lifecycle` `#mcp` `#trust` `#pii`
+### v1.3.0 (Q3 2026)
+- Apostilas 13-15: Internacionalização, Mobile, Voice
+- Tutoriais 16-20: Realtime BI, GraphRAG, Voice Agents
+- Certificação Voice Architect (NOVO)
+- 20 novos vídeos-aulas
+
+### v1.4.0 (Q4 2026)
+- Apostilas 16-20: Quantum-resistant crypto, AI Governance, AI Safety
+- Tutoriais 21-25: Edge deployment, Neuromorphic, Bio-IA
+- Certificação AI Safety Officer (NOVO)
+- Sistema de busca semântica Obsidian-like
 
 ---
 
-**Versão 1.2.0** · Atualizado em 2026-06-12
+**Mantido por:** MMN_IA Collective · Academ'IA
+**Versão:** 1.2.0 · **Data:** 2026-06-28
+**Licença:** Interno Nexus Affil'IA'te

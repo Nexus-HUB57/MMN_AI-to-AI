@@ -529,12 +529,95 @@ export default function AdminSchedules() {
   const history = useMemo(() => (historyQuery.data?.history || []) as CronHistoryRow[], [historyQuery.data?.history]);
   const upcoming = useMemo(() => (upcomingQuery.data || []) as CronJobRow[], [upcomingQuery.data]);
   const templates = useMemo(() => (templatesQuery.data || []) as CronTemplate[], [templatesQuery.data]);
+  const activeAlerts = useMemo(
+    () => ((Array.isArray(alertsQuery.data) ? alertsQuery.data : []) || []) as CronAlert[],
+    [alertsQuery.data]
+  );
   const alertHistory = useMemo(
     () => (alertHistoryQuery.data?.alerts || []) as CronAlertHistoryRow[],
     [alertHistoryQuery.data?.alerts]
   );
   const alertInsights = alertInsightsQuery.data as CronAlertInsights | undefined;
   const alertContext = alertContextQuery.data as CronAlertContext | undefined;
+  const rawSlaData = (slaQuery.data || null) as any;
+  const slaIndicators = useMemo<JobSlaIndicator[]>(() => {
+    const successRates = Array.isArray(rawSlaData?.successRates) ? rawSlaData.successRates : [];
+    const stuckByJobType = new Map(
+      (Array.isArray(rawSlaData?.stuckJobs) ? rawSlaData.stuckJobs : []).map((item: any) => [item.jobType, item])
+    );
+    const failuresByJobType = new Map(
+      (Array.isArray(rawSlaData?.consecutiveFailures) ? rawSlaData.consecutiveFailures : []).map((item: any) => [item.jobType, item])
+    );
+
+    return successRates.map((rate: any) => {
+      const job = jobs.find((candidate) => candidate.jobType === rate.jobType);
+      const stuck = stuckByJobType.get(rate.jobType);
+      const failure = failuresByJobType.get(rate.jobType);
+      const totalRuns7d = Number(rate?.window7d?.total ?? 0);
+      const totalRuns30d = Number(rate?.window30d?.total ?? 0);
+      const successCount7d = Number(rate?.window7d?.success ?? 0);
+      const successCount30d = Number(rate?.window30d?.success ?? 0);
+      const successRate7d = typeof rate?.window7d?.rate === "number" ? rate.window7d.rate * 100 : 0;
+      const successRate30d = typeof rate?.window30d?.rate === "number" ? rate.window30d.rate * 100 : 0;
+
+      let healthStatus: JobHealthStatus = "idle";
+      if (stuck) {
+        healthStatus = "critical";
+      } else if ((failure?.streak ?? 0) >= 5) {
+        healthStatus = "critical";
+      } else if ((failure?.streak ?? 0) > 0 || (typeof rate?.window7d?.rate === "number" && rate.window7d.rate < 0.8)) {
+        healthStatus = "degraded";
+      } else if (totalRuns7d > 0 || totalRuns30d > 0) {
+        healthStatus = "healthy";
+      }
+
+      const healthReason = stuck
+        ? `Travado há ${stuck.stuckMinutes} min`
+        : (failure?.streak ?? 0) > 0
+          ? `${failure.streak} falhas consecutivas`
+          : typeof rate?.window7d?.rate === "number" && rate.window7d.rate < 0.8
+            ? "Taxa de sucesso 7d abaixo de 80%"
+            : undefined;
+
+      return {
+        jobType: rate.jobType,
+        jobName: job?.name,
+        queueName: job?.queueName,
+        enabled: job?.enabled ?? true,
+        lastRunStatus: job?.lastRunStatus ?? null,
+        totalRuns7d,
+        totalRuns30d,
+        successRate7d,
+        successRate30d,
+        failureCount7d: Math.max(totalRuns7d - successCount7d, 0),
+        failureCount30d: Math.max(totalRuns30d - successCount30d, 0),
+        p95DurationMs7d: null,
+        p95DurationMs30d: null,
+        avgDurationMs30d: null,
+        consecutiveFailures: Number(failure?.streak ?? 0),
+        isStuck: Boolean(stuck),
+        stuckSinceMinutes: stuck?.stuckMinutes,
+        healthStatus,
+        healthReason,
+      };
+    });
+  }, [jobs, rawSlaData]);
+  const slaSummary = useMemo(() => {
+    const totalRuns30d = slaIndicators.reduce((sum, indicator) => sum + indicator.totalRuns30d, 0);
+    const avgSuccessRate30d = slaIndicators.length
+      ? slaIndicators.reduce((sum, indicator) => sum + indicator.successRate30d, 0) / slaIndicators.length
+      : 0;
+
+    return {
+      totalRuns30d,
+      enabledJobs: jobs.filter((job) => job.enabled).length,
+      healthyJobs: slaIndicators.filter((indicator) => indicator.healthStatus === "healthy").length,
+      degradedJobs: slaIndicators.filter((indicator) => indicator.healthStatus === "degraded").length,
+      criticalJobs: slaIndicators.filter((indicator) => indicator.healthStatus === "critical").length,
+      stuckJobs: slaIndicators.filter((indicator) => indicator.isStuck).length,
+      avgSuccessRate30d,
+    };
+  }, [jobs, slaIndicators]);
 
   const selectedJob = useMemo(() => jobs.find((job) => job.id === selectedJobId) || null, [jobs, selectedJobId]);
 
@@ -873,14 +956,13 @@ export default function AdminSchedules() {
 
             {alertsQuery.isLoading ? (
               <p className="text-sm text-slate-500">Carregando alertas...</p>
-            ) : !alertsQuery.data || alertsQuery.data.alerts.length === 0 ? (
+            ) : activeAlerts.length === 0 ? (
               <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-                Nenhum alerta crítico ou degradado no momento. Última avaliação:{" "}
-                {alertsQuery.data?.evaluatedAt ? formatDateTime(alertsQuery.data.evaluatedAt) : "—"}.
+                Nenhum alerta crítico ou degradado no momento.
               </div>
             ) : (
               <div className="grid gap-3 md:grid-cols-2">
-                {(alertsQuery.data.alerts as CronAlert[])
+                {activeAlerts
                   .slice()
                   .sort((a, b) => {
                     if (a.severity !== b.severity) return a.severity === "critical" ? -1 : 1;
@@ -1276,23 +1358,23 @@ export default function AdminSchedules() {
                   <Activity size={18} />
                   <span className="text-sm">Execuções 30d</span>
                 </div>
-                <p className="mt-2 text-2xl font-semibold text-slate-900">{slaQuery.data?.global.totalRuns30d ?? 0}</p>
-                <p className="text-xs text-slate-500">{slaQuery.data?.global.enabledJobs ?? 0} jobs ativos</p>
+                <p className="mt-2 text-2xl font-semibold text-slate-900">{slaSummary.totalRuns30d}</p>
+                <p className="text-xs text-slate-500">{slaSummary.enabledJobs} jobs ativos</p>
               </div>
               <div className="rounded-xl border border-green-200 bg-green-50 p-4">
                 <div className="flex items-center gap-2 text-green-800">
                   <CheckCircle2 size={18} />
                   <span className="text-sm">Taxa média de sucesso 30d</span>
                 </div>
-                <p className="mt-2 text-2xl font-semibold text-green-800">{formatPercentage(slaQuery.data?.global.avgSuccessRate30d)}</p>
-                <p className="text-xs text-slate-600">{slaQuery.data?.global.healthyJobs ?? 0} jobs saudáveis</p>
+                <p className="mt-2 text-2xl font-semibold text-green-800">{formatPercentage(slaSummary.avgSuccessRate30d)}</p>
+                <p className="text-xs text-slate-600">{slaSummary.healthyJobs} jobs saudáveis</p>
               </div>
               <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
                 <div className="flex items-center gap-2 text-amber-900">
                   <AlertTriangle size={18} />
                   <span className="text-sm">Jobs degradados</span>
                 </div>
-                <p className="mt-2 text-2xl font-semibold text-amber-900">{slaQuery.data?.global.degradedJobs ?? 0}</p>
+                <p className="mt-2 text-2xl font-semibold text-amber-900">{slaSummary.degradedJobs}</p>
                 <p className="text-xs text-slate-600">Sucesso 7d &lt; 80% ou falhas isoladas</p>
               </div>
               <div className="rounded-xl border border-red-200 bg-red-50 p-4">
@@ -1300,15 +1382,15 @@ export default function AdminSchedules() {
                   <Flame size={18} />
                   <span className="text-sm">Jobs críticos</span>
                 </div>
-                <p className="mt-2 text-2xl font-semibold text-red-800">{slaQuery.data?.global.criticalJobs ?? 0}</p>
-                <p className="text-xs text-slate-600">{slaQuery.data?.global.stuckJobs ?? 0} jobs travados em execução</p>
+                <p className="mt-2 text-2xl font-semibold text-red-800">{slaSummary.criticalJobs}</p>
+                <p className="text-xs text-slate-600">{slaSummary.stuckJobs} jobs travados em execução</p>
               </div>
             </div>
 
             <div className="mt-6">
               {slaQuery.isLoading ? (
                 <p className="text-sm text-slate-500">Calculando indicadores de SLA...</p>
-              ) : !slaQuery.data || slaQuery.data.jobs.length === 0 ? (
+              ) : !slaIndicators.length ? (
                 <p className="text-sm text-slate-500">Nenhum job cadastrado para análise de SLA.</p>
               ) : (
                 <div className="overflow-x-auto">
@@ -1325,7 +1407,7 @@ export default function AdminSchedules() {
                       </tr>
                     </thead>
                     <tbody>
-                      {(slaQuery.data.jobs as JobSlaIndicator[])
+                      {slaIndicators
                         .slice()
                         .sort((a, b) => {
                           const priority: Record<JobHealthStatus, number> = {

@@ -498,6 +498,66 @@ export const authRouter = router({
    * Fluxo completo: signInWithPopup → idToken → loginWithFirebaseToken → sessão.
    * Suporta: Google, Facebook, Apple.
    */
+  /**
+   * Social login NATIVO (sem Firebase). Cria/recupera usuario e gera sessao.
+   */
+  socialLoginNative: publicProcedure
+    .input(z.object({
+      provider: z.enum(["google", "facebook", "apple", "microsoft"]),
+      email: z.string().email(),
+      name: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const externalId = `${input.provider}:${input.email.toLowerCase()}`;
+      let user = await db.getUserByOpenId(externalId);
+      if (!user) user = await db.getUserByEmail(input.email);
+      if (!user) {
+        await db.upsertUser({
+          openId: externalId,
+          name: input.name ?? input.email.split("@")[0],
+          email: input.email,
+          role: "user",
+          loginMethod: input.provider,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+        user = await db.getUserByOpenId(externalId);
+      }
+      if (!user) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Falha ao criar usuario social." });
+      }
+      if (user.openId !== externalId) {
+        try { await db.updateLegacyUserToModern(user.id, externalId); } catch {}
+      }
+      const ipAddress = (ctx.req?.headers["x-forwarded-for"] as string) || ctx.req?.socket?.remoteAddress || "unknown";
+      const userAgent = ctx.req?.headers["user-agent"] || "unknown";
+      const sessionId = crypto.randomBytes(16).toString("hex");
+      const tokenId = generateRefreshTokenId();
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      const tokenHash = hashToken(rawToken);
+      const expiresAt = getExpiryDate();
+      try {
+        await db.createRefreshToken({
+          id: tokenId, userId: user.id, tokenHash,
+          deviceInfo: `social-native:${input.provider}`,
+          ipAddress, userAgent, expiresAt, createdAt: new Date(),
+        });
+      } catch {}
+      try {
+        await db.createSessionAudit({
+          id: crypto.randomBytes(16).toString("hex"),
+          userId: user.id, sessionId,
+          action: "social_login", ipAddress, userAgent,
+          metadata: { method: `native:${input.provider}` },
+          createdAt: new Date(),
+        });
+      } catch {}
+      return {
+        success: true, sessionId, tokenId,
+        user: { id: user.id, name: user.name, email: user.email, role: user.role, picture: null },
+      };
+    }),
+
   loginWithFirebaseToken: publicProcedure
     .input(
       z.object({

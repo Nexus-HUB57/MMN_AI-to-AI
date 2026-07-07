@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import PartnersContactForm from "@/components/PartnersContactForm";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
@@ -56,6 +57,8 @@ const planIcons = {
 } as const;
 
 export default function Subscriptions() {
+  const [partnersFormOpen, setPartnersFormOpen] = useState(false);
+  const [partnersFormPlan, setPartnersFormPlan] = useState<{ planId: string; planName: string; termMonths: number } | null>(null);
   const [, setLocation] = useLocation();
   const { isAuthenticated } = useAuth();
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -361,7 +364,15 @@ export default function Subscriptions() {
                       <Button
                         className="gradient-btn h-12 w-full"
                         disabled={startMutation.isPending && startMutation.variables?.planId === plan.id}
-                        onClick={() => handleSubscribe(plan)}
+                        onClick={() => {
+                          const term = selectedTerms[plan.id] ?? plan.storefront.defaultTermMonths;
+                          if (plan.governance.requiresAdminContact || plan.priceCents == null) {
+                            setPartnersFormPlan({ planId: plan.id, planName: plan.fullName, termMonths: term });
+                            setPartnersFormOpen(true);
+                          } else {
+                            handleSubscribe(plan);
+                          }
+                        }}
                       >
                         {plan.storefront.ctaLabel}
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -391,6 +402,15 @@ export default function Subscriptions() {
           </div>
         </section>
       </div>
+      {partnersFormPlan && (
+        <PartnersContactForm
+          open={partnersFormOpen}
+          onOpenChange={setPartnersFormOpen}
+          planId={partnersFormPlan.planId}
+          planName={partnersFormPlan.planName}
+          termMonths={partnersFormPlan.termMonths}
+        />
+      )}
     </DashboardLayout>
   );
 }

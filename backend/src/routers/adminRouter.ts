@@ -113,11 +113,18 @@ export const adminRouter = router({
       role: z.enum(["user", "admin"]).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
-      const { id, ...updates } = input;
+      const { id, role, ...updates } = input;
 
       const [existingUser] = await ctx.db.select().from(users).where(eq(users.id, id));
       if (!existingUser) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Usuário não encontrado" });
+      }
+
+      if (role !== undefined && role !== existingUser.role) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Promoção ou alteração de papel administrativo foi bloqueada no backoffice. Use configuração protegida.",
+        });
       }
 
       await ctx.db.update(users)
@@ -521,7 +528,7 @@ export const adminRouter = router({
         database: Boolean(process.env.DATABASE_URL),
         redis: Boolean(process.env.REDIS_URL),
         hotmart: Boolean(process.env.HOTMART_CLIENT_ID),
-        shopee: Boolean(process.env.SHOPEE_AFFILIATE_ID),
+        shopee: Boolean((process.env.SHOPEE_AFFILIATE_ID && process.env.SHOPEE_AFFILIATE_USERNAME) || (process.env.SHOPEE_PARTNER_ID && process.env.SHOPEE_PARTNER_KEY && (process.env.SHOPEE_REDIRECT_URI || process.env.SHOPEE_PUSH_CALLBACK_URL))),
       },
     };
   }),
@@ -551,6 +558,121 @@ export const adminRouter = router({
       // Em produção, salvaria em tabela de configurações
       console.log("Settings updated:", input);
       return { success: true, message: "Configurações atualizadas" };
+    }),
+
+  /**
+   * Limpar cache de runtime (seguro para produção).
+   */
+  clearRuntimeCache: adminProcedure
+    .mutation(async () => {
+      const clearedAt = new Date().toISOString();
+      (globalThis as any).__ONEVERSO_ADMIN_CACHE_CLEARED_AT = clearedAt;
+      return {
+        success: true,
+        clearedAt,
+        message: "Cache de runtime invalidado com sucesso. Se necessário, atualize o navegador com Ctrl+F5.",
+      };
+    }),
+
+  /**
+   * Prévia do reset operacional de go-live.
+   * Escopo: comissões, saldos, pedidos de teste (admin/zero), progresso e views.
+   */
+  previewGoLiveReset: adminProcedure
+    .mutation(async ({ ctx }) => {
+      const raw: any = await ctx.db.execute(sql`
+        SELECT
+          (SELECT count(*)::int FROM public.commissions) AS commissions,
+          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
+          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
+          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
+          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
+          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
+          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
+          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
+          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
+          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
+          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
+      `);
+      const row: any = Array.isArray(raw) ? raw[0] : (raw?.rows?.[0] ?? {});
+      const getNum = (key: string) => Number(row?.[key] ?? 0);
+      return {
+        success: true,
+        scope: 'Somente dados operacionais de teste',
+        confirmationText: 'RESETAR GO LIVE',
+        callbackUrl: process.env.SHOPEE_PUSH_CALLBACK_URL || 'https://oneverso.com.br/webhooks/shopee',
+        counts: {
+          commissions: getNum('commissions'),
+          affiliateBalances: getNum('affiliate_balances'),
+          affiliatePerformance: getNum('affiliate_performance'),
+          affiliateXp: getNum('affiliate_xp'),
+          lessonProgress: getNum('lesson_progress'),
+          lessonViews: getNum('lesson_views'),
+          lessonCompletionStats: getNum('lesson_completion_stats'),
+          paymentsHomolog: getNum('payments_homolog'),
+          marketplaceOrdersTest: getNum('marketplace_orders_test'),
+          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
+          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
+        },
+      };
+    }),
+
+  /**
+   * Reset controlado para go-live real.
+   * Preserva usuários/admins/config-base; remove apenas dados operacionais de teste.
+   */
+  resetGoLiveOperationalData: adminProcedure
+    .input(z.object({ confirmationText: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if ((input.confirmationText || '').trim() !== 'RESETAR GO LIVE') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Digite exatamente RESETAR GO LIVE para confirmar.' });
+      }
+      const previewRaw: any = await ctx.db.execute(sql`
+        SELECT
+          (SELECT count(*)::int FROM public.commissions) AS commissions,
+          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
+          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
+          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
+          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
+          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
+          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
+          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
+          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
+          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
+          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
+      `);
+      const row: any = Array.isArray(previewRaw) ? previewRaw[0] : (previewRaw?.rows?.[0] ?? {});
+      const getNum = (key: string) => Number(row?.[key] ?? 0);
+
+      await ctx.db.execute(sql`DELETE FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
+      await ctx.db.execute(sql`DELETE FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
+      await ctx.db.execute(sql`DELETE FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0`);
+      await ctx.db.execute(sql`DELETE FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%'`);
+      await ctx.db.execute(sql`DELETE FROM public.lesson_views`);
+      await ctx.db.execute(sql`DELETE FROM public.lesson_progress`);
+      await ctx.db.execute(sql`DELETE FROM public.commissions`);
+      await ctx.db.execute(sql`DELETE FROM public.affiliate_balances`);
+      await ctx.db.execute(sql`DELETE FROM public.affiliate_performance`);
+      await ctx.db.execute(sql`DELETE FROM public.affiliate_xp`);
+
+      return {
+        success: true,
+        resetAt: new Date().toISOString(),
+        scope: 'Somente dados operacionais de teste',
+        deleted: {
+          commissions: getNum('commissions'),
+          affiliateBalances: getNum('affiliate_balances'),
+          affiliatePerformance: getNum('affiliate_performance'),
+          affiliateXp: getNum('affiliate_xp'),
+          lessonProgress: getNum('lesson_progress'),
+          lessonViews: getNum('lesson_views'),
+          lessonCompletionStats: getNum('lesson_completion_stats'),
+          paymentsHomolog: getNum('payments_homolog'),
+          marketplaceOrdersTest: getNum('marketplace_orders_test'),
+          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
+          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
+        },
+      };
     }),
 
   // ============ DASHBOARD ============

@@ -94,11 +94,10 @@ export const usersRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Usuário não encontrado" });
       }
 
-      await ctx.db.update(users)
-        .set({ role: input.role, updatedAt: new Date() })
-        .where(eq(users.id, input.userId));
-
-      return { success: true, message: `Papel atualizado para ${input.role}` };
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Alteração de papel administrativo desabilitada. Use configuração protegida para qualquer ajuste de acesso admin.",
+      });
     }),
 
   /**
@@ -139,4 +138,38 @@ export const usersRouter = router({
       activeAffiliates: Number(activeAffiliates.count),
     };
   }),
+  /**
+   * ID Indicador único do afiliado (referralCode)
+   * Gera um identificador estável e único por usuário a partir do user.id
+   */
+  getReferral: protectedProcedure.query(async ({ ctx }) => {
+    const userId = (ctx as any)?.user?.id ?? (ctx as any)?.userId ?? null;
+    if (!userId) {
+      return { code: "", url: "", userId: null };
+    }
+    // Gerar código estável a partir do id (base36 + prefixo NX)
+    const num = Number(userId);
+    const safe = isNaN(num)
+      ? String(userId).replace(/[^a-zA-Z0-9]/g, "").slice(0, 10).toUpperCase()
+      : num.toString(36).toUpperCase().padStart(5, "0");
+    const code = `NX${safe}`;
+    const url = `https://oneverso.com.br/cadastro?ref=${code}`;
+    return { code, url, userId };
+  }),
+
+
+  /**
+   * Link público da Minha Loja do afiliado (vitrine compartilhável)
+   */
+  myStoreLink: protectedProcedure.query(async ({ ctx }) => {
+    const userId = (ctx as any)?.user?.id ?? (ctx as any)?.userId ?? null;
+    if (!userId) return { url: "", code: "" };
+    const num = Number(userId);
+    const safe = isNaN(num)
+      ? String(userId).replace(/[^a-zA-Z0-9]/g, "").slice(0, 10).toUpperCase()
+      : num.toString(36).toUpperCase().padStart(5, "0");
+    const code = `NX${safe}`;
+    return { url: `https://oneverso.com.br/minha-loja/${code}`, code };
+  }),
+
 });

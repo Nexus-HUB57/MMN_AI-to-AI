@@ -39,6 +39,30 @@ const SECTION_LABEL: Record<string, string> = {
 
 
 const _prefetched = new Set<string>();
+
+function sectionHref(sectionSlug: string, lessonId: string) {
+  return `/academia/ead/${sectionSlug}/${lessonId}`;
+}
+
+function sectionEmoji(sectionSlug: string) {
+  switch (sectionSlug) {
+    case "curso":
+      return "🎓";
+    case "lab":
+      return "🧪";
+    case "lib":
+      return "📚";
+    case "playbook":
+      return "🧭";
+    case "webinar":
+      return "🎥";
+    case "treinamento":
+      return "🛠️";
+    default:
+      return "🎓";
+  }
+}
+
 function prefetchLesson(id: string) {
   if (_prefetched.has(id)) return;
   _prefetched.add(id);
@@ -50,6 +74,7 @@ export default function AcademiaWhatsNew() {
   const [items, setItems] = useState<WhatsNewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [brokenCovers, setBrokenCovers] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     let mounted = true;
@@ -97,16 +122,22 @@ export default function AcademiaWhatsNew() {
         {items.map((it) => (
           <a
             key={it.lessonId}
-            href={`/academia/ead/curso/${it.lessonId}`}
+            href={sectionHref(it.sectionSlug, it.lessonId)}
             onMouseEnter={() => prefetchLesson(it.lessonId)}
             onFocus={() => prefetchLesson(it.lessonId)}
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
           >
-            {it.coverUrl ? (
-              <img src={it.coverUrl} alt="" className="w-14 h-14 object-cover rounded-md flex-shrink-0" />
+            {it.coverUrl && !brokenCovers[it.lessonId] ? (
+              <img
+                src={it.coverUrl}
+                alt={it.title || it.lessonId}
+                className="w-14 h-14 object-cover rounded-md flex-shrink-0"
+                loading="lazy"
+                onError={() => setBrokenCovers((prev) => ({ ...prev, [it.lessonId]: true }))}
+              />
             ) : (
               <div className="w-14 h-14 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-md flex items-center justify-center flex-shrink-0">
-                <span className="text-2xl">🎓</span>
+                <span className="text-2xl">{sectionEmoji(it.sectionSlug)}</span>
               </div>
             )}
             <div className="flex-1 min-w-0">

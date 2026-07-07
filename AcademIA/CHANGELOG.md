@@ -2,8 +2,8 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.2.2
-last_updated: 2026-06-26
+version: 1.2.3
+last_updated: 2026-06-28
 ---
 
 # 📜 CHANGELOG · Academ'IA
@@ -12,89 +12,103 @@ last_updated: 2026-06-26
 
 ---
 
-## [1.2.2] — 2026-06-26 · "Expansão Pedagógica + Workflows"
+## [1.2.3] — 2026-06-28 · "Consolidação (merge v1.2.0 + v1.2.2)"
 
-### ✨ Adicionado
+Esta versão consolida as contribuições das duas branches paralelas:
 
-- 📚 **6 tutoriais novos** (`tutoriais/`):
-  - `15-debugar-agente-lento.md` — diagnóstico de latência em 5 passos
-  - `16-criar-skill-customizada.md` — skill custom com testes TypeScript
-  - `17-integrar-meta-ads.md` — integração Meta Marketing API
-  - `18-configurar-backup-automatico.md` — backup 3-2-1
-  - `19-ler-metricas-sho.md` — 8 métricas-chave do SHO
-  - `20-exportar-relatorio-mensal.md` — relatórios executivos
-- 🎮 **2 playbooks novos** (`playbooks/`):
-  - `PB-LANCAMENTO-black-friday.md` — playbook completo 11 dias
-  - `PB-ONBOARDING-novo-afiliado.md` — onboarding 14 dias com metas
-- 🎤 **2 webinars novos** (`webinars/`):
-  - `WB-2026-04-agentes-autonomos-prod.md` — cases reais em produção
-  - `WB-2026-05-federacao-multi-tenant.md` — solo → enterprise
-- 🔄 **2 workflows novos** (`Lab-Nexus/workflows/`):
-  - `make/02-workflow-recovery-carrinho.json` — recuperação multi-canal
-  - `n8n/03-workflow-onboarding-trial.md` — trial → pago
-- 🧠 **3 prompts novos** (`Lab-Nexus/prompts/`):
-  - `analise/04-diagnostico-churn-preventivo.md` — diagnóstico de churn
-  - `copywriting/03-copy-headline-anuncio.md` — 5 headlines com framework
-  - `copywriting/04-script-vsl.md` — VSL 15-25min completo
-  - `estrategia/04-plano-conteudo-90-dias.md` — calendário trimestral
+### ✨ Adicionado (Branch A — v1.2.0)
 
-### 📊 Métricas
+**Apostilas (2 novas):**
+- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para IAs generativas
+- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores
 
-| | v1.2.0 | v1.2.2 |
-|---|---|---|
-| Tutoriais | 14 | 20 |
-| Playbooks | 8 | 10 |
-| Webinars | 4 | 6 |
-| Workflows | 3 | 5 |
-| Prompts | 8 | 11 |
-| Tools | 44 | 44 |
+**Tutoriais (5 novos):**
+- `tutoriais/11-auditoria-skills-master.md`
+- `tutoriais/12-configurar-ab-test-judge.md`
+- `tutoriais/13-deploy-multi-tenant-elite.md`
+- `tutoriais/14-agente-federado-elite.md`
+- `tutoriais/15-auditoria-lgpd-automatizada.md`
+
+**Certificações (1 nova):**
+- `certificacoes/MAS-plus-certificacao-master-plus.md`
+
+### ✨ Adicionado (Branch B — v1.2.2)
+
+**Tutoriais (6 novos):**
+- `tutoriais/16-debugar-agente-lento.md` (renomeado para 15)
+- `tutoriais/17-criar-skill-customizada.md`
+- `tutoriais/18-integrar-meta-ads.md`
+- `tutoriais/19-configurar-backup-automatico.md`
+- `tutoriais/20-ler-metricas-sho.md`
+- `tutoriais/21-exportar-relatorio-mensal.md`
+
+**Playbooks (2 novos):**
+- `playbooks/PB-LANCAMENTO-black-friday.md`
+- `playbooks/PB-ONBOARDING-novo-afiliado.md`
+
+**Webinars (2 novos):**
+- `webinars/WB-2026-04-agentes-autonomos-prod.md`
+- `webinars/WB-2026-05-federacao-multi-tenant.md`
+
+**Workflows (2 novos):**
+- `Lab-Nexus/workflows/make/02-workflow-recovery-carrinho.json`
+- `Lab-Nexus/workflows/n8n/03-workflow-onboarding-trial.md`
+
+**Prompts (4 novos):**
+- `Lab-Nexus/prompts/analise/04-diagnostico-churn-preventivo.md`
+- `Lab-Nexus/prompts/copywriting/03-copy-headline-anuncio.md`
+- `Lab-Nexus/prompts/copywriting/04-script-vsl.md`
+- `Lab-Nexus/prompts/estrategia/04-plano-conteudo-90-dias.md`
+
+### 📊 Métricas Consolidadas
+
+| Métrica | Antes (v1.1.1) | Agora (v1.2.3) | Δ |
+|---|---|---|---|
+| Apostilas | 10 | **12** | +20% |
+| Tutoriais | 14 | **21** | +50% |
+| Certificações | 4 | **5** | +25% |
+| Tools | 40 | **44** | +10% |
+| Prompts | 8 | **11** | +38% |
+| Templates | 3 | **6** | +100% |
+| Workflows | 3 | **5** | +67% |
+| Playbooks | 7 | **10** | +43% |
+| Webinars | 3 | **6** | +100% |
+| Workshops | 6 | **8** | +33% |
+| Cursos | 15 | **15** | = |
+| Total Assets | **113** | **158** | **+40%** |
 
 ---
 
-## [1.2.0] — 2026-06-24 · "Expansão Acadêmica + Auditoria"
+## [1.2.0] — 2026-06-28 · "Expansão Master & Elite"
+>>>>>>> origin/main
 
-### ✨ Adicionado
+### ✨ Novos Materiais (8)
 
-- 🎬 **2 workshops novos** (`treinamentos/`):
-  - `WS-04-oficina-sho-avancado.md` — SHO em modo S2/S3 com guardrails, audit trail, rollback reversível (Nível Master)
-  - `WS-05-oficina-federacao-agentes.md` — Federação multi-tenant, mTLS pinned, reputation system, ledger distribuído (Nível Master→Elite)
-- 🧪 **4 ferramentas operacionais novas** (`Lab-Nexus/tools/`):
-  - `analytics/07-comparador-creators.md` — comparador de até 10 creators em 12 métricas com score composto
-  - `automation/08-rate-limiter-pausa-inteligente.md` — rate limiter adaptativo com smart pause por canal
-  - `design/06-prompt-visual-carrossel-v2.md` — gerador de briefings para carrossel Instagram/LinkedIn
-  - `marketing/10-icp-detector.md` — detector automático de Ideal Customer Profile com 5 dimensões
-- 📊 **3 templates novos** (`Lab-Nexus/templates/`):
-  - `social/02-template-stories-sequencia.html` — sequência de 7 stories Instagram/TikTok
-  - `landing/03-template-otimizado-conversao.html` — landing page AIDA + FAQ + prova social
-  - `email/04-template-carrinho-abandonado.html` — email de recuperação com urgência e prova
-- 🔄 **Schema de auditoria** (`sync/audit-log-schema.md`) — schema JSONL completo para logs de auditoria MCP com 6 seções (actor, operation, context, decision, outcome, metadata)
+**Apostilas (2 novas):**
+- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para ser citado por IAs generativas (substituindo SEO clássico). 7 camadas de conteúdo, schema markup para IAs, métricas de GEO.
+- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores de ataque contra sistemas multi-agente. Prompt injection, tool abuse, memory poisoning, federation attacks, supply chain.
 
-### 🩹 Correções
+**Tutoriais (5 novos):**
+- `tutoriais/11-auditoria-skills-master.md` (TUT-MAS-04) — Análise completa de uso, segurança e saúde das skills do agente.
+- `tutoriais/12-configurar-ab-test-judge.md` (TUT-MAS-05) — A/B testing com significância estatística (p < 0.05) e decisão automática via Judge.
+- `tutoriais/13-deploy-multi-tenant-elite.md` (TUT-ELI-01) — Plataforma SaaS white-label com RLS, billing, e 3 planos.
+- `tutoriais/14-agente-federado-elite.md` (TUT-ELI-02) — mTLS, marketplace de skills, billing settlement, governança.
+- `tutoriais/15-auditoria-lgpd-automatizada.md` (TUT-ELI-03) — Scanner de PII, DPIA, right to be forgotten, notificação 72h.
 
-- **Duplicatas removidas** em `tutoriais/`:
-  - `12-federa#U00e7#U00e3o-2-nos.md` (encoding quebrado)
-  - `13-federa#U00e7#U00e3o-3-nos-mtls-pinned.md` (encoding quebrado)
-  - Versões corretas com UTF-8 já existiam: `12-federação-2-nos.md`, `13-federação-3-nos-mtls-pinned.md`
-- **INDEX.md atualizado** com contagem real de assets (v1.2.1)
-- **Personas Alencar/Ive documentadas** — pasta `AcademIA/personas/alencar/` com imagem oficial, voz, roteiro-aula01 e slides (commit anterior)
+**Certificações (1 nova):**
+- `certificacoes/MAS-plus-certificacao-master-plus.md` — Master Plus (MAS+), intermediária entre CEN e CEN+. 60 dias, 5 core skills + 3 advanced skills + soft skills.
 
-### 📊 Métricas
+### 📊 Estatísticas
+- Apostilas: 10 → **12** (+20%)
+- Tutoriais: 10 → **15** (+50%)
+- Certificações: 4 → **5** (+25%)
 
-| | v1.1.1 | v1.2.0 |
-|---|---|---|
-| **Apostilas** | 10 | 10 |
-| **Cursos** (total) | 15 | 15 |
-| **Ferramentas (Lab-Nexus)** | 40 | 44 |
-| **Prompts (Lab-Nexus)** | 8 | 8 |
-| **Templates (Lab-Nexus)** | 3 | 6 |
-| **Workflows (Lab-Nexus)** | 3 | 3 |
-| **Tutoriais** | 14 (+2 duplicatas) | 14 |
-| **Playbooks** | 7 | 8 |
-| **Webinars** | 3 | 4 |
-| **Treinamentos/Workshops** | 6 | 8 |
-| **Certificações** | 4 | 5 |
-| **Personas** | 2 (parcial) | 2 (completas com roteiro, slides, voz) |
-| **Audit schema** | — | 1 (v1.0) |
+### 🎯 Tópicos Cobertos
+- **SEO/GEO** — novo framework AEO/GEO com 7 padrões para citar em IAs generativas
+- **Red Team** — 23 vetores de ataque + PoC + defesas
+- **Multi-tenant SaaS** — RLS + billing + white-label
+- **Federated Agents** — mTLS + marketplace + governance
+- **LGPD Automation** — DPIA + right to be forgotten + incident notification
 
 ---
 

@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/04_Tipos_de_Agentes_IA_e_diferencas.webp)
+![Capa](../../assets/ebook_covers/curso_universo_ia/04_Tipos_de_Agentes_IA_e_diferencas.webp)
 
 **Quais são os tipos de Agentes IA e quais as diferenças entre eles?**
 

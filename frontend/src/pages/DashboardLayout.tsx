@@ -43,8 +43,46 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 
+import { trpc } from "../lib/trpc";
 // NEXUS_ONBOARDING_V2
 import OnboardingBundle from "@/components/OnboardingBundle";
+
+
+import CommandPalette from "../components/CommandPalette";
+import { ThemeToggle } from "../components/ThemeProvider";
+import { useFocusMode } from "../hooks/useFocusMode";
+function DashboardStatusIndicators() {
+  const status = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+    retry: false,
+  });
+  const agentActive = !!status?.data?.agentActive;
+  const monthlyPaid = !!status?.data?.monthlyActivationPaid;
+  const dot = (on: boolean, label: string) => (
+    <div className="flex items-center gap-1.5">
+      <span
+        className={
+          "inline-block h-2.5 w-2.5 rounded-full " +
+          (on
+            ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)] animate-pulse"
+            : "bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.7)]")
+        }
+        aria-label={(on ? "Ativo: " : "Pendente: ") + label}
+        title={(on ? "Ativo: " : "Pendente: ") + label}
+      />
+      <span className="hidden md:inline text-[10px] uppercase tracking-widest text-slate-300/80">
+        {label}
+      </span>
+    </div>
+  );
+  return (
+    <div className="ml-3 hidden sm:flex items-center gap-3 border-l border-white/10 pl-3">
+      {dot(agentActive, "Agente")}
+      {dot(monthlyPaid, "Ativação")}
+    </div>
+  );
+}
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -63,7 +101,9 @@ interface NavGroup {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, loading, logout } = useAuth();
+  
+  useFocusMode();
+const { user, loading, logout } = useAuth();
   const [location, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -230,11 +270,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="text-lg font-bold gradient-text hidden sm:inline">
                 IOAID · SaaS
               </span>
+              <DashboardStatusIndicators />
             </button>
           </div>
 
           {/* User Menu */}
-          <DropdownMenu modal={false} open={userMenuOpen} onOpenChange={setUserMenuOpen}>
+          <div className="flex items-center gap-1"><ThemeToggle /><DropdownMenu modal={false} open={userMenuOpen} onOpenChange={setUserMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
@@ -332,9 +373,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu></div>
         </div>
       </header>
+      <CommandPalette />
 
       {/* Sidebar */}
       <aside
@@ -389,7 +431,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 min-h-screen">
+      <main className="lg:ml-64 pt-16 min-h-screen ux-page-mount">
         <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 

@@ -171,15 +171,15 @@ async function callTrpcMutation<T>(procedure: string, input: unknown): Promise<{
   }
 }
 const ADMIN_SESSION_ID = "admin-nexus-affiliate-core";
-// Correção #8 — Admin: lucasmpthomaz@gmail.com (hash atualizado). Email real não exposto no bundle.
+// Hash do administrador operacional vigente. O e-mail real permanece fora do bundle.
 const ADMIN_INTERNAL_EMAIL = "equipe-restrita@nexus.internal";
 const AUTHORIZED_ADMIN_EMAIL_SHA256 =
   "7d67005172b41a8cf0abe1b5de9a5f1605821ff22d0207e9bd0f2cfcb91384b2";
 const AUTHORIZED_ADMIN_PASSWORD_SHA256 =
   "81493748f444279b87fbdb2770ad8a24e12d4c676ede14087d6920c98f6d9a2e";
 
-export const ADMIN_ACCESS_LABEL = "Equipe Nexus Affil'IA'te";
-export const ADMIN_RESTRICTED_NOTICE = "Acesso Restrito - Equipe Nexus Affil'IA'te";
+export const ADMIN_ACCESS_LABEL = "Lucas Thomaz";
+export const ADMIN_RESTRICTED_NOTICE = "Acesso Restrito - Lucas Thomaz";
 
 const ADMIN_USER: User = {
   id: ADMIN_SESSION_ID,
@@ -364,8 +364,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (credentials?: LoginCredentials) => {
     const normalizedEmail = credentials?.email?.trim().toLowerCase() ?? "";
+    const isAdminMode = credentials?.role === "admin";
+
+    // Apenas o modo admin explícito dispara o fluxo administrativo.
+    // O auto-match por e-mail só vale quando NÃO estamos no modo afiliado.
     const requestedAdmin =
-      credentials?.role === "admin" || (normalizedEmail ? await matchesAuthorizedAdminEmail(normalizedEmail) : false);
+      isAdminMode ||
+      (credentials?.role !== "affiliate" && normalizedEmail
+        ? await matchesAuthorizedAdminEmail(normalizedEmail)
+        : false);
 
     if (requestedAdmin) {
       if (!credentials?.password) {
@@ -374,8 +381,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return loginAdmin(normalizedEmail, credentials.password);
     }
 
+    // Modo afiliado: Nome + Senha (senha opcional no fluxo demo).
+    const name = credentials?.name?.trim();
+    if (!name) {
+      throw new Error("Informe seu nome para acessar o painel do afiliado.");
+    }
+
     const nextUser = buildAffiliateUser({
-      name: credentials?.name?.trim() || AFFILIATE_DEMO_USER.name,
+      name,
       email: normalizedEmail || AFFILIATE_DEMO_USER.email,
     });
     setUser(nextUser);

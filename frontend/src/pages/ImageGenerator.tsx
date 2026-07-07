@@ -1,3 +1,4 @@
+import DashboardLayout from '@/components/DashboardLayout';
 import { useState } from 'react';
 import { Agent, GeneratedImage } from '@/types/agent';
 import { trpc } from '@/lib/trpc';

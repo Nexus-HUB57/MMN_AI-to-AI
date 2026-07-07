@@ -5,11 +5,44 @@ import {
   type ICronAlertRow,
 } from '../../../database/schemas/schema-cron';
 import { users } from '../../../database/schemas/schema-final';
-import {
-  computeCronSlaSnapshot,
-  type JobSlaIndicator,
-  type CronSlaSnapshot,
-} from './cronSlaIndicators';
+import { computeCronSlaSnapshot } from './cronSlaIndicators';
+
+interface JobSlaIndicator {
+  jobType: string;
+  jobName?: string;
+  queueName?: string;
+  enabled: boolean;
+  lastRunStatus?: string | null;
+  totalRuns7d: number;
+  totalRuns30d: number;
+  successRate7d: number;
+  successRate30d: number;
+  failureCount7d: number;
+  failureCount30d: number;
+  p95DurationMs7d: number | null;
+  p95DurationMs30d: number | null;
+  avgDurationMs30d: number | null;
+  consecutiveFailures: number;
+  isStuck: boolean;
+  stuckSinceMinutes?: number;
+  healthStatus: 'healthy' | 'degraded' | 'critical' | 'idle';
+  healthReason?: string;
+}
+
+interface CronSlaSnapshot {
+  generatedAt?: string;
+  options: {
+    stuckThresholdMinutes: number;
+    consecutiveFailuresAlertThreshold: number;
+  };
+  global: {
+    totalJobs: number;
+    criticalJobs: number;
+    degradedJobs: number;
+    stuckJobs: number;
+  };
+  jobs: JobSlaIndicator[];
+}
 
 export type CronAlertSeverity = 'warning' | 'critical';
 export type CronAlertType =
@@ -67,7 +100,8 @@ export async function evaluateCronAlerts(
   const successRateAlertThreshold = options.successRateAlertThreshold ?? DEFAULT_SUCCESS_RATE_ALERT;
   const notifyAdmins = options.notifyAdmins ?? true;
 
-  const snapshot = await computeCronSlaSnapshot();
+  const rawSnapshot = await computeCronSlaSnapshot();
+  const snapshot = normalizeCronSlaSnapshot(rawSnapshot);
   const now = new Date();
   const candidates = snapshot.jobs.flatMap((indicator) =>
     buildAlertsForJob(indicator, snapshot, successRateAlertThreshold, now)
@@ -494,6 +528,165 @@ function buildEvaluateResult(args: {
       stuckJobs: args.snapshot.global.stuckJobs,
     },
   };
+}
+
+function normalizeCronSlaSnapshot(rawSnapshot: any): CronSlaSnapshot {
+  const defaultOptions = {
+    stuckThresholdMinutes: 30,
+    consecutiveFailuresAlertThreshold: 3,
+  };
+
+  if (rawSnapshot && Array.isArray(rawSnapshot.jobs)) {
+    const jobs = rawSnapshot.jobs.map((job: any) => normalizeJobIndicator(job));
+    const global = rawSnapshot.global ?? {};
+
+    return {
+      generatedAt: normalizeGeneratedAt(rawSnapshot.generatedAt),
+      options: {
+        stuckThresholdMinutes: Number(rawSnapshot.options?.stuckThresholdMinutes ?? defaultOptions.stuckThresholdMinutes),
+        consecutiveFailuresAlertThreshold: Number(
+          rawSnapshot.options?.consecutiveFailuresAlertThreshold ?? defaultOptions.consecutiveFailuresAlertThreshold,
+        ),
+      },
+      global: {
+        totalJobs: Number(global.totalJobs ?? jobs.length),
+        criticalJobs: Number(global.criticalJobs ?? jobs.filter((job) => job.healthStatus === 'critical').length),
+        degradedJobs: Number(global.degradedJobs ?? jobs.filter((job) => job.healthStatus === 'degraded').length),
+        stuckJobs: Number(global.stuckJobs ?? jobs.filter((job) => job.isStuck).length),
+      },
+      jobs,
+    };
+  }
+
+  const successRates = Array.isArray(rawSnapshot?.successRates) ? rawSnapshot.successRates : [];
+  const stuckJobs = Array.isArray(rawSnapshot?.stuckJobs) ? rawSnapshot.stuckJobs : [];
+  const consecutiveFailures = Array.isArray(rawSnapshot?.consecutiveFailures) ? rawSnapshot.consecutiveFailures : [];
+
+  const successByJobType = new Map(successRates.map((entry: any) => [entry?.jobType, entry]));
+  const stuckByJobType = new Map(stuckJobs.map((entry: any) => [entry?.jobType, entry]));
+  const failureByJobType = new Map(consecutiveFailures.map((entry: any) => [entry?.jobType, entry]));
+  const jobTypes = new Set<string>();
+
+  for (const entry of successRates) if (entry?.jobType) jobTypes.add(entry.jobType);
+  for (const entry of stuckJobs) if (entry?.jobType) jobTypes.add(entry.jobType);
+  for (const entry of consecutiveFailures) if (entry?.jobType) jobTypes.add(entry.jobType);
+
+  const jobs = Array.from(jobTypes).map((jobType) => {
+    const success = successByJobType.get(jobType);
+    const stuck = stuckByJobType.get(jobType);
+    const failure = failureByJobType.get(jobType);
+
+    const totalRuns7d = Number(success?.window7d?.total ?? 0);
+    const totalRuns30d = Number(success?.window30d?.total ?? 0);
+    const successRate7d = normalizePercent(success?.window7d?.rate);
+    const successRate30d = normalizePercent(success?.window30d?.rate);
+    const failureCount7d = Math.max(0, totalRuns7d - Number(success?.window7d?.success ?? 0));
+    const failureCount30d = Math.max(0, totalRuns30d - Number(success?.window30d?.success ?? 0));
+    const consecutiveFailureCount = Number(failure?.streak ?? 0);
+    const isStuck = Boolean(stuck);
+    const stuckSinceMinutes = stuck ? Number(stuck.stuckMinutes ?? 0) : undefined;
+
+    let healthStatus: JobSlaIndicator['healthStatus'] = 'healthy';
+    let healthReason = 'Sem incidentes recentes';
+
+    if (totalRuns30d === 0 && !isStuck && consecutiveFailureCount === 0) {
+      healthStatus = 'idle';
+      healthReason = 'Sem execuções recentes';
+    } else if (isStuck || consecutiveFailureCount >= 5) {
+      healthStatus = 'critical';
+      healthReason = isStuck
+        ? `Execução travada há ${stuckSinceMinutes ?? '?'} minutos`
+        : `${consecutiveFailureCount} falhas consecutivas`;
+    } else if (consecutiveFailureCount > 0 || (totalRuns7d > 0 && successRate7d < 80)) {
+      healthStatus = 'degraded';
+      healthReason = consecutiveFailureCount > 0
+        ? `${consecutiveFailureCount} falhas consecutivas`
+        : `Taxa de sucesso 7d em ${successRate7d.toFixed(1)}%`;
+    }
+
+    return {
+      jobType,
+      jobName: stuck?.name ?? jobType,
+      queueName: undefined,
+      enabled: true,
+      lastRunStatus: isStuck ? 'running' : null,
+      totalRuns7d,
+      totalRuns30d,
+      successRate7d,
+      successRate30d,
+      failureCount7d,
+      failureCount30d,
+      p95DurationMs7d: null,
+      p95DurationMs30d: null,
+      avgDurationMs30d: null,
+      consecutiveFailures: consecutiveFailureCount,
+      isStuck,
+      stuckSinceMinutes,
+      healthStatus,
+      healthReason,
+    } satisfies JobSlaIndicator;
+  });
+
+  return {
+    generatedAt: normalizeGeneratedAt(rawSnapshot?.generatedAt),
+    options: defaultOptions,
+    global: {
+      totalJobs: jobs.length,
+      criticalJobs: jobs.filter((job) => job.healthStatus === 'critical').length,
+      degradedJobs: jobs.filter((job) => job.healthStatus === 'degraded').length,
+      stuckJobs: jobs.filter((job) => job.isStuck).length,
+    },
+    jobs,
+  };
+}
+
+function normalizeJobIndicator(job: any): JobSlaIndicator {
+  const totalRuns7d = Number(job?.totalRuns7d ?? 0);
+  const totalRuns30d = Number(job?.totalRuns30d ?? 0);
+  const successRate7d = normalizePercent(job?.successRate7d);
+  const successRate30d = normalizePercent(job?.successRate30d);
+  const failureCount7d = Number(
+    job?.failureCount7d ?? Math.max(0, totalRuns7d - Math.round((successRate7d / 100) * totalRuns7d)),
+  );
+  const failureCount30d = Number(
+    job?.failureCount30d ?? Math.max(0, totalRuns30d - Math.round((successRate30d / 100) * totalRuns30d)),
+  );
+  const consecutiveFailures = Number(job?.consecutiveFailures ?? 0);
+  const isStuck = Boolean(job?.isStuck);
+
+  return {
+    jobType: String(job?.jobType ?? 'unknown'),
+    jobName: job?.jobName ?? undefined,
+    queueName: job?.queueName ?? undefined,
+    enabled: Boolean(job?.enabled ?? true),
+    lastRunStatus: job?.lastRunStatus ?? null,
+    totalRuns7d,
+    totalRuns30d,
+    successRate7d,
+    successRate30d,
+    failureCount7d,
+    failureCount30d,
+    p95DurationMs7d: job?.p95DurationMs7d ?? null,
+    p95DurationMs30d: job?.p95DurationMs30d ?? null,
+    avgDurationMs30d: job?.avgDurationMs30d ?? null,
+    consecutiveFailures,
+    isStuck,
+    stuckSinceMinutes: job?.stuckSinceMinutes ?? undefined,
+    healthStatus: (job?.healthStatus ?? 'idle') as JobSlaIndicator['healthStatus'],
+    healthReason: job?.healthReason ?? undefined,
+  };
+}
+
+function normalizePercent(value: unknown): number {
+  const numeric = Number(value ?? 0);
+  if (!Number.isFinite(numeric)) return 0;
+  return numeric <= 1 ? numeric * 100 : numeric;
+}
+
+function normalizeGeneratedAt(value: unknown): string | undefined {
+  if (!value) return undefined;
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
 }
 
 function persistNotifications(alerts: CronAlert[]): Promise<void> {

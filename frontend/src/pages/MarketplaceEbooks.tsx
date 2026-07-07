@@ -471,7 +471,7 @@ export default function MarketplaceEbooksPage() {
               {ebooks.length} ebooks · {packsQuery.data?.length ?? 0} packs · custo R$ 0,50 · venda R$ 0,99
             </p>
           </div>
-          <Link href="/marketplaces/cart">
+          <Link href="/marketplaces?openCart=1">
             <a className="relative px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition shrink-0">
               🛒 {BRL(cartTotal)}
               {cartCount > 0 && (

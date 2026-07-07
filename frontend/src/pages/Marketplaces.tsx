@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
+import FirstAccessBanner from "@/components/FirstAccessBanner";
 import {
   EXTERNAL_MARKETPLACES,
   NEXUS_PACKS,
@@ -220,6 +221,16 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
   const [ebookCart, setEbookCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
+  // Fix bug 404 /marketplaces/cart: abrir cart automaticamente via ?openCart=1
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("openCart") === "1") {
+        setCartOpen(true);
+      }
+    }
+  }, []);
+
   // NEXUS_UX_STATES_V2
   const debouncedEbookSearch = useDebounceValue(ebookSearch, 220);
   const [nexusQuickView, setNexusQuickView] = useState<any | null>(null);
@@ -319,13 +330,18 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
     const desc = ebookCart.length === 1
       ? ebookCart[0].title
       : `${ebookCart.length} e-books · Marketplace Nexus`;
-    const params = new URLSearchParams({
-      amountCents: String(cartTotal),
+    // ONDA 15 FIX: usar buildMarketplaceCheckoutUrl para persistir intent completo (base64 + localStorage)
+    const url = buildMarketplaceCheckoutUrl({
+      source: "marketplace-nexus",
+      type: "ebook" as any,
+      slug: ebookCart[0]?.slug ?? "ebook-checkout",
+      name: desc,
+      amountCents: cartTotal,
       description: desc,
       payerEmail: customerEmail,
-      source: "marketplace-nexus",
-    });
-    window.location.href = `/pix/checkout?${params.toString()}`;
+      payerName: customerName || undefined,
+    } as any);
+    window.location.href = url;
   }
 
   async function handlePayMercadoPago() {
@@ -1844,6 +1860,7 @@ export default function Marketplaces() {
   if (isAuthenticated) {
     return (
       <DashboardLayout>
+        <FirstAccessBanner />
         <MarketplacesContent isPublicView={false} />
       </DashboardLayout>
     );

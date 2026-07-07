@@ -9,7 +9,6 @@ import { dashboardRouter } from "./routers/dashboardRouter";
 import { dropshippingRouter } from "./routers/dropshippingRouter";
 import { logRouter } from "./routers/logRouter";
 import { marketplacesRouter } from "./domains/marketplace/router";
-import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { affiliateRouter as mmnRouter } from "./domains/affiliate/router";
 import { observabilityRouter } from "./routers/observabilityRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
@@ -26,6 +25,7 @@ import { adminRouter } from "./routers/adminRouter";
 import { billingRouter } from "./domains/billing/router";
 import { usersRouter } from "./routers/usersRouter";
 import { materialsRouter } from "./routers/materialsRouter";
+import { internalMeetingsRouter } from "./routers/internalMeetingsRouter";
 import { networkRouter } from "./routers/networkRouter";
 import { delinquentsRouter } from "./routers/delinquentsRouter";
 import { commissionsRouter } from "./domains/commissions/router";
@@ -45,6 +45,23 @@ import { labNexusRouter } from "./routers/labNexusRouter";
 import { academiaEadRouter } from "./routers/academiaEadRouter";
 import { meetingRouter } from "./routers/meetingRouter";
 import { a2aRouter } from "./agentic/a2a/router";
+import { ceoAiRouter } from "./agentic/ceo-ai/router";
+import { skillMarketplaceRouter } from "./domains/skillMarketplace/router";
+import { judgeFederationRouter } from "./agentic/judge-federation/router";
+import { governanceLoopRouter } from "./agentic/governance-loop/router";
+import { multiTenantRouter } from "./agentic/multi-tenant/router";
+import { cSuiteRouter } from "./agentic/c-suite-bridge/router";
+import { bootstrapCSuite } from "./agentic/c-suite-bridge/bootstrap";
+import { nexusRagRouter } from "./routers/nexusRagRouter";
+import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
+import { orchestratorAdminRouter } from "./routers/orchestratorAdminRouter";
+import { onda1Router } from "./routers/onda1Router";
+import { autoHealEngineRouter } from "./routers/autoHealEngineRouter";
+import { governanceLoopExecutorRouter } from "./routers/governanceLoopExecutorRouter";
+import { nikoCapitalRouter } from "./routers/nikoCapitalRouter";
+
+// Bootstrap C-Suite ao carregar appRouter (idempotente)
+bootstrapCSuite().catch(() => undefined);
 
 export const appRouter = router({
   system: router({
@@ -158,6 +175,16 @@ export const appRouter = router({
         academiaEad: true,
         meetings: true,
         a2a: true,
+        ceoAi: true,
+        skillMarketplace: true,
+        judgeFederation: true,
+        governanceLoop: true,
+        multiTenant: true,
+        cSuite: true,
+        nexusRag: true,
+        marketplaceNexus: true,
+        orchestratorAdmin: true,
+      onda1: true,
       },
     })),
   }),
@@ -173,7 +200,6 @@ export const appRouter = router({
   dropshipping: dropshippingRouter,
   logs: logRouter,
   marketplaces: marketplacesRouter,
-  marketplaceNexus: marketplaceNexusRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,
@@ -189,6 +215,16 @@ export const appRouter = router({
   academiaEad: academiaEadRouter,
   meetings: meetingRouter,
   a2a: a2aRouter,
+  ceoAi: ceoAiRouter,
+  skillMarketplace: skillMarketplaceRouter,
+  judgeFederation: judgeFederationRouter,
+  governanceLoop: governanceLoopRouter,
+  multiTenant: multiTenantRouter,
+  cSuite: cSuiteRouter,
+  nexusRag: nexusRagRouter,
+  marketplaceNexus: marketplaceNexusRouter,
+  orchestratorAdmin: orchestratorAdminRouter,
+  onda1: onda1Router,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,
@@ -196,6 +232,7 @@ export const appRouter = router({
   admin: adminRouter,
   users: usersRouter,
   materials: materialsRouter,
+  internalMeetings: internalMeetingsRouter,
   network: networkRouter,
   delinquents: delinquentsRouter,
   commissions: commissionsRouter,
@@ -207,6 +244,9 @@ export const appRouter = router({
   agentSkillsRuntime: agentSkillsRuntimeRouter,
   pix: pixRouter,
   nexus: nexusOperationsRouter,
+  autoHealEngine: autoHealEngineRouter,
+  governanceLoopExecutor: governanceLoopExecutorRouter,
+  nikoCapital: nikoCapitalRouter,
 });
 
 export type AppRouter = typeof appRouter;

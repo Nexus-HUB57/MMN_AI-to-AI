@@ -195,3 +195,5 @@ export const CommissionChart: React.FC = () => {
     </div>
   );
 };
+
+export default CommissionChart;

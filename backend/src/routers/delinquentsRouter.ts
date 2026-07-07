@@ -32,112 +32,7 @@ export const delinquentsRouter = router({
     .query(async ({ ctx, input }) => {
       // Para desenvolvimento, retornamos mock data
       // Em produção, buscaria afiliados com pagamentos pendentes há mais de X dias
-      const mockDelinquents = [
-        {
-          id: 1,
-          userId: 101,
-          name: "João Silva",
-          email: "joao@example.com",
-          affiliateCode: "JOAO001",
-          category: "monthly_activation" as const,
-          outstandingAmount: 250.00,
-          daysOverdue: 45,
-          lastPaymentDate: new Date("2026-04-05"),
-          status: "active" as const,
-          contactAttempts: 3,
-        },
-        {
-          id: 2,
-          userId: 102,
-          name: "Maria Santos",
-          email: "maria@example.com",
-          affiliateCode: "MARIA002",
-          category: "monthly_activation" as const,
-          outstandingAmount: 50.00,
-          daysOverdue: 30,
-          lastPaymentDate: new Date("2026-04-20"),
-          status: "active" as const,
-          contactAttempts: 1,
-        },
-        {
-          id: 3,
-          userId: 103,
-          name: "Pedro Costa",
-          email: "pedro@example.com",
-          affiliateCode: "PEDRO003",
-          category: "pack" as const,
-          outstandingAmount: 500.00,
-          daysOverdue: 90,
-          lastPaymentDate: new Date("2026-03-01"),
-          status: "suspended" as const,
-          contactAttempts: 5,
-        },
-        {
-          id: 4,
-          userId: 104,
-          name: "Ana Oliveira",
-          email: "ana@example.com",
-          affiliateCode: "ANA004",
-          category: "skill" as const,
-          outstandingAmount: 150.00,
-          daysOverdue: 15,
-          lastPaymentDate: new Date("2026-05-05"),
-          status: "active" as const,
-          contactAttempts: 0,
-        },
-        {
-          id: 5,
-          userId: 105,
-          name: "Carlos Mendes",
-          email: "carlos@example.com",
-          affiliateCode: "CARLOS005",
-          category: "pack" as const,
-          outstandingAmount: 1000.00,
-          daysOverdue: 120,
-          lastPaymentDate: new Date("2026-02-01"),
-          status: "suspended" as const,
-          contactAttempts: 8,
-        },
-        {
-          id: 6,
-          userId: 106,
-          name: "Bianca Rocha",
-          email: "bianca@example.com",
-          affiliateCode: "BIANCA006",
-          category: "ebook" as const,
-          outstandingAmount: 98.10,
-          daysOverdue: 22,
-          lastPaymentDate: new Date("2026-04-28"),
-          status: "active" as const,
-          contactAttempts: 2,
-        },
-        {
-          id: 7,
-          userId: 107,
-          name: "Diego Lacerda",
-          email: "diego@example.com",
-          affiliateCode: "DIEGO007",
-          category: "commission" as const,
-          outstandingAmount: 745.20,
-          daysOverdue: 60,
-          lastPaymentDate: new Date("2026-03-22"),
-          status: "active" as const,
-          contactAttempts: 4,
-        },
-        {
-          id: 8,
-          userId: 108,
-          name: "Helena Prado",
-          email: "helena@example.com",
-          affiliateCode: "HELENA008",
-          category: "monthly_activation" as const,
-          outstandingAmount: 30.00,
-          daysOverdue: 8,
-          lastPaymentDate: new Date("2026-05-15"),
-          status: "active" as const,
-          contactAttempts: 0,
-        },
-      ];
+      const mockDelinquents: any[] = []; // Onda 9: mocks removidos
 
       // Filtrar mock data
       let filtered = mockDelinquents;
@@ -240,31 +135,26 @@ export const delinquentsRouter = router({
   /**
    * Estatísticas de inadimplência
    */
-  getStats: publicProcedure.query(async () => {
-    return {
-      totalDelinquents: 156,
-      totalOutstanding: 125000.00,
-      byDaysOverdue: {
-        "0-30": 45,
-        "31-60": 38,
-        "61-90": 32,
-        "90+": 41,
-      },
-      byStatus: {
-        active: 89,
-        suspended: 67,
-      },
-      // Quebra oficial por categoria operacional (Nexus SaaS · IOAID)
-      byCategory: {
-        monthly_activation: 78,
-        pack: 41,
-        skill: 14,
-        ebook: 11,
-        commission: 12,
-      },
-      averageDaysOverdue: 52,
-      recoveryRate: 0.35,
-    };
+  getStats: adminProcedure.query(async () => {
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const client = await pool.connect();
+    try {
+      const res = await client.query(`SELECT COUNT(*)::int AS total FROM delinquents`);
+      const total = res.rows[0]?.total ?? 0;
+      return {
+        totalDelinquents: total,
+        totalOutstanding: 0,
+        byDaysOverdue: { "0-30": 0, "31-60": 0, "61-90": 0, "90+": 0 },
+        byStatus: { active: 0, suspended: 0 },
+        byCategory: { monthly_activation: 0, pack: 0, skill: 0, ebook: 0, commission: 0 },
+        averageDaysOverdue: 0,
+        recoveryRate: 0,
+      };
+    } finally {
+      client.release();
+      await pool.end();
+    }
   }),
 
   /**

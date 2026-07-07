@@ -417,9 +417,9 @@ export const pixRouter = router({
         warnings.push("Documento do pagador inválido para o Mercado Pago. O checkout continuará com fallback PIX manual.");
       }
 
-      const externalReference = input.subscriptionId
-        ? `subscription:${input.subscriptionId}:${runtimeUser.id}:${Date.now()}`
-        : `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
+      // ONDA 15 FIX: gerar UUID curto (36 chars max para caber em varchar(36))
+      const _rand = () => Math.random().toString(36).slice(2, 10);
+      const externalReference = `${runtimeUser.id}-${Date.now().toString(36)}-${_rand()}`.slice(0, 36);
       const fallbackPix = {
         pixKey: MARKETPLACE_PIX_KEY,
         keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
@@ -534,6 +534,42 @@ export const pixRouter = router({
         warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com a chave PIX manual.`);
       }
 
+      // ONDA 14 FIX: criar marketplace_order para webhook rastrear
+      try {
+        const _pgPool = new PgPoolForHook({ connectionString: process.env.DATABASE_URL });
+        const client = await _pgPool.connect();
+        try {
+          await client.query("BEGIN");
+          const orderId = `mp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+          // externalReference completo fica em external_reference para lookup
+          const exists = await client.query(
+            `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$1 LIMIT 1`,
+            [orderId]
+          );
+          if ((exists.rowCount ?? 0) === 0) {
+            await client.query(
+              `INSERT INTO marketplace_orders (id, user_id, status, payment_status, subtotal_cents, total_cents, payment_method, external_reference, metadata, is_test_data) VALUES ($1, $2, 'pending', 'pending', $3, $3, 'mercado_pago', $1, $4::jsonb, false)`,
+              [orderId, runtimeUser.id, input.amountCents, JSON.stringify({source: input.source ?? "marketplace", type: input.type, slug: input.slug, name: input.name, description: input.description, payerEmail, payerName})]
+            );
+            await client.query(
+              `INSERT INTO marketplace_order_items (order_id, item_slug, title, unit_price_cents, quantity, item_type) VALUES ($1, $2, $3, $4, 1, $5)`,
+              [orderId, input.slug, input.name, input.amountCents, input.type]
+            );
+            console.log(`[ONDA14] marketplace_order criada: ${orderId} user=${runtimeUser.id} amount=${input.amountCents}`);
+          }
+          await client.query("COMMIT");
+        } catch (dbErr) {
+          try { await client.query("ROLLBACK"); } catch {}
+          console.error("[ONDA14] Erro criando marketplace_order:", dbErr);
+          warnings.push("Erro registrando pedido: " + String(dbErr));
+        } finally {
+          try { client.release(); } catch {}
+          try { await _pgPool.end(); } catch {}
+        }
+      } catch (poolErr) {
+        console.error("[ONDA14] Pool erro:", poolErr);
+      }
+
       return result;
     }),
 
@@ -574,13 +610,14 @@ export const pixRouter = router({
     .query(async ({ ctx, input }) => {
       // D15-PH-marketplace : lê marketplace_orders do user logado
       try {
+        // FIX 01-07-2026: usar pg.Pool direto (drizzle.execute nao aceita params positional)
         const params: any[] = [ctx.user.id, input.limit, input.offset];
         let where = `mo.user_id = $1 AND mo.payment_status IN ('paid','approved')`;
         if (input.startDate) { params.push(new Date(input.startDate)); where += ` AND COALESCE(mo.paid_at, mo.created_at) >= $${params.length}`; }
         if (input.endDate)   { params.push(new Date(input.endDate));   where += ` AND COALESCE(mo.paid_at, mo.created_at) <= $${params.length}`; }
         const q = `SELECT mo.id, mo.total_cents, mo.payment_status, mo.payment_method, mo.payment_id, mo.external_reference, mo.metadata, mo.created_at, mo.paid_at FROM marketplace_orders mo WHERE ${where} ORDER BY COALESCE(mo.paid_at, mo.created_at) DESC LIMIT $2 OFFSET $3`;
-        const res: any = await (ctx as any).db.execute(q as any, params as any);
-        const rows = (res?.rows ?? res ?? []) as any[];
+        const res = await __pixPool.query(q, params);
+        const rows = (res?.rows ?? []) as any[];
         return {
           items: rows.map((p: any) => ({
             id: String(p.id),

@@ -1,10 +1,9 @@
-/* UX_MAX_v1 */
 import { Toaster } from "sonner";
-import { PageSkeleton } from "@/components/ui/Skeleton";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Route, Switch } from "wouter";
+import useFirstAccessGate from "@/hooks/useFirstAccessGate";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -13,8 +12,8 @@ import Cadastro from "@/pages/Cadastro";
 import Dashboard from "@/pages/Dashboard";
 import Marketplaces from "@/pages/Marketplaces";
 import Estoque from "@/pages/Estoque";
-import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import MinhaLoja from "@/pages/MinhaLoja";
+import AffiliateMiniSite from "@/pages/AffiliateMiniSite";
 import PixCheckout from "@/pages/PixCheckout";
 import PixHistory from "@/pages/PixHistory";
 import PacksMarketplace from "@/pages/PacksMarketplace";
@@ -26,12 +25,6 @@ import CareerProgress from "@/pages/CareerProgress";
 import ContentHub from "@/pages/ContentHub";
 import ContentCalendar from "@/pages/ContentCalendar";
 import MarketingMaterials from "@/pages/MarketingMaterials";
-import ProfileSettings from "@/pages/ProfileSettings";
-import PartnersAccessGuard from "@/components/PartnersAccessGuard";
-import EbookManager from "@/pages/EbookManager";
-import ImageGenerator from "@/pages/ImageGenerator";
-import ContentGeneration from "@/pages/ContentGeneration";
-import ContentGenerator from "@/pages/ContentGenerator";
 import TrackingLinks from "@/pages/TrackingLinks";
 import MarketplaceEbooks from "@/pages/MarketplaceEbooks";
 import SisuPanel from "@/pages/SisuPanel";
@@ -47,49 +40,50 @@ import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminAcademia from "@/pages/AdminAcademia";
+import AdminMeetings from "@/pages/AdminMeetings";
+import AdminGovernance from "@/pages/AdminGovernance";
+import AdminFederation from "@/pages/AdminFederation";
 import AdminUsers from "@/pages/AdminUsers";
+import AdminCommissions from "@/pages/AdminCommissions";
 import AdminNetwork from "@/pages/AdminNetwork";
 import AdminPayments from "@/pages/AdminPayments";
+import AdminDelinquents from "@/pages/AdminDelinquents";
+import AdminMaterials from "@/pages/AdminMaterials";
 import AdminScheduler from "@/pages/AdminScheduler";
 import AdminSchedules from "@/pages/AdminSchedules";
-import AdminMaterials from "@/pages/AdminMaterials";
-import AdminDelinquents from "@/pages/AdminDelinquents";
-import AdminCommissions from "@/pages/AdminCommissions";
 import AdminApprovals from "@/pages/AdminApprovals";
-import AdminRuntime from "@/pages/AdminRuntime";
 import AdminSettings from "@/pages/AdminSettings";
-import AdminPackTickets from "@/pages/AdminPackTickets";
-import AdminPanel from "@/pages/AdminPanel";
+import ProfileSettings from "@/pages/ProfileSettings";
 import AdminSkills from "@/pages/AdminSkills";
-import AdminAgentDetails from "@/pages/AdminAgentDetails";
-import AdminAcademia from "@/pages/AdminAcademia";
+import AdminRuntime from "@/pages/AdminRuntime";
+import AdminPackTickets from "@/pages/AdminPackTickets";
 import AdminAcademiaAnalytics from "@/pages/AdminAcademiaAnalytics";
+import AdminPanel from "@/pages/AdminPanel";
+import AdminAgentDetails from "@/pages/AdminAgentDetails";
+import AdminOrchestrator from "@/pages/AdminOrchestrator";
 import AcademiaHub from "@/pages/AcademiaHub";
 import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
+import MeetingHub from "@/pages/MeetingHub";
 import LabChatbot from "@/pages/LabChatbot";
 import NotFound from "@/pages/NotFound";
-import CommandPalette from "@/components/ux/CommandPalette";
-import QuickAgentDock from "@/components/ux/QuickAgentDock";
-import RouteProgress from "@/components/ux/RouteProgress";
-import WelcomeTour from "@/components/ux/WelcomeTour";
 
 function Router() {
+  useFirstAccessGate();
   return (
-    <><RouteProgress /><CommandPalette /><QuickAgentDock /><WelcomeTour /><Switch>
+    <Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/afiliado" component={Dashboard} />
       <Route path="/marketplaces" component={Marketplaces} />
-      <Route path="/marketplaces/ebooks">{() => { if (typeof window !== "undefined") { window.location.replace("/marketplaces"); } return null; }}</Route>
+      <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />
-      <Route path="/minisite" component={MinhaLoja} />
       <Route path="/minha-loja" component={MinhaLoja} />
-      <Route path="/minha-loja/:code" component={MinhaLoja} />
-      <Route path="/afiliado/:code" component={MinhaLoja} />
+      <Route path="/minisite" component={AffiliateMiniSite} />
+      <Route path="/afiliado/:code" component={AffiliateMiniSite} />
       <Route path="/pix/checkout" component={PixCheckout} />
       <Route path="/pix/history" component={PixHistory} />
       <Route path="/packs" component={PacksMarketplace} />
@@ -103,13 +97,36 @@ function Router() {
       <Route path="/agents" component={Agents} />
       <Route path="/agents/sync" component={AgentsSync} />
       <Route path="/orchestrator" component={OrchestratorDashboard} />
-      <Route path="/partners"><PartnersAccessGuard><PartnersDashboardPage /></PartnersAccessGuard></Route>
+      <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
-      <Route path="/admin/academia/analytics" component={AdminAcademiaAnalytics} />
       <Route path="/admin/academia" component={AdminAcademia} />
+      <Route path="/admin/academia/analytics" component={AdminAcademiaAnalytics} />
+      <Route path="/admin/meetings" component={AdminMeetings} />
+      <Route path="/admin/governance" component={AdminGovernance} />
+      <Route path="/admin/federation" component={AdminFederation} />
+      <Route path="/admin/users" component={AdminUsers} />
+      <Route path="/admin/commissions" component={AdminCommissions} />
+      <Route path="/admin/network" component={AdminNetwork} />
+      <Route path="/admin/payments" component={AdminPayments} />
+      <Route path="/admin/delinquents" component={AdminDelinquents} />
+      <Route path="/admin/materials" component={AdminMaterials} />
+      <Route path="/admin/scheduler" component={AdminScheduler} />
+      <Route path="/admin/schedules" component={AdminSchedules} />
+      <Route path="/admin/approvals" component={AdminApprovals} />
+      <Route path="/admin/status" component={AdminRuntime} />
+      <Route path="/admin/runtime" component={AdminRuntime} />
+      <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/profile" component={ProfileSettings} />
+      <Route path="/admin/skills" component={AdminSkills} />
+      <Route path="/admin/pack-tickets" component={AdminPackTickets} />
+      <Route path="/admin/agents/:agentId" component={AdminAgentDetails} />
+      <Route path="/admin/panel" component={AdminPanel} />
+      <Route path="/admin/orchestrator" component={AdminOrchestrator} />
+      <Route path="/marketplace" component={Marketplaces} />
       <Route path="/academia" component={AcademiaHub} />
+      <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />
       <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />
       <Route path="/academia/lab-nexus" component={LabChatbot} />
@@ -118,11 +135,6 @@ function Router() {
       <Route path="/content-hub" component={ContentHub} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
-      <Route path="/profile" component={ProfileSettings} />
-      <Route path="/content/generator" component={ContentGenerator} />
-      <Route path="/content/generation" component={ContentGeneration} />
-      <Route path="/content/image" component={ImageGenerator} />
-      <Route path="/marketing/ebooks" component={EbookManager} />
       <Route path="/tracking/links" component={TrackingLinks} />
       <Route path="/social/accounts" component={SocialAccounts} />
       <Route path="/sisu" component={SisuPanel} />
@@ -130,27 +142,9 @@ function Router() {
       <Route path="/dropshipping/orders/:orderId" component={OrderTracking} />
       <Route path="/order-tracking/:orderId" component={OrderTracking} />
       <Route path="/utilities" component={Utilities} />
-
-      <Route path="/admin/users" component={AdminUsers} />
-      <Route path="/admin/network" component={AdminNetwork} />
-      <Route path="/admin/payments" component={AdminPayments} />
-      <Route path="/admin/scheduler" component={AdminScheduler} />
-      <Route path="/admin/schedules" component={AdminSchedules} />
-      <Route path="/admin/materials" component={AdminMaterials} />
-      <Route path="/admin/delinquents" component={AdminDelinquents} />
-      <Route path="/admin/commissions" component={AdminCommissions} />
-      <Route path="/admin/approvals" component={AdminApprovals} />
-      <Route path="/admin/status" component={AdminRuntime} />
-      <Route path="/admin/runtime" component={AdminRuntime} />
-      <Route path="/admin/config" component={AdminSettings} />
-      <Route path="/admin/pack-tickets" component={AdminPackTickets} />
-          <Route path="/admin/settings" component={AdminSettings} />
-      <Route path="/admin/panel" component={AdminPanel} />
-      <Route path="/admin/skills" component={AdminSkills} />
-      <Route path="/admin/agents/:agentId" component={AdminAgentDetails} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
-    </Switch></>
+    </Switch>
   );
 }
 

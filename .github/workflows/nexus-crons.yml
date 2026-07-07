@@ -1,0 +1,67 @@
+name: ⏰ Nexus Crons Automatizados
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+    - cron: '0 12 * * 1'
+    - cron: '*/15 * * * *'
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  setup-ssh:
+    runs-on: ubuntu-latest
+    outputs:
+      configured: ${{ steps.check.outputs.configured }}
+    steps:
+      - id: check
+        run: echo "configured=true" >> $GITHUB_OUTPUT
+
+  health-check:
+    if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check público
+        run: |
+          curl -sS https://oneverso.com.br/api/health | tee health.json
+          curl -sS "https://oneverso.com.br/api/trpc/banking.getBtcBrlQuote?input=%7B%7D" | head -c 500
+
+  monitor-critico:
+    if: github.event.schedule == '*/15 * * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Monitor endpoints
+        run: |
+          for ep in "api/health" "api/trpc/marketplaceNexus.listEbooks?input=%7B%7D"; do
+            S=$(curl -s -o /dev/null -w "%{http_code}" "https://oneverso.com.br/$ep")
+            [ "$S" = "200" ] || echo "::warning::$ep = $S"
+          done
+          echo "✅ Monitor completo"
+
+  digest-comissoes:
+    if: github.event.schedule == '0 12 * * 1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+      - name: Digest
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.VPS_PORT }}" -o StrictHostKeyChecking=no root@"${{ secrets.VPS_HOST }}" \
+            "sudo -u postgres psql -d nexus_prod -c \"SELECT COUNT(*) AS approved, COALESCE(SUM(amount)/100.0,0) AS total_brl FROM commissions WHERE status='approved' AND created_at > NOW() - INTERVAL '7 days';\""
+
+  reconciliacao:
+    if: github.event.schedule == '0 3 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+      - name: Reconciliação
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ secrets.VPS_PORT }}" -o StrictHostKeyChecking=no root@"${{ secrets.VPS_HOST }}" \
+            "sudo -u postgres psql -d nexus_prod -c \"SELECT status, COUNT(*) FROM marketplace_orders GROUP BY status;\""

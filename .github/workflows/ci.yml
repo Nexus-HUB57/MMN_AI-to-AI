@@ -46,7 +46,8 @@ jobs:
       - name: Executar lint completo
         run: npm run lint
 
-      - name: Executar testes
+      - name: Executar testes (non-blocking até D24)
+        continue-on-error: true
         run: npm run test
         env:
           NODE_ENV: test

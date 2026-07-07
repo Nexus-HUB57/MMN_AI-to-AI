@@ -10,7 +10,7 @@ pattern: "MMN_IA"
 status: "planejado"
 ---
 
-![Capa — As 18 Skills em Produção](../../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
+![Capa — As 18 Skills em Produção](../../assets/ebook_covers/ACAD-apostila-07-18-skills-operacionais.webp)
 
 **WB-2026-04 · As 18 Skills em Produção: Cases Reais**
 

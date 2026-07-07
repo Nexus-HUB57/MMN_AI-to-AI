@@ -1,0 +1,123 @@
+name: 🚀 Onda 17 - Go Live Health Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: 'Motivo do check'
+        default: 'go-live-final-2026-07-04'
+
+permissions:
+  contents: read
+
+jobs:
+  golive_check:
+    name: Health Check completo em produção via SSH
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Preparar chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "Host vps" > ~/.ssh/config
+          echo "  HostName ${{ secrets.VPS_HOST }}" >> ~/.ssh/config
+          echo "  Port ${{ secrets.VPS_PORT }}" >> ~/.ssh/config
+          echo "  User root" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          echo "SSH config prepared for ${{ secrets.VPS_HOST }}:${{ secrets.VPS_PORT }}"
+
+      - name: 1. System health + PM2
+        run: |
+          ssh vps << 'EOF'
+          echo "=== HEALTH ==="
+          curl -s https://oneverso.com.br/api/trpc/system.health | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('result',{}).get('data',{}).get('json',{}); print(f\"ok={r.get('ok')} uptime={r.get('uptime')}s mode={r.get('mode')}\")" 2>/dev/null || echo "health check failed"
+          echo ""
+          echo "=== PM2 ==="
+          pm2 list | grep -E "mmn-api|online|errored" | head -5
+          EOF
+
+      - name: 2. Rotas críticas (portal + admin + marketplace)
+        run: |
+          ssh vps << 'EOF'
+          for route in /estoque /minha-loja /marketplaces /marketplaces/ebooks /pix/checkout /admin/orchestrator /admin/network /admin/commissions /admin/status /admin/settings /admin/federation /admin/meetings /admin/materials /admin/academia /admin/approvals; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://oneverso.com.br$route")
+            echo "$route -> HTTP $code"
+          done
+          EOF
+
+      - name: 3. Webhook Mercado Pago + endpoint PIX status
+        run: |
+          ssh vps << 'EOF'
+          echo "=== Webhook MP ==="
+          curl -s -o /dev/null -w "webhook -> HTTP %{http_code}\n" -X POST https://oneverso.com.br/webhooks/mercadopago \
+            -H "Content-Type: application/json" \
+            -d '{"type":"payment","action":"payment.updated","data":{"id":"test-onda17"}}'
+          echo ""
+          echo "=== /api/pix/status ==="
+          curl -s "https://oneverso.com.br/api/pix/status?paymentId=test-onda17" | head -c 300
+          echo ""
+          EOF
+
+      - name: 4. DB Metrics finais
+        run: |
+          ssh vps << 'EOF'
+          sudo -u postgres psql nexus_prod -t -c "
+          SELECT 'orders_paid=' || COUNT(*) FROM marketplace_orders WHERE status='paid'
+          UNION ALL SELECT 'orders_total=' || COUNT(*) FROM marketplace_orders
+          UNION ALL SELECT 'user2_library=' || COUNT(*) FROM marketplace_user_library WHERE user_id=2
+          UNION ALL SELECT 'user307_library=' || COUNT(*) FROM marketplace_user_library WHERE user_id=307
+          UNION ALL SELECT 'network_entries=' || COUNT(*) FROM network
+          UNION ALL SELECT 'diretos_ceo=' || COUNT(*) FROM network WHERE level=1
+          UNION ALL SELECT 'users_total=' || COUNT(*) FROM users
+          UNION ALL SELECT 'affiliates_total=' || COUNT(*) FROM affiliates
+          UNION ALL SELECT 'founders_batch=' || COUNT(*) FROM founders_batch
+          UNION ALL SELECT 'csuite_agents=' || COUNT(*) FROM csuite_agents
+          UNION ALL SELECT 'judge_federation=' || COUNT(*) FROM judge_federation_nodes
+          UNION ALL SELECT 'episodios_niko=' || COUNT(*) FROM niko_operational_memory
+          UNION ALL SELECT 'internal_meetings=' || COUNT(*) FROM internal_meetings;
+          " 2>&1 | grep "=" | tr -d ' '
+          EOF
+
+      - name: 5. Env vars críticos (15 keys)
+        run: |
+          ssh vps << 'EOF'
+          cd /var/www/oneverso/current/backend
+          for var in GEMINI_API_KEY OPENAI_API_KEY HOTMART_CLIENT_ID HOTMART_CLIENT_SECRET HOTMART_BASIC_AUTH SHOPEE_AFFILIATE_ID SHOPEE_AFFILIATE_USERNAME MERCADO_PAGO_ACCESS_TOKEN MERCADO_PAGO_TEST_ACCESS_TOKEN MERCADO_PAGO_NOTIFICATION_URL BASE_URL APP_URL DATABASE_URL REDIS_URL JWT_SECRET; do
+            if grep -q "^$var=" .env 2>/dev/null; then
+              len=$(grep "^$var=" .env | head -1 | cut -d= -f2- | wc -c)
+              echo "  OK $var (len=$len)"
+            else
+              echo "  MISS $var"
+            fi
+          done
+          EOF
+
+      - name: 6. Bundle ativo + últimas orders
+        run: |
+          ssh vps << 'EOF'
+          echo "=== BUNDLE ==="
+          BUNDLE=$(grep -oP 'index-[A-Za-z0-9_-]+\.js' /var/www/oneverso/public/index.html | head -1)
+          echo "Frontend bundle: $BUNDLE"
+          ls -lh /var/www/oneverso/public/assets/$BUNDLE 2>/dev/null | awk '{print "Size:", $5}'
+          echo ""
+          echo "=== 5 últimas orders ==="
+          sudo -u postgres psql nexus_prod -c "SELECT id, user_id, status, amount_cents, created_at::timestamp(0) FROM marketplace_orders ORDER BY created_at DESC LIMIT 5;" 2>&1 | head -12
+          EOF
+
+      - name: 7. Logs PM2 (últimos erros)
+        run: |
+          ssh vps << 'EOF'
+          pm2 logs mmn-api --nostream --lines 15 --err 2>/dev/null | tail -20 || true
+          EOF
+
+      - name: 8. GO LIVE SUMMARY
+        run: |
+          echo "🟢 GO LIVE ONDA 17 - Health check completo"
+          echo "Ambiente: VPS canonical (${{ secrets.VPS_HOST }})"
+          echo "Note: ${{ inputs.note }}"
+          echo "Run URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

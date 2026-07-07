@@ -43,6 +43,7 @@ import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 
+import AffiliateStatusLights from "@/components/AffiliateStatusLights";
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -207,7 +208,7 @@ const QUICK_ACTIONS = [
   {
     href: "/marketplaces/ebooks",
     label: "E-books IA",
-    description: "5 títulos a R$ 0,50 / revenda R$ 1,00",
+    description: "E-books IA · valores dinâmicos por catálogo",
     icon: BookOpen,
     accent: "from-quantum-lime/30 to-quantum-cyan/0",
   },
@@ -220,43 +221,9 @@ const QUICK_ACTIONS = [
   },
 ];
 
-const RECENT_ACTIVITY = [
-  {
-    title: "Comissão de R$ 150,00",
-    detail: "Recebida no nível 2 da malha",
-    time: "há 5 min",
-    icon: TrendingUp,
-    tone: "good" as const,
-  },
-  {
-    title: "Maria S. entrou na sua rede",
-    detail: "Indicação direta via Minha Loja",
-    time: "há 28 min",
-    icon: Users,
-    tone: "info" as const,
-  },
-  {
-    title: "Bônus de carreira liberado",
-    detail: "Você atingiu o nível Ouro",
-    time: "há 2h",
-    icon: Star,
-    tone: "warn" as const,
-  },
-  {
-    title: "Venda confirmada no marketplace",
-    detail: "Pedido #1284 · R$ 89,90",
-    time: "há 6h",
-    icon: ShoppingCart,
-    tone: "good" as const,
-  },
-];
+const RECENT_ACTIVITY: Array<{title:string;detail:string;time:string;icon:typeof TrendingUp;tone:"good"|"info"|"warn"}> = []; // ONDA-CORRECAO: mocks removidos
 
-const SYSTEM_STATUS = [
-  { label: "API tRPC", value: "online", tone: "good" as const },
-  { label: "Database", value: "ok", tone: "good" as const },
-  { label: "Redis cache", value: "warming", tone: "warn" as const },
-  { label: "Modo", value: "produção", tone: "info" as const },
-];
+const SYSTEM_STATUS: Array<{label:string;value:string;tone:"good"|"info"|"warn"}> = []; // ONDA-CORRECAO: dados reais via system.health
 
 function toneClasses(tone: "good" | "warn" | "info") {
   if (tone === "good") return "text-quantum-lime";
@@ -288,8 +255,8 @@ export default function Dashboard() {
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
   const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
 
-  const displayName = user?.name || "Afiliado IOAID · SaaS";
-  const displayEmail = user?.email || "usuario@demo.mmn.ai";
+  const displayName = user?.name || "Afiliado";
+  const displayEmail = user?.email || "";
   const displayRole = user?.role === "admin" ? "Administrador" : "Afiliado";
 
   // -------------------------------------------------------------------------
@@ -425,6 +392,7 @@ export default function Dashboard() {
             </Link>
           </div>
         </header>
+        <AffiliateStatusLights />
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

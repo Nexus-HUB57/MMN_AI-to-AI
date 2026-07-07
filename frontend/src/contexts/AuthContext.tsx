@@ -188,10 +188,14 @@ const ADMIN_USER: User = {
   role: "admin",
 };
 
+// ONDA-CORRECAO 01-07-2026: AFFILIATE_DEMO_USER neutralizado.
+// Antes: hardcoded usuario@demo.mmn.ai / "Afiliado IOAID · SaaS"
+// Agora: sombra vazia que apenas serve como schema — spread do buildAffiliateUser
+// sempre sobrescreve com dados reais do usuario logado.
 const AFFILIATE_DEMO_USER: User = {
-  id: "affiliate-review-user",
-  name: "Afiliado IOAID · SaaS",
-  email: "usuario@demo.mmn.ai",
+  id: "",
+  name: "",
+  email: "",
   role: "affiliate",
 };
 
@@ -207,7 +211,12 @@ function persistUser(user: User | null) {
 }
 
 function buildAffiliateUser(overrides?: Partial<User>): User {
-  return { ...AFFILIATE_DEMO_USER, ...overrides, role: "affiliate" };
+  const base = { ...AFFILIATE_DEMO_USER, ...overrides, role: "affiliate" as const };
+  // Guardrail: se overrides nao trouxe email real, retorna null-like usuario
+  if (!base.email || base.email.trim() === "") {
+    return { id: overrides?.id || "unknown", name: overrides?.name || "Afiliado", email: "", role: "affiliate" };
+  }
+  return base;
 }
 
 function isAuthorizedAdminSession(user: User) {

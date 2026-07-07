@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePackA2Gate, PackA2AlreadyOwnedCard } from "@/components/PackA2Gate";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -93,17 +94,46 @@ function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: str
 
 export default function PixCheckout() {
   const { user } = useAuth();
+  // ONDA 19: Gate anti-recompra Pack A²
+  const packGate = usePackA2Gate();
   const checkoutIntent = useMemo(() => readMarketplaceCheckoutIntent(), []);
   const defaultAmount = checkoutIntent?.amountCents ? (checkoutIntent.amountCents / 100).toFixed(2) : "";
   const defaultDescription = checkoutIntent?.description ?? checkoutIntent?.name ?? "";
 
   const [amount, setAmount] = useState(defaultAmount);
   const [description, setDescription] = useState(defaultDescription);
-  const [payerEmail, setPayerEmail] = useState(user?.email ?? "");
+  const [payerName, setPayerName] = useState<string>((checkoutIntent as any)?.payerName ?? user?.name ?? "");
+  const [payerEmail, setPayerEmail] = useState((checkoutIntent as any)?.payerEmail ?? user?.email ?? "");
   const [payerDocument, setPayerDocument] = useState(user?.cpf ?? "");
   const [copiedPixCode, setCopiedPixCode] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [checkoutSession, setCheckoutSession] = useState<MarketplaceCheckoutSession | null>(null);
+  
+  // ONDA 15 POLL: verificar status do PIX a cada 5s (auto-detect confirmação)
+  useEffect(() => {
+    if (!checkoutSession?.pix?.paymentId) return;
+    if (checkoutSession.pix.status === "approved") return;
+    
+    const interval = setInterval(async () => {
+      try {
+        const paymentId = checkoutSession.pix.paymentId;
+        if (!paymentId) return;
+        // Buscar status via tRPC (endpoint pix.getPaymentStatus)
+        const statusRes: any = await (trpc as any).pix?.getPaymentStatus?.query?.({ paymentId })
+          .catch(() => null);
+        if (statusRes?.status === "approved") {
+          setCheckoutSession((prev: any) => prev ? { ...prev, pix: { ...prev.pix, status: "approved" } } : prev);
+          setFeedback("✅ Pagamento confirmado! Ebooks liberados no seu estoque.");
+          clearInterval(interval);
+        }
+      } catch (err) {
+        console.warn("[ONDA15 POLL]", err);
+      }
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [checkoutSession?.pix?.paymentId]);
+
   const [hasRequestedCheckout, setHasRequestedCheckout] = useState(false);
 
   // D14-PIX poll
@@ -217,6 +247,44 @@ export default function PixCheckout() {
       : "Revise o item, gere o checkout seguro no servidor e pague por QR Code PIX ou código copia e cola."
     : "Use este checkout para cobranças avulsas do ecossistema Nexus com geração segura de PIX.";
 
+  
+  // ONDA 15: auto-gerar checkout se intent + payerEmail vem do carrinho
+  const [autoTriggerCheckout, setAutoTriggerCheckout] = useState(false);
+  useEffect(() => {
+    if (!autoTriggerCheckout && checkoutIntent && payerEmail && payerName && amountCents > 0 && !checkoutSession) {
+      setAutoTriggerCheckout(true);
+      // Delay pequeno para render inicial
+      setTimeout(() => { handleGenerateCheckout(); }, 300);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkoutIntent, payerEmail, payerName, amountCents]);
+
+
+  // ONDA 15: poll status do pagamento a cada 5s se paymentId gerado
+  const paymentIdRef = checkoutSession?.pix?.paymentId;
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  useEffect(() => {
+    if (!paymentIdRef || paymentConfirmed) return;
+    const timer = setInterval(async () => {
+      try {
+        const resp = await fetch(`/api/pix/status?paymentId=${encodeURIComponent(paymentIdRef)}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data?.status === "approved" || data?.paid === true) {
+            setPaymentConfirmed(true);
+            setFeedback("✅ Pagamento confirmado automaticamente! Ebooks entregues no seu estoque.");
+            clearInterval(timer);
+            // Redirecionar para /estoque após 3s
+            setTimeout(() => { window.location.href = "/estoque"; }, 3000);
+          }
+        }
+      } catch (err) {
+        // silent
+      }
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [paymentIdRef, paymentConfirmed]);
+
   const handleGenerateCheckout = async () => {
     if (!hasValidAmount) {
       setFeedback("Informe um valor válido para gerar o checkout PIX.");
@@ -264,6 +332,17 @@ export default function PixCheckout() {
       setFeedback("Não foi possível copiar automaticamente. Faça a cópia manual do código exibido.");
     }
   };
+
+  // ONDA 19: Se já possui Pack A², bloqueia recompra
+  if (packGate.blocked) {
+    return (
+      <DashboardLayout>
+        <div className="mx-auto max-w-4xl space-y-6 p-6">
+          <PackA2AlreadyOwnedCard packInfo={packGate.packInfo} />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

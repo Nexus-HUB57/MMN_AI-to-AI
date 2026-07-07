@@ -101,7 +101,9 @@ Assumi a parte mais didática e detalhada, explicando processos, ferramentas e m
 
 ### 01 · Entendendo o IOAID
 - **Arquivo:** `Generate Vídeos Nexus V/brand/personas/alencar/roteiro-aula01.md`
-- **Slides:** `Generate Vídeos Nexus V/brand/personas/alencar/slides-aula01.md`
+- **Slides:**
+- MD: `Generate Vídeos Nexus V/brand/personas/alencar/slides-aula01.md`
+- PNGs: `Generate Vídeos Nexus V/brand/personas/alencar/slides/` (5 slides)
 - **Status:** ✅ Pronto para produção
 - **Persona:** Sir. Nexus Alencar
 - **Voz:** Serena, acolhedora e autoritária
@@ -164,8 +166,9 @@ Sir. Nexus Alencar é a **voz técnica, prática e profunda** da Nexus Affil'IA'
 | Áudio de referência | ✅ Disponível |
 | Perfil vocal | ✅ Definido |
 | Roteiro de exemplo (IOAID) | ✅ Disponível |
-| Slides de apoio | ✅ Disponíveis |
-| Diretrizes de voz dedicadas | 📋 A criar |
+| Slides de apoio (5 PNGs + MD) | ✅ Disponíveis |
+| Diretrizes de voz dedicadas | ✅ Criadas |
+| Vídeo de teste (image-to-video) | 📋 A gerar |
 
 ---
 

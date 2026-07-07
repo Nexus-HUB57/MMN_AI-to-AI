@@ -150,4 +150,29 @@ A Sra. Nexus Ive é a **voz da razão, da inovação estruturada e do suporte co
 
 ---
 
-**Última atualização:** 2026-06-17 · v1.0
+## 10.1 Assets Produzidos
+
+### Imagens (6 referências)
+- `Generate Vídeos Nexus V/brand/personas/ive/ive_training_v1.png` (principal)
+- `Generate Vídeos Nexus V/brand/personas/ive/ive_training_room.png` (variação)
+- `Generate Vídeos Nexus V/brand/personas/ive/ive_nexus_1.png` a `ive_nexus_3.png` (variações)
+- `Generate Vídeos Nexus V/brand/personas/ive/ive_nexus_ref_1.png` (referência)
+
+### Slides Visuais (7 PNGs)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_01_boas_vindas.png` (abertura)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_02_ecossistema.png` (5 camadas)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_03_pilares.png` (3 pilares)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_04_jornada_30_dias.png` (timeline)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_05_mandamentos.png` (5 mandamentos)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_06_recursos.png` (recursos)
+- `Generate Vídeos Nexus V/brand/personas/ive/slides/slide_07_encerramento.png` (próximo passo)
+- Specs: `Generate Vídeos Nexus V/brand/personas/ive/slides-aula00.md`
+
+### Vídeos de Teste (image-to-video)
+- `Generate Vídeos Nexus V/brand/personas/ive/videos/ive_abertura_teste.mp4` (6s)
+- `Generate Vídeos Nexus V/brand/personas/ive/videos/ive_apresentacao_teste.mp4` (6s)
+- `Generate Vídeos Nexus V/brand/personas/ive/videos/ive_encerramento_teste.mp4` (6s)
+
+---
+
+**Última atualização:** 2026-06-26 · v1.1

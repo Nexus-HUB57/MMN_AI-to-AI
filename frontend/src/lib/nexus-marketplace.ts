@@ -127,6 +127,8 @@ export interface MarketplaceEbook {
   pdfPath: string;
   highlights: string[];
   unlockPackSlug: string;
+  sourceMarkdown?: string;
+  coverPublicPath?: string;
 }
 
 export interface ExternalMarketplaceChannel {
@@ -198,9 +200,14 @@ export interface ProgressSnapshot {
   xpCurrent: number;
   xpTarget: number;
   xpProgress: number;
+  xpProgressPct?: number;
+  xpRemaining?: number;
   directCurrent: number;
   directTarget: number;
   directProgress: number;
+  directProgressPct?: number;
+  directRemaining?: number;
+  nextLevel?: { label: string; subtitle?: string; requiredXp?: number; requiredDirects?: number } | null;
 }
 
 export const MARKETPLACE_PROFILE_STORAGE_KEY = "mmn-ai-marketplace-profile";

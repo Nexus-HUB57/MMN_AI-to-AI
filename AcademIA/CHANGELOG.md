@@ -284,7 +284,41 @@ Esta versão consolida as contribuições das duas branches paralelas:
 
 ---
 
-## 📊 Métricas de Crescimento
+## [1.2.0] — 2026-06-28 · "Análise Técnica + Materiais Pendentes"
+
+### 🆕 Novos Materiais
+
+- **`ANALISE_TECNICA_E_ROADMAP.md`**: auditoria completa + roadmap de 90 dias (4 sprints)
+- **`FAQ.md`**: 30 perguntas frequentes sobre AcademIA, cursos, certificações e operação
+- **`certificacoes/banco-questoes-con.md`**: 50 questões oficiais da certificação CON com gabarito comentado
+
+### 🎯 Gaps Identificados (próximas sprints)
+
+- **GAP-01** Banco de questões CEN e CEN+ (atual só CON)
+- **GAP-02** Tutoriais #15-30 (atual só vai até #14)
+- **GAP-03** Cursos de RAG, Deploy, Segurança (atual só cobre 2015-level)
+- **GAP-04** Materiais em vídeo (atual 100% texto)
+- **GAP-05** Landing page pública (atualmente só HTML não-indexado)
+- **GAP-07** Trilha paralela Comercial vs Técnica
+
+### 📋 Próximas Entregas (Sprint 1 - 3 semanas)
+
+- 6 tutoriais novos: RAG, Whisper, OpenAI API, fine-tuning, deploy, prompt CTR
+- 3 cursos novos: RAG em Produção, Deploy em Produção, Segurança/Jailbreaks
+- 3 bancos de questões: CON, CEN, CEN+
+
+### 📊 Métricas de Crescimento Atualizadas
+
+| Versão | Data | Cursos | Tools | Prompts | Templates | Workflows | Tutoriais | Playbooks | Apostilas |
+|---|---|---|---|---|---|---|---|---|---|
+| 1.0.0 | 2026-06-02 | 15 | 38 | 6 | 3 | 3 | 12 | 7 | 0 |
+| 1.1.0 | 2026-06-02 | 15 | 40 | 8 | 3 | 3 | 14 | 7 | 0 |
+| 1.2.0 | **2026-06-28** | 15 | 40+ | 8 | 3 | 3 | 14 | 7 | 10 |
+
+**Total estimado de arquivos**: 100+ .md · 15.000+ linhas
+**Próximo milestone**: v1.3 (Sprint 1) → 18+ cursos, 20+ tutoriais, 3 bancos de questões
+
+---
 
 | Versão | Data | Cursos | Tools | Prompts | Templates | Workflows | Tutoriais | Playbooks |
 |---|---|---|---|---|---|---|---|---|

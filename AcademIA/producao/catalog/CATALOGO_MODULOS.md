@@ -12,11 +12,11 @@ Catálogo oficial de todos os módulos de vídeo-aulas com status de produção.
 |---------|-------|
 | Total de módulos | 16 |
 | Módulos com roteiro | 16/16 (100%) |
-| Módulos com áudio completo | 1/16 (6%) |
-| Módulos com vídeo final | 0/16 (0%) |
-| Módulos publicados | 0/16 (0%) |
+| Módulos com áudio completo | 3/16 (19%)
+| Módulos com vídeo final | 2/16 (13%)
+| Módulos publicadas | 0/16 (0%)
 
-**Status atualizado:** 2026-06-17
+**Status atualizado:** 2026-07-07
 
 ---
 
@@ -247,6 +247,43 @@ export const courseModules = {
 5. **Publicar primeiro módulo** como piloto
 6. **Coletar feedback** da audiência
 7. **Iterar templates** baseado em aprendizados
+
+---
+
+---
+
+## 🎬 Vídeos Finalizados (2026-07-07)
+
+### ✅ V1 · Boas-vindas ao Nexus — Sir. Nexus Alencar
+- **Arquivo:** `AcademIA/producao/videos/v1_alencar_00_boas_vindas.mp4`
+- **Thumbnail:** `AcademIA/producao/videos/thumb_v1_alencar.jpg`
+- **Duração:** ~7 min 10 s (430 s)
+- **Resolução:** 1920×1080 · H.264 + AAC
+- **Tamanho:** 11 MB
+- **Persona:** Sir. Nexus Alencar (solo)
+- **Roteiro:** `AcademIA/producao/roteiros/00-boas-vindas-alencar.md`
+- **Cenas:** 7 (intro + 6 cenas + outro)
+- **Status:** ✅ Completo, pronto para publicação
+
+### ✅ V2 · Entendendo o IOAID — Dupla Ive + Alencar
+- **Arquivo:** `AcademIA/producao/videos/v2_dupla_01_ioaid.mp4`
+- **Thumbnail:** `AcademIA/producao/videos/thumb_v2_dupla.jpg`
+- **Duração:** ~6 min 29 s (389 s)
+- **Resolução:** 1920×1080 · H.264 + AAC
+- **Tamanho:** 9.6 MB
+- **Personas:** Sra. Nexus Ive + Sir. Nexus Alencar (co-apresentação)
+- **Roteiro:** `AcademIA/producao/roteiros/01-ioaid-dupla.md`
+- **Cenas:** 7 (intro + 9 falas alternadas + outro)
+- **Status:** ✅ Completo, pronto para publicação
+
+### 📦 Assets Gerados (15-07-07)
+- **Frames:** `AcademIA/producao/assets/frames/` (15 WEBPs 1920×1080)
+- **Vinhetas:** `AcademIA/producao/assets/vinhetas/` (intro.webp + outro.webp)
+- **Áudios:** `AcademIA/producao/assets/audios/` (a migrar de /workspace/audio_temp)
+
+### 🎙️ Vozes Utilizadas
+- **Sra. Nexus Ive:** `Portuguese_CharmingQueen` (autoritária + calor)
+- **Sir. Nexus Alencar:** `Portuguese_Steadymentor` (maduro + didático)
 
 ---
 

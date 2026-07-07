@@ -192,9 +192,16 @@ const QUICK_ACTIONS = [
     accent: "from-quantum-purple/30 to-quantum-cyan/0",
   },
   {
+    href: "/pix/checkout?pack=pack-a2",
+    label: "Pack A² · Ativação Essencial",
+    description: "AÇÃO NECESSÁRIA · R$ 10 · Ativa seu Agente Nexus e libera comissões",
+    icon: Zap,
+    accent: "from-quantum-cyan/40 to-emerald-400/20",
+  },
+  {
     href: "/subscriptions",
-    label: "Nexus Partners Pack",
-    description: "Produto SaaS independente com contratação por assinatura",
+    label: "Nexus Partners Pack (opcional)",
+    description: "Produto SaaS complementar · assinatura independente",
     icon: Users,
     accent: "from-amber-400/30 to-quantum-purple/10",
   },
@@ -748,7 +755,7 @@ export default function Dashboard() {
 
             <div className="mt-5 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4 text-sm text-slate-200">
               <p className="font-semibold text-quantum-cyan">Regra de ativação aplicada</p>
-              <p className="mt-2 leading-6">O Nexus Partners Pack aparece no dashboard como produto comercial autônomo. O acesso ao catálogo e à contratação fica disponível após autenticação; a operação diária segue em painéis dedicados de assinatura e parceiros.</p>
+              <p className="mt-2 leading-6">O Nexus Partners Pack é um produto SaaS COMPLEMENTAR (opcional). A ação necessária para ativar seu Agente Nexus é adquirir o Pack A² por R$ 10. O Nexus Partners Pack fica disponível como upgrade após ativação.</p>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">

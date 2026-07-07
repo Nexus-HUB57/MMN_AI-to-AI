@@ -140,7 +140,7 @@ export default function AffiliateStatusLights() {
               ? "Seu agente está operando e evoluindo em tempo real."
               : "O Agente é ativado após a aquisição do Pack no Marketplace Nexus."
           }
-          cta={{ href: "/marketplaces", label: "Adquirir Pack" }}
+          cta={{ href: "/marketplaces?focus=pack-a2", label: "Adquirir Pack" }}
         />
         <StatusRow
           icon={<Calendar size={18} />}
@@ -151,7 +151,7 @@ export default function AffiliateStatusLights() {
               ? "Assinatura mensal em dia. Bônus liberados."
               : "Renove sua ativação mensal para manter comissões e bônus."
           }
-          cta={{ href: "/marketplaces", label: "Renovar Ativação" }}
+          cta={{ href: "/marketplaces?focus=pack-a2", label: "Renovar Ativação" }}
         />
       </div>
 
@@ -164,15 +164,16 @@ export default function AffiliateStatusLights() {
             </p>
             <p className="mt-1">
               Para ativar seu <strong>Agente Nexus</strong> e começar a ganhar
-              comissões, adquira seu <strong>Nexus Partners Pack</strong> no
-              Marketplace Nexus. Sem o pack, o Agente permanece desligado.
+              comissões, adquira seu <strong>Pack A²</strong> (Pack Agente Afiliado)
+              no Marketplace Nexus por apenas R$ 10. Sem o Pack A², o Agente
+              permanece desligado.
             </p>
             <Link
-              href="/marketplaces"
+              href="/marketplaces?focus=pack-a2"
               className="mt-2 inline-flex items-center gap-1 rounded bg-amber-400 px-3 py-1.5 text-[11px] font-mono uppercase tracking-widest text-obsidian transition hover:bg-amber-300"
             >
               <ShoppingCart size={12} />
-              Ir para o Marketplace Nexus
+              Adquirir Pack A² (R$ 10)
             </Link>
           </div>
         </div>

@@ -44,6 +44,7 @@ import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
 import { academiaEadRouter } from "./routers/academiaEadRouter";
 import { academiaPublicRouter } from "./routers/academiaPublicRouter";
+import { dashboardStatusRouter } from "./routers/dashboardStatusRouter";
 import { meetingRouter } from "./routers/meetingRouter";
 import { a2aRouter } from "./agentic/a2a/router";
 import { ceoAiRouter } from "./agentic/ceo-ai/router";
@@ -218,6 +219,7 @@ export const appRouter = router({
   labNexus: labNexusRouter,
   academiaEad: academiaEadRouter,
   academiaPublic: academiaPublicRouter,
+  dashboardStatus: dashboardStatusRouter,
   meetings: meetingRouter,
   a2a: a2aRouter,
   ceoAi: ceoAiRouter,

@@ -731,9 +731,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 </>
               ) : (
                 <>
-                  <Link href="/subscriptions">
+                  <Link href="/pix/checkout?pack=pack-a2">
                     <Button className="gradient-btn h-12 px-6 text-sm font-semibold">
-                      Contratar Nexus Partners Pack
+                      Adquirir Pack A² (R$ 10)
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -748,7 +748,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
 
             {hasOnboardingFlag && (
               <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
-                Cadastro concluído! Você já pode acessar o marketplace e, se fizer sentido para sua operação, contratar o Nexus Partners Pack como produto independente por assinatura.
+                Cadastro concluído! Adquira agora seu Pack A² por R$ 10 para ativar seu Agente Nexus e começar a ganhar comissões. O Nexus Partners Pack fica disponível opcionalmente após a ativação.
               </div>
             )}
           </div>

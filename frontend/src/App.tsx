@@ -63,6 +63,7 @@ import AdminPanel from "@/pages/AdminPanel";
 import AdminAgentDetails from "@/pages/AdminAgentDetails";
 import AdminOrchestrator from "@/pages/AdminOrchestrator";
 import AcademiaHub from "@/pages/AcademiaHub";
+import AcademiaDashboard from "@/pages/AcademiaDashboard";
 import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
 import MeetingHub from "@/pages/MeetingHub";
@@ -126,6 +127,7 @@ function Router() {
       <Route path="/admin/orchestrator" component={AdminOrchestrator} />
       <Route path="/marketplace" component={Marketplaces} />
       <Route path="/academia" component={AcademiaHub} />
+      <Route path="/academia/dashboard" component={AcademiaDashboard} />
       <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />
       <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />

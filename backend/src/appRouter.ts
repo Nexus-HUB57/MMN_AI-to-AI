@@ -59,6 +59,9 @@ import { onda1Router } from "./routers/onda1Router";
 import { autoHealEngineRouter } from "./routers/autoHealEngineRouter";
 import { governanceLoopExecutorRouter } from "./routers/governanceLoopExecutorRouter";
 import { nikoCapitalRouter } from "./routers/nikoCapitalRouter";
+import { networkExtendedRouter } from "./routers/networkExtendedRouter";
+import { packEntitlementsRouter as packEntitlementsOnda19Router } from "./routers/packEntitlementsOnda19Router";
+import { btcCustodyRouter } from "./routers/btcCustodyRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -247,6 +250,9 @@ export const appRouter = router({
   autoHealEngine: autoHealEngineRouter,
   governanceLoopExecutor: governanceLoopExecutorRouter,
   nikoCapital: nikoCapitalRouter,
+  networkExtended: networkExtendedRouter,
+  packEntitlements: packEntitlementsOnda19Router,
+  btcCustody: btcCustodyRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { trpc } from '../lib/trpc';
 import DashboardLayout from '@/components/DashboardLayout';
 import BRLBTCConverter from '@/components/payments/BRLBTCConverter';
+import BtcCustodyPanel from "@/components/BtcCustodyPanel";
 import { Wallet, Plus, Trash2, Clock, CheckCircle, XCircle, AlertCircle, CreditCard, PiggyBank, ArrowUpRight, ArrowDownRight, ChevronRight, RefreshCw } from 'lucide-react';
 
 type TabType = 'balance' | 'accounts' | 'withdraw' | 'history';
@@ -262,7 +263,7 @@ export default function Payments() {
             </div>
             {/* D14-BTC converter */}
             <div className="mt-2">
-              <BRLBTCConverter />
+              <BtcCustodyPanel />
             </div>
 
           </div>

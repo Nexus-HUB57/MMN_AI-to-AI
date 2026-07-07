@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePackA2Gate, PackA2AlreadyOwnedCard } from "@/components/PackA2Gate";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -93,6 +94,8 @@ function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: str
 
 export default function PixCheckout() {
   const { user } = useAuth();
+  // ONDA 19: Gate anti-recompra Pack A²
+  const packGate = usePackA2Gate();
   const checkoutIntent = useMemo(() => readMarketplaceCheckoutIntent(), []);
   const defaultAmount = checkoutIntent?.amountCents ? (checkoutIntent.amountCents / 100).toFixed(2) : "";
   const defaultDescription = checkoutIntent?.description ?? checkoutIntent?.name ?? "";
@@ -329,6 +332,17 @@ export default function PixCheckout() {
       setFeedback("Não foi possível copiar automaticamente. Faça a cópia manual do código exibido.");
     }
   };
+
+  // ONDA 19: Se já possui Pack A², bloqueia recompra
+  if (packGate.blocked) {
+    return (
+      <DashboardLayout>
+        <div className="mx-auto max-w-4xl space-y-6 p-6">
+          <PackA2AlreadyOwnedCard packInfo={packGate.packInfo} />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

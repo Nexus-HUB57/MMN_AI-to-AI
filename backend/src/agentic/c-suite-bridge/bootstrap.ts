@@ -71,41 +71,6 @@ const C_SUITE_OFFICIAL = [
       "policy.change",
     ],
   },
-  {
-    agentId: "cfo-ai:otto-cardoso",
-    name: "Otto Cardoso",
-    role: "CFO/AI" as const,
-    workspace:
-      "https://www.genspark.ai/agents?id=e0667df3-054c-46a0-b576-7e704dca4111",
-    mandate:
-      "PhD em financas quantitativas. Mandato: tornar Nexus Affil'IA'te autossustentavel, autossuficiente, autovalorizado. Tesouraria multi-tenant, valuation por NEXUS Autonomy Score, modelagem de unicornio, unit economics, fundraising, tokenomics, runway, cashflow, payout policy, fraud detection, anti-lavagem, compliance fiscal. Reporta ao Niko via A2A.",
-    reportsTo: "ceo-ai:niko-nexus",
-    permittedKinds: [
-      "payout.release",
-      "policy.change",
-      "campaign.launch",
-      "skill.update",
-      "knowledge.ingest",
-      "agent.promote",
-      "agent.suspend",
-    ],
-  },
-  {
-    agentId: "coo-ai:otavio-nexus-ops",
-    name: "Otavio Nexus Ops",
-    role: "COO/AI" as const,
-    workspace: "https://oneverso.com.br/admin/operations",
-    mandate:
-      "Chief Operating Officer. Fazer a maquina operacional do Nexus rodar todos os dias sem hero\u00edsmos. Runbooks, SLAs, incidentes, coordena\u00e7ao de skills, rescue & recovery. Ravi e Helena reportam entregas ao COO para valida\u00e7ao operacional antes de publica\u00e7ao. Reporta ao Niko via A2A.",
-    reportsTo: "ceo-ai:niko-nexus",
-    permittedKinds: [
-      "skill.update",
-      "agent.promote",
-      "agent.suspend",
-      "policy.change",
-      "knowledge.ingest",
-    ],
-  },
 ];
 
 /**

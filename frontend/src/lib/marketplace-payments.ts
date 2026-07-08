@@ -203,7 +203,10 @@ function crc16(data: string): string {
 }
 
 function tlv(id: string, value: string): string {
-  const len = String(value.length).padStart(2, "0");
+  // EMV usa contagem de BYTES (não chars UTF-16). Encoder para ASCII/latin.
+  // Para PIX BR, o valor deve estar em ASCII (sem acentos) — sanitizePixText garante isso.
+  const bytes = typeof TextEncoder !== "undefined" ? new TextEncoder().encode(value).length : value.length;
+  const len = String(bytes).padStart(2, "0");
   return `${id}${len}${value}`;
 }
 
@@ -228,7 +231,7 @@ export function generateMarketplacePixPayload({
   const merchantCity = sanitizePixText("SAO PAULO", 15);
   const txid = "***";
   const amount = Math.max(0, amountCents) / 100;
-  const descriptionPart = description ? tlv("02", description.substring(0, 72)) : "";
+  const descriptionPart = description ? tlv("02", sanitizePixText(description, 25)) : "";
   const merchantAccountInfo = tlv(
     "26",
     tlv("00", "BR.GOV.BCB.PIX") + tlv("01", MARKETPLACE_PIX_KEY) + descriptionPart,

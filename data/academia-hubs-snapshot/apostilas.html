@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostilas · Academ'IA · Nexus Affil'IA'te</title>
+<meta name="description" content="Materiais de estudo das trilhas Fundamental, Agente, Master e Elite.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1424;
+  --card: #131a2c;
+  --border: rgba(99, 234, 255, 0.18);
+  --cyan: #63eaff;
+  --purple: #b78cff;
+  --text: #e5edf5;
+  --dim: #94a3b8;
+  --gold: #facc15;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: radial-gradient(ellipse at top left, #0a1530 0%, #050810 60%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 32px 16px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 32px; }
+h1 { font-size: 2.5rem; background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.subtitle { color: var(--dim); font-size: 1.05rem; max-width: 720px; margin: 0 auto 16px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin: 24px 0; }
+.kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+.kpi-value { font-size: 1.6rem; font-weight: 800; color: var(--cyan); }
+.kpi-label { font-size: 0.75rem; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+.search-row { display: flex; gap: 10px; margin: 18px 0; flex-wrap: wrap; }
+.search-row input { flex: 1; min-width: 240px; padding: 12px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.95rem; }
+.search-row input:focus { outline: none; border-color: var(--cyan); }
+.search-row select { padding: 12px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); }
+.filter-row { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+.chip { padding: 6px 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 999px; color: var(--dim); cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+.chip:hover { border-color: var(--cyan); color: var(--text); }
+.chip.active { background: linear-gradient(135deg, rgba(99,234,255,0.2), rgba(183,140,255,0.2)); border-color: var(--cyan); color: var(--cyan); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; transition: transform 0.2s, border-color 0.2s; position: relative; }
+.card:hover { transform: translateY(-2px); border-color: var(--cyan); }
+.card.featured { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2), 0 8px 24px rgba(250, 204, 21, 0.06); }
+.featured-badge { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+.card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; padding-right: 60px; }
+.card-sub { font-size: 0.85rem; color: var(--dim); margin-bottom: 12px; min-height: 32px; }
+.tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag { font-size: 0.7rem; padding: 2px 6px; background: var(--bg2); border-radius: 4px; color: var(--dim); }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; text-decoration: none; border: 1px solid var(--border); color: var(--text); transition: all 0.15s; }
+.btn:hover { background: var(--bg2); border-color: var(--cyan); }
+.btn.primary { background: linear-gradient(135deg, var(--cyan), var(--purple)); color: #000; border: none; font-weight: 600; }
+.empty { text-align: center; padding: 60px 20px; color: var(--dim); }
+.nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; justify-content: center; }
+.nav a { color: var(--dim); text-decoration: none; padding: 6px 12px; border-radius: 6px; border: 1px solid transparent; font-size: 0.9rem; }
+.nav a:hover { background: var(--bg2); color: var(--cyan); border-color: var(--border); }
+.nav a.active { color: var(--cyan); border-color: var(--border); }
+.loading { text-align: center; padding: 40px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📖 Apostilas</h1>
+    <p class="subtitle">Materiais de estudo das trilhas Fundamental, Agente, Master e Elite.</p>
+    <nav class="nav">
+      <a href="/academia/hubs/"             >Geral</a>
+      <a href="/academia/hubs/lab.html"     >Lab</a>
+      <a href="/academia/hubs/lib.html"     >Lib</a>
+      <a href="/academia/hubs/playbooks.html" >Playbooks</a>
+      <a href="/academia/hubs/webinars.html"  >Webinars</a>
+      <a href="/academia/hubs/tutoriais.html" >Tutoriais</a>
+      <a href="/academia/hubs/apostilas.html" class="active">Apostilas</a>
+      <a href="/academia/ead/curso">Voltar à Academ'IA</a>
+    </nav>
+  </header>
+
+  <div class="kpis" id="kpis">
+    <div class="kpi"><div class="kpi-value" id="k-total">—</div><div class="kpi-label">Itens visíveis</div></div>
+    <div class="kpi"><div class="kpi-value" id="k-featured">—</div><div class="kpi-label">Destacados</div></div>
+    <div class="kpi"><div class="kpi-value" id="k-with-video">—</div><div class="kpi-label">Com vídeo</div></div>
+    <div class="kpi"><div class="kpi-value" id="k-with-pdf">—</div><div class="kpi-label">Com PDF</div></div>
+  </div>
+
+  <div class="search-row">
+    <input type="search" id="search" placeholder="🔍 Buscar por título, subtítulo ou tag..." autocomplete="off">
+    <select id="level">
+      <option value="">Todos os níveis</option>
+      <option value="fundamental">Fundamental</option>
+      <option value="agente">Agente</option>
+      <option value="master">Master</option>
+      <option value="elite">Elite</option>
+    </select>
+  </div>
+
+  <div class="filter-row">
+    <div class="chip active" data-filter="all">Todos</div>
+    <div class="chip" data-filter="featured">⭐ Destaques</div>
+    <div class="chip" data-filter="video">🎬 Com vídeo</div>
+    <div class="chip" data-filter="pdf">📄 Com PDF</div>
+  </div>
+
+  <div id="results">
+    <div class="loading">Carregando catálogo do Postgres...</div>
+  </div>
+</div>
+
+<script>
+const SECTION = "curso";
+const TRPC_URL = '/api/trpc/academiaEad.listOverrides';
+
+function trpcUrl(input) {
+  return TRPC_URL + (input ? '?input=' + encodeURIComponent(JSON.stringify(input)) : '');
+}
+
+async function fetchItems(input) {
+  const r = await fetch(trpcUrl(input));
+  if (!r.ok) throw new Error('http_' + r.status);
+  const json = await r.json();
+  const d = json.result && json.result.data; return Array.isArray(d) ? d : (d && Array.isArray(d.items) ? d.items : []);
+}
+
+let _cache = null;
+let _state = { q: '', level: '', filter: 'all' };
+
+async function ensureLoaded() {
+  if (_cache) return _cache;
+  const input = SECTION ? { sectionSlug: SECTION } : {};
+  _cache = await fetchItems(input);
+  return _cache;
+}
+
+function applyFilters(items) {
+  let arr = items.slice();
+  if (_state.level) arr = arr.filter(i => (i.level || '') === _state.level);
+  if (_state.filter === 'featured') arr = arr.filter(i => i.isFeatured);
+  if (_state.filter === 'video')    arr = arr.filter(i => i.videoUrl);
+  if (_state.filter === 'pdf')      arr = arr.filter(i => i.pdfUrl);
+  return arr;
+}
+
+async function render() {
+  const root = document.getElementById('results');
+  root.innerHTML = '<div class="loading">Buscando...</div>';
+  try {
+    let items;
+    if (_state.q.length >= 2) {
+      const input = SECTION ? { sectionSlug: SECTION, search: _state.q } : { search: _state.q };
+      const data = await fetchItems(input);
+      items = Array.isArray(data) ? data : (data && data.items) ? data.items : [];
+    } else {
+      const data = await ensureLoaded();
+      items = Array.isArray(data) ? data : (data && data.items) ? data.items : [];
+    }
+    const filtered = applyFilters(items);
+
+    // KPIs
+    document.getElementById('k-total').textContent = filtered.length;
+    document.getElementById('k-featured').textContent = filtered.filter(i => i.isFeatured).length;
+    document.getElementById('k-with-video').textContent = filtered.filter(i => i.videoUrl).length;
+    document.getElementById('k-with-pdf').textContent = filtered.filter(i => i.pdfUrl).length;
+
+    if (filtered.length === 0) {
+      root.innerHTML = '<div class="empty">Nenhum item encontrado com esses filtros.</div>';
+      return;
+    }
+
+    root.innerHTML = '<div class="grid">' + filtered.map(card).join('') + '</div>';
+  } catch (e) {
+    root.innerHTML = '<div class="empty">Erro ao carregar: ' + (e.message || e) + '</div>';
+  }
+}
+
+function card(i) {
+  const tags = (i.tags || []).slice(0, 4).map(t => '<span class="tag">'+t+'</span>').join('');
+  const actions = [];
+  if (i.htmlUrl)  actions.push('<a class="btn primary" href="'+i.htmlUrl+'" target="_blank">📖 Apostila</a>');
+  if (i.videoUrl) actions.push('<a class="btn" href="'+i.videoUrl+'" target="_blank">🎬 Vídeo</a>');
+  if (i.pdfUrl)   actions.push('<a class="btn" href="'+i.pdfUrl+'" target="_blank">📄 PDF</a>');
+  if (i.mdPath)   actions.push('<a class="btn" href="'+i.mdPath+'" target="_blank">📝 MD</a>');
+  if (!actions.length) actions.push('<a class="btn" href="/academia/ead/curso/'+i.lessonId+'">Abrir aula →</a>');
+  return ''
+    + '<div class="card '+(i.isFeatured?'featured':'')+'">'
+    + (i.isFeatured ? '<span class="featured-badge">⭐ DESTAQUE</span>' : '')
+    + '<div class="card-title">'+(i.title || i.lessonId)+'</div>'
+    + '<div class="card-sub">'+(i.subtitle || ((i.level || '—') + ' · ' + (i.requiredTier || 'aberto')))+'</div>'
+    + '<div class="tags">'+tags+'</div>'
+    + '<div class="actions">'+actions.join('')+'</div>'
+    + '</div>';
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  _state.q = e.target.value.trim();
+  if (_state.q.length === 0 || _state.q.length >= 2) render();
+});
+document.getElementById('level').addEventListener('change', (e) => { _state.level = e.target.value; render(); });
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+  c.classList.add('active');
+  _state.filter = c.dataset.filter;
+  render();
+}));
+
+render();
+</script>
+</body>
+</html>

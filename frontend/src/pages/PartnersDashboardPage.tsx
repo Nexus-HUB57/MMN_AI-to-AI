@@ -339,18 +339,25 @@ export default function PartnersDashboardPage() {
 
   const stats = useMemo<FallbackPartnerStats>(() => {
     if (statsQuery.data) return statsQuery.data as FallbackPartnerStats;
-    return getFallbackPartnerStats();
+    // ONDA 27: sem fallback fictício. Se não há dados, mostrar zeros reais.
+    return {
+      totalPartners: 0,
+      activePartners: 0,
+      inactivePartners: 0,
+      totalVolume: 0,
+      totalCommissions: 0,
+      averageTier: "silver",
+      tierDistribution: { silver: 0, gold: 0, platinum: 0, diamond: 0 },
+      topPerformers: [],
+      growthRate: 0,
+      averageVolumePerPartner: 0,
+    } as FallbackPartnerStats;
   }, [statsQuery.data, localRevision]);
 
   const partnersList = useMemo(() => {
     if (partnersQuery.data) return partnersQuery.data;
-    return listFallbackPartners({
-      tier: tierFilter !== "all" ? tierFilter : undefined,
-      status: statusFilter !== "all" ? statusFilter : undefined,
-      search: searchTerm || undefined,
-      page: currentPage,
-      limit: 12,
-    });
+    // ONDA 27: sem fallback fictício. Se não há dados, retornar lista vazia real.
+    return { partners: [], total: 0, page: 1, pageSize: 12, totalPages: 0 } as any;
   }, [partnersQuery.data, tierFilter, statusFilter, searchTerm, currentPage, localRevision]);
 
   const selectedPartnerData = useMemo<FallbackPartner | null>(() => {
@@ -445,7 +452,7 @@ export default function PartnersDashboardPage() {
 
         {apiOffline && (
           <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            A API de partners não respondeu no domínio atual. Exibindo snapshot operacional espelhado do repositório e mantendo cadastro local seguro para continuidade do painel.
+            Faça login para visualizar seu Nexus Partners Pack. Painel público exibe métricas reais zeradas até autenticação e/ou cadastro do primeiro parceiro.
           </div>
         )}
 

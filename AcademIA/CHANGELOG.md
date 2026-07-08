@@ -2,8 +2,8 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.2.0
-last_updated: 2026-06-28
+version: 1.2.5
+last_updated: 2026-07-07
 ---
 
 # 📜 CHANGELOG · Academ'IA
@@ -12,7 +12,111 @@ last_updated: 2026-06-28
 
 ---
 
+## [1.2.5] — 2026-07-07 · "Expansão Monetização + Automação"
+
+### ✨ Adicionado
+
+**Apostilas (1 nova):**
+- `apostilas/13-monetizacao-avancada-escala.md` — 6 pilares de receita além de afiliação: produto digital, mentoria, SaaS, mídia, licensing, community. Roadmap R$ 0 → R$ 300k/mês em 24 meses.
+
+**Workshops (1 novo):**
+- `treinamentos/WS-06-oficina-automacao-conteudo.md` — Pipeline 5 agentes (Researcher, Planner, Writer, Editor, Designer) com checkpoints humanos. Escala 10x produção sem perder qualidade.
+
+**Templates HTML (2 novos):**
+- `Lab-Nexus/templates/social/03-template-stories-engajamento.html` — 8 stories prontos (gancho, dor, prova, aula, quiz, enquete, bastidores, CTA)
+- `Lab-Nexus/templates/email/05-template-onboarding-sequencia.html` — Sequência 5 emails D+0 a D+4 com merge tags e métricas-alvo
+
+**Prompts (2 novos):**
+- `Lab-Nexus/prompts/analise/05-analise-concorrencia-profund.md` — Mapa competitivo 5-10 players, gaps, posicionamento defensável
+- `Lab-Nexus/prompts/estrategia/05-okr-trimestral-equipe.md` — OKRs completos time 3-15 pessoas, 3 Objectives + KRs mensuráveis
+
+### 📊 Métricas
+
+| Métrica | v1.2.3 | v1.2.5 | Δ |
+|---|---|---|---|
+| Apostilas | 12 | **13** | +1 |
+| Prompts | 12 | **14** | +2 |
+| Templates | 9 | **11** | +2 |
+| Workshops | 5 | **6** | +1 |
+| Tutoriais | 27 | 27 | = |
+| Tools | 45 | 45 | = |
+| Workflows | 5 | 5 | = |
+| Playbooks | 10 | 10 | = |
+| Webinars | 10 | 10 | = |
+| Certificações | 5 | 5 | = |
+| **TOTAL** | **149** | **155** | **+6** |
+
+---
+
+## [1.2.3] — 2026-06-28 · "Consolidação (merge v1.2.0 + v1.2.2)"
+
+Esta versão consolida as contribuições das duas branches paralelas:
+
+### ✨ Adicionado (Branch A — v1.2.0)
+
+**Apostilas (2 novas):**
+- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para IAs generativas
+- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores
+
+**Tutoriais (5 novos):**
+- `tutoriais/11-auditoria-skills-master.md`
+- `tutoriais/12-configurar-ab-test-judge.md`
+- `tutoriais/13-deploy-multi-tenant-elite.md`
+- `tutoriais/14-agente-federado-elite.md`
+- `tutoriais/15-auditoria-lgpd-automatizada.md`
+
+**Certificações (1 nova):**
+- `certificacoes/MAS-plus-certificacao-master-plus.md`
+
+### ✨ Adicionado (Branch B — v1.2.2)
+
+**Tutoriais (6 novos):**
+- `tutoriais/16-debugar-agente-lento.md` (renomeado para 15)
+- `tutoriais/17-criar-skill-customizada.md`
+- `tutoriais/18-integrar-meta-ads.md`
+- `tutoriais/19-configurar-backup-automatico.md`
+- `tutoriais/20-ler-metricas-sho.md`
+- `tutoriais/21-exportar-relatorio-mensal.md`
+
+**Playbooks (2 novos):**
+- `playbooks/PB-LANCAMENTO-black-friday.md`
+- `playbooks/PB-ONBOARDING-novo-afiliado.md`
+
+**Webinars (2 novos):**
+- `webinars/WB-2026-04-agentes-autonomos-prod.md`
+- `webinars/WB-2026-05-federacao-multi-tenant.md`
+
+**Workflows (2 novos):**
+- `Lab-Nexus/workflows/make/02-workflow-recovery-carrinho.json`
+- `Lab-Nexus/workflows/n8n/03-workflow-onboarding-trial.md`
+
+**Prompts (4 novos):**
+- `Lab-Nexus/prompts/analise/04-diagnostico-churn-preventivo.md`
+- `Lab-Nexus/prompts/copywriting/03-copy-headline-anuncio.md`
+- `Lab-Nexus/prompts/copywriting/04-script-vsl.md`
+- `Lab-Nexus/prompts/estrategia/04-plano-conteudo-90-dias.md`
+
+### 📊 Métricas Consolidadas
+
+| Métrica | Antes (v1.1.1) | Agora (v1.2.3) | Δ |
+|---|---|---|---|
+| Apostilas | 10 | **12** | +20% |
+| Tutoriais | 14 | **21** | +50% |
+| Certificações | 4 | **5** | +25% |
+| Tools | 40 | **44** | +10% |
+| Prompts | 8 | **11** | +38% |
+| Templates | 3 | **6** | +100% |
+| Workflows | 3 | **5** | +67% |
+| Playbooks | 7 | **10** | +43% |
+| Webinars | 3 | **6** | +100% |
+| Workshops | 6 | **8** | +33% |
+| Cursos | 15 | **15** | = |
+| Total Assets | **113** | **158** | **+40%** |
+
+---
+
 ## [1.2.0] — 2026-06-28 · "Expansão Master & Elite"
+>>>>>>> origin/main
 
 ### ✨ Novos Materiais (8)
 

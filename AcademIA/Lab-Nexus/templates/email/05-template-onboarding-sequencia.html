@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template Email · Onboarding Sequência 5 Emails · Nexus</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #0A0E27;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #E5E7EB;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #0A0E27 0%, #1A1F3A 100%);
+  }
+  .header {
+    padding: 32px 24px 24px;
+    text-align: center;
+    border-bottom: 2px solid #00FFFF;
+  }
+  .logo {
+    color: #00FFFF;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+  .logo span {
+    color: #FF00FF;
+  }
+  .content {
+    padding: 40px 32px;
+  }
+  h1 {
+    color: #FFFFFF;
+    font-size: 28px;
+    line-height: 1.3;
+    margin: 0 0 16px;
+    font-weight: 800;
+  }
+  h1 .hl {
+    color: #00FFFF;
+  }
+  h2 {
+    color: #FF00FF;
+    font-size: 20px;
+    margin: 32px 0 12px;
+  }
+  p {
+    line-height: 1.6;
+    font-size: 16px;
+    margin: 12px 0;
+    color: #D1D5DB;
+  }
+  .button {
+    display: inline-block;
+    background: linear-gradient(135deg, #00FFFF, #FF00FF);
+    color: #0A0E27 !important;
+    padding: 16px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    margin: 24px 0;
+  }
+  .card {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid #00FFFF;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+  }
+  .step-num {
+    background: #FF00FF;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+  .step-content strong {
+    color: #00FFFF;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00FFFF, transparent);
+    margin: 32px 0;
+  }
+  .footer {
+    padding: 32px 24px;
+    text-align: center;
+    color: #6B7280;
+    font-size: 13px;
+    border-top: 1px solid rgba(0, 255, 255, 0.2);
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(255, 0, 255, 0.15);
+    color: #FF00FF;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .stat {
+    text-align: center;
+    padding: 16px;
+  }
+  .stat-num {
+    color: #00FFFF;
+    font-size: 36px;
+    font-weight: 800;
+    display: block;
+  }
+  .stat-label {
+    color: #9CA3AF;
+    font-size: 13px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .quote {
+    border-left: 3px solid #FF00FF;
+    padding-left: 16px;
+    font-style: italic;
+    color: #D1D5DB;
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ====== EMAIL 1: BOAS-VINDAS (D+0) ====== -->
+  <div class="header">
+    <div class="logo">NEXUS<span>·</span>ACADEMY</div>
+  </div>
+
+  <div class="content">
+    <div class="badge">📩 EMAIL 1 de 5 · D+0</div>
+    <h1>Bem-vindo(a). <span class="hl">Sua jornada começa agora.</span></h1>
+
+    <p>Oi, {{nome}}.</p>
+
+    <p>Você acabou de dar o passo mais importante — decidiu aprender de verdade. Nos próximos <strong>5 dias</strong>, vou te mandar 1 email por dia com tudo que você precisa pra ter resultado rápido.</p>
+
+    <p>Esse email não é enrolação. É conteúdo curto, direto, e acionável.</p>
+
+    <h2>📋 O que esperar dessa sequência</h2>
+
+    <div class="card">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>HOJE · Boas-vindas + setup inicial</strong>
+          Você está aqui. Configure sua conta em 5 min.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>AMANHÃ · Seu primeiro agente</strong>
+          Vamos criar juntos um agente simples que roda sozinho.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>D+2 · Sua primeira campanha</strong>
+          Disparar pro primeiro lead em 15 min.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>D+3 · Medindo resultado</strong>
+          Onde olhar pra saber se está no caminho certo.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>D+4 · Próximo passo</strong>
+          Onde ir depois dessa sequência.
+        </div>
+      </div>
+    </div>
+
+    <h2>🚀 Ação de hoje (5 min)</h2>
+
+    <p>Antes do próximo email:</p>
+    <p>1. Acesse sua conta em <a href="#" style="color: #00FFFF;">app.nexus-academy.io</a><br>
+       2. Complete seu perfil (foto + bio + nicho)<br>
+       3. Conecte WhatsApp Business API<br>
+       4. Escolha 1 objetivo: <em>mais leads OU mais vendas</em></p>
+
+    <div style="text-align: center;">
+      <a href="#" class="button">COMPLETAR MEU PERFIL AGORA</a>
+    </div>
+
+    <p style="text-align: center; margin-top: 32px;"><em>Amanhã te mando o template exato do primeiro agente. Até lá.</em></p>
+    <p style="text-align: right; color: #FF00FF;">— Time Nexus</p>
+  </div>
+
+  <div class="footer">
+    Você recebeu esse email porque se inscreveu na Nexus Academy.<br>
+    <a href="#" style="color: #6B7280;">Cancelar inscrição</a> · <a href="#" style="color: #6B7280;">Configurar preferências</a>
+  </div>
+
+  <!-- ====== EMAIL 2: PRIMEIRO AGENTE (D+1) ====== -->
+  <div class="content" style="border-top: 1px dashed rgba(0,255,255,0.3); padding-top: 48px;">
+    <div class="badge">📩 EMAIL 2 de 5 · D+1</div>
+    <h1>Hoje você cria seu <span class="hl">primeiro agente autônomo</span>.</h1>
+
+    <p>Ontem foi aquecimento. Hoje é mão na massa.</p>
+
+    <p>Um agente nada mais é que <strong>uma série de instruções que rodam sozinhas</strong>. Vou te dar o template, você copia, adapta e testa em 15 minutos.</p>
+
+    <h2>🤖 Template: Agente "Boas-vindas Lead"</h2>
+
+    <div class="card">
+      <p><strong>O que esse agente faz:</strong> Quando alguém preenche o formulário de captura no seu site, esse agente dispara automaticamente uma sequência de 3 mensagens no WhatsApp.</p>
+      <p><strong>Quando usar:</strong> Para qualquer negócio que capta leads via landing page, formulário ou anúncio.</p>
+      <p><strong>Tempo de configuração:</strong> 15 min.</p>
+    </div>
+
+    <h2>📝 Passo a passo</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>Acesse Agentes → Criar Novo</strong>
+        Em <code>app.nexus-academy.io/agentes</code>, clique em "+ Novo Agente".
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>Trigger: "Lead captured"</strong>
+        Configure para disparar quando webhook recebe evento do seu formulário.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>3 mensagens com delay</strong>
+        Mensagem 1 (imediata): saudação personalizada. Mensagem 2 (24h): conteúdo de valor. Mensagem 3 (72h): CTA.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>Ativar e testar com seu próprio número</strong>
+        Sempre teste antes de subir pra produção.
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="#" class="button">VER TUTORIAL COMPLETO COM VÍDEO</a>
+    </div>
+
+    <h2>🎯 Métricas pra acompanhar</h2>
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-num">65%</span>
+        <span class="stat-label">Taxa de abertura WhatsApp</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">23%</span>
+        <span class="stat-label">Taxa de resposta</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">8%</span>
+        <span class="stat-label">Conversão em reunião</span>
+      </div>
+    </div>
+
+    <p>Esses são números típicos pra um agente bem configurado. Se os seus estiverem abaixo, revisamos juntos no D+3.</p>
+  </div>
+
+  <!-- ====== EMAIL 3: PRIMEIRA CAMPANHA (D+2) ====== -->
+  <div class="content" style="border-top: 1px dashed rgba(0,255,255,0.3); padding-top: 48px;">
+    <div class="badge">📩 EMAIL 3 de 5 · D+2</div>
+    <h1>Sua <span class="hl">primeira campanha</span> rodando em 15 min.</h1>
+
+    <p>Você tem o agente pronto. Agora precisa de audiência pra mandar mensagem.</p>
+
+    <h2>🎯 Estratégia "Primeira Campanha" (zero orçamento)</h2>
+
+    <p>Antes de gastar com anúncio, valide com público orgânico. Aqui está o plano:</p>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">📌 DIA 1-2: Lista quente (50-200 contatos)</strong>
+      <p>Importe seus contatos pessoais que já te conhecem. São eles que vão validar se sua copy funciona.</p>
+    </div>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">📌 DIA 3-5: Lista fria qualificada (500-1000 contatos)</strong>
+      <p>Use o lead magnet que você configurou no D+0. Quem baixou quer saber mais sobre você.</p>
+    </div>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">📌 DIA 6-14: Escalar com tráfego pago (opcional)</strong>
+      <p>Só depois que as duas primeiras tiverem conversão ≥ 5%. Não gaste antes.</p>
+    </div>
+
+    <h2>📊 Estrutura da campanha teste</h2>
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-num">1.000</span>
+        <span class="stat-label">Leads no escopo</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">Mensagens</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">R$ 0</span>
+        <span class="stat-label">Investimento inicial</span>
+      </div>
+    </div>
+
+    <div class="quote">
+      "Em 14 dias eu validei minha copy com 1.000 leads e R$ 0. Depois escalei com Meta Ads. <strong>Hoje R$ 30k/mês.</strong>" — Carla M., afiliada Nexus desde 2025
+    </div>
+
+    <div style="text-align: center;">
+      <a href="#" class="button">BAIXAR TEMPLATE DA CAMPANHA</a>
+    </div>
+  </div>
+
+  <!-- ====== EMAIL 4: MEDINDO RESULTADO (D+3) ====== -->
+  <div class="content" style="border-top: 1px dashed rgba(0,255,255,0.3); padding-top: 48px;">
+    <div class="badge">📩 EMAIL 4 de 5 · D+3</div>
+    <h1>Onde olhar pra saber <span class="hl">se está funcionando</span>.</h1>
+
+    <p>Disparou a campanha? Agora vem a parte que separa amadores de profissionais: <strong>medir e ajustar</strong>.</p>
+
+    <h2>📊 As 5 métricas que importam (ignore o resto)</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>Taxa de entrega (>95%)</strong>
+        Se < 95%, seu número pode estar banido ou com template mal escrito.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>Taxa de abertura (>70%)</strong>
+        Se < 50%, problema no gancho da mensagem 1.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>Taxa de resposta (>15%)</strong>
+        Se < 10%, copy fraca ou público errado.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>Taxa de conversão (>3%)</strong>
+        Sua oferta/CTA precisa ser mais forte ou página de vendas otimizada.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>CAC por lead qualificado</strong>
+        Meta: até R$ 8 para lista fria. Se > R$ 15, repense canal.
+      </div>
+    </div>
+
+    <h2>🛠️ Como ler o dashboard</h2>
+    <p>Acesse <code>app.nexus-academy.io/metricas</code> e você vai ver:</p>
+    <p>• Funil em tempo real (entregas → leituras → respostas → conversões)<br>
+       • Coortes por dia/horário<br>
+       • Performance por copy/segmento<br>
+       • Alertas automáticos se algo cair</p>
+
+    <div style="text-align: center;">
+      <a href="#" class="button">VER MEU DASHBOARD AGORA</a>
+    </div>
+  </div>
+
+  <!-- ====== EMAIL 5: PRÓXIMO PASSO (D+4) ====== -->
+  <div class="content" style="border-top: 1px dashed rgba(0,255,255,0.3); padding-top: 48px;">
+    <div class="badge">📩 EMAIL 5 de 5 · D+4</div>
+    <h1>Você passou pelo <span class="hl">onboarding</span>. E agora?</h1>
+
+    <p>Parabéns. Em 5 dias você saiu do zero e tem um sistema rodando. Mas isso foi só o começo.</p>
+
+    <h2>🛤️ Os 4 caminhos possíveis agora</h2>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">1. CAMINHO OPERADOR (R$ 5-30k/mês)</strong>
+      <p>Foque em operar bem a máquina: 1-2 produtos, campanhas semanais, lista orgânica crescendo. Próximo passo: dominar funis avançados.</p>
+      <p><em>Tempo até resultado consistente: 3-6 meses</em></p>
+    </div>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">2. CAMINHO ESCALA (R$ 30-100k/mês)</strong>
+      <p>Adicione tráfego pago, multi-canal, equipe pequena (1-2 assistentes). Próximo passo: implementar A/B testing.</p>
+      <p><em>Tempo até resultado consistente: 6-12 meses</em></p>
+    </div>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">3. CAMINHO PRODUTO (R$ 50-300k/mês)</strong>
+      <p>Use o que aprendeu pra criar seu próprio infoproduto. A audiência que você construiu é seu ativo principal. Próximo passo: planejar lançamento.</p>
+      <p><em>Tempo até resultado consistente: 6-18 meses</em></p>
+    </div>
+
+    <div class="card">
+      <strong style="color: #00FFFF;">4. CAMINHO ELITE (R$ 100k+/mês)</strong>
+      <p>Mentoria, SaaS, federation de agentes. Aqui você constrói ecossistema, não só produto. Próximo passo: entender arquitetura multi-tenant.</p>
+      <p><em>Tempo até resultado consistente: 12-24 meses</em></p>
+    </div>
+
+    <h2>🎯 Recomendação honesta</h2>
+
+    <p>Se você chegou até aqui sem travar: <strong>vá pro Caminho 2 (Escala)</strong> por mais 90 dias. Depois você decide se quer ir pra 3 ou 4. A maioria pula rápido demais e se frustra.</p>
+
+    <div style="text-align: center;">
+      <a href="#" class="button">QUERO FALAR COM UM CONSULTOR</a>
+    </div>
+
+    <p style="margin-top: 32px;">Independente do caminho escolhido: continue executando, continue medindo, continue aprendendo.</p>
+    <p>Sucesso é construído em meses, não dias.</p>
+
+    <p style="text-align: right; color: #FF00FFFF; font-weight: 700; margin-top: 24px;">— Equipe Nexus Academy</p>
+  </div>
+
+  <div class="footer">
+    Você recebeu essa sequência porque se inscreveu na Nexus Academy.<br>
+    <a href="#" style="color: #6B7280;">Cancelar inscrição</a> · <a href="#" style="color: #6B7280;">Configurar preferências</a> · <a href="#" style="color: #6B7280;">Suporte</a>
+  </div>
+
+</div>
+
+<!-- INSTRUÇÕES DE USO -->
+<div style="max-width: 600px; margin: 24px auto; padding: 24px; background: #1F2937; color: #D1D5DB; border-radius: 12px; font-family: monospace; font-size: 13px;">
+  <h3 style="color: #00FFFF; margin-top: 0;">📋 Instruções de uso do template</h3>
+  <pre style="white-space: pre-wrap;">
+SUBSTITUIR NO HTML:
+- {{nome}} → merge tag do nome do lead
+- {{link_personalizado}} → UTM tracking por lead
+- Cores mantidas no padrão Nexus (cyan #00FFFF, pink #FF00FF)
+- CTA buttons → apontar para URLs reais
+
+CONFIGURAR NO EMAIL TOOL:
+- Trigger: novo lead na lista "onboarding-5d"
+- Delay entre emails: 24h (D+0, D+1, D+2, D+3, D+4)
+- Resposta a "REPLY" → enviar para cs@nexus-academy.io
+- Se lead converter antes → sair da sequência
+
+MÉTRICAS-ALVO POR EMAIL:
+- Email 1: open > 85%, click > 40%
+- Email 2: open > 70%, click > 25%
+- Email 3: open > 65%, click > 20%
+- Email 4: open > 60%, click > 30%
+- Email 5: open > 60%, click > 35%
+
+A/B TESTS SUGERIDOS:
+- Subject do Email 1: "Bem-vindo(a) à Nexus" vs "Sua jornada começa agora"
+- CTA Email 5: "Falar com consultor" vs "Quero crescer"
+- Horário envio: 9h vs 19h (testar coortes separadas)
+  </pre>
+</div>
+
+</body>
+</html>

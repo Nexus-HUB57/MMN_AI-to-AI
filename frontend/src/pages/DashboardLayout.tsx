@@ -251,7 +251,7 @@ const { user, loading, logout } = useAuth();
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
+              className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
             >
               {sidebarOpen ? (
                 <X className="w-5 h-5" />
@@ -379,7 +379,7 @@ const { user, loading, logout } = useAuth();
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border z-30 transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border z-30 transition-transform duration-300 md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -430,14 +430,14 @@ const { user, loading, logout } = useAuth();
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 min-h-screen ux-page-mount">
-        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+      <main className="md:ml-64 pt-16 min-h-screen ux-page-mount">
+        <div className="p-4 sm:p-6 md:p-8">{children}</div>
       </main>
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-20 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

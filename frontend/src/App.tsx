@@ -63,10 +63,12 @@ import AdminPanel from "@/pages/AdminPanel";
 import AdminAgentDetails from "@/pages/AdminAgentDetails";
 import AdminOrchestrator from "@/pages/AdminOrchestrator";
 import AcademiaHub from "@/pages/AcademiaHub";
+import AcademiaDashboard from "@/pages/AcademiaDashboard";
 import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
 import MeetingHub from "@/pages/MeetingHub";
 import LabChatbot from "@/pages/LabChatbot";
+import ContentGeneration from "@/pages/ContentGeneration";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
@@ -126,6 +128,7 @@ function Router() {
       <Route path="/admin/orchestrator" component={AdminOrchestrator} />
       <Route path="/marketplace" component={Marketplaces} />
       <Route path="/academia" component={AcademiaHub} />
+      <Route path="/academia/dashboard" component={AcademiaDashboard} />
       <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />
       <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />
@@ -133,6 +136,7 @@ function Router() {
       <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />
+      <Route path="/content/generation" component={ContentGeneration} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
       <Route path="/tracking/links" component={TrackingLinks} />

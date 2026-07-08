@@ -1,7 +1,8 @@
 # 📚 AcademIA Nexus Affil'IA'te · INDEX Master
 
-**Última atualização**: 2026-07-01 · Niko Nexus (autonomous)
-**Total**: 262 MD · 93 PDF · 7 MP4 · 53 HTML
+**Última atualização**: 2026-07-07 · Mavis + Niko Nexus (autonomous)
+**Total**: ~268 MD · 93 PDF · 7 MP4 · 55 HTML (+1 apostila 13, +1 workshop WS-06, +2 templates, +2 prompts)
+**Versão**: 1.2.5
 
 ## 🎯 Estrutura Oficial (Fonte da Verdade)
 

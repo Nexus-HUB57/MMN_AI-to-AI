@@ -1,0 +1,174 @@
+{
+  "name": "Workflow: Recuperação de Carrinho Abandonado",
+  "platform": "make.com",
+  "version": "1.0.0",
+  "description": "Captura eventos de carrinho abandonado e dispara sequência multi-canal",
+  "trigger": {
+    "module": "webhook",
+    "event": "cart.abandoned",
+    "filter": {
+      "value": ">= 50",
+      "currency": "BRL"
+    }
+  },
+  "schedule": null,
+  "modules": [
+    {
+      "id": 1,
+      "module": "webhook",
+      "name": "Receber Webhook Carrinho Abandonado",
+      "params": {
+        "hook_id": "{{env.MAKE_HOOK_CART}}"
+      }
+    },
+    {
+      "id": 2,
+      "module": "filter",
+      "name": "Filtrar valor mínimo R$ 50",
+      "filter": {
+        "value": "{{1.value}} >= 50 AND {{1.currency}} = BRL"
+      }
+    },
+    {
+      "id": 3,
+      "module": "google_sheets:read_row",
+      "name": "Buscar dados do lead",
+      "params": {
+        "spreadsheet_id": "{{env.GS_LEADS}}",
+        "row_filter": "email = {{1.email}}"
+      }
+    },
+    {
+      "id": 4,
+      "module": "router",
+      "name": "Roteamento por canal preferido",
+      "routes": [
+        {
+          "filter": {
+            "3.channel_preference": "whatsapp"
+          },
+          "modules": [5, 6, 7, 8]
+        },
+        {
+          "filter": {
+            "3.channel_preference": "email"
+          },
+          "modules": [9, 10, 11, 12]
+        }
+      ],
+      "fallback_modules": [9, 10, 11, 12]
+    },
+    {
+      "id": 5,
+      "module": "delay",
+      "name": "Aguardar 1h",
+      "params": {
+        "ms": 3600000
+      }
+    },
+    {
+      "id": 6,
+      "module": "nexus:send_whatsapp",
+      "name": "WhatsApp #1 - Soft reminder",
+      "params": {
+        "to": "{{3.phone}}",
+        "template": "carrinho_v1_soft",
+        "variables": {
+          "nome": "{{3.first_name}}",
+          "produto": "{{1.product_name}}",
+          "link": "{{1.recovery_url}}"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "module": "delay",
+      "name": "Aguardar 24h",
+      "params": {
+        "ms": 86400000
+      }
+    },
+    {
+      "id": 8,
+      "module": "nexus:send_whatsapp",
+      "name": "WhatsApp #2 - Urgência + bônus",
+      "params": {
+        "to": "{{3.phone}}",
+        "template": "carrinho_v2_urgencia",
+        "variables": {
+          "nome": "{{3.first_name}}",
+          "produto": "{{1.product_name}}",
+          "desconto": "10%",
+          "expira_em": "48h",
+          "link": "{{1.recovery_url_v2}}"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "module": "delay",
+      "name": "Aguardar 2h",
+      "params": {
+        "ms": 7200000
+      }
+    },
+    {
+      "id": 10,
+      "module": "nexus:send_email",
+      "name": "Email #1 - Lembrete amigável",
+      "params": {
+        "to": "{{3.email}}",
+        "template": "cart_recovery_v1",
+        "subject": "{{3.first_name}}, seu lugar tá te esperando 👋",
+        "variables": {
+          "nome": "{{3.first_name}}",
+          "produto": "{{1.product_name}}",
+          "valor": "{{1.value}}",
+          "link": "{{1.recovery_url}}"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "module": "delay",
+      "name": "Aguardar 48h",
+      "params": {
+        "ms": 172800000
+      }
+    },
+    {
+      "id": 12,
+      "module": "nexus:send_email",
+      "name": "Email #2 - Urgência com bônus",
+      "params": {
+        "to": "{{3.email}}",
+        "template": "cart_recovery_v2_urgency",
+        "subject": "⏰ Última chance: {{3.first_name}}, oferta acaba em 48h",
+        "variables": {
+          "nome": "{{3.first_name}}",
+          "produto": "{{1.product_name}}",
+          "valor_original": "{{1.value}}",
+          "valor_com_desconto": "{{1.discounted_value}}",
+          "link": "{{1.recovery_url_final}}"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "module": "nexus:audit_log",
+      "name": "Registrar sequência disparada",
+      "params": {
+        "event": "cart_recovery_sequence_sent",
+        "lead_id": "{{3.id}}",
+        "value": "{{1.value}}",
+        "channel": "{{3.channel_preference}}",
+        "touches_planned": "2-3"
+      }
+    }
+  ],
+  "expected_metrics": {
+    "recovery_rate": "8-15%",
+    "cost_per_recovered_lead": "R$ 0.30-0.80",
+    "ltv_uplift": "+12% sobre leads que completaram"
+  }
+}

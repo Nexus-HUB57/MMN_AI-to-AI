@@ -271,8 +271,11 @@ export default function Dashboard() {
   // -------------------------------------------------------------------------
   // ID de Indicador: prefixo NX + primeiros 8 chars do user.id (sem hífens)
   const referralId = useMemo(() => {
-    const raw = (user?.id || profile.userId || "").toString().replace(/[^A-Za-z0-9]/g, "");
-    return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
+    const rawId = user?.id ?? profile.userId ?? "";
+    const digits = String(rawId).replace(/[^0-9]/g, "");
+    if (!digits) return "NX-PENDING";
+    // Padroniza: NX + 5 dígitos zerados à esquerda (ex: NX-00307)
+    return `NX-${digits.padStart(5, "0").slice(-5)}`;
   }, [user?.id, profile.userId]);
 
   // Link de indicação público (Minha Loja / cadastro)

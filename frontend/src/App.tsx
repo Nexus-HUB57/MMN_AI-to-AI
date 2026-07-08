@@ -68,6 +68,7 @@ import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
 import MeetingHub from "@/pages/MeetingHub";
 import LabChatbot from "@/pages/LabChatbot";
+import ContentGeneration from "@/pages/ContentGeneration";
 import NotFound from "@/pages/NotFound";
 
 function Router() {
@@ -135,6 +136,7 @@ function Router() {
       <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />
+      <Route path="/content/generation" component={ContentGeneration} />
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
       <Route path="/tracking/links" component={TrackingLinks} />

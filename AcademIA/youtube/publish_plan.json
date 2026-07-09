@@ -32,7 +32,7 @@
       "fund-00"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "visão geral da AcademIA, trilhas de aprendizagem, lógica da plataforma e próximos passos para iniciar sua jornada."
   },
   {
@@ -68,7 +68,7 @@
       "fund-01"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "introdução à infraestrutura operacional de inteligência distribuída e ao modelo de orquestração que sustenta a operação Nexus."
   },
   {
@@ -105,7 +105,7 @@
       "fund-02"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "como o mecanismo de auto-healing reduz falhas, fecha loops operacionais e aumenta resiliência em sistemas orientados por IA."
   },
   {
@@ -142,7 +142,7 @@
       "fund-03"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "leitura prática das principais telas, indicadores e fluxos que sustentam a operação de afiliados dentro da plataforma."
   },
   {
@@ -178,7 +178,7 @@
       "agent-00"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "demonstração direta de criação de um primeiro agente útil, com foco em velocidade de execução e valor prático imediato."
   },
   {
@@ -215,7 +215,7 @@
       "agent-01"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "as skills que transformam conteúdo, segmentação e posicionamento em execução orientada por IA."
   },
   {
@@ -252,7 +252,7 @@
       "agent-02"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "como estruturar disparo, distribuição e cadência de mensagens com consistência operacional e ganho de escala."
   },
   {
@@ -289,7 +289,7 @@
       "agent-03"
     ],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "uso de um agente avaliador para revisar decisões, elevar qualidade de execução e reduzir erro humano em produção."
   },
   {
@@ -324,7 +324,7 @@
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/08-otimizacao-de-conversao-a-matematica-da-receita.png",
     "db_lessons": [],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "princípios de otimização de conversão, gargalos de receita e decisões de melhoria baseadas em dados."
   },
   {
@@ -352,14 +352,14 @@
       "Master",
       "Funis e Lifecycle — O Sistema Completo"
     ],
-    "privacy_status": "unlisted",
+    "privacy_status": "private",
     "category_id": "27",
     "made_for_kids": false,
-    "video_path": "",
+    "video_path": "/var/www/oneverso/current/public/academia/videos/video-09-funis-e-lifecycle.mp4",
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/09-funis-e-lifecycle-o-sistema-completo.png",
     "db_lessons": [],
-    "ready": false,
-    "status": "script_ready_video_pending",
+    "ready": true,
+    "status": "ready_to_upload",
     "summary": "arquitetura de funis, retenção e lifecycle para escalar relacionamento e receita de ponta a ponta."
   },
   {
@@ -387,14 +387,14 @@
       "Master",
       "A/B Testing com Judge — Ciência da Experimentação"
     ],
-    "privacy_status": "unlisted",
+    "privacy_status": "private",
     "category_id": "27",
     "made_for_kids": false,
-    "video_path": "",
+    "video_path": "/var/www/oneverso/current/public/academia/videos/video-10-a-b-testing-com-judge.mp4",
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/10-a-b-testing-com-judge-ciencia-da-experimentacao.png",
     "db_lessons": [],
-    "ready": false,
-    "status": "script_ready_video_pending",
+    "ready": true,
+    "status": "ready_to_upload",
     "summary": "como usar hipóteses, variações e mecanismos de julgamento assistido por IA para melhorar decisões de produto e oferta."
   },
   {
@@ -422,14 +422,14 @@
       "Master",
       "Análise de Coortes e Churn — A Arte de Reter"
     ],
-    "privacy_status": "unlisted",
+    "privacy_status": "private",
     "category_id": "27",
     "made_for_kids": false,
-    "video_path": "",
+    "video_path": "/var/www/oneverso/current/public/academia/videos/video-11-coortes-e-churn.mp4",
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/11-analise-de-coortes-e-churn-a-arte-de-reter.png",
     "db_lessons": [],
-    "ready": false,
-    "status": "script_ready_video_pending",
+    "ready": true,
+    "status": "ready_to_upload",
     "summary": "métricas de retenção, leitura de coortes e combate ao churn com inteligência operacional."
   },
   {
@@ -457,14 +457,14 @@
       "Elite",
       "Blueprints Elite — O Jogo do Top 10%"
     ],
-    "privacy_status": "unlisted",
+    "privacy_status": "private",
     "category_id": "27",
     "made_for_kids": false,
-    "video_path": "",
+    "video_path": "/var/www/oneverso/current/public/academia/videos/video-12-blueprints-elite.mp4",
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/12-blueprints-elite-o-jogo-do-top-10.png",
     "db_lessons": [],
-    "ready": false,
-    "status": "script_ready_video_pending",
+    "ready": true,
+    "status": "ready_to_upload",
     "summary": "estruturas, playbooks e mentalidade de execução para avançar da operação comum para performance de elite."
   },
   {
@@ -492,14 +492,14 @@
       "Elite",
       "Multi-Tenant e White-Label na Prática"
     ],
-    "privacy_status": "unlisted",
+    "privacy_status": "private",
     "category_id": "27",
     "made_for_kids": false,
-    "video_path": "",
+    "video_path": "/var/www/oneverso/current/public/academia/videos/video-13-multi-tenant-e-white-label.mp4",
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/13-multi-tenant-e-white-label-na-pratica.png",
     "db_lessons": [],
-    "ready": false,
-    "status": "script_ready_video_pending",
+    "ready": true,
+    "status": "ready_to_upload",
     "summary": "como estruturar operação replicável, multi-tenant e white-label para escalar com governança."
   },
   {
@@ -534,7 +534,7 @@
     "thumbnail_path": "/var/www/oneverso/current/AcademIA/youtube/thumbnails/14-federacao-de-agentes-zero-trust.png",
     "db_lessons": [],
     "ready": true,
-    "status": "ready_to_upload",
+    "status": "uploaded",
     "summary": "a camada avançada de coordenação entre agentes, com foco em segurança, governança e autonomia operacional."
   }
 ]

@@ -126,6 +126,61 @@
       "code": "13",
       "title": "AcademIA Nexus • 13 | Multi-Tenant e White-Label na Prática",
       "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "04",
+      "title": "AcademIA Nexus • 04 | Seu Primeiro Agente em 4 Minutos · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "05",
+      "title": "AcademIA Nexus • 05 | Skills Essenciais — Copywriter + Audience-Segmenter · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "06",
+      "title": "AcademIA Nexus • 06 | Disparando no WhatsApp em Escala · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "07",
+      "title": "AcademIA Nexus • 07 | Judge Revisor — A IA que Decide por Você · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "08",
+      "title": "AcademIA Nexus • 08 | Otimização de Conversão — A Matemática da Receita · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "09",
+      "title": "AcademIA Nexus • 09 | Funis e Lifecycle — O Sistema Completo",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "10",
+      "title": "AcademIA Nexus • 10 | A/B Testing com Judge — Ciência da Experimentação",
+      "error": "<HttpError 400 when requesting None returned \"The request metadata specifies an invalid video description.\". Details: \"[{'message': 'The request metadata specifies an invalid video description.', 'domain': 'youtube.video', 'reason': 'invalidDescription', 'location': 'body.snippet.description', 'locationType': 'other'}]\">"
+    },
+    {
+      "code": "11",
+      "title": "AcademIA Nexus • 11 | Análise de Coortes e Churn — A Arte de Reter",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "12",
+      "title": "AcademIA Nexus • 12 | Blueprints Elite — O Jogo do Top 10%",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "13",
+      "title": "AcademIA Nexus • 13 | Multi-Tenant e White-Label na Prática",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
+    },
+    {
+      "code": "14",
+      "title": "AcademIA Nexus • 14 | Federação de Agentes Zero-Trust · v2",
+      "error": "<HttpError 400 when requesting None returned \"The user has exceeded the number of videos they may upload.\". Details: \"[{'message': 'The user has exceeded the number of videos they may upload.', 'domain': 'youtube.video', 'reason': 'uploadLimitExceeded'}]\">"
     }
   ]
 }

@@ -1,0 +1,20 @@
+Disparando no WhatsApp em Escala
+
+Neste episódio da AcademIA Nexus, você aprende como estruturar disparo, distribuição e cadência de mensagens com consistência operacional e ganho de escala.
+
+O que você vai ver neste vídeo:
+- disparo em escala com controle
+- cadência e estrutura operacional
+- evitando gargalos de comunicação
+
+Série: Agentes
+Código da aula: 06
+Canal oficial: https://www.youtube.com/@NexusAffilIAte-w9p
+Plataforma: https://oneverso.com.br/academia/ead/curso
+Portal: https://oneverso.com.br
+
+Próximo vídeo sugerido: 07 — Judge Revisor — A IA que Decide por Você
+
+Se este conteúdo fez sentido, avance para a próxima aula da trilha e acompanhe a evolução da operação com IA.
+
+#AcademIANexus #OneVerso #AgentesDeIA #AutomacaoInteligente

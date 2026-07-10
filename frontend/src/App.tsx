@@ -68,6 +68,8 @@ import AcademiaSection from "@/pages/AcademiaSection";
 import AcademiaLesson from "@/pages/AcademiaLesson";
 import MeetingHub from "@/pages/MeetingHub";
 import LabChatbot from "@/pages/LabChatbot";
+import LibNexus from "@/pages/LibNexus";
+import LabNexus from "@/pages/LabNexus";
 import ContentGeneration from "@/pages/ContentGeneration";
 import NotFound from "@/pages/NotFound";
 
@@ -132,7 +134,8 @@ function Router() {
       <Route path="/academia/meetings" component={MeetingHub} />
       <Route path="/academia/ead/:slug" component={AcademiaSection} />
       <Route path="/academia/ead/:slug/:lessonId" component={AcademiaLesson} />
-      <Route path="/academia/lab-nexus" component={LabChatbot} />
+      <Route path="/academia/lib-nexus" component={LibNexus} />
+      <Route path="/academia/lab-nexus" component={LabNexus} />
       <Route path="/academia/lab-nexus/chatbot" component={LabChatbot} />
       <Route path="/lab/chatbot" component={LabChatbot} />
       <Route path="/content-hub" component={ContentHub} />

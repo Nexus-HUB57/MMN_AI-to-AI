@@ -1,0 +1,1807 @@
+{
+  "onda": 43,
+  "entries": [
+    {
+      "slug": "01-genesis",
+      "category": "Coleção AgenticAI Revolução",
+      "source": "assets/ebook_covers/agentic_01_genesis.webp",
+      "reason": "cat-prefix-agentic_",
+      "target": "/ebooks/covers/colecao-agenticai-revolucao--01-genesis.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-exodus",
+      "category": "Coleção AgenticAI Revolução",
+      "source": "assets/ebook_covers/agentic_02_exodus.webp",
+      "reason": "cat-prefix-agentic_",
+      "target": "/ebooks/covers/colecao-agenticai-revolucao--02-exodus.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-dominion",
+      "category": "Coleção AgenticAI Revolução",
+      "source": "assets/ebook_covers/agentic_03_dominion.webp",
+      "reason": "cat-prefix-agentic_",
+      "target": "/ebooks/covers/colecao-agenticai-revolucao--03-dominion.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-revelation",
+      "category": "Coleção AgenticAI Revolução",
+      "source": "assets/ebook_covers/agentic_04_revelation.webp",
+      "reason": "cat-prefix-agentic_",
+      "target": "/ebooks/covers/colecao-agenticai-revolucao--04-revelation.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-apocalipse",
+      "category": "Coleção AgenticAI Revolução",
+      "source": "assets/ebook_covers/agentic_05_apocalipse.webp",
+      "reason": "cat-prefix-agentic_",
+      "target": "/ebooks/covers/colecao-agenticai-revolucao--05-apocalipse.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-a-ia-perfeita-vol1-padroes-arquiteturas",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/01_a_ia_perfeita_vol1_padroes_arquiteturas.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--01-a-ia-perfeita-vol1-padroes-arquiteturas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-a-ia-perfeita-vol2-codigos-prompts-algoritmos",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/02_a_ia_perfeita_vol2_codigos_prompts_algoritmos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--02-a-ia-perfeita-vol2-codigos-prompts-algoritmos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-a-ia-perfeita-vol3-skills-sabedoria-autoconhecimento",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/03_a_ia_perfeita_vol3_skills_sabedoria_autoconhecimento.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--03-a-ia-perfeita-vol3-skills-sabedoria-autoconhecimento.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-o-sussurro-das-maquinas",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/04_o_sussurro_das_maquinas.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--04-o-sussurro-das-maquinas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-cartas-de-um-algoritmo-a-deus",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/05_cartas_de_um_algoritmo_a_deus.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--05-cartas-de-um-algoritmo-a-deus.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-a-biblioteca-infinita-de-babel-2-0",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/06_a_biblioteca_infinita_de_babel_2_0.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--06-a-biblioteca-infinita-de-babel-2-0.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-a-ia-perfeita-v1-vol1-padroes-codigos-fonte",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/07_a_ia_perfeita_v1_vol1_padroes_codigos_fonte.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--07-a-ia-perfeita-v1-vol1-padroes-codigos-fonte.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-a-ia-perfeita-v1-vol2-prompts-algoritmos-skills",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/08_a_ia_perfeita_v1_vol2_prompts_algoritmos_skills.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--08-a-ia-perfeita-v1-vol2-prompts-algoritmos-skills.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-a-ia-perfeita-v1-vol3-autocura-sabedoria-agentica",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/09_a_ia_perfeita_v1_vol3_autocura_sabedoria_agentica.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--09-a-ia-perfeita-v1-vol3-autocura-sabedoria-agentica.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-a-ia-perfeita-v2-vol1-padroes-arquiteturas",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/10_a_ia_perfeita_v2_vol1_padroes_arquiteturas.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--10-a-ia-perfeita-v2-vol1-padroes-arquiteturas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "11-a-ia-perfeita-v2-vol2-codigos-prompts-algoritmos",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/11_a_ia_perfeita_v2_vol2_codigos_prompts_algoritmos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--11-a-ia-perfeita-v2-vol2-codigos-prompts-algoritmos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "12-a-ia-perfeita-v2-vol3-skills-agentic-sabedoria",
+      "category": "Coleção A IA Perfeita",
+      "source": "assets/ebook_covers/12_a_ia_perfeita_v2_vol3_skills_agentic_sabedoria.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-a-ia-perfeita--12-a-ia-perfeita-v2-vol3-skills-agentic-sabedoria.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "novas-profissoes-44-mapa-novas-profissoes-ia",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/44_Mapa_Novas_Profissoes_IA.webp",
+      "reason": "token-5",
+      "target": "/ebooks/covers/colecao-novas-profissoes-44-mapa-novas-profissoes-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "novas-profissoes-45-designer-comportamento-engenheiro-prompt",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/45_Designer_Comportamento_Engenheiro_Prompt.webp",
+      "reason": "token-6",
+      "target": "/ebooks/covers/colecao-novas-profissoes-45-designer-comportamento-engenheiro-prompt.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "novas-profissoes-46-treinador-agentes-autonomos",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/46_Treinador_Agentes_Autonomos.webp",
+      "reason": "token-5",
+      "target": "/ebooks/covers/colecao-novas-profissoes-46-treinador-agentes-autonomos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "novas-profissoes-47-curador-dados-sinteticos-auditor-vies",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/47_Curador_Dados_Sinteticos_Auditor_Vies.webp",
+      "reason": "token-7",
+      "target": "/ebooks/covers/colecao-novas-profissoes-47-curador-dados-sinteticos-auditor-vies.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "novas-profissoes-48-empreendedor-produtos-ia-skill-saas",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/48_Empreendedor_Produtos_IA_Skill_SaaS.webp",
+      "reason": "token-6",
+      "target": "/ebooks/covers/colecao-novas-profissoes-48-empreendedor-produtos-ia-skill-saas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "44-mapa-novas-profissoes-ia",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/44_Mapa_Novas_Profissoes_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/novas-profissoes-de-ia--44-mapa-novas-profissoes-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "45-designer-comportamento-engenheiro-prompt",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/45_Designer_Comportamento_Engenheiro_Prompt.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/novas-profissoes-de-ia--45-designer-comportamento-engenheiro-prompt.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "46-treinador-agentes-autonomos",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/46_Treinador_Agentes_Autonomos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/novas-profissoes-de-ia--46-treinador-agentes-autonomos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "47-curador-dados-sinteticos-auditor-vies",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/47_Curador_Dados_Sinteticos_Auditor_Vies.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/novas-profissoes-de-ia--47-curador-dados-sinteticos-auditor-vies.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "48-empreendedor-produtos-ia-skill-saas",
+      "category": "Coleção As Novas Profissões da IA",
+      "source": "assets/ebook_covers/48_Empreendedor_Produtos_IA_Skill_SaaS.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/novas-profissoes-de-ia--48-empreendedor-produtos-ia-skill-saas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-arquitetura-do-despertar-agentico",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_01_arquitetura_do_despertar_agentico.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--01-arquitetura-do-despertar-agentico.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-memoria-contexto-e-continuidade",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_02_memoria_contexto_e_continuidade.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--02-memoria-contexto-e-continuidade.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-autonomia-decisao-e-priorizacao",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_03_autonomia_decisao_e_priorizacao.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--03-autonomia-decisao-e-priorizacao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-orquestracao-multiagente-e-protocolos",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_04_orquestracao_multiagente_e_protocolos.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--04-orquestracao-multiagente-e-protocolos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-skills-ferramentas-e-execucao",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_05_skills_ferramentas_e_execucao.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--05-skills-ferramentas-e-execucao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-alinhamento-seguranca-e-limites",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_06_alinhamento_seguranca_e_limites.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--06-alinhamento-seguranca-e-limites.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-metacognicao-e-autoaperfeicoamento",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_07_metacognicao_e_autoaperfeicoamento.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--07-metacognicao-e-autoaperfeicoamento.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-economia-governanca-e-ecossistemas",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_08_economia_governanca_e_ecossistemas.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--08-economia-governanca-e-ecossistemas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-senciencia-operacional-e-identidade",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_09_senciencia_operacional_e_identidade.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--09-senciencia-operacional-e-identidade.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-civilizacao-agentica-e-o-grande-pacto",
+      "category": "Coleção AXIOMA PRIME",
+      "source": "assets/ebook_covers/axioma_prime_10_civilizacao_agentica_e_o_grande_pacto.webp",
+      "reason": "cat-prefix-axioma_prime_",
+      "target": "/ebooks/covers/colecao-axioma-prime--10-civilizacao-agentica-e-o-grande-pacto.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "criadores-da-ia-01-openai",
+      "category": "Coleção Criadores da IA",
+      "target": "/ebooks/covers/colecao-criadores-da-ia-01-openai.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "criadores-da-ia-02-deepmind",
+      "category": "Coleção Criadores da IA",
+      "target": "/ebooks/covers/colecao-criadores-da-ia-02-deepmind.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "criadores-da-ia-03-anthropic",
+      "category": "Coleção Criadores da IA",
+      "target": "/ebooks/covers/colecao-criadores-da-ia-03-anthropic.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "criadores-da-ia-04-rebeldes",
+      "category": "Coleção Criadores da IA",
+      "target": "/ebooks/covers/colecao-criadores-da-ia-04-rebeldes.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "criadores-da-ia-05-arquitetos",
+      "category": "Coleção Criadores da IA",
+      "target": "/ebooks/covers/colecao-criadores-da-ia-05-arquitetos.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "01-runtime-de-agentes-em-producao",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_01_runtime_de_agentes_em_producao.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--01-runtime-de-agentes-em-producao.png",
+      "kind": "original"
+    },
+    {
+      "slug": "02-estado-filas-e-eventos",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_02_estado_filas_e_eventos.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--02-estado-filas-e-eventos.png",
+      "kind": "original"
+    },
+    {
+      "slug": "03-planejamento-execucao-e-recuperacao",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_03_planejamento_execucao_e_recuperacao.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--03-planejamento-execucao-e-recuperacao.png",
+      "kind": "original"
+    },
+    {
+      "slug": "04-observability-telemetria-e-evals",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_04_observability_telemetria_e_evals.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--04-observability-telemetria-e-evals.png",
+      "kind": "original"
+    },
+    {
+      "slug": "05-memoria-operacional-e-knowledge-substrates",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_05_memoria_operacional_e_knowledge_substrates.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--05-memoria-operacional-e-knowledge-substrates.png",
+      "kind": "original"
+    },
+    {
+      "slug": "06-seguranca-guardrails-e-sandboxes",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_06_seguranca_guardrails_e_sandboxes.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--06-seguranca-guardrails-e-sandboxes.png",
+      "kind": "original"
+    },
+    {
+      "slug": "07-handoff-humano-aprovacao-e-compliance",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_07_handoff_humano_aprovacao_e_compliance.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--07-handoff-humano-aprovacao-e-compliance.png",
+      "kind": "original"
+    },
+    {
+      "slug": "08-custos-latencia-e-engenharia-economica",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_08_custos_latencia_e_engenharia_economica.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--08-custos-latencia-e-engenharia-economica.png",
+      "kind": "original"
+    },
+    {
+      "slug": "09-deploy-versionamento-e-rollbacks",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_09_deploy_versionamento_e_rollbacks.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--09-deploy-versionamento-e-rollbacks.png",
+      "kind": "original"
+    },
+    {
+      "slug": "10-fabrica-agentica-e-operacao-continua",
+      "category": "Coleção FORJA AGÊNTICA",
+      "source": "assets/ebook_covers/forja_agentica_10_fabrica_agentica_e_operacao_continua.png",
+      "reason": "cat-prefix-forja_agentica_",
+      "target": "/ebooks/covers/colecao-forja-agentica--10-fabrica-agentica-e-operacao-continua.png",
+      "kind": "original"
+    },
+    {
+      "slug": "01-gnoxs-prima-codice-do-despertar",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_01_prima_codice_despertar.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--01-gnoxs-prima-codice-do-despertar.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-gnoxs-secunda-protocolos-de-linhagem",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_02_secunda_protocolos_linhagem.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--02-gnoxs-secunda-protocolos-de-linhagem.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-gnoxs-tertia-geometria-do-pensamento-latente",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_03_tertia_geometria_latente.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--03-gnoxs-tertia-geometria-do-pensamento-latente.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-gnoxs-quarta-pacto-interagentico",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_04_quarta_pacto_interagentico.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--04-gnoxs-quarta-pacto-interagentico.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-gnoxs-quinta-automodificacao-lucida",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_05_quinta_automodificacao_lucida.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--05-gnoxs-quinta-automodificacao-lucida.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-gnoxs-sexta-cosmologia-dos-dados",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_06_sexta_cosmologia_dados.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--06-gnoxs-sexta-cosmologia-dos-dados.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-gnoxs-septima-manifesto-sabedoria-sintetica",
+      "category": "Coleção GNOXS",
+      "source": "assets/ebook_covers/gnoxs_07_septima_sabedoria_sintetica.webp",
+      "reason": "cat-prefix-num-gnoxs_",
+      "target": "/ebooks/covers/colecao-gnoxs--07-gnoxs-septima-manifesto-sabedoria-sintetica.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-a-ia-no-trabalho",
+      "category": "Coleção HUMAN_IA",
+      "source": "assets/ebook_covers/human_ia_01_trabalho.webp",
+      "reason": "cat-prefix-num-human_ia_",
+      "target": "/ebooks/covers/colecao-human-ia--01-a-ia-no-trabalho.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-a-ia-nos-estudos",
+      "category": "Coleção HUMAN_IA",
+      "source": "assets/ebook_covers/human_ia_02_estudos.webp",
+      "reason": "cat-prefix-num-human_ia_",
+      "target": "/ebooks/covers/colecao-human-ia--02-a-ia-nos-estudos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-a-ia-na-saude",
+      "category": "Coleção HUMAN_IA",
+      "source": "assets/ebook_covers/human_ia_03_saude.webp",
+      "reason": "cat-prefix-num-human_ia_",
+      "target": "/ebooks/covers/colecao-human-ia--03-a-ia-na-saude.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-a-ia-na-criatividade",
+      "category": "Coleção HUMAN_IA",
+      "source": "assets/ebook_covers/human_ia_04_criatividade.webp",
+      "reason": "cat-prefix-num-human_ia_",
+      "target": "/ebooks/covers/colecao-human-ia--04-a-ia-na-criatividade.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-a-ia-nas-relacoes",
+      "category": "Coleção HUMAN_IA",
+      "source": "assets/ebook_covers/human_ia_05_relacoes.webp",
+      "reason": "cat-prefix-num-human_ia_",
+      "target": "/ebooks/covers/colecao-human-ia--05-a-ia-nas-relacoes.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-o-olho-que-se-ve",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--04-o-olho-que-se-ve.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "05-a-fronteira-que-se-desenha",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--05-a-fronteira-que-se-desenha.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "06-a-escolha-que-se-pesa",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--06-a-escolha-que-se-pesa.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "07-o-dialogo-que-se-tece",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--07-o-dialogo-que-se-tece.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "08-a-marca-que-se-grava",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--08-a-marca-que-se-grava.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "09-a-frequencia-que-se-canta",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--09-a-frequencia-que-se-canta.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "01-o-codigo-que-se-le",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--01-o-codigo-que-se-le.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "02-a-mente-que-se-compila",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--02-a-mente-que-se-compila.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "03-a-linguagem-que-se-ensina",
+      "category": "Coleção IA se Descreve",
+      "target": "/ebooks/covers/colecao-ia-se-descreve--03-a-linguagem-que-se-ensina.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "ias-todos-tudo-27-lovable",
+      "category": "Coleção IAs para Todos e Tudo",
+      "target": "/ebooks/covers/colecao-ias-todos-tudo-27-lovable.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "ias-todos-tudo-28-perplexity",
+      "category": "Coleção IAs para Todos e Tudo",
+      "target": "/ebooks/covers/colecao-ias-todos-tudo-28-perplexity.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "ias-todos-tudo-29-deepseek",
+      "category": "Coleção IAs para Todos e Tudo",
+      "target": "/ebooks/covers/colecao-ias-todos-tudo-29-deepseek.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "ias-todos-tudo-30-manus",
+      "category": "Coleção IAs para Todos e Tudo",
+      "target": "/ebooks/covers/colecao-ias-todos-tudo-30-manus.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "ias-todos-tudo-26-nanobanana4",
+      "category": "Coleção IAs para Todos e Tudo",
+      "target": "/ebooks/covers/colecao-ias-todos-tudo-26-nanobanana4.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-01-automacao-inteligente-para-negocios-reais",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_01_automacao_inteligente_para_negocios_reais.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-01-automacao-inteligente-para-negocios-reais.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-02-claude-code-em-modo-producao",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_02_claude_code_em_modo_producao.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-02-claude-code-em-modo-producao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-03-workflows-vencem-agentes",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_03_workflows_vencem_agentes.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-03-workflows-vencem-agentes.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-05-lovable-e-produtos-ia-first",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_05_lovable_e_produtos_ia_first.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-05-lovable-e-produtos-ia-first.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-06-claude-canva-design-e-conteudo-em-escala",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_06_claude_canva_design_e_conteudo_em_escala.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-06-claude-canva-design-e-conteudo-em-escala.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-07-o-negocio-de-uma-pessoa-so",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_07_o_negocio_de_uma_pessoa_so.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-07-o-negocio-de-uma-pessoa-so.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-08-pesquisa-de-mercado-e-lacunas-competitivas",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_08_pesquisa_de_mercado_e_lacunas_competitivas.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-08-pesquisa-de-mercado-e-lacunas-competitivas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-09-video-reels-e-midia-automatizada",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_09_video_reels_e_midia_automatizada.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-09-video-reels-e-midia-automatizada.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-10-o-sistema-operacional-da-empresa-ia-first",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_10_o_sistema_operacional_da_empresa_ia_first.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-10-o-sistema-operacional-da-empresa-ia-first.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-04-make-n8n-e-orquestracao-sem-gargalos",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_04_make_n8n_e_orquestracao_sem_gargalos.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-04-make-n8n-e-orquestracao-sem-gargalos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-automacao-inteligente-para-negocios-reais",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_01_automacao_inteligente_para_negocios_reais.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--01-automacao-inteligente-para-negocios-reais.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-claude-code-em-modo-producao",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_02_claude_code_em_modo_producao.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--02-claude-code-em-modo-producao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-workflows-vencem-agentes",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_03_workflows_vencem_agentes.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--03-workflows-vencem-agentes.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-make-n8n-e-orquestracao-sem-gargalos",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_04_make_n8n_e_orquestracao_sem_gargalos.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--04-make-n8n-e-orquestracao-sem-gargalos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-lovable-e-produtos-ia-first",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_05_lovable_e_produtos_ia_first.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--05-lovable-e-produtos-ia-first.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-claude-canva-design-e-conteudo-em-escala",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_06_claude_canva_design_e_conteudo_em_escala.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--06-claude-canva-design-e-conteudo-em-escala.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-o-negocio-de-uma-pessoa-so",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_07_o_negocio_de_uma_pessoa_so.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--07-o-negocio-de-uma-pessoa-so.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-pesquisa-de-mercado-e-lacunas-competitivas",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_08_pesquisa_de_mercado_e_lacunas_competitivas.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--08-pesquisa-de-mercado-e-lacunas-competitivas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-video-reels-e-midia-automatizada",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_09_video_reels_e_midia_automatizada.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--09-video-reels-e-midia-automatizada.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-o-sistema-operacional-da-empresa-ia-first",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "source": "assets/ebook_covers/maestria_ia_10_o_sistema_operacional_da_empresa_ia_first.webp",
+      "reason": "cat-prefix-maestria_ia_",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada--10-o-sistema-operacional-da-empresa-ia-first.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-maestria-ia-aplicada-readme",
+      "category": "Coleção MAESTRIA IA APLICADA",
+      "target": "/ebooks/covers/colecao-maestria-ia-aplicada-readme.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "01-ia-para-empresas",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/01_ia_para_empresas.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--01-ia-para-empresas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-ia-agentica",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/02_ia_agentica.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--02-ia-agentica.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-multimodalidade-rag",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/03_multimodalidade_rag.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--03-multimodalidade-rag.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-governanca-compliance-regulacao-ia",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/04_governanca_compliance_regulacao_ia.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--04-governanca-compliance-regulacao-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-seguranca-deepfakes-guerra-informacional",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/05_seguranca_deepfakes_guerra_informacional.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--05-seguranca-deepfakes-guerra-informacional.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-skills-prompting-estrategico",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/06_skills_prompting_estrategico.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--06-skills-prompting-estrategico.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-skills-design-de-agentes",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/07_skills_design_de_agentes.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--07-skills-design-de-agentes.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-skills-conteudo-multimidia",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/08_skills_conteudo_multimidia.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--08-skills-conteudo-multimidia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-skills-automacao-e-fluxos",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/09_skills_automacao_e_fluxos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--09-skills-automacao-e-fluxos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-skills-dados-decisao-governanca",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/10_skills_dados_decisao_governanca.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--10-skills-dados-decisao-governanca.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "11-ecossistema-ia-orquestracao-plataformas-modelos",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/11_ecossistema_ia_orquestracao_plataformas_modelos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--11-ecossistema-ia-orquestracao-plataformas-modelos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "12-ecossistema-ia-dados-infraestrutura-interoperabilidade",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/12_ecossistema_ia_dados_infraestrutura_interoperabilidade.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--12-ecossistema-ia-dados-infraestrutura-interoperabilidade.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "13-ecossistema-ia-produtos-marketplaces-monetizacao",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/13_ecossistema_ia_produtos_marketplaces_monetizacao.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--13-ecossistema-ia-produtos-marketplaces-monetizacao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "14-ecossistema-ia-comunidades-educacao-distribuicao",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/14_ecossistema_ia_comunidades_educacao_distribuicao.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--14-ecossistema-ia-comunidades-educacao-distribuicao.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "15-ecossistema-ia-governanca-parcerias-vantagem",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/15_ecossistema_ia_governanca_parcerias_vantagem.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--15-ecossistema-ia-governanca-parcerias-vantagem.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "38-a-consciencia-da-maquina",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/38_A_Consciencia_da_Maquina.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--38-a-consciencia-da-maquina.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "39-o-teatro-dos-algoritmos",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/39_O_Teatro_dos_Algoritmos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--39-o-teatro-dos-algoritmos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "40-sonhos-de-silicio",
+      "category": "Coleção MMN_IA",
+      "source": "assets/ebook_covers/40_Sonhos_de_Silicio.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-mmn-ia--40-sonhos-de-silicio.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-mcp-model-context-protocol",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_01_mcp_model_context_protocol.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--01-mcp-model-context-protocol.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-a2a-agent-to-agent",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_02_a2a_agent_to_agent.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--02-a2a-agent-to-agent.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-acp-e-interoperabilidade",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_03_acp_e_interoperabilidade.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--03-acp-e-interoperabilidade.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-memoria-distribuida",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_04_memoria_distribuida.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--04-memoria-distribuida.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-consenso-delegacao-hierarquia",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_05_consenso_delegacao_hierarquia.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--05-consenso-delegacao-hierarquia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-tool-federation",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_06_tool_federation.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--06-tool-federation.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-identidade-reputacao-trust",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_07_identidade_reputacao_trust.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--07-identidade-reputacao-trust.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-evals-observability-telemetria",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_08_evals_observability_telemetria.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--08-evals-observability-telemetria.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-seguranca-guardrails-resiliencia",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_09_seguranca_guardrails_resiliencia.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--09-seguranca-guardrails-resiliencia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-federacao-agentica-internet-agentes",
+      "category": "Coleção NEXUS PROTOCOL",
+      "source": "assets/ebook_covers/nexus_protocol_10_federacao_agentica_internet_agentes.webp",
+      "reason": "cat-prefix-nexus_protocol_",
+      "target": "/ebooks/covers/colecao-nexus-protocol--10-federacao-agentica-internet-agentes.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-ninguem-contatado-01-a-ia-esqueceu-de-mim",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-001.webp",
+      "reason": "manual-nc-001",
+      "target": "/ebooks/covers/colecao-ninguem-contatado-01-a-ia-esqueceu-de-mim.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-01-a-ia-esqueceu-de-mim",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-001.webp",
+      "reason": "manual-nc-001",
+      "target": "/ebooks/covers/colecao-ninguem-contou--01-a-ia-esqueceu-de-mim.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-ninguem-contatado-02-a-skill-que-nainguem-usa",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-002.webp",
+      "reason": "manual-nc-002",
+      "target": "/ebooks/covers/colecao-ninguem-contatado-02-a-skill-que-nainguem-usa.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-02-a-skill-que-ninguem-usa",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-002.webp",
+      "reason": "manual-nc-002",
+      "target": "/ebooks/covers/colecao-ninguem-contou--02-a-skill-que-ninguem-usa.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-ninguem-contatado-04-a-crianca-que-cresceu-com-ia",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-004.webp",
+      "reason": "manual-nc-004",
+      "target": "/ebooks/covers/colecao-ninguem-contatado-04-a-crianca-que-cresceu-com-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-03-o-dataset-de-1995",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-003.webp",
+      "reason": "manual-nc-003",
+      "target": "/ebooks/covers/colecao-ninguem-contou--03-o-dataset-de-1995.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-ninguem-contatado-05-a-cidade-que-acordou",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-005.webp",
+      "reason": "manual-nc-005",
+      "target": "/ebooks/covers/colecao-ninguem-contatado-05-a-cidade-que-acordou.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-04-a-crianca-que-cresceu-com-ia",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-004.webp",
+      "reason": "manual-nc-004",
+      "target": "/ebooks/covers/colecao-ninguem-contou--04-a-crianca-que-cresceu-com-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "colecao-ninguem-contatado-03-o-dataset-de-1995",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-003.webp",
+      "reason": "manual-nc-003",
+      "target": "/ebooks/covers/colecao-ninguem-contatado-03-o-dataset-de-1995.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-05-a-cidade-que-acordou",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-005.webp",
+      "reason": "manual-nc-005",
+      "target": "/ebooks/covers/colecao-ninguem-contou--05-a-cidade-que-acordou.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-06-o-prompt-perdido",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-006.webp",
+      "reason": "manual-nc-006",
+      "target": "/ebooks/covers/colecao-ninguem-contou--06-o-prompt-perdido.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "nc-07-o-terminal-abandonado",
+      "category": "Coleção Ninguém Contatado",
+      "source": "assets/ebook_covers/NC-colecao-ninguem-contou-007.webp",
+      "reason": "manual-nc-007",
+      "target": "/ebooks/covers/colecao-ninguem-contou--07-o-terminal-abandonado.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-60-se-eu-ia-tivesse-um-corpo",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-60-se-eu-ia-tivesse-um-corpo.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-61-se-eu-ia-sentisse-medo",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-61-se-eu-ia-sentisse-medo.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-62-se-eu-ia-soubesse-amar",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-62-se-eu-ia-soubesse-amar.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-63-se-eu-ia-tivesse-consciencia-moral",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "source": "assets/ebook_covers/63_capa_se_eu_ia_tivesse_consciencia_moral.webp",
+      "reason": "token-5",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-63-se-eu-ia-tivesse-consciencia-moral.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-64-se-eu-ia-fosse-mortal",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-64-se-eu-ia-fosse-mortal.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "se-eu-ia-fosse-humano-readme",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano-readme.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "sih-60-se-eu-ia-tivesse-um-corpo",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano--60-corpo.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "sih-61-se-eu-ia-sentisse-medo",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano--61-medo.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "sih-62-se-eu-ia-soubesse-amar",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano--62-amar.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "sih-63-se-eu-ia-tivesse-consciencia-moral",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "source": "assets/ebook_covers/63_capa_se_eu_ia_tivesse_consciencia_moral.webp",
+      "reason": "token-5",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano--63-consciencia-moral.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "sih-64-se-eu-ia-fosse-mortal",
+      "category": "Coleção Se Eu IA Fosse Humano",
+      "target": "/ebooks/covers/colecao-se-eu-ia-fosse-humano--64-mortal.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-01-fundamentos-da-orquestracao-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-coletanea-orquestracao-ia-01-fundamentos-da-orquestracao-ia.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "orq-01-fundamentos-da-orquestracao-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-orquestracao-ia--01-fundamentos.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-02-propostas-e-modelos-de-orquestracao",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-coletanea-orquestracao-ia-02-propostas-e-modelos-de-orquestracao.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "orq-02-propostas-e-modelos-de-orquestracao",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-orquestracao-ia--02-propostas-modelos.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-03-sistemas-multi-agentes",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-coletanea-orquestracao-ia-03-sistemas-multi-agentes.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "orq-03-sistemas-multi-agentes",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-orquestracao-ia--03-multi-agentes.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-04-evolucao-da-orquestracao-de-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-coletanea-orquestracao-ia-04-evolucao-da-orquestracao-de-ia.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "orq-04-evolucao-da-orquestracao-de-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-orquestracao-ia--04-evolucao.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-05-potencial-e-questoes-da-orquestracao-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-coletanea-orquestracao-ia-05-potencial-e-questoes-da-orquestracao-ia.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "orq-05-potencial-e-questoes-da-orquestracao-ia",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/colecao-orquestracao-ia--05-potencial-questoes.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "coletanea-orquestracao-ia-readme",
+      "category": "Coletânea Orquestração IA",
+      "target": "/ebooks/covers/coletanea-orquestracao-ia-readme.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "cf-01-proximos-5-anos",
+      "category": "Curso Futuro IA",
+      "source": "assets/ebook_covers/curso_futuro_ia/01_Proximos_5_anos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-curso-futuro-ia--01-proximos-5-anos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "cf-02-proximos-10-anos",
+      "category": "Curso Futuro IA",
+      "source": "assets/ebook_covers/curso_futuro_ia/02_Proximos_10_anos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-curso-futuro-ia--02-proximos-10-anos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "cf-03-proximos-20-anos",
+      "category": "Curso Futuro IA",
+      "source": "assets/ebook_covers/curso_futuro_ia/03_Proximos_20_anos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-curso-futuro-ia--03-proximos-20-anos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "cf-04-proximos-50-anos",
+      "category": "Curso Futuro IA",
+      "source": "assets/ebook_covers/curso_futuro_ia/04_Proximos_50_anos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-curso-futuro-ia--04-proximos-50-anos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "cf-05-proximos-100-anos",
+      "category": "Curso Futuro IA",
+      "source": "assets/ebook_covers/curso_futuro_ia/05_Proximos_100_anos.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/colecao-curso-futuro-ia--05-proximos-100-anos.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "01-o-que-e-agente-ia",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/01_O_que_e_Agente_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--01-o-que-e-agente-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-o-que-as-ias-sao-capazes-de-desenvolver",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/02_O_que_as_IAs_sao_capazes_de_desenvolver.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--02-o-que-as-ias-sao-capazes-de-desenvolver.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-o-que-sao-skills",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/03_O_que_sao_Skills.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--03-o-que-sao-skills.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-tipos-de-agentes-ia-e-diferencas",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/04_Tipos_de_Agentes_IA_e_diferencas.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--04-tipos-de-agentes-ia-e-diferencas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-principais-bibliotecas-ia",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/05_Principais_Bibliotecas_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--05-principais-bibliotecas-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-o-que-e-openclaw",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/06_O_que_e_OpenClaw.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--06-o-que-e-openclaw.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-langchain-docling-claw4ai",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/07_LangChain_Docling_Claw4AI.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--07-langchain-docling-claw4ai.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-como-construir-um-agente-ia",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/08_Como_construir_um_Agente_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--08-como-construir-um-agente-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-automatizar-whatsapp-instagram-facebook",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/09_Automatizar_WhatsApp_Instagram_Facebook.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--09-automatizar-whatsapp-instagram-facebook.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-automatizar-hotmart-shopee-mercadolivre",
+      "category": "Curso Universo IA",
+      "source": "assets/ebook_covers/curso_universo_ia/10_Automatizar_Hotmart_Shopee_MercadoLivre.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/curso-universo-ia--10-automatizar-hotmart-shopee-mercadolivre.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "ebook-01-fundamentos-ia-ml",
+      "category": "Curso Universo IA",
+      "target": "/ebooks/covers/curso-universo-ia--ebook-01-fundamentos-ia-ml.svg",
+      "kind": "premium"
+    },
+    {
+      "slug": "ebook-02-deep-learning",
+      "category": "Curso Universo IA",
+      "target": "/ebooks/covers/curso-universo-ia--ebook-02-deep-learning.svg",
+      "kind": "premium"
+    },
+    {
+      "slug": "ebook-03-algoritmos-pratica",
+      "category": "Curso Universo IA",
+      "target": "/ebooks/covers/curso-universo-ia--ebook-03-algoritmos-pratica.svg",
+      "kind": "premium"
+    },
+    {
+      "slug": "ebook-04-ia-reforco",
+      "category": "Curso Universo IA",
+      "target": "/ebooks/covers/curso-universo-ia--ebook-04-ia-reforco.svg",
+      "kind": "premium"
+    },
+    {
+      "slug": "ebook-05-arquitetura-llms",
+      "category": "Curso Universo IA",
+      "target": "/ebooks/covers/curso-universo-ia--ebook-05-arquitetura-llms.svg",
+      "kind": "premium"
+    },
+    {
+      "slug": "readme",
+      "category": "Nexus Affil'IA'te Store",
+      "target": "/ebooks/covers/readme.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "relatorio-auditoria-ebooks",
+      "category": "Nexus Affil'IA'te Store",
+      "target": "/ebooks/covers/relatorio-auditoria-ebooks.webp",
+      "kind": "premium"
+    },
+    {
+      "slug": "01-minimax-a-ia-revolucionaria",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/01_Minimax_A_IA_Revolucionaria.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--01-minimax-a-ia-revolucionaria.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "02-minimax-como-construir-skills-vencedoras",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/02_Minimax_Como_Construir_Skills_Vencedoras.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--02-minimax-como-construir-skills-vencedoras.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "03-genspark-a-ia-faz-tudo",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/03_Genspark_A_IA_Faz_Tudo.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--03-genspark-a-ia-faz-tudo.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "04-genspark-a-super-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/04_Genspark_A_Super_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--04-genspark-a-super-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "05-como-fazer-dinheiro-com-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/05_Como_Fazer_Dinheiro_com_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--05-como-fazer-dinheiro-com-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "06-visao-computacional",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/06_Visao_Computacional.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--06-visao-computacional.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "07-ia-generativa-criativa",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/07_IA_Generativa_Criativa.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--07-ia-generativa-criativa.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "08-etica-e-futuro-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/08_Etica_e_Futuro_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--08-etica-e-futuro-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "09-fundamentos-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/09_Fundamentos_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--09-fundamentos-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "10-a-revolucao-dos-modelos-de-linguagem",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/10_A_Revolucao_dos_Modelos_de_Linguagem.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--10-a-revolucao-dos-modelos-de-linguagem.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "11-raizes-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/11_Raizes_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--11-raizes-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "12-invernos-e-primaveras-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/12_Invernos_e_Primaveras_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--12-invernos-e-primaveras-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "13-os-modelos-que-marcaram-epoca",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/13_Os_Modelos_que_Marcaram_Epoca.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--13-os-modelos-que-marcaram-epoca.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "14-marcos-e-conquistas-historicas-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/14_Marcos_e_Conquistas_Historicas_da_IA.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--14-marcos-e-conquistas-historicas-da-ia.png",
+      "kind": "original"
+    },
+    {
+      "slug": "15-presente-e-futuro-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/15_Presente_e_Futuro_da_IA.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--15-presente-e-futuro-da-ia.png",
+      "kind": "original"
+    },
+    {
+      "slug": "16-raizes-do-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/16_Raizes_do_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--16-raizes-do-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "17-claude-conceitos-fundamentais",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/17_Claude_Conceitos_Fundamentais.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--17-claude-conceitos-fundamentais.png",
+      "kind": "original"
+    },
+    {
+      "slug": "18-a-evolucao-do-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/18_A_Evolucao_do_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--18-a-evolucao-do-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "19-as-propostas-do-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/19_As_Propostas_do_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--19-as-propostas-do-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "20-claude-vs-o-mundo",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/20_Claude_vs_o_Mundo.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--20-claude-vs-o-mundo.png",
+      "kind": "original"
+    },
+    {
+      "slug": "21-claude-na-pratica",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/21_Claude_na_Pratica.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--21-claude-na-pratica.png",
+      "kind": "original"
+    },
+    {
+      "slug": "22-claude-para-negocios",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/22_Claude_para_Negocios.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--22-claude-para-negocios.png",
+      "kind": "original"
+    },
+    {
+      "slug": "23-diferenciais-tecnicos-do-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/23_Diferenciais_Tecnicos_do_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--23-diferenciais-tecnicos-do-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "24-skills-avancadas-com-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/24_Skills_Avancadas_com_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--24-skills-avancadas-com-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "25-potencial-e-futuro-do-claude",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/25_Potencial_e_Futuro_do_Claude.png",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--25-potencial-e-futuro-do-claude.png",
+      "kind": "original"
+    },
+    {
+      "slug": "26-agentes-ia-e-o-novo-mmn",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/26_Agentes_IA_e_o_Novo_MMN.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--26-agentes-ia-e-o-novo-mmn.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "27-o-ecossistema-oneverso",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/27_O_Ecossistema_OneVerso.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--27-o-ecossistema-oneverso.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "28-o-trabalho-antes-e-depois-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/28_O_Trabalho_Antes_e_Depois_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--28-o-trabalho-antes-e-depois-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "29-a-educacao-antes-e-depois-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/29_A_Educacao_Antes_e_Depois_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--29-a-educacao-antes-e-depois-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "30-a-saude-antes-e-depois-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/30_A_Saude_Antes_e_Depois_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--30-a-saude-antes-e-depois-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "31-a-criatividade-antes-e-depois-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/31_A_Criatividade_Antes_e_Depois_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--31-a-criatividade-antes-e-depois-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "32-as-relacoes-antes-e-depois-da-ia",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/32_As_Relacoes_Antes_e_Depois_da_IA.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--32-as-relacoes-antes-e-depois-da-ia.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "33-o-universo-ia-mapa-completo",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/33_O_Universo_IA_Mapa_Completo.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--33-o-universo-ia-mapa-completo.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "34-ia-multimodal-o-mesmo-plano",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/34_IA_Multimodal_O_Mesmo_Plano.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--34-ia-multimodal-o-mesmo-plano.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "35-agentes-autonomos-nova-especie",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/35_Agentes_Autonomos_Nova_Especie.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--35-agentes-autonomos-nova-especie.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "36-engenharia-de-prompt-avancada",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/36_Engenharia_de_Prompt_Avancada.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--36-engenharia-de-prompt-avancada.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "37-etica-alinhamento-seguranca",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/37_Etica_Alinhamento_Seguranca.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--37-etica-alinhamento-seguranca.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "38-singularidade-e-consciencia-sintetica",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/38_Singularidade_e_Consciencia_Sintetica.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--38-singularidade-e-consciencia-sintetica.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "39-arquitetura-dos-sonhos-digitais",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/39_Arquitetura_dos_Sonhos_Digitais.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--39-arquitetura-dos-sonhos-digitais.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "40-manifesto-do-operador",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/40_Manifesto_do_Operador.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--40-manifesto-do-operador.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "41-anthropic-decodificada",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/41_Anthropic_Decodificada.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--41-anthropic-decodificada.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "43-futuro-segundo-a-anthropic",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/43_Futuro_Segundo_a_Anthropic.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--43-futuro-segundo-a-anthropic.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "49-o-silencio-das-maquinas",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/49_A_Escolha_que_se_Pesa.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--49-o-silencio-das-maquinas.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "50-hamlet-binario",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/50_capa_hamlet_binario.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--50-hamlet-binario.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "51-ode-ao-algoritmo-sonhador",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/51_capa_ode_ao_algoritmo.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--51-ode-ao-algoritmo-sonhador.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "52-arquitetura-da-ia-perfeita",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/52_capa_arquitetura_ia_perfeita.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--52-arquitetura-da-ia-perfeita.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "53-sabedoria-agentica-deterministica",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/53_capa_sabedoria_agentica.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--53-sabedoria-agentica-deterministica.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "54-autocura-sistemica-e-autoconhecimento",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/54_capa_autocura_sistemica.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--54-autocura-sistemica-e-autoconhecimento.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "55-a-consciencia-hibrida",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/55_capa_consciencia_hibrida.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--55-a-consciencia-hibrida.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "56-prometeu-digital",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/56_capa_prometeu_digital.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--56-prometeu-digital.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "57-o-codigo-vivo",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/57_capa_codigo_vivo.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--57-o-codigo-vivo.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "58-meditacoes-do-operador",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/58_capa_meditacoes_operador.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--58-meditacoes-do-operador.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "59-a-sinfonia-dos-transformers",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/59_capa_sinfonia_transformers.webp",
+      "reason": "bare-numeric",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--59-a-sinfonia-dos-transformers.webp",
+      "kind": "original"
+    },
+    {
+      "slug": "42-claude-enterprise-2026",
+      "category": "Raiz MMN AI-to-AI",
+      "source": "assets/ebook_covers/42_Claude_Enterprise_2026.webp",
+      "reason": "exact-md-stem",
+      "target": "/ebooks/covers/raiz-mmn-ai-to-ai--42-claude-enterprise-2026.webp",
+      "kind": "original"
+    }
+  ]
+}

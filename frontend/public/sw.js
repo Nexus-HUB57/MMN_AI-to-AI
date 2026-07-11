@@ -1,26 +1,66 @@
-// D13 PWA Service Worker — cache leve para offline básico
-const CACHE = "oneverso-v1";
-const ASSETS = ["/", "/dashboard", "/marketplaces", "/manifest.json"];
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS).catch(() => null)));
+// D42 Nexus SW · network-first para HTML, cache-first para assets estáticos
+const CACHE = 'oneverso-v2-20260711';
+const HTML_CACHE = 'oneverso-html-v2';
+const ASSET_HOSTS = ['/assets/', '/ebooks/', '/manifest.json', '/favicon'];
+
+self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
-self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))));
-  self.clients.claim();
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k !== CACHE && k !== HTML_CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach(c => c.postMessage({ type: 'SW_UPDATED', cache: CACHE }));
+  })());
 });
-self.addEventListener("fetch", (e) => {
-  const u = new URL(e.request.url);
-  if (e.request.method !== "GET") return;
-  // network-first para API/tRPC; cache-first para assets
-  if (u.pathname.startsWith("/api/") || u.pathname.startsWith("/webhooks/")) return;
-  e.respondWith(
-    fetch(e.request).then((res) => {
-      if (res && res.status === 200 && u.origin === location.origin) {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => null);
+
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+
+  // Never cache API/webhooks
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/webhooks/')) return;
+
+  // Network-first for HTML navigations (prevents black screen on stale bundle)
+  const isHTML = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  if (isHTML) {
+    e.respondWith((async () => {
+      try {
+        const fresh = await fetch(req, { cache: 'no-store' });
+        if (fresh && fresh.status === 200) {
+          const copy = fresh.clone();
+          caches.open(HTML_CACHE).then(c => c.put(req, copy)).catch(() => null);
+        }
+        return fresh;
+      } catch (err) {
+        const cached = await caches.match(req);
+        return cached || Response.error();
       }
-      return res;
-    }).catch(() => caches.match(e.request))
-  );
+    })());
+    return;
+  }
+
+  // Cache-first for hashed assets
+  const isStatic = ASSET_HOSTS.some(prefix => url.pathname.startsWith(prefix));
+  if (isStatic) {
+    e.respondWith((async () => {
+      const cached = await caches.match(req);
+      if (cached) return cached;
+      try {
+        const res = await fetch(req);
+        if (res && res.status === 200 && url.origin === self.location.origin) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => null);
+        }
+        return res;
+      } catch (err) {
+        return Response.error();
+      }
+    })());
+    return;
+  }
 });

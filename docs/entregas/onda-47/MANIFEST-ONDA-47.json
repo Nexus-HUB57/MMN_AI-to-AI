@@ -1,0 +1,114 @@
+{
+  "onda": 47,
+  "data": "2026-07-11",
+  "total_covers": 36,
+  "total_thumbs": 10,
+  "total_audios": 10,
+  "total_roteiros": 4,
+  "covers": [
+    "acad-apostila-02-cases-orquestracao-autonoma.webp",
+    "colecao-a-ia-perfeita--01-a-ia-perfeita-vol1-padroes-arquiteturas.webp",
+    "colecao-a-ia-perfeita--02-a-ia-perfeita-vol2-codigos-prompts-algoritmos.webp",
+    "colecao-axioma-prime--01-arquitetura-do-despertar-agentico.webp",
+    "colecao-axioma-prime--04-orquestracao-multiagente-e-protocolos.webp",
+    "colecao-forja-agentica--01-runtime-de-agentes-em-producao.webp",
+    "colecao-ia-se-descreve--01-o-codigo-que-se-le.webp",
+    "colecao-ia-se-descreve--02-a-mente-que-se-compila.webp",
+    "colecao-ia-se-descreve--03-a-linguagem-que-se-ensina.webp",
+    "colecao-ia-se-descreve--04-o-olho-que-se-ve.webp",
+    "colecao-ia-se-descreve--05-a-fronteira-que-se-desenha.webp",
+    "colecao-ia-se-descreve--06-a-escolha-que-se-pesa.webp",
+    "colecao-ia-se-descreve--07-o-dialogo-que-se-tece.webp",
+    "colecao-ia-se-descreve--08-a-marca-que-se-grava.webp",
+    "colecao-ia-se-descreve--09-a-frequencia-que-se-canta.webp",
+    "colecao-ias-todos-tudo-26-nanobanana4.webp",
+    "colecao-ias-todos-tudo-27-lovable.webp",
+    "colecao-ias-todos-tudo-28-perplexity.webp",
+    "colecao-ias-todos-tudo-29-deepseek.webp",
+    "colecao-ias-todos-tudo-30-manus.webp",
+    "colecao-maestria-ia-aplicada--01-automacao-inteligente-para-negocios-reais.webp",
+    "colecao-maestria-ia-aplicada--02-claude-code-em-modo-producao.webp",
+    "colecao-maestria-ia-aplicada--04-make-n8n-orquestracao.webp",
+    "colecao-mmn-ia--11-ecossistema-ia-orquestracao-plataformas-modelos.webp",
+    "colecao-mmn-ia--54-autocura-sistemica.webp",
+    "colecao-nexus-protocol--01-mcp-model-context-protocol.webp",
+    "colecao-se-eu-ia-fosse-humano--60-corpo.webp",
+    "colecao-se-eu-ia-fosse-humano--61-medo.webp",
+    "colecao-se-eu-ia-fosse-humano--62-amar.webp",
+    "colecao-se-eu-ia-fosse-humano--63-consciencia-moral.webp",
+    "colecao-se-eu-ia-fosse-humano--64-mortal.webp",
+    "curso-universo-ia--ebook-01-fundamentos-ia-ml.webp",
+    "curso-universo-ia--ebook-02-deep-learning.webp",
+    "curso-universo-ia--ebook-03-algoritmos-pratica.webp",
+    "curso-universo-ia--ebook-04-ia-reforco.webp",
+    "curso-universo-ia--ebook-05-arquitetura-llms.webp"
+  ],
+  "thumbs": [
+    "thumb-aula-01-o-que-e-agente-ia.webp",
+    "thumb-aula-02-o-que-ias-desenvolvem.webp",
+    "thumb-aula-03-o-que-sao-skills.webp",
+    "thumb-aula-04-tipos-de-agentes.webp",
+    "thumb-aula-05-bibliotecas-ia.webp",
+    "thumb-aula-06-openclaw.webp",
+    "thumb-aula-07-langchain-docling-craw4ai.webp",
+    "thumb-aula-08-como-construir-agente.webp",
+    "thumb-aula-09-automacao-social.webp",
+    "thumb-aula-10-marketplaces.webp"
+  ],
+  "audios_academia": [
+    {
+      "file": "aula-01-o-que-e-agente-ia.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-02-o-que-ias-desenvolvem.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-03-o-que-sao-skills.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-04-tipos-de-agentes.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-05-bibliotecas-ia.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-06-openclaw.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-07-langchain-docling-craw4ai.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-08-como-construir-agente.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-09-automacao-social.mp3",
+      "voice": "Deep_Voice_Man (Minimax)"
+    },
+    {
+      "file": "aula-10-marketplaces.mp3",
+      "voice": "Eve (ElevenLabs V3)"
+    }
+  ],
+  "roteiros": [
+    "aula-01-o-que-e-agente-ia.md",
+    "aula-02-o-que-ias-desenvolvem.md",
+    "aula-03-o-que-sao-skills.md",
+    "aula-04-tipos-de-agentes.md"
+  ],
+  "voice_padrao_futuro": "Eve (ElevenLabs V3)",
+  "estilo_visual_canonico": {
+    "fundo": "deep navy #050C1A + radial black vignette",
+    "dourado": "#D4AF37",
+    "ciano": "#00F2FE",
+    "tipografia": "Serif gold gradient",
+    "regras": "Sem faces realistas, print-ready, editorial cinematic"
+  }
+}

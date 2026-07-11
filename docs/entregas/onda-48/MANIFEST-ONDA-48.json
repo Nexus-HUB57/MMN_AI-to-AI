@@ -1,0 +1,69 @@
+{
+  "onda": 48,
+  "data": "2026-07-11",
+  "titulo": "Curso Nexus · Dupla Ive + Alencar · Aulas 11-16",
+  "total_aulas": 6,
+  "distribuicao": {
+    "ive": 3,
+    "alencar": 3
+  },
+  "personas_canonicas_repo": {
+    "ive": "AcademIA/personas/ive/",
+    "alencar": "AcademIA/personas/alencar/",
+    "dupla": "AcademIA/personas/dupla/"
+  },
+  "voice_mapping": {
+    "Sra. Nexus Ive": "Eve (ElevenLabs V3)",
+    "Sir. Nexus Alencar": "James (ElevenLabs V3)"
+  },
+  "aulas": [
+    {
+      "num": 11,
+      "persona": "Sra. Nexus Ive",
+      "voice": "Eve",
+      "tema": "IOAID · Sistema Nervoso Nexus",
+      "audio": "aula-11-ioaid-ive.mp3",
+      "thumb": "thumb-aula-11-ioaid-ive.webp"
+    },
+    {
+      "num": 12,
+      "persona": "Sir. Nexus Alencar",
+      "voice": "James",
+      "tema": "SHO · Sistema Híbrido de Orquestração",
+      "audio": "aula-12-sho-alencar.mp3",
+      "thumb": "thumb-aula-12-sho-alencar.webp"
+    },
+    {
+      "num": 13,
+      "persona": "Sra. Nexus Ive",
+      "voice": "Eve",
+      "tema": "Painel do Afiliado",
+      "audio": "aula-13-painel-afiliado-ive.mp3",
+      "thumb": "thumb-aula-13-painel-afiliado-ive.webp"
+    },
+    {
+      "num": 14,
+      "persona": "Sir. Nexus Alencar",
+      "voice": "James",
+      "tema": "Arquitetura Técnica Nexus",
+      "audio": "aula-14-arquitetura-tecnica-alencar.mp3",
+      "thumb": "thumb-aula-14-arquitetura-tecnica-alencar.webp"
+    },
+    {
+      "num": 15,
+      "persona": "Sra. Nexus Ive",
+      "voice": "Eve",
+      "tema": "Método Nexus de Escala",
+      "audio": "aula-15-metodo-nexus-escala-ive.mp3",
+      "thumb": "thumb-aula-15-metodo-nexus-escala-ive.webp"
+    },
+    {
+      "num": 16,
+      "persona": "Sir. Nexus Alencar",
+      "voice": "James",
+      "tema": "Seu Primeiro Agente Escalável",
+      "audio": "aula-16-primeiro-agente-escalavel-alencar.mp3",
+      "thumb": "thumb-aula-16-primeiro-agente-escalavel-alencar.webp"
+    }
+  ]
+}

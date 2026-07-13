@@ -231,7 +231,7 @@ Condições:
 
 - `governanca/C-SUITE-AI.md` — composição e mandato da C-Suite
 - `Lib-Nexus/best-practices/03-seguranca-agentes.md` — segurança
-- `apostilas/13-monetizacao-avancada-escala.md` — decisões de receita
+- `apostilas/19-monetizacao-avancada-escala.md` — decisões de receita
 - `Lab-Nexus/prompts/estrategia/05-okr-trimestral-equipe.md` — execução pós-decisão
 
 ---

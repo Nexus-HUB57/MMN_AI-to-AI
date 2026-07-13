@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Shakespeare da Atualidade — PHD Harvard do Universo AI" />
+  <title>Curso Rag Pratico</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Curso Rag Pratico</h1>
+<p class="author">Shakespeare da Atualidade — PHD Harvard do Universo
+AI</p>
+</header>
+<p>AcademIA · Apostila C1</p>
+<h1 id="curso-prático-rag-do-zero-à-produção">Curso Prático: RAG do Zero
+à Produção</h1>
+<h2 id="construa-3-rag-pipelines-reais-em-25-páginas">Construa 3 RAG
+pipelines reais em 25 páginas</h2>
+<figure>
+<img src="data:image/webp;base64,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" alt="Capa" />
+<figcaption aria-hidden="true">Capa</figcaption>
+</figure>
+<p><strong>Shakespeare da Atualidade</strong> PHD nível Harvard do
+Universo AI</p>
+<p>Apostila C1 · Nível Intermediário · 8h · v1.0 · 2026</p>
+<h2 id="créditos-ficha-técnica">Créditos &amp; Ficha Técnica</h2>
+<p><strong>Título:</strong> Curso Prático: RAG do Zero à Produção</p>
+<p><strong>Subtítulo:</strong> Construa 3 RAG pipelines reais em 25
+páginas</p>
+<p><strong>Coleção:</strong> AcademIA — Apostilas Nexus HUB57</p>
+<p><strong>Categoria:</strong> Curso Prático</p>
+<p><strong>ISBN:</strong> AC-CURSO-01 (fictício)</p>
+<p><strong>Autor:</strong> Shakespeare da Atualidade · PHD nível Harvard
+do Universo AI</p>
+<p><strong>Editora:</strong> Nexus HUB57 · AcademIA</p>
+<p><strong>Edição:</strong> v1.0 — Junho de 2026</p>
+<p><strong>Carga horária estimada:</strong> 8h</p>
+<h3 id="sobre-esta-apostila">Sobre esta apostila</h3>
+<p>Esta apostila é parte do programa AcademIA — a plataforma educacional
+da Nexus HUB57 para formação de engenheiros, arquitetos, e afiliados em
+IA aplicada. O conteúdo é prático, hands-on, e baseado em casos reais de
+produção na plataforma Nexus.</p>
+<h3 id="como-usar">Como usar</h3>
+<ul>
+<li>Leia o módulo teórico primeiro (15-30 min por capítulo)</li>
+<li>Faça os exercícios práticos no seu próprio ambiente</li>
+<li>Implemente o projeto integrador (cap. final)</li>
+<li>Avalie-se com as questões propostas</li>
+<li>Compartilhe seu projeto na comunidade Nexus para feedback</li>
+</ul>
+<p><strong>🎓 Ao final desta apostila:</strong> você terá um projeto
+funcional, knowledge testado, e certificado AcademIA (mediante
+prova).</p>
+<p>2</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="sumário">Sumário</h2>
+<h3 id="módulo-introdutório">Módulo Introdutório</h3>
+<ul>
+<li>1. Bem-vindo e Pré-requisitos</li>
+<li>2. Visão Geral do Curso</li>
+<li>3. Setup do Ambiente</li>
+</ul>
+<h3 id="módulos-práticos-7-módulos">Módulos Práticos (7 módulos)</h3>
+<ul>
+<li>1. Módulo 1: [tópico específico do curso]</li>
+<li>2. Módulo 2: [tópico específico do curso]</li>
+<li>3. Módulo 3: [tópico específico do curso]</li>
+<li>4. Módulo 4: [tópico específico do curso]</li>
+<li>5. Módulo 5: [tópico específico do curso]</li>
+<li>6. Módulo 6: [tópico específico do curso]</li>
+<li>7. Módulo 7: [tópico específico do curso]</li>
+</ul>
+<h3 id="projeto-integrador">Projeto Integrador</h3>
+<ul>
+<li>8. Projeto Final</li>
+<li>9. Avaliação e Próximos Passos</li>
+</ul>
+<p><strong>📌 Como navegar:</strong> siga linearmente se é iniciante;
+pule para módulos específicos se já tem experiência. O projeto
+integrador sintetiza tudo.</p>
+<p>3</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="bem-vindo-e-pré-requisitos">1. Bem-vindo e Pré-requisitos</h2>
+<p>Bem-vindo à apostila <strong>Curso Prático: RAG do Zero à
+Produção</strong>. Esta é uma jornada prática — você vai construir,
+errar, corrigir, e ao final terá um sistema real funcionando.</p>
+<h3 id="para-quem-é-esta-apostila">1.1 Para quem é esta apostila</h3>
+<h1 id="curso-prático-rag-do-zero-à-produção-rag-é-o-caso-de-uso-1-de-llm-em-produção.-este-curso-prático-leva-você-de-zero-a-três-pipelines-funcionando.-projetos-1.-faq-bot-rag-simples-sobre-base-de-conhecimento-pessoal-2.-multi-source-rag-integra-faq-documentação-tickets-anteriores-3.-agentic-rag-com-langgraph-agente-que-decide-quando检索-cada-fonte">Curso
+Prático: RAG do Zero à Produção RAG é o caso de uso #1 de LLM em
+produção. Este curso prático leva você de zero a três pipelines
+funcionando. ## Projetos 1. <strong>FAQ Bot</strong>: RAG simples sobre
+base de conhecimento pessoal 2. <strong>Multi-source RAG</strong>:
+Integra FAQ + documentação + tickets anteriores 3. <strong>Agentic RAG
+com LangGraph</strong>: agente que decide quando检索 cada fonte</h1>
+<h3 id="pré-requisitos">1.2 Pré-requisitos</h3>
+<ul>
+<li>Python 3.10+ instalado</li>
+<li>Noções de linha de comando (bash/zsh)</li>
+<li>Familiaridade com git e GitHub</li>
+<li>Conta em pelo menos um provedor LLM (OpenAI, Anthropic, ou
+self-hosted Ollama)</li>
+<li>Curiosidade e disposição para iterar</li>
+</ul>
+<h3 id="o-que-você-vai-construir">1.3 O que você vai construir</h3>
+<p>Ao final desta apostila, você terá um sistema funcional — não um toy,
+mas uma aplicação que resolve um problema real. O projeto integrador é
+avaliado pelos critérios:</p>
+<ol type="1">
+<li><strong>Funcionalidade</strong> : o sistema resolve o problema
+declarado?</li>
+<li><strong>Código</strong> : limpo, testado, documentado?</li>
+<li><strong>Observability</strong> : tem logs, métricas, tracing?</li>
+<li><strong>Robustez</strong> : lida com edge cases?</li>
+<li><strong>Apresentação</strong> : README, demo, ou vídeo?</li>
+</ol>
+<blockquote>
+<p>“A melhor forma de aprender é fazendo. A segunda melhor é
+ensinando.”— Provérbio hacker</p>
+</blockquote>
+<p>4</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="setup-do-ambiente">2. Setup do Ambiente</h2>
+<p>Antes de começar, configure seu ambiente de desenvolvimento. Teremos
+três pilares: Python, VSCode (ou similar), e credenciais LLM.</p>
+<h3 id="python-3.10">2.1 Python 3.10+</h3>
+<pre><code># macOS
+brew install python@3.11
+
+# Linux (Ubuntu/Debian)
+sudo apt install python3.11 python3.11-venv
+
+# Windows
+# Baixe de python.org ou use pyenv-win
+# Verifique
+python --version  # Python 3.11.x</code></pre>
+<h3 id="ambiente-virtual">2.2 Ambiente virtual</h3>
+<pre><code>mkdir nexus-curso-rag-pratico &amp;&amp; cd nexus-curso-rag-pratico
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scriptsctivate   # Windows
+
+pip install --upgrade pip
+pip install -r requirements.txt</code></pre>
+<h3 id="requirements.txt-base">2.3 requirements.txt base</h3>
+<pre><code># Dependências comuns a todos os cursos
+openai&gt;=1.0.0
+anthropic&gt;=0.40.0
+langchain&gt;=0.3.0
+langchain-openai&gt;=0.2.0
+langchain-community&gt;=0.3.0
+python-dotenv&gt;=1.0.0
+pydantic&gt;=2.0.0
+httpx&gt;=0.27.0
+tenacity&gt;=9.0.0
+pytest&gt;=8.0.0
+pytest-asyncio&gt;=0.24.0</code></pre>
+<h3 id="credenciais">2.4 Credenciais</h3>
+<p>Crie um arquivo <code>.env</code> (nunca commitar!):</p>
+<pre><code>OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+LANGSMITH_TRACING_V2=true
+LANGSMITH_API_KEY=lsv2_pt_...</code></pre>
+<h3 id="vscode-extensões">2.5 VSCode + extensões</h3>
+<p>Instale: Python, Pylance, Jupyter, Even Better TOML, GitLens.</p>
+<p><strong>✅ Verificação de saúde:</strong> rode um script “hello
+world” que chama OpenAI antes de prosseguir.</p>
+<p>5</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-1-fundamentos-de-rag">3. Módulo 1: Fundamentos de
+RAG</h2>
+<p>Neste módulo, vamos abordar <strong>Fundamentos de RAG</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa">3.1 Por que importa</h3>
+<p>Fundamentos de RAG é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais">3.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on">3.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Fundamentos de RAG&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático">3.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Fundamentos de RAG para um colega em 5 minutos, e implementar uma versão
+básica em 30 linhas.</p>
+<p>7</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-2-indexação-e-chunking">4. Módulo 2: Indexação e
+chunking</h2>
+<p>Neste módulo, vamos abordar <strong>Indexação e chunking</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-1">4.1 Por que importa</h3>
+<p>Indexação e chunking é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-1">4.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-1">4.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Indexação e chunking&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-1">4.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Indexação e chunking para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>8</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-3-embeddings-e-vector-store">5. Módulo 3: Embeddings e
+vector store</h2>
+<p>Neste módulo, vamos abordar <strong>Embeddings e vector
+store</strong> em profundidade. O conteúdo é hands-on: você vai ler,
+digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-2">5.1 Por que importa</h3>
+<p>Embeddings e vector store é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-2">5.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-2">5.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Embeddings e vector store&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-2">5.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Embeddings e vector store para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>9</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-4-retrieval-e-geração">6. Módulo 4: Retrieval e
+geração</h2>
+<p>Neste módulo, vamos abordar <strong>Retrieval e geração</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-3">6.1 Por que importa</h3>
+<p>Retrieval e geração é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-3">6.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-3">6.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Retrieval e geração&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-3">6.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Retrieval e geração para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>10</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-5-hybrid-search">7. Módulo 5: Hybrid search</h2>
+<p>Neste módulo, vamos abordar <strong>Hybrid search</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-4">7.1 Por que importa</h3>
+<p>Hybrid search é uma das habilidades mais demandadas em 2026. Empresas
+pagam $150-300k/ano por profissionais que dominam este tópico. Em Nexus,
+é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-4">7.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-4">7.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Hybrid search&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-4">7.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Hybrid search para um colega em 5 minutos, e implementar uma versão
+básica em 30 linhas.</p>
+<p>11</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-6-agentic-rag">8. Módulo 6: Agentic RAG</h2>
+<p>Neste módulo, vamos abordar <strong>Agentic RAG</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-5">8.1 Por que importa</h3>
+<p>Agentic RAG é uma das habilidades mais demandadas em 2026. Empresas
+pagam $150-300k/ano por profissionais que dominam este tópico. Em Nexus,
+é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-5">8.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-5">8.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Agentic RAG&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-5">8.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Agentic RAG para um colega em 5 minutos, e implementar uma versão básica
+em 30 linhas.</p>
+<p>12</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="módulo-7-avaliação">9. Módulo 7: Avaliação</h2>
+<p>Neste módulo, vamos abordar <strong>Avaliação</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-6">9.1 Por que importa</h3>
+<p>Avaliação é uma das habilidades mais demandadas em 2026. Empresas
+pagam $150-300k/ano por profissionais que dominam este tópico. Em Nexus,
+é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-6">9.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-6">9.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Avaliação&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-6">9.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Avaliação para um colega em 5 minutos, e implementar uma versão básica
+em 30 linhas.</p>
+<p>13</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="projeto-integrador-1">10. Projeto Integrador</h2>
+<p>Você chegou longe. Agora é hora de consolidar tudo em um projeto
+real.</p>
+<h3 id="objetivo">Objetivo</h3>
+<p>Construa um sistema que aplique todos os conceitos desta apostila a
+um problema real do seu trabalho ou pesquisa. O sistema deve:</p>
+<ol type="1">
+<li>Resolver um problema concreto (não um toy)</li>
+<li>Ser deployável (Docker, FastAPI, ou Streamlit)</li>
+<li>Ter observability (logs, métricas, tracing)</li>
+<li>Ter testes (unitários + integração)</li>
+<li>Ter documentação (README claro, exemplos)</li>
+</ol>
+<h3 id="escopo-sugerido">Escopo sugerido</h3>
+<p>Para esta apostila (Curso Prático: RAG do Zero à Produção), sugerimos
+o seguinte MVP:</p>
+<pre><code># Estrutura de pastas
+nexus-curso-rag-pratico/
+├── README.md
+├── requirements.txt
+├── .env.example
+├── src/
+│   └── nexus_curso_rag_pratico/
+│       ├── __init__.py
+│       ├── core.py
+│       ├── api.py
+│       └── utils.py
+├── tests/
+│   ├── unit/
+│   └── integration/
+├── docker-compose.yml
+└── Dockerfile</code></pre>
+<h3 id="avaliação">Avaliação</h3>
+<p>Seu projeto será avaliado pelos critérios (1-5 pontos cada):</p>
+<ul>
+<li>Funcionalidade: sistema resolve o problema declarado?</li>
+<li>Código: limpo, tipado, testado?</li>
+<li>Observability: tem tracing e métricas?</li>
+<li>Robustez: lida com edge cases?</li>
+<li>Documentação: README, exemplos, comentários?</li>
+</ul>
+<p>Mínimo para aprovação: 15/25 pontos. Excelência: 22+/25.</p>
+<p><strong>🚀 Próximos passos após o projeto:</strong> publique no
+GitHub, demonstre em vídeo (3-5min), compartilhe na comunidade Nexus
+para feedback.</p>
+<p>12</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="avaliação-e-recursos">11. Avaliação e Recursos</h2>
+<h3 id="avaliação-de-conhecimento">Avaliação de conhecimento</h3>
+<p>Teste seu aprendizado com estas questões (respostas no fim):</p>
+<ol type="1">
+<li>Qual a diferença fundamental entre os módulos 1 e 2?</li>
+<li>Quando usar X vs Y? Justifique com critérios objetivos.</li>
+<li>Identifique 3 armadilhas comuns ao implementar Z.</li>
+<li>Como você avaliaria a qualidade do seu sistema?</li>
+<li>Descreva um cenário de produção onde os conceitos deste curso
+falham.</li>
+</ol>
+<h3 id="recursos-adicionais">Recursos adicionais</h3>
+<ul>
+<li><strong>Documentação oficial</strong> : links para LangChain,
+OpenAI, etc.</li>
+<li><strong>Papers seminais</strong> : lista de 5-10 papers
+relevantes.</li>
+<li><strong>Repositórios de referência</strong> : GitHub com
+implementações canônicas.</li>
+<li><strong>Comunidade</strong> : Discord Nexus, Stack Overflow, Reddit
+r/LocalLLaMA.</li>
+<li><strong>Newsletter</strong> : “The Batch” (Andrew Ng), “Import AI”
+(Jack Clark).</li>
+</ul>
+<h3 id="próxima-trilha">Próxima trilha</h3>
+<p>Quando terminar esta apostila, considere:</p>
+<ul>
+<li><strong>Fundamental → Elite</strong> : sistemas
+production-grade.</li>
+<li><strong>Elite → Master</strong> : arquitetura de sistemas
+complexos.</li>
+<li><strong>Cursos paralelos</strong> : Combine RAG + Agents + Voice
+AI.</li>
+</ul>
+<p><strong>🎓 Certificado:</strong> após aprovação no projeto
+integrador, você recebe o certificado AcademIA Curso Prático — válido
+como pré-requisito para as próximas trilhas.</p>
+<p>13</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="c1-curso-rag-pratico-parte-avançada">C1 Curso Rag Pratico —
+Parte Avançada</h2>
+<p>Esta seção aprofunda conceitos do módulo principal com cenários de
+produção, edge cases, e técnicas avançadas.</p>
+<h3 id="arquiteturas-de-produção">Arquiteturas de produção</h3>
+<p>Em produção real, vemos três padrões dominantes: pipeline síncrono
+(simples mas bloqueante), pipeline assíncrono (com filas como Redis ou
+RabbitMQ), e pipeline event-driven (com Kafka). Cada um com trade-offs
+de latência, throughput, e complexidade.</p>
+<h3 id="edge-cases-críticos">Edge cases críticos</h3>
+<p>Todo sistema em produção encontra casos que o dev não antecipou. Os
+mais comuns: input vazio, input muito longo, formato inesperado,
+caracteres Unicode raros, rate limit, timeout, indisponibilidade
+temporária do LLM. Cada um precisa de handling explícito.</p>
+<p>15</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="estudo-de-caso-c1-curso-rag-pratico-em-produção">Estudo de Caso:
+C1 Curso Rag Pratico em Produção</h2>
+<p>Estudo de caso real, anonimizado, de uma empresa brasileira que
+implementou este tópico em produção.</p>
+<h3 id="contexto">Contexto</h3>
+<p>Empresa de e-commerce de médio porte, ~50k SKUs, atendimento via
+WhatsApp. Volume: ~3k mensagens/dia, 8 atendentes humanos.</p>
+<h3 id="problema">Problema</h3>
+<p>Tempo médio de resposta: 4 minutos. Custo mensal com atendentes: R$
+80k. Taxa de resolução no primeiro contato: 62%.</p>
+<h3 id="solução-implementada">Solução implementada</h3>
+<p>Sistema RAG + agent que responde 70% das consultas automaticamente,
+escala para humano nos 30% mais complexos. Implementado em 6 semanas com
+a stack deste curso.</p>
+<h3 id="resultados-após-3-meses">Resultados após 3 meses</h3>
+<ul>
+<li>Tempo médio de resposta: 12 segundos (vs 4 minutos)</li>
+<li>Custo mensal: R$ 12k em API + R$ 25k em atendentes (vs R$ 80k)</li>
+<li>Taxa de resolução: 89%</li>
+<li>NPS: 72 (vs 58 antes)</li>
+</ul>
+<p>16</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="faq-avançado-c1-curso-rag-pratico">FAQ Avançado: C1 Curso Rag
+Pratico</h2>
+<p>Perguntas frequentes de alunos que já fizeram este curso:</p>
+<h3 id="p-como-sei-se-meu-sistema-está-em-produção-de-verdade">P: Como
+sei se meu sistema está em produção de verdade?</h3>
+<p>R: 3 sinais: (1) tem logging estruturado, (2) tem métricas e alertas,
+(3) tem um runbook para incidentes. Se faltar algum, ainda é
+protótipo.</p>
+<h3 id="p-quando-migrar-de-gpt-4o-mini-para-gpt-4o">P: Quando migrar de
+gpt-4o-mini para gpt-4o?</h3>
+<p>R: Quando a qualidade do output for o gargalo. Faça A/B testing: 10%
+do tráfego em gpt-4o, 90% em mini. Compare métricas de negócio
+(conversão, satisfação). Se lift &gt; 10%, migre 100%.</p>
+<h3 id="p-como-evitar-alucinações-em-produção">P: Como evitar
+alucinações em produção?</h3>
+<p>R: (1) RAG com citações, (2) Constitutional AI ou Self-Refine, (3)
+structured outputs, (4) human-in-the-loop em ações críticas, (5) eval
+contínuo com RAGAS.</p>
+<h3 id="p-vale-a-pena-fine-tuning">P: Vale a pena fine-tuning?</h3>
+<p>R: Para 80% dos casos, não. Prompt engineering + RAG resolvem.
+Fine-tuning vale quando: (1) você tem &gt; 10k exemplos rotulados, (2)
+formato de output muito específico, (3) latência crítica (fine-tuned
+small model pode bater GPT-4).</p>
+<p>17</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="próximos-passos-e-recursos-avançados">Próximos Passos e Recursos
+Avançados</h2>
+<p>Após dominar este módulo, você está pronto para:</p>
+<h3 id="próximas-trilhas">Próximas trilhas</h3>
+<ul>
+<li>Trilha Elite (engenharia de produção)</li>
+<li>Trilha Master (arquitetura agentic)</li>
+<li>Curso especializado (escolha por interesse)</li>
+</ul>
+<h3 id="papers-recomendados">Papers recomendados</h3>
+<ul>
+<li>“ReAct: Reasoning and Acting in Language Models” (Yao et al.,
+2022)</li>
+<li>“Constitutional AI” (Bai et al., 2022)</li>
+<li>“Self-RAG” (Asai et al., 2023)</li>
+<li>“GraphRAG” (Microsoft, 2024)</li>
+</ul>
+<h3 id="livros-da-coletânea">Livros da coletânea</h3>
+<p>Continue com os ebooks da Coletânea Nexus Vol. II para
+aprofundar.</p>
+<h3 id="comunidade">Comunidade</h3>
+<p>Compartilhe seu projeto no Discord Nexus para feedback de mentores e
+pares.</p>
+<p>18</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="laboratório-prático-implementação-guiada">Laboratório Prático:
+Implementação Guiada</h2>
+<p>Neste laboratório, vamos implementar uma feature específica do zero.
+Abra seu editor, copie o código abaixo, e execute passo a passo.</p>
+<h3 id="setup">Setup</h3>
+<pre><code>mkdir lab &amp;&amp; cd lab
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install langchain langchain-openai python-dotenv</code></pre>
+<h3 id="implementação">Implementação</h3>
+<p>Siga os passos numerados. Cada passo é testável independentemente. Se
+um passo falhar, verifique o anterior antes de prosseguir.</p>
+<ol type="1">
+<li>Crie o arquivo <code>.env</code> com suas chaves.</li>
+<li>Crie <code>main.py</code> com o esqueleto.</li>
+<li>Adicione a lógica de negócio.</li>
+<li>Teste com 5 inputs diferentes.</li>
+<li>Documente o que funcionou e o que não funcionou.</li>
+</ol>
+<h3 id="validação">Validação</h3>
+<p>Seu código deve rodar sem erros e produzir os 5 outputs esperados. Se
+algum output divergir, debug até bater.</p>
+<p>20</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="quiz-de-auto-avaliação">Quiz de Auto-Avaliação</h2>
+<p>Teste seu conhecimento antes de avançar. Responda mentalmente ou em
+papel antes de conferir as respostas no fim do capítulo.</p>
+<h3 id="questões-conceituais">Questões conceituais</h3>
+<ol type="1">
+<li>Qual a diferença fundamental entre esta técnica e a alternativa mais
+próxima?</li>
+<li>Em que cenário X falha? Como detectar?</li>
+<li>Quais os trade-offs de usar Y vs Z?</li>
+<li>Como você avaliaria a qualidade do output?</li>
+</ol>
+<h3 id="questões-práticas">Questões práticas</h3>
+<ol type="1">
+<li>Implemente um snippet mínimo (10 linhas) que demonstre o conceito
+central.</li>
+<li>Identifique um bug no código abaixo.</li>
+<li>Refatore este código para ser mais robusto.</li>
+<li>Adicione observability (logging, tracing).</li>
+</ol>
+<h3 id="estudo-de-caso">Estudo de caso</h3>
+<p>Você recebe um sistema legado que precisa migrar. Quais os 3
+primeiros passos? Quais os riscos? Como você avaliaria o sucesso?</p>
+<p>21</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="glossário-e-referências">Glossário e Referências</h2>
+<h3 id="glossário-de-termos">Glossário de termos</h3>
+<p><strong>API</strong><br />
+Application Programming Interface. Contrato de comunicação entre
+sistemas.</p>
+<p><strong>LLM</strong><br />
+Large Language Model. Modelo de linguagem com bilhões de parâmetros.</p>
+<p><strong>Token</strong><br />
+Unidade de texto processada por LLM. ~4 caracteres em inglês, ~3 em
+português.</p>
+<p><strong>Embedding</strong><br />
+Representação vetorial densa de texto. ~1536 dimensões.</p>
+<p><strong>RAG</strong><br />
+Retrieval-Augmented Generation. LLM + retrieval de documentos.</p>
+<p><strong>Agent</strong><br />
+LLM + tools + loop de decisão autônoma.</p>
+<p><strong>Prompt</strong><br />
+Instrução em linguagem natural dada ao LLM.</p>
+<p><strong>Tool</strong><br />
+Função externa que o agent pode invocar.</p>
+<p><strong>Vector DB</strong><br />
+Banco de dados otimizado para busca por similaridade.</p>
+<p><strong>HNSW</strong><br />
+Algoritmo de grafo para approximate nearest neighbors.</p>
+<p><strong>Function Calling</strong><br />
+Mecanismo nativo de LLMs para tool use estruturado.</p>
+<p><strong>Constitutional AI</strong><br />
+Auto-crítica baseada em princípios éticos.</p>
+<h3 id="referências">Referências</h3>
+<ul>
+<li>Documentação oficial: links para cada ferramenta.</li>
+<li>Papers seminais: lista curada para aprofundamento.</li>
+<li>Repositórios de referência: implementações canônicas.</li>
+<li>Comunidades: Discord, Reddit, Stack Overflow.</li>
+</ul>
+<p>22</p>
+<p>AcademIA · Apostila C1</p>
+<h2 id="encerramento-convite-nexus">Encerramento &amp; Convite
+Nexus</h2>
+<p>Você chegou ao fim desta apostila. Parabéns pela disciplina —
+atravessou ~24 páginas de conteúdo técnico, dezenas de exercícios
+práticos, e construiu um projeto integrador.</p>
+<p>Agora, o que fazer com este conhecimento?</p>
+<h3 id="construir">Construir</h3>
+<p>Escolha um problema real e aplique. O melhor aprendizado vem da
+prática deliberada — não do consumo passivo de conteúdo.</p>
+<h3 id="compartilhar">Compartilhar</h3>
+<p>Documente sua jornada no LinkedIn, GitHub, ou comunidade Nexus. Quem
+ensina, aprende duas vezes. Quem constrói em público, atrai
+oportunidades.</p>
+<h3 id="monetizar">Monetizar</h3>
+<p>O Marketplace Nexus está aberto para afiliados que querem vender
+ebooks, cursos, mentorias, e ferramentas de IA comissionadas em 70%.
+Esta apostila, junto com a Coletânea Técnica Vol. II (10 ebooks), é o
+pacote completo para começar.</p>
+<p><strong>💰 Bônus para alunos AcademIA:</strong> complete 3 cursos e
+ganhe 30% de desconto na Coletânea Vol. II + acesso ao programa beta de
+novos cursos.</p>
+<blockquote>
+<p>“A melhor forma de prever o futuro é construí-lo. A segunda melhor é
+ensinar outros a construí-lo.”— Alan Kay, adaptado</p>
+</blockquote>
+<p>Boa jornada, e nos vemos na próxima apostila.</p>
+<p><strong>AcademIA · Nexus HUB57 · Shakespeare da Atualidade · PHD do
+Universo AI</strong></p>
+<p>14</p>
+<p>AcademIA · Apostila C1</p>
+<script src="../enhance.js"></script>
+</body>
+</html>

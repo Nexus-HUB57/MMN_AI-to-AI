@@ -19,6 +19,7 @@ const COMMANDS: Cmd[] = [
   { label: "Comissões", href: "/commissions", group: "Financeiro" },
   { label: "Pagamentos", href: "/payments", group: "Financeiro" },
   { label: "Checkout PIX", href: "/pix/checkout", group: "Financeiro" },
+  { label: "Ativar Pack A² · início do afiliado", href: "/pix/checkout?pack=pack-a2", group: "Carreira", keywords: "pack a2 ativação agente onboarding início afiliado" },
   { label: "Histórico PIX", href: "/pix/history", group: "Financeiro" },
   { label: "Rede Binária N.O", href: "/network", group: "Rede" },
   { label: "Sub-Redes (SiSu)", href: "/sisu", group: "Rede" },
@@ -27,7 +28,8 @@ const COMMANDS: Cmd[] = [
   { label: "Contas Sociais", href: "/social/accounts", group: "Marketing" },
   { label: "Rastreamento de Links", href: "/tracking/links", group: "Marketing" },
   { label: "Configurações de Conta", href: "/profile", group: "Conta" },
-  { label: "Nexus Partners Pack", href: "/subscriptions", group: "Conta" },
+  { label: "Nexus Partners Pack · SaaS independente", href: "/subscriptions", group: "Conta", keywords: "partners assinatura start growth enterprise saas complementar" },
+  { label: "Painel Partners · assinantes", href: "/partners", group: "Conta", keywords: "partners dashboard parceiros tiers api chatbot" },
 ];
 
 export default function CommandPalette() {

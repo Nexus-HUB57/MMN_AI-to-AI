@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PartnersDeliveryPanels from "@/components/PartnersDeliveryPanels";
+import PartnersAccessGuard from "@/components/PartnersAccessGuard";
+import PartnersPremiumOnboarding from "@/components/PartnersPremiumOnboarding";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -396,8 +398,9 @@ export default function PartnersDashboardPage() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 md:px-6">
+    <PartnersAccessGuard>
+      <DashboardLayout>
+        <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 md:px-6">
         <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.16),transparent_32%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,1))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
@@ -449,6 +452,8 @@ export default function PartnersDashboardPage() {
             </div>
           </div>
         </section>
+
+        <PartnersPremiumOnboarding />
 
         {apiOffline && (
           <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
@@ -814,8 +819,9 @@ export default function PartnersDashboardPage() {
             <PartnersDeliveryPanels.Chatbot />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+        </div>
+      </DashboardLayout>
+    </PartnersAccessGuard>
   );
 }
 

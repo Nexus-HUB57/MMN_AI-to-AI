@@ -44,6 +44,7 @@ import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 
 import AffiliateStatusLights from "@/components/AffiliateStatusLights";
+import NexusJourneyClarifier from "@/components/NexusJourneyClarifier";
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -261,6 +262,7 @@ export default function Dashboard() {
   const btcLocked = isBtcLocked(profile);
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
   const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
+  const hasPackA2 = profile.activePackSlugs.includes("pack-a2");
 
   const displayName = user?.name || "Afiliado";
   const displayEmail = user?.email || "";
@@ -403,6 +405,7 @@ export default function Dashboard() {
           </div>
         </header>
         <AffiliateStatusLights />
+        <NexusJourneyClarifier hasPackA2={hasPackA2} />
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">

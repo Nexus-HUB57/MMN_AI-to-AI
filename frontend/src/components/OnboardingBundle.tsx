@@ -150,11 +150,11 @@ export function WelcomeTour({ onComplete }: { onComplete?: () => void }) {
 // 2. ProgressChecklist — barra lateral fixa
 // ===========================================
 const STEPS_DEF = [
-  { id: "register", label: "Cadastro concluído", route: "/dashboard" },
-  { id: "agent_active", label: "Agente IA ativo", route: "/agents" },
-  { id: "pack_a2", label: "Pack A² ativado", route: "/marketplaces" },
-  { id: "first_share", label: "Loja compartilhada", route: "/minha-loja" },
-  { id: "first_sale", label: "Primeira venda", route: "/commissions" },
+  { id: "register", label: "Conta criada", route: "/dashboard" },
+  { id: "pack_a2", label: "Pack A² ativado", route: "/pix/checkout?pack=pack-a2" },
+  { id: "agent_active", label: "Agente IA liberado", route: "/agents" },
+  { id: "library_ready", label: "Biblioteca sincronizada", route: "/marketplaces/ebooks" },
+  { id: "first_sale", label: "Primeira comissão", route: "/commissions" },
 ];
 
 export function ProgressChecklist() {
@@ -164,6 +164,10 @@ export function ProgressChecklist() {
 
   const libraryQuery = (trpc as any).packEntitlements?.listMyLibrary?.useQuery
     ? (trpc as any).packEntitlements.listMyLibrary.useQuery(undefined, { staleTime: 60_000 })
+    : { data: null };
+
+  const statusQuery = (trpc as any).dashboardStatus?.getStatus?.useQuery
+    ? (trpc as any).dashboardStatus.getStatus.useQuery(undefined, { staleTime: 60_000, retry: false })
     : { data: null };
 
   const [collapsed, setCollapsed] = useState(false);
@@ -178,16 +182,20 @@ export function ProgressChecklist() {
   const grants = (grantsQuery.data?.grants ?? []) as any[];
   const libraryTotal = libraryQuery.data?.total ?? 0;
 
+  const hasPackA2 = grants.some((g: any) => g.packSlug === "pack-a2");
+  const agentActive = Boolean(statusQuery.data?.agentActive) || hasPackA2;
+
   const completedMap: Record<string, boolean> = {
-    register: true, // já logado
-    agent_active: true, // criado no cadastro
-    pack_a2: grants.some((g: any) => g.packSlug === "pack-a2"),
-    first_share: false, // TODO: rastrear cliques no botão de compartilhamento
-    first_sale: false, // TODO: rastrear primeira ordem
+    register: true,
+    pack_a2: hasPackA2,
+    agent_active: agentActive,
+    library_ready: libraryTotal > 0,
+    first_sale: false,
   };
 
   const completed = STEPS_DEF.filter((s) => completedMap[s.id]).length;
   const total = STEPS_DEF.length;
+  const nextStep = STEPS_DEF.find((s) => !completedMap[s.id]) ?? null;
 
   if (dismissed) return null;
   if (completed === total) return null; // já completou tudo
@@ -271,6 +279,18 @@ export function ProgressChecklist() {
               );
             })}
           </ul>
+
+          {nextStep && (
+            <div className="mt-3 rounded-xl border border-quantum-cyan/20 bg-quantum-cyan/10 p-3">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-quantum-cyan">Próxima ação recomendada</p>
+              <p className="mt-1 text-sm font-semibold text-white">{nextStep.label}</p>
+              <Link href={nextStep.route}>
+                <a className="mt-2 inline-flex items-center gap-2 text-xs font-semibold text-quantum-cyan hover:text-white">
+                  Ir agora <ArrowRight className="h-3.5 w-3.5" />
+                </a>
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

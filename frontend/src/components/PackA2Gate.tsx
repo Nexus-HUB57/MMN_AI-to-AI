@@ -107,4 +107,3 @@ export function PackA2AlreadyOwnedCard({ packInfo }: { packInfo: any }) {
   );
 }
 
-export default PackA2Gate;

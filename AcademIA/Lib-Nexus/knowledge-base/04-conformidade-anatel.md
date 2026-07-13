@@ -265,7 +265,7 @@ Para WhatsApp Business API, Meta exige templates pré-aprovados. Cada template p
 
 - `tutoriais/18-configurar-backup-automatico.md` (preservação de logs)
 - `tutoriais/15-auditoria-lgpd-automatizada.md` (DPIA automatizada)
-- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` (vetores de ataque)
+- `apostilas/18-seguranca-ofensiva-pentest-agentes-ia.md` (vetores de ataque)
 - `Lib-Nexus/knowledge-base/03-conformidade-lgpd.md` (LGPD base)
 - `playbooks/PB-LGPD-direitos-titular.md` (operação direitos titular)
 - `governanca/C-SUITE-AI.md` (governance loop para decisões críticas)

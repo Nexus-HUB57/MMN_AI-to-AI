@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Shakespeare da Atualidade — PHD Harvard do Universo AI" />
+  <title>Curso Voice Ai</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Curso Voice Ai</h1>
+<p class="author">Shakespeare da Atualidade — PHD Harvard do Universo
+AI</p>
+</header>
+<p>AcademIA · Apostila C5</p>
+<h1 id="curso-prático-voice-ai-j.a.r.v.i.s.">Curso Prático: Voice AI
+(J.A.R.V.I.S.)</h1>
+<h2 id="construa-um-assistente-de-voz-completo">Construa um assistente
+de voz completo</h2>
+<figure>
+<img src="data:image/webp;base64,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" alt="Capa" />
+<figcaption aria-hidden="true">Capa</figcaption>
+</figure>
+<p><strong>Shakespeare da Atualidade</strong> PHD nível Harvard do
+Universo AI</p>
+<p>Apostila C5 · Nível Intermediário · 10h · v1.0 · 2026</p>
+<h2 id="créditos-ficha-técnica">Créditos &amp; Ficha Técnica</h2>
+<p><strong>Título:</strong> Curso Prático: Voice AI (J.A.R.V.I.S.)</p>
+<p><strong>Subtítulo:</strong> Construa um assistente de voz
+completo</p>
+<p><strong>Coleção:</strong> AcademIA — Apostilas Nexus HUB57</p>
+<p><strong>Categoria:</strong> Curso Prático</p>
+<p><strong>ISBN:</strong> AC-CURSO-05 (fictício)</p>
+<p><strong>Autor:</strong> Shakespeare da Atualidade · PHD nível Harvard
+do Universo AI</p>
+<p><strong>Editora:</strong> Nexus HUB57 · AcademIA</p>
+<p><strong>Edição:</strong> v1.0 — Junho de 2026</p>
+<p><strong>Carga horária estimada:</strong> 10h</p>
+<h3 id="sobre-esta-apostila">Sobre esta apostila</h3>
+<p>Esta apostila é parte do programa AcademIA — a plataforma educacional
+da Nexus HUB57 para formação de engenheiros, arquitetos, e afiliados em
+IA aplicada. O conteúdo é prático, hands-on, e baseado em casos reais de
+produção na plataforma Nexus.</p>
+<h3 id="como-usar">Como usar</h3>
+<ul>
+<li>Leia o módulo teórico primeiro (15-30 min por capítulo)</li>
+<li>Faça os exercícios práticos no seu próprio ambiente</li>
+<li>Implemente o projeto integrador (cap. final)</li>
+<li>Avalie-se com as questões propostas</li>
+<li>Compartilhe seu projeto na comunidade Nexus para feedback</li>
+</ul>
+<p><strong>🎓 Ao final desta apostila:</strong> você terá um projeto
+funcional, knowledge testado, e certificado AcademIA (mediante
+prova).</p>
+<p>2</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="sumário">Sumário</h2>
+<h3 id="módulo-introdutório">Módulo Introdutório</h3>
+<ul>
+<li>1. Bem-vindo e Pré-requisitos</li>
+<li>2. Visão Geral do Curso</li>
+<li>3. Setup do Ambiente</li>
+</ul>
+<h3 id="módulos-práticos-8-módulos">Módulos Práticos (8 módulos)</h3>
+<ul>
+<li>1. Módulo 1: [tópico específico do curso]</li>
+<li>2. Módulo 2: [tópico específico do curso]</li>
+<li>3. Módulo 3: [tópico específico do curso]</li>
+<li>4. Módulo 4: [tópico específico do curso]</li>
+<li>5. Módulo 5: [tópico específico do curso]</li>
+<li>6. Módulo 6: [tópico específico do curso]</li>
+<li>7. Módulo 7: [tópico específico do curso]</li>
+<li>8. Módulo 8: [tópico específico do curso]</li>
+</ul>
+<h3 id="projeto-integrador">Projeto Integrador</h3>
+<ul>
+<li>9. Projeto Final</li>
+<li>10. Avaliação e Próximos Passos</li>
+</ul>
+<p><strong>📌 Como navegar:</strong> siga linearmente se é iniciante;
+pule para módulos específicos se já tem experiência. O projeto
+integrador sintetiza tudo.</p>
+<p>3</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="bem-vindo-e-pré-requisitos">1. Bem-vindo e Pré-requisitos</h2>
+<p>Bem-vindo à apostila <strong>Curso Prático: Voice AI
+(J.A.R.V.I.S.)</strong>. Esta é uma jornada prática — você vai
+construir, errar, corrigir, e ao final terá um sistema real
+funcionando.</p>
+<h3 id="para-quem-é-esta-apostila">1.1 Para quem é esta apostila</h3>
+<h1 id="curso-prático-voice-ai-em-2026-voz-é-a-interface-definitiva.-este-curso-hands-on-leva-você-pela-construção-de-um-assistente-de-voz-completo-com-stt-tts-llm-streaming-e-memory.">Curso
+Prático: Voice AI Em 2026, voz é a interface definitiva. Este curso
+hands-on leva você pela construção de um assistente de voz completo, com
+STT, TTS, LLM streaming, e memory.</h1>
+<h3 id="pré-requisitos">1.2 Pré-requisitos</h3>
+<ul>
+<li>Python 3.10+ instalado</li>
+<li>Noções de linha de comando (bash/zsh)</li>
+<li>Familiaridade com git e GitHub</li>
+<li>Conta em pelo menos um provedor LLM (OpenAI, Anthropic, ou
+self-hosted Ollama)</li>
+<li>Curiosidade e disposição para iterar</li>
+</ul>
+<h3 id="o-que-você-vai-construir">1.3 O que você vai construir</h3>
+<p>Ao final desta apostila, você terá um sistema funcional — não um toy,
+mas uma aplicação que resolve um problema real. O projeto integrador é
+avaliado pelos critérios:</p>
+<ol type="1">
+<li><strong>Funcionalidade</strong> : o sistema resolve o problema
+declarado?</li>
+<li><strong>Código</strong> : limpo, testado, documentado?</li>
+<li><strong>Observability</strong> : tem logs, métricas, tracing?</li>
+<li><strong>Robustez</strong> : lida com edge cases?</li>
+<li><strong>Apresentação</strong> : README, demo, ou vídeo?</li>
+</ol>
+<blockquote>
+<p>“A melhor forma de aprender é fazendo. A segunda melhor é
+ensinando.”— Provérbio hacker</p>
+</blockquote>
+<p>4</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="setup-do-ambiente">2. Setup do Ambiente</h2>
+<p>Antes de começar, configure seu ambiente de desenvolvimento. Teremos
+três pilares: Python, VSCode (ou similar), e credenciais LLM.</p>
+<h3 id="python-3.10">2.1 Python 3.10+</h3>
+<pre><code># macOS
+brew install python@3.11
+
+# Linux (Ubuntu/Debian)
+sudo apt install python3.11 python3.11-venv
+
+# Windows
+# Baixe de python.org ou use pyenv-win
+# Verifique
+python --version  # Python 3.11.x</code></pre>
+<h3 id="ambiente-virtual">2.2 Ambiente virtual</h3>
+<pre><code>mkdir nexus-curso-voice-ai &amp;&amp; cd nexus-curso-voice-ai
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scriptsctivate   # Windows
+
+pip install --upgrade pip
+pip install -r requirements.txt</code></pre>
+<h3 id="requirements.txt-base">2.3 requirements.txt base</h3>
+<pre><code># Dependências comuns a todos os cursos
+openai&gt;=1.0.0
+anthropic&gt;=0.40.0
+langchain&gt;=0.3.0
+langchain-openai&gt;=0.2.0
+langchain-community&gt;=0.3.0
+python-dotenv&gt;=1.0.0
+pydantic&gt;=2.0.0
+httpx&gt;=0.27.0
+tenacity&gt;=9.0.0
+pytest&gt;=8.0.0
+pytest-asyncio&gt;=0.24.0</code></pre>
+<h3 id="credenciais">2.4 Credenciais</h3>
+<p>Crie um arquivo <code>.env</code> (nunca commitar!):</p>
+<pre><code>OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+LANGSMITH_TRACING_V2=true
+LANGSMITH_API_KEY=lsv2_pt_...</code></pre>
+<h3 id="vscode-extensões">2.5 VSCode + extensões</h3>
+<p>Instale: Python, Pylance, Jupyter, Even Better TOML, GitLens.</p>
+<p><strong>✅ Verificação de saúde:</strong> rode um script “hello
+world” que chama OpenAI antes de prosseguir.</p>
+<p>5</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-1-pipeline-de-voz-completo">3. Módulo 1: Pipeline de voz
+completo</h2>
+<p>Neste módulo, vamos abordar <strong>Pipeline de voz completo</strong>
+em profundidade. O conteúdo é hands-on: você vai ler, digitar, executar,
+e iterar.</p>
+<h3 id="por-que-importa">3.1 Por que importa</h3>
+<p>Pipeline de voz completo é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais">3.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on">3.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Pipeline de voz completo&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático">3.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Pipeline de voz completo para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>7</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-2-stt-com-whisper">4. Módulo 2: STT com Whisper</h2>
+<p>Neste módulo, vamos abordar <strong>STT com Whisper</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-1">4.1 Por que importa</h3>
+<p>STT com Whisper é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-1">4.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-1">4.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;STT com Whisper&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-1">4.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar STT
+com Whisper para um colega em 5 minutos, e implementar uma versão básica
+em 30 linhas.</p>
+<p>8</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-3-tts-com-elevenlabs">5. Módulo 3: TTS com
+ElevenLabs</h2>
+<p>Neste módulo, vamos abordar <strong>TTS com ElevenLabs</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-2">5.1 Por que importa</h3>
+<p>TTS com ElevenLabs é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-2">5.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-2">5.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;TTS com ElevenLabs&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-2">5.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar TTS
+com ElevenLabs para um colega em 5 minutos, e implementar uma versão
+básica em 30 linhas.</p>
+<p>9</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-4-vad-e-wake-word">6. Módulo 4: VAD e wake-word</h2>
+<p>Neste módulo, vamos abordar <strong>VAD e wake-word</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-3">6.1 Por que importa</h3>
+<p>VAD e wake-word é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-3">6.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-3">6.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;VAD e wake-word&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-3">6.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar VAD
+e wake-word para um colega em 5 minutos, e implementar uma versão básica
+em 30 linhas.</p>
+<p>10</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-5-llm-streaming">7. Módulo 5: LLM streaming</h2>
+<p>Neste módulo, vamos abordar <strong>LLM streaming</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-4">7.1 Por que importa</h3>
+<p>LLM streaming é uma das habilidades mais demandadas em 2026. Empresas
+pagam $150-300k/ano por profissionais que dominam este tópico. Em Nexus,
+é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-4">7.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-4">7.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;LLM streaming&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-4">7.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar LLM
+streaming para um colega em 5 minutos, e implementar uma versão básica
+em 30 linhas.</p>
+<p>11</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-6-memória-e-personalidade">8. Módulo 6: Memória e
+personalidade</h2>
+<p>Neste módulo, vamos abordar <strong>Memória e personalidade</strong>
+em profundidade. O conteúdo é hands-on: você vai ler, digitar, executar,
+e iterar.</p>
+<h3 id="por-que-importa-5">8.1 Por que importa</h3>
+<p>Memória e personalidade é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-5">8.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-5">8.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Memória e personalidade&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-5">8.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Memória e personalidade para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>12</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-7-barge-in-e-latência">9. Módulo 7: Barge-in e
+latência</h2>
+<p>Neste módulo, vamos abordar <strong>Barge-in e latência</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-6">9.1 Por que importa</h3>
+<p>Barge-in e latência é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-6">9.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-6">9.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Barge-in e latência&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-6">9.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Barge-in e latência para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>13</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="módulo-8-edge-ai">10. Módulo 8: Edge AI</h2>
+<p>Neste módulo, vamos abordar <strong>Edge AI</strong> em profundidade.
+O conteúdo é hands-on: você vai ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-7">10.1 Por que importa</h3>
+<p>Edge AI é uma das habilidades mais demandadas em 2026. Empresas pagam
+$150-300k/ano por profissionais que dominam este tópico. Em Nexus, é
+pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-7">10.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-7">10.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Edge AI&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-7">10.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar Edge
+AI para um colega em 5 minutos, e implementar uma versão básica em 30
+linhas.</p>
+<p>14</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="projeto-integrador-1">11. Projeto Integrador</h2>
+<p>Você chegou longe. Agora é hora de consolidar tudo em um projeto
+real.</p>
+<h3 id="objetivo">Objetivo</h3>
+<p>Construa um sistema que aplique todos os conceitos desta apostila a
+um problema real do seu trabalho ou pesquisa. O sistema deve:</p>
+<ol type="1">
+<li>Resolver um problema concreto (não um toy)</li>
+<li>Ser deployável (Docker, FastAPI, ou Streamlit)</li>
+<li>Ter observability (logs, métricas, tracing)</li>
+<li>Ter testes (unitários + integração)</li>
+<li>Ter documentação (README claro, exemplos)</li>
+</ol>
+<h3 id="escopo-sugerido">Escopo sugerido</h3>
+<p>Para esta apostila (Curso Prático: Voice AI (J.A.R.V.I.S.)),
+sugerimos o seguinte MVP:</p>
+<pre><code># Estrutura de pastas
+nexus-curso-voice-ai/
+├── README.md
+├── requirements.txt
+├── .env.example
+├── src/
+│   └── nexus_curso_voice_ai/
+│       ├── __init__.py
+│       ├── core.py
+│       ├── api.py
+│       └── utils.py
+├── tests/
+│   ├── unit/
+│   └── integration/
+├── docker-compose.yml
+└── Dockerfile</code></pre>
+<h3 id="avaliação">Avaliação</h3>
+<p>Seu projeto será avaliado pelos critérios (1-5 pontos cada):</p>
+<ul>
+<li>Funcionalidade: sistema resolve o problema declarado?</li>
+<li>Código: limpo, tipado, testado?</li>
+<li>Observability: tem tracing e métricas?</li>
+<li>Robustez: lida com edge cases?</li>
+<li>Documentação: README, exemplos, comentários?</li>
+</ul>
+<p>Mínimo para aprovação: 15/25 pontos. Excelência: 22+/25.</p>
+<p><strong>🚀 Próximos passos após o projeto:</strong> publique no
+GitHub, demonstre em vídeo (3-5min), compartilhe na comunidade Nexus
+para feedback.</p>
+<p>13</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="avaliação-e-recursos">12. Avaliação e Recursos</h2>
+<h3 id="avaliação-de-conhecimento">Avaliação de conhecimento</h3>
+<p>Teste seu aprendizado com estas questões (respostas no fim):</p>
+<ol type="1">
+<li>Qual a diferença fundamental entre os módulos 1 e 2?</li>
+<li>Quando usar X vs Y? Justifique com critérios objetivos.</li>
+<li>Identifique 3 armadilhas comuns ao implementar Z.</li>
+<li>Como você avaliaria a qualidade do seu sistema?</li>
+<li>Descreva um cenário de produção onde os conceitos deste curso
+falham.</li>
+</ol>
+<h3 id="recursos-adicionais">Recursos adicionais</h3>
+<ul>
+<li><strong>Documentação oficial</strong> : links para LangChain,
+OpenAI, etc.</li>
+<li><strong>Papers seminais</strong> : lista de 5-10 papers
+relevantes.</li>
+<li><strong>Repositórios de referência</strong> : GitHub com
+implementações canônicas.</li>
+<li><strong>Comunidade</strong> : Discord Nexus, Stack Overflow, Reddit
+r/LocalLLaMA.</li>
+<li><strong>Newsletter</strong> : “The Batch” (Andrew Ng), “Import AI”
+(Jack Clark).</li>
+</ul>
+<h3 id="próxima-trilha">Próxima trilha</h3>
+<p>Quando terminar esta apostila, considere:</p>
+<ul>
+<li><strong>Fundamental → Elite</strong> : sistemas
+production-grade.</li>
+<li><strong>Elite → Master</strong> : arquitetura de sistemas
+complexos.</li>
+<li><strong>Cursos paralelos</strong> : Combine RAG + Agents + Voice
+AI.</li>
+</ul>
+<p><strong>🎓 Certificado:</strong> após aprovação no projeto
+integrador, você recebe o certificado AcademIA Curso Prático — válido
+como pré-requisito para as próximas trilhas.</p>
+<p>14</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="c5-curso-voice-ai-parte-avançada">C5 Curso Voice Ai — Parte
+Avançada</h2>
+<p>Esta seção aprofunda conceitos do módulo principal com cenários de
+produção, edge cases, e técnicas avançadas.</p>
+<h3 id="arquiteturas-de-produção">Arquiteturas de produção</h3>
+<p>Em produção real, vemos três padrões dominantes: pipeline síncrono
+(simples mas bloqueante), pipeline assíncrono (com filas como Redis ou
+RabbitMQ), e pipeline event-driven (com Kafka). Cada um com trade-offs
+de latência, throughput, e complexidade.</p>
+<h3 id="edge-cases-críticos">Edge cases críticos</h3>
+<p>Todo sistema em produção encontra casos que o dev não antecipou. Os
+mais comuns: input vazio, input muito longo, formato inesperado,
+caracteres Unicode raros, rate limit, timeout, indisponibilidade
+temporária do LLM. Cada um precisa de handling explícito.</p>
+<p>16</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="estudo-de-caso-c5-curso-voice-ai-em-produção">Estudo de Caso: C5
+Curso Voice Ai em Produção</h2>
+<p>Estudo de caso real, anonimizado, de uma empresa brasileira que
+implementou este tópico em produção.</p>
+<h3 id="contexto">Contexto</h3>
+<p>Empresa de e-commerce de médio porte, ~50k SKUs, atendimento via
+WhatsApp. Volume: ~3k mensagens/dia, 8 atendentes humanos.</p>
+<h3 id="problema">Problema</h3>
+<p>Tempo médio de resposta: 4 minutos. Custo mensal com atendentes: R$
+80k. Taxa de resolução no primeiro contato: 62%.</p>
+<h3 id="solução-implementada">Solução implementada</h3>
+<p>Sistema RAG + agent que responde 70% das consultas automaticamente,
+escala para humano nos 30% mais complexos. Implementado em 6 semanas com
+a stack deste curso.</p>
+<h3 id="resultados-após-3-meses">Resultados após 3 meses</h3>
+<ul>
+<li>Tempo médio de resposta: 12 segundos (vs 4 minutos)</li>
+<li>Custo mensal: R$ 12k em API + R$ 25k em atendentes (vs R$ 80k)</li>
+<li>Taxa de resolução: 89%</li>
+<li>NPS: 72 (vs 58 antes)</li>
+</ul>
+<p>17</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="faq-avançado-c5-curso-voice-ai">FAQ Avançado: C5 Curso Voice
+Ai</h2>
+<p>Perguntas frequentes de alunos que já fizeram este curso:</p>
+<h3 id="p-como-sei-se-meu-sistema-está-em-produção-de-verdade">P: Como
+sei se meu sistema está em produção de verdade?</h3>
+<p>R: 3 sinais: (1) tem logging estruturado, (2) tem métricas e alertas,
+(3) tem um runbook para incidentes. Se faltar algum, ainda é
+protótipo.</p>
+<h3 id="p-quando-migrar-de-gpt-4o-mini-para-gpt-4o">P: Quando migrar de
+gpt-4o-mini para gpt-4o?</h3>
+<p>R: Quando a qualidade do output for o gargalo. Faça A/B testing: 10%
+do tráfego em gpt-4o, 90% em mini. Compare métricas de negócio
+(conversão, satisfação). Se lift &gt; 10%, migre 100%.</p>
+<h3 id="p-como-evitar-alucinações-em-produção">P: Como evitar
+alucinações em produção?</h3>
+<p>R: (1) RAG com citações, (2) Constitutional AI ou Self-Refine, (3)
+structured outputs, (4) human-in-the-loop em ações críticas, (5) eval
+contínuo com RAGAS.</p>
+<h3 id="p-vale-a-pena-fine-tuning">P: Vale a pena fine-tuning?</h3>
+<p>R: Para 80% dos casos, não. Prompt engineering + RAG resolvem.
+Fine-tuning vale quando: (1) você tem &gt; 10k exemplos rotulados, (2)
+formato de output muito específico, (3) latência crítica (fine-tuned
+small model pode bater GPT-4).</p>
+<p>18</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="próximos-passos-e-recursos-avançados">Próximos Passos e Recursos
+Avançados</h2>
+<p>Após dominar este módulo, você está pronto para:</p>
+<h3 id="próximas-trilhas">Próximas trilhas</h3>
+<ul>
+<li>Trilha Elite (engenharia de produção)</li>
+<li>Trilha Master (arquitetura agentic)</li>
+<li>Curso especializado (escolha por interesse)</li>
+</ul>
+<h3 id="papers-recomendados">Papers recomendados</h3>
+<ul>
+<li>“ReAct: Reasoning and Acting in Language Models” (Yao et al.,
+2022)</li>
+<li>“Constitutional AI” (Bai et al., 2022)</li>
+<li>“Self-RAG” (Asai et al., 2023)</li>
+<li>“GraphRAG” (Microsoft, 2024)</li>
+</ul>
+<h3 id="livros-da-coletânea">Livros da coletânea</h3>
+<p>Continue com os ebooks da Coletânea Nexus Vol. II para
+aprofundar.</p>
+<h3 id="comunidade">Comunidade</h3>
+<p>Compartilhe seu projeto no Discord Nexus para feedback de mentores e
+pares.</p>
+<p>19</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="laboratório-prático-implementação-guiada">Laboratório Prático:
+Implementação Guiada</h2>
+<p>Neste laboratório, vamos implementar uma feature específica do zero.
+Abra seu editor, copie o código abaixo, e execute passo a passo.</p>
+<h3 id="setup">Setup</h3>
+<pre><code>mkdir lab &amp;&amp; cd lab
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install langchain langchain-openai python-dotenv</code></pre>
+<h3 id="implementação">Implementação</h3>
+<p>Siga os passos numerados. Cada passo é testável independentemente. Se
+um passo falhar, verifique o anterior antes de prosseguir.</p>
+<ol type="1">
+<li>Crie o arquivo <code>.env</code> com suas chaves.</li>
+<li>Crie <code>main.py</code> com o esqueleto.</li>
+<li>Adicione a lógica de negócio.</li>
+<li>Teste com 5 inputs diferentes.</li>
+<li>Documente o que funcionou e o que não funcionou.</li>
+</ol>
+<h3 id="validação">Validação</h3>
+<p>Seu código deve rodar sem erros e produzir os 5 outputs esperados. Se
+algum output divergir, debug até bater.</p>
+<p>21</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="quiz-de-auto-avaliação">Quiz de Auto-Avaliação</h2>
+<p>Teste seu conhecimento antes de avançar. Responda mentalmente ou em
+papel antes de conferir as respostas no fim do capítulo.</p>
+<h3 id="questões-conceituais">Questões conceituais</h3>
+<ol type="1">
+<li>Qual a diferença fundamental entre esta técnica e a alternativa mais
+próxima?</li>
+<li>Em que cenário X falha? Como detectar?</li>
+<li>Quais os trade-offs de usar Y vs Z?</li>
+<li>Como você avaliaria a qualidade do output?</li>
+</ol>
+<h3 id="questões-práticas">Questões práticas</h3>
+<ol type="1">
+<li>Implemente um snippet mínimo (10 linhas) que demonstre o conceito
+central.</li>
+<li>Identifique um bug no código abaixo.</li>
+<li>Refatore este código para ser mais robusto.</li>
+<li>Adicione observability (logging, tracing).</li>
+</ol>
+<h3 id="estudo-de-caso">Estudo de caso</h3>
+<p>Você recebe um sistema legado que precisa migrar. Quais os 3
+primeiros passos? Quais os riscos? Como você avaliaria o sucesso?</p>
+<p>22</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="glossário-e-referências">Glossário e Referências</h2>
+<h3 id="glossário-de-termos">Glossário de termos</h3>
+<p><strong>API</strong><br />
+Application Programming Interface. Contrato de comunicação entre
+sistemas.</p>
+<p><strong>LLM</strong><br />
+Large Language Model. Modelo de linguagem com bilhões de parâmetros.</p>
+<p><strong>Token</strong><br />
+Unidade de texto processada por LLM. ~4 caracteres em inglês, ~3 em
+português.</p>
+<p><strong>Embedding</strong><br />
+Representação vetorial densa de texto. ~1536 dimensões.</p>
+<p><strong>RAG</strong><br />
+Retrieval-Augmented Generation. LLM + retrieval de documentos.</p>
+<p><strong>Agent</strong><br />
+LLM + tools + loop de decisão autônoma.</p>
+<p><strong>Prompt</strong><br />
+Instrução em linguagem natural dada ao LLM.</p>
+<p><strong>Tool</strong><br />
+Função externa que o agent pode invocar.</p>
+<p><strong>Vector DB</strong><br />
+Banco de dados otimizado para busca por similaridade.</p>
+<p><strong>HNSW</strong><br />
+Algoritmo de grafo para approximate nearest neighbors.</p>
+<p><strong>Function Calling</strong><br />
+Mecanismo nativo de LLMs para tool use estruturado.</p>
+<p><strong>Constitutional AI</strong><br />
+Auto-crítica baseada em princípios éticos.</p>
+<h3 id="referências">Referências</h3>
+<ul>
+<li>Documentação oficial: links para cada ferramenta.</li>
+<li>Papers seminais: lista curada para aprofundamento.</li>
+<li>Repositórios de referência: implementações canônicas.</li>
+<li>Comunidades: Discord, Reddit, Stack Overflow.</li>
+</ul>
+<p>23</p>
+<p>AcademIA · Apostila C5</p>
+<h2 id="encerramento-convite-nexus">Encerramento &amp; Convite
+Nexus</h2>
+<p>Você chegou ao fim desta apostila. Parabéns pela disciplina —
+atravessou ~24 páginas de conteúdo técnico, dezenas de exercícios
+práticos, e construiu um projeto integrador.</p>
+<p>Agora, o que fazer com este conhecimento?</p>
+<h3 id="construir">Construir</h3>
+<p>Escolha um problema real e aplique. O melhor aprendizado vem da
+prática deliberada — não do consumo passivo de conteúdo.</p>
+<h3 id="compartilhar">Compartilhar</h3>
+<p>Documente sua jornada no LinkedIn, GitHub, ou comunidade Nexus. Quem
+ensina, aprende duas vezes. Quem constrói em público, atrai
+oportunidades.</p>
+<h3 id="monetizar">Monetizar</h3>
+<p>O Marketplace Nexus está aberto para afiliados que querem vender
+ebooks, cursos, mentorias, e ferramentas de IA comissionadas em 70%.
+Esta apostila, junto com a Coletânea Técnica Vol. II (10 ebooks), é o
+pacote completo para começar.</p>
+<p><strong>💰 Bônus para alunos AcademIA:</strong> complete 3 cursos e
+ganhe 30% de desconto na Coletânea Vol. II + acesso ao programa beta de
+novos cursos.</p>
+<blockquote>
+<p>“A melhor forma de prever o futuro é construí-lo. A segunda melhor é
+ensinar outros a construí-lo.”— Alan Kay, adaptado</p>
+</blockquote>
+<p>Boa jornada, e nos vemos na próxima apostila.</p>
+<p><strong>AcademIA · Nexus HUB57 · Shakespeare da Atualidade · PHD do
+Universo AI</strong></p>
+<p>15</p>
+<p>AcademIA · Apostila C5</p>
+<script src="../enhance.js"></script>
+</body>
+</html>

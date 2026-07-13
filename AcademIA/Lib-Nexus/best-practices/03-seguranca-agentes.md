@@ -10,7 +10,7 @@ nivel: Master / Elite
 
 # 🛡️ Best Practices · Segurança de Agentes IA
 
-> **23 práticas obrigatórias** para qualquer agente autônomo que opera em produção na Nexus. Complementa `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md`.
+> **23 práticas obrigatórias** para qualquer agente autônomo que opera em produção na Nexus. Complementa `apostilas/18-seguranca-ofensiva-pentest-agentes-ia.md`.
 
 ## 🎯 Princípios Fundamentais
 
@@ -305,7 +305,7 @@ async function killAgent(agentId: string, reason: string) {
 
 ## 🔗 Materiais Relacionados
 
-- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — vetores de ataque
+- `apostilas/18-seguranca-ofensiva-pentest-agentes-ia.md` — vetores de ataque
 - `Lib-Nexus/knowledge-base/03-conformidade-lgpd.md` — base LGPD
 - `Lib-Nexus/knowledge-base/04-conformidade-anatel.md` — telecom
 - `tutoriais/15-auditoria-lgpd-automatizada.md` — DPIA automatizada

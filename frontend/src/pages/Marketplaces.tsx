@@ -731,9 +731,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 </>
               ) : (
                 <>
-                  <Link href="/subscriptions">
+                  <Link href="/pix/checkout?pack=pack-a2">
                     <Button className="gradient-btn h-12 px-6 text-sm font-semibold">
-                      Contratar Nexus Partners Pack
+                      Adquirir Pack A² (R$ 10)
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -746,9 +746,22 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
               )}
             </div>
 
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="rounded-3xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-quantum-cyan/80">Jornada principal do afiliado</p>
+                <p className="mt-2 text-lg font-bold text-white">Pack A² é a porta de entrada</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">Ativa o primeiro agente IA, libera a jornada comercial e inicia a progressão oficial do Nexus Affil'IA'te.</p>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                <p className="text-[10px] uppercase tracking-[0.24em] text-slate-400">SaaS complementar</p>
+                <p className="mt-2 text-lg font-bold text-white">Nexus Partners Pack é opcional</p>
+                <p className="mt-2 text-sm leading-6 text-slate-300">Ferramenta híbrida por assinatura, contratável por afiliados ou terceiros, com operação independente da escada de packs.</p>
+              </div>
+            </div>
+
             {hasOnboardingFlag && (
               <div className="rounded-2xl border border-quantum-cyan/30 bg-quantum-cyan/10 p-4 text-sm text-quantum-cyan">
-                Cadastro concluído! Você já pode acessar o marketplace e, se fizer sentido para sua operação, contratar o Nexus Partners Pack como produto independente por assinatura.
+                Cadastro concluído! Adquira agora seu Pack A² por R$ 10 para ativar seu Agente Nexus e começar a ganhar comissões. O Nexus Partners Pack fica disponível opcionalmente após a ativação.
               </div>
             )}
           </div>

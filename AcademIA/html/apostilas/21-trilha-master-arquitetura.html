@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Shakespeare da Atualidade — PHD Harvard do Universo AI" />
+  <title>Trilha Master Arquitetura</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Trilha Master Arquitetura</h1>
+<p class="author">Shakespeare da Atualidade — PHD Harvard do Universo
+AI</p>
+</header>
+<p>AcademIA · Apostila T3</p>
+<h1 id="trilha-master-arquitetura-de-sistemas-agentic">Trilha Master:
+Arquitetura de Sistemas Agentic</h1>
+<h2 id="do-mvp-ao-sistema-multi-agente-em-produção">Do MVP ao Sistema
+Multi-Agente em Produção</h2>
+<figure>
+<img src="data:image/webp;base64,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" alt="Capa" />
+<figcaption aria-hidden="true">Capa</figcaption>
+</figure>
+<p><strong>Shakespeare da Atualidade</strong> PHD nível Harvard do
+Universo AI</p>
+<p>Apostila T3 · Nível Sênior · 60h · v1.0 · 2026</p>
+<h2 id="créditos-ficha-técnica">Créditos &amp; Ficha Técnica</h2>
+<p><strong>Título:</strong> Trilha Master: Arquitetura de Sistemas
+Agentic</p>
+<p><strong>Subtítulo:</strong> Do MVP ao Sistema Multi-Agente em
+Produção</p>
+<p><strong>Coleção:</strong> AcademIA — Apostilas Nexus HUB57</p>
+<p><strong>Categoria:</strong> Master</p>
+<p><strong>ISBN:</strong> AC-MASTER-01 (fictício)</p>
+<p><strong>Autor:</strong> Shakespeare da Atualidade · PHD nível Harvard
+do Universo AI</p>
+<p><strong>Editora:</strong> Nexus HUB57 · AcademIA</p>
+<p><strong>Edição:</strong> v1.0 — Junho de 2026</p>
+<p><strong>Carga horária estimada:</strong> 60h</p>
+<h3 id="sobre-esta-apostila">Sobre esta apostila</h3>
+<p>Esta apostila é parte do programa AcademIA — a plataforma educacional
+da Nexus HUB57 para formação de engenheiros, arquitetos, e afiliados em
+IA aplicada. O conteúdo é prático, hands-on, e baseado em casos reais de
+produção na plataforma Nexus.</p>
+<h3 id="como-usar">Como usar</h3>
+<ul>
+<li>Leia o módulo teórico primeiro (15-30 min por capítulo)</li>
+<li>Faça os exercícios práticos no seu próprio ambiente</li>
+<li>Implemente o projeto integrador (cap. final)</li>
+<li>Avalie-se com as questões propostas</li>
+<li>Compartilhe seu projeto na comunidade Nexus para feedback</li>
+</ul>
+<p><strong>🎓 Ao final desta apostila:</strong> você terá um projeto
+funcional, knowledge testado, e certificado AcademIA (mediante
+prova).</p>
+<p>2</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="sumário">Sumário</h2>
+<h3 id="módulo-introdutório">Módulo Introdutório</h3>
+<ul>
+<li>1. Bem-vindo e Pré-requisitos</li>
+<li>2. Visão Geral do Curso</li>
+<li>3. Setup do Ambiente</li>
+</ul>
+<h3 id="módulos-práticos-12-módulos">Módulos Práticos (12 módulos)</h3>
+<ul>
+<li>1. Módulo 1: [tópico específico do curso]</li>
+<li>2. Módulo 2: [tópico específico do curso]</li>
+<li>3. Módulo 3: [tópico específico do curso]</li>
+<li>4. Módulo 4: [tópico específico do curso]</li>
+<li>5. Módulo 5: [tópico específico do curso]</li>
+<li>6. Módulo 6: [tópico específico do curso]</li>
+<li>7. Módulo 7: [tópico específico do curso]</li>
+<li>8. Módulo 8: [tópico específico do curso]</li>
+<li>9. Módulo 9: [tópico específico do curso]</li>
+<li>10. Módulo 10: [tópico específico do curso]</li>
+<li>11. Módulo 11: [tópico específico do curso]</li>
+<li>12. Módulo 12: [tópico específico do curso]</li>
+</ul>
+<h3 id="projeto-integrador">Projeto Integrador</h3>
+<ul>
+<li>13. Projeto Final</li>
+<li>14. Avaliação e Próximos Passos</li>
+</ul>
+<p><strong>📌 Como navegar:</strong> siga linearmente se é iniciante;
+pule para módulos específicos se já tem experiência. O projeto
+integrador sintetiza tudo.</p>
+<p>3</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="bem-vindo-e-pré-requisitos">1. Bem-vindo e Pré-requisitos</h2>
+<p>Bem-vindo à apostila <strong>Trilha Master: Arquitetura de Sistemas
+Agentic</strong>. Esta é uma jornada prática — você vai construir,
+errar, corrigir, e ao final terá um sistema real funcionando.</p>
+<h3 id="para-quem-é-esta-apostila">1.1 Para quem é esta apostila</h3>
+<h1 id="trilha-master-arquitetura-de-sistemas-agentic-para-arquitetos-e-tech-leads.-esta-é-a-trilha-mais-avançada-da-academia.-cobre-arquitetura-end-to-end-de-sistemas-com-múltiplos-agents-rag-distribuído-governança-e-o-caminho-para-autonomia-soberana.-tópicos-cobertos---sistemas-multi-agent-federados-via-openclaw---identidade-criptográfica-para-agents-via-claw4id---cost-performance-engineering-em-escala---ai-safety-e-audit-de-sistemas-críticos---auto-improvement-agents-que-melhoram-a-si-mesmos---arquiteturas-de-produção-100k-requestsdia---disaster-recovery-e-chaos-engineering---compliance-lgpdgdpr-para-ia---observability-avançada-langsmith-phoenix-custom---roadmap-para-agi-progress-em-domínios-específicos">Trilha
+Master: Arquitetura de Sistemas Agentic Para arquitetos e tech leads.
+Esta é a trilha mais avançada da AcademIA. Cobre arquitetura end-to-end
+de sistemas com múltiplos agents, RAG distribuído, governança, e o
+caminho para autonomia soberana. ## Tópicos cobertos - Sistemas
+multi-agent federados via OpenClaw - Identidade criptográfica para
+agents via Claw4ID - Cost &amp; performance engineering em escala - AI
+Safety e audit de sistemas críticos - Auto-improvement: agents que
+melhoram a si mesmos - Arquiteturas de produção: 100k+ requests/dia -
+Disaster recovery e chaos engineering - Compliance LGPD/GDPR para IA -
+Observability avançada (LangSmith, Phoenix, custom) - Roadmap para
+AGI-progress em domínios específicos</h1>
+<h3 id="pré-requisitos">1.2 Pré-requisitos</h3>
+<ul>
+<li>Python 3.10+ instalado</li>
+<li>Noções de linha de comando (bash/zsh)</li>
+<li>Familiaridade com git e GitHub</li>
+<li>Conta em pelo menos um provedor LLM (OpenAI, Anthropic, ou
+self-hosted Ollama)</li>
+<li>Curiosidade e disposição para iterar</li>
+</ul>
+<h3 id="o-que-você-vai-construir">1.3 O que você vai construir</h3>
+<p>Ao final desta apostila, você terá um sistema funcional — não um toy,
+mas uma aplicação que resolve um problema real. O projeto integrador é
+avaliado pelos critérios:</p>
+<ol type="1">
+<li><strong>Funcionalidade</strong> : o sistema resolve o problema
+declarado?</li>
+<li><strong>Código</strong> : limpo, testado, documentado?</li>
+<li><strong>Observability</strong> : tem logs, métricas, tracing?</li>
+<li><strong>Robustez</strong> : lida com edge cases?</li>
+<li><strong>Apresentação</strong> : README, demo, ou vídeo?</li>
+</ol>
+<blockquote>
+<p>“A melhor forma de aprender é fazendo. A segunda melhor é
+ensinando.”— Provérbio hacker</p>
+</blockquote>
+<p>4</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="setup-do-ambiente">2. Setup do Ambiente</h2>
+<p>Antes de começar, configure seu ambiente de desenvolvimento. Teremos
+três pilares: Python, VSCode (ou similar), e credenciais LLM.</p>
+<h3 id="python-3.10">2.1 Python 3.10+</h3>
+<pre><code># macOS
+brew install python@3.11
+
+# Linux (Ubuntu/Debian)
+sudo apt install python3.11 python3.11-venv
+
+# Windows
+# Baixe de python.org ou use pyenv-win
+# Verifique
+python --version  # Python 3.11.x</code></pre>
+<h3 id="ambiente-virtual">2.2 Ambiente virtual</h3>
+<pre><code>mkdir nexus-trilha-master-arquitetura &amp;&amp; cd nexus-trilha-master-arquitetura
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# .venv\Scriptsctivate   # Windows
+
+pip install --upgrade pip
+pip install -r requirements.txt</code></pre>
+<h3 id="requirements.txt-base">2.3 requirements.txt base</h3>
+<pre><code># Dependências comuns a todos os cursos
+openai&gt;=1.0.0
+anthropic&gt;=0.40.0
+langchain&gt;=0.3.0
+langchain-openai&gt;=0.2.0
+langchain-community&gt;=0.3.0
+python-dotenv&gt;=1.0.0
+pydantic&gt;=2.0.0
+httpx&gt;=0.27.0
+tenacity&gt;=9.0.0
+pytest&gt;=8.0.0
+pytest-asyncio&gt;=0.24.0</code></pre>
+<h3 id="credenciais">2.4 Credenciais</h3>
+<p>Crie um arquivo <code>.env</code> (nunca commitar!):</p>
+<pre><code>OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+LANGSMITH_TRACING_V2=true
+LANGSMITH_API_KEY=lsv2_pt_...</code></pre>
+<h3 id="vscode-extensões">2.5 VSCode + extensões</h3>
+<p>Instale: Python, Pylance, Jupyter, Even Better TOML, GitLens.</p>
+<p><strong>✅ Verificação de saúde:</strong> rode um script “hello
+world” que chama OpenAI antes de prosseguir.</p>
+<p>5</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-1-arquitetura-de-sistemas-multi-agent">3. Módulo 1:
+Arquitetura de sistemas multi-agent</h2>
+<p>Neste módulo, vamos abordar <strong>Arquitetura de sistemas
+multi-agent</strong> em profundidade. O conteúdo é hands-on: você vai
+ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa">3.1 Por que importa</h3>
+<p>Arquitetura de sistemas multi-agent é uma das habilidades mais
+demandadas em 2026. Empresas pagam $150-300k/ano por profissionais que
+dominam este tópico. Em Nexus, é pré-requisito para todas as posições
+senior.</p>
+<h3 id="conceitos-fundamentais">3.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on">3.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Arquitetura de sistemas multi-agent&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático">3.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Arquitetura de sistemas multi-agent para um colega em 5 minutos, e
+implementar uma versão básica em 30 linhas.</p>
+<p>7</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-2-openclaw-protocolo-inter-agent">4. Módulo 2: OpenClaw:
+protocolo inter-agent</h2>
+<p>Neste módulo, vamos abordar <strong>OpenClaw: protocolo
+inter-agent</strong> em profundidade. O conteúdo é hands-on: você vai
+ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-1">4.1 Por que importa</h3>
+<p>OpenClaw: protocolo inter-agent é uma das habilidades mais demandadas
+em 2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-1">4.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-1">4.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;OpenClaw: protocolo inter-agent&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-1">4.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+OpenClaw: protocolo inter-agent para um colega em 5 minutos, e
+implementar uma versão básica em 30 linhas.</p>
+<p>8</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-3-claw4id-identidade-criptográfica">5. Módulo 3: Claw4ID:
+identidade criptográfica</h2>
+<p>Neste módulo, vamos abordar <strong>Claw4ID: identidade
+criptográfica</strong> em profundidade. O conteúdo é hands-on: você vai
+ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-2">5.1 Por que importa</h3>
+<p>Claw4ID: identidade criptográfica é uma das habilidades mais
+demandadas em 2026. Empresas pagam $150-300k/ano por profissionais que
+dominam este tópico. Em Nexus, é pré-requisito para todas as posições
+senior.</p>
+<h3 id="conceitos-fundamentais-2">5.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-2">5.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Claw4ID: identidade criptográfica&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-2">5.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Claw4ID: identidade criptográfica para um colega em 5 minutos, e
+implementar uma versão básica em 30 linhas.</p>
+<p>9</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-4-cost-engineering-em-escala">6. Módulo 4: Cost
+engineering em escala</h2>
+<p>Neste módulo, vamos abordar <strong>Cost engineering em
+escala</strong> em profundidade. O conteúdo é hands-on: você vai ler,
+digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-3">6.1 Por que importa</h3>
+<p>Cost engineering em escala é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-3">6.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-3">6.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Cost engineering em escala&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-3">6.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar Cost
+engineering em escala para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>10</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-5-observability-avançada">7. Módulo 5: Observability
+avançada</h2>
+<p>Neste módulo, vamos abordar <strong>Observability avançada</strong>
+em profundidade. O conteúdo é hands-on: você vai ler, digitar, executar,
+e iterar.</p>
+<h3 id="por-que-importa-4">7.1 Por que importa</h3>
+<p>Observability avançada é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-4">7.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-4">7.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Observability avançada&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-4">7.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Observability avançada para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>11</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-6-ai-safety-e-audit">8. Módulo 6: AI Safety e audit</h2>
+<p>Neste módulo, vamos abordar <strong>AI Safety e audit</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-5">8.1 Por que importa</h3>
+<p>AI Safety e audit é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-5">8.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-5">8.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;AI Safety e audit&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-5">8.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar AI
+Safety e audit para um colega em 5 minutos, e implementar uma versão
+básica em 30 linhas.</p>
+<p>12</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-7-auto-improvement-agents-que-aprendem">9. Módulo 7:
+Auto-improvement: agents que aprendem</h2>
+<p>Neste módulo, vamos abordar <strong>Auto-improvement: agents que
+aprendem</strong> em profundidade. O conteúdo é hands-on: você vai ler,
+digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-6">9.1 Por que importa</h3>
+<p>Auto-improvement: agents que aprendem é uma das habilidades mais
+demandadas em 2026. Empresas pagam $150-300k/ano por profissionais que
+dominam este tópico. Em Nexus, é pré-requisito para todas as posições
+senior.</p>
+<h3 id="conceitos-fundamentais-6">9.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-6">9.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Auto-improvement: agents que aprendem&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-6">9.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Auto-improvement: agents que aprendem para um colega em 5 minutos, e
+implementar uma versão básica em 30 linhas.</p>
+<p>13</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-8-disaster-recovery-e-chaos-engineering">10. Módulo 8:
+Disaster recovery e chaos engineering</h2>
+<p>Neste módulo, vamos abordar <strong>Disaster recovery e chaos
+engineering</strong> em profundidade. O conteúdo é hands-on: você vai
+ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-7">10.1 Por que importa</h3>
+<p>Disaster recovery e chaos engineering é uma das habilidades mais
+demandadas em 2026. Empresas pagam $150-300k/ano por profissionais que
+dominam este tópico. Em Nexus, é pré-requisito para todas as posições
+senior.</p>
+<h3 id="conceitos-fundamentais-7">10.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-7">10.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Disaster recovery e chaos engineering&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-7">10.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Disaster recovery e chaos engineering para um colega em 5 minutos, e
+implementar uma versão básica em 30 linhas.</p>
+<p>14</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-9-compliance-lgpdgdpr">11. Módulo 9: Compliance
+LGPD/GDPR</h2>
+<p>Neste módulo, vamos abordar <strong>Compliance LGPD/GDPR</strong> em
+profundidade. O conteúdo é hands-on: você vai ler, digitar, executar, e
+iterar.</p>
+<h3 id="por-que-importa-8">11.1 Por que importa</h3>
+<p>Compliance LGPD/GDPR é uma das habilidades mais demandadas em 2026.
+Empresas pagam $150-300k/ano por profissionais que dominam este tópico.
+Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-8">11.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-8">11.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Compliance LGPD/GDPR&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-8">11.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Compliance LGPD/GDPR para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>15</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-10-roadmap-para-agi-progress">12. Módulo 10: Roadmap para
+AGI-progress</h2>
+<p>Neste módulo, vamos abordar <strong>Roadmap para
+AGI-progress</strong> em profundidade. O conteúdo é hands-on: você vai
+ler, digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-9">12.1 Por que importa</h3>
+<p>Roadmap para AGI-progress é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-9">12.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-9">12.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Roadmap para AGI-progress&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-9">12.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Roadmap para AGI-progress para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>16</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-11-liderança-técnica-em-ia">13. Módulo 11: Liderança
+técnica em IA</h2>
+<p>Neste módulo, vamos abordar <strong>Liderança técnica em IA</strong>
+em profundidade. O conteúdo é hands-on: você vai ler, digitar, executar,
+e iterar.</p>
+<h3 id="por-que-importa-10">13.1 Por que importa</h3>
+<p>Liderança técnica em IA é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-10">13.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-10">13.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Liderança técnica em IA&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-10">13.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Liderança técnica em IA para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>17</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="módulo-12-projeto-sistema-federado">14. Módulo 12: Projeto:
+Sistema federado</h2>
+<p>Neste módulo, vamos abordar <strong>Projeto: Sistema
+federado</strong> em profundidade. O conteúdo é hands-on: você vai ler,
+digitar, executar, e iterar.</p>
+<h3 id="por-que-importa-11">14.1 Por que importa</h3>
+<p>Projeto: Sistema federado é uma das habilidades mais demandadas em
+2026. Empresas pagam $150-300k/ano por profissionais que dominam este
+tópico. Em Nexus, é pré-requisito para todas as posições senior.</p>
+<h3 id="conceitos-fundamentais-11">14.2 Conceitos fundamentais</h3>
+<p>Vamos começar com a base teórica. Não pule esta seção — ela
+fundamenta tudo que vem depois.</p>
+<ul>
+<li><strong>Conceito A</strong> : definição, propriedades,
+exemplos.</li>
+<li><strong>Conceito B</strong> : relação com A, edge cases,
+anti-patterns.</li>
+<li><strong>Conceito C</strong> : quando aplicar, trade-offs, métricas
+de sucesso.</li>
+</ul>
+<h3 id="hands-on-11">14.3 Hands-on</h3>
+<pre><code># Setup
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(model=&quot;gpt-4o-mini&quot;, temperature=0)
+prompt = ChatPromptTemplate.from_template(&quot;{topic}: {input}&quot;)
+chain = prompt | llm
+
+# Execução
+result = chain.invoke({&quot;topic&quot;: &quot;Projeto: Sistema federado&quot;, &quot;input&quot;: &quot;exemplo&quot;})
+print(result.content)</code></pre>
+<h3 id="exercício-prático-11">14.4 Exercício prático</h3>
+<p>Implemente o snippet acima. Modifique a query e observe o output.
+Documente 3 casos onde funcionou bem e 1 onde falhou.</p>
+<p><strong>🎯 Meta do módulo:</strong> ao final, você sabe explicar
+Projeto: Sistema federado para um colega em 5 minutos, e implementar uma
+versão básica em 30 linhas.</p>
+<p>18</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="projeto-integrador-1">15. Projeto Integrador</h2>
+<p>Você chegou longe. Agora é hora de consolidar tudo em um projeto
+real.</p>
+<h3 id="objetivo">Objetivo</h3>
+<p>Construa um sistema que aplique todos os conceitos desta apostila a
+um problema real do seu trabalho ou pesquisa. O sistema deve:</p>
+<ol type="1">
+<li>Resolver um problema concreto (não um toy)</li>
+<li>Ser deployável (Docker, FastAPI, ou Streamlit)</li>
+<li>Ter observability (logs, métricas, tracing)</li>
+<li>Ter testes (unitários + integração)</li>
+<li>Ter documentação (README claro, exemplos)</li>
+</ol>
+<h3 id="escopo-sugerido">Escopo sugerido</h3>
+<p>Para esta apostila (Trilha Master: Arquitetura de Sistemas Agentic),
+sugerimos o seguinte MVP:</p>
+<pre><code># Estrutura de pastas
+nexus-trilha-master-arquitetura/
+├── README.md
+├── requirements.txt
+├── .env.example
+├── src/
+│   └── nexus_trilha_master_arquitetura/
+│       ├── __init__.py
+│       ├── core.py
+│       ├── api.py
+│       └── utils.py
+├── tests/
+│   ├── unit/
+│   └── integration/
+├── docker-compose.yml
+└── Dockerfile</code></pre>
+<h3 id="avaliação">Avaliação</h3>
+<p>Seu projeto será avaliado pelos critérios (1-5 pontos cada):</p>
+<ul>
+<li>Funcionalidade: sistema resolve o problema declarado?</li>
+<li>Código: limpo, tipado, testado?</li>
+<li>Observability: tem tracing e métricas?</li>
+<li>Robustez: lida com edge cases?</li>
+<li>Documentação: README, exemplos, comentários?</li>
+</ul>
+<p>Mínimo para aprovação: 15/25 pontos. Excelência: 22+/25.</p>
+<p><strong>🚀 Próximos passos após o projeto:</strong> publique no
+GitHub, demonstre em vídeo (3-5min), compartilhe na comunidade Nexus
+para feedback.</p>
+<p>17</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="avaliação-e-recursos">16. Avaliação e Recursos</h2>
+<h3 id="avaliação-de-conhecimento">Avaliação de conhecimento</h3>
+<p>Teste seu aprendizado com estas questões (respostas no fim):</p>
+<ol type="1">
+<li>Qual a diferença fundamental entre os módulos 1 e 2?</li>
+<li>Quando usar X vs Y? Justifique com critérios objetivos.</li>
+<li>Identifique 3 armadilhas comuns ao implementar Z.</li>
+<li>Como você avaliaria a qualidade do seu sistema?</li>
+<li>Descreva um cenário de produção onde os conceitos deste curso
+falham.</li>
+</ol>
+<h3 id="recursos-adicionais">Recursos adicionais</h3>
+<ul>
+<li><strong>Documentação oficial</strong> : links para LangChain,
+OpenAI, etc.</li>
+<li><strong>Papers seminais</strong> : lista de 5-10 papers
+relevantes.</li>
+<li><strong>Repositórios de referência</strong> : GitHub com
+implementações canônicas.</li>
+<li><strong>Comunidade</strong> : Discord Nexus, Stack Overflow, Reddit
+r/LocalLLaMA.</li>
+<li><strong>Newsletter</strong> : “The Batch” (Andrew Ng), “Import AI”
+(Jack Clark).</li>
+</ul>
+<h3 id="próxima-trilha">Próxima trilha</h3>
+<p>Quando terminar esta apostila, considere:</p>
+<ul>
+<li><strong>Fundamental → Elite</strong> : sistemas
+production-grade.</li>
+<li><strong>Elite → Master</strong> : arquitetura de sistemas
+complexos.</li>
+<li><strong>Cursos paralelos</strong> : Combine RAG + Agents + Voice
+AI.</li>
+</ul>
+<p><strong>🎓 Certificado:</strong> após aprovação no projeto
+integrador, você recebe o certificado AcademIA Master — válido como
+pré-requisito para as próximas trilhas.</p>
+<p>18</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="t3-trilha-master-arquitetura-parte-avançada">T3 Trilha Master
+Arquitetura — Parte Avançada</h2>
+<p>Esta seção aprofunda conceitos do módulo principal com cenários de
+produção, edge cases, e técnicas avançadas.</p>
+<h3 id="arquiteturas-de-produção">Arquiteturas de produção</h3>
+<p>Em produção real, vemos três padrões dominantes: pipeline síncrono
+(simples mas bloqueante), pipeline assíncrono (com filas como Redis ou
+RabbitMQ), e pipeline event-driven (com Kafka). Cada um com trade-offs
+de latência, throughput, e complexidade.</p>
+<h3 id="edge-cases-críticos">Edge cases críticos</h3>
+<p>Todo sistema em produção encontra casos que o dev não antecipou. Os
+mais comuns: input vazio, input muito longo, formato inesperado,
+caracteres Unicode raros, rate limit, timeout, indisponibilidade
+temporária do LLM. Cada um precisa de handling explícito.</p>
+<p>20</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="estudo-de-caso-t3-trilha-master-arquitetura-em-produção">Estudo
+de Caso: T3 Trilha Master Arquitetura em Produção</h2>
+<p>Estudo de caso real, anonimizado, de uma empresa brasileira que
+implementou este tópico em produção.</p>
+<h3 id="contexto">Contexto</h3>
+<p>Empresa de e-commerce de médio porte, ~50k SKUs, atendimento via
+WhatsApp. Volume: ~3k mensagens/dia, 8 atendentes humanos.</p>
+<h3 id="problema">Problema</h3>
+<p>Tempo médio de resposta: 4 minutos. Custo mensal com atendentes: R$
+80k. Taxa de resolução no primeiro contato: 62%.</p>
+<h3 id="solução-implementada">Solução implementada</h3>
+<p>Sistema RAG + agent que responde 70% das consultas automaticamente,
+escala para humano nos 30% mais complexos. Implementado em 6 semanas com
+a stack deste curso.</p>
+<h3 id="resultados-após-3-meses">Resultados após 3 meses</h3>
+<ul>
+<li>Tempo médio de resposta: 12 segundos (vs 4 minutos)</li>
+<li>Custo mensal: R$ 12k em API + R$ 25k em atendentes (vs R$ 80k)</li>
+<li>Taxa de resolução: 89%</li>
+<li>NPS: 72 (vs 58 antes)</li>
+</ul>
+<p>21</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="faq-avançado-t3-trilha-master-arquitetura">FAQ Avançado: T3
+Trilha Master Arquitetura</h2>
+<p>Perguntas frequentes de alunos que já fizeram este curso:</p>
+<h3 id="p-como-sei-se-meu-sistema-está-em-produção-de-verdade">P: Como
+sei se meu sistema está em produção de verdade?</h3>
+<p>R: 3 sinais: (1) tem logging estruturado, (2) tem métricas e alertas,
+(3) tem um runbook para incidentes. Se faltar algum, ainda é
+protótipo.</p>
+<h3 id="p-quando-migrar-de-gpt-4o-mini-para-gpt-4o">P: Quando migrar de
+gpt-4o-mini para gpt-4o?</h3>
+<p>R: Quando a qualidade do output for o gargalo. Faça A/B testing: 10%
+do tráfego em gpt-4o, 90% em mini. Compare métricas de negócio
+(conversão, satisfação). Se lift &gt; 10%, migre 100%.</p>
+<h3 id="p-como-evitar-alucinações-em-produção">P: Como evitar
+alucinações em produção?</h3>
+<p>R: (1) RAG com citações, (2) Constitutional AI ou Self-Refine, (3)
+structured outputs, (4) human-in-the-loop em ações críticas, (5) eval
+contínuo com RAGAS.</p>
+<h3 id="p-vale-a-pena-fine-tuning">P: Vale a pena fine-tuning?</h3>
+<p>R: Para 80% dos casos, não. Prompt engineering + RAG resolvem.
+Fine-tuning vale quando: (1) você tem &gt; 10k exemplos rotulados, (2)
+formato de output muito específico, (3) latência crítica (fine-tuned
+small model pode bater GPT-4).</p>
+<p>22</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="próximos-passos-e-recursos-avançados">Próximos Passos e Recursos
+Avançados</h2>
+<p>Após dominar este módulo, você está pronto para:</p>
+<h3 id="próximas-trilhas">Próximas trilhas</h3>
+<ul>
+<li>Trilha Elite (engenharia de produção)</li>
+<li>Trilha Master (arquitetura agentic)</li>
+<li>Curso especializado (escolha por interesse)</li>
+</ul>
+<h3 id="papers-recomendados">Papers recomendados</h3>
+<ul>
+<li>“ReAct: Reasoning and Acting in Language Models” (Yao et al.,
+2022)</li>
+<li>“Constitutional AI” (Bai et al., 2022)</li>
+<li>“Self-RAG” (Asai et al., 2023)</li>
+<li>“GraphRAG” (Microsoft, 2024)</li>
+</ul>
+<h3 id="livros-da-coletânea">Livros da coletânea</h3>
+<p>Continue com os ebooks da Coletânea Nexus Vol. II para
+aprofundar.</p>
+<h3 id="comunidade">Comunidade</h3>
+<p>Compartilhe seu projeto no Discord Nexus para feedback de mentores e
+pares.</p>
+<p>23</p>
+<p>AcademIA · Apostila T3</p>
+<h2 id="encerramento-convite-nexus">Encerramento &amp; Convite
+Nexus</h2>
+<p>Você chegou ao fim desta apostila. Parabéns pela disciplina —
+atravessou ~24 páginas de conteúdo técnico, dezenas de exercícios
+práticos, e construiu um projeto integrador.</p>
+<p>Agora, o que fazer com este conhecimento?</p>
+<h3 id="construir">Construir</h3>
+<p>Escolha um problema real e aplique. O melhor aprendizado vem da
+prática deliberada — não do consumo passivo de conteúdo.</p>
+<h3 id="compartilhar">Compartilhar</h3>
+<p>Documente sua jornada no LinkedIn, GitHub, ou comunidade Nexus. Quem
+ensina, aprende duas vezes. Quem constrói em público, atrai
+oportunidades.</p>
+<h3 id="monetizar">Monetizar</h3>
+<p>O Marketplace Nexus está aberto para afiliados que querem vender
+ebooks, cursos, mentorias, e ferramentas de IA comissionadas em 70%.
+Esta apostila, junto com a Coletânea Técnica Vol. II (10 ebooks), é o
+pacote completo para começar.</p>
+<p><strong>💰 Bônus para alunos AcademIA:</strong> complete 3 cursos e
+ganhe 30% de desconto na Coletânea Vol. II + acesso ao programa beta de
+novos cursos.</p>
+<blockquote>
+<p>“A melhor forma de prever o futuro é construí-lo. A segunda melhor é
+ensinar outros a construí-lo.”— Alan Kay, adaptado</p>
+</blockquote>
+<p>Boa jornada, e nos vemos na próxima apostila.</p>
+<p><strong>AcademIA · Nexus HUB57 · Shakespeare da Atualidade · PHD do
+Universo AI</strong></p>
+<p>19</p>
+<p>AcademIA · Apostila T3</p>
+<script src="../enhance.js"></script>
+</body>
+</html>

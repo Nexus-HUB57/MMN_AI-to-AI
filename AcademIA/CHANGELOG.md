@@ -17,7 +17,7 @@ last_updated: 2026-07-07
 ### ✨ Adicionado
 
 **Apostilas (1 nova):**
-- `apostilas/13-monetizacao-avancada-escala.md` — 6 pilares de receita além de afiliação: produto digital, mentoria, SaaS, mídia, licensing, community. Roadmap R$ 0 → R$ 300k/mês em 24 meses.
+- `apostilas/19-monetizacao-avancada-escala.md` — 6 pilares de receita além de afiliação: produto digital, mentoria, SaaS, mídia, licensing, community. Roadmap R$ 0 → R$ 300k/mês em 24 meses.
 
 **Workshops (1 novo):**
 - `treinamentos/WS-06-oficina-automacao-conteudo.md` — Pipeline 5 agentes (Researcher, Planner, Writer, Editor, Designer) com checkpoints humanos. Escala 10x produção sem perder qualidade.
@@ -55,8 +55,8 @@ Esta versão consolida as contribuições das duas branches paralelas:
 ### ✨ Adicionado (Branch A — v1.2.0)
 
 **Apostilas (2 novas):**
-- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para IAs generativas
-- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores
+- `apostilas/17-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para IAs generativas
+- `apostilas/18-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores
 
 **Tutoriais (5 novos):**
 - `tutoriais/11-auditoria-skills-master.md`
@@ -84,7 +84,7 @@ Esta versão consolida as contribuições das duas branches paralelas:
 
 **Webinars (2 novos):**
 - `webinars/WB-2026-04-agentes-autonomos-prod.md`
-- `webinars/WB-2026-05-federacao-multi-tenant.md`
+- `webinars/WB-2026-05-multi-tenant.md`
 
 **Workflows (2 novos):**
 - `Lab-Nexus/workflows/make/02-workflow-recovery-carrinho.json`
@@ -121,8 +121,8 @@ Esta versão consolida as contribuições das duas branches paralelas:
 ### ✨ Novos Materiais (8)
 
 **Apostilas (2 novas):**
-- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para ser citado por IAs generativas (substituindo SEO clássico). 7 camadas de conteúdo, schema markup para IAs, métricas de GEO.
-- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores de ataque contra sistemas multi-agente. Prompt injection, tool abuse, memory poisoning, federation attacks, supply chain.
+- `apostilas/17-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para ser citado por IAs generativas (substituindo SEO clássico). 7 camadas de conteúdo, schema markup para IAs, métricas de GEO.
+- `apostilas/18-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores de ataque contra sistemas multi-agente. Prompt injection, tool abuse, memory poisoning, federation attacks, supply chain.
 
 **Tutoriais (5 novos):**
 - `tutoriais/11-auditoria-skills-master.md` (TUT-MAS-04) — Análise completa de uso, segurança e saúde das skills do agente.

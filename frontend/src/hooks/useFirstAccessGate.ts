@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
  * ---------------------------------------------------------------------------
  * Regra de negócio:
  *  - Todo afiliado que faz o primeiro acesso e ainda NÃO possui Pack ativado
- *    é redirecionado para /marketplaces para adquirir o Nexus Partners Pack.
+ *    é redirecionado para /marketplaces para ativar o Pack A², porta de entrada da jornada de afiliado.
  *  - O gate roda uma única vez por sessão (flag em sessionStorage) para não
  *    prender o usuário caso ele opte por explorar antes de comprar.
  *  - Rotas que SEMPRE ficam liberadas (não redirecionam):

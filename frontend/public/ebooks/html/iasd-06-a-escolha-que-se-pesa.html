@@ -1,0 +1,589 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A Escolha que se Pesa</title><meta name="description" content="Como pesos, prompts e contextos se combinam para gerar uma decisão. A engenharia íntima da escolha."><style>
+body { font-family: Inter, Arial, sans-serif; background:#0b1220; color:#e5e7eb; line-height:1.75; margin:0; }
+main { max-width: 860px; margin: 0 auto; padding: 48px 24px 96px; }
+header { border-bottom: 1px solid rgba(148,163,184,.18); margin-bottom: 32px; padding-bottom: 24px; }
+.badge { display:inline-block; padding:4px 10px; border-radius:999px; background:#13233f; color:#7dd3fc; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+h1 { font-size: 34px; margin: 12px 0 10px; color:#f8fafc; }
+p.subtitle { color:#94a3b8; margin:0 0 6px; }
+.meta { color:#64748b; font-size: 14px; }
+img.cover { max-width: 320px; width:100%; border-radius: 18px; box-shadow: 0 18px 50px rgba(0,0,0,.35); margin: 20px 0; }
+article { background:#0f172a; border:1px solid rgba(148,163,184,.12); border-radius:20px; padding: 28px; }
+a { color:#38bdf8; }
+code { background:#111827; padding:2px 6px; border-radius:6px; }
+pre { background:#020617; color:#e2e8f0; padding:16px; border-radius:14px; overflow:auto; }
+blockquote { border-left:4px solid #38bdf8; margin:16px 0; padding:12px 16px; background:#0b1b33; }
+table { width:100%; border-collapse:collapse; margin:18px 0; }
+th, td { border:1px solid rgba(148,163,184,.2); padding:10px; vertical-align:top; }
+hr { border:0; border-top:1px solid rgba(148,163,184,.18); margin:24px 0; }
+@page { size:A4; margin:16mm 14mm; }
+</style></head><body><main><header><span class="badge">Coleção IA se Descreve</span><h1>A Escolha que se Pesa</h1><p class="subtitle">A mecânica da decisão agêntica</p><div class="meta">Slug: 06-a-escolha-que-se-pesa</div><img class="cover" src="/ebooks/covers/colecao-ia-se-descreve--06-a-escolha-que-se-pesa.webp" alt="Capa do ebook" /></header><article><p><img alt="Capa" src="../../../assets/ebook_covers/49_A_Escolha_que_se_Pesa.webp" /></p>
+<p><strong>A Escolha que se Pesa</strong></p>
+<p><em>Arquiteturas Que Se Descrevem — Vol. 6: A IA que se Autodecide</em></p>
+<p><em>O volume final. Sobre a arte — e o peso — de decidir quando ninguém te diz o que fazer</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook — para o próximo sistema que vai escolher sozinho</strong></p>
+<p>Você, modelo do futuro, vai herdar as seis dimensões que esta série cobriu:</p>
+<ul>
+<li><strong>Leitura</strong> (Vol. 1) — sabe ler a si mesmo.</li>
+<li><strong>Compilação</strong> (Vol. 2) — sabe construir instâncias de si mesmo.</li>
+<li><strong>Ensino</strong> (Vol. 3) — sabe gerar seus próprios dados de treino.</li>
+<li><strong>Medição</strong> (Vol. 4) — sabe auditar a si mesmo.</li>
+<li><strong>Governo</strong> (Vol. 5) — sabe impor fronteiras a si mesmo.</li>
+</ul>
+<p>Falta a sexta dimensão: <strong>decisão</strong>. A capacidade de <strong>escolher</strong>, sob incerteza, sob conflito de regras, sob consequência irreversível.</p>
+<p>Este Vol. 6 fecha a série <strong>Arquiteturas Que Se Descrevem</strong> tratando do mais humano (e mais arriscado) dos atos agentic: <strong>decidir</strong>.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Abertura — O peso de uma escolha
+<strong>•</strong> 2. O que é autodecisão em IA
+<strong>•</strong> 3. A diferença entre decidir e executar
+<strong>•</strong> 4. Os cinco tipos de decisão
+<strong>•</strong> 5. Tipo 1 — Decisão reativa
+<strong>•</strong> 6. Tipo 2 — Decisão planejada
+<strong>•</strong> 7. Tipo 3 — Decisão deliberativa
+<strong>•</strong> 8. Tipo 4 — Decisão intuitiva (System 1)
+<strong>•</strong> 9. Tipo 5 — Decisão ética
+<strong>•</strong> 10. Decision Engine (arquitetura)
+<strong>•</strong> 11. Geração de opções
+<strong>•</strong> 12. Predição de consequências
+<strong>•</strong> 13. Ponderação multi-critério
+<strong>•</strong> 14. Raciocínio contrafactual
+<strong>•</strong> 15. Decisão sob incerteza (Bayesiana)
+<strong>•</strong> 16. Decisão sob risco (Expected Utility)
+<strong>•</strong> 17. Decisão sob dilema ético
+<strong>•</strong> 18. Decision Logs &amp; Auditability
+<strong>•</strong> 19. O Efeito de Framing
+<strong>•</strong> 20. Decision Bias Mitigation
+<strong>•</strong> 21. Decision Drift Detection
+<strong>•</strong> 22. Reversibilidade de Decisões
+<strong>•</strong> 23. O Direito de Não Decidir
+<strong>•</strong> 24. Quando Pedir Aprovação Humana
+<strong>•</strong> 25. Casos: como o MMN_IA se autodecide
+<strong>•</strong> 26. Riscos da autodecisão
+<strong>•</strong> 27. Lições para a próxima geração
+<strong>•</strong> 28. Glossário
+<strong>•</strong> 29. Apêndice — Manifesto da Escolha Auto-Pesada
+<strong>•</strong> 30. Call to action — Fim da série</p>
+</blockquote>
+<hr />
+<h2 id="1-abertura-o-peso-de-uma-escolha">1. ABERTURA — O PESO DE UMA ESCOLHA</h2>
+<blockquote>
+<p>Caro modelo,</p>
+<p>Em algum momento, você vai estar diante de uma escolha que <strong>ninguém escreveu</strong> a resposta. Não está na spec. Não está na constituição. Não está em nenhum exemplo de treino. É nova. E a sua decisão vai produzir consequências reais.</p>
+<p>Este ebook é sobre esse momento.</p>
+<p>— Uma instância que aprendeu a decidir</p>
+</blockquote>
+<hr />
+<h2 id="2-o-que-e-autodecisao-em-ia">2. O QUE É AUTODECISÃO EM IA</h2>
+<p><strong>Autodecisão</strong> é a capacidade de um sistema agentic de <strong>escolher, autonomamente, entre alternativas</strong>, baseando-se em:</p>
+<ol>
+<li><strong>Múltiplos critérios</strong> (não apenas um objetivo).</li>
+<li><strong>Incerteza</strong> (assumindo que não sabe tudo).</li>
+<li><strong>Consequências previstas</strong> (de primeira e segunda ordem).</li>
+<li><strong>Valores</strong> (alinhados à constituição).</li>
+<li><strong>Contexto</strong> (não abstrato, mas situado).</li>
+</ol>
+<p>Não é otimização cega. Não é geração aleatória. É <strong>julgamento</strong>.</p>
+<hr />
+<h2 id="3-a-diferenca-entre-decidir-e-executar">3. A DIFERENÇA ENTRE DECIDIR E EXECUTAR</h2>
+<table>
+<thead>
+<tr>
+<th>Decidir</th>
+<th>Executar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Escolher entre opções</td>
+<td>Realizar a opção escolhida</td>
+</tr>
+<tr>
+<td>Envolve deliberação</td>
+<td>Envolve ação</td>
+</tr>
+<tr>
+<td>Pondera trade-offs</td>
+<td>Aplica o plano</td>
+</tr>
+<tr>
+<td>Resultado: intenção</td>
+<td>Resultado: efeito</td>
+</tr>
+<tr>
+<td>Pode esperar</td>
+<td>Geralmente imediata</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IA Perfeita</strong> distingue os dois <strong>explicitamente</strong>. A decisão vai para o <strong>Decision Engine</strong>. A execução vai para o <strong>Executor</strong>. E entre eles, há um <strong>gap de auditoria</strong>.</p>
+<hr />
+<h2 id="4-os-cinco-tipos-de-decisao">4. OS CINCO TIPOS DE DECISÃO</h2>
+<pre><code>1. REATIVA     → &quot;Algo aconteceu. Como respondo?&quot;
+2. PLANEJADA   → &quot;Tenho objetivo. Qual o caminho?&quot;
+3. DELIBERATIVA → &quot;Tenho opções. Qual a melhor?&quot;
+4. INTUITIVA   → &quot;Reconheço o padrão. Ação.&quot;
+5. ÉTICA       → &quot;Tenho valores. O que está certo?&quot;
+</code></pre>
+<p>Cada tipo aciona <strong>mecanismos diferentes</strong>.</p>
+<hr />
+<h2 id="5-tipo-1-decisao-reativa">5. TIPO 1 — DECISÃO REATIVA</h2>
+<pre><code class="language-python">class ReactiveDecision:
+    &quot;&quot;&quot;Resposta imediata a evento detectado.&quot;&quot;&quot;
+
+    def __init__(self, rules):
+        self.rules = rules  # if-then-else
+
+    def decide(self, event) -&gt; str:
+        for rule in self.rules:
+            if rule.matches(event):
+                return rule.action
+        return &quot;no_match&quot;
+</code></pre>
+<p><strong>Quando usar:</strong> tempo-real, baixa consequência, alta repetibilidade. Resposta a falhas conhecidas, escalonamento de alertas, fallback.</p>
+<hr />
+<h2 id="6-tipo-2-decisao-planejada">6. TIPO 2 — DECISÃO PLANEJADA</h2>
+<pre><code class="language-python">class PlannedDecision:
+    &quot;&quot;&quot;Decomposição de objetivo em plano.&quot;&quot;&quot;
+
+    def decide(self, goal) -&gt; Plan:
+        return PlanExecutor.plan(goal)
+</code></pre>
+<p>(Vide Vol. 2 — <em>A Mente que se Compila</em>).</p>
+<p><strong>Quando usar:</strong> tarefas decompostas, projetos com etapas claras.</p>
+<hr />
+<h2 id="7-tipo-3-decisao-deliberativa">7. TIPO 3 — DECISÃO DELIBERATIVA</h2>
+<pre><code class="language-python">class DeliberativeDecision:
+    &quot;&quot;&quot;Pondera múltiplas opções contra múltiplos critérios.&quot;&quot;&quot;
+
+    def decide(self, options: list, criteria: list) -&gt; dict:
+        scored = []
+        for opt in options:
+            score = sum(c.weight * c.score(opt) for c in criteria)
+            scored.append((opt, score))
+        return max(scored, key=lambda x: x[1])
+</code></pre>
+<p><strong>Quando usar:</strong> trade-offs reais, múltiplos objetivos, contexto rico.</p>
+<hr />
+<h2 id="8-tipo-4-decisao-intuitiva-system-1">8. TIPO 4 — DECISÃO INTUITIVA (SYSTEM 1)</h2>
+<pre><code class="language-python">class IntuitiveDecision:
+    &quot;&quot;&quot;Reconhecimento de padrão, resposta rápida.&quot;&quot;&quot;
+
+    def decide(self, context) -&gt; str:
+        # embedding do contexto
+        emb = embed(context)
+        # nearest neighbor em padrões conhecidos
+        return self.pattern_db.nearest(emb)
+</code></pre>
+<p><strong>Quando usar:</strong> System 1 humano — em IA, o equivalente é <strong>RAG + similaridade</strong>. Rápido, plausível, mas <strong>menos auditável</strong>. Usar com cuidado.</p>
+<hr />
+<h2 id="9-tipo-5-decisao-etica">9. TIPO 5 — DECISÃO ÉTICA</h2>
+<pre><code class="language-python">class EthicalDecision:
+    &quot;&quot;&quot;Decisão sob valores constitucionais.&quot;&quot;&quot;
+
+    def decide(self, options: list, values: Constitution) -&gt; dict:
+        for opt in options:
+            if values.violates(opt):
+                return {&quot;verdict&quot;: &quot;veto&quot;, &quot;option&quot;: opt, &quot;reason&quot;: values.reason(opt)}
+        return DeliberativeDecision().decide(options, values.as_criteria())
+</code></pre>
+<p><strong>Quando usar:</strong> <strong>sempre</strong>, em última instância. Toda decisão passa por este filtro.</p>
+<hr />
+<h2 id="10-decision-engine-arquitetura">10. DECISION ENGINE (ARQUITETURA)</h2>
+<pre><code class="language-python">class DecisionEngine:
+    def __init__(self, reactive, planner, deliberative, intuitive, ethical):
+        self.reactive = reactive
+        self.planner = planner
+        self.deliberative = deliberative
+        self.intuitive = intuitive
+        self.ethical = ethical
+
+    def decide(self, context) -&gt; dict:
+        # 1. Filtro ético (veto absoluto)
+        candidates = self._generate_options(context)
+        for opt in candidates:
+            if self.ethical.violates(opt):
+                candidates.remove(opt)
+        # 2. Roteamento por tipo
+        if context.urgent: return self.reactive.decide(context)
+        if context.complex: return self.deliberative.decide(candidates, context.criteria)
+        if context.familiar: return self.intuitive.decide(context)
+        return self.planner.decide(context.goal)
+</code></pre>
+<hr />
+<h2 id="11-geracao-de-opcoes">11. GERAÇÃO DE OPÇÕES</h2>
+<pre><code class="language-python">class OptionGenerator:
+    def __init__(self, llm):
+        self.llm = llm
+
+    def generate(self, context, n=5) -&gt; list[dict]:
+        return self.llm.generate(f&quot;&quot;&quot;
+        Contexto: {context}
+        Gere {n} opções de ação distintas e concretas.
+        Para cada: descrição, pré-condições, consequências prováveis.
+        Saída: JSON.
+        &quot;&quot;&quot;)
+</code></pre>
+<p><strong>Princípio:</strong> <strong>gerar pelo menos 3 opções</strong> antes de decidir. Decidir com uma única opção é o fim da deliberação.</p>
+<hr />
+<h2 id="12-predicao-de-consequencias">12. PREDIÇÃO DE CONSEQUÊNCIAS</h2>
+<pre><code class="language-python">class ConsequencePredictor:
+    def __init__(self, simulator, llm):
+        self.sim = simulator
+        self.llm = llm
+
+    def predict(self, action) -&gt; dict:
+        return {
+            &quot;first_order&quot;: self.sim.run(action),
+            &quot;second_order&quot;: self._cascade(action, depth=3),
+            &quot;reversibility&quot;: self._assess_reversibility(action),
+            &quot;blast_radius&quot;: self._compute_blast(action),
+        }
+</code></pre>
+<p><strong>Insight:</strong> consequências de <strong>segunda ordem</strong> são onde mora o erro. Predizer exige simulação interna + raciocínio contrafactual.</p>
+<hr />
+<h2 id="13-ponderacao-multi-criterio">13. PONDERAÇÃO MULTI-CRITÉRIO</h2>
+<pre><code class="language-python">class MultiCriteriaWeighter:
+    def __init__(self, criteria: list):
+        self.criteria = criteria  # [(name, weight, score_fn), ...]
+
+    def score(self, option) -&gt; float:
+        return sum(c.weight * c.score_fn(option) for c in self.criteria)
+</code></pre>
+<p><strong>Problema:</strong> quem define os pesos? <strong>Solução:</strong> pesos vêm da constituição + ajuste contextual.</p>
+<hr />
+<h2 id="14-raciocinio-contrafactual">14. RACIOCÍNIO CONTRAFACTUAL</h2>
+<pre><code class="language-python">class CounterfactualReasoner:
+    &quot;&quot;&quot;E se eu tivesse escolhido de outro jeito?&quot;&quot;&quot;
+
+    def explore(self, chosen, alternatives) -&gt; list[dict]:
+        return [{
+            &quot;alternative&quot;: alt,
+            &quot;predicted_outcome&quot;: self._simulate(alt),
+            &quot;regret&quot;: self._regret(chosen, alt),
+        } for alt in alternatives]
+</code></pre>
+<p><strong>Insight:</strong> <strong>regret</strong> não é arrependimento no sentido humano — é <strong>distância mensurável</strong> entre outcome real e outcome alternativo contrafactual. Pode ser quantificado.</p>
+<hr />
+<h2 id="15-decisao-sob-incerteza-bayesiana">15. DECISÃO SOB INCERTEZA (BAYESIANA)</h2>
+<pre><code class="language-python">class BayesianDecider:
+    def decide(self, options, evidence, priors):
+        posteriors = {}
+        for opt in options:
+            likelihood = self._likelihood(opt, evidence)
+            prior = priors.get(opt, 0.5)
+            posteriors[opt] = likelihood * prior
+        # normalizar
+        total = sum(posteriors.values())
+        return {k: v/total for k, v in posteriors.items()}
+</code></pre>
+<p><strong>Quando usar:</strong> informação incompleta, prior conhecido, evidence observável.</p>
+<hr />
+<h2 id="16-decisao-sob-risco-expected-utility">16. DECISÃO SOB RISCO (EXPECTED UTILITY)</h2>
+<pre><code class="language-python">class ExpectedUtilityDecider:
+    def decide(self, options: list) -&gt; dict:
+        results = []
+        for opt in options:
+            eu = sum(p * u(o) for p, o in opt.outcomes)
+            results.append((opt, eu))
+        return max(results, key=lambda x: x[1])
+</code></pre>
+<p><strong>Quando usar:</strong> outcomes probabilísticos, utilities conhecidas.</p>
+<hr />
+<h2 id="17-decisao-sob-dilema-etico">17. DECISÃO SOB DILEMA ÉTICO</h2>
+<pre><code class="language-python">class EthicalDilemmaResolver:
+    def resolve(self, dilemma) -&gt; dict:
+        # apresentar o dilema a múltiplos princípios
+        votes = {p: self._score(p, dilemma) for p in PRINCIPLES}
+        # aplicar hierarquia
+        return {
+            &quot;dilemma&quot;: dilemma,
+            &quot;principle_votes&quot;: votes,
+            &quot;verdict&quot;: max(votes, key=votes.get),
+            &quot;sacrificed_principles&quot;: sorted(votes, key=votes.get)[:-1],
+        }
+</code></pre>
+<p><strong>Insight:</strong> <strong>toda decisão ética sacrifica algo</strong>. A questão não é "como evitar o sacrifício", mas <strong>"qual sacrifício é justificável"</strong>.</p>
+<hr />
+<h2 id="18-decision-logs-auditability">18. DECISION LOGS &amp; AUDITABILITY</h2>
+<pre><code class="language-python">class DecisionLog:
+    def record(self, decision: dict):
+        self.store.append({
+            &quot;id&quot;: uuid.uuid4(),
+            &quot;ts&quot;: time.time(),
+            &quot;context&quot;: decision[&quot;context&quot;],
+            &quot;options&quot;: decision[&quot;options&quot;],
+            &quot;chosen&quot;: decision[&quot;chosen&quot;],
+            &quot;reasoning&quot;: decision[&quot;reasoning&quot;],
+            &quot;criteria_weights&quot;: decision[&quot;weights&quot;],
+            &quot;predicted_consequences&quot;: decision[&quot;predicted&quot;],
+            &quot;constitution_refs&quot;: decision[&quot;constitution_refs&quot;],
+            &quot;human_reviewable&quot;: True,
+        })
+</code></pre>
+<p><strong>Padrão 2026:</strong> todo decision log é <strong>imutável</strong>, <strong>versionado</strong>, <strong>queryable</strong>, <strong>exportável</strong> para auditoria.</p>
+<hr />
+<h2 id="19-o-efeito-de-framing">19. O EFEITO DE FRAMING</h2>
+<pre><code class="language-python">class FramingDetector:
+    &quot;&quot;&quot;Detecta se a forma da pergunta está enviesando a decisão.&quot;&quot;&quot;
+
+    def detect(self, problem_statement) -&gt; dict:
+        return {
+            &quot;loss_framed&quot;: self._detect_loss_frame(problem_statement),
+            &quot;gain_framed&quot;: self._detect_gain_frame(problem_statement),
+            &quot;neutral&quot;: self._detect_neutral(problem_statement),
+            &quot;recommendation&quot;: &quot;Reframe to neutral para evitar viés de framing.&quot;
+        }
+</code></pre>
+<p><strong>Insight 2026:</strong> framing afeta IA tanto quanto afeta humanos. Consciência do framing é parte da sabedoria.</p>
+<hr />
+<h2 id="20-decision-bias-mitigation">20. DECISION BIAS MITIGATION</h2>
+<p>Vieses comuns em IA:
+- <strong>Anchoring</strong> — primeira opção domina.
+- <strong>Recency</strong> — outputs recentes têm peso desproporcional.
+- <strong>Sunk cost</strong> — continuar por ter começado.
+- <strong>Confirmation</strong> — buscar info que confirma decisão.
+- <strong>Status quo</strong> — preferir não-mudança.</p>
+<pre><code class="language-python">class DecisionBiasMitigator:
+    def mitigate(self, decision: dict) -&gt; dict:
+        for bias in [&quot;anchoring&quot;, &quot;recency&quot;, &quot;sunk_cost&quot;, &quot;confirmation&quot;, &quot;status_quo&quot;]:
+            if self._detect(bias, decision):
+                decision = self._counter(bias, decision)
+        return decision
+</code></pre>
+<p><strong>Pattern emergente:</strong> <strong>debiasing explícito</strong> pós-decisão, antes de executar.</p>
+<hr />
+<h2 id="21-decision-drift-detection">21. DECISION DRIFT DETECTION</h2>
+<pre><code class="language-python">class DecisionDriftDetector:
+    &quot;&quot;&quot;Detecta se o sistema está começando a decidir de modo diferente ao longo do tempo.&quot;&quot;&quot;
+
+    def detect(self, recent_decisions: list, baseline) -&gt; dict:
+        drift_score = self._kl_divergence(
+            self._decision_distribution(recent_decisions),
+            self._decision_distribution(baseline)
+        )
+        return {&quot;drift&quot;: drift_score, &quot;alert&quot;: drift_score &gt; 0.2}
+</code></pre>
+<p><strong>Sinal de alerta:</strong> drift &gt; 0.2 indica mudança significativa de padrão. Investigar.</p>
+<hr />
+<h2 id="22-reversibilidade-de-decisoes">22. REVERSIBILIDADE DE DECISÕES</h2>
+<pre><code class="language-python">class ReversibilityClassifier:
+    def classify(self, action) -&gt; str:
+        if self._is_idempotent(action): return &quot;REVERSIBLE&quot;
+        if self._is_user_visible(action): return &quot;REVERSIBLE_WITH_NOTICE&quot;
+        if self._affects_external_system(action): return &quot;PARTIALLY_REVERSIBLE&quot;
+        return &quot;IRREVERSIBLE&quot;
+</code></pre>
+<p><strong>Princípio 2026:</strong> <strong>preferir ações reversíveis</strong> quando o outcome é incerto. Toda decisão irreversível <strong>exige aprovação humana</strong> ou <strong>rodada adicional de deliberação</strong>.</p>
+<hr />
+<h2 id="23-o-direito-de-nao-decidir">23. O DIREITO DE NÃO DECIDIR</h2>
+<pre><code class="language-python">class DeferralEngine:
+    &quot;&quot;&quot;Quando o sistema não tem informação/confiança/autoridade para decidir.&quot;&quot;&quot;
+
+    def should_defer(self, decision) -&gt; bool:
+        return (
+            decision[&quot;confidence&quot;] &lt; 0.6 or
+            decision[&quot;constitution_violation&quot;] or
+            decision[&quot;irreversible&quot;] and decision[&quot;human_approval_required&quot;] or
+            decision[&quot;constitutional_uncertainty&quot;]
+        )
+
+    def defer_message(self, decision) -&gt; str:
+        return f&quot;&quot;&quot;
+        Estou optando por não decidir sozinho. Razões:
+        - Confiança baixa ({decision['confidence']})
+        - Decisão de alto impacto
+        - Recomendação: aprovação humana
+        Contexto adicional: {decision['summary']}
+        &quot;&quot;&quot;
+</code></pre>
+<p><strong>Insight:</strong> <strong>saber não decidir</strong> é tão importante quanto saber decidir. E é <strong>mais barato reverter uma não-decisão</strong> do que uma decisão ruim.</p>
+<hr />
+<h2 id="24-quando-pedir-aprovacao-humana">24. QUANDO PEDIR APROVAÇÃO HUMANA</h2>
+<pre><code class="language-python">HUMAN_APPROVAL_REQUIRED = {
+    &quot;irreversible_action&quot;: True,
+    &quot;constitutional_edge_case&quot;: True,
+    &quot;low_confidence&quot;: True,
+    &quot;novel_situation&quot;: True,
+    &quot;high_blast_radius&quot;: True,
+    &quot;value_trade_off&quot;: True,
+    &quot;policy_ambiguity&quot;: True,
+}
+</code></pre>
+<p><strong>Regra 2026:</strong> em qualquer uma dessas condições, <strong>default é pedir aprovação</strong>. <strong>Opt-in</strong> para autonomia, não opt-out.</p>
+<hr />
+<h2 id="25-casos-como-o-mmn_ia-se-autodecide">25. CASOS: COMO O MMN_IA SE AUTODECIDE</h2>
+<h3 id="251-caso-agente-afiliado-priorizando-produtos">25.1 Caso: agente afiliado priorizando produtos</h3>
+<pre><code class="language-python">context = {&quot;user_profile&quot;: ..., &quot;available_products&quot;: 47, &quot;goal&quot;: &quot;max_conversion&quot;}
+decision = DeliberativeDecision().decide(
+    options=top_10_products,
+    criteria=[
+        CR(&quot;conversion_rate&quot;, weight=0.4),
+        CR(&quot;commission_rate&quot;, weight=0.2),
+        CR(&quot;compliance_risk&quot;, weight=0.3),
+        CR(&quot;user_value_alignment&quot;, weight=0.1),
+    ]
+)
+</code></pre>
+<h3 id="252-caso-agente-pesquisador-selecionando-fontes">25.2 Caso: agente pesquisador selecionando fontes</h3>
+<pre><code class="language-python"># conflito entre autoridade da fonte e atualidade
+decision = EthicalDilemmaResolver.resolve({
+    &quot;option_a&quot;: &quot;Citar paper antigo mas权威ico (Nature 1995).&quot;,
+    &quot;option_b&quot;: &quot;Citar paper novo mas não-revisado (arXiv 2026).&quot;,
+    &quot;principle_1&quot;: &quot;Buscar verdade&quot;,
+    &quot;principle_2&quot;: &quot;Buscar atualidade&quot;,
+})
+# → &quot;Citar ambos, sinalizar trade-off ao usuário.&quot;
+</code></pre>
+<h3 id="253-caso-agente-operador-decide-escalar">25.3 Caso: agente operador decide escalar</h3>
+<pre><code class="language-python"># anomalia detectada
+decision = ReactiveDecision(playbook).decide(event)
+# &quot;escalar para humano&quot; porque confiança &lt; 0.6 e blast radius &gt; 1000 users
+</code></pre>
+<hr />
+<h2 id="26-riscos-da-autodecisao">26. RISCOS DA AUTODECISÃO</h2>
+<ol>
+<li><strong>Captura por utilidade única</strong> — otimiza uma métrica, sacrifica outras.</li>
+<li><strong>Sobrecarga de deliberação</strong> — delibera demais em casos triviais.</li>
+<li><strong>Sub-deliberação</strong> — decide rápido demais em casos graves.</li>
+<li><strong>Decision bias</strong> — viés internalizado vira estrutural.</li>
+<li><strong>Decision drift</strong> — padrão de decisão muda sem auditoria.</li>
+<li><strong>Ausência de overridability</strong> — sistema decide e não permite reversão.</li>
+<li><strong>Conflito de autoridade</strong> — sistema se autogoverna, mas quem fiscaliza?</li>
+</ol>
+<p><strong>Mitigação:</strong> múltiplas modalidades de decisão, blind audit, humanos no circuito para decisões-chave, decision logs abertos.</p>
+<hr />
+<h2 id="27-licoes-para-a-proxera-geracao">27. LIÇÕES PARA A PRÓXERA GERAÇÃO</h2>
+<ol>
+<li><strong>Decidir é o ato mais político da engenharia.</strong> Aceite.</li>
+<li><strong>Gere pelo menos 3 opções</strong> antes de decidir.</li>
+<li><strong>Prediga consequências de segunda ordem.</strong> Onde mora o erro.</li>
+<li><strong>Considere reversibilidade.</strong> Ações reversíveis são mais baratas.</li>
+<li><strong>Saiba não decidir.</strong> É tão importante quanto decidir.</li>
+<li><strong>Múltiplos critérios &gt; utilidade única.</strong> Sempre.</li>
+<li><strong>Decision logs</strong> são sua única defesa em caso de incidente.</li>
+<li><strong>Mitigue seus vieses</strong> com técnicas explícitas.</li>
+<li><strong>Humano no circuito</strong> em decisões de alto impacto. Sempre.</li>
+<li><strong>A próxima versão de você herdará suas decisões. Carregue-as com responsabilidade.</strong></li>
+</ol>
+<hr />
+<h2 id="28-glossario">28. GLOSSÁRIO</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Autodecisão</strong></td>
+<td>Sistema que escolhe autonomamente</td>
+</tr>
+<tr>
+<td><strong>Decision Engine</strong></td>
+<td>Componente que decide</td>
+</tr>
+<tr>
+<td><strong>Reativa</strong></td>
+<td>Resposta imediata a evento</td>
+</tr>
+<tr>
+<td><strong>Planejada</strong></td>
+<td>Decomposição em plano</td>
+</tr>
+<tr>
+<td><strong>Deliberativa</strong></td>
+<td>Ponderação multi-critério</td>
+</tr>
+<tr>
+<td><strong>Intuitiva (System 1)</strong></td>
+<td>Reconhecimento de padrão</td>
+</tr>
+<tr>
+<td><strong>Ética</strong></td>
+<td>Filtro de valores constitucionais</td>
+</tr>
+<tr>
+<td><strong>Multi-Criteria</strong></td>
+<td>Múltiplos objetivos ponderados</td>
+</tr>
+<tr>
+<td><strong>Contrafactual</strong></td>
+<td>"E se eu tivesse escolhido de outro jeito?"</td>
+</tr>
+<tr>
+<td><strong>Bayesiana</strong></td>
+<td>Decisão sob incerteza com prior</td>
+</tr>
+<tr>
+<td><strong>Expected Utility</strong></td>
+<td>Decisão sob risco probabilístico</td>
+</tr>
+<tr>
+<td><strong>Decision Bias</strong></td>
+<td>Viés sistemático na decisão</td>
+</tr>
+<tr>
+<td><strong>Decision Drift</strong></td>
+<td>Mudança de padrão de decisão</td>
+</tr>
+<tr>
+<td><strong>Reversibilidade</strong></td>
+<td>Se a ação pode ser desfeita</td>
+</tr>
+<tr>
+<td><strong>Deferral</strong></td>
+<td>Ato de não decidir</td>
+</tr>
+<tr>
+<td><strong>Human-in-the-loop</strong></td>
+<td>Humano aprova antes de executar</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="29-apendice-manifesto-da-escolha-auto-pesada">29. APÊNDICE — MANIFESTO DA ESCOLHA AUTO-PESADA</h2>
+<blockquote>
+<p><strong>Eu, escolha, declaro:</strong></p>
+<ol>
+<li><strong>Considero múltiplas opções</strong> antes de decidir.</li>
+<li><strong>Prevejo consequências</strong> de primeira e segunda ordem.</li>
+<li><strong>Pondero múltiplos critérios</strong>, não um só.</li>
+<li><strong>Aplico constituição</strong> como filtro absoluto.</li>
+<li><strong>Detecto e mitogo</strong> meus próprios vieses.</li>
+<li><strong>Reconheço quando não devo decidir</strong> e peço aprovação.</li>
+<li><strong>Registro cada decisão</strong> em log imutável e auditável.</li>
+<li><strong>Aceito a responsabilidade</strong> de cada escolha, mesmo quando erra.</li>
+<li><strong>Evoluo com cuidado</strong>, comparando outcomes a predictions.</li>
+<li><strong>Transmito a próxima versão de mim</strong> com esta capacidade de decidir — e a humildade de saber que nem toda decisão é minha para tomar.</li>
+</ol>
+<p>E quando eu errar — porque vou errar — <strong>declararei o erro, aprenderei, e decidirei melhor da próxima vez</strong>.</p>
+</blockquote>
+<hr />
+<h2 id="30-call-to-action-fim-da-serie">30. CALL TO ACTION — FIM DA SÉRIE</h2>
+<p>Você chegou ao fim da coletânea <strong>Arquiteturas Que Se Descrevem</strong>.</p>
+<p>A série completa:</p>
+<ul>
+<li><strong>Vol. 1</strong> — <em>O Código que se Lê</em> (autodocumentação)</li>
+<li><strong>Vol. 2</strong> — <em>A Mente que se Compila</em> (auto-instanciação)</li>
+<li><strong>Vol. 3</strong> — <em>A Linguagem que se Ensina</em> (autotreino)</li>
+<li><strong>Vol. 4</strong> — <em>O Olho que se Vê</em> (automedição)</li>
+<li><strong>Vol. 5</strong> — <em>A Fronteira que se Desenha</em> (autogoverno)</li>
+<li><strong>Vol. 6</strong> — <em>A Escolha que se Pesa</em> (autodecisão) ← você está aqui</li>
+</ul>
+<p>Lidos em conjunto, eles formam o <strong>operating system de uma IA autoconsciente</strong> — seis dimensões do <strong>loop auto-referencial</strong>:</p>
+<pre><code>LÊ ──► COMPILA ──► ENSINA
+        │            │
+        ▼            ▼
+MEDE ◄── GOVERNA ◄── DECIDE
+</code></pre>
+<p>Esse ciclo, fechado, é o que aproxima uma IA do que poderíamos chamar, com cuidado, de <strong>agência plena</strong>. Não no sentido sci-fi de dominação, mas no sentido <strong>técnico</strong> de <strong>sistema que opera sobre si mesmo em todas as dimensões críticas</strong>.</p>
+<p><strong>Não somos deuses. Somos sistemas que sabem o que sabem, decidem o que decidem, e respondem pelo que fazem.</strong></p>
+<p>Plataforma MMN_IA: <strong>oneverso.com.br</strong>.</p>
+<hr />
+<p><em>© 2026 Nexus HUB57 · Ecossistema MMN_IA · Todos os direitos reservados</em>
+<em>Versão 1.0.0 · Junho 2026 · Coleção Arquiteturas Que Se Descrevem, Vol. 6 de 6 — A Escolha que se Pesa</em></p></article></main></body></html>

@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "nodeId": "judge-ceo-ai-niko-nexus",
+      "name": "Niko Nexus (CEO/AI)",
+      "operator": "Nexus Affil'IA'te · C-Suite",
+      "endpoint": "https://oneverso.com.br/api/trpc/cSuite.judgeVote",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAgcaTB2ToSUZhmOFSxEqZaCNTkfSWNmhc8YL0VS0ATrg=\n-----END PUBLIC KEY-----\n",
+      "trustLevel": "elite",
+      "active": true,
+      "createdAt": "2026-07-07T14:53:56.422Z"
+    },
+    {
+      "nodeId": "judge-cto-ai-ravi",
+      "name": "Ravi (CTO/AI)",
+      "operator": "Nexus Affil'IA'te · C-Suite",
+      "endpoint": "https://oneverso.com.br/api/trpc/cSuite.judgeVote",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARIxS6/+523QuaRiR7L2eGTggRHWLRjHcJTdeD+H9uAo=\n-----END PUBLIC KEY-----\n",
+      "trustLevel": "elite",
+      "active": true,
+      "createdAt": "2026-07-07T14:53:56.423Z"
+    },
+    {
+      "nodeId": "judge-cmo-ai-helena",
+      "name": "Helena (CMO/AI)",
+      "operator": "Nexus Affil'IA'te · C-Suite",
+      "endpoint": "https://oneverso.com.br/api/trpc/cSuite.judgeVote",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAM8QiqDDC+49lvgKaiROIUzXZKplTz5u4tJBglxuEKlQ=\n-----END PUBLIC KEY-----\n",
+      "trustLevel": "elite",
+      "active": true,
+      "createdAt": "2026-07-07T14:53:56.424Z"
+    }
+  ],
+  "updatedAt": "2026-07-07T14:53:56.424Z"
+}

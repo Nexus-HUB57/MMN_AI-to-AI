@@ -94,7 +94,7 @@ export default function Network() {
 
   const q = (trpc as any).networkExtended?.getMyBinaryNetwork?.useQuery?.(
     userIdNum ? { userId: userIdNum, maxDepth: 5 } : undefined,
-    { refetchInterval: 60_000, retry: false }
+    { enabled: !!userIdNum, refetchInterval: 60_000, refetchOnMount: "always", retry: false }
   );
 
   const data = q?.data;

@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PartnersDeliveryPanels from "@/components/PartnersDeliveryPanels";
+import PartnersAccessGuard from "@/components/PartnersAccessGuard";
+import PartnersPremiumOnboarding from "@/components/PartnersPremiumOnboarding";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -339,18 +341,25 @@ export default function PartnersDashboardPage() {
 
   const stats = useMemo<FallbackPartnerStats>(() => {
     if (statsQuery.data) return statsQuery.data as FallbackPartnerStats;
-    return getFallbackPartnerStats();
+    // ONDA 27: sem fallback fictício. Se não há dados, mostrar zeros reais.
+    return {
+      totalPartners: 0,
+      activePartners: 0,
+      inactivePartners: 0,
+      totalVolume: 0,
+      totalCommissions: 0,
+      averageTier: "silver",
+      tierDistribution: { silver: 0, gold: 0, platinum: 0, diamond: 0 },
+      topPerformers: [],
+      growthRate: 0,
+      averageVolumePerPartner: 0,
+    } as FallbackPartnerStats;
   }, [statsQuery.data, localRevision]);
 
   const partnersList = useMemo(() => {
     if (partnersQuery.data) return partnersQuery.data;
-    return listFallbackPartners({
-      tier: tierFilter !== "all" ? tierFilter : undefined,
-      status: statusFilter !== "all" ? statusFilter : undefined,
-      search: searchTerm || undefined,
-      page: currentPage,
-      limit: 12,
-    });
+    // ONDA 27: sem fallback fictício. Se não há dados, retornar lista vazia real.
+    return { partners: [], total: 0, page: 1, pageSize: 12, totalPages: 0 } as any;
   }, [partnersQuery.data, tierFilter, statusFilter, searchTerm, currentPage, localRevision]);
 
   const selectedPartnerData = useMemo<FallbackPartner | null>(() => {
@@ -389,8 +398,9 @@ export default function PartnersDashboardPage() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 md:px-6">
+    <PartnersAccessGuard>
+      <DashboardLayout>
+        <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 md:px-6">
         <section className="rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.16),transparent_32%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,6,23,1))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="space-y-3">
@@ -443,9 +453,11 @@ export default function PartnersDashboardPage() {
           </div>
         </section>
 
+        <PartnersPremiumOnboarding />
+
         {apiOffline && (
           <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">
-            A API de partners não respondeu no domínio atual. Exibindo snapshot operacional espelhado do repositório e mantendo cadastro local seguro para continuidade do painel.
+            Faça login para visualizar seu Nexus Partners Pack. Painel público exibe métricas reais zeradas até autenticação e/ou cadastro do primeiro parceiro.
           </div>
         )}
 
@@ -807,8 +819,9 @@ export default function PartnersDashboardPage() {
             <PartnersDeliveryPanels.Chatbot />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+        </div>
+      </DashboardLayout>
+    </PartnersAccessGuard>
   );
 }
 

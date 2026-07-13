@@ -44,6 +44,7 @@ import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 
 import AffiliateStatusLights from "@/components/AffiliateStatusLights";
+import NexusJourneyClarifier from "@/components/NexusJourneyClarifier";
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -192,9 +193,16 @@ const QUICK_ACTIONS = [
     accent: "from-quantum-purple/30 to-quantum-cyan/0",
   },
   {
+    href: "/pix/checkout?pack=pack-a2",
+    label: "Pack A² · Ativação Essencial",
+    description: "AÇÃO NECESSÁRIA · R$ 10 · Ativa seu Agente Nexus e libera comissões",
+    icon: Zap,
+    accent: "from-quantum-cyan/40 to-emerald-400/20",
+  },
+  {
     href: "/subscriptions",
-    label: "Nexus Partners Pack",
-    description: "Produto SaaS independente com contratação por assinatura",
+    label: "Nexus Partners Pack (opcional)",
+    description: "Produto SaaS complementar · assinatura independente",
     icon: Users,
     accent: "from-amber-400/30 to-quantum-purple/10",
   },
@@ -254,6 +262,7 @@ export default function Dashboard() {
   const btcLocked = isBtcLocked(profile);
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
   const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
+  const hasPackA2 = profile.activePackSlugs.includes("pack-a2");
 
   const displayName = user?.name || "Afiliado";
   const displayEmail = user?.email || "";
@@ -264,8 +273,11 @@ export default function Dashboard() {
   // -------------------------------------------------------------------------
   // ID de Indicador: prefixo NX + primeiros 8 chars do user.id (sem hífens)
   const referralId = useMemo(() => {
-    const raw = (user?.id || profile.userId || "").toString().replace(/[^A-Za-z0-9]/g, "");
-    return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
+    const rawId = user?.id ?? profile.userId ?? "";
+    const digits = String(rawId).replace(/[^0-9]/g, "");
+    if (!digits) return "NX-PENDING";
+    // Padroniza: NX + 5 dígitos zerados à esquerda (ex: NX-00307)
+    return `NX-${digits.padStart(5, "0").slice(-5)}`;
   }, [user?.id, profile.userId]);
 
   // Link de indicação público (Minha Loja / cadastro)
@@ -393,6 +405,7 @@ export default function Dashboard() {
           </div>
         </header>
         <AffiliateStatusLights />
+        <NexusJourneyClarifier hasPackA2={hasPackA2} />
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -748,7 +761,7 @@ export default function Dashboard() {
 
             <div className="mt-5 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4 text-sm text-slate-200">
               <p className="font-semibold text-quantum-cyan">Regra de ativação aplicada</p>
-              <p className="mt-2 leading-6">O Nexus Partners Pack aparece no dashboard como produto comercial autônomo. O acesso ao catálogo e à contratação fica disponível após autenticação; a operação diária segue em painéis dedicados de assinatura e parceiros.</p>
+              <p className="mt-2 leading-6">O Nexus Partners Pack é um produto SaaS COMPLEMENTAR (opcional). A ação necessária para ativar seu Agente Nexus é adquirir o Pack A² por R$ 10. O Nexus Partners Pack fica disponível como upgrade após ativação.</p>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">

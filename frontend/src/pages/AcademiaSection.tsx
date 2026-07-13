@@ -191,7 +191,7 @@ export default function AcademiaSection() {
         {slug === "curso" && (
           <section className="space-y-4">
             <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
-              <Card className="border-red-400/20 bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,0.12),transparent_28%),rgba(15,23,42,0.90)] backdrop-blur">
+              <Card className="border-red-400/25 bg-[linear-gradient(180deg,rgba(15,23,42,0.98),rgba(2,6,23,1))] backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white">Sincronização do canal oficial com a trilha de vídeo aulas</CardTitle>
                   <CardDescription className="text-slate-300">
@@ -230,7 +230,7 @@ export default function AcademiaSection() {
                 </CardContent>
               </Card>
 
-              <Card className="border-white/10 bg-white/5 backdrop-blur">
+              <Card className="border-white/10 bg-slate-900/60 backdrop-blur">
                 <CardHeader>
                   <CardTitle className="text-white">Últimos vídeos do canal</CardTitle>
                   <CardDescription className="text-slate-300">
@@ -259,7 +259,7 @@ export default function AcademiaSection() {
                 </CardContent>
               </Card>
             </div>
-            <div className="flex flex-col gap-3 rounded-[28px] border border-quantum-cyan/20 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.12),transparent_30%),rgba(15,23,42,0.82)] p-6 shadow-xl shadow-black/20 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 rounded-[28px] border border-quantum-cyan/20 bg-[radial-gradient(circle_at_top_left,rgba(0,229,255,0.10),transparent_30%),rgba(15,23,42,0.96)] p-6 shadow-xl shadow-black/20 md:flex-row md:items-center md:justify-between">
               <div className="space-y-2">
                 <Badge className="border border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
                   Plano oficial de materiais · Cursos e Trilhas
@@ -280,7 +280,7 @@ export default function AcademiaSection() {
 
             <div className="grid gap-4 xl:grid-cols-4">
               {CURSO_LEVEL_PLANS.map((plan) => (
-                <Card key={plan.level} className="border-white/10 bg-white/5 backdrop-blur">
+                <Card key={plan.level} className="border-white/10 bg-slate-900/60 backdrop-blur">
                   <CardHeader className="space-y-3">
                     <div className={`inline-flex w-fit rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${plan.tone}`}>
                       {plan.level}

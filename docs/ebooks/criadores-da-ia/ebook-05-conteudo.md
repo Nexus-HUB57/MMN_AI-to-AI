@@ -28,7 +28,7 @@ Boa leitura.
 
 
 
-![Cena 2 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+2+arquitetos)
+![Cena 2 — Arquitetos da IA](capas/05-capa-arquitetos.jpg)
 
 ## Sumário
 
@@ -151,7 +151,6 @@ A carreira dele é, em si, **a história da profissionalização da IA multimoda
 
 
 
-![Cena 4 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+4+arquitetos)
 
 ## Fei-Fei Li e o ImageNet: A Mãe das IAs Modernas (14M imagens, 2009)
 
@@ -329,7 +328,6 @@ Sua carreira mostra que, em 2022–2026, **a fronteira da IA não é mais exclus
 
 
 
-![Cena 6 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+6+arquitetos)
 
 ## Stanford 2015–2017: A Forja que Gerou a Geração Transformers
 
@@ -473,7 +471,6 @@ E, em 2026, quando alguém usa **vibe coding** (Cursor, Copilot Workspace, Repli
 
 
 
-![Cena 8 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+8+arquitetos)
 
 ## AutoPilot, DALL·E, o Lado Visionário de Karpathy na Tesla
 
@@ -617,7 +614,6 @@ Essa terceira tese — *spatial AI* — é, em 2026, a tese central da **World L
 
 
 
-![Cena 10 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+10+arquitetos)
 
 ## Mira Murati na OpenAI: A Engenharia do GPT-4 e a Estratégia Multimodal
 
@@ -777,7 +773,6 @@ Esses perfis, em conjunto com os três cobertos neste volume, formam **os 7-8 no
 
 
 
-![Cena 12 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+12+arquitetos)
 
 ## Conclusão: Os Arquitetos e a Próxima Onda da IA Multimodal + Chamada Final à Coletânea
 
@@ -911,7 +906,6 @@ Obrigado por ler. Nos vemos no Volume 6.
 
 
 
-![Cena 14 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+14+arquitetos)
 
 ## Glossário
 

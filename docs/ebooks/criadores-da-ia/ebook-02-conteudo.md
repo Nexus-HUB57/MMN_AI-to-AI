@@ -2,6 +2,9 @@
 
 ## Demis Hassabis, Shane Legg, Jeff Dean e a IA que Aprende a Sonhar
 
+![A fundação da DeepMind em 2010 — Londres](ilustracoes/02-01-fundacao-deepmind.jpg)
+
+
 **Subtítulo:** *A jornada épica de três mentes que ensinaram máquinas a jogar Atari, dobrar proteínas e sonhar com o mundo*
 
 **Tagline:** *"Eles não queriam apenas fazer uma IA melhor. Queriam responder à pergunta mais antiga da ciência: o que é inteligência?"*
@@ -10,7 +13,7 @@
 
 ---
 
-![Capa - Os Visionários do Google DeepMind](https://placehold.co/1200x600/0A3A0A/FFF?text=OS+VISIONARIOS+DO+GOOGLE+DEEPMIND)
+![Capa - Os Visionários do Google DeepMind](capas/02-capa-deepmind.jpg)
 
 ---
 
@@ -50,6 +53,8 @@ Boa leitura.
 # CAPÍTULO 1
 
 ## Londres, 1976 — A Infância de um Prodígio que Queria Programar a Mente
+
+
 
 ### 1.1 O menino de sangue misto que aprendeu a pensar antes de aprender a falar
 
@@ -108,6 +113,9 @@ Hassabis, naquele momento, tinha 34 anos. A aposta da vida dele começava ali.
 # CAPÍTULO 2
 
 ## Shane Legg e a Pergunta de Um Milhão de Dólares (paper "Human-level artificial intelligence" 2007)
+
+![AlphaGo vs Lee Sedol — março de 2016, o Movimento 37](ilustracoes/02-02-alphago-movimento37.jpg)
+
 
 ### 2.1 O neozelandês que pensava em público, e em solidão
 
@@ -190,6 +198,8 @@ Hassabis é a voz. Legg é a bússola. Dean é a infraestrutura. E juntos, eles 
 # CAPÍTULO 3
 
 ## A Fundação da DeepMind — Atari, Vídeos do YouTube e o Sonho da AGI
+
+
 
 ### 3.1 Setembro de 2010: a primeira equipe, em um porão em Londres
 
@@ -288,6 +298,9 @@ Essa esperança se concretizou em janeiro de 2014.
 
 ## A Venda para o Google: A Batalha de 2014 (Facebook vs Google, ~$500M)
 
+![AlphaFold — Nobel de Química 2024](ilustracoes/02-03-alphafold-nobel.jpg)
+
+
 ### 4.1 O contexto: a corrida das big techs por IA, em 2013
 
 Para entender a compra da DeepMind pelo Google, é preciso voltar a 2012-2013, quando **duas tendências simultâneas** estavam mudando o Vale do Silício:
@@ -366,6 +379,8 @@ A aquisição da DeepMind foi, portanto, **um momento fundacional da era moderna
 # CAPÍTULO 5
 
 ## AlphaGo vs Lee Sedol — 9 de março de 2016, o Movimento 37
+
+
 
 ### 5.1 O jogo mais importante da história da IA
 
@@ -858,4 +873,3 @@ E essa história — **a história da humanidade aprendendo a criar inteligênci
 
 ---
 
-![Os Visionários do Google DeepMind - Capa Final](https://placehold.co/1200x600/0A3A0A/FFF?text=OS+VISIONARIOS+DO+DEEPMIND)

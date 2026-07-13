@@ -15,7 +15,7 @@
 
 ---
 
-![Capa - Os Guardiões da IA Segura](https://placehold.co/1200x600/3A2A0A/FFF?text=OS+GUARDIOES+DA+IA+SEGURA)
+![Capa - Os Guardiões da IA Segura](capas/03-capa-anthropic.jpg)
 
 ---
 
@@ -847,7 +847,6 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 ---
 
-![Os Guardiões da IA Segura - Capa Final](https://placehold.co/1200x600/3A2A0A/FFF?text=OS+GUARDIOES+DA+IA+SEGURA)
 
 ---
 

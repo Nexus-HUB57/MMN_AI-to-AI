@@ -2,6 +2,9 @@
 
 ## Sam Altman, Greg Brockman, Ilya Sutskever e a Fundação da OpenAI
 
+![A reunião que mudou o Silício — julho de 2015](ilustracoes/01-01-reuniao-openai.jpg)
+
+
 ### *De uma ideia maluca em 2015 ao ChatGPT que mudou o mundo — a história não contada dos fundadores da OpenAI*
 
 > **"Como três pessoas certas, no momento certo, com a obsessão certa, reescreveram o futuro da humanidade."**
@@ -10,7 +13,7 @@
 
 ---
 
-![Capa - Os Pais da Era Moderna](https://placehold.co/1200x600/0A0A23/FFF?text=OS+PAIS+DA+ERA+MODERNA)
+![Capa - Os Pais da Era Moderna](capas/01-capa-openai.jpg)
 
 ---
 
@@ -46,6 +49,8 @@ Boa leitura.
 # CAPÍTULO 1
 
 ## A Reunião que Mudou o Silício — O jantar de julho de 2015 em São Francisco
+
+
 
 ### 1.1 O cenário: o Vale do Silício em 2015
 
@@ -101,13 +106,15 @@ A OpenAI nasceu com uma promessa quase utópica: **aberta, sem fins lucrativos, 
 
 O jantar de julho de 2015 é, portanto, o Big Bang deste livro. Tudo o que vem depois — Altman, Brockman, Sutskever, ChatGPT, GPT-4, a crise de novembro de 2023, a SSI, o Stargate — é consequência daquele momento. E é por isso que começamos por ele.
 
-![Reunião OpenAI - julho 2015](https://placehold.co/1200x600/0A0A23/FFF?text=O+JANTAR+DE+JULHO+DE+2015)
 
 ---
 
 # CAPÍTULO 2
 
 ## Sam Altman — O Operador do Sistema (parte 1)
+
+![A crise de novembro de 2023 — Sam Altman deposto e reinstated](ilustracoes/01-02-altman-crise.jpg)
+
 
 ### 2.1 Chicago, 22 de abril de 1985: a origem
 
@@ -171,13 +178,14 @@ Em 2021, a Microsoft renovou a parceria com mais US$ 2 bilhões. Em 2022, a Open
 
 Em 2023, Sam Altman era, oficialmente, o **CEO da empresa mais importante do mundo em IA**. Aos 38 anos. Tinha chegado lá.
 
-![Sam Altman - Operador do Sistema](https://placehold.co/1200x600/0A0A23/FFF?text=SAM+ALTMAN+-+O+OPERADOR+DO+SISTEMA)
 
 ---
 
 # CAPÍTULO 3
 
 ## Greg Brockman — O Arquiteto Invisível (parte 1)
+
+
 
 ### 3.1 Dakota do Norte, 29 de novembro de 1987: a origem
 
@@ -234,13 +242,15 @@ Brockman, ao longo dos anos, foi construindo um estilo próprio de gestão: **se
 
 Esse estilo, embora eficaz, gerou críticas. Alguns pesquisadores, emparticular os mais seniores, reclamavam que Brockman era **"paternalista"** — tomava decisões técnicas sem consultar o time. Outros achavam que ele era **"micro-gerenciador"** — opinava em PRs de pouca relevância. Mas, no saldo, a maioria reconhece que, sem a sua liderança operacional, a OpenAI não teria chegado aonde chegou.
 
-![Greg Brockman - Arquiteto Invisível](https://placehold.co/1200x600/0A0A23/FFF?text=GREG+BROCKMAN+-+O+ARQUITETO+INVISIVEL)
 
 ---
 
 # CAPÍTULO 4
 
 ## Ilya Sutskever — O Profeta do Deep Learning (parte 1)
+
+![30 de novembro de 2022 — o lançamento do ChatGPT](ilustracoes/01-03-chatgpt-launch.jpg)
+
 
 ### 4.1 Nizhny Novgorod, 1986: a origem
 
@@ -313,13 +323,14 @@ Ilya, durante esses anos, construiu uma reputação **mítica** dentro da OpenAI
 
 Mas havia também um lado sombrio. Ilya era, segundo relatos de colegas, **intransigente em questões de segurança**. Ele acreditava, genuinamente, que a OpenAI estava perto de construir uma AGI, e que a falta de cuidado poderia levar a consequências catastróficas. Essas preocupações, em 2023, o levariam a tomar uma das decisões mais controversas da história da tecnologia: a demissão de Sam Altman.
 
-![Ilya Sutskever - Profeta do Deep Learning](https://placehold.co/1200x600/0A0A23/FFF?text=ILYA+SUTSKEVER+-+O+PROFETA+DO+DEEP+LEARNING)
 
 ---
 
 # CAPÍTULO 5
 
 ## Os Papers que Construíram a Revolução
+
+
 
 ### 5.1 A linhagem técnica: do Transformer ao ChatGPT
 
@@ -369,6 +380,9 @@ A OpenAI, sob a liderança de Sutskever, não inventou a maioria dessas ideias. 
 
 ## A Noite do ChatGPT — 30 de novembro de 2022
 
+![Stargate — a infraestrutura de US$ 500 bilhões para a AGI](ilustracoes/01-04-stargate.jpg)
+
+
 ### 6.1 O contexto: por que novembro de 2022
 
 Em outubro de 2022, a OpenAI estava, internamente, em uma encruzilhada. Tinha o GPT-3.5 (uma versão atualizada do GPT-3) funcionando. Tinha o DALL·E 2 em produção. Tinha a API sendo usada por milhares de desenvolvedores. Mas a percepção pública era a de que a OpenAI era uma "empresa de pesquisa", não uma "empresa de produtos". Havia uma sensação, dentro da empresa, de que **a próxima coisa precisava ser maior**.
@@ -412,6 +426,8 @@ E foi a noite em que Altman, Brockman, e Sutskever viram, com clareza, que **a O
 # CAPÍTULO 7
 
 ## A Tempestade de 2023 — Demissão, Drama, Retorno, Q* e a Fundação da SSI
+
+
 
 ### 7.1 O contexto: novembro de 2023
 
@@ -483,7 +499,6 @@ A tempestade de 2023 deixou marcas profundas em todos os três criadores:
 
 A tempestade também redefiniu a indústria. Em resposta direta à crise, a Anthropic (criada em 2021 por ex-OpenAI Dario e Daniela Amodei) ganhou destaque como a "alternativa segura". A xAI de Musk (criada em março de 2023) se apresentou como a "alternativa aberta". O Google DeepMind acelerou o lançamento do Gemini (dezembro de 2023). A corrida da IA, em 2024, era uma corrida de **quatro cavalos** — e o cavalo OpenAI, mesmo ferido, continuava sendo o favorito.
 
-![Tempestade de 2023 - OpenAI Drama](https://placehold.co/1200x600/0A0A23/FFF?text=A+TEMPESTADE+DE+2023)
 
 ---
 
@@ -580,7 +595,6 @@ O Stargate, em 2025-2026, é **a materialização das visões** dos três criado
 - **Brockman**: queria a **infraestrutura técnica mais avançada do mundo**, e conseguiu. O Stargate é, antes de tudo, uma conquista de **engenharia de sistemas** — e Brockman foi seu arquiteto.
 - **Sutskever**: queria a **AGI construída com cuidado**, e foi, em parte, responsável por tê-la construido **com cuidado insuficiente** em 2023 — mas sua SSI, em 2026, era vista como o **"freio de segurança externo"** do campo. Sutskever, paradoxalmente, tornou-se mais influente fora da OpenAI do que dentro.
 
-![Stargate Project - 2025](https://placehold.co/1200x600/0A0A23/FFF?text=STARGATE+-+A+INFRAESTRUTURA+BILIONARIA)
 
 ---
 

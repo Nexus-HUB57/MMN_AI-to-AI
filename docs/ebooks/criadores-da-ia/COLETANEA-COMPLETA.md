@@ -14,23 +14,23 @@
 
 1️⃣ **[Ebook 01 — Os Pais da Era Moderna](#ebook-01)**  
    - Criadores: Sam Altman, Greg Brockman, Ilya Sutskever  
-   - IAs/Empresas: OpenAI (GPT, ChatGPT, GPT-4, o1/o3, Stargate)
+   - IAs/Empresas: OpenAI
 
 2️⃣ **[Ebook 02 — Os Visionários do Google DeepMind](#ebook-02)**  
    - Criadores: Demis Hassabis, Shane Legg, Jeff Dean  
-   - IAs/Empresas: Gemini, AlphaGo, AlphaZero, AlphaFold (Nobel 2024)
+   - IAs/Empresas: Gemini, AlphaFold
 
 3️⃣ **[Ebook 03 — Os Guardiões da IA Segura](#ebook-03)**  
-   - Criadores: Dario Amodei, Daniela Amodei, Chris Olah  
-   - IAs/Empresas: Anthropic, Claude (Constitutional AI, Responsible Scaling)
+   - Criadores: Dario & Daniela Amodei, Chris Olah  
+   - IAs/Empresas: Anthropic, Claude
 
 4️⃣ **[Ebook 04 — Rebeldes, Filósofos e Disruptores](#ebook-04)**  
    - Criadores: Elon Musk, Yann LeCun, Geoffrey Hinton  
-   - IAs/Empresas: xAI (Grok), Meta (Llama, JEPA), Prêmio Turing, Nobel 2024
+   - IAs/Empresas: xAI, Meta, Nobel
 
 5️⃣ **[Ebook 05 — Os Arquitetos do Multiuniverso IA](#ebook-05)**  
    - Criadores: Andrej Karpathy, Fei-Fei Li, Mira Murati  
-   - IAs/Empresas: Tesla AI, ImageNet, World Labs, Thinking Machines AI
+   - IAs/Empresas: Tesla, ImageNet
 
 
 ---
@@ -44,10 +44,6 @@ Por trás de cada uma dessas IAs há um punhado de pessoas — engenheiros, pesq
 
 Esta coletânea é sobre essas pessoas. São cinco ebooks, quinze mentes brilhantes, uma pergunta: **quem são os arquitetos do futuro que já chegou?**
 
-A ordem dos volumes não é cronológica — é narrativa. Começamos com os pais da era moderna (OpenAI), seguimos para os visionários do Google DeepMind (Gemini, AlphaGo, AlphaFold), depois visitamos os guardiões da IA segura (Anthropic, Claude), conhecemos os rebeldes e filósofos (xAI, Meta, Prêmio Turing), e fechamos com os arquitetos silenciosos do multiuniverso multimodal.
-
-Boa leitura.
-
 
 ---
 
@@ -58,10 +54,10 @@ Boa leitura.
 
 **Criadores:** Sam Altman, Greg Brockman, Ilya Sutskever  
 
-**IAs/Empresas:** OpenAI (GPT, ChatGPT, GPT-4, o1/o3, Stargate)
+**IAs/Empresas:** OpenAI
 
 
-📄 *Arquivo-fonte: [`01-pais-era-moderna-openai/ebook-01-conteudo.md`](01-pais-era-moderna-openai/ebook-01-conteudo.md)*
+📄 *Fonte: [`01-pais-era-moderna-openai/ebook-01-conteudo.md`](01-pais-era-moderna-openai/ebook-01-conteudo.md)*
 
 
 ---
@@ -69,6 +65,9 @@ Boa leitura.
 # Os Pais da Era Moderna
 
 ## Sam Altman, Greg Brockman, Ilya Sutskever e a Fundação da OpenAI
+
+![A reunião que mudou o Silício — julho de 2015](ilustracoes/01-01-reuniao-openai.jpg)
+
 
 ### *De uma ideia maluca em 2015 ao ChatGPT que mudou o mundo — a história não contada dos fundadores da OpenAI*
 
@@ -78,7 +77,7 @@ Boa leitura.
 
 ---
 
-![Capa - Os Pais da Era Moderna](https://placehold.co/1200x600/0A0A23/FFF?text=OS+PAIS+DA+ERA+MODERNA)
+![Capa - Os Pais da Era Moderna](capas/01-capa-openai.jpg)
 
 ---
 
@@ -114,6 +113,8 @@ Boa leitura.
 # CAPÍTULO 1
 
 ## A Reunião que Mudou o Silício — O jantar de julho de 2015 em São Francisco
+
+
 
 ### 1.1 O cenário: o Vale do Silício em 2015
 
@@ -169,13 +170,15 @@ A OpenAI nasceu com uma promessa quase utópica: **aberta, sem fins lucrativos, 
 
 O jantar de julho de 2015 é, portanto, o Big Bang deste livro. Tudo o que vem depois — Altman, Brockman, Sutskever, ChatGPT, GPT-4, a crise de novembro de 2023, a SSI, o Stargate — é consequência daquele momento. E é por isso que começamos por ele.
 
-![Reunião OpenAI - julho 2015](https://placehold.co/1200x600/0A0A23/FFF?text=O+JANTAR+DE+JULHO+DE+2015)
 
 ---
 
 # CAPÍTULO 2
 
 ## Sam Altman — O Operador do Sistema (parte 1)
+
+![A crise de novembro de 2023 — Sam Altman deposto e reinstated](ilustracoes/01-02-altman-crise.jpg)
+
 
 ### 2.1 Chicago, 22 de abril de 1985: a origem
 
@@ -239,13 +242,14 @@ Em 2021, a Microsoft renovou a parceria com mais US$ 2 bilhões. Em 2022, a Open
 
 Em 2023, Sam Altman era, oficialmente, o **CEO da empresa mais importante do mundo em IA**. Aos 38 anos. Tinha chegado lá.
 
-![Sam Altman - Operador do Sistema](https://placehold.co/1200x600/0A0A23/FFF?text=SAM+ALTMAN+-+O+OPERADOR+DO+SISTEMA)
 
 ---
 
 # CAPÍTULO 3
 
 ## Greg Brockman — O Arquiteto Invisível (parte 1)
+
+
 
 ### 3.1 Dakota do Norte, 29 de novembro de 1987: a origem
 
@@ -302,13 +306,15 @@ Brockman, ao longo dos anos, foi construindo um estilo próprio de gestão: **se
 
 Esse estilo, embora eficaz, gerou críticas. Alguns pesquisadores, emparticular os mais seniores, reclamavam que Brockman era **"paternalista"** — tomava decisões técnicas sem consultar o time. Outros achavam que ele era **"micro-gerenciador"** — opinava em PRs de pouca relevância. Mas, no saldo, a maioria reconhece que, sem a sua liderança operacional, a OpenAI não teria chegado aonde chegou.
 
-![Greg Brockman - Arquiteto Invisível](https://placehold.co/1200x600/0A0A23/FFF?text=GREG+BROCKMAN+-+O+ARQUITETO+INVISIVEL)
 
 ---
 
 # CAPÍTULO 4
 
 ## Ilya Sutskever — O Profeta do Deep Learning (parte 1)
+
+![30 de novembro de 2022 — o lançamento do ChatGPT](ilustracoes/01-03-chatgpt-launch.jpg)
+
 
 ### 4.1 Nizhny Novgorod, 1986: a origem
 
@@ -381,13 +387,14 @@ Ilya, durante esses anos, construiu uma reputação **mítica** dentro da OpenAI
 
 Mas havia também um lado sombrio. Ilya era, segundo relatos de colegas, **intransigente em questões de segurança**. Ele acreditava, genuinamente, que a OpenAI estava perto de construir uma AGI, e que a falta de cuidado poderia levar a consequências catastróficas. Essas preocupações, em 2023, o levariam a tomar uma das decisões mais controversas da história da tecnologia: a demissão de Sam Altman.
 
-![Ilya Sutskever - Profeta do Deep Learning](https://placehold.co/1200x600/0A0A23/FFF?text=ILYA+SUTSKEVER+-+O+PROFETA+DO+DEEP+LEARNING)
 
 ---
 
 # CAPÍTULO 5
 
 ## Os Papers que Construíram a Revolução
+
+
 
 ### 5.1 A linhagem técnica: do Transformer ao ChatGPT
 
@@ -437,6 +444,9 @@ A OpenAI, sob a liderança de Sutskever, não inventou a maioria dessas ideias. 
 
 ## A Noite do ChatGPT — 30 de novembro de 2022
 
+![Stargate — a infraestrutura de US$ 500 bilhões para a AGI](ilustracoes/01-04-stargate.jpg)
+
+
 ### 6.1 O contexto: por que novembro de 2022
 
 Em outubro de 2022, a OpenAI estava, internamente, em uma encruzilhada. Tinha o GPT-3.5 (uma versão atualizada do GPT-3) funcionando. Tinha o DALL·E 2 em produção. Tinha a API sendo usada por milhares de desenvolvedores. Mas a percepção pública era a de que a OpenAI era uma "empresa de pesquisa", não uma "empresa de produtos". Havia uma sensação, dentro da empresa, de que **a próxima coisa precisava ser maior**.
@@ -480,6 +490,8 @@ E foi a noite em que Altman, Brockman, e Sutskever viram, com clareza, que **a O
 # CAPÍTULO 7
 
 ## A Tempestade de 2023 — Demissão, Drama, Retorno, Q* e a Fundação da SSI
+
+
 
 ### 7.1 O contexto: novembro de 2023
 
@@ -551,7 +563,6 @@ A tempestade de 2023 deixou marcas profundas em todos os três criadores:
 
 A tempestade também redefiniu a indústria. Em resposta direta à crise, a Anthropic (criada em 2021 por ex-OpenAI Dario e Daniela Amodei) ganhou destaque como a "alternativa segura". A xAI de Musk (criada em março de 2023) se apresentou como a "alternativa aberta". O Google DeepMind acelerou o lançamento do Gemini (dezembro de 2023). A corrida da IA, em 2024, era uma corrida de **quatro cavalos** — e o cavalo OpenAI, mesmo ferido, continuava sendo o favorito.
 
-![Tempestade de 2023 - OpenAI Drama](https://placehold.co/1200x600/0A0A23/FFF?text=A+TEMPESTADE+DE+2023)
 
 ---
 
@@ -648,7 +659,6 @@ O Stargate, em 2025-2026, é **a materialização das visões** dos três criado
 - **Brockman**: queria a **infraestrutura técnica mais avançada do mundo**, e conseguiu. O Stargate é, antes de tudo, uma conquista de **engenharia de sistemas** — e Brockman foi seu arquiteto.
 - **Sutskever**: queria a **AGI construída com cuidado**, e foi, em parte, responsável por tê-la construido **com cuidado insuficiente** em 2023 — mas sua SSI, em 2026, era vista como o **"freio de segurança externo"** do campo. Sutskever, paradoxalmente, tornou-se mais influente fora da OpenAI do que dentro.
 
-![Stargate Project - 2025](https://placehold.co/1200x600/0A0A23/FFF?text=STARGATE+-+A+INFRAESTRUTURA+BILIONARIA)
 
 ---
 
@@ -767,10 +777,10 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 **Criadores:** Demis Hassabis, Shane Legg, Jeff Dean  
 
-**IAs/Empresas:** Gemini, AlphaGo, AlphaZero, AlphaFold (Nobel 2024)
+**IAs/Empresas:** Gemini, AlphaFold
 
 
-📄 *Arquivo-fonte: [`02-visionarios-deepmind-gemini/ebook-02-conteudo.md`](02-visionarios-deepmind-gemini/ebook-02-conteudo.md)*
+📄 *Fonte: [`02-visionarios-deepmind-gemini/ebook-02-conteudo.md`](02-visionarios-deepmind-gemini/ebook-02-conteudo.md)*
 
 
 ---
@@ -778,6 +788,9 @@ Obrigado por ler. Nos vemos no Volume 4.
 # Os Visionários do Google DeepMind
 
 ## Demis Hassabis, Shane Legg, Jeff Dean e a IA que Aprende a Sonhar
+
+![A fundação da DeepMind em 2010 — Londres](ilustracoes/02-01-fundacao-deepmind.jpg)
+
 
 **Subtítulo:** *A jornada épica de três mentes que ensinaram máquinas a jogar Atari, dobrar proteínas e sonhar com o mundo*
 
@@ -787,7 +800,7 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 ---
 
-![Capa - Os Visionários do Google DeepMind](https://placehold.co/1200x600/0A3A0A/FFF?text=OS+VISIONARIOS+DO+GOOGLE+DEEPMIND)
+![Capa - Os Visionários do Google DeepMind](capas/02-capa-deepmind.jpg)
 
 ---
 
@@ -827,6 +840,8 @@ Boa leitura.
 # CAPÍTULO 1
 
 ## Londres, 1976 — A Infância de um Prodígio que Queria Programar a Mente
+
+
 
 ### 1.1 O menino de sangue misto que aprendeu a pensar antes de aprender a falar
 
@@ -885,6 +900,9 @@ Hassabis, naquele momento, tinha 34 anos. A aposta da vida dele começava ali.
 # CAPÍTULO 2
 
 ## Shane Legg e a Pergunta de Um Milhão de Dólares (paper "Human-level artificial intelligence" 2007)
+
+![AlphaGo vs Lee Sedol — março de 2016, o Movimento 37](ilustracoes/02-02-alphago-movimento37.jpg)
+
 
 ### 2.1 O neozelandês que pensava em público, e em solidão
 
@@ -967,6 +985,8 @@ Hassabis é a voz. Legg é a bússola. Dean é a infraestrutura. E juntos, eles 
 # CAPÍTULO 3
 
 ## A Fundação da DeepMind — Atari, Vídeos do YouTube e o Sonho da AGI
+
+
 
 ### 3.1 Setembro de 2010: a primeira equipe, em um porão em Londres
 
@@ -1065,6 +1085,9 @@ Essa esperança se concretizou em janeiro de 2014.
 
 ## A Venda para o Google: A Batalha de 2014 (Facebook vs Google, ~$500M)
 
+![AlphaFold — Nobel de Química 2024](ilustracoes/02-03-alphafold-nobel.jpg)
+
+
 ### 4.1 O contexto: a corrida das big techs por IA, em 2013
 
 Para entender a compra da DeepMind pelo Google, é preciso voltar a 2012-2013, quando **duas tendências simultâneas** estavam mudando o Vale do Silício:
@@ -1143,6 +1166,8 @@ A aquisição da DeepMind foi, portanto, **um momento fundacional da era moderna
 # CAPÍTULO 5
 
 ## AlphaGo vs Lee Sedol — 9 de março de 2016, o Movimento 37
+
+
 
 ### 5.1 O jogo mais importante da história da IA
 
@@ -1635,7 +1660,6 @@ E essa história — **a história da humanidade aprendendo a criar inteligênci
 
 ---
 
-![Os Visionários do Google DeepMind - Capa Final](https://placehold.co/1200x600/0A3A0A/FFF?text=OS+VISIONARIOS+DO+DEEPMIND)
 
 
 
@@ -1646,12 +1670,12 @@ E essa história — **a história da humanidade aprendendo a criar inteligênci
 # 3️⃣ Ebook 03 — Os Guardiões da IA Segura
 
 
-**Criadores:** Dario Amodei, Daniela Amodei, Chris Olah  
+**Criadores:** Dario & Daniela Amodei, Chris Olah  
 
-**IAs/Empresas:** Anthropic, Claude (Constitutional AI, Responsible Scaling)
+**IAs/Empresas:** Anthropic, Claude
 
 
-📄 *Arquivo-fonte: [`03-guardioes-ia-segura-anthropic/ebook-03-conteudo.md`](03-guardioes-ia-segura-anthropic/ebook-03-conteudo.md)*
+📄 *Fonte: [`03-guardioes-ia-segura-anthropic/ebook-03-conteudo.md`](03-guardioes-ia-segura-anthropic/ebook-03-conteudo.md)*
 
 
 ---
@@ -1673,7 +1697,7 @@ E essa história — **a história da humanidade aprendendo a criar inteligênci
 
 ---
 
-![Capa - Os Guardiões da IA Segura](https://placehold.co/1200x600/3A2A0A/FFF?text=OS+GUARDIOES+DA+IA+SEGURA)
+![Capa - Os Guardiões da IA Segura](capas/03-capa-anthropic.jpg)
 
 ---
 
@@ -2505,7 +2529,6 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 ---
 
-![Os Guardiões da IA Segura - Capa Final](https://placehold.co/1200x600/3A2A0A/FFF?text=OS+GUARDIOES+DA+IA+SEGURA)
 
 ---
 
@@ -2522,10 +2545,10 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 **Criadores:** Elon Musk, Yann LeCun, Geoffrey Hinton  
 
-**IAs/Empresas:** xAI (Grok), Meta (Llama, JEPA), Prêmio Turing, Nobel 2024
+**IAs/Empresas:** xAI, Meta, Nobel
 
 
-📄 *Arquivo-fonte: [`04-rebeldes-disruptores/ebook-04-conteudo.md`](04-rebeldes-disruptores/ebook-04-conteudo.md)*
+📄 *Fonte: [`04-rebeldes-disruptores/ebook-04-conteudo.md`](04-rebeldes-disruptores/ebook-04-conteudo.md)*
 
 
 ---
@@ -2542,7 +2565,7 @@ Obrigado por ler. Nos vemos no Volume 4.
 
 
 
-![Cena 2 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+2+rebeldes)
+![Cena 2 — Rebeldes da IA](capas/04-capa-rebeldes.jpg)
 
 ## NOTA DO AUTOR
 
@@ -2577,7 +2600,6 @@ Boa leitura.
 
 
 
-![Cena 4 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+4+rebeldes)
 
 ## Geoffrey Hinton — A Mãe que o Fez Querer Entender o Cérebro
 
@@ -2695,7 +2717,6 @@ Essa é uma posição insustentável em qualquer empresa normal. LeCun a mantém
 
 
 
-![Cena 6 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+6+rebeldes)
 
 ## AlexNet 2012 — O Terremoto que Acordou o Silício
 
@@ -2821,7 +2842,6 @@ E ele fez isso com o instinto de quem acredita que a civilização só muda quan
 
 
 
-![Cena 8 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+8+rebeldes)
 
 ## A Batalha dos Prêmios — Turing 2018 (Hinton + LeCun + Bengio)
 
@@ -3014,7 +3034,6 @@ Esse debate — que deveria ser, em uma democracia saudável, um debate público
 
 
 
-![Cena 10 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+10+rebeldes)
 
 ## LeCun, Llama, LLaMA 2/3/4 e o Manifesto "World Models" (JEPA, crítica ao LLM)
 
@@ -3130,7 +3149,6 @@ Essa transformação foi, para Hinton, simultaneamente um reconhecimento e uma *
 
 
 
-![Cena 12 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+12+rebeldes)
 
 ## Conclusão: Os Rebeldes e a Próxima Década da IA que Discute Consigo Mesma
 
@@ -3204,7 +3222,6 @@ Três vozes. Três esperanças. Uma humanidade. O futuro, como sempre, ainda est
 
 
 
-![Cena 14 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+14+rebeldes)
 
 ## REFERÊNCIAS E LEITURAS ADICIONAIS
 
@@ -3287,10 +3304,10 @@ Que este livro sirva, mesmo que modestamente, para **manter o debate aberto** so
 
 **Criadores:** Andrej Karpathy, Fei-Fei Li, Mira Murati  
 
-**IAs/Empresas:** Tesla AI, ImageNet, World Labs, Thinking Machines AI
+**IAs/Empresas:** Tesla, ImageNet
 
 
-📄 *Arquivo-fonte: [`05-arquitetos-multiuniverso/ebook-05-conteudo.md`](05-arquitetos-multiuniverso/ebook-05-conteudo.md)*
+📄 *Fonte: [`05-arquitetos-multiuniverso/ebook-05-conteudo.md`](05-arquitetos-multiuniverso/ebook-05-conteudo.md)*
 
 
 ---
@@ -3325,7 +3342,7 @@ Boa leitura.
 
 
 
-![Cena 2 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+2+arquitetos)
+![Cena 2 — Arquitetos da IA](capas/05-capa-arquitetos.jpg)
 
 ## Sumário
 
@@ -3448,7 +3465,6 @@ A carreira dele é, em si, **a história da profissionalização da IA multimoda
 
 
 
-![Cena 4 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+4+arquitetos)
 
 ## Fei-Fei Li e o ImageNet: A Mãe das IAs Modernas (14M imagens, 2009)
 
@@ -3626,7 +3642,6 @@ Sua carreira mostra que, em 2022–2026, **a fronteira da IA não é mais exclus
 
 
 
-![Cena 6 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+6+arquitetos)
 
 ## Stanford 2015–2017: A Forja que Gerou a Geração Transformers
 
@@ -3770,7 +3785,6 @@ E, em 2026, quando alguém usa **vibe coding** (Cursor, Copilot Workspace, Repli
 
 
 
-![Cena 8 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+8+arquitetos)
 
 ## AutoPilot, DALL·E, o Lado Visionário de Karpathy na Tesla
 
@@ -3914,7 +3928,6 @@ Essa terceira tese — *spatial AI* — é, em 2026, a tese central da **World L
 
 
 
-![Cena 10 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+10+arquitetos)
 
 ## Mira Murati na OpenAI: A Engenharia do GPT-4 e a Estratégia Multimodal
 
@@ -4074,7 +4087,6 @@ Esses perfis, em conjunto com os três cobertos neste volume, formam **os 7-8 no
 
 
 
-![Cena 12 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+12+arquitetos)
 
 ## Conclusão: Os Arquitetos e a Próxima Onda da IA Multimodal + Chamada Final à Coletânea
 
@@ -4208,7 +4220,6 @@ Obrigado por ler. Nos vemos no Volume 6.
 
 
 
-![Cena 14 — Arquitetos da IA](https://placehold.co/1200x600/1A0A2E/FFFFFF?text=Capa+14+arquitetos)
 
 ## Glossário
 

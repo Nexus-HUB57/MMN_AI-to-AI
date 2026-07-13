@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import PartnersContactForm from "@/components/PartnersContactForm";
+import PartnersActivationWizard from "@/components/PartnersActivationWizard";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/contexts/AuthContext";
 import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
@@ -245,6 +246,8 @@ export default function Subscriptions() {
             </Card>
           </div>
         </section>
+
+        <PartnersActivationWizard />
 
         {runtimeOffline && (
           <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">

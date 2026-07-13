@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PartnersDeliveryPanels from "@/components/PartnersDeliveryPanels";
 import PartnersAccessGuard from "@/components/PartnersAccessGuard";
 import PartnersPremiumOnboarding from "@/components/PartnersPremiumOnboarding";
+import PartnersActivationWizard from "@/components/PartnersActivationWizard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -453,6 +454,7 @@ export default function PartnersDashboardPage() {
           </div>
         </section>
 
+        <PartnersActivationWizard />
         <PartnersPremiumOnboarding />
 
         {apiOffline && (

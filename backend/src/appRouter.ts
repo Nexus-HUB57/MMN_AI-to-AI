@@ -37,6 +37,7 @@ import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
 import { subscriptionsRouter } from "./domains/subscriptions/router";
+import { partnersDeliveryRouter } from "./routers/partnersDeliveryRouter";
 import { adminAuthRouter } from "./routers/adminAuthRouter";
 import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
@@ -233,6 +234,7 @@ export const appRouter = router({
   orchestratorAdmin: orchestratorAdminRouter,
   onda1: onda1Router,
   subscriptions: subscriptionsRouter,
+  partnersDelivery: partnersDeliveryRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,
   billing: billingRouter,

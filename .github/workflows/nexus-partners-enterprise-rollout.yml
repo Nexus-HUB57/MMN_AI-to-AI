@@ -69,8 +69,12 @@ jobs:
           done
 
           if [ -z "${NEXUS_OPEN_API_KEY:-}" ] && [ -z "${NEXUS_OPEN_API_KEYS:-}" ]; then
-            echo "❌ Defina NEXUS_OPEN_API_KEY ou NEXUS_OPEN_API_KEYS no environment do GitHub Actions."
-            missing=$((missing+1))
+            if [ "${{ github.event.inputs.target_environment }}" = "production" ]; then
+              echo "❌ Defina NEXUS_OPEN_API_KEY ou NEXUS_OPEN_API_KEYS no environment do GitHub Actions para produção."
+              missing=$((missing+1))
+            else
+              echo "⚠️ Sem credencial OpenAPI dedicada no staging; o workflow vai cair para smoke público via tRPC."
+            fi
           else
             echo "✅ Credencial OpenAPI detectada"
           fi
@@ -111,7 +115,7 @@ jobs:
           echo "ℹ️ Nenhum deploy hook/Render configurado; seguindo para smoke tests."
 
       - name: Smoke tests do gateway NPP
-        run: bash scripts/check_npp_enterprise_rollout.sh "$API_BASE_URL" "$NEXUS_OPEN_API_KEY" "$NEXUS_OPEN_API_KEYS"
+        run: bash scripts/check_npp_enterprise_rollout.sh "$API_BASE_URL" "$NEXUS_OPEN_API_KEY" "$NEXUS_OPEN_API_KEYS" "${{ github.event.inputs.target_environment }}"
 
       - name: Sumário
         if: always()
@@ -124,4 +128,5 @@ jobs:
             echo "- Skip build: ${{ github.event.inputs.skip_build }}"
             echo "- Trigger backend rollout: ${{ github.event.inputs.trigger_backend_rollout }}"
             echo "- Status final: ${{ job.status }}"
+            echo "- OpenAPI auth secret presente: ${{ secrets.NEXUS_OPEN_API_KEY != '' || secrets.NEXUS_OPEN_API_KEYS != '' }}"
           } >> "$GITHUB_STEP_SUMMARY"

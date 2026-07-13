@@ -29,6 +29,7 @@ const COMMANDS: Cmd[] = [
   { label: "Rastreamento de Links", href: "/tracking/links", group: "Marketing" },
   { label: "Configurações de Conta", href: "/profile", group: "Conta" },
   { label: "Nexus Partners Pack · SaaS independente", href: "/subscriptions", group: "Conta", keywords: "partners assinatura start growth enterprise saas complementar" },
+  { label: "Conheça a SaaS/PaaS Nexus Partners Pack", href: "/npp", group: "Conta", keywords: "npp landing page saas paas diferenciais pack a2 comparativo pessoa física cnpj afiliado" },
   { label: "Painel Partners · assinantes", href: "/partners", group: "Conta", keywords: "partners dashboard parceiros tiers api chatbot" },
   { label: "Runtime NPP · OpenAPI", href: "/partners", group: "Conta", keywords: "runtime openapi console rollout staging produção secrets gateway" },
 ];

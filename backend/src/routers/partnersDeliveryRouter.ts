@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../config/trpc";
-import { getPartnersOnboardingBlueprint, getPartnersRuntimeOverview } from "../nexus-partners-pack/runtimeConfig";
+import {
+  getPartnersDeploymentReadiness,
+  getPartnersOnboardingBlueprint,
+  getPartnersRuntimeOverview,
+} from "../nexus-partners-pack/runtimeConfig";
 
 /**
  * partnersDeliveryRouter
@@ -104,6 +108,8 @@ export const partnersDeliveryRouter = router({
     .query(() => PERFORMANCE_SAMPLE),
 
   runtimeOverview: publicProcedure.query(() => getPartnersRuntimeOverview()),
+
+  deploymentReadiness: publicProcedure.query(() => getPartnersDeploymentReadiness()),
 
   onboardingBlueprint: publicProcedure.query(() => getPartnersOnboardingBlueprint()),
 

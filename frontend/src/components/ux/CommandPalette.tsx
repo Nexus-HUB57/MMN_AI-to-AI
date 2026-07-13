@@ -30,6 +30,7 @@ const COMMANDS: Cmd[] = [
   { label: "Configurações de Conta", href: "/profile", group: "Conta" },
   { label: "Nexus Partners Pack · SaaS independente", href: "/subscriptions", group: "Conta", keywords: "partners assinatura start growth enterprise saas complementar" },
   { label: "Painel Partners · assinantes", href: "/partners", group: "Conta", keywords: "partners dashboard parceiros tiers api chatbot" },
+  { label: "Runtime NPP · OpenAPI", href: "/partners", group: "Conta", keywords: "runtime openapi console rollout staging produção secrets gateway" },
 ];
 
 export default function CommandPalette() {

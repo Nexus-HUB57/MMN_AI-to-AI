@@ -21,6 +21,7 @@ import PartnersDeliveryPanels from "@/components/PartnersDeliveryPanels";
 import PartnersAccessGuard from "@/components/PartnersAccessGuard";
 import PartnersPremiumOnboarding from "@/components/PartnersPremiumOnboarding";
 import PartnersActivationWizard from "@/components/PartnersActivationWizard";
+import PartnersRuntimeConsole from "@/components/PartnersRuntimeConsole";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -484,6 +485,7 @@ export default function PartnersDashboardPage() {
             <TabsTrigger value="tiers"><Award className="mr-2 h-4 w-4" />Tiers</TabsTrigger>
             <TabsTrigger value="materials"><Star className="mr-2 h-4 w-4" />Materiais</TabsTrigger>
             <TabsTrigger value="performance"><Activity className="mr-2 h-4 w-4" />Performance</TabsTrigger>
+            <TabsTrigger value="runtime"><Shield className="mr-2 h-4 w-4" />Runtime & OpenAPI</TabsTrigger>
             <TabsTrigger value="apis"><Zap className="mr-2 h-4 w-4" />APIs do Agente</TabsTrigger>
             <TabsTrigger value="chatbot"><Network className="mr-2 h-4 w-4" />Chatbot</TabsTrigger>
           </TabsList>
@@ -813,6 +815,9 @@ export default function PartnersDashboardPage() {
           </TabsContent>
           <TabsContent value="performance" className="space-y-6">
             <PartnersDeliveryPanels.Performance />
+          </TabsContent>
+          <TabsContent value="runtime" className="space-y-6">
+            <PartnersRuntimeConsole />
           </TabsContent>
           <TabsContent value="apis" className="space-y-6">
             <PartnersDeliveryPanels.ApiBindings />

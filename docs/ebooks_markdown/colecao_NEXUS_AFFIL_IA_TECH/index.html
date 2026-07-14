@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NEXUS AFFIL'IA'TE TECH — Coletânea Técnica</title>
+<style>
+:root {
+  --bg: #060912;
+  --bg2: #0c1424;
+  --fg: #e8edf7;
+  --muted: #8b97b3;
+  --gold: #d6b15a;
+  --accent: #4ea1ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at top, #0c1424 0%, #060912 80%);
+  color: var(--fg); line-height: 1.65;
+}
+header {
+  text-align: center; padding: 80px 24px 50px;
+  border-bottom: 1px solid rgba(214,177,90,.18);
+}
+header .eyebrow {
+  font-size: 12px; letter-spacing: .35em; color: var(--gold); text-transform: uppercase;
+}
+header h1 {
+  font-size: clamp(28px, 4vw, 48px); margin: 18px 0 10px; line-height: 1.15;
+  background: linear-gradient(90deg, #fff 0%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+header p { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 17px; }
+.meta { margin-top: 20px; color: var(--muted); font-size: 13px; letter-spacing: .15em; }
+main { max-width: 1280px; margin: 0 auto; padding: 60px 24px; }
+.grid {
+  display: grid; gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.card {
+  background: linear-gradient(180deg, #0e1830 0%, #0a1124 100%);
+  border: 1px solid rgba(214,177,90,.18);
+  border-radius: 16px; overflow: hidden;
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(214,177,90,.55);
+  box-shadow: 0 14px 50px rgba(78,161,255,.18);
+}
+.card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+.card-body { padding: 20px 22px 24px; }
+.roman { color: var(--gold); font-size: 12px; letter-spacing: .25em; text-transform: uppercase; }
+.card h3 { font-size: 19px; margin: 8px 0 10px; color: #fff; }
+.subtitle { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+.question { color: #b9c4dc; font-size: 13px; margin: 0 0 18px; }
+.read {
+  color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 600;
+  letter-spacing: .05em;
+}
+.read:hover { color: var(--gold); }
+footer {
+  text-align: center; padding: 50px 24px; color: var(--muted);
+  font-size: 13px; letter-spacing: .15em;
+  border-top: 1px solid rgba(214,177,90,.18);
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Coletânea Canônica · MMN AI-to-AI</div>
+  <h1>NEXUS AFFIL'IA'TE TECH — Coletânea Técnica</h1>
+  <p>A profundidade técnica de nível PhD: orquestração agêntica, senciência, autonomia,
+  SaaS IA e a infraestrutura física que torna tudo possível. 5 volumes, 10 capítulos cada,
+  1 jornada — da engenharia dos sistemas à termodinâmica dos tokens.</p>
+  <div class="meta">Edição Canônica 1.0.0 · 2026-07-14 · NEXUS HUB57</div>
+</header>
+<main>
+  <section class="grid">
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_affil_ia_tech_01_orquestracao_ecossistemas_ia.webp" alt="Capa Vol I" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume I</span>
+        <h3>Orquestração de Ecossistemas IA</h3>
+        <p class="subtitle">Engenharia de sistemas multi-agente em produção: padrões, topologias, fallbacks, custos e o contrato invisível entre agentes.</p>
+        <p class="question"><em>"Como se constrói, de fato, um ecossistema de agentes que funciona em produção?"</em></p>
+        <a class="read" href="01_orquestracao_ecossistemas_ia.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_affil_ia_tech_02_senciencia_e_barreiras.webp" alt="Capa Vol II" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume II</span>
+        <h3>Senciência e suas Barreiras</h3>
+        <p class="subtitle">O problema difícil da consciência sintética, os testes que não bastam e o que a engenharia pode (e deve) afirmar.</p>
+        <p class="question"><em>"Quando um sistema parece consciente, o que sabemos — e o que não sabemos?"</em></p>
+        <a class="read" href="02_senciencia_e_barreiras.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_affil_ia_tech_03_poder_perigo_autonomia_ai.webp" alt="Capa Vol III" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume III</span>
+        <h3>O Poder x Perigo da Autonomia AI</h3>
+        <p class="subtitle">Engenharia, governança e os limites do self-directed machine: do Copilot ao sistema fully autonomous.</p>
+        <p class="question"><em>"Quanto de autonomia delegar, em quais condições, com quais controles?"</em></p>
+        <a class="read" href="03_poder_perigo_autonomia_ai.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_affil_ia_tech_04_fundamento_saas_ia.webp" alt="Capa Vol IV" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume IV</span>
+        <h3>Fundamento SaaS IA</h3>
+        <p class="subtitle">A pilha canônica de um Software-as-a-Service agêntico: do token economics ao multi-tenancy, do SLA ao feedback loop.</p>
+        <p class="question"><em>"Como se constrói, em termos de arquitetura e economia, um SaaS de IA?"</em></p>
+        <a class="read" href="04_fundamento_saas_ia.md">Ler volume →</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <img src="../../../assets/ebook_covers/nexus_affil_ia_tech_05_poder_processamento_ia.webp" alt="Capa Vol V" loading="lazy" />
+      <div class="card-body">
+        <span class="roman">Volume V</span>
+        <h3>Poder de Processamento IA</h3>
+        <p class="subtitle">GPU, TPU, NPU, memória, KV cache, inferência, throughput, latência, e o custo oculto — em energia, água e carbono — de cada token gerado.</p>
+        <p class="question"><em>"O que determina o custo, a latência e a sustentabilidade de cada token gerado?"</em></p>
+        <a class="read" href="05_poder_processamento_ia.md">Ler volume →</a>
+      </div>
+    </article>
+
+  </section>
+</main>
+<footer>
+  NEXUS AFFIL'IA'TE TECH · Edição Canônica 1.0.0 · 2026-07-14 · MMN AI-to-AI · Nexus HUB57
+</footer>
+</body>
+</html>

@@ -225,7 +225,7 @@ server {
 
     # Frontend Routes
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri /index.html;
     }
 
     # Static Assets Cache

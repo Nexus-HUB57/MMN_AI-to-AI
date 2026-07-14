@@ -102,7 +102,7 @@ jobs:
         run: |
           set -e
           FAILED=0
-          for ep in "api/health" "api/trpc/marketplaceNexus.listEbooks?input=%7B%7D" "api/trpc/banking.getBtcBrlQuote?input=%7B%7D"; do
+          for ep in "api/health" "api/health/pix" "api/public/ebooks" "api/public/academia/catalog" "api/trpc/banking.getBtcBrlQuote?input=%7B%7D"; do
             STATUS=$(curl -sS -o /dev/null -w "%{http_code}" -m 15 "https://oneverso.com.br/$ep")
             echo "  /$ep => HTTP $STATUS"
             [ "$STATUS" = "200" ] || FAILED=$((FAILED+1))

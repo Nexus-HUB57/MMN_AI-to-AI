@@ -19,7 +19,9 @@ import {
 } from "./domains/subscriptions/billingWebhook";
 import { getDb } from "../../database/schemas/db";
 import { metricsCollector, metricsHandler } from "./middlewares/prometheusMetrics";
+import { pixWebhookMiddleware } from "./middleware/pixMiddleware";
 import { pixWebhookRateLimiter, pixQrRateLimiter } from "./middlewares/pixRateLimiter";
+import { isOpenPixAvailable } from "./services/openPixService";
 import { createNexusOpenApiRouter } from "./open-api/routes";
 
 const PORT = Number(process.env.PORT || 3000);
@@ -131,13 +133,126 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
+app.get("/api/health/pix", (_req, res) => {
+  const pixKey = (process.env.MARKETPLACE_PIX_KEY || process.env.PIX_KEY || "").trim();
+  const mercadopagoConfigured = Boolean(
+    (process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || "").trim(),
+  );
+
+  res.json({
+    ok: true,
+    service: "pix",
+    configured: Boolean(pixKey),
+    pixKeyMasked: pixKey ? `${pixKey.slice(0, 4)}***${pixKey.slice(-2)}` : null,
+    sandbox: process.env.PIX_SANDBOX === "true" || process.env.NODE_ENV !== "production",
+    openPixAvailable: isOpenPixAvailable(),
+    mercadopagoConfigured,
+    webhookPaths: {
+      pix: ["/webhooks/pix", "/api/webhooks/pix"],
+      mercadopago: ["/webhooks/mercadopago", "/api/webhooks/mercadopago"],
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/webhooks/pix", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    provider: "pix",
+    method: "GET",
+    message: "Webhook PIX disponível. Use POST para notificações.",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/webhooks/pix", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    provider: "pix",
+    method: "GET",
+    message: "Webhook PIX disponível. Use POST para notificações.",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.post("/webhooks/pix", pixWebhookMiddleware);
+app.post("/api/webhooks/pix", pixWebhookMiddleware);
+
+app.get("/webhooks/mercadopago", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    provider: "mercado_pago",
+    method: "GET",
+    message: "Webhook Mercado Pago disponível. Use POST para notificações.",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/webhooks/mercadopago", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    provider: "mercado_pago",
+    method: "GET",
+    message: "Webhook Mercado Pago disponível. Use POST para notificações.",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/public/ebooks", async (_req, res) => {
+  try {
+    const { listEbooks } = await import("./domains/marketplace/userLibraryService");
+    const items = await listEbooks({});
+    res.status(200).json({ ok: true, total: Array.isArray(items) ? items.length : 0, items });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      items: [],
+      total: 0,
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
+
+app.get("/api/public/academia/catalog", async (_req, res) => {
+  try {
+    const db = await getDb();
+    if (!db) {
+      return res.status(200).json({ ok: true, totalSections: 0, sections: [], source: "db_unavailable" });
+    }
+
+    const result: any = await db.execute(`
+      SELECT
+        section_slug,
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE is_published)::int AS published,
+        COUNT(*) FILTER (WHERE featured)::int AS featured,
+        COUNT(DISTINCT level)::int AS levels
+      FROM academia_lessons
+      WHERE section_slug IS NOT NULL
+      GROUP BY section_slug
+      ORDER BY total DESC
+    ` as any);
+
+    const rows = result?.rows ?? result ?? [];
+    res.status(200).json({ ok: true, totalSections: rows.length, sections: rows, source: "real" });
+  } catch (error) {
+    res.status(200).json({
+      ok: true,
+      totalSections: 0,
+      sections: [],
+      source: "error",
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    });
+  }
+});
+
 app.get("/cron/status", (_req, res) => {
   res.json(getSchedulerStatus());
 });
 
 app.get("/metrics", metricsHandler);
 
-app.post("/webhooks/mercadopago", async (req, res) => {
+const handleMercadoPagoWebhook = async (req: express.Request, res: express.Response) => {
   try {
     const body = (req.body ?? {}) as Record<string, any>;
     const query = req.query as Record<string, any>;
@@ -279,7 +394,10 @@ app.post("/webhooks/mercadopago", async (req, res) => {
       error: error instanceof Error ? error.message : "Erro desconhecido",
     });
   }
-});
+};
+
+app.post("/webhooks/mercadopago", handleMercadoPagoWebhook);
+app.post("/api/webhooks/mercadopago", handleMercadoPagoWebhook);
 
 
 // ONDA 15: REST endpoint para polling status pagamento

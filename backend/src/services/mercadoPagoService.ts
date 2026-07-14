@@ -1,10 +1,15 @@
 import { randomUUID } from "node:crypto";
+import { request as httpsRequest } from "node:https";
 
 const MERCADO_PAGO_API_BASE = "https://api.mercadopago.com";
-const MERCADO_PAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN?.trim() ?? "";
+const MERCADO_PAGO_ACCESS_TOKEN =
+  process.env.MERCADO_PAGO_ACCESS_TOKEN?.trim() ||
+  process.env.MP_ACCESS_TOKEN?.trim() ||
+  "";
 const MERCADO_PAGO_NOTIFICATION_URL = process.env.MERCADO_PAGO_NOTIFICATION_URL?.trim() || undefined;
 const MERCADO_PAGO_STATEMENT_DESCRIPTOR = process.env.MERCADO_PAGO_STATEMENT_DESCRIPTOR?.trim() || undefined;
 const MERCADO_PAGO_USE_SANDBOX = process.env.MERCADO_PAGO_USE_SANDBOX === "true";
+const MERCADO_PAGO_TIMEOUT_MS = Number(process.env.MERCADO_PAGO_TIMEOUT_MS || 15000);
 
 export interface MercadoPagoCheckoutPreferenceInput {
   slug: string;
@@ -44,27 +49,77 @@ function requireAccessToken() {
   }
 }
 
+function safeJsonParse(value: string) {
+  if (!value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
+
 async function mercadoPagoRequest<T>(path: string, init?: RequestInit): Promise<T> {
   requireAccessToken();
 
-  const response = await fetch(`${MERCADO_PAGO_API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
-      ...(init?.headers ?? {}),
-    },
+  const url = new URL(path, MERCADO_PAGO_API_BASE);
+  const body = typeof init?.body === "string" ? init.body : undefined;
+  const mergedHeaders = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
+    "User-Agent": "oneverso-mmn-ai/1.0 mercado-pago",
+    ...(init?.headers ?? {}),
+  } as Record<string, string>;
+
+  return new Promise<T>((resolve, reject) => {
+    const req = httpsRequest(
+      url,
+      {
+        method: init?.method ?? "GET",
+        headers: mergedHeaders,
+        family: 4,
+        timeout: MERCADO_PAGO_TIMEOUT_MS,
+      },
+      (response) => {
+        const chunks: Buffer[] = [];
+
+        response.on("data", (chunk) => {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        });
+
+        response.on("end", () => {
+          const text = Buffer.concat(chunks).toString("utf-8");
+          const data = safeJsonParse(text);
+          const statusCode = response.statusCode ?? 500;
+
+          if (statusCode < 200 || statusCode >= 300) {
+            const message =
+              (data as any)?.message ||
+              (data as any)?.error ||
+              (text ? `Mercado Pago retornou HTTP ${statusCode}: ${text}` : `Mercado Pago retornou HTTP ${statusCode}`);
+            reject(new Error(message));
+            return;
+          }
+
+          resolve((data ?? {}) as T);
+        });
+      },
+    );
+
+    req.on("timeout", () => {
+      req.destroy(new Error(`Timeout ao conectar no Mercado Pago após ${MERCADO_PAGO_TIMEOUT_MS}ms.`));
+    });
+
+    req.on("error", (error) => {
+      reject(new Error(`Falha de rede ao acessar o Mercado Pago: ${error.message}`));
+    });
+
+    if (body) {
+      req.write(body);
+    }
+
+    req.end();
   });
-
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
-
-  if (!response.ok) {
-    const message = data?.message || data?.error || `Mercado Pago retornou HTTP ${response.status}`;
-    throw new Error(message);
-  }
-
-  return data as T;
 }
 
 function sanitizeDescription(value?: string, maxLength = 120) {

@@ -1,35 +1,36 @@
-// D13 FOCUS_MODE — atalho F para esconder sidebar
-import { useEffect, useState } from "react";
+// D13 FOCUS_MODE — legado neutralizado para manter o menu lateral como protocolo fixo
+import { useEffect } from "react";
 
 export function useFocusMode() {
-  const [focus, setFocus] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("ux-focus") === "1";
-  });
-
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const clearLegacyFocusMode = () => {
+      try {
+        window.localStorage.removeItem("ux-focus");
+      } catch {
+        // noop
+      }
+      document.documentElement.classList.remove("ux-focus-mode");
+    };
+
+    clearLegacyFocusMode();
+
     const onKey = (e: KeyboardEvent) => {
-      // só ativa F se não estiver digitando em input/textarea
-      const target = e.target as HTMLElement;
+      const target = e.target as HTMLElement | null;
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
         return;
       }
-      if (e.key === "f" || e.key === "F") {
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          setFocus((f) => {
-            const next = !f;
-            localStorage.setItem("ux-focus", next ? "1" : "0");
-            document.documentElement.classList.toggle("ux-focus-mode", next);
-            return next;
-          });
-        }
+
+      if ((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        clearLegacyFocusMode();
       }
     };
-    window.addEventListener("keydown", onKey);
-    document.documentElement.classList.toggle("ux-focus-mode", focus);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [focus]);
 
-  return focus;
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  return false;
 }

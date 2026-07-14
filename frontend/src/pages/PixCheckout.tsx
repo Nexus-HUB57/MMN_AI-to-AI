@@ -304,14 +304,19 @@ export default function PixCheckout() {
         amountCents,
         returnUrl: absoluteReturnUrl,
         payerEmail: payerEmail || undefined,
-        payerName: user?.name || undefined,
+        payerName: payerName || user?.name || undefined,
         payerDocument: payerDocument || undefined,
         subscriptionId: paymentContext.subscriptionId,
         termMonths: paymentContext.termMonths,
       })) as MarketplaceCheckoutSession;
 
       setCheckoutSession(session);
-      setFeedback("Checkout PIX gerado com sucesso.");
+      const hasWarnings = Array.isArray(session?.warnings) && session.warnings.length > 0;
+      setFeedback(
+        hasWarnings
+          ? "Checkout gerado com contingência ativa. O PIX manual continua disponível enquanto o Mercado Pago estabiliza."
+          : "Checkout PIX gerado com sucesso.",
+      );
     } catch (error) {
       setCheckoutSession(null);
       setFeedback(error instanceof Error ? error.message : "Não foi possível preparar o checkout agora.");

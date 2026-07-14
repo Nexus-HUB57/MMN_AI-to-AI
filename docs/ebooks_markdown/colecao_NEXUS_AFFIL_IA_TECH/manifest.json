@@ -1,0 +1,70 @@
+{
+  "collection": "NEXUS AFFIL'IA'TE TECH — Coletânea Técnica",
+  "slug": "NEXUS_AFFIL_IA_TECH",
+  "edition": "Edição Canônica 1.0.0",
+  "generated_at": "2026-07-14T16:18:00.000000+00:00",
+  "issued": "2026-07-14",
+  "total_volumes": 5,
+  "authors": [
+    "MMN AI-to-AI",
+    "Nexus HUB57"
+  ],
+  "positioning": "Profundidade técnica de nível PhD em orquestração agêntica, senciência, autonomia, SaaS IA e infraestrutura de processamento.",
+  "volumes": [
+    {
+      "id": "01_orquestracao_ecossistemas_ia",
+      "volume": "I",
+      "n": 1,
+      "title": "Orquestração de Ecossistemas IA",
+      "subtitle": "Engenharia de sistemas multi-agente em produção: padrões, topologias, fallbacks, custos e o contrato invisível entre agentes.",
+      "markdown": "01_orquestracao_ecossistemas_ia.md",
+      "question": "Como se constrói, de fato, um ecossistema de agentes que funciona em produção?",
+      "axis": "Padrões de orquestração, topologias, máquinas de estado, contratos, custos, observabilidade.",
+      "canonical_id": "NEXUS_AFFIL_IA_TECH_VOL_01"
+    },
+    {
+      "id": "02_senciencia_e_barreiras",
+      "volume": "II",
+      "n": 2,
+      "title": "Senciência e suas Barreiras",
+      "subtitle": "O problema difícil da consciência sintética, os testes que não bastam e o que a engenharia pode (e deve) afirmar.",
+      "markdown": "02_senciencia_e_barreiras.md",
+      "question": "Quando um sistema parece consciente, o que sabemos — e o que não sabemos?",
+      "axis": "Problema difícil, qualia, cinco correntes, testes, estatuto moral, posição consequencialista.",
+      "canonical_id": "NEXUS_AFFIL_IA_TECH_VOL_02"
+    },
+    {
+      "id": "03_poder_perigo_autonomia_ai",
+      "volume": "III",
+      "n": 3,
+      "title": "O Poder x Perigo da Autonomia AI",
+      "subtitle": "Engenharia, governança e os limites do self-directed machine: do Copilot ao sistema fully autonomous.",
+      "markdown": "03_poder_perigo_autonomia_ai.md",
+      "question": "Quanto de autonomia delegar, em quais condições, com quais controles?",
+      "axis": "Espectro de autonomia, goal misalignment, convergência instrumental, kill switch, sandbox, reversibilidade.",
+      "canonical_id": "NEXUS_AFFIL_IA_TECH_VOL_03"
+    },
+    {
+      "id": "04_fundamento_saas_ia",
+      "volume": "IV",
+      "n": 4,
+      "title": "Fundamento SaaS IA",
+      "subtitle": "A pilha canônica de um Software-as-a-Service agêntico: do token economics ao multi-tenancy, do SLA ao feedback loop.",
+      "markdown": "04_fundamento_saas_ia.md",
+      "question": "Como se constrói, em termos de arquitetura e economia, um SaaS de IA?",
+      "axis": "Pilha em 7 camadas, multi-tenancy, token economics, SLA estatístico, compliance, feedback loop.",
+      "canonical_id": "NEXUS_AFFIL_IA_TECH_VOL_04"
+    },
+    {
+      "id": "05_poder_processamento_ia",
+      "volume": "V",
+      "n": 5,
+      "title": "Poder de Processamento IA",
+      "subtitle": "GPU, TPU, NPU, memória, KV cache, inferência, throughput, latência, e o custo oculto — em energia, água e carbono — de cada token gerado.",
+      "markdown": "05_poder_processamento_ia.md",
+      "question": "O que determina o custo, a latência e a sustentabilidade de cada token gerado?",
+      "axis": "Anatomia de hardware, KV cache, batching, quantização, paralelismo, ASICs, pegada por token, provisionamento.",
+      "canonical_id": "NEXUS_AFFIL_IA_TECH_VOL_05"
+    }
+  ]
+}

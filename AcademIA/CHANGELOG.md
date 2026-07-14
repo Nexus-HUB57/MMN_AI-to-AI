@@ -92,8 +92,8 @@ Esta versão consolida as contribuições das duas branches paralelas:
 
 **Prompts (4 novos):**
 - `Lab-Nexus/prompts/analise/04-diagnostico-churn-preventivo.md`
-- `Lab-Nexus/prompts/copywriting/03-copy-headline-anuncio.md`
-- `Lab-Nexus/prompts/copywriting/04-script-vsl.md`
+- `Lab-Nexus/prompts/copywriting/08-copy-headline-anuncio.md`
+- `Lab-Nexus/prompts/copywriting/09-script-vsl.md`
 - `Lab-Nexus/prompts/estrategia/04-plano-conteudo-90-dias.md`
 
 ### 📊 Métricas Consolidadas

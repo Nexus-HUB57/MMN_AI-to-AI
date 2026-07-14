@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Monitor endpoints
         run: |
-          for ep in "api/health" "api/trpc/marketplaceNexus.listEbooks?input=%7B%7D"; do
+          for ep in "api/health" "api/health/pix" "api/public/ebooks" "api/public/academia/catalog"; do
             S=$(curl -s -o /dev/null -w "%{http_code}" "https://oneverso.com.br/$ep")
             [ "$S" = "200" ] || echo "::warning::$ep = $S"
           done

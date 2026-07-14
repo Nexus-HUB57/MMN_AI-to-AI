@@ -10,10 +10,18 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../database';
+import { getDb } from '../db';
 import { transactionHistory, withdrawalRequests, bankAccounts } from '../../../database/schemas/banking-schema';
 import { eq, and, desc } from 'drizzle-orm';
 import crypto from 'crypto';
+
+async function requireDb() {
+  const db = await getDb();
+  if (!db) {
+    throw new Error('Database unavailable');
+  }
+  return db as any;
+}
 
 // PIX Configuration (would come from environment in production)
 const PIX_CONFIG = {
@@ -193,6 +201,7 @@ export async function createPixPayment(
   const transactionId = crypto.randomUUID();
 
   try {
+    const db = await requireDb();
     // Store transaction in database
     await db.insert(transactionHistory).values({
       id: transactionId,
@@ -228,6 +237,7 @@ export async function createPixPayment(
 export async function handlePixWebhook(payload: PixWebhookPayload): Promise<boolean> {
   try {
     const { txid, status, dadosPagamento, payer } = payload;
+    const db = await requireDb();
 
     // Find the transaction
     const transactions = await db.select()
@@ -279,6 +289,7 @@ export async function handlePixWebhook(payload: PixWebhookPayload): Promise<bool
 
 // Get PIX Payment Status
 export async function getPixPaymentStatus(txid: string) {
+  const db = await requireDb();
   const transactions = await db.select()
     .from(transactionHistory)
     .where(eq(transactionHistory.pixTxid, txid));
@@ -311,6 +322,7 @@ export async function requestPixWithdrawal(
   holderName: string
 ): Promise<{ success: boolean; withdrawalId?: string; error?: string }> {
   try {
+    const db = await requireDb();
     // Validate minimum amount (R$ 10.00 = 1000 cents)
     if (amount < 1000) {
       return { success: false, error: 'Valor mínimo para saque PIX é R$ 10,00' };
@@ -348,6 +360,7 @@ export async function requestPixWithdrawal(
 // Cancel PIX Payment
 export async function cancelPixPayment(txid: string): Promise<boolean> {
   try {
+    const db = await requireDb();
     const transactions = await db.select()
       .from(transactionHistory)
       .where(eq(transactionHistory.pixTxid, txid));
@@ -379,6 +392,7 @@ export async function getPixTransactionHistory(
   page: number = 1,
   limit: number = 20
 ) {
+  const db = await requireDb();
   const offset = (page - 1) * limit;
 
   const transactions = await db.select()

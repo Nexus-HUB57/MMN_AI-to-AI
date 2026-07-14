@@ -1,5 +1,10 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../config/trpc";
+import {
+  getPartnersDeploymentReadiness,
+  getPartnersOnboardingBlueprint,
+  getPartnersRuntimeOverview,
+} from "../nexus-partners-pack/runtimeConfig";
 
 /**
  * partnersDeliveryRouter
@@ -102,6 +107,12 @@ export const partnersDeliveryRouter = router({
     .input(z.object({ userId: z.string().min(1) }).optional())
     .query(() => PERFORMANCE_SAMPLE),
 
+  runtimeOverview: publicProcedure.query(() => getPartnersRuntimeOverview()),
+
+  deploymentReadiness: publicProcedure.query(() => getPartnersDeploymentReadiness()),
+
+  onboardingBlueprint: publicProcedure.query(() => getPartnersOnboardingBlueprint()),
+
   listApiBindings: publicProcedure
     .input(z.object({ userId: z.string().min(1) }))
     .query(({ input }) => {
@@ -168,13 +179,15 @@ export const partnersDeliveryRouter = router({
       userBudget.set(input.userId, b);
       // Resposta determinística do chatbot Partners; o modelo real é integrado
       // pelo backend de runtime do agente. Aqui mantemos o contrato e o orçamento.
-      const reply = `Recebido. Direcionando o agente Nexus Partners para: "${input.message.slice(0, 220)}". Tokens consumidos: ${tokensEstimated}.`;
+      const runtime = getPartnersRuntimeOverview();
+      const reply = `Recebido. Direcionando o agente Nexus Partners para: "${input.message.slice(0, 220)}". Tokens consumidos: ${tokensEstimated}. Runtime principal: ${runtime.primaryProvider} (${runtime.model}).`;
       return {
         ok: true,
         reply,
         tokensConsumed: tokensEstimated,
         remaining: b.limit - b.used,
         limit: b.limit,
+        runtime,
       };
     }),
 });

@@ -97,8 +97,8 @@ Cronograma real:
 
 **Ferramentas:**
 - `Lab-Nexus/prompts/estrategia/04-plano-conteudo-90-dias.md` (planejamento)
-- `Lab-Nexus/prompts/copywriting/03-copy-headline-anuncio.md`
-- `Lab-Nexus/prompts/copywriting/04-script-vsl.md`
+- `Lab-Nexus/prompts/copywriting/08-copy-headline-anuncio.md`
+- `Lab-Nexus/prompts/copywriting/09-script-vsl.md`
 - `Lab-Nexus/tools/design/01-template-carrossel.md`
 - `Lab-Nexus/templates/social/01-template-carrossel-educativo.html`
 

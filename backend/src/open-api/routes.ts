@@ -41,6 +41,7 @@ import { getNexusApiContext, requireNexusApiKey } from "./auth";
 import { createOpenApiAuditMiddleware, listRecentOpenApiAuditRecords } from "./audit";
 import { requireIdempotencyKey } from "./idempotency";
 import { createPublicOpenApiRateLimiter, createTenantOpenApiRateLimiter } from "./rate-limit";
+import { getPartnersOnboardingBlueprint, getPartnersRuntimeOverview } from "../nexus-partners-pack/runtimeConfig";
 
 const OPEN_API_STAGE = "sprint-5";
 const commissionStatusSchema = z.enum(["pending", "confirmed", "paid", "cancelled"]);
@@ -204,7 +205,8 @@ async function getTenantScopedSubscriptionDetails(subscriptionId: string, tenant
 
 function createOpenApiSpec() {
   return {
-    openapi: "3.1.0",
+    openapi: "3.1.1",
+    jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema",
     info: {
       title: "Nexus Open API",
       version: "v1",
@@ -439,6 +441,20 @@ function createOpenApiSpec() {
           responses: { 200: { description: "Volume history" }, 404: { description: "Not found" } },
         },
       },
+      "/partners/runtime": {
+        get: {
+          summary: "Status do runtime enterprise do Nexus Partners Pack",
+          security: [{ bearerAuth: [] }],
+          responses: { 200: { description: "Runtime overview" } },
+        },
+      },
+      "/partners/onboarding/blueprint": {
+        get: {
+          summary: "Blueprint oficial da jornada Pack A² → Partners",
+          security: [{ bearerAuth: [] }],
+          responses: { 200: { description: "Onboarding blueprint" } },
+        },
+      },
     },
   };
 }
@@ -479,6 +495,8 @@ export function createNexusOpenApiRouter() {
         partners: "/api/v1/partners",
         partnerStats: "/api/v1/partners/stats",
         partnerPartnerships: "/api/v1/partners/partnerships",
+        partnersRuntime: "/api/v1/partners/runtime",
+        partnersOnboardingBlueprint: "/api/v1/partners/onboarding/blueprint",
         auditRecent: "/api/v1/audit/recent",
       },
     });
@@ -1035,6 +1053,28 @@ export function createNexusOpenApiRouter() {
       },
       meta: {
         total: listTiers().length,
+      },
+    });
+  });
+
+  router.get("/partners/runtime", requirePartnersReadAccess, (_req, res) => {
+    const apiContext = getNexusApiContext(res);
+    res.json({
+      data: getPartnersRuntimeOverview(),
+      meta: {
+        tenantId: apiContext?.tenantId ?? null,
+        scope: "partners_runtime",
+      },
+    });
+  });
+
+  router.get("/partners/onboarding/blueprint", requirePartnersReadAccess, (_req, res) => {
+    const apiContext = getNexusApiContext(res);
+    res.json({
+      data: getPartnersOnboardingBlueprint(),
+      meta: {
+        tenantId: apiContext?.tenantId ?? null,
+        scope: "partners_onboarding_blueprint",
       },
     });
   });

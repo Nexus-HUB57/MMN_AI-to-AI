@@ -379,6 +379,12 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
+              href="/npp"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Conheça a SaaS/PaaS NPP <Globe className="h-4 w-4" />
+            </Link>
+            <Link
               href="/subscriptions"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-quantum-lime to-quantum-cyan px-6 py-3 text-sm font-semibold text-obsidian shadow-lg shadow-quantum-lime/20 transition hover:opacity-90"
             >

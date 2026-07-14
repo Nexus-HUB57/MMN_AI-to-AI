@@ -39,6 +39,7 @@ import OrchestratorDashboard from "@/pages/OrchestratorDashboard";
 import SocialAccounts from "@/pages/SocialAccounts";
 import PartnersDashboardPage from "@/pages/PartnersDashboardPage";
 import Subscriptions from "@/pages/Subscriptions";
+import NexusPartnersPackPage from "@/pages/NexusPartnersPackPage";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminAcademia from "@/pages/AdminAcademia";
 import AdminMeetings from "@/pages/AdminMeetings";
@@ -103,6 +104,8 @@ function Router() {
       <Route path="/orchestrator" component={OrchestratorDashboard} />
       <Route path="/partners" component={PartnersDashboardPage} />
       <Route path="/subscriptions" component={Subscriptions} />
+      <Route path="/npp" component={NexusPartnersPackPage} />
+      <Route path="/nexus-partners-pack" component={NexusPartnersPackPage} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/academia" component={AdminAcademia} />

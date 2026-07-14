@@ -10,7 +10,7 @@
 
 
 
-![Cena 2 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+2+rebeldes)
+![Cena 2 — Rebeldes da IA](capas/04-capa-rebeldes.jpg)
 
 ## NOTA DO AUTOR
 
@@ -45,7 +45,6 @@ Boa leitura.
 
 
 
-![Cena 4 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+4+rebeldes)
 
 ## Geoffrey Hinton — A Mãe que o Fez Querer Entender o Cérebro
 
@@ -163,7 +162,6 @@ Essa é uma posição insustentável em qualquer empresa normal. LeCun a mantém
 
 
 
-![Cena 6 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+6+rebeldes)
 
 ## AlexNet 2012 — O Terremoto que Acordou o Silício
 
@@ -289,7 +287,6 @@ E ele fez isso com o instinto de quem acredita que a civilização só muda quan
 
 
 
-![Cena 8 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+8+rebeldes)
 
 ## A Batalha dos Prêmios — Turing 2018 (Hinton + LeCun + Bengio)
 
@@ -482,7 +479,6 @@ Esse debate — que deveria ser, em uma democracia saudável, um debate público
 
 
 
-![Cena 10 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+10+rebeldes)
 
 ## LeCun, Llama, LLaMA 2/3/4 e o Manifesto "World Models" (JEPA, crítica ao LLM)
 
@@ -598,7 +594,6 @@ Essa transformação foi, para Hinton, simultaneamente um reconhecimento e uma *
 
 
 
-![Cena 12 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+12+rebeldes)
 
 ## Conclusão: Os Rebeldes e a Próxima Década da IA que Discute Consigo Mesma
 
@@ -672,7 +667,6 @@ Três vozes. Três esperanças. Uma humanidade. O futuro, como sempre, ainda est
 
 
 
-![Cena 14 — Rebeldes da IA](https://placehold.co/1200x600/B00020/FFFFFF?text=Capa+14+rebeldes)
 
 ## REFERÊNCIAS E LEITURAS ADICIONAIS
 

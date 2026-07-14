@@ -1,5 +1,5 @@
 ---
-title: "Best Practices · Segurança de Agentes IA"
+title: "Best Practices 04 · Segurança de Agentes IA"
 description: "23 práticas obrigatórias para agentes autônomos em produção"
 tags: [seguranca, agentes, prompt-injection, defense-in-depth, supply-chain, audit]
 version: 1.0
@@ -314,4 +314,4 @@ async function killAgent(agentId: string, reason: string) {
 
 ---
 
-*Lib-Nexus · Best Practices · 03 · 2026*
+*Lib-Nexus · Best Practices · 04 · 2026*

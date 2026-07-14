@@ -1,4 +1,4 @@
-# 📧 Prompt 05 · Sequência de Email Nurture (5 emails)
+# 📧 Prompt 10 · Sequência de Email Nurture (5 emails)
 
 **Categoria:** copywriting
 **Nível:** Master
@@ -267,4 +267,4 @@ queima. Tá escrito 'Erro #4'."
 
 ---
 
-*Lab-Nexus · prompt/05 · 2026*
+*Lab-Nexus · prompt/10 · 2026*

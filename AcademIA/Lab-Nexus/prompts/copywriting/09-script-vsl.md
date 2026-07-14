@@ -1,4 +1,4 @@
-# 🎬 Prompt 04 · Script de VSL (Video Sales Letter)
+# 🎬 Prompt 09 · Script de VSL (Video Sales Letter)
 
 **Categoria:** copywriting
 **Nível:** Master
@@ -171,4 +171,4 @@ menos 3 estratégias diferentes nos últimos 6 meses?"
 
 ---
 
-*Lab-Nexus · prompt/04 · 2026*
+*Lab-Nexus · prompt/09 · 2026*

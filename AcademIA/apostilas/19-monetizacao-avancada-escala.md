@@ -50,7 +50,7 @@ Afiliação Nexus é excelente pra começar (R$ 0 → R$ 30k/mês em 6-9 meses).
 - `tutoriais/13-deploy-multi-tenant-elite.md` (hosting)
 - `Lab-Nexus/tools/marketing/04-funil-builder.md` (montagem do funil)
 - `Lab-Nexus/prompts/estrategia/01-planejamento-lancamento.md` (brainstorm do conteúdo)
-- `Lab-Nexus/prompts/copywriting/04-script-vsl.md` (página de vendas)
+- `Lab-Nexus/prompts/copywriting/09-script-vsl.md` (página de vendas)
 - `playbooks/PB-LANCAMENTO-lancamento-7-dias.md` (operação do lançamento)
 
 **Receita esperada (6 meses):**

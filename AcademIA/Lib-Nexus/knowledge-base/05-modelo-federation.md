@@ -281,7 +281,7 @@ Resultado: zero dados cruzam fronteira, 100% compliance.
 - [Apostila 14 — Multi-Tenant & White-Label](../AcademIA/apostilas/14-multi-tenant-whitelabel.md)
 - [Webinar WB-2026-04 — IA-to-IA Federation](../AcademIA/webinars/WB-2026-04-ia-to-ia-federation.md)
 - [Knowledge-base: `01-modelo-ioaid.md`](01-modelo-ioaid.md)
-- [Knowledge-base: `04-modelo-sho.md`](04-modelo-sho.md)
+- [Knowledge-base: `07-modelo-sho.md`](07-modelo-sho.md)
 
 ## 👥 Ownership
 

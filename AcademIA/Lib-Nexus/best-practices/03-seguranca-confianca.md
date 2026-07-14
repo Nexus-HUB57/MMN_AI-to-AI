@@ -298,7 +298,7 @@ Toda feature nova deve passar:
 
 - [Knowledge-base: 06-padroes-seguranca.md](../knowledge-base/06-padroes-seguranca.md)
 - [Knowledge-base: 03-conformidade-lgpd.md](../knowledge-base/03-conformidade-lgpd.md)
-- [Knowledge-base: 04-modelo-sho.md](../knowledge-base/04-modelo-sho.md)
+- [Knowledge-base: 07-modelo-sho.md](../knowledge-base/07-modelo-sho.md)
 - [Best-practice: 01-error-handling.md](01-error-handling.md)
 - [Playbook: PB-CRISES-gestao-crise-data-loss.md](../../AcademIA/playbooks/PB-CRISES-gestao-crise-data-loss.md)
 

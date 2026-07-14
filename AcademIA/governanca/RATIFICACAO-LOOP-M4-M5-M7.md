@@ -260,7 +260,7 @@ Backup: arquivo offline criptografado (rotação 90 dias)
 
 - `governanca/C-SUITE-AI.md` — composição C-Suite
 - `Lab-Nexus/prompts/governanca/01-decisao-csuite-ratificar.md` — template de proposta
-- `Lib-Nexus/best-practices/03-seguranca-agentes.md` — segurança das chaves
+- `Lib-Nexus/best-practices/04-seguranca-agentes.md` — segurança das chaves
 - `Lib-Nexus/knowledge-base/04-conformidade-anatel.md` — compliance
 
 ---

@@ -1,4 +1,4 @@
-# ✍️ Prompt 03 · Copy de Headline para Anúncio Pago
+# ✍️ Prompt 08 · Copy de Headline para Anúncio Pago
 
 **Categoria:** copywriting
 **Nível:** Agente → Master
@@ -115,4 +115,4 @@ tom: "provocativo + autoridade"
 
 ---
 
-*Lab-Nexus · prompt/03 · 2026*
+*Lab-Nexus · prompt/08 · 2026*

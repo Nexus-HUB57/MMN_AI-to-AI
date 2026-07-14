@@ -259,7 +259,7 @@ Cada entrada:
 ## 📚 Documentos Relacionados
 
 - [Knowledge-base: `03-conformidade-lgpd.md`](03-conformidade-lgpd.md)
-- [Knowledge-base: `04-modelo-sho.md`](04-modelo-sho.md)
+- [Knowledge-base: `07-modelo-sho.md`](07-modelo-sho.md)
 - [Apostila 11 — SHO em Produção](../AcademIA/apostilas/11-sho-em-producao.md)
 - [Playbook `PB-LGPD-direitos-titular.md`](../AcademIA/playbooks/PB-LGPD-direitos-titular.md)
 - [Playbook `PB-LGPD-avancado-data-subjects.md`](../AcademIA/playbooks/PB-LGPD-avancado-data-subjects.md)

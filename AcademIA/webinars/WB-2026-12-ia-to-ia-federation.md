@@ -1,19 +1,19 @@
 ---
-title: "WB-2026-08 · IA-to-IA Federation"
-webinar_code: WB-2026-08
-date: 2026-09-09
+title: "WB-2026-12 · IA-to-IA Federation"
+webinar_code: WB-2026-12
+date: 2026-12-09
 duration: 90min
 speaker: "Sir Nexus Alencar + convidado internacional (TBA)"
 tags: [webinar, federation, multi-agent, ia-to-ia, white-label, escala]
 last_updated: 2026-06-28
 version: "1.0.0"
-status: agendado (09/09/2026)
+status: agendado (09/12/2026)
 pattern: "MMN_IA"
 ---
 
 ![Capa — IA-to-IA Federation](../../assets/ebook_covers/ACAD-apostila-12-ioaid-arquitetura-profunda.webp)
 
-**WB-2026-08 · IA-to-IA Federation**
+**WB-2026-12 · IA-to-IA Federation**
 
 *Como agentes de IA se federam em escala — do multi-agente local ao ecossistema distribuído*
 
@@ -278,4 +278,4 @@ Perguntas esperadas:
 
 ---
 
-*Nexus Affil'IA'te · Academ'IA · Webinar WB-2026-08 · v1.0.0 · Setembro 2026*
+*Nexus Affil'IA'te · Academ'IA · Webinar WB-2026-12 · v1.0.0 · Setembro 2026*

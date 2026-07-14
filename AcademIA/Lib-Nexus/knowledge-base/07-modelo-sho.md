@@ -195,4 +195,4 @@ O SHO opera como um **loop contínuo** de 5 fases:
 
 ---
 
-*Nexus Affil'IA'te · Lib-Nexus · knowledge-base/04-modelo-sho.md · v1.0 · Junho 2026*
+*Nexus Affil'IA'te · Lib-Nexus · knowledge-base/07-modelo-sho.md · v1.0 · Junho 2026*

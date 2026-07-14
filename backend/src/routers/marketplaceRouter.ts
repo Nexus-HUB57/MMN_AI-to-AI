@@ -1,7 +1,7 @@
 import { router, protectedProcedure, adminProcedure } from '../trpc';
 import { z } from 'zod';
 import { eq, and, or, like, desc, asc, sql, inArray } from 'drizzle-orm';
-import { db } from '../database';
+import { db } from '../db';
 import {
   marketplaceProducts,
   productCategories,

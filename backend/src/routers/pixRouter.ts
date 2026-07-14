@@ -543,19 +543,39 @@ export const pixRouter = router({
           const orderId = `mp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
           // externalReference completo fica em external_reference para lookup
           const exists = await client.query(
-            `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$1 LIMIT 1`,
-            [orderId]
+            `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$2 LIMIT 1`,
+            [orderId, externalReference]
           );
           if ((exists.rowCount ?? 0) === 0) {
             await client.query(
-              `INSERT INTO marketplace_orders (id, user_id, status, payment_status, subtotal_cents, total_cents, payment_method, external_reference, metadata, is_test_data) VALUES ($1, $2, 'pending', 'pending', $3, $3, 'mercado_pago', $1, $4::jsonb, false)`,
-              [orderId, runtimeUser.id, input.amountCents, JSON.stringify({source: input.source ?? "marketplace", type: input.type, slug: input.slug, name: input.name, description: input.description, payerEmail, payerName})]
+              `INSERT INTO marketplace_orders (id, user_id, status, payment_status, subtotal_cents, total_cents, payment_method, payment_id, external_reference, metadata, is_test_data) VALUES ($1, $2, 'pending', 'pending', $3, $3, $4, $5, $6, $7::jsonb, false)`,
+              [
+                orderId,
+                runtimeUser.id,
+                input.amountCents,
+                result.pix.provider === "mercado_pago" || result.mercadoPago.preferenceId ? "mercado_pago" : "pix",
+                result.pix.paymentId,
+                externalReference,
+                JSON.stringify({
+                  source: input.source ?? "marketplace",
+                  type: input.type,
+                  slug: input.slug,
+                  name: input.name,
+                  description: input.description,
+                  payerEmail,
+                  payerName,
+                  email: payerEmail,
+                  customerEmail: payerEmail,
+                  customerName: payerName,
+                  externalReference,
+                }),
+              ]
             );
             await client.query(
               `INSERT INTO marketplace_order_items (order_id, item_slug, title, unit_price_cents, quantity, item_type) VALUES ($1, $2, $3, $4, 1, $5)`,
               [orderId, input.slug, input.name, input.amountCents, input.type]
             );
-            console.log(`[ONDA14] marketplace_order criada: ${orderId} user=${runtimeUser.id} amount=${input.amountCents}`);
+            console.log(`[ONDA14] marketplace_order criada: ${orderId} extRef=${externalReference} user=${runtimeUser.id} amount=${input.amountCents}`);
           }
           await client.query("COMMIT");
         } catch (dbErr) {

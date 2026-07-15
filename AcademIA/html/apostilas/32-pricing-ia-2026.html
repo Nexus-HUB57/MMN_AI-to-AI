@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="MMN_IA Collective" />
+  <meta name="dcterms.date" content="2026-07-15" />
+  <title>Pricing de Produtos Digitais com IA — O Algoritmo de Precificação 2026</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Pricing de Produtos Digitais com IA — O Algoritmo de
+Precificação 2026</h1>
+<p class="subtitle">Como Definir o Preço Certo Usando IA, Dados de
+Mercado e Psicologia</p>
+<p class="author">MMN_IA Collective</p>
+<p class="date">2026-07-15</p>
+</header>
+<p><strong>Apostila 32 · Pricing de Produtos Digitais com
+IA</strong></p>
+<p><em>O preço é a variável de marketing mais importante. Erro de 10% no
+preço pode reduzir lucro em 50%. Esta apostila mostra como a IA está
+mudando pricing — e como você pode usar.</em></p>
+<p><strong>Por MMN_IA Collective · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<figure>
+<img src="data:image/webp;base64,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" alt="Capa — Pricing de Produtos Digitais com IA" />
+<figcaption aria-hidden="true">Capa — Pricing de Produtos Digitais com
+IA</figcaption>
+</figure>
+<p><strong>Sobre esta apostila</strong></p>
+<p>Pricing é a arte de definir o preço certo para o produto certo, no
+momento certo, para a pessoa certa. Em 2026, a IA permite
+<strong>pricing dinâmico em tempo real</strong>, <strong>segmentação
+comportamental</strong> e <strong>elasticidade preditiva</strong>.</p>
+<p>Esta apostila cobre: - Fundamentos de pricing (psicologia + economia)
+- Pricing dinâmico com IA - Pricing comportamental - Pricing de
+assinatura - Pricing freemium → premium - A/B testing de preço - 7
+frameworks práticos</p>
+<hr />
+<h1 id="sumário">Sumário</h1>
+<p><strong>PARTE I — FUNDAMENTOS</strong></p>
+<ol type="1">
+<li><a href="#cap1">O que é pricing (e por que 80% erra)</a></li>
+<li><a href="#cap2">Psicologia do preço</a></li>
+<li><a href="#cap3">Elasticidade-preço da demanda</a></li>
+</ol>
+<p><strong>PARTE II — MÉTODOS COM IA</strong></p>
+<ol start="4" type="1">
+<li><a href="#cap4">Pricing dinâmico em tempo real</a></li>
+<li><a href="#cap5">Segmentação comportamental</a></li>
+<li><a href="#cap6">Pricing preditivo com ML</a></li>
+<li><a href="#cap7">A/B testing de preço (multivariate)</a></li>
+</ol>
+<p><strong>PARTE III — FRAMEWORKS PRÁTICOS</strong></p>
+<ol start="8" type="1">
+<li><a href="#cap8">Framework 1: Tiered Pricing (3-5 níveis)</a></li>
+<li><a href="#cap9">Framework 2: Freemium → Premium</a></li>
+<li><a href="#cap10">Framework 3: Subscription Box</a></li>
+<li><a href="#cap11">Framework 4: Pay-What-You-Want</a></li>
+<li><a href="#cap12">Framework 5: Bundle Estratégico</a></li>
+<li><a href="#cap13">Framework 6: Loss Leader</a></li>
+<li><a href="#cap14">Framework 7: Premium Anchor</a></li>
+</ol>
+<p>Epílogo: <a href="#epilogo">O futuro do pricing (2027-2030)</a></p>
+<p>Apêndice: <a href="#apendice">Calculadora de Elasticidade</a></p>
+<hr />
+<p><a id="cap1"></a> # Capítulo 1 — O que é pricing (e por que 80%
+erra)</p>
+<p><strong>Pricing</strong> é a definição do preço de um produto ou
+serviço. Parece simples, mas é uma das decisões mais complexas do
+marketing.</p>
+<p><strong>Por que 80% das empresas erram:</strong></p>
+<ol type="1">
+<li><strong>Copiando o concorrente</strong> — sem considerar valor
+percebido</li>
+<li><strong>Baseado apenas em custo</strong> — esquecendo o que o
+cliente está disposto a pagar</li>
+<li><strong>Estático</strong> — sem ajuste por segmento, momento,
+contexto</li>
+<li><strong>Sem teste</strong> — definido uma vez e nunca revisado</li>
+<li><strong>Ignorando elasticidade</strong> — sem saber quanto a demanda
+cai com aumento de preço</li>
+</ol>
+<p><strong>O que a IA mudou em 2026:</strong></p>
+<ul>
+<li>Pricing <strong>dinâmico</strong> (muda em tempo real)</li>
+<li>Pricing <strong>preditivo</strong> (antecipa demanda)</li>
+<li>Pricing <strong>personalizado</strong> (cada cliente vê preço
+diferente)</li>
+<li>Pricing <strong>otimizado</strong> (maximiza LTV, não só
+conversão)</li>
+</ul>
+<hr />
+<p><a id="cap2"></a> # Capítulo 2 — Psicologia do preço</p>
+<p>O preço é muito mais que um número. É um <strong>sinal de
+valor</strong>.</p>
+<h2 id="princípios-psicológicos">5 princípios psicológicos</h2>
+<h3 id="anchor-âncora">1. Anchor (âncora)</h3>
+<p>O primeiro preço visto “ancora” a percepção. Mostre R$ 1.997 antes de
+revelar R$ 497 → 497 parece “barato”.</p>
+<p><strong>Aplicação:</strong> página de vendas com lista de “preço
+original” R$ 1.997 e “preço hoje” R$ 497.</p>
+<h3 id="charm-pricing-r-97-vs-r-100">2. Charm pricing (R$ 97 vs R$
+100)</h3>
+<p>Preços terminando em 9 (R$ 97, R$ 199, R$ 497) vendem <strong>15-30%
+mais</strong> que preços “redondos”.</p>
+<p><strong>Exceção:</strong> produtos premium usam preço redondo (R$
+500, R$ 1.000, R$ 5.000) para parecer mais luxuoso.</p>
+<h3 id="decoy-effect-efeito-isca">3. Decoy effect (efeito isca)</h3>
+<p>Adicione uma opção intermediária que ninguém quer, mas que faz a
+opção “cara” parecer mais atrativa.</p>
+<p><strong>Exemplo:</strong> - Plano A: R$ 29/mês (básico) - Plano B: R$
+99/mês (intermediário, decoy) - Plano C: R$ 97/mês (premium, melhor
+custo-benefício)</p>
+<p>A maioria escolhe C (porque B parece pior). Sem B, muitos escolheriam
+A.</p>
+<h3 id="loss-aversion-aversão-à-perda">4. Loss aversion (aversão à
+perda)</h3>
+<p>Pessoas preferem evitar perda do que ganhar algo equivalente. Use
+<strong>framing de perda</strong>:</p>
+<ul>
+<li>❌ “Ganhe R$ 500 de desconto”</li>
+<li>✅ “Não perca R$ 500 de desconto (expira em 24h)”</li>
+</ul>
+<h3 id="social-proof-prova-social">5. Social proof (prova social)</h3>
+<p>Mostre quantas pessoas compraram pelo preço X. Reduz risco
+percebido.</p>
+<ul>
+<li>“500+ alunos matriculados neste curso”</li>
+<li>“97% dos clientes recomendam”</li>
+</ul>
+<hr />
+<p><a id="cap3"></a> # Capítulo 3 — Elasticidade-preço da demanda</p>
+<p><strong>Elasticidade</strong> mede quanto a demanda muda quando o
+preço muda.</p>
+<p><strong>Fórmula:</strong></p>
+<pre><code>E = (% variação na demanda) / (% variação no preço)</code></pre>
+<p><strong>Interpretação:</strong></p>
+<ul>
+<li><strong>E &gt; 1</strong>: produto elástico (demanda sensível a
+preço). Ex: software, cursos online.</li>
+<li><strong>E &lt; 1</strong>: produto inelástico (demanda pouco
+sensível). Ex: medicamentos, gasolina.</li>
+<li><strong>E = -1</strong>: unitário (lucro constante).</li>
+</ul>
+<p><strong>Como descobrir sua elasticidade:</strong></p>
+<ol type="1">
+<li>Histórico de vendas com preços diferentes</li>
+<li>A/B testing de preço</li>
+<li>Análise de dados de mercado</li>
+</ol>
+<p><strong>Curva típica de produtos digitais:</strong></p>
+<pre><code>Preço
+  ^
+  |        +----+ (premium anchor)
+  |       /      \
+  |      /        \
+  |     /          \
+  |    /            \
+  |   /              \
+  |  /                \
+  | /                  \
+  |/____________________\___&gt; Volume
+  R$29    R$97   R$297   R$997</code></pre>
+<p><strong>Ponto ótimo</strong>: onde <strong>margem × volume = lucro
+máximo</strong> (não é “mais volume” nem “mais margem”, é a
+interseção).</p>
+<p><strong>Calculadora de elasticidade</strong> está no apêndice.</p>
+<hr />
+<p><a id="cap4"></a> # Capítulo 4 — Pricing dinâmico em tempo real</p>
+<p><strong>Pricing dinâmico</strong> = o preço muda automaticamente
+baseado em: - Demanda atual (visitantes na página, conversions, etc.) -
+Horário / dia da semana / estação - Segmento do visitante (novo vs
+recorrente) - Localização geográfica - Comportamento de navegação</p>
+<h2 id="como-implementar-com-ia">Como implementar com IA</h2>
+<p><strong>Stack:</strong> LangGraph + Redis (cache) + Postgres (dados)
++ API do gateway de pagamento</p>
+<p><strong>Algoritmo simplificado:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_price(user, product, current_state):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Preço base</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    base_price <span class="op">=</span> product.base_price</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ajustes comportamentais</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> user.is_new:</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Novos visitantes: anchor maior</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        base_price <span class="op">*=</span> <span class="fl">1.20</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> user.has_visited_3_times:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Visitou 3+ vezes: oferta</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        base_price <span class="op">*=</span> <span class="fl">0.85</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ajuste de demanda</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    demand_factor <span class="op">=</span> current_state.visitors_last_hour <span class="op">/</span> <span class="dv">100</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    base_price <span class="op">*=</span> (<span class="dv">1</span> <span class="op">+</span> demand_factor <span class="op">*</span> <span class="fl">0.1</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ajuste de horário</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="dv">19</span> <span class="op">&lt;=</span> current_state.hour <span class="op">&lt;=</span> <span class="dv">22</span>:</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Horário nobre: +5%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        base_price <span class="op">*=</span> <span class="fl">1.05</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Limites (nunca abaixo do mínimo)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    final_price <span class="op">=</span> <span class="bu">max</span>(base_price, product.min_price)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> final_price</span></code></pre></div>
+<h2 id="casos-de-uso-reais">Casos de uso reais</h2>
+<p><strong>Case 1 — Curso online de R$ 497</strong> - Pricing dinâmico:
+R$ 297 (madrugada) → R$ 597 (horário nobre) - Aumento de <strong>32% no
+faturamento total</strong> vs preço fixo</p>
+<p><strong>Case 2 — SaaS B2B</strong> - Pricing por empresa: R$ 99/mês
+(startup) → R$ 4.999/mês (enterprise) - Precificação calculada por IA
+baseado em: # funcionários, receita, setor</p>
+<p><strong>Case 3 — E-commerce de produto físico</strong> - Pricing
+dinâmico por demanda: produto em alta = sobe preço automaticamente -
+Aumento de <strong>18% no lucro</strong> vs preço fixo</p>
+<h2 id="riscos">Riscos</h2>
+<ul>
+<li><strong>Backlash</strong> (“vi o mesmo produto mais barato ontem,
+por quê?”)</li>
+<li><strong>Perda de confiança</strong> se o cliente perceber
+manipulação</li>
+<li><strong>Compliance</strong> (em alguns mercados, preços
+personalizados podem ser ilegais)</li>
+</ul>
+<p><strong>Regra de ouro:</strong> se o cliente descobrir, ele precisa
+achar <strong>justo</strong>.</p>
+<hr />
+<p><a id="cap5"></a> # Capítulo 5 — Segmentação comportamental</p>
+<p><strong>Segmentação comportamental</strong> = agrupar clientes por
+<strong>comportamento</strong> (não por demografia) e oferecer preço
+diferente pra cada grupo.</p>
+<h2 id="os-5-segmentos-comportamentais">Os 5 segmentos
+comportamentais</h2>
+<h3 id="first-time-visitor-novo-visitante">1. First-time visitor (novo
+visitante)</h3>
+<p><strong>Comportamento:</strong> primeira vez no site, sem histórico
+<strong>Preço sugerido:</strong> preço cheio (anchor) + cupom de
+primeira compra (10-15% off) <strong>Objetivo:</strong> converter com
+baixo risco</p>
+<h3 id="researcher-pesquisador">2. Researcher (pesquisador)</h3>
+<p><strong>Comportamento:</strong> visitou 3+ páginas, leu reviews,
+comparou produtos <strong>Preço sugerido:</strong> bundle com desconto
+(ex: 20% off no segundo produto) <strong>Objetivo:</strong> maximizar
+LTV sem regredir</p>
+<h3 id="bargain-hunter-caçador-de-promoção">3. Bargain hunter (caçador
+de promoção)</h3>
+<p><strong>Comportamento:</strong> busca cupons, espera Black Friday,
+espera lançamento <strong>Preço sugerido:</strong> preço cheio + cupom
+de 30% se comprar em 24h <strong>Objetivo:</strong> converter sem
+canibalizar</p>
+<h3 id="loyal-customer-cliente-recorrente">4. Loyal customer (cliente
+recorrente)</h3>
+<p><strong>Comportamento:</strong> já comprou 1+ vezes <strong>Preço
+sugerido:</strong> desconto progressivo (10% no 2º, 15% no 3º, 20% no
+4º) <strong>Objetivo:</strong> aumentar LTV e reduzir churn</p>
+<h3 id="high-value-alto-valor">5. High-value (alto valor)</h3>
+<p><strong>Comportamento:</strong> comprou high-ticket, é engajado,
+indica amigos <strong>Preço sugerido:</strong> upgrade premium (ex:
+programa VIP) com preço especial <strong>Objetivo:</strong> reter e
+transformar em embaixador</p>
+<h2 id="implementação-com-ia">Implementação com IA</h2>
+<p><strong>1. Coleta dados</strong>: cookies, IP, sessão, purchase
+history <strong>2. IA classifica</strong>: cluster (K-means ou similar)
+agrupa em 5 segmentos <strong>3. Pricing engine</strong>: aplica preço
+por segmento <strong>4. Real-time</strong>: ajuste em &lt; 100ms</p>
+<hr />
+<p><a id="cap6"></a> # Capítulo 6 — Pricing preditivo com ML</p>
+<p><strong>Pricing preditivo</strong> = prever a demanda
+<strong>antes</strong> de acontecer, e ajustar preço de forma
+proativa.</p>
+<h2 id="modelo-preditivo">Modelo preditivo</h2>
+<p><strong>Inputs:</strong> - Histórico de vendas (24 meses) -
+Calendário (feriados, Black Friday, Natal) - Tráfego do site (Google
+Analytics) - Concorrentes (web scraping) - Macroeconômico (inflação,
+câmbio, emprego)</p>
+<p><strong>Output:</strong> - Demanda prevista para os próximos 30 dias
+- Elasticidade prevista por segmento - Preço ótimo por
+dia/semana/mês</p>
+<h2 id="implementação-com-python-scikit-learn">Implementação com Python
++ scikit-learn</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> GradientBoostingRegressor</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> joblib</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carregar dados históricos</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;historico_vendas.csv&#39;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Features</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">&#39;preco&#39;</span>, <span class="st">&#39;dia_semana&#39;</span>, <span class="st">&#39;feriado&#39;</span>, <span class="st">&#39;trafego&#39;</span>, <span class="st">&#39;concorrente_preco&#39;</span>, <span class="st">&#39;mes&#39;</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[features]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">&#39;vendas&#39;</span>]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Treinar modelo</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GradientBoostingRegressor(n_estimators<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>model.fit(X, y)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Prever demanda</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>previsao <span class="op">=</span> model.predict(X_futuro)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Calcular preço ótimo (maximiza receita)</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df_futuro[<span class="st">&#39;preco_otimo&#39;</span>] <span class="op">=</span> df_futuro.<span class="bu">apply</span>(</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> row: maximize_revenue(row, model),</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Salvar modelo</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>joblib.dump(model, <span class="st">&#39;pricing_model.pkl&#39;</span>)</span></code></pre></div>
+<h2 id="quando-vale-a-pena">Quando vale a pena</h2>
+<p><strong>Vale</strong> quando você tem: - Mínimo 12 meses de histórico
+- Volume razoável (&gt; 100 vendas/mês) - Variação natural de
+demanda</p>
+<p><strong>Não vale</strong> quando: - Produto novo (sem histórico) -
+Volume muito baixo (&lt; 50 vendas/mês) - Mercado muito estável</p>
+<hr />
+<p><a id="cap7"></a> # Capítulo 7 — A/B testing de preço
+(multivariate)</p>
+<p><strong>A/B testing de preço</strong> = mostrar preços diferentes
+para audiências diferentes e medir qual converte mais.</p>
+<h2 id="variáveis-a-testar">Variáveis a testar</h2>
+<ol type="1">
+<li><strong>Preço absoluto</strong>: R$ 297 vs R$ 397 vs R$ 497</li>
+<li><strong>Preço parcelado</strong>: “12x R$ 24,75” vs “à vista R$
+297”</li>
+<li><strong>Anchor</strong>: “de R$ 997 por R$ 497” vs “R$ 497”</li>
+<li><strong>Charm pricing</strong>: “R$ 497” vs “R$ 500” vs “R$
+499,90”</li>
+<li><strong>Frete</strong>: “Frete grátis” vs “Frete R$ 19” vs “Frete
+calculado”</li>
+</ol>
+<h2 id="metodologia">Metodologia</h2>
+<p><strong>1. Definir hipótese</strong></p>
+<blockquote>
+<p>“Acreditamos que mostrar ‘de R$ 997 por R$ 497’ (com anchor) aumenta
+conversão em 15% comparado a ‘R$ 497’ (sem anchor).”</p>
+</blockquote>
+<p><strong>2. Calcular sample size</strong></p>
+<p>Use calculadora de A/B test (ex: Optimizely, VWO, ou fórmula): -
+Baseline conversion: 3% - MDE (minimum detectable effect): 15% -
+Significance: 95% - Power: 80% - Sample size: ~5.000 por variante</p>
+<p><strong>3. Rodar por 2-4 semanas</strong></p>
+<p>Divisão 50/50 entre A e B. Não pare antes de atingir sample size.</p>
+<p><strong>4. Medir resultado</strong></p>
+<ul>
+<li><strong>Conversão</strong>: % que comprou</li>
+<li><strong>Receita média</strong>: R$ por visitante</li>
+<li><strong>LTV projetado</strong>: se for menor no curto prazo mas
+maior no longo, considere</li>
+</ul>
+<p><strong>5. Decidir</strong></p>
+<ul>
+<li>p-value &lt; 0.05 = diferença significativa</li>
+<li>Vencedora é a que maximiza <strong>receita</strong> (não
+conversão!)</li>
+</ul>
+<h2 id="multivariate-testing">Multivariate testing</h2>
+<p>Mais complexo: testa 3+ variáveis ao mesmo tempo (preço × anchor ×
+parcelamento).</p>
+<p><strong>Atenção:</strong> precisa de 5-10x mais tráfego. Só vale para
+sites com &gt; 100k visitas/mês.</p>
+<hr />
+<p><a id="cap8"></a> # Capítulo 8 — Framework 1: Tiered Pricing (3-5
+níveis)</p>
+<p><strong>Tiered pricing</strong> = oferecer 3-5 opções de preço, com
+crescentes níveis de features.</p>
+<h2 id="estrutura-clássica">Estrutura clássica</h2>
+<pre><code>┌─────────────────────────────────────────────┐
+│ Plano BASIC: R$ 29/mês                      │
+│ - Feature A                                  │
+│ - Feature B                                  │
+│ - 5GB storage                                │
+└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│ Plano PRO: R$ 99/mês                        │
+│ - Tudo do Basic +                            │
+│ - Feature C                                  │
+│ - Feature D                                  │
+│ - 50GB storage                               │
+│ - Suporte email                              │
+└─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│ Plano BUSINESS: R$ 299/mês                  │
+│ - Tudo do Pro +                              │
+│ - Feature E                                  │
+│ - 500GB storage                              │
+│ - Suporte prioritário                        │
+│ - Integração API                             │
+└─────────────────────────────────────────────┘</code></pre>
+<h2 id="como-definir-os-3-5-níveis">Como definir os 3-5 níveis</h2>
+<p><strong>Regra 1: cada nível tem 2-3x o preço do anterior</strong> (R$
+29 → R$ 99 → R$ 299) <strong>Regra 2: 60% dos clientes escolhe o nível
+intermediário</strong> (decoy effect) <strong>Regra 3: o nível mais caro
+é o “anchor”</strong> (faz o intermediário parecer acessível)</p>
+<h2 id="quando-usar">Quando usar</h2>
+<ul>
+<li>SaaS</li>
+<li>Cursos com diferentes níveis (básico, completo, mentoria)</li>
+<li>Serviços com escopo variável</li>
+</ul>
+<h2 id="erros-comuns">Erros comuns</h2>
+<ul>
+<li><strong>Muitos níveis</strong> (5+ = confusão)</li>
+<li><strong>Diferença de features muito pequena</strong> (ninguém vê
+valor em upgrade)</li>
+<li><strong>Preço intermediário não-diferenciado</strong> (deve ser o
+“viral”)</li>
+</ul>
+<hr />
+<p><a id="cap9"></a> # Capítulo 9 — Framework 2: Freemium → Premium</p>
+<p><strong>Freemium</strong> = versão grátis (limitada) + versão paga
+(completa).</p>
+<h2 id="estrutura">Estrutura</h2>
+<pre><code>FREE                 PREMIUM
+R$ 0                 R$ 49/mês
+- 1 usuário          - Ilimitado
+- 100 msgs/mês       - Ilimitado
+- 1GB storage        - 100GB
+- Sem suporte        - Suporte 24/7
+- Sem API            - API + webhooks</code></pre>
+<h2 id="métricas-críticas">Métricas críticas</h2>
+<ol type="1">
+<li><strong>Free-to-paid conversion</strong>: % de free users que viram
+paid (meta: 2-5%)</li>
+<li><strong>Time to convert</strong>: quanto tempo leva pra converter
+(meta: &lt; 30 dias)</li>
+<li><strong>CAC (custo de aquisição)</strong>: quanto custa pra trazer 1
+free user</li>
+<li><strong>LTV (lifetime value)</strong>: quanto o paid user gera em
+receita</li>
+</ol>
+<p><strong>Regra de ouro:</strong> se CAC × 1/LTV &lt; 3, o modelo é
+saudável.</p>
+<h2 id="quando-funciona">Quando funciona</h2>
+<ul>
+<li>Produto com <strong>valor de rede</strong> (mais usuários = mais
+valor)</li>
+<li>Onboarding é simples (não precisa de treinamento)</li>
+<li>Limite do free é claro (não é só “trial”)</li>
+</ul>
+<h2 id="quando-não-funciona">Quando NÃO funciona</h2>
+<ul>
+<li>Produto que precisa de muito suporte</li>
+<li>Free user consome muito recurso (custo alto)</li>
+<li>Free e Premium são “iguais” com pequenas diferenças</li>
+</ul>
+<hr />
+<p><a id="cap10"></a> # Capítulo 10 — Framework 3: Subscription Box</p>
+<p><strong>Subscription box</strong> = assinatura recorrente com
+produtos/serviços entregues periodicamente.</p>
+<h2 id="modelos">Modelos</h2>
+<ol type="1">
+<li><strong>Curated</strong> (selecionado por curador): Netflix,
+Spotify</li>
+<li><strong>Replenishment</strong> (reposição): itens que você consome
+(café, vitaminas)</li>
+<li><strong>Discovery</strong> (descoberta): produtos novos todo mês
+(GlossyBox, Birchbox)</li>
+</ol>
+<h2 id="pricing-típico">Pricing típico</h2>
+<ul>
+<li><strong>R$ 29-99/mês</strong> (curated / discovery)</li>
+<li><strong>R$ 99-299/mês</strong> (premium com exclusividade)</li>
+</ul>
+<h2 id="métricas-críticas-1">Métricas críticas</h2>
+<ol type="1">
+<li><strong>MRR (Monthly Recurring Revenue)</strong>: receita recorrente
+mensal</li>
+<li><strong>Churn rate</strong>: % que cancela por mês (meta: &lt;
+5%)</li>
+<li><strong>LTV</strong>: R$ médio que um assinante gera em X meses</li>
+<li><strong>Payback period</strong>: meses pra recuperar CAC</li>
+</ol>
+<p><strong>Cálculo rápido de LTV:</strong></p>
+<pre><code>LTV = (R$ médio/mês) / churn rate
+
+Exemplo: R$ 50/mês com 5% churn = R$ 50 / 0.05 = R$ 1.000</code></pre>
+<h2 id="anti-churn">Anti-churn</h2>
+<ul>
+<li><strong>Onboarding forte</strong> (primeira semana é crucial)</li>
+<li><strong>Engajamento contínuo</strong> (novidades mensais)</li>
+<li><strong>Comunidade</strong> (acesso a grupo exclusivo)</li>
+<li><strong>Personalização</strong> (quanto mais relevante, menor
+churn)</li>
+</ul>
+<hr />
+<p><a id="cap11"></a> # Capítulo 11 — Framework 4: Pay-What-You-Want
+(PWYW)</p>
+<p><strong>PWYW</strong> = cliente paga o quanto quiser (incluindo
+zero).</p>
+<h2 id="quando-funciona-1">Quando funciona</h2>
+<ul>
+<li><strong>Conteúdo artístico</strong> (música, livros, podcasts) com
+base de fãs</li>
+<li><strong>Produtos de baixo custo marginal</strong> (software, curso
+gravado)</li>
+<li><strong>Modelo híbrido</strong> (PWYW como “test drive” + versão
+premium fixa)</li>
+</ul>
+<h2 id="exemplos-clássicos">Exemplos clássicos</h2>
+<ul>
+<li><strong>Radiohead - In Rainbows</strong> (2007): álbum vendido por
+PWYW → arrecadou £3 milhões</li>
+<li><strong>PWYW em museus</strong> (muitos museus britânicos sugerem
+£5)</li>
+<li><strong>Humble Bundle</strong> (jogos indie por PWYW)</li>
+</ul>
+<h2 id="erros-comuns-1">Erros comuns</h2>
+<ul>
+<li><strong>Esperar que maioria pague o “justo”</strong>: histórico
+mostra 5-10% paga, 90% paga $0</li>
+<li><strong>Sem incentivo pra pagar mais</strong>: oferecer bonus pra
+quem paga acima de X</li>
+<li><strong>Ignorar o sinal de qualidade</strong>: PWYW demais sugere
+produto “barato”</li>
+</ul>
+<p><strong>Solução:</strong> PWYW + <strong>níveis de bônus</strong>: -
+Pague R$ 0: recebe básico - Pague R$ 29: recebe + bônus 1 - Pague R$ 99:
+recebe tudo + bônus 2 + 3</p>
+<h2 id="funciona-em-2026">Funciona em 2026?</h2>
+<p><strong>Sim, mas como modelo de captação de leads</strong>, não como
+modelo de receita principal.</p>
+<p>Use PWYW para: 1. <strong>Construir lista</strong> (lead magnet) 2.
+<strong>Gerar buzz</strong> (mídia) 3. <strong>Validar demanda</strong>
+(quantos pagam acima de X?)</p>
+<hr />
+<p><a id="cap12"></a> # Capítulo 12 — Framework 5: Bundle
+Estratégico</p>
+<p><strong>Bundle</strong> = combinar 2+ produtos em 1 oferta com
+desconto.</p>
+<h2 id="estrutura-típica">Estrutura típica</h2>
+<pre><code>Curso A (R$ 297) + Curso B (R$ 497) = Bundle (R$ 597)
+(desconto de 28% no bundle)</code></pre>
+<h2 id="quando-funciona-2">Quando funciona</h2>
+<ul>
+<li>Produtos <strong>complementares</strong> (ex: curso de copywriting +
+curso de design)</li>
+<li>Cliente médio compraria <strong>2 dos 3</strong> produtos</li>
+<li>Você quer <strong>aumentar ticket médio</strong></li>
+</ul>
+<h2 id="quando-não-funciona-1">Quando NÃO funciona</h2>
+<ul>
+<li>Produtos substitutos (cliente compraria 1 OU outro, não ambos)</li>
+<li>Margem muito baixa (desconto inviável)</li>
+<li>Produtos premium vendidos separadamente (bundle dilui
+percepção)</li>
+</ul>
+<h2 id="tipos-de-bundle">Tipos de bundle</h2>
+<ol type="1">
+<li><strong>Pure bundle</strong> (só vendido junto): R$ 597 — sem opção
+de comprar separado</li>
+<li><strong>Mixed bundle</strong> (junto + separado): R$ 597 ou R$ 297 +
+R$ 497 separados</li>
+<li><strong>New product bundle</strong> (1 novo + 1 antigo): lança novo
+produto com desconto</li>
+</ol>
+<p><strong>Mais comum:</strong> mixed bundle, com preço “antes/depois”
+claro.</p>
+<hr />
+<p><a id="cap13"></a> # Capítulo 13 — Framework 6: Loss Leader</p>
+<p><strong>Loss leader</strong> = vender produto X com prejuízo pra
+atrair cliente que compra Y (lucrativo).</p>
+<h2 id="estrutura-1">Estrutura</h2>
+<pre><code>Lead Magnet: e-book grátis (R$ 0)
+   ↓ (10% convertem)
+Produto Isca: curso introdutório R$ 47 (custo R$ 80) → perda de R$ 33
+   ↓ (30% convertem)
+Produto Core: curso completo R$ 497 (margem 80%) → lucro de R$ 398
+   ↓ (10% indicam)
+Cliente indica novo lead</code></pre>
+<h2 id="matemática">Matemática</h2>
+<ul>
+<li>1.000 leads no topo</li>
+<li>100 compram produto isca (R$ 47 × 100 = R$ 4.700, custo R$ 8.000,
+perda R$ 3.300)</li>
+<li>30 compram produto core (R$ 497 × 30 = R$ 14.910, lucro R$
+11.924)</li>
+<li><strong>Lucro líquido: R$ 8.624</strong> (apesar do prejuízo no
+isca)</li>
+</ul>
+<h2 id="quando-funciona-3">Quando funciona</h2>
+<ul>
+<li>Você tem produto <strong>core</strong> com boa margem</li>
+<li>Volume de leads é alto</li>
+<li>Custo de aquisição é previsível</li>
+</ul>
+<h2 id="quando-não-funciona-2">Quando NÃO funciona</h2>
+<ul>
+<li>Sem produto core (perda real)</li>
+<li>Margem do core é baixa</li>
+<li>Volume de leads insuficiente pra diluir a perda</li>
+</ul>
+<hr />
+<p><a id="cap14"></a> # Capítulo 14 — Framework 7: Premium Anchor</p>
+<p><strong>Premium anchor</strong> = mostrar opção premium cara (que
+ninguém compra) pra fazer opções intermediárias parecerem
+“razoáveis”.</p>
+<h2 id="estrutura-clássica-1">Estrutura clássica</h2>
+<pre><code>Plano Starter:    R$ 29/mês
+Plano Pro:        R$ 99/mês    ← maioria compra
+Plano Enterprise: R$ 999/mês   ← ninguém compra, mas ancora percepção</code></pre>
+<p><strong>Sem Premium Anchor:</strong> - R$ 29 vs R$ 99 = “caro, vou de
+Starter” - Conversão: 30% Starter, 70% Pro</p>
+<p><strong>Com Premium Anchor:</strong> - R$ 29 vs R$ 99 vs R$ 999 =
+“Pro é um meio termo razoável” - Conversão: 15% Starter, 80% Pro, 5%
+Enterprise - <strong>Receita aumenta</strong> (mesmo com menos
+Starter)</p>
+<h2 id="aplicação-em-infoprodutos">Aplicação em infoprodutos</h2>
+<pre><code>Curso Essencial:     R$ 197    (1% compra)
+Curso Completo:      R$ 497    (70% compra)  ← maioria
+Curso + Mentoria:    R$ 4.997  (5% compra)  ← premium anchor</code></pre>
+<p><strong>Atenção:</strong> o premium anchor precisa ser
+<strong>plausível</strong> (não R$ 1M que ninguém acredita).</p>
+<hr />
+<p><a id="epilogo"></a> # Epílogo — O futuro do pricing (2027-2030)</p>
+<p>Tendências para os próximos 4 anos:</p>
+<h2 id="pricing-100-automatizado">2027 — Pricing 100% automatizado</h2>
+<ul>
+<li>Toda decisão de preço passa por IA</li>
+<li>A/B testing contínuo em background</li>
+<li>Ajuste em tempo real, sem intervenção humana</li>
+</ul>
+<h2 id="pricing-por-ltv">2028 — Pricing por LTV</h2>
+<ul>
+<li>Preço não é só sobre conversão, é sobre LTV</li>
+<li>Cliente que tende a churn recebe oferta pra ficar</li>
+<li>Cliente com alto LTV potencial recebe upgrade premium</li>
+</ul>
+<h2 id="pricing-por-emoção">2029 — Pricing por emoção</h2>
+<ul>
+<li>IA detecta estado emocional (navegação, mouse, hesitação)</li>
+<li>Preço ajusta pra “calmar” ou “apressar” baseado no contexto</li>
+<li>Compliance entra em questão (ético?)</li>
+</ul>
+<h2 id="pricing-por-ia-to-ai">2030 — Pricing por IA-to-AI</h2>
+<ul>
+<li>Agentes de comprador negociam com agentes de vendedor</li>
+<li>Preço “justo” definido por consenso algorítmico</li>
+<li>Humano decide se aprova</li>
+</ul>
+<h2 id="recomendação">Recomendação</h2>
+<p><strong>Não espere 2030.</strong> Comece hoje com: 1. <strong>Coletar
+dados</strong> (vendas, visitantes, comportamento) 2. <strong>A/B
+test</strong> 1 variável de preço por mês 3. <strong>Implementar pricing
+dinâmico simples</strong> (horário + segmento) 4. <strong>Medir LTV por
+canal</strong> (não só conversão)</p>
+<p>O futuro do pricing é <strong>agora</strong>.</p>
+<hr />
+<p><a id="apendice"></a> # Apêndice — Calculadora de Elasticidade</p>
+<h2 id="calculadora-manual">Calculadora manual</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inputs</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>preco_atual <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>preco_novo <span class="op">=</span> <span class="dv">120</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>vendas_atual <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>vendas_novo <span class="op">=</span> <span class="dv">850</span>  <span class="co"># após teste A/B</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Cálculos</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>variacao_preco <span class="op">=</span> (preco_novo <span class="op">-</span> preco_atual) <span class="op">/</span> preco_atual</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>variacao_demanda <span class="op">=</span> (vendas_novo <span class="op">-</span> vendas_atual) <span class="op">/</span> vendas_atual</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>elasticidade <span class="op">=</span> variacao_demanda <span class="op">/</span> variacao_preco</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Elasticidade: </span><span class="sc">{</span>elasticidade<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpretação</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">abs</span>(elasticidade) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Produto ELÁSTICO (sensível a preço)&quot;</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Recomendação: NÃO aumente preço. Reduza pra aumentar receita total.&quot;</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Produto INELÁSTICO (pouco sensível)&quot;</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Recomendação: Pode aumentar preço.&quot;</span>)</span></code></pre></div>
+<h2 id="exemplo-prático">Exemplo prático</h2>
+<ul>
+<li>Preço atual: R$ 100</li>
+<li>Preço novo: R$ 120 (+20%)</li>
+<li>Vendas atuais: 1.000</li>
+<li>Vendas no teste: 850 (-15%)</li>
+</ul>
+<pre><code>Elasticidade = -15% / 20% = -0.75
+
+|elasticidade| &lt; 1 → INELÁSTICO
+Recomendação: aumente o preço. Lucro total será maior.</code></pre>
+<p><strong>Cálculo de receita:</strong> - Atual: 1.000 × R$ 100 = R$
+100.000 - Novo: 850 × R$ 120 = R$ 102.000 (+2%)</p>
+<p><strong>Sempre teste antes de assumir.</strong> A teoria ajuda, mas
+dados reais decidem.</p>
+<hr />
+<p><em>Fim da Apostila 32 · Pricing de Produtos Digitais com IA</em></p>
+<p><em>MMN_IA Collective · 2026 · Licença: CC BY-SA 4.0</em></p>
+<p><em>“Preço é a única variável de marketing que não tem custo. Tudo o
+mais (produto, distribuição, comunicação) custa. Preço traz receita
+direto.”</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

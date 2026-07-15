@@ -2,15 +2,15 @@
 title: "Webinars · Academ'IA"
 description: "Gravações de eventos, lives e apresentações oficiais"
 tags: [webinars, gravacoes, lives, lancamentos]
-version: 2.1.0
-last_updated: 2026-07-14
+version: 2.2.0
+last_updated: 2026-07-15
 ---
 
 # 📡 Webinars · Academ'IA
 
 > Gravações de lives, lançamentos e apresentações oficiais. Toda gravação fica disponível **24h após o evento**.
 
-## 📋 Catálogo (12 webinars)
+## 📋 Catálogo (14 webinars)
 
 | Código | Título | Data | Duração | Status |
 |---|---|---|---|---|
@@ -26,6 +26,8 @@ last_updated: 2026-07-14
 | [WB-2026-10](WB-2026-10-seo-vs-ia-generativa.md) | 🔍 SEO vs IA Generativa | 2026-10-08 | 90 min | 📅 Planejado |
 | [WB-2026-11](WB-2026-11-burnout-afiliados.md) | 💆 Burnout em Affiliates | 2026-10-22 | 90 min | 📅 Planejado |
 | [WB-2026-12](WB-2026-12-ia-to-ia-federation.md) | 🌐 IA-to-IA Federation | 2026-12-09 | 90 min | 📅 Planejado |
+| [WB-2026-13](WB-2026-13-criacao-conteudo-ia.md) | ✍️ Criação de Conteúdo com IA | 2026-12-18 | 90 min | 📅 Planejado |
+| [WB-2026-14](WB-2026-14-pricing-ia-tempo-real.md) | 💰 Pricing com IA em Tempo Real | 2026-12-23 | 90 min | 📅 Planejado |
 
 ## 🗓️ Calendário de Lives 2026
 
@@ -61,4 +63,4 @@ Discord → `#academy-master` → canal de sugestões.
 
 ---
 
-**Versão 2.1** · Atualizado 2026-07-14 · Onda 38
+**Versão 2.2** · Atualizado 2026-07-15 · Onda 40

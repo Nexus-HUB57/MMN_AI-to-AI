@@ -1,8 +1,8 @@
 # 📚 AcademIA Nexus Affil'IA'te · INDEX Master
 
-**Última atualização**: 2026-07-14 · Mavis + contribuidor paralelo
-**Total**: 31 apostilas · 13 webinars · 31 PDFs apostila · 13 PDFs webinar · 44 HTMLs · 26 capas AcademIA
-**Versão**: 1.3.1 (Onda 39)
+**Última atualização**: 2026-07-15 · Mavis + contribuidor paralelo
+**Total**: 32 apostilas · 14 webinars · 32 PDFs apostila · 14 PDFs webinar · 46 HTMLs · 32 capas AcademIA
+**Versão**: 1.3.2 (Onda 40)
 
 ## 🎯 Estrutura Oficial (Fonte da Verdade)
 
@@ -104,7 +104,7 @@ AcademIA/
 - 25 capas AcademIA (1-15 + 16, 20-28)
 - **Total**: ~1.1 GB no repo, 68 MB servidos publicamente
 
-## 📚 Catálogo de Apostilas (31)
+## 📚 Catálogo de Apostilas (32)
 
 ### Trilha Fundamental & Agente (1-15)
 1. Apresentação & Infraestrutura · 2. Cases Orquestração · 3. Infra Operacional IA · 4. Orquestração Híbrida · 5. 7 Telas Essenciais · 6. Setup Agente · 7. 18 Skills Operacionais · 8. Rotina Disparo · 9. Campanhas Automatizadas · 10. Jornada Afiliado · 11. SHO em Produção · 12. IOAID Arquitetura · 13. Marketplace Skills · 14. Multi-Tenant Whitelabel · 15. Métricas ROI
@@ -112,10 +112,10 @@ AcademIA/
 ### Trilha Master & Elite (16-22)
 16. Trilha Fundamental IA · 17. SEO & Marketing Conteúdo · 18. Segurança Ofensiva · 19. Monetização Avançada · 20. Trilha Elite Engenharia · 21. Trilha Master Arquitetura · 22. Trilha Master Mentoria
 
-### Cursos Práticos & Avançados (23-31)
-23. Curso RAG Prático · 24. Curso Agents LangGraph · 25. Curso Prompt Engineering · 26. Curso Vector DB · 27. Curso Voice AI · 28. Curso Multimodal RAG · 29. AI-to-AI Protocol (A2A) · 30. Federação Zero-Trust · 31. Fábrica de Conteúdo com IA
+### Cursos Práticos & Avançados (23-32)
+23. Curso RAG Prático · 24. Curso Agents LangGraph · 25. Curso Prompt Engineering · 26. Curso Vector DB · 27. Curso Voice AI · 28. Curso Multimodal RAG · 29. AI-to-AI Protocol (A2A) · 30. Federação Zero-Trust · 31. Fábrica de Conteúdo com IA · 32. Pricing de Produtos Digitais com IA
 
-## 🎥 Catálogo de Webinars (13)
+## 🎥 Catálogo de Webinars (14)
 - WB-01 Lançamento IOAID · WB-02 SHO em Produção · WB-03 Open House
 - WB-04 Skills em Produção · WB-05 Multi-Tenant · WB-06 A/B Test Estatístico · WB-07 LGPD & IA
 - WB-08 CFO/AI Otto · Unit Economics
@@ -123,3 +123,4 @@ AcademIA/
 - WB-10 SEO vs IA Generativa · WB-11 Burnout em Affiliates
 - WB-12 IA-to-IA Federation
 - WB-13 Criação de Conteúdo com IA
+- WB-14 Pricing com IA em Tempo Real

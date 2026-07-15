@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="description" content="Como implementar pricing dinâmico, preditivo e personalizado em 30 dias — sem ser ‘maluco’ ou anti-ético" />
+  <title>WB-2026-14 · Pricing com IA em Tempo Real</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">WB-2026-14 · Pricing com IA em Tempo Real</h1>
+</header>
+<p><strong>WB-2026-14 · Pricing com IA em Tempo Real</strong></p>
+<p><em>Como afiliados e infoprodutores estão usando IA para precificar
+produtos em tempo real, com aumento médio de 30% em receita.</em></p>
+<p><strong>Por Otto Cardoso · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<hr />
+<h1 id="sumário">🎯 Sumário</h1>
+<blockquote>
+<p><strong>•</strong> 1. O que é pricing dinâmico (e o que não é)
+<strong>•</strong> 2. Por que 90% das PMEs têm o preço errado
+<strong>•</strong> 3. Os 4 modelos de pricing com IA <strong>•</strong>
+4. Pricing dinâmico simples em 1 semana <strong>•</strong> 5. Pricing
+preditivo em 30 dias <strong>•</strong> 6. Case: afiliada dobrou ticket
+médio <strong>•</strong> 7. Case: SaaS de R$ 99 a R$ 4.999 dinâmico
+<strong>•</strong> 8. Como evitar backlash do cliente <strong>•</strong>
+9. Compliance e ética <strong>•</strong> 10. Q&amp;A com Otto +
+convidado Hotmart</p>
+</blockquote>
+<hr />
+<p><strong>1. O que é pricing dinâmico (e o que não é)</strong></p>
+<p><strong>Pricing dinâmico</strong> é ajustar o preço automaticamente
+baseado em: - Demanda atual - Comportamento do visitante - Horário, dia,
+estação - Segmento do cliente</p>
+<p><strong>O que NÃO é:</strong> - ❌ Manipular preço pra cliente que
+“parece rico” ver mais caro (anti-ético) - ❌ Aumentar preço sem
+critério (gera churn) - ❌ Pricing dinâmico SEM TESTE (pode destruir
+valor da marca)</p>
+<p><strong>O que É:</strong> - ✅ Pricing baseado em valor percebido +
+elasticidade - ✅ Pricing que maximiza <strong>receita total</strong>,
+não só conversão - ✅ Pricing que o cliente acharia
+<strong>justo</strong> se soubesse</p>
+<hr />
+<p><strong>2. Por que 90% das PMEs têm o preço errado</strong></p>
+<p>Pesquisa de 2025 (Deloitte): - <strong>62%</strong> dos pequenos
+negócios nunca testaram preço diferente - <strong>89%</strong> definem
+preço baseado em “achismo” ou cópia do concorrente -
+<strong>94%</strong> não sabem a elasticidade do próprio produto</p>
+<p><strong>Resultado:</strong> perdem em média <strong>20-30% de receita
+potencial</strong>.</p>
+<hr />
+<p><strong>3. Os 4 modelos de pricing com IA</strong></p>
+<p><strong>Modelo 1 — Pricing estático + A/B testing</strong> - Preço
+fixo, mas testa 2-3 variantes mensalmente -
+<strong>Complexidade:</strong> baixa - <strong>Ganho típico:</strong>
+5-15%</p>
+<p><strong>Modelo 2 — Pricing dinâmico simples (horário + dia)</strong>
+- Preço muda por horário/dia baseado em demanda histórica -
+<strong>Complexidade:</strong> média - <strong>Ganho típico:</strong>
+10-25%</p>
+<p><strong>Modelo 3 — Pricing comportamental (segmentação)</strong> -
+Preço muda por segmento (novo, recorrente, high-value) -
+<strong>Complexidade:</strong> alta - <strong>Ganho típico:</strong>
+20-40%</p>
+<p><strong>Modelo 4 — Pricing preditivo (ML)</strong> - Preço prevê
+demanda futura e ajusta proativamente - <strong>Complexidade:</strong>
+muito alta - <strong>Ganho típico:</strong> 30-60%</p>
+<hr />
+<p><strong>4. Pricing dinâmico simples em 1 semana</strong></p>
+<p><strong>Stack:</strong> Google Sheets + Apps Script + Stripe +
+webhook</p>
+<p><strong>Passo a passo:</strong></p>
+<ol type="1">
+<li>Colete dados de vendas dos últimos 90 dias</li>
+<li>Identifique padrões (horário, dia, mês)</li>
+<li>Defina 2-3 “faixas” de preço</li>
+<li>Configure no gateway de pagamento (Stripe, Hotmart, etc)</li>
+<li>Crie Apps Script que ajusta preço baseado em horário</li>
+<li>Ative e monitore</li>
+</ol>
+<p><strong>Investimento:</strong> R$ 0 (só tempo)</p>
+<p><strong>Resultado esperado em 30 dias:</strong> +8-15% em receita</p>
+<hr />
+<p><strong>5. Pricing preditivo em 30 dias</strong></p>
+<p><strong>Stack:</strong> Python + scikit-learn + Postgres + API do
+gateway</p>
+<p><strong>Passo a passo:</strong></p>
+<ol type="1">
+<li>Colete 12+ meses de dados (mínimo)</li>
+<li>Identifique features (preço, dia, tráfego, sazonalidade)</li>
+<li>Treine modelo (Gradient Boosting ou XGBoost)</li>
+<li>Valide com holdout (3 meses de teste)</li>
+<li>Implemente como “sugestão” (humano aprova)</li>
+<li>Após 30 dias, automatize</li>
+</ol>
+<p><strong>Investimento:</strong> R$ 500-2000 (dev freelancer ou
+IA-assisted)</p>
+<p><strong>Resultado esperado em 90 dias:</strong> +25-40% em
+receita</p>
+<hr />
+<p><strong>6. Case: afiliada dobrou ticket médio</strong></p>
+<p><strong>Perfil:</strong> Marina, afiliada de nutrição, 5.000
+leads/mês</p>
+<p><strong>Antes:</strong> preço fixo R$ 297</p>
+<p><strong>Depois (com pricing dinâmico):</strong> - Madrugada (0h-6h):
+R$ 197 - Manhã (6h-12h): R$ 297 - Tarde (12h-18h): R$ 247 - Noite
+(18h-24h): R$ 397 (horário nobre)</p>
+<p><strong>Resultado:</strong> - Conversão geral: -3% (caiu um pouco) -
+Ticket médio: +35% - <strong>Receita total: +32%</strong></p>
+<p><strong>Por que funcionou:</strong> Horário nobre tem demanda alta
+(elasticidade baixa), permite cobrar mais. Madrugada tem demanda baixa
+(elasticidade alta), precisa reduzir pra converter.</p>
+<hr />
+<p><strong>7. Case: SaaS de R$ 99 a R$ 4.999 dinâmico</strong></p>
+<p><strong>Perfil:</strong> Ferramenta de marketing, 2.000 clientes</p>
+<p><strong>Antes:</strong> R$ 99/mês fixo (todos pagavam igual)</p>
+<p><strong>Depois (pricing personalizado):</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Segmento</th>
+<th>Preço</th>
+<th>Features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Micro (1-3 pessoas)</td>
+<td>R$ 99</td>
+<td>Básico</td>
+</tr>
+<tr class="even">
+<td>Pequeno (4-15)</td>
+<td>R$ 299</td>
+<td>+ Relatórios</td>
+</tr>
+<tr class="odd">
+<td>Médio (16-50)</td>
+<td>R$ 999</td>
+<td>+ API</td>
+</tr>
+<tr class="even">
+<td>Enterprise (50+)</td>
+<td>R$ 4.999</td>
+<td>+ White-label + SLA</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Como identifica:</strong> IA analisa # funcionários, receita
+(LinkedIn), tráfego, etc.</p>
+<p><strong>Resultado:</strong> - Receita média por cliente: +85% -
+Churn: -22% (cada um vê preço justo pro seu tamanho) - <strong>Receita
+total: +112%</strong></p>
+<hr />
+<p><strong>8. Como evitar backlash do cliente</strong></p>
+<p><strong>Regra de ouro:</strong> o cliente precisa achar o preço
+<strong>justo</strong>, mesmo se descobrir que pagou mais que outro.</p>
+<p><strong>5 práticas:</strong></p>
+<ol type="1">
+<li><strong>Justificativa visível</strong> — mostre “por que esse preço”
+(features, suporte, etc)</li>
+<li><strong>Não expor diferença</strong> — não mostre “você pagou R$ 99,
+fulano pagou R$ 297”</li>
+<li><strong>Oferecer upgrade claro</strong> — quem pagou menos sabe o
+que ganha pagando mais</li>
+<li><strong>Política de transparência</strong> — “nosso preço é baseado
+em valor para seu tamanho”</li>
+<li><strong>Atendimento humano</strong> — para casos extremos (“mas eu
+vi mais barato!”)</li>
+</ol>
+<hr />
+<p><strong>9. Compliance e ética</strong></p>
+<p><strong>No Brasil (2026):</strong> - CDC proíbe preços abusivos ou
+discriminatórios - LGPD exige consentimento pra pricing personalizado -
+Ibramercos proíbe publicidade enganosa</p>
+<p><strong>Como navegar:</strong> - ✅ Pricing dinâmico é legal SE
+baseado em critérios objetivos (horário, demanda, segmento) - ❌ Pricing
+baseado em raça, gênero, classe social é ilegal - ⚠️ Pricing por “perfil
+socioeconômico inferido” é zona cinzenta</p>
+<p><strong>Recomendação:</strong> documente os critérios. Se
+questionado, consiga explicar <strong>justificativa técnica</strong> do
+preço.</p>
+<hr />
+<p><strong>10. Q&amp;A com Otto + convidado Hotmart</strong></p>
+<p>Otto + convidado da Hotmart responderão: - Quando NÃO vale a pena
+pricing dinâmico - Como o Stripe/Hotmart lida com pricing dinâmico -
+Caso de bug (preço = 0 ou = 1Milhão) — como evitar - Pricing para
+white-label - Pricing para infoproduto perpétuo vs lançamento - Próximos
+passos práticos (templates de planilha)</p>
+<hr />
+<p><em>WB-2026-14 · Pricing com IA em Tempo Real · Dezembro
+2026</em></p>
+<p><em>Por MMN AI-to-AI · 2026 · Licença: CC BY-SA 4.0</em></p>
+<p><em>“O preço é o melhor lugar pra IA trabalhar. É a única alavanca
+que não tem custo e tem efeito direto na receita.”</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

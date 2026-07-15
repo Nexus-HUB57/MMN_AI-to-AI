@@ -698,3 +698,4 @@ Thumbs.db
 *.swo
 # Uploads temporários
 /tmp/nexus-upload/
+AcademIA/videos/render/

@@ -703,7 +703,7 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
                 </div>
                 <div className="rounded-3xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-5">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-quantum-cyan/70">E-books no catálogo</p>
-                  <p className="mt-3 text-3xl font-bold text-white">800+</p>
+                  <p className="mt-3 text-3xl font-bold text-white">234</p>
                 </div>
                 <div className="rounded-3xl border border-purple-500/20 bg-purple-500/5 p-5">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-purple-300/70">Skills do agente</p>

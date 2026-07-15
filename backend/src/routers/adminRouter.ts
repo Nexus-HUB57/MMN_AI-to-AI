@@ -340,6 +340,7 @@ export const adminRouter = router({
   getNetworkTree: adminProcedure
     .input(z.object({
       rootAffiliateId: z.number().optional(),
+      rootUserId: z.number().optional(),
       maxDepth: z.number().min(1).max(10).default(3),
     }).optional())
     .query(async ({ input }) => {
@@ -347,21 +348,29 @@ export const adminRouter = router({
       const pool = new Pool({ connectionString: process.env.DATABASE_URL });
       const client = await pool.connect();
       try {
-        // Se não passar rootAffiliateId, usa Lucas (NX-FOUNDER-001)
-        let rootId = input?.rootAffiliateId;
+        const maxDepth = input?.maxDepth ?? 3;
+
+        // Resolver rootAffiliateId a partir de rootUserId se necessario
+        let rootId = input?.rootAffiliateId ?? null;
+        if (!rootId && input?.rootUserId) {
+          const r = await client.query(
+            `SELECT id FROM affiliates WHERE "userId" = $1 LIMIT 1`,
+            [input.rootUserId],
+          );
+          rootId = r.rows[0]?.id ?? null;
+        }
         if (!rootId) {
           const rootRes = await client.query(
-            `SELECT id FROM affiliates WHERE "affiliateCode" = 'NX-FOUNDER-001' LIMIT 1`
+            `SELECT id FROM affiliates WHERE "affiliateCode" = 'NX-FOUNDER-001' LIMIT 1`,
           );
           rootId = rootRes.rows[0]?.id ?? null;
         }
-        if (!rootId) return { root: null, nodes: [], totalNodes: 0, directs: 0 };
+        if (!rootId) return { root: null, nodes: [], totalNodes: 0, directs: 0, source: "root_not_found" };
 
-        const maxDepth = input?.maxDepth ?? 3;
-        // Query recursiva (CTE) para pegar toda a árvore até maxDepth
+        // Query recursiva SEM filtro is_test_data (para nao esconder cadastros reais em beta)
         const treeRes = await client.query(`
           WITH RECURSIVE tree AS (
-            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId", 
+            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId",
                    u.name, u.email, 1 AS depth
             FROM affiliates a
             JOIN users u ON u.id = a."userId"
@@ -372,7 +381,7 @@ export const adminRouter = router({
             FROM affiliates a
             JOIN users u ON u.id = a."userId"
             JOIN tree t ON a."sponsorId" = t.id
-            WHERE t.depth < $2 AND a.is_test_data = false
+            WHERE t.depth < $2
           )
           SELECT id, "affiliateCode" AS code, "userId", "sponsorId", name, email, depth
           FROM tree
@@ -382,11 +391,27 @@ export const adminRouter = router({
         const nodes = treeRes.rows;
         const root = nodes.find((n: any) => n.depth === 1) ?? null;
         const directs = nodes.filter((n: any) => n.depth === 2).length;
+
+        // Totais operacionais reais
+        const totals = await client.query(`
+          SELECT
+            (SELECT COUNT(*)::int FROM users)      AS users_total,
+            (SELECT COUNT(*)::int FROM affiliates) AS affiliates_total,
+            (SELECT COUNT(*)::int FROM affiliates WHERE "sponsorId" IS NOT NULL) AS connections
+        `);
+        const t = totals.rows[0] || {};
+
         return {
           root,
           nodes,
           totalNodes: nodes.length,
           directs,
+          totals: {
+            users: Number(t.users_total || 0),
+            affiliates: Number(t.affiliates_total || 0),
+            connections: Number(t.connections || 0),
+          },
+          source: "db_real",
         };
       } finally {
         client.release();

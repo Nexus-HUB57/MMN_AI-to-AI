@@ -381,7 +381,7 @@ const { user, loading, logout } = useAuth();
       <aside
         data-sidebar="dashboard-primary"
         aria-label="Menu lateral principal"
-        data-sidebar-protocol="always-on"
+        data-sidebar-protocol="always-on" data-testid="sidebar-always-on"
         className={`fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border z-30 transition-transform duration-300 md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}

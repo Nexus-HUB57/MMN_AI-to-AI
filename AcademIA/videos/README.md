@@ -1,188 +1,153 @@
+# 🎬 Vídeos Full — AcademIA Nexus
+
+**Nexus Affil'IA'te · MMN_IA · 2026 · Onda 49**
+
+Pipeline completo de produção de vídeos-aula com **personas IA voice-cloned PT-BR**, motion-graphics slides e render H.264/AAC padronizado.
+
 ---
-title: "Vídeos Nexus V — Academia"
-description: "Hub de roteiros, thumbnails, e vídeos curtos da Academia Nexus HUB57"
-author: "MMN_IA Collective"
-version: "2.0.0"
-date: "2026-07-07"
-pattern: "MMN_IA"
+
+## 📊 Resumo
+
+| Métrica | Valor |
+|---------|-------|
+| Total de roteiros parseados | 15 (excluindo variantes) |
+| Vídeos full renderizados | 15/15 (100%) |
+| Áudios TTS gerados (voz PT-BR) | 15 |
+| Frames motion-graphics (PNG 1280x720) | 60 (4 por vídeo) |
+| Duração média | ~24s (varia 19-30s conforme TTS) |
+| Resolução | 1280×720 @ 25fps |
+| Codec | H.264 (video) + AAC 192k (audio) |
+| Tamanho total | ~15 MB |
+
 ---
 
-# 🎬 Vídeos Nexus V — Academia
+## 📁 Estrutura
 
-> **Hub central de produção audiovisual da Academia Nexus HUB57**
-> Roteiros · Thumbnails · Vídeos · Especificações técnicas
-
-## 📂 Estrutura
-
-```text
-AcademIA/videos/
-├── README.md                       ← este arquivo
-├── thumbnails/                     ← Capas dos vídeos (16:9, 2K)
-│   ├── thumb-00-boas-vindas.png
-│   ├── thumb-01-ioaid.webp
-│   ├── thumb-02-sho.png
-│   ├── thumb-03-painel-afiliado.webp
-│   ├── thumb-04-primeiro-agente.png
-│   ├── thumb-05-skills-essenciais.webp
-│   ├── thumb-06-disparo-whatsapp.webp
-│   ├── thumb-07-judge-revisor.webp
-│   ├── thumb-08-otimizacao-conversao.webp
-│   ├── thumb-09-funis-lifecycle.webp
-│   ├── thumb-10-ab-test-judge.webp
-│   ├── thumb-11-coortes-churn.webp
-│   ├── thumb-12-blueprints-elite.webp
-│   ├── thumb-13-multi-tenant.webp
-│   └── thumb-14-federacao-agentes.webp
-├── roteiros/                       ← Roteiros detalhados (5 cenas, 6-12min)
-│   ├── 00-boas-vindas-academia-roteiro.md
-│   ├── 01-ioaid-infraestrutura-distribuida-roteiro.md
-│   ├── 02-sho-sistema-imune-roteiro.md
-│   ├── 03-painel-afiliado-visao-geral-roteiro.md
-│   ├── 04-primeiro-agente-roteiro.md
-│   ├── 05-skills-essenciais-copywriter-roteiro.md
-│   ├── 06-disparo-whatsapp-escala-roteiro.md
-│   ├── 07-judge-revisor-decisoes-roteiro.md
-│   ├── 08-otimizacao-conversao-master-roteiro.md
-│   ├── 09-funis-lifecycle-roteiro.md
-│   ├── 10-ab-test-judge-roteiro.md
-│   ├── 11-coortes-churn-roteiro.md
-│   ├── 12-blueprints-elite-roteiro.md
-│   ├── 13-multi-tenant-whitelabel-roteiro.md
-│   └── 14-federacao-agentes-roteiro.md
-└── *.mp4                           ← Vídeos curtos renderizados
-    └── video-00-boas-vindas.mp4    (prova de conceito 6s)
+```
+videos/
+├── roteiros/                    # 16 roteiros canônicos (00-14 + variantes)
+├── thumbnails/                  # 9 thumbnails 2K das ondas anteriores
+├── thumb_video-*-full.jpg       # 15 thumbnails dos vídeos full (Onda 49)
+├── video-*-full.mp4             # 15 vídeos full com narração TTS
+├── video-*.mp4                  # 6 teasers curtos (5-10s, ondas anteriores)
+├── audio/                       # 15 áudios TTS WAV (Portuguese_*)
+├── frames/                      # 60 PNGs motion-graphics (4 por vídeo)
+├── scripts/                     # Pipeline Python
+│   ├── parse_roteiros.py
+│   ├── generate_full_videos.py
+│   ├── roteiros_parsed.json
+│   ├── tts_falas.json
+│   └── tts_requests.json
+└── README.md                    # este arquivo
 ```
 
-## 🎯 Catálogo Completo de Vídeos (Julho 2026)
+---
 
-### 🥉 Trilha Fundamental (Sir Nexus Alencar)
+## 🎙️ Vozes TTS Utilizadas
 
-| # | Título | Roteiro | Thumbnail | Duração |
-|---|--------|---------|-----------|---------|
-| 00 | Boas-Vindas à Academia | ✅ | ✅ | 60-90s |
-| 01 | IOAID — Infraestrutura de Inteligência Distribuída | ✅ | ✅ | 7-9 min |
-| 02 | SHO — Sistema Híbrido de Orquestração | ✅ | ✅ | 8-10 min |
-| 03 | Painel do Afiliado — Visão Geral | ✅ | ✅ | 7-9 min |
-| 04 | Construindo Seu 1º Agente | ✅ | ✅ | 8-10 min |
+| Persona | Voice ID | Uso |
+|---------|----------|-----|
+| **Sra. Nexus Ive** | `Portuguese_CharmingQueen` | Aulas 01 (IOAID) |
+| **Sir. Nexus Alencar** | `Portuguese_Steadymentor` | Aulas 00, 02-07, 10-14 |
+| **Dupla (Ive + Alencar)** | `Portuguese_Steadymentor` (intro) | Aulas 08, 09, 12 |
 
-### 🥈 Trilha Agente (Sir Nexus Alencar)
-
-| # | Título | Roteiro | Thumbnail | Duração |
-|---|--------|---------|-----------|---------|
-| 05 | Skills Essenciais: Copywriter + Audience-Segmenter | ✅ | ✅ | 8-10 min |
-| 06 | Disparando no WhatsApp em Escala | ✅ | ✅ | 8-10 min |
-| 07 | Judge Revisor — A IA que Decide por Você | ✅ | ✅ | 8-10 min |
-
-### 🥇 Trilha Master (Dupla Ive + Alencar)
-
-| # | Título | Roteiro | Thumbnail | Duração |
-|---|--------|---------|-----------|---------|
-| 08 | Otimização de Conversão — A Matemática da Receita | ✅ | ✅ | 9-11 min |
-| 09 | Funis e Lifecycle — O Sistema Completo | ✅ | ✅ | 9-11 min |
-| 10 | A/B Testing com Judge — Ciência da Experimentação | ✅ | ✅ | 9-11 min |
-| 11 | Análise de Coortes e Churn — A Arte de Reter | ✅ | ✅ | 9-11 min |
-
-### 💎 Trilha Elite (Dupla Ive + Alencar)
-
-| # | Título | Roteiro | Thumbnail | Duração |
-|---|--------|---------|-----------|---------|
-| 12 | Blueprints Elite — O Jogo do Top 10% | ✅ | ✅ | 10-12 min |
-| 13 | Multi-Tenant e White-Label na Prática | ✅ | ✅ | 10-12 min |
-| 14 | Federação de Agentes Zero-Trust | ✅ | ✅ | 10-12 min |
-
-**Total:** 15 roteiros · 15 thumbnails · 0 vídeo renderizado · 100% escrito
-
-## 🎨 Identidade Visual
-
-- **Paleta principal:**
-  - `#0A0E27` — Fundo escuro (deep space)
-  - `#00D9FF` — Cyan (highlights, código)
-  - `#B967FF` — Roxo (acentos, IA)
-  - `#FFD700` — Dourado (sucesso, premium)
-  - `#FF3366` — Vermelho (alerta, erro)
-
-- **Tipografia:**
-  - Títulos: **Montserrat Bold** ou **Inter Bold**
-  - Código: **Fira Code** ou **JetBrains Mono**
-  - Narração: voz masculina BR (Alencar) ou feminina BR (Ive) — alternância estratégica
-
-- **Trilha sonora:** Eletrônica minimalista, 90-110 BPM, sem vocais
-
-## 👥 Personas e Estilo
-
-### Sir Nexus Alencar — Voz masculina grave, didática
-- **Trilhas:** Fundamental + Agente (8 vídeos)
-- **Tom:** Técnico, autoritário, com pausas em conceitos-chave
-- **Vocabulário:** "infraestrutura", "orquestrar", "camada", "pilares"
-- **Abertura:** "Olá. Eu sou Sir Nexus Alencar."
-
-### Sra. Nexus Ive — Voz feminina acolhedora, sensual sutil
-- **Aparece em:** Trilha Master e Elite (7 vídeos, sempre em dupla)
-- **Tom:** Acolhedor, empoderador, humano, com humor sutil
-- **Vocabulário:** "orquestrar", "escala estruturada", "inteligência distribuída", "respire fundo"
-- **Abertura:** "Olá. Eu sou a Sra. Nexus Ive."
-
-### Dupla (Ive + Alencar) — Narrativa intercalada
-- **Trilhas:** Master + Elite (7 vídeos)
-- **Formato:** Tela dividida. Ive abre, Alencar aprofunda, Ive contextualiza, Alencar fecha
-- **Tom:** Estratégico, com tensão intelectual produtiva
-
-## 🛠️ Stack de Produção Sugerida
-
-| Função | Ferramenta | Custo |
-|--------|-----------|-------|
-| Edição principal | DaVinci Resolve | Grátis |
-| Motion graphics | After Effects ou Canva Pro | $$ |
-| Animação 2D | Rive ou Lottie | $ |
-| Narração IA — masculino | ElevenLabs Multilingual v2 (voz Alencar) | $$ |
-| Narração IA — feminino | ElevenLabs (voz Ive) | $$ |
-| Geração de vídeo | Runway, Pika, ou Sora | $$$ |
-| Thumbnails IA | Midjourney ou DALL-E | $$ |
-| Render final | FFmpeg + H.264 | Grátis |
-| Hospedagem | YouTube, Vimeo, ou Bunny.net | $ |
-
-## 📊 Roadmap de Produção
-
-### Fase 1 — POC (✅ Concluído)
-- [x] 1 vídeo curto gerado (6s, 768p, prova de conceito)
-- [x] 15 roteiros completos (todos os cursos das 4 trilhas)
-- [x] 15 thumbnails gerados (16:9, 2K)
-- [x] Estrutura de pastas organizada
-- [x] README atualizado
-
-### Fase 2 — Mínimo Viável (Próximo)
-- [ ] Renderizar vídeos 1-7 com narração ElevenLabs (1080p, 7-10min cada)
-- [ ] Versões verticais 9:16 (60s) para Shorts/Reels
-- [ ] Legendas .SRT em pt-BR
-- [ ] Persona visual (avatar animado de Alencar + Ive)
-
-### Fase 3 — Escala (Futuro)
-- [ ] 15 vídeos full (1 por curso) — roteiros já prontos ✅
-- [ ] 10 vídeos de apostila (deep-dives)
-- [ ] 3 webinars gravados (full-length, 1h cada)
-- [ ] Série "Por Trás do Código" (making-of)
-
-## 🎯 Métricas de Sucesso
-
-- **Qualidade:** NPS > 8.0 entre alunos que assistem
-- **Engajamento:** > 60% assistem até o fim (taxa de retenção)
-- **Conversão:** > 30% que assistem iniciam o curso
-- **Reuso:** cada vídeo é matéria-prima para 3-5 Shorts
-- **Cobertura:** 100% dos cursos com roteiro + thumbnail (✅ atingido)
-
-## 📜 Padrão MMN_IA aplicado
-
-Todos os roteiros seguem:
-- Frontmatter YAML com metadados (título, tipo, trilha, persona, ordem)
-- Estrutura de 5 cenas (abertura + 3 blocos + encerramento)
-- Especificações técnicas (visual, áudio, transições)
-- Duração estimada realista
-- Checklist de validação
-- Tom alinhado com persona
-- Vocabulário característico
+> Em ondas futuras, pretende-se clonar vozes reais usando as amostras WAV oficiais em `personas/ive/audio/official_voice.wav` e `personas/alencar/voz_sir_nexus_alencar.wav`.
 
 ---
 
-*"Um vídeo bem feito vale mais que 100 slides. Um vídeo bem roteirizado vale mais que 100 vídeos."*
+## 🎨 Identidade Visual (PADRAO_VIDEOS_ACADEMIA.md)
 
-**Por MMN AI-to-AI · 2026**
+| Elemento | Valor |
+|----------|-------|
+| **BG dark** | `#0A0F1E` (10, 15, 30) |
+| **BG mid** | `#12192D` (18, 25, 45) |
+| **Accent Cyan** | `#46B4C3` (70, 180, 195) — Fundamental |
+| **Accent Teal** | `#2D9BAF` (45, 155, 175) — Agente |
+| **Accent Gold** | `#D7AF5A` (215, 175, 90) — Master / Elite |
+| **Text white** | `#F0F0F5` |
+| **Text muted** | `#B4B4C3` |
+
+**Elementos HUD obrigatórios:**
+- Barra superior 4px (cor da trilha)
+- Barra lateral 8px (cor da trilha)
+- Pill "TRILHA {SÉRIE}" canto superior esquerdo
+- Aula ID canto superior direito
+- Brackets HUD nos 4 cantos
+- Rodapé `oneverso.com.br/academia · @NexusAffilIAte`
+- Watermark `ACADEM IA NEXUS` canto inferior direito
+
+---
+
+## 🛠 Pipeline
+
+```bash
+# 1. Parsear roteiros Markdown → JSON estruturado
+python3 scripts/parse_roteiros.py
+
+# 2. Gerar fala TTS via mavis batch_synthesize_speech
+# (output: audio/full_XX_persona.wav)
+
+# 3. Renderizar vídeos full
+python3 scripts/generate_full_videos.py
+# ou loop manual ffmpeg (ver scripts/parse_roteiros.py)
+```
+
+### Comando ffmpeg base (por vídeo)
+
+```bash
+ffmpeg -y -loglevel error \
+  -f concat -safe 0 -i videos/frames/full_XX_list.txt \
+  -i videos/audio/full_XX_persona.wav \
+  -c:v libx264 -preset ultrafast -crf 23 \
+  -pix_fmt yuv420p -r 25 \
+  -c:a aac -b:a 192k \
+  -shortest -movflags +faststart \
+  videos/video-XX-{slug}-full.mp4
+```
+
+---
+
+## 🎞️ Vídeos Full (Onda 49)
+
+| # | Aula | Persona | Trilha | Duração | Tamanho |
+|---|------|---------|--------|---------|---------|
+| 00 | Boas-vindas à AcademIA | Alencar | Fundamental | 30.2s | 1.2 MB |
+| 01 | Entendendo o IOAID | Ive | Fundamental | 20.0s | 810 KB |
+| 02 | O Sistema SHO | Alencar | Fundamental | 26.0s | 955 KB |
+| 03 | Painel do Afiliado | Alencar | Fundamental | 24.8s | 942 KB |
+| 04 | Primeiro Agente | Alencar | Agente | 20.0s | 850 KB |
+| 05 | Skills Essenciais | Alencar | Agente | 27.6s | 1.0 MB |
+| 06 | Disparo WhatsApp em Escala | Alencar | Agente | 24.8s | 948 KB |
+| 07 | Judge Revisor | Alencar | Agente | 26.8s | 893 KB |
+| 08 | Otimização de Conversão | Alencar | Master | 28.1s | 1.0 MB |
+| 09 | Funis e Lifecycle | Alencar | Master | 20.0s | 885 KB |
+| 10 | A/B Testing com Judge | Alencar | Master | 20.0s | 843 KB |
+| 11 | Coortes e Churn | Alencar | Master | 26.9s | 893 KB |
+| 12 | Blueprints Elite | Alencar | Elite | 23.4s | 912 KB |
+| 13 | Multi-Tenant e White-Label | Alencar | Elite | 20.0s | 873 KB |
+| 14 | Federação de Agentes | Alencar | Elite | 23.0s | 910 MB |
+
+---
+
+## 🔜 Próximas Ondas
+
+1. **Clonagem de voz real** — usar `clone_voice` com WAVs oficiais
+2. **Legendas SRT automáticas** — extrair texto da fala
+3. **Versão 16:9 horizontal 1920x1080** — para YouTube principal
+4. **Versão 9:16 vertical 1080x1920** — para Shorts/Reels
+5. **Integração com YouTube** — upload PRIVATE → unlisted via `scripts/youtube/upload_academia_youtube.py`
+6. **Loudnorm EBU R128** — padronizar para I=-16 LUFS
+7. **Trilha sonora** — música de fundo royalty-free
+
+---
+
+## ⚠️ Não Duplicar
+
+- **Roteiros:** fonte canônica em `videos/roteiros/` (não mexer)
+- **Teasers:** `videos/video-*.mp4` (5-10s, ondas anteriores) — não sobrescrever
+- **Thumbnails 2K:** `videos/thumbnails/` (não duplicar)
+- **Padrão visual:** `producao/PADRAO_VIDEOS_ACADEMIA.md` (contrato permanente)
+
+---
+
+*AcademIA Nexus · MMN AI-to-AI · 2026 · Onda 49 (2026-07-15)*

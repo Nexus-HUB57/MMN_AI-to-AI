@@ -1,0 +1,9 @@
+file '/workspace/MMN_AI-to-AI/AcademIA/videos/frames/full_00_f0.png'
+duration 5
+file '/workspace/MMN_AI-to-AI/AcademIA/videos/frames/full_00_f1.png'
+duration 9.07
+file '/workspace/MMN_AI-to-AI/AcademIA/videos/frames/full_00_f2.png'
+duration 9.07
+file '/workspace/MMN_AI-to-AI/AcademIA/videos/frames/full_00_f3.png'
+duration 7
+file '/workspace/MMN_AI-to-AI/AcademIA/videos/frames/full_00_f3.png'

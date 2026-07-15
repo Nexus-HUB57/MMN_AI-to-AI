@@ -1,0 +1,1369 @@
+[
+  {
+    "code": "00",
+    "slug": "00-boas-vindas-academia-roteiro",
+    "roteiro_file": "videos/roteiros/00-boas-vindas-academia-roteiro.md",
+    "meta": {
+      "title": "Boas-vindas à AcademIA Nexus",
+      "persona": "alencar",
+      "trilha": "Fundamental",
+      "cor": "cyan",
+      "lesson": "fund-00"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura Cinematográfica",
+        "duracao": 8,
+        "narracoes": [
+          "\"Você não vai aprender IA. Você vai se tornar IA.\""
+        ],
+        "bullets": [
+          "Câmera passando por uma rede neural holográfica",
+          "Expansão de partículas em 3D",
+          "Transição suave para o logo"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 2,
+        "titulo": "Apresentação do HUB",
+        "duracao": 12,
+        "narracoes": [
+          "Bem-vindo à Academia Nexus HUB57. A primeira academia de Inteligência Artificial aplicada a Marketing Multinível do Brasil.",
+          "> \"Aqui, você não é aluno. Você é operador. Você não decora conteúdo. Você implanta sistemas."
+        ],
+        "bullets": [
+          "`IMPLANTE > APRENDA`",
+          "`EXECUTE > DECORE`",
+          "`OPERE > ASSISTA`"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 3,
+        "titulo": "As 4 Trilhas",
+        "duracao": 20,
+        "narracoes": [
+          "São 4 trilhas de progressão, 15 cursos, 10 apostilas, e 3 webinars. Tudo integrado. Tudo em código aberto. Tudo seu."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 4,
+        "titulo": "A Promessa",
+        "duracao": 15,
+        "narracoes": [
+          "Em 90 dias, se você seguir o método, você vai ter:",
+          "> \"- Um agente pessoal rodando 24/7",
+          "- 7 telas de comando funcionando",
+          "- 18 skills operacionais prontas",
+          "- Sua primeira campanha automatizada no ar",
+          "- E um painel de afiliado que você entende, finalmente."
+        ],
+        "bullets": [
+          "✅ Agente pessoal",
+          "✅ 7 telas de comando",
+          "✅ 18 skills prontas",
+          "✅ 1ª campanha automatizada",
+          "✅ Painel dominado"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 5,
+        "titulo": "CTA Final",
+        "duracao": 15,
+        "narracoes": [
+          "O próximo passo é seu. Comece pela Trilha Fundamental. Hoje. Agora. Não espere.",
+          "> \"Bem-vindo ao Nexus. Bem-vindo ao futuro que você opera.",
+          "🚀 Acesse: github.com/Nexus-HUB57/MMN_AI-to-AI",
+          "📚 Comece por: AcademIA/cursos/fundamental/00-boas-vindas.md"
+        ],
+        "bullets": [
+          "Edição:** DaVinci Resolve (grátis) ou CapCut Pro",
+          "Motion graphics:** After Effects ou Canva Pro",
+          "Narração IA:** ElevenLabs (voz BR) ou ElevenLabs Multilingual v2",
+          "Trilha:** Epidemic Sound, Artlist, ou Pixabay (royalty-free)",
+          "Render:** HandBrake (H.264) ou FFmpeg",
+          "[ ] Vídeo 1080p renderizado (versão longa 60-90s)"
+        ],
+        "visual": ""
+      }
+    ],
+    "total_duracao": 70,
+    "total_narracao_chars": 878
+  },
+  {
+    "code": "01",
+    "slug": "01-entendendo-ioaid-roteiro",
+    "roteiro_file": "videos/roteiros/01-entendendo-ioaid-roteiro.md",
+    "meta": {
+      "title": "Entendendo o IOAID",
+      "persona": "ive",
+      "trilha": "Fundamental",
+      "cor": "cyan",
+      "lesson": "fund-01"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "A Pergunta Inicial",
+        "duracao": 15,
+        "narracoes": [
+          "Você já parou pra pensar o que acontece entre o momento que você aperta 'enviar' e a mensagem chegar no cliente? No Nexus, isso passa por 5 módulos diferentes em menos de 800 milissegundos. Vamos ver quais são."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 2,
+        "titulo": "Os 5 Módulos",
+        "duracao": 35,
+        "narracoes": [
+          "São 5 módulos. Cada um com um papel claro:",
+          "Quem é você? Você tem permissão? Isso aqui responde em < 50ms.",
+          "O carteiro. Recebe a mensagem, distribui para os módulos certos. Usa Redis Streams, é assíncrono.",
+          "O cérebro. Aqui o LLM é chamado, com o system prompt, contexto, ferramentas.",
+          "O fiscal. Antes de responder, checa se a mensagem está OK (compliance, ética, qualidade).",
+          "O olho que tudo vê. Logs, métricas, traces. Se algo falhar, alerta em < 30s."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 3,
+        "titulo": "O Fluxo",
+        "duracao": 30,
+        "narracoes": [
+          "O fluxo é esse: você envia → autenticação valida → event bus roteia → agent runtime pensa → judge revisa → resposta volta → monitoring registra. Em paralelo.",
+          "Tudo isso em < 800ms. O cliente nem percebeu que existiu."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 4,
+        "titulo": "Auditável, Escalável, Reversível",
+        "duracao": 20,
+        "narracoes": [
+          "Três palavras que resumem o IOAID:",
+          "Cada requisição é registrada. Você sabe exatamente o que foi feito, quando, e por quê.",
+          "Funciona com 10 requisições ou 10 milhões. O sistema escala horizontalmente.",
+          "Algo deu errado? Você pode reverter. Cada ação tem um 'desfazer' correspondente."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 5,
+        "titulo": "Comparação com Sistemas Tradicionais",
+        "duracao": 15,
+        "narracoes": [
+          "Em sistemas tradicionais, tudo isso é uma caixa preta. Você envia, e 'espera que dê certo'. No IOAID, cada passo é visível, monitorável, e ajustável."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 6,
+        "titulo": "CTA",
+        "duracao": 15,
+        "narracoes": [
+          "Quer ver o código? Acesse a apostila 01 — Apresentação da Infraestrutura. Tem diagrama completo e setup com docker-compose.",
+          "> \"Próximo vídeo: O Sistema SHO. O sistema imunológico do Nexus.",
+          "📚 AcademIA/apostilas/01-apresentacao-infraestrutura.md",
+          "💻 Código: AcademIA/Lab-Nexus/workflows/"
+        ],
+        "bullets": [],
+        "visual": ""
+      }
+    ],
+    "total_duracao": 130,
+    "total_narracao_chars": 1583
+  },
+  {
+    "code": "02",
+    "slug": "02-sho-sistema-imune-roteiro",
+    "roteiro_file": "videos/roteiros/02-sho-sistema-imune-roteiro.md",
+    "meta": {
+      "title": "O Sistema SHO",
+      "persona": "alencar",
+      "trilha": "Fundamental",
+      "cor": "cyan",
+      "lesson": "fund-02"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "O Problema",
+        "duracao": 20,
+        "narracoes": [
+          "Imagine: você tem 7 agentes rodando 24/7. Às 3 da manhã, um deles trava. Às 6 da manhã, você descobre. Perdeu 3 horas. Perdeu mensagens. Perdeu vendas.",
+          "> \"Em qualquer sistema tradicional, isso é inevitável. No Nexus, não."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 2,
+        "titulo": "O que é SHO",
+        "duracao": 30,
+        "narracoes": [
+          "SHO significa Self-Healing Orchestrator. É o sistema imunológico do seu ecossistema.",
+          "> \"Ele faz 4 coisas, em loop contínuo, 24/7:"
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 3,
+        "titulo": "Anatomia do SHO",
+        "duracao": 40,
+        "narracoes": [
+          "O SHO tem 5 componentes:",
+          "Tudo isso roda em < 200ms. Enquanto você está dormindo, o SHO já diagnosticou, já curou, e já aprendeu."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 4,
+        "titulo": "Cenários Reais",
+        "duracao": 50,
+        "narracoes": [
+          "3 cenários reais onde o SHO brilha:",
+          "A Meta tem uma instabilidade de 5 minutos. O SHO detecta em 30s, desvia automaticamente para fallback (Telegram), retém as mensagens em fila, e quando a API volta, reprocessa tudo. Zero mensagens perdidas.",
+          "Um agente entra em loop infinito consumindo tokens. O SHO detecta o padrão em 90s (3x mais chamadas que o normal), mata o processo, abre um ticket, e dispara uma versão limpa. Custo evitado: ~R$ 200 em tokens.",
+          "Postgres está com 95% CPU. O SHO detecta, escala para 2 réplicas read-only, redireciona queries de leitura, e dispara alerta para escalar verticalmente. Sistema nunca caiu."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 5,
+        "titulo": "Métricas de Sucesso",
+        "duracao": 20,
+        "narracoes": [
+          "Em produção, em 6 meses:",
+          "Não é mágica. É engenharia de produção feita com cuidado."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 6,
+        "titulo": "CTA",
+        "duracao": 20,
+        "narracoes": [
+          "Quer ver o código? Acesse a apostila 03 — Infra Operacional de IA. Lá tem o setup completo, do zero, com docker-compose.",
+          "> \"Nos vemos no próximo vídeo.",
+          "📚 AcademIA/apostilas/03-infra-operacional-ia.md",
+          "💻 Código: AcademIA/Lab-Nexus/tools/automation/"
+        ],
+        "bullets": [
+          "[ ] Vídeo 1080p renderizado",
+          "[ ] Animação do diagrama (5 blocos)",
+          "[ ] 3 cards de cenários com mockups",
+          "[ ] Thumbnail (`thumb-02-sho.png` ✅)",
+          "[ ] Legendas .SRT",
+          "[ ] Versão vertical 60s para Shorts (resumo)"
+        ],
+        "visual": ""
+      }
+    ],
+    "total_duracao": 180,
+    "total_narracao_chars": 1430
+  },
+  {
+    "code": "03",
+    "slug": "03-painel-afiliado-roteiro",
+    "roteiro_file": "videos/roteiros/03-painel-afiliado-roteiro.md",
+    "meta": {
+      "title": "Painel do Afiliado",
+      "persona": "dupla",
+      "trilha": "Fundamental",
+      "cor": "cyan",
+      "lesson": "fund-03"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 12,
+        "narracoes": [
+          "Em 3 minutos, eu vou te mostrar as 7 telas do painel que você precisa dominar. Não as 47 telas. As 7. As que 90% dos operadores usam todo dia. Bora."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 2,
+        "titulo": "Tela 1: Dashboard Inicial",
+        "duracao": 23,
+        "narracoes": [
+          "Tela 1: Dashboard. Aqui você vê em 5 segundos como está sua operação: quantos leads hoje, qual a conversão, qual o ROI. É a tela que você abre TODA manhã, junto com o café.",
+          "Dica: configure widgets customizados. Os 3 que eu recomendo: gráfico de conversão dos últimos 7 dias, top 5 produtos, taxa de resposta do Judge."
+        ],
+        "bullets": [
+          "Leads hoje: ??",
+          "Conversão: ??",
+          "ROI: ??",
+          "Faturamento: ??"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 3,
+        "titulo": "Tela 2: Agentes",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 2: Agentes. Lista de todos os agentes ativos. Status (online/offline), última execução, taxa de erro. Aqui você detecta quem tá travado.",
+          "Se um agente fica amarelo > 1h, algo tá errado. Clica nele e olha os logs."
+        ],
+        "bullets": [
+          "Status: 🟢 / 🟡 / 🔴",
+          "Última execução",
+          "Taxa de erro",
+          "Ações: pausar / reiniciar / configurar"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 4,
+        "titulo": "Tela 3: Disparos",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 3: Disparos. Aqui você vê TODAS as mensagens que saíram. Por canal (WhatsApp, Telegram, e-mail), por campanha, por período.",
+          "Dica: filtre por 'lidos mas não respondidos' para identificar mensagens que precisam follow-up."
+        ],
+        "bullets": [
+          "Filtros: canal / campanha / data",
+          "Status: enviado / entregue / lido / respondido",
+          "Ações: pausar campanha / reenviar / exportar"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 5,
+        "titulo": "Tela 4: Leads",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 4: Leads. Sua base de contatos. Cada lead tem: nome, telefone, tags, histórico de interações, score de qualificação.",
+          "Score > 70 = lead quente. Score < 30 = descarte ou re-engajamento com copy diferente."
+        ],
+        "bullets": [
+          "Lista com tags (frio, morno, quente)",
+          "Score de qualificação (0-100)",
+          "Histórico (mensagens, aberturas, cliques)",
+          "Ações: enviar mensagem / adicionar tag / arquivar"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 6,
+        "titulo": "Tela 5: Skills",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 5: Skills. Suas 18 skills operacionais. Aqui você vê quais estão ativas, desabilitadas, ou em teste.",
+          "Dica: skills com taxa de sucesso < 80% precisam ajuste de prompt. Olha o log de falhas."
+        ],
+        "bullets": [
+          "18 skills base + N customizadas",
+          "Status: ativa / em teste / desabilitada",
+          "Métricas: uso, taxa de sucesso, latência",
+          "Ações: ativar / desativar / clonar / customizar"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 7,
+        "titulo": "Tela 6: Métricas",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 6: Métricas. Onde você toma decisão baseada em dado, não em achismo. CAC, LTV, conversão, churn, cohort.",
+          "Se você não sabe seu CAC, você não está fazendo negócio. Está fazendo achismo."
+        ],
+        "bullets": [
+          "CAC (custo de aquisição)",
+          "LTV (lifetime value)",
+          "Conversão por etapa",
+          "Churn mensal / trimestral / anual",
+          "Cohort analysis"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 8,
+        "titulo": "Tela 7: Logs",
+        "duracao": 25,
+        "narracoes": [
+          "Tela 7: Logs. Última e mais importante. Aqui você vê TUDO que aconteceu: cada requisição, cada erro, cada alerta.",
+          "Quando algo dá errado (e vai dar), você vem aqui primeiro. Sempre."
+        ],
+        "bullets": [
+          "Nível: info / warning / error",
+          "Timestamp preciso",
+          "Agente / skill / usuário relacionado",
+          "Trace completo (5 módulos do IOAID)",
+          "Ações: filtrar / exportar / investigar"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 9,
+        "titulo": "Resumo e CTA",
+        "duracao": 25,
+        "narracoes": [
+          "Sete telas. Dashboard, Agentes, Disparos, Leads, Skills, Métricas, Logs. Essas são as 7. Não precisa decorar — precisa abrir todo dia até virar automático.",
+          "> \"Quer ver mais? Apostila 05 detalha cada tela. E o curso 03-painel-afiliado tem o checklist de personalização.",
+          "📚 AcademIA/apostilas/05-sete-telas-essenciais.md",
+          "🎯 Curso 03-painel-afiliado.md"
+        ],
+        "bullets": [
+          "Não mostrar dados reais** de clientes (LGPD). Usar dados anonimizados.",
+          "Cobrir campos sensíveis** (telefone, e-mail) com blur.",
+          "Zoom** generoso em áreas pequenas (texto pequeno não funciona em mobile)."
+        ],
+        "visual": ""
+      }
+    ],
+    "total_duracao": 210,
+    "total_narracao_chars": 2020
+  },
+  {
+    "code": "04",
+    "slug": "04-primeiro-agente-roteiro",
+    "roteiro_file": "videos/roteiros/04-primeiro-agente-roteiro.md",
+    "meta": {
+      "title": "Primeiro Agente",
+      "persona": "alencar",
+      "trilha": "Agente",
+      "cor": "teal",
+      "lesson": "agent-00"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "A Pergunta",
+        "duracao": 15,
+        "narracoes": [
+          "Quanto tempo leva pra construir um agente de IA que responde clientes no WhatsApp? Em 2023, semanas. Em 2024, dias. Em 2026? 4 minutos.",
+          "> \"Eu vou te mostrar como."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 2,
+        "titulo": "Definição",
+        "duracao": 25,
+        "narracoes": [
+          "Antes do código, o conceito. Um agente tem 4 partes:",
+          "É isso. 4 partes. O resto é orquestração."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 3,
+        "titulo": "Live Coding",
+        "duracao": 110,
+        "narracoes": [
+          "Vamos lá. `npm init agente-vendas`. Crio o projeto.",
+          "O cérebro. Carrega o LLM. Eu uso o `gpt-4o-mini` por custo, mas pode ser qualquer um.",
+          "A identidade. É aqui que o agente vira SEU agente. Em vez de um chatbot genérico, vira a Marina, 28 anos, especialista em...",
+          "As ferramentas. O que o agente pode fazer além de falar. Aqui, consultar preço:",
+          "A memória. O agente precisa lembrar da conversa. Aqui uso um array simples:",
+          "Agora conecto. Quando chega mensagem, ele pensa, lembra, e responde:",
+          "Vamos testar. Eu envio uma mensagem simulada:",
+          "Pronto. 2 minutos e 30 segundos. Você tem um agente funcional."
+        ],
+        "bullets": [
+          "Sempre cumprimente pelo nome do cliente",
+          "Se não souber, ofereça falar com humano",
+          "NUNCA invente preço ou estoque",
+          "Máximo 3 linhas por resposta"
+        ],
+        "visual": ""
+      },
+      {
+        "n": 4,
+        "titulo": "Os 10% que Fazem a Diferença",
+        "duracao": 30,
+        "narracoes": [
+          "Mas um agente PRODUÇÃO precisa de mais 5 coisas:",
+          "Isso é o que separa um protótipo de um sistema que fatura R$ 50k/mês."
+        ],
+        "bullets": [],
+        "visual": ""
+      },
+      {
+        "n": 5,
+        "titulo": "CTA",
+        "duracao": 20,
+        "narracoes": [
+          "O código completo está no curso `00-primeiro-agente.md` da Trilha Agente. Tem também a apostila 06 — Setup do Agente Pessoal, com docker-compose pronto.",
+          "💻 AcademIA/cursos/agente/00-primeiro-agente.md",
+          "📦 Setup completo: AcademIA/apostilas/06-setup-agente-pessoal.md"
+        ],
+        "bullets": [
+          "Velocidade do live-coding:** 2x (não 4x; precisa dar pra ler)",
+          "Zoom:** aumentar fonte do VSCode para 18-20pt",
+          "Áudio:** fone de ouvido + mic condensador, sem ruído de teclado",
+          "Demo real:** testar antes 3x para não travar na gravação",
+          "Backup:** ter um terminal pré-configurado como plano B",
+          "[ ] Vídeo 1080p renderizado"
+        ],
+        "visual": ""
+      }
+    ],
+    "total_duracao": 200,
+    "total_narracao_chars": 1233
+  },
+  {
+    "code": "05",
+    "slug": "05-skills-essenciais-copywriter-roteiro",
+    "roteiro_file": "videos/roteiros/05-skills-essenciais-copywriter-roteiro.md",
+    "meta": {
+      "title": "Skills Essenciais",
+      "persona": "alencar",
+      "trilha": "Agente",
+      "cor": "teal",
+      "lesson": "agent-01"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura e Contexto",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou Sir Nexus Alencar. Bem-vindo à Trilha Agente. Até aqui, você entendeu a infraestrutura, viu o sistema SHO e aprendeu o painel. Agora a coisa fica séria. Vamos falar das 2 skills que todo afiliado que escala precisa instalar antes de qualquer outra coisa: Copywriter e Audience-Segmenter. Compreenda: você pode ter a melhor infraestrutura do mundo, mas se a copy não converte e o público não é o certo, você está queimando dinheiro. Essas duas skills são o coração da operação.\" --"
+        ],
+        "bullets": [],
+        "visual": "Sequência com ícones de skills (engrenagens, módulos) flutuando em grid 3D. Sir Nexus Alencar em plano médio."
+      },
+      {
+        "n": 2,
+        "titulo": "A Skill Copywriter",
+        "duracao": 180,
+        "narracoes": [
+          "\"A skill Copywriter transforma um briefing em copy de alta conversão. Veja bem: ela não é um prompt genérico de 'escreva um texto de vendas'. Ela foi treinada com milhares de copies validadas em WhatsApp, Instagram, Hotmart, Shopee, e-mail, landing pages, VSLs. Ela entende estrutura, ritmo, gatilhos emocionais, e objeções específicas de cada nicho. Quando você ativa essa skill num agente, o que acontece? O agente passa a escrever como um copywriter sênior. E o mais importante: ele segue o tom de voz da sua marca, não um tom genérico.\"",
+          "\"Olha a diferença. Antes da skill: 'Olá, tudo bem? Quero te apresentar o curso X que vai mudar sua vida. Clique aqui para saber mais.' Isso é copy de amador. Depois da skill instalada: 'Você já perdeu 30 minutos tentando entender o que esse curso faz? Eu te explico em 3 linhas. Curso X foi feito para [persona específica] que quer [resultado específico] em [prazo específico]. A diferença do X para os outros 47 cursos do mercado? Não é o conteúdo. É o método. Clique aqui pra ver os 7 vídeos de demonstração.' Mesma oferta. Copy que vende vs copy que não vende. A skill Copywriter é essa diferença, automatizada.\"",
+          "\"Veja como instalar: Biblioteca > Skills > Copywriter > Instalar. Em 30 segundos, a skill está ativa. Depois, vá em Agentes > selecione seu agente principal > Skills > ative Copywriter. Pronto. Agora qualquer mensagem que esse agente gerar já passa pelo filtro de copy profissional.\" --"
+        ],
+        "bullets": [],
+        "visual": "Animação mostrando a skill Copywriter gerando 5 variações de copy a partir de um briefing. Comparação lado a lado: copy medíocre vs copy treinada."
+      },
+      {
+        "n": 3,
+        "titulo": "A Skill Audience-Segmenter",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a Audience-Segmenter. Essa skill resolve o problema mais comum dos afiliados: mirar em todo mundo e não acertar ninguém. Veja bem: você tem 5 mil leads na sua base. Se você mandar a mesma mensagem pros 5 mil, a taxa de conversão vai ser 1-2%. Mas se você segmentar esses 5 mil em 8 perfis diferentes, e mandar mensagem personalizada pra cada perfil, a conversão pula pra 8-15%. Mesma base. Mesma oferta. Segmentação muda tudo.\"",
+          "\"O que essa skill faz, automaticamente? Primeiro, ela analisa o histórico de cada lead: o que ele comprou, o que ele abriu, o que ele respondeu, em que canal chegou. Segundo, ela cruza com sinais externos: idade inferida, profissão inferida, localização, dispositivo, horário de maior engajamento. Terceiro, ela propõe clusters — por exemplo: 'Mães empreendedoras 30-45 SP/RJ', 'Investidores iniciantes 25-35 capital', 'Profissionais liberais alto LTV'. Você pode aprovar, ajustar ou criar novos. Em 5 minutos, você tem uma base segmentada que antes levava 5 horas para fazer manualmente.\"",
+          "\"Aqui está o superpoder quando você combina as duas skills: Copywriter + Audience-Segmenter. A segmentação cria os clusters. A Copywriter gera mensagem específica para cada cluster. O agente dispara no canal certo, no horário certo, com a copy certa, para a pessoa certa. Isso não é mais marketing de massa. Isso é marketing de precisão, automatizado.\" --"
+        ],
+        "bullets": [],
+        "visual": "Mapa de calor (heat map) com clusters de audiências, mostrando segmentação por idade, interesse, comportamento, LTV."
+      },
+      {
+        "n": 4,
+        "titulo": "Casos Práticos e Boas Práticas",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vou te dar 3 cases rápidos para você dimensionar o impacto. Case 1: Afiliado de cosméticos. Tinha 3 mil leads na base. Sem skill. Conversão de 1,8%. Instalou as duas skills. Em 14 dias, conversão subiu para 9,4%. Receita 5x maior. Case 2: Afiliado de infoprodutos. Segmentava por idade (errado). Audience-Segmenter identificou que o cluster que mais convertia era mulheres 35-50 com filhos, em horário noturno. Copywriter ajustou a copy para falar com mãe que estuda à noite depois dos filhos dormirem. Conversão subiu 7x. Case 3: Afiliado de Shopee. Não tinha base própria. Usava só público frio do Meta Ads. Com Audience-Segmenter + Copywriter, começou a montar base de leads orgânica via conteúdo segmentado no Instagram. Em 90 dias, tinha 12 mil leads segmentados. CAC caiu 60%.\"",
+          "\"A boa prática de ouro que eu recomendo: instale essas duas skills ANTES de qualquer campanha nova. Não desperdice dinheiro em copy genérica e público mal segmentado. Calibre primeiro. Meça depois. Escale então.\" --"
+        ],
+        "bullets": [],
+        "visual": "Antes e depois de uma campanha real. Métricas lado a lado (conversão, CAC, LTV)."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: a skill Copywriter transforma briefing em copy profissional, validada por dados, no tom da sua marca. A skill Audience-Segmenter divide sua base em clusters acionáveis, com perfil, comportamento, horário e canal otimizados. Juntas, elas multiplicam conversão por 3x a 7x. No próximo módulo, vamos falar de Disparo no WhatsApp — como configurar, escalonar e aprovar mensagens em escala. É onde a coisa fica operacional de verdade. Estarei com você no próximo passo. Respire fundo. As skills certas mudam o jogo.\""
+        ],
+        "bullets": [
+          "Persona:** Sir Nexus Alencar — voz grave, didática",
+          "Duração:** 8-10 min",
+          "Visual:** Demonstrações de tela capturada, animações de skill, heat maps",
+          "[x] 5 cenas",
+          "[x] Duração 8-10 min",
+          "[x] Persona Sir Nexus Alencar"
+        ],
+        "visual": "Slide com as 2 skills destacadas, setas indicando a integração. Logo da Academia."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 4843
+  },
+  {
+    "code": "06",
+    "slug": "06-disparo-whatsapp-escala-roteiro",
+    "roteiro_file": "videos/roteiros/06-disparo-whatsapp-escala-roteiro.md",
+    "meta": {
+      "title": "Disparo WhatsApp em Escala",
+      "persona": "alencar",
+      "trilha": "Agente",
+      "cor": "teal",
+      "lesson": "agent-02"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou Sir Nexus Alencar. Hoje a gente vai falar de WhatsApp Business API em escala. O canal mais lucrativo do Brasil, e o que mais baniu afiliado desavisado. Veja bem: 90% dos afiliados que quebraram baniram WhatsApp. E 90% dos que escalaram usam WhatsApp como pilar principal. A diferença? Configuração certa, aprovação certa, e ritmo certo. É isso que vamos destrinchar agora.\" --"
+        ],
+        "bullets": [],
+        "visual": "Tela do WhatsApp Business com várias conversas. Métricas de envio em tempo real subindo. Sir Nexus Alencar em PIP."
+      },
+      {
+        "n": 2,
+        "titulo": "A Anatomia do Disparo Inteligente",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vamos começar com a anatomia do disparo inteligente. Não é 'mandar 5 mil mensagens iguais'. É um sistema em 6 etapas. Etapa 1: Lead chega. Pode ser de Facebook Ads, Instagram, formulário no site, indicação. A IOAID captura e já enriquece o lead automaticamente — nome, telefone, origem, horário. Etapa 2: Segmentação. A skill Audience-Segmenter (que a gente viu na aula passada) classifica o lead no cluster certo. Etapa 3: Aprovação. O Judge Revisor lê a mensagem que o agente gerou, valida tom, contexto, conformidade LGPD, e só libera se passar em todos os critérios. Etapa 4: Disparo. A mensagem vai com timing inteligente — espera 2-15 segundos após a última interação do lead, simula digitação humana, varia o horário por cluster. Etapa 5: Resposta. Quando o lead responde, o agente assume o diálogo, seguindo o roteiro de qualificação. Etapa 6: Conversão. Quando o lead está pronto, o agente transfere para humano (você ou seu closer) com todo o contexto da conversa.\"",
+          "\"O que isso significa na prática? Significa que cada lead recebe uma experiência única, contextual, e juridicamente segura. Não é spam. É conversa qualificada, automatizada, em escala.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama mostrando o fluxo: Lead → Segmentação → Aprovação → Disparo → Resposta → Qualificação → Conversão."
+      },
+      {
+        "n": 3,
+        "titulo": "O Ritmo Certo: Quantas Mensagens por Dia",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que mais quebra afiliado. Qual o ritmo certo de disparo? A resposta curta: depende do seu número, da sua reputação, e do seu aquecimento. A resposta longa:\"",
+          "\"Número novo (0-30 dias). Você não dispara nada. Esse é o momento de aquecer o número: responder quem te chama, mandar mensagem para amigos próximos, postar status. A Meta está te observando. Volume alto agora = ban quase certo. Aquecendo (30-90 dias). Você começa com 20-50 mensagens/dia para leads quentes (que já interagiram com você). Só para leads quentes. Nunca para leads frios. Estabelecido (90-180 dias). Você sobe para 100-300 mensagens/dia, ainda priorizando leads quentes, mas pode começar a incluir leads mornos. Maduro (180+ dias). Você pode escalar para 500-2000 mensagens/dia, sempre respeitando o limite da Meta e o template aprovado.\"",
+          "\"Outra regra de ouro: nunca dispare mais de 1000 mensagens/hora em um único número. O sistema anti-spam da Meta detecta picos. Distribua. Use 2-3 números em paralelo. Use janelas inteligentes — 9h-12h, 14h-17h, 19h-21h. Evite 0h-6h (mesmo que o lead more de sono e vá responder de madrugada — você não quer ser associado a spam noturno).\"",
+          "\"E a regra final: monitore o Quality Rating do número. Ele aparece no painel da Meta. Se cair abaixo de 'Medium' (Médio), pause imediatamente por 48-72h. Resolva o problema (provavelmente: template rejeitado, opt-out ignorado, ou volume alto de respostas negativas). Volte devagar.\" --"
+        ],
+        "bullets": [],
+        "visual": "Gráfico animado mostrando curva de banimento vs. volume diário. Linha verde (volume seguro), linha amarela (atenção), linha vermelha (ban)."
+      },
+      {
+        "n": 4,
+        "titulo": "Templates, Aprovação e Compliance",
+        "duracao": 120,
+        "narracoes": [
+          "\"Templates são mensagens pré-aprovadas pela Meta. Você só pode iniciar conversa com leads frios usando template aprovado. A boa notícia: o agente SHO já gerencia isso para você. A regra dos 24h: depois que o lead responde qualquer mensagem, você tem 24 horas para responder livremente, sem template. Depois disso, só com template aprovado.\"",
+          "\"O Judge Revisor é seu melhor amigo aqui. Ele lê cada mensagem antes de sair e verifica: 1) Tom coerente com a marca? 2) Conformidade LGPD (não tem dado sensível vazando)? 3) Não é spam (não promete o impossível, não tem clickbait agressivo)? 4) Call to action claro? Se qualquer item reprovar, a mensagem é bloqueada automaticamente e você recebe uma notificação. Você pode aprovar a versão ajustada que o Judge sugere, ou pedir uma nova versão. Em média, o Judge bloqueia 12% das mensagens — e essas 12% são as que provavelmente causariam reclamação ou ban.\"",
+          "\"Por fim, LGPD. Em toda mensagem, inclua opção clara de sair ('responda SAIR para não receber mais mensagens'). Nunca compartilhe dados do lead com terceiros. Nunca envie mensagem sem opt-in explícito. Respeite o prazo de retenção (90 dias para leads inativos). Em caso de dúvida, o painel tem o checklist LGPD completo — leia antes de escalar.\" --"
+        ],
+        "bullets": [],
+        "visual": "Painel mostrando fila de mensagens pendentes de aprovação pelo Judge. Cada mensagem com status (aprovada/rejeitada/ajustar)."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: disparo em escala no WhatsApp é um sistema em 6 etapas — chegar, segmentar, aprovar, disparar, responder, converter. O ritmo certo depende do seu número: novo (0), aquecendo (20-50), estabelecido (100-300), maduro (500-2000). Nunca passe de 1000/hora. Use templates aprovados, respeite a janela de 24h, confie no Judge, e mantenha LGPD em dia. No próximo módulo, vamos ver como o Judge Revisor decide o que passa e o que não passa — a IA que protege seu número e sua reputação. Estarei com você no próximo passo. Respire fundo. WhatsApp é seu canal de ouro — use com sabedoria.\""
+        ],
+        "bullets": [
+          "Persona:** Sir Nexus Alencar",
+          "Duração:** 8-10 min",
+          "Visual:** Dashboard, diagrama de fluxo, tabela de cadência, exemplos de mensagens",
+          "[x] 5 cenas",
+          "[x] Duração 8-10 min",
+          "[x] Persona Sir Nexus Alencar"
+        ],
+        "visual": "Dashboard final com métricas saudáveis. Logo da Academia."
+      }
+    ],
+    "total_duracao": 540,
+    "total_narracao_chars": 4847
+  },
+  {
+    "code": "07",
+    "slug": "07-judge-revisor-decisoes-roteiro",
+    "roteiro_file": "videos/roteiros/07-judge-revisor-decisoes-roteiro.md",
+    "meta": {
+      "title": "Judge Revisor",
+      "persona": "alencar",
+      "trilha": "Agente",
+      "cor": "teal",
+      "lesson": "agent-03"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou Sir Nexus Alencar. Hoje a gente vai abrir a caixa-preta do Judge Revisor — talvez a peça mais importante da sua operação, e a menos compreendida. Veja bem: o Judge não é um chatbot. Não é um filtro de palavras. É um avaliador autônomo que lê cada mensagem antes dela sair, decide se aprova, rejeita, ou sugere ajuste, e ainda aprende com cada decisão sua. Em afiliado que escala, o Judge é o segundo cérebro operacional. Vamos entender como ele funciona, como configurar, e como tirar o máximo dele.\" --"
+        ],
+        "bullets": [],
+        "visual": "Animação de um \"juiz\" simbólico (balança digital + chip de IA) analisando uma mensagem. Sir Nexus Alencar em plano médio, escritório."
+      },
+      {
+        "n": 2,
+        "titulo": "Como o Judge Decide",
+        "duracao": 180,
+        "narracoes": [
+          "\"O Judge avalia cada mensagem em 5 critérios simultâneos, em tempo real. Critério 1: Tom de voz. A mensagem é coerente com a personalidade configurada para o agente? Está consistente com o histórico do lead? Se você configurou tom formal e o agente mandou 'eai parça, beleza?', rejeita. Critério 2: Conformidade. Tem dado sensível vazando (CPF, cartão, senha)? Tem promessa proibida (resultado garantido, 'cura', 'fique rico')? Tem clickbait agressivo? Rejeita e explica o motivo. Critério 3: Persuasão. A copy tem estrutura (gancho, problema, solução, CTA)? Tem clareza? Tem emoção? Tem especificidade? Score de 0-100. Abaixo de 60, bloqueia para revisão. Critério 4: Contexto. A mensagem faz sentido no fluxo da conversa? Não é repetitiva? Não contradiz algo dito antes? Não pula etapa do funil? Critério 5: Histórico do lead. Esse lead já recebeu mensagem similar? Já abriu? Já respondeu? Já pediu descadastro? Se sim, o Judge adapta a copy ou sugere outro canal.\"",
+          "\"O que torna o Judge especial é que ele não toma decisões isoladas. Cada critério é ponderado em conjunto. Uma mensagem pode ter tom perfeito (nota 95), mas contexto ruim (nota 40) — nesse caso, o Judge bloqueia para sua revisão, porque o risco de soar estranho na conversa é alto. E mais: o Judge registra todas as decisões em log. Você pode auditar. Pode ver exatamente por que uma mensagem foi aprovada ou rejeitada. Isso é compliance automatizado — você sabe, a qualquer momento, como seus agentes estão performando.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama em camadas mostrando os 5 critérios avaliados pelo Judge em paralelo: tom, conformidade, persuasão, contexto, histórico."
+      },
+      {
+        "n": 3,
+        "titulo": "Configurando o Judge para Sua Operação",
+        "duracao": 120,
+        "narracoes": [
+          "\"Agora, como configurar o Judge para a sua realidade. Vá em Agentes > Judge Revisor > Configurações. Você vai ver os 5 critérios com sliders. Recomendações por estágio:\"",
+          "\"Se você está começando (0-30 dias): Suba a barra. Tom: 90. Conformidade: 100. Persuasão: 80. Contexto: 90. Histórico: 80. Por quê? Porque você ainda não tem histórico de aprovações. O Judge vai bloquear mais, você vai aprovar mais, mas cada aprovação treina o sistema. Se você já está rodando (30-90 dias): Abaixe Persuasão para 65, Histórico para 70. Você já validou seu tom, agora quer escala. Se você está maduro (90+ dias): Persuasão pode ir para 55. O Judge já aprendeu seu estilo — confia nele.\"",
+          "\"Outra config essencial: lista de bloqueio. Em Judge > Blacklist, você cadastra palavras e expressões proibidas. Por exemplo: 'garantido', 'fique rico', 'cura definitiva', '100% sem risco'. O Judge bloqueia qualquer mensagem que contenha esses termos, automaticamente. Você pode adicionar quantos quiser. Minha recomendação: comece com 30-50 termos comuns de spam e誇大, e vá refinando com base no que aparecer nas auditorias.\"",
+          "\"E o botão 'Aprovar e Aprender'. Sempre que você aprova uma mensagem ajustada pelo Judge, o Judge aprende. Em 3 meses, o Judge vai aprovar sozinho 70-80% das mensagens — sem você mexer. Isso é automação real — não é 'automação que precisa aprovar tudo'. É automação que melhora com o tempo.\" --"
+        ],
+        "bullets": [],
+        "visual": "Tela capturada do painel. Sliders sendo ajustados para os 5 critérios."
+      },
+      {
+        "n": 4,
+        "titulo": "Interpretando o Relatório de Autonomia",
+        "duracao": 120,
+        "narracoes": [
+          "\"Toda semana, abra o Relatório de Autonomia (Agentes > Judge > Relatório). Você vai ver 4 números essenciais. 1) Total de decisões. Quantas mensagens o Judge avaliou na semana. 2) Aprovações automáticas. Quantas ele liberou sem você intervir. Esse número deve crescer com o tempo. Se estagnou, o Judge não está aprendendo — provavelmente você está aprovando mensagens muito diferentes entre si, ou o tom configurado não bate com sua copy real. 3) Bloqueios. Quantas mensagens ele travou para sua revisão. Se for 0%, suspeito — pode ser que o Judge está calibrado frouxo demais. O ideal é 8-15% de bloqueios (nem zero, nem mais de 20%). 4) Sugestões aceitas. Das mensagens que ele sugeriu ajuste, quantas você aceitou a versão dele. Se for alta (>70%), o Judge está no seu tom. Se for baixa (<40%), ele está sugerindo coisas que você não aprova — reveja a calibração.\"",
+          "\"A métrica de ouro é taxa de autonomia crescente. Em semana 1: 20%. Em semana 4: 50%. Em semana 12: 75%+. Se você chegar a 80% de autonomia sustentada por 4 semanas seguidas, você virou afiliado de elite operacional. Pode parar de aprovar uma a uma e começar a focar em estratégia.\"",
+          "\"Os 5 sinais: Judge aprova sozinho >75% das mensagens. Você só aprova exceções. Tom configurado bate com a voz real da marca. Blacklist ativa e atualizada. Relatório de autonomia mostra tendência de alta sustentada. Quando esses 5 sinais acendem, parabéns — você saiu do operacional e entrou na estratégia.\" --"
+        ],
+        "bullets": [],
+        "visual": "Dashboard com 4 métricas grandes: Total de decisões, Aprovações automáticas, Bloqueios, Sugestões aceitas."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: o Judge Revisor avalia cada mensagem em 5 critérios — tom, conformidade, persuasão, contexto, histórico. Ele aprende com cada aprovação sua. Você configura os pesos por estágio, mantém uma blacklist ativa, e acompanha o Relatório de Autonomia semanal. A meta é chegar a 75%+ de autonomia — aí você vira elite. No próximo módulo, a gente sobe para a Trilha Master — onde você vai aprender a otimizar conversão, construir funis, rodar A/B tests com Judge, e analisar coortes de churn. A operação fica séria. Estarei com você no próximo passo. Respire fundo. Judge é seu segundo cérebro.\""
+        ],
+        "bullets": [
+          "Persona:** Sir Nexus Alencar",
+          "Duração:** 8-10 min",
+          "Visual:** Diagrama de critérios, dashboard de autonomia, tabela de configuração",
+          "[x] 5 cenas",
+          "[x] Duração 8-10 min",
+          "[x] Persona Sir Nexus Alencar"
+        ],
+        "visual": "Slide final com 5 critérios do Judge + 5 sinais de elite. Logo da Academia."
+      }
+    ],
+    "total_duracao": 540,
+    "total_narracao_chars": 5463
+  },
+  {
+    "code": "08",
+    "slug": "08-otimizacao-conversao-master-roteiro",
+    "roteiro_file": "videos/roteiros/08-otimizacao-conversao-master-roteiro.md",
+    "meta": {
+      "title": "Otimização de Conversão",
+      "persona": "dupla",
+      "trilha": "Master",
+      "cor": "gold",
+      "lesson": "master-00"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura em Dupla",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Bem-vindo à Trilha Master.\"",
+          "\"E eu sou Sir Nexus Alencar. Hoje a gente vai falar de otimização de conversão. Mas não da forma rasa que você já viu em outros lugares. Vamos falar da matemática real por trás da receita.\"",
+          "\"Porque afiliado sério pensa em números. E números têm hierarquia. Você pode ter 1 milhão de visualizações e zero de receita — e isso é mais comum do que você imagina. O que separa quem escala de quem empaca é saber onde está o gargalo.\"",
+          "\"Veja bem: a gente vai usar a mesma fórmula que times de growth usam em SaaS, e adaptar para o universo de afiliados. Mesma ciência, aplicação diferente.\" --"
+        ],
+        "bullets": [],
+        "visual": "Tela dividida. **Sra. Nexus Ive** à esquerda (escritório moderno, iluminação quente), **Sir Nexus Alencar** à direita (escritório técnico, iluminação fria). Logo da Academia centralizado entre eles."
+      },
+      {
+        "n": 2,
+        "titulo": "O Funil Como Uma Série de Probabilidades",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos abrir a fórmula mestra da receita. Receita = Leads × Taxa de Qualificação × Taxa de Conversão × Ticket Médio × LTV. Cada termo é um gargalo. Otimizar conversão é descobrir qual gargalo está matando sua receita, e atacar um por vez, do mais impactante para o menos.\"",
+          "\"Exemplo. Você tem 10.000 leads. Qualificação de 40% = 4.000 leads qualificados. Conversão de 5% = 200 vendas. Ticket médio de R$ 297 = R$ 59.400. Agora, se você dobrar a qualificação (40% → 80%), passa de 200 para 400 vendas = R$ 118.800. Dobrou a receita sem gastar mais um centavo em tráfego. Veja bem: o gargalo mais impactante nem sempre é conversão. Às vezes é qualificação. Às vezes é geração de leads. O erro do afiliado amador é otimizar tudo ao mesmo tempo. O afiliado elite mapeia o gargalo e ataca com tudo.\"",
+          "\"A fórmula para descobrir o gargalo: calcule o lift potencial de cada variável. Se dobrar Leads (10k → 20k) gera +R$ 59.400. Se dobrar Qualificação (40% → 80%) gera +R$ 59.400. Se dobrar Conversão (5% → 10%) gera +R$ 59.400. Por que todo mundo parece igual? Porque o cálculo linear diz isso. Mas o gargalo real é o que tem menor lift com menor esforço. Em geral: otimizar qualificação gera mais lift com menos custo do que dobrar tráfego. Esse é o princípio que faz afiliado inteligente escalar mais rápido que afiliado com budget.\" --"
+        ],
+        "bullets": [],
+        "visual": "Funil visual grande: **Impressões → Cliques → Leads → Qualificados → Conversões → Clientes recorrentes**. Cada etapa com % de conversão."
+      },
+      {
+        "n": 3,
+        "titulo": "Os 5 Gargalos Universais",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora eu vou entrar no lado humano da otimização. Porque, com todo respeito aos números, afiliado não vende planilha — vende relação. Veja bem: cada gargalo tem uma causa raiz emocional, não só técnica.\"",
+          "\"Gargalo 1: Aquisição fraca. Leads que chegam mas não tinham intenção real de comprar. Eles clicaram no anúncio por curiosidade, preencheram formulário por impulso, ou vieram de indicação frouxa. Causa raiz: segmentação errada, copy de anúncio que promete o que não entrega, ou público frio demais. Solução: Audience-Segmenter + Copywriter (a gente viu na Trilha Agente). Gargalo 2: Engajamento baixo. Leads que chegaram, mas não respondem. Causa raiz: primeira mensagem genérica, timing errado, ou canal inadequado. Solução: mensagem personalizada por cluster + cadência inteligente. Gargalo 3: Qualificação falha. Leads que respondem, mas não estão prontos para comprar. Causa raiz: agente de qualificação que faz perguntas erradas, ou aceita lead que não é perfil. Solução: critérios de BANT (Budget, Authority, Need, Timeline) implementados no agente.\"",
+          "\"Gargalo 4: Conversão travada. Leads qualificados que veem a oferta mas não fecham. Causa raiz: copy da oferta fraca, prova social insuficiente, preço desalinhado com valor percebido, ou objeção não tratada. Solução: otimização da página de vendas + tratamento de objeções com skill dedicada. Gargalo 5: Retenção baixa. Clientes que compram mas não recompram. Causa raiz: expectativa não entregue, falta de pós-venda estruturado, ou ausência de produto de upsell. Solução: sequência de pós-venda automática + produtos complementares na vitrine.\"",
+          "\"Todo mês, mapeie os 5 gargalos do seu funil. Use os dados do painel. Compare com o mês anterior. Qual gargalo melhorou? Qual piorou? Onde você vai atacar este mês? Esse é o ritual de gestão. Sem ele, você está operando no escuro. Com ele, você vira o maestro.\" --"
+        ],
+        "bullets": [],
+        "visual": "5 cards lado a lado: **Gargalo 1 (Aquisição)**, **Gargalo 2 (Engajamento)**, **Gargalo 3 (Qualificação)**, **Gargalo 4 (Conversão)**, **Gargalo 5 (Retenção)**."
+      },
+      {
+        "n": 4,
+        "titulo": "Ferramentas e Frameworks Práticos",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vou compartilhar 4 dashboards que você precisa olhar toda semana. Dashboard 1: Funil completo. Impressões → Cliques → Leads → Qualificados → Conversões. Com taxa de conversão em cada etapa, comparada com a meta. Dashboard 2: Análise de coortes. Quando cada lead entrou, qual a conversão por coorte? Você descobre que leads de determinada semana convertem 3x mais — então descubra o que tinha de diferente nessa semana. Dashboard 3: A/B tests ativos. Quais testes rodando, qual a variante vencedora, qual o lift. Dashboard 4: Unit economics. CAC, LTV, ROI por canal. Se um canal tem CAC de R$ 80 e LTV de R$ 100, fecha. Se tem CAC de R$ 30 e LTV de R$ 100, escala agressivamente.\"",
+          "\"O framework que eu recomendo é o ICE: Impact, Confidence, Ease. Para cada oportunidade de otimização, dê uma nota de 1-10 nesses 3 critérios. Multiplique. As 3 maiores notas ICE do mês são onde você coloca sua energia. Não tente fazer tudo. Faça o que dá mais retorno com menos esforço.\"",
+          "\"E o lembrete final: métricas de vaidade são inimigas da otimização. Likes, visualizações, alcance — não pagam boleto. Receita, conversão, LTV, ROI — esses pagam. Olhe para os números que importam. O resto é distração.\" --"
+        ],
+        "bullets": [],
+        "visual": "Painel mostrando 4 dashboards: Funil, Cohort, A/B Test, Unit Economics."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: receita = Leads × Qualificação × Conversão × Ticket × LTV. O gargalo é a variável com menor lift pelo menor esforço. Use o framework ICE para priorizar. Olhe os 4 dashboards semanalmente. Métricas de vaidade são inimigas.\"",
+          "\"E lembre-se: otimização não é evento, é processo. Você nunca 'termina' de otimizar. Você está sempre procurando o próximo gargalo. Esse é o mindset do afiliado elite.\"",
+          "\"No próximo módulo, a gente vai mergulhar em Funis e Lifecycle — como construir o caminho do lead desde o primeiro clique até a recompra, com triggers automatizados em cada etapa. É onde a coisa vira sistema. Estaremos com você no próximo passo. Respire fundo. Otimização é a arte de fazer mais com o que você já tem.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 9-11 min",
+          "Visual:** Planilhas, dashboards, funis animados, matriz ICE",
+          "Tom:** Estratégico, com humor sutil, alternância entre Ive (humano) e Alencar (técnico)",
+          "[x] 5 cenas",
+          "[x] Duração 9-11 min"
+        ],
+        "visual": "Slide com a fórmula mestra + os 5 gargalos + os 4 dashboards. Logo da Academia."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 5763
+  },
+  {
+    "code": "09",
+    "slug": "09-funis-lifecycle-roteiro",
+    "roteiro_file": "videos/roteiros/09-funis-lifecycle-roteiro.md",
+    "meta": {
+      "title": "Funis e Lifecycle",
+      "persona": "dupla",
+      "trilha": "Master",
+      "cor": "gold",
+      "lesson": "master-01"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Bem-vindos à segunda aula da Trilha Master.\"",
+          "\"E eu sou Sir Nexus Alencar. Hoje a gente vai construir o sistema nervoso da sua operação. Funis e Lifecycle. Porque afiliado que escala não vende uma vez — vende uma jornada. E essa jornada tem etapas, gatilhos, e momentos críticos que definem se o lead vira cliente recorrente ou esquecido.\" --"
+        ],
+        "bullets": [],
+        "visual": "Tela dividida. **Sra. Nexus Ive** à esquerda, **Sir Nexus Alencar** à direita. Diagrama central de funil multi-etapa."
+      },
+      {
+        "n": 2,
+        "titulo": "As 7 Etapas do Lifecycle do Lead",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos abrir o lifecycle completo do lead, do primeiro clique ao cliente recorrente. São 7 etapas. Cada uma tem um gatilho de entrada, um gatilho de saída, e uma métrica crítica.\"",
+          "\"Etapa 1: Descoberta. O lead te encontra pela primeira vez. Anúncio, post, busca orgânica, indicação. Gatilho de entrada: clique em qualquer ponto de contato. Métrica crítica: CTR (click-through rate) e custo por clique. Etapa 2: Engajamento inicial. Lead interage pela primeira vez. Responde uma DM, curte um post, preenche formulário. Gatilho de entrada: primeira ação rastreável. Métrica crítica: taxa de resposta na primeira mensagem. Etapa 3: Nutrição. Lead está 'esquentando'. Recebe conteúdo, mas ainda não comprou. Gatilho: respondeu mas não converteu em 7 dias. Métrica crítica: taxa de engajamento com conteúdo e taxa de qualificação progressiva.\"",
+          "\"Etapa 4: Qualificação. Lead demonstra sinais de intenção real. Pede preço, faz perguntas sobre o produto, menciona orçamento. Gatilho: palavras-chave de intenção detectadas. Métrica crítica: BANT score (Budget, Authority, Need, Timeline). Etapa 5: Conversão. Lead compra. Gatilho: pagamento confirmado. Métrica crítica: taxa de conversão final, ticket médio. Etapa 6: Onboarding. Lead vira cliente e está experimentando o produto. Gatilho: compra ativada. Métrica crítica: taxa de ativação (consumiu o produto? usou o produto?).\"",
+          "\"Etapa 7: Retenção e expansão. Cliente está usando, e tem chance de recomprar ou indicar. Gatilho: completou onboarding, usou por X dias. Métrica crítica: LTV (lifetime value), NPS, taxa de recompra. Esse é o momento que separa afiliados amadores de elite. Porque 90% da sua receita futura vem dos clientes atuais, não de novos leads.\"",
+          "\"O erro clássico do afiliado é parar no Etapa 5: Conversão. Ele comemora a venda e parte para o próximo lead. Mas o ouro está nas etapas 6 e 7 — onde cada cliente vira uma máquina de receita recorrente.\" --"
+        ],
+        "bullets": [],
+        "visual": "Linha do tempo horizontal com 7 etapas destacadas em cores diferentes."
+      },
+      {
+        "n": 3,
+        "titulo": "Triggers Automatizados em Cada Etapa",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que transforma funil em máquina: os triggers automatizados. Cada etapa tem gatilhos de entrada e saída, e cada gatilho dispara uma ação automática.\"",
+          "\"Trigger 1: Lead novo detectado. Quando lead entra na base, ação: enviar mensagem de boas-vindas personalizada via skill Audience-Segmenter + Copywriter. Trigger 2: Lead não respondeu em 48h. Ação: enviar conteúdo educativo relevante (não oferta). Trigger 3: Lead respondeu com dúvida. Ação: agente de qualificação assume. Trigger 4: Lead demonstrou intenção (palavras: 'preço', 'como comprar', 'parcelamento'). Ação: enviar oferta personalizada com tratamento de objeções.\"",
+          "\"Trigger 5: Cliente ativou o produto. Ação: sequência de onboarding de 7 dias (dicas, primeiros passos, cases). Trigger 6: Cliente não usou em 14 dias. Ação: mensagem de re-engajamento com oferta de suporte. Trigger 7: Cliente usou por 30+ dias e deu NPS alto. Ação: pedir indicação ou oferecer produto complementar (upsell).\"",
+          "\"Aqui está o superpoder: cada trigger é um agente SHO rodando em background. Você não programa nada — você configura a regra uma vez, e o SHO executa 24/7, sem você tocar. Em 30 dias, você tem 20-30 triggers ativos, todos orquestrados, todos aprendendo com os dados.\"",
+          "\"O ranking de prioridade dos triggers que mais geram receita, em ordem: Trigger 4 (intenção) > Trigger 5 (onboarding) > Trigger 7 (indicacao/upsell) > Trigger 3 (qualificação) > Trigger 2 (re-engajamento) > Trigger 1 (boas-vindas) > Trigger 6 (recuperar inativo). Veja bem: trigger 4 converte 5x mais que trigger 1. Então priorize a detecção de intenção — é onde está o ouro.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama de automação com setas, gatilhos nomeados e ações correspondentes."
+      },
+      {
+        "n": 4,
+        "titulo": "Métricas-Chave por Etapa",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vamos olhar as métricas que você precisa acompanhar por etapa. Descoberta: CTR (meta > 2%) e custo por lead (varia por nicho). Engajamento: taxa de resposta na primeira mensagem (meta > 35%). Nutrição: taxa de abertura de conteúdo (meta > 40%) e taxa de qualificação progressiva (meta > 15% ao final de 7 dias). Qualificação: BANT score médio (meta > 70/100). Conversão: taxa de fechamento (meta > 8%), ticket médio, CAC por canal. Onboarding: taxa de ativação (meta > 70% em 7 dias). Retenção: NPS (meta > 50), taxa de recompra em 90 dias (meta > 30%), LTV (varia, mas o ideal é LTV > 3x CAC).\"",
+          "\"A regra de ouro: se LTV < 3x CAC, você está queimando caixa. Aumente o LTV (com retenção e upsell) ou diminua o CAC (com melhor segmentação). LTV > 3x CAC significa que cada cliente vale 3x o que você gastou para adquirir — você está construindo negócio. LTV > 5x CAC significa que você pode escalar agressivamente — o dinheiro volta rápido.\"",
+          "\"E o lembrete humano: métricas sem história são só números. Cada número conta a história de um lead, de um cliente, de uma decisão. Olhe os números, mas ouve as pessoas. Quando você combina os dois, você vira estrategista de verdade.\" --"
+        ],
+        "bullets": [],
+        "visual": "Planilha com 7 linhas (uma por etapa) e 4 colunas: métrica, valor atual, meta, tendência."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: o lifecycle do lead tem 7 etapas — Descoberta, Engajamento, Nutrição, Qualificação, Conversão, Onboarding, Retenção. Cada etapa tem gatilhos automatizados que disparam ações sem você tocar. O ranking de prioridade dos triggers está em detecção de intenção e upsell, que rendem mais. A métrica de ouro é LTV/CAC > 3.\"",
+          "\"E o lembrete final: construir funil é como construir casa. Você não pula a fundação. Você vai etapa por etapa, medindo, ajustando, e crescendo de baixo para cima. Esse é o jeito profissional.\"",
+          "\"No próximo módulo, vamos mergulhar em A/B Testing com Judge — como rodar testes estatisticamente válidos em escala, sem perder tempo com amostras pequenas. A ciência da experimentação aplicada a afiliados. Estaremos com você no próximo passo. Respire fundo. Lifecycle é o sistema que faz você dormir tranquilo enquanto o funil trabalha.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 9-11 min",
+          "Visual:** Linha do tempo, diagrama de triggers, planilhas, heatmaps",
+          "[x] 5 cenas",
+          "[x] Duração 9-11 min",
+          "[x] Persona Dupla"
+        ],
+        "visual": "Slide com as 7 etapas + os 7 triggers + as métricas-chave. Logo da Academia."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 5939
+  },
+  {
+    "code": "10",
+    "slug": "10-ab-test-judge-roteiro",
+    "roteiro_file": "videos/roteiros/10-ab-test-judge-roteiro.md",
+    "meta": {
+      "title": "A/B Testing com Judge",
+      "persona": "dupla",
+      "trilha": "Master",
+      "cor": "gold",
+      "lesson": "master-02"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Bem-vindos à terceira aula da Trilha Master.\"",
+          "\"E eu sou Sir Nexus Alencar. Hoje a gente vai falar de A/B testing — mas não da forma que você provavelmente já viu em posts de marketing. Vamos falar da ciência real por trás da experimentação — porque a maioria dos afiliados que faz A/B test está fazendo errado, e tomando decisão baseado em ilusão estatística.\"",
+          "\"Veja bem: você acha que 'B ganhou de A, então vou usar B'. Mas será que ganhou de verdade? Ou foi sorte? A pergunta não é 'qual variante converteu mais?'. A pergunta é 'qual variante converteu mais COM CONFIANÇA ESTATÍSTICA?'.\" --"
+        ],
+        "bullets": [],
+        "visual": "Lado a lado estatístico. Dois gráficos (A e B) com barras de conversão. Ícone de balança digital. Dupla (Ive + Alencar) em janelas."
+      },
+      {
+        "n": 2,
+        "titulo": "A Anatomia de um A/B Test Válido",
+        "duracao": 180,
+        "narracoes": [
+          "\"Um A/B test válido tem 8 componentes obrigatórios. Vou destrinchar cada um.\"",
+          "\"1) Hipótese clara. Não é 'quero ver qual mensagem é melhor'. É 'acredito que a mensagem B, com gancho emocional, vai converter 20% mais que a mensagem A, com gancho racional, para o cluster de mães empreendedoras 30-45'. Veja bem: a hipótese tem variante, tem mecanismo, tem métrica, tem público. Se você não tem esses 4 elementos, você está chutando, não testando.\"",
+          "\"2) Métrica primária única. Você escolhe UMA métrica que vai decidir vencedor vs. perdedor. Taxa de conversão? Receita por envio? Taxa de resposta? Uma só. Métricas secundárias (tempo de resposta, NPS, custo) são informativas, não decidem. Se você fica olhando 5 métricas, vai achar que ganhou quando na verdade não ganhou — ilusão de significância.\"",
+          "\"3) Baseline conhecido. Você precisa saber a taxa atual da métrica primária antes de testar. Se você não tem baseline, está comparando no escuro. 4) Variantes bem isoladas. Testa uma variável por vez. Se você muda copy E imagem E CTA ao mesmo tempo, não sabe o que causou o resultado. Isole. 5) Tamanho de amostra adequado. Esse é o ponto onde 90% dos afiliados erram.\"",
+          "\"Para detectar uma diferença real de 10% com 95% de confiança, dependendo da sua taxa de conversão atual, você precisa de milhares de exposições por variante. Não 50. Não 100. Em marketing digital de alta conversão, normalmente você precisa de 5.000 a 50.000 amostras por variante. 6) Duração pré-definida. Você não para o teste 'quando parece que um ganhou'. Você define a duração antes de começar (uma semana, 14 dias, o tempo necessário para coletar a amostra). 7) Critério de parada pré-definido. Significância estatística de 95% (p<0.05) — não 90%, não 80%. 8) Sem peeking. Você não olha o resultado parcial e decide 'já tem vencedor'. Isso é o erro fatal. Você só abre os dados no final do experimento.\"",
+          "\"Se você respeita esses 8 componentes, seu A/B test é ciência. Se você ignora, é achismo disfarçado de teste.\" --"
+        ],
+        "bullets": [],
+        "visual": "Fluxograma detalhado de um experimento válido: hipótese, métrica primária, baseline, variantes, amostra, duração, significância."
+      },
+      {
+        "n": 3,
+        "titulo": "Como o Judge Roda A/B Tests Automaticamente",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que democratiza a experimentação. Você não precisa ser estatístico. O Judge Revisor, integrado ao SHO, roda A/B tests automaticamente. Você só precisa configurar.\"",
+          "\"Passo 1: Defina a métrica primária. No painel, vá em Experimentos > Novo A/B > Métrica primária. Escolha: taxa de conversão, receita por envio, ou taxa de resposta. Uma só. Passo 2: Defina as variantes. A pode ser a copy atual (controle). B pode ser a copy com gancho emocional. C pode ser a copy com gancho de prova social. Até 4 variantes por teste. Passo 3: Aloque o tráfego. Quanto % vai para A? Quanto vai para B? Recomendação: 50/50 para 2 variantes, 33/33/33 para 3, 25/25/25/25 para 4. Passo 4: Defina a duração. O Judge calcula o tamanho de amostra necessário baseado na sua baseline e no lift mínimo que você quer detectar. Se baseline é 5% e você quer detectar lift de 20% (5% → 6%), com 95% de confiança, você precisa de ~30.000 amostras por variante. O Judge te diz exatamente quanto tempo isso leva baseado no seu volume diário. Passo 5: Aguarde e não mexa.\"",
+          "\"Durante o teste, você não pode alterar as variantes, não pode realocar tráfego, não pode olhar resultado parcial. O painel te mostra o progresso (X% da amostra coletada) sem revelar o vencedor. Esse é o segredo da ciência: separar quem opera de quem analisa.\"",
+          "\"No final, o Judge abre o resultado: variante vencedora, lift, p-valor, intervalo de confiança 95%, e significância estatística. Se p<0.05, a diferença é real, não foi sorte. Se p>=0.05, não há diferença estatística — não declare vencedor. Esse é o momento da verdade — onde 95% dos afiliados mentem para si mesmos declarando vencedor sem significância.\" --"
+        ],
+        "bullets": [],
+        "visual": "Painel mostrando configuração de A/B test. Sliders para variantes, alocação de tráfego, métricas."
+      },
+      {
+        "n": 4,
+        "titulo": "Erros Comuns e Boas Práticas",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vou te dar 5 erros que mais vejo em afiliados que dizem 'fiz A/B test'. Erro 1: Peeking (olhar resultado parcial). Você olha no dia 3, vê B ganhando, para o teste, declara B vencedor. Mas com amostra pequena, a flutuação aleatória estava inflando a diferença. Quando você replica, B perde. Regra: não olhe até o fim. Erro 2: Amostra pequena. Você testa com 50 leads cada, declara vencedor. Mas com 50 amostras, a margem de erro é tão grande que o resultado é praticamente aleatório. Regra: tamanho de amostra mínimo calculado pelo Judge.\"",
+          "\"Erro 3: Variáveis múltiplas. Você muda copy + imagem + CTA no B, declara vencedor, e não sabe qual elemento causou. Você pode ter matado a copy boa com imagem ruim, e agora acha que copy ruim é melhor. Regra: isole uma variável. Erro 4: Critério móvel. Você começa querendo detectar lift de 10%, mas no meio muda para 5% porque quer ver resultado. Isso invalida o teste. Regra: defina critério antes, mantenha até o fim. Erro 5: Viés de seleção. Você testa em leads 'bons', declara vencedor, aplica para leads 'ruins' e perde. Regra: teste em amostra representativa da sua base, ou estratifique por cluster.\"",
+          "\"Checklist final antes de declarar vencedor: 1) Tem p<0.05? 2) Tamanho de amostra foi respeitado? 3) Variáveis foram isoladas? 4) Critério foi mantido? 5) Amostra é representativa? Se qualquer item for 'não', não declare vencedor. Volte ao drawing board.\" --"
+        ],
+        "bullets": [],
+        "visual": "5 cards com erros comuns: \"Peeking\", \"Amostra pequena\", \"Variáveis múltiplas\", \"Critério móvel\", \"Viés de seleção\"."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: um A/B test válido tem 8 componentes — hipótese, métrica única, baseline, variantes isoladas, amostra calculada, duração fixa, critério pré-definido, sem peeking. O Judge automatiza tudo isso, mas você precisa respeitar o método.\"",
+          "\"E o lembrete final: o pior resultado de um A/B test não é 'não teve diferença'. É 'achei que teve diferença e tomei decisão errada por ilusão'. A/B test mal feito é pior que não testar. Faça certo ou não faça.\"",
+          "\"No próximo módulo, vamos falar de Análise de Coortes e Churn — como entender o comportamento dos leads ao longo do tempo, e prever quem está prestes a abandonar antes que abandone. A arte de manter cliente. Estaremos com você no próximo passo. Respire fundo. A ciência não mente — desde que você não minta para ela.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 9-11 min",
+          "Visual:** Fluxograma, dashboard de teste, gráfico de significância, checklist",
+          "[x] 5 cenas",
+          "[x] Duração 9-11 min",
+          "[x] Persona Dupla"
+        ],
+        "visual": "Slide com os 8 componentes + os 5 erros + o checklist. Logo da Academia."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 6468
+  },
+  {
+    "code": "11",
+    "slug": "11-coortes-churn-roteiro",
+    "roteiro_file": "videos/roteiros/11-coortes-churn-roteiro.md",
+    "meta": {
+      "title": "Coortes e Churn",
+      "persona": "dupla",
+      "trilha": "Master",
+      "cor": "gold",
+      "lesson": "master-03"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Estamos na quarta aula da Trilha Master.\"",
+          "\"E eu sou Sir Nexus Alencar. Hoje a gente vai falar de retenção. Veja bem: a maioria dos afiliados pensa em aquisição — como conseguir mais leads, mais vendas, mais cliques. Mas a verdadeira alavanca de receita está no outro lado: como reter quem já é cliente, como prever quem está prestes a sair, e como agir antes do churn acontecer.\"",
+          "\"Porque adquirir cliente novo custa 5-7x mais que reter cliente atual. E um cliente satisfeito compra 2-3x mais que um cliente novo. Retenção não é caridade — é estratégia pura.\" --"
+        ],
+        "bullets": [],
+        "visual": "Gráfico de coorte (heatmap) com retenção decrescente ao longo das semanas. Curva de churn ascendente. Dupla em janelas."
+      },
+      {
+        "n": 2,
+        "titulo": "Análise de Coortes: O Que É e Como Ler",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos abrir a análise de coortes, a ferramenta mais poderosa para entender retenção. O que é uma coorte? É um grupo de pessoas que compartilham uma característica comum no tempo — geralmente, a semana em que entraram na sua base.\"",
+          "\"Olha esse heatmap. Linha 1: coorte da semana 1 (leads que entraram na semana 1). Eles estão na coluna 'Semana 0' com 100% (todos estavam ativos quando entraram). Na coluna 'Semana 1', 75% estavam ativos. Na 'Semana 4', 48% estavam ativos. Na 'Semana 7', 35%. Linha 5: coorte da semana 5. Eles entraram mais recentemente, então só temos 3 colunas. Mas olha: eles estão com retenção melhor — 82% na semana 1, 65% na semana 2. O que aconteceu? A gente mudou a copy da primeira mensagem. O heatmap revela o impacto da mudança — coortes novos retêm melhor.\"",
+          "\"A leitura clássica do heatmap de coortes tem 3 insights que você precisa extrair toda semana. Insight 1: retenção absoluta. Qual % de cada coorte ainda está ativo após X semanas? Insight 2: retenção relativa. Coortes novos estão retendo mais ou menos que coortes antigos? Se menos, você está perdendo força. Se mais, você está melhorando. Insight 3: ponto de churn. Em qual semana a maior parte do churn acontece? Se é na semana 1, problema na primeira experiência. Se é na semana 4, problema no produto. Se é na semana 8, problema no engajamento.\"",
+          "\"A grande dica: não olhe só retenção — olhe a curva de retenção. Uma curva que cai rapidamente e estabiliza em 30% é melhor que uma que cai lentamente e vai a 0%. O fundo do poço importa mais que a velocidade da queda.\" --"
+        ],
+        "bullets": [],
+        "visual": "Heatmap de coortes — linhas = semana de aquisição, colunas = semana desde aquisição. Cores mais escuras = maior retenção."
+      },
+      {
+        "n": 3,
+        "titulo": "Previsão de Churn: Quem Vai Sair Antes de Sair",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que transforma retenção de reativo em proativo. O modelo preditivo de churn da SHO identifica clientes em risco de sair antes que eles saiam. Como funciona?\"",
+          "\"O modelo analisa 4 sinais comportamentais. Sinal 1: Queda de engajamento. Cliente que abria 80% das mensagens e de repente abre 20%. Sinal 2: Aumento de tempo entre interações. Cliente que respondia em 2h, agora responde em 5 dias. Sinal 3: Padrão de reclamação. Cliente que menciona palavras como 'insatisfeito', 'reembolso', 'cancelar' em qualquer canal. Sinal 4: Redução de uso do produto. Cliente que consumia 5 aulas por semana, agora consome 0.5.\"",
+          "\"Cada sinal tem um peso. Quando 3 dos 4 sinais disparam ao mesmo tempo, o cliente entra em zona vermelha — risco alto de churn nos próximos 14 dias. Quando 2 sinais disparam, zona amarela — risco médio. Quando 1 sinal, zona verde — saudável.\"",
+          "\"E o que fazer com clientes em risco? Você tem 3 ações automatizadas que o SHO dispara. Ação 1: Mensagem de re-engajamento personalizada. Não é mensagem genérica de 'sentimos sua falta'. É mensagem específica para o motivo do risco. Se o sinal foi queda de engajamento, a mensagem é sobre conteúdo novo relevante. Se foi reclamação, a mensagem é empatia + solução concreta. Ação 2: Oferta de suporte. 'Quer uma sessão 1:1 gratuita com nosso especialista?'. Ação 3: Desconto ou bônus em produto complementar. Em último caso, reconquistar o cliente vale mais que vender para um novo.\"",
+          "\"Veja bem: 38% dos clientes em zona vermelha são recuperados com essas 3 ações. 62% churnam de qualquer jeito. Mas 38% salvos é receita preservada que você não teria. E o melhor: prevenir churn é 10x mais barato que adquirir cliente novo.\" --"
+        ],
+        "bullets": [],
+        "visual": "Modelo preditivo com lista de clientes, score de risco (verde, amarelo, vermelho), e ações recomendadas."
+      },
+      {
+        "n": 4,
+        "titulo": "Estratégias de Retenção por Cluster",
+        "duracao": 120,
+        "narracoes": [
+          "\"Agora vou te dar 3 estratégias de retenção adaptadas por cluster. Não existe 'receita única' de retenção — cada cluster responde a incentivos diferentes.\"",
+          "\"Cluster 1: Mães Empreendedoras. Elas compram por impulso, engajam intensamente nas primeiras 2 semanas, depois caem em rotina. Estratégia: conteúdo em micro-formato (vídeos de 3-5 min, áudios de WhatsApp) que ela consome entre uma tarefa e outra. Comunidade de pares (grupo de WhatsApp de mães empreendedoras). Reconhecimento público: 'Veja o case da Maria, mãe de 2, faturou R$ 5k no primeiro mês'.\"",
+          "\"Cluster 2: Investidores Iniciantes. Eles comparam muito, churnam se não veem resultado em 30-60 dias. Estratégia: relatórios mensais de progresso ('Seu patrimônio rendeu X% no mês'). Conteúdo educacional longo (livros, podcasts, artigos). Mentorias em grupo trimestrais. Ouro: oferecer produto de upsell (curso avançado, comunidade premium) assim que atingem o primeiro milestone.\"",
+          "\"Cluster 3: Profissionais Liberais de Alto LTV. Eles compram racionalmente, valorizam tempo e resultado. Estratégia: onboarding premium com consultor 1:1. Acesso prioritário a novos produtos. Eventos exclusivos (jantares, retreats, masterminds). Co-criação: pedir feedback em produto beta, eles se sentem parte. LTV desse cluster é 3-5x maior — vale o investimento.\"",
+          "\"A grande lição: retenção não é uma estratégia — são 3 estratégias diferentes, uma por cluster. Audience-Segmenter classifica. Você define a estratégia. O SHO executa. Esse é o tripé da retenção profissional.\" --"
+        ],
+        "bullets": [],
+        "visual": "3 personas/clusters com jornada de retenção personalizada."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: a análise de coortes revela retenção absoluta, relativa e ponto de churn. O modelo preditivo identifica clientes em risco antes que saiam --- com 4 sinais comportamentais. E 3 estratégias de retenção por cluster maximizam LTV.\"",
+          "\"E o lembrete final: retenção é o jogo de longo prazo. Afiliado que só pensa em aquisição vive rodando. Afiliado que pensa em retenção constrói império. No próximo módulo, vamos entrar na Trilha Elite --- os blueprints que o top 10% usa para escalar de R$ 100k/mês para R$ 1M/mês. Multi-tenant, white-label, federação de agentes. O nível onde a operação vira plataforma. Estaremos com você no próximo passo. Respire fundo. Reter é multiplicar.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 9-11 min",
+          "Visual:** Heatmap de coortes, modelo preditivo, 3 personas, gráfico de LTV",
+          "[x] 5 cenas",
+          "[x] Duração 9-11 min",
+          "[x] Persona Dupla"
+        ],
+        "visual": "Slide com heatmap + modelo preditivo + 3 estratégias. Logo da Academia."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 6054
+  },
+  {
+    "code": "12",
+    "slug": "12-blueprints-elite-roteiro",
+    "roteiro_file": "videos/roteiros/12-blueprints-elite-roteiro.md",
+    "meta": {
+      "title": "Blueprints Elite",
+      "persona": "dupla",
+      "trilha": "Elite",
+      "cor": "gold",
+      "lesson": "elite-00"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Bem-vindos à Trilha Elite.\"",
+          "\"E eu sou Sir Nexus Alencar. Este é o nível mais alto da Academia. Poucos chegam aqui. Os que chegam, operam diferente de todo mundo. Veja bem: o top 10% dos afiliados não trabalham mais — eles constroem plataformas que trabalham para eles. É isso que vamos abrir hoje: os blueprints que separam o afiliado comum do operador de elite.\"",
+          "\"Mas atenção: estes blueprints exigem volume, capital, equipe e maturidade operacional. Se você está começando, volte e domine as trilhas anteriores antes. Elite não é salto — é evolução.\" --"
+        ],
+        "bullets": [],
+        "visual": "Logo da Trilha Elite em platina. Dupla em plano mais fechado, mais intimista. Escritório escuro, iluminação premium."
+      },
+      {
+        "n": 2,
+        "titulo": "Blueprint 1: Operação Multi-Canal Orquestrada",
+        "duracao": 180,
+        "narracoes": [
+          "\"Blueprint 1: Operação Multi-Canal Orquestrada. O afiliado comum opera 1-2 canais. O elite opera 6-10 canais simultaneamente, orquestrados pelo mesmo SHO, com Judge Revisor único validando tudo. Veja bem: o que muda não é o canal — é a orquestração.\"",
+          "\"Como funciona na prática? Cada canal — WhatsApp, Instagram, Facebook, Hotmart, Shopee, Mercado Livre, e-mail — gera leads e eventos. Todos caem no mesmo hub unificado de leads. O SHO decide automaticamente qual canal, qual mensagem, qual momento, para cada lead. O Judge Revisor valida antes de sair. O afiliado não gerencia canal — gerencia o sistema que gerencia canais.\"",
+          "\"O erro clássico do afiliado que tenta escalar é adicionar canais sem orquestração. Ele abre conta no Instagram, no Facebook, no Hotmart, no Shopee — e opera cada um separado, com planilhas diferentes, sem visão unificada. Resultado: leads se perdem, mensagens duplicam, conversões caem, e a operação vira um caos. O blueprint elite diz: orquestre primeiro, escale depois. E a orquestração é justamente o que a IOAID e o SHO entregam.\"",
+          "\"A métrica de sucesso desse blueprint: CAC blended (custo de aquisição unificado entre canais) cai 40-60% quando você orquestra, porque cada lead entra no canal de maior conversão para o perfil dele, em vez de ser empurrado por força em todos.\" --"
+        ],
+        "bullets": [],
+        "visual": "Arquitetura em camadas: WhatsApp, Instagram, Facebook, Hotmart, Shopee, ML no nível operacional, todos se alimentando num SHO central, com Judge Revisor em cima."
+      },
+      {
+        "n": 3,
+        "titulo": "Blueprint 2: Operação Multi-Tenant e White-Label",
+        "duracao": 180,
+        "narracoes": [
+          "\"Blueprint 2: Multi-Tenant e White-Label. Quando você chega a R$ 100k/mês, surge a pergunta: como escalar para R$ 500k, R$ 1M, R$ 5M por mês? A resposta é: multiplicar a operação sem multiplicar o custo proporcional.\"",
+          "\"Veja bem: contratar 10 closers para multiplicar vendas multiplica o custo em 10x. Não é escalável. Multi-tenant permite que você compartilhe a infraestrutura (SHO, Judge, skills, integrações) com sub-afiliados que pagam uma taxa de plataforma ou uma % da receita. Você escala receita sem escalar custo na mesma proporção.\"",
+          "\"Como funciona: você tem 1 conta master (sua operação). Dentro dela, N contas-tenant (seus sub-afiliados, franqueados, ou partners). Cada tenant tem: sua própria base de leads (isolada), seu próprio painel (white-label com a marca deles), suas próprias campanhas, mas compartilha: infraestrutura SHO, Judge, skills, integrações, e a inteligência coletiva de todos os tenants. White-label significa que o sub-afiliado vê a marca dele, não a sua. Mas por baixo, é a mesma plataforma.\"",
+          "\"O modelo de receita típico: você cobra 20-40% da receita de cada tenant (ou fee fixo mensal de R$ 1.500-5.000 por tenant). Com 10 tenants faturando R$ 50k/mês cada, você tem R$ 100-200k/mês recorrente --- com custo marginal quase zero, porque a infra já está paga. É aqui que afiliados viram plataformas.\"",
+          "\"Atenção: multi-tenant exige governança forte. Cada tenant não pode ver dados dos outros. Compliance LGPD é crítico. Auditoria e logs são obrigatórios. A boa notícia: a SHO tem multi-tenant nativo com isolamento total. Você não precisa construir do zero. Mas o design de permissões --- quem vê o quê, quem pode fazer o quê --- é o seu trabalho.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama de rede. Um nó central (AcademIA) com 3 sub-nós (Sub-afiliado A, Sub-afiliado B, Sub-afiliado C), cada um com sua base de leads isolada mas infraestrutura compartilhada."
+      },
+      {
+        "n": 4,
+        "titulo": "Blueprint 3: Federação de Agentes Zero-Trust",
+        "duracao": 180,
+        "narracoes": [
+          "\"Blueprint 3: Federação de Agentes Zero-Trust. Esse é o blueprint mais avançado e o que diferencia afiliado elite de plataforma elite. Veja bem: multi-tenant é uma plataforma, uma operação, vários tenants. Federação é várias plataformas independentes que colaboram entre si, com confiança zero entre elas.\"",
+          "\"Por que isso importa? Imagine: você tem operação no Brasil. Um parceiro tem operação em Portugal. Outro tem em Angola. Vocês querem compartilhar leads de oportunidade (ex: lead brasileiro quer migrar para Portugal), compartilhar skills desenvolvidas localmente, compartilhar Judge configurado, sem expor a base inteira de cada um. Como fazer? Federação com zero-trust --- cada nó valida o outro antes de compartilhar. mTLS (mutual TLS) para criptografia. Pinned credentials para autenticação forte. Auditoria cruzada de cada operação.\"",
+          "\"O modelo técnico funciona assim: cada nó SHO tem um endpoint de federação --- uma API que aceita pedidos de outros nós federados. Quando Nó A quer compartilhar leads com Nó B, o pedido passa por: 1) mTLS handshake (ambos validam certificado). 2) Policy check (Nó A verifica: 'Esse Nó B tem permissão? Tem contrato? Está dentro dos limites?'). 3) Token grantado com escopo limitado (apenas leads qualificados, apenas para fins específicos, com prazo de expiração). 4) Operação registrada em log cruzado --- ambos os nós auditam o que foi compartilhado.\"",
+          "\"Por que zero-trust? Porque confiança é vetor de ataque. Se um nó federado for comprometido, ele não pode acessar dados dos outros nós sem passar por validação a cada pedido. Nada é assumido. Tudo é verificado. Esse é o padrão usado por Google, Microsoft, Amazon, Apple. E o SHO implementa isso nativamente.\"",
+          "\"A métrica de sucesso desse blueprint: federar 3 nós em 3 países, com latência < 200ms inter-nó, 99.9% de uptime, e auditoria 100% rastreável. Quando você chega aqui, você não é mais afiliado --- é operador de plataforma federada global.\" --"
+        ],
+        "bullets": [],
+        "visual": "Mapa-múndi estilizado com 3 nós (Brasil, Portugal, Angola) conectados por linhas cifradas. Cada nó tem sua instância SHO + Judge, mas com mTLS e federação."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: os 3 blueprints elite são: 1) Multi-Canal Orquestrado (escalar canais sem caos). 2) Multi-Tenant e White-Label (escalar receita com infra compartilhada). 3) Federação Zero-Trust (escalar globalmente, com segurança e governança). Cada blueprint é uma camada que se constrói sobre a anterior.\"",
+          "\"E o lembrete final: elite não é operação. É plataforma. Quando você chega aqui, você sai do jogo do afiliado e entra no jogo da plataforma. Multiplicador de receita, com governança, com escala, com segurança. No próximo módulo, vamos mergulhar no blueprint 1 com profundidade técnica: como configurar o multi-canal orquestrado na prática --- do WhatsApp ao Mercado Livre, tudo no mesmo SHO. Estaremos com você no próximo passo. Respire fundo. Você não é mais afiliado. Você é operador de plataforma.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 10-12 min",
+          "Visual:** Arquitetura em camadas, mapa-múndi, fluxograma de federação",
+          "Tom:** Estratégico de alto nível, sem rodeios, com respeito à maturidade do público",
+          "[x] 5 cenas",
+          "[x] Duração 10-12 min"
+        ],
+        "visual": "Slide com os 3 blueprints lado a lado. Logo da Academia + marca Elite em platina."
+      }
+    ],
+    "total_duracao": 660,
+    "total_narracao_chars": 6332
+  },
+  {
+    "code": "13",
+    "slug": "13-multi-tenant-whitelabel-roteiro",
+    "roteiro_file": "videos/roteiros/13-multi-tenant-whitelabel-roteiro.md",
+    "meta": {
+      "title": "Multi-Tenant e White-Label",
+      "persona": "dupla",
+      "trilha": "Elite",
+      "cor": "gold",
+      "lesson": "elite-01"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Estamos no segundo módulo da Trilha Elite. Na aula passada, abrimos os 3 blueprints. Hoje vamos colocar a mão na massa no blueprint 2: Multi-Tenant e White-Label. Vamos configurar do zero: criar tenants, isolar dados, customizar marca, definir permissões, e ativar 2-3 tenants reais em produção. Esse é o tutorial que ninguém te dá, porque é o que monetiza de verdade.\"",
+          "\"Atenção: este é o blueprint que transforma afiliado em plataforma. Quando você consegue 10 tenants ativos, cada um faturando R$ 30k-50k/mês, e você recebe 20-30% de fee, você tem R$ 60-150k/mês recorrente, com custo marginal quase zero. Esse é o novo modelo de negócio de afiliado elite.\" --"
+        ],
+        "bullets": [],
+        "visual": "Painel admin aberto com 3 tenants visíveis lado a lado, cada um com sua marca distinta. Dupla em janelas."
+      },
+      {
+        "n": 2,
+        "titulo": "Criando e Configurando o Primeiro Tenant",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos criar nosso primeiro tenant. Passo 1: Admin > Tenants > Novo Tenant. Você vai preencher: nome do tenant (ex: 'Loja da Maria'), subdomínio (ex: maria.academ.com.br), marca (cor primária, logo, ícone), plano contratado (Starter, Pro, Enterprise), administrador do tenant (quem vai gerenciar a conta --- geralmente o sub-afiliado), limites (número de leads, número de agentes, número de campanhas por mês).\"",
+          "\"Passo 2: Configurar isolamento. Aqui é onde 90% dos implementadores erram. Cada tenant tem sua própria base de leads, com IDs únicos, com queries que filtram por tenant_id em TODA operação. Sem isso, um tenant vê dados dos outros --- pesadelo de LGPD. A boa notícia: o SHO tem isolamento de dados nativo. Você só precisa ativar a flag em cada endpoint. Passo 3: Configurar skill-sharing. Quais skills o tenant herda do master? Quais ele pode customizar? Recomendação: skills core herdadas do master, skills verticais customizadas por tenant. Passo 4: Configurar Judge Revisor. O tenant pode ajustar os 5 critérios do Judge (tom, conformidade, persuasão, contexto, histórico), mas dentro de limites predefinidos --- você não quer que um tenant desabilite conformidade.\"",
+          "\"Passo 5: Provisionar infraestrutura. Esse é o momento técnico. O SHO aloca: banco de dados dedicado (ou schema isolado), fila de processamento própria, armazenamento separado, certificados SSL para o subdomínio, chaves de API dedicadas para integrações (cada tenant tem suas próprias keys de WhatsApp, Hotmart, Shopee). Passo 6: Ativação. Envie email de boas-vindas para o administrador do tenant com link de acesso, credenciais, tutorial de primeiros passos, e SLA de suporte.\"",
+          "\"Tempo total de provisionamento: 30-45 minutos se a infra já está pronta. O SHO automatiza 80% do processo via API de provisionamento. Você só precisa validar e ativar.\" --"
+        ],
+        "bullets": [],
+        "visual": "Tour guiado no painel admin. Passo a passo de criar um tenant."
+      },
+      {
+        "n": 3,
+        "titulo": "White-Label: Customização Visual e de Marca",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que faz o sub-afiliado sentir a plataforma como dele: o white-label. Veja bem: o sub-afiliado não quer ver 'Nexus Affil'IA'te' --- quer ver a marca dele. Logos, cores, domínio, e-mail, suporte. Vamos configurar cada camada.\"",
+          "\"Camada 1: Identidade visual. Faça upload do logo do tenant (em PNG transparente, idealmente 200x60px). Defina cor primária (a cor principal dos botões, links, highlights). Defina cor secundária (acentos, badges). Defina favicon (ícone da aba do navegador). Resultado: o painel inteiro agora carrega a marca do tenant. Em 5 minutos, o sub-afiliado vê um produto que parece 'dele'.\"",
+          "\"Camada 2: Domínio customizado. O tenant tem o próprio subdomínio (maria.seu-dominio.com.br) ou até domínio próprio (plataforma.da-maria.com.br). Você configura o CNAME no DNS do tenant apontando para o SHO, e o SHO emite certificado SSL automático (Let's Encrypt). Em 10 minutos, o tenant acessa a plataforma pelo próprio domínio.\"",
+          "\"Camada 3: E-mail transacional. Quando o SHO envia e-mail para o tenant (alerta, relatório, notificação), o remetente é o tenant, não o master. Ex: 'alertas@plataforma.da-maria.com.br' ao invés de 'alertas@nexus.com'. Você configura SPF, DKIM, DMARC no DNS do tenant, e o SHO usa o domínio customizado para envio. Resultado: e-mail não cai em spam, e a marca é consistente.\"",
+          "\"Camada 4: Suporte white-label. Tier 1 de suporte (chat ao vivo, FAQ, base de conhecimento) é branded com a marca do tenant. Email de suporte (ajuda@plataforma.da-maria.com.br), widget de chat com logo do tenant, artigos de FAQ com tom do tenant. Tier 2 e Tier 3 (você) opera nos bastidores, mas o sub-afiliado nunca fala com a equipe master diretamente --- você escalou suporte sem contratar suporte. É aqui que o fee do tenant vira margem pura.\" --"
+        ],
+        "bullets": [],
+        "visual": "Antes/depois de customização white-label. Painel com marca do master vs. painel com marca do tenant."
+      },
+      {
+        "n": 4,
+        "titulo": "Modelo de Negócio e Unit Economics",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos ao modelo de negócio real. Não adianta ter multi-tenant se a matemática não fecha. Vou te dar os 3 modelos de pricing mais usados.\"",
+          "\"Modelo 1: % da Receita. Você cobra 20-30% da receita de cada tenant. Vantagem: escala com o tenant --- se ele cresce, você cresce. Desvantagem: se o tenant cresce muito, ele pode preferir migrar para plataforma própria. Quando usar: quando o tenant tem R$ 10-30k/mês de receita e não tem capacidade técnica de operar sozinho. Você está no sweet spot dele.\"",
+          "\"Modelo 2: Fee Fixo Mensal. Você cobra R$ 1.500-5.000/mês por tenant, independente da receita dele. Vantagem: receita previsível para você. Desvantagem: se o tenant tem receita baixa, o fee pesa. Quando usar: quando o tenant tem R$ 30k+/mês e a infra que você provê é valiosa (Judge, skills, multi-canal).\"",
+          "\"Modelo 3: Híbrido --- fee fixo baixo + % de receita acima de threshold. Ex: R$ 1.000/mês fixo + 15% sobre o que passar de R$ 20k/mês. Vantagem: justo para os dois lados. Tenant pequeno paga fee fixo acessível. Tenant grande paga % que escala. Quando usar: quando você quer captar tenant pequeno e reter tenant grande com o mesmo modelo.\"",
+          "\"A matemática da escala: com 10 tenants ativos, R$ 30k de receita média cada, fee de 25%: R$ 75k/mês recorrente --- com custo de infra de R$ 8-12k/mês (servidor, Judge, suporte Tier 2/3). Margem: 85-90%. Com 30 tenants: R$ 225k/mês, custo R$ 25-35k, margem 85%. É aqui que afiliado vira empresa. A escala é o multiplicador, não a receita unitária.\"",
+          "\"A grande virada: afiliado comum troca horas por dinheiro --- mais escala = mais horas. Afiliado elite vende plataforma --- mais escala = mesmas horas + mais tenants + mais margem. A hora que você gastou configurando multi-tenant vira receita recorrente para anos.\" --"
+        ],
+        "bullets": [],
+        "visual": "Planilha de unit economics multi-tenant. Receita, custo, margem, escala."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e CTA",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: criar e configurar tenant leva 30-45 minutos com a API de provisionamento. White-label tem 4 camadas --- identidade visual, domínio customizado, e-mail transacional, suporte branded. E o modelo de negócio mais equilibrado é o híbrido --- fee fixo + % acima de threshold.\"",
+          "\"E o lembrete final: multi-tenant não é tecnologia --- é decisão de negócio. Você pode ter a melhor infra do mundo, mas se não souber precificar, vender, reter tenants, não escala. Tecnologia habilita, negócio decide.\"",
+          "\"No próximo módulo, vamos fechar a Trilha Elite com o blueprint mais avançado: Federação de Agentes Zero-Trust --- como criar uma rede global de plataformas independentes que colaboram entre si com segurança e governança. O último nível da escala. Estaremos com você no próximo passo. Respire fundo. Você está construindo plataforma, não afiliado.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 10-12 min",
+          "Visual:** Painel admin, customização white-label, planilha de unit economics",
+          "Tom:** Tutorial prático + visão de negócio",
+          "[x] 5 cenas",
+          "[x] Duração 10-12 min"
+        ],
+        "visual": "Slide com os 4 passos + os 3 modelos + a matemática. Logo da Academia + marca Elite."
+      }
+    ],
+    "total_duracao": 660,
+    "total_narracao_chars": 6922
+  },
+  {
+    "code": "14",
+    "slug": "14-federacao-agentes-roteiro",
+    "roteiro_file": "videos/roteiros/14-federacao-agentes-roteiro.md",
+    "meta": {
+      "title": "Federação de Agentes",
+      "persona": "dupla",
+      "trilha": "Elite",
+      "cor": "gold",
+      "lesson": "elite-02"
+    },
+    "cenas": [
+      {
+        "n": 1,
+        "titulo": "Abertura",
+        "duracao": 60,
+        "narracoes": [
+          "\"Olá. Eu sou a Sra. Nexus Ive. Estamos no último módulo da Trilha Elite. O blueprint mais avançado de toda a Academia.\"",
+          "\"E eu sou Sir Nexus Alencar. Hoje vamos falar de Federação de Agentes Zero-Trust. Esse é o blueprint que transforma operador de plataforma em operador de rede global. Aqui não tem master e tenant --- tem pares independentes que colaboram entre si, com confiança zero por padrão e validação a cada operação. É o que Google, Microsoft, Apple e Amazon fazem entre si --- e que você vai implementar na sua rede de afiliados.\"",
+          "\"Atenção: esse blueprint é o mais complexo tecnicamente e exige maturidade operacional. Se você está começando, vá para a Trilha Master primeiro. Se você já é Elite e domina multi-tenant, esse é o próximo salto.\" --"
+        ],
+        "bullets": [],
+        "visual": "Mapa-múndi estilizado com 4 nós (Brasil, Portugal, Angola, EUA) conectados por linhas cifradas. Animação de handshake mTLS entre os nós. Dupla em janelas."
+      },
+      {
+        "n": 2,
+        "titulo": "O Que É Federação e Por Que Zero-Trust",
+        "duracao": 180,
+        "narracoes": [
+          "\"Vamos começar pelo conceito. Federação --- em tecnologia --- é um conjunto de sistemas independentes que colaboram entre si, cada um mantendo sua autonomia operacional, mas compartilhando recursos, dados e serviços sob contratos explícitos. Não é centralização --- é colaboração federada.\"",
+          "\"Por que federação em rede de afiliados? Veja bem: multi-tenant resolve o caso de uma plataforma central. Mas o mundo real tem múltiplas plataformas independentes que querem colaborar sem perder autonomia. Imagine: você opera no Brasil. Seu parceiro opera em Portugal. Vocês querem compartilhar leads de oportunidade (brasileiro migrando para Portugal), compartilhar skills desenvolvidas localmente, compartilhar Judge Revisor treinado, sem expor a base inteira de cada um e sem depender de uma plataforma central que ambos temem ser vendor lock-in. Federação resolve isso.\"",
+          "\"Agora, Zero-Trust. Por que esse modelo é importante? Veja bem: em redes tradicionais, confiança é assumida --- se você está dentro da rede, é confiável. Mas 80% dos ataques cibernéticos exploram justamente confiança interna --- um nó comprometido acessa tudo. Zero-Trust inverte: nenhuma confiança é assumida, toda operação é validada, a cada pedido, em tempo real. Google BeyondCorp (o framework zero-trust do Google) e NIST 800-207 são os padrões da indústria. O SHO implementa zero-trust nativamente para federação.\"",
+          "\"Os 7 princípios de Zero-Trust aplicados a federação: 1) Verificar sempre. Toda operação entre nós exige autenticação, autorização e validação em tempo real. 2) Menor privilégio. Cada nó recebe apenas o mínimo de acesso necessário para a operação solicitada. 3) Assumir violação. Assume-se que qualquer nó pode estar comprometido --- o sistema está desenhado para minimizar blast radius se um nó cair. 4) Inspeção profunda. Todo tráfego inter-nó é criptografado, autenticado e logado. 5) Micro-segmentação. Cada contrato de federação é isolado --- um contrato não afeta outros. 6) Verificação contínua. Credenciais e permissões são revalidadas periodicamente, não confiadas indefinidamente. 7) Auditoria centralizada cruzada. Ambos os nós registram toda operação em log local, com sincronização de auditoria cruzada para compliance.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama comparativo: modelo centralizado (master-tenant) vs. modelo federado (pares)."
+      },
+      {
+        "n": 3,
+        "titulo": "mTLS e Pinned Credentials: O Coração da Segurança",
+        "duracao": 180,
+        "narracoes": [
+          "\"Agora a parte que garante a segurança da federação: mTLS (mutual TLS) e pinned credentials. mTLS é TLS com autenticação dos dois lados --- em vez de só o servidor autenticar para o cliente (HTTPS tradicional), ambos se autenticam mutuamente. Como funciona o handshake: 1) Cliente apresenta certificado. O nó que está pedindo diz 'eu sou o nó A, este é meu certificado'. 2) Servidor valida. O nó B valida o certificado do nó A contra a CA (Certificate Authority) confiável. 3) Servidor apresenta certificado. O nó B diz 'eu sou o nó B, este é meu certificado'. 4) Cliente valida. O nó A valida o certificado do nó B. 5) Canal seguro estabelecido. As duas partes agora têm chaves de sessão compartilhadas, toda comunicação é criptografada com AES-256 (ou superior), e a integridade é garantida com HMAC-SHA256.\"",
+          "\"Pinned credentials é a segunda camada de segurança. Mesmo com mTLS, um certificado pode ser comprometido. Pinning significa: você fixa o fingerprint (hash SHA-256) do certificado esperado na configuração do nó. Se o certificado apresentado não bater com o fingerprint pinado, a conexão é rejeitada --- mesmo que o certificado seja tecnicamente válido. É como trancar a porta E colocar uma foto do visitante esperado na porta.\"",
+          "\"Como configurar: no painel admin SHO, vá em Federação > Nós > Configurar Nó. Adicione o nó parceiro: nome, endpoint (URL), CA confiável, certificado do nó (para validação), fingerprint pinado. Salve. A partir desse momento, toda operação entre os nós passa por mTLS + pinning. Se qualquer elemento falhar, a conexão é recusada e o incidente é logado.\"",
+          "\"Rotação de credenciais: a cada 90 dias, os certificados devem ser rotacionados (gerados novos, distribuídos, antigos revogados). A SHO tem workflow de rotação automatizado --- você define a periodicidade, o sistema gera novos certificados, distribui para os nós federados via canal seguro, e revoga os antigos. Zero-downtime rotation. Esse é o padrão usado por grandes empresas.\" --"
+        ],
+        "bullets": [],
+        "visual": "Diagrama de handshake mTLS. Cliente e servidor trocam certificados, validam CA, estabelecem canal cifrado."
+      },
+      {
+        "n": 4,
+        "titulo": "Cenários de Federação e Casos Reais",
+        "duracao": 120,
+        "narracoes": [
+          "\"Vou te dar 3 cenários reais de federação entre afiliados elite.\"",
+          "\"Cenário 1: Migração de lead entre mercados. Afiliado no Brasil identificou que 30% dos seus leads têm interesse em emigrar para Portugal. Ele tem parceria com afiliado em Portugal. Com federação: o nó BR compartilha o lead (com consentimento LGPD explícito) com o nó PT, que assume o atendimento com copy e skill adaptadas ao mercado português. Resultado: lead não se perde. Nó BR recebe 15% de comissão sobre a venda. Nó PT recebe 85% mas ganha um lead qualificado que não conseguiria captar sozinho. Win-win.\"",
+          "\"Cenário 2: Skill vertical compartilhada. Afiliado de seguros no Brasil desenvolveu uma skill 'cotação-de-seguros' que economiza 80% do tempo de cotação. Outro afiliado (em Angola) precisa da mesma skill, mas não tem capacidade de desenvolver. Com federação: o nó BR publica a skill no registry federado --- Nó AN consulta o registry, baixa a skill, instala localmente, e usa. Nó BR recebe fee de licenciamento (R$ 500-2.000/mês por tenant que usa). Nó AN economiza 6 meses de desenvolvimento. Win-win.\"",
+          "\"Cenário 3: Judge federado. Um afiliado tem 10 anos de dados de mensagens aprovadas/rejeitadas --- o Judge dele aprendeu o tom de marca de forma profunda. Outro afiliado quer usar um Judge com mesma qualidade, mas não tem anos de dados. Com federação: o nó com Judge maduro oferece o Judge como serviço federado --- o nó cliente envia mensagem para o Judge federado, recebe aprovação/rejeição, e só libera a mensagem se aprovada. Fee por uso (ex: R$ 0.05 por mensagem avaliada). Cliente gasta menos que treinar Judge próprio. Provider monetiza o investimento. Win-win.\"",
+          "\"A grande virada estratégica: federação transforma afiliados em ecossistema. Em vez de competir por leads, colaboram por ecossistema. Em vez de cada um construir tudo, compartilham o que cada um faz melhor. É assim que plataformas globais crescem --- não centralizando, mas federando especializados.\" --"
+        ],
+        "bullets": [],
+        "visual": "3 cenários de federação lado a lado."
+      },
+      {
+        "n": 5,
+        "titulo": "Recapitulação e Encerramento da Trilha Elite",
+        "duracao": 60,
+        "narracoes": [
+          "\"Recapitulando: Federação Zero-Trust permite colaboração entre plataformas independentes com autonomia preservada e segurança máxima. mTLS + pinned credentials garantem que cada operação é autenticada e validada. Os 3 cenários mostram win-win em ação: migração de leads, compartilhamento de skills, Judge como serviço.\"",
+          "\"E o lembrete final: você completou a Trilha Elite. Você agora sabe: 1) Orquestrar múltiplos canais sem caos. 2) Operar multi-tenant com white-label, transformando afiliado em plataforma. 3) Federar com zero-trust, transformando plataforma em rede global. Esse é o topo da pirâmide. Poucos chegam. Você chegou.\"",
+          "\"O próximo passo é seu: implemente o primeiro blueprint --- o que faz mais sentido para sua operação atual. Não implemente os 3 ao mesmo tempo. Blueprints se constroem em camadas. Multi-canal primeiro. Multi-tenant depois. Federação por último.\"",
+          "\"A Academia segue com novas trilhas, novos workshops, novos blueprints. Mas a Elite é o topo --- o que vem depois é manter, refinar, expandir. Bem-vindo ao Top 10%. Respire fundo. Você chegou onde 90% não chega.\""
+        ],
+        "bullets": [
+          "Persona:** Dupla (Ive + Alencar)",
+          "Duração:** 10-12 min",
+          "Visual:** Mapa-múndi, handshake mTLS, certificados, cenários lado a lado",
+          "Tom:** Técnico avançado + visão estratégica de ecossistema",
+          "Encerramento da Trilha Elite** --- momento simbólico",
+          "[x] 5 cenas"
+        ],
+        "visual": "Slide com os 3 blueprints elite lado a lado. Logo da Academia + marca Elite em platina. Tela de \"Trilha Elite Concluída\"."
+      }
+    ],
+    "total_duracao": 600,
+    "total_narracao_chars": 8001
+  }
+]

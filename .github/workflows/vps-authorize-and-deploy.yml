@@ -1,7 +1,7 @@
 name: 🔐 VPS · Autorizar chave + Deploy v2.2
 
 # Objetivo: destravar o Go Live SEM depender de acesso humano ao VPS.
-# 1) usa HOSTGATOR_PASS (senha root do VPS) para logar via sshpass
+# 1) usa VPS_ROOT_PASSWORD (senha root do VPS) para logar via sshpass; fallback HOSTGATOR_PASS
 # 2) autoriza a PUBLIC key derivada de HOSTGATOR_SSH_KEY em ~/.ssh/authorized_keys
 # 3) valida que publickey funciona (BatchMode=yes)
 # 4) opcional: dispara o workflow prd-v22-golive.yml em sequencia
@@ -83,12 +83,22 @@ jobs:
 
       - name: 🛂 Autorizar pública no VPS via sshpass (senha root)
         env:
-          VPS_PASS: ${{ secrets.HOSTGATOR_PASS }}
+          VPS_PASS_PRIMARY: ${{ secrets.VPS_ROOT_PASSWORD }}
+          VPS_PASS_FALLBACK: ${{ secrets.HOSTGATOR_PASS }}
         run: |
+          # Preferir VPS_ROOT_PASSWORD (senha real do root); usar HOSTGATOR_PASS como fallback legado.
+          if [ -n "$VPS_PASS_PRIMARY" ]; then
+            VPS_PASS="$VPS_PASS_PRIMARY"; PASS_SRC=VPS_ROOT_PASSWORD
+          elif [ -n "$VPS_PASS_FALLBACK" ]; then
+            VPS_PASS="$VPS_PASS_FALLBACK"; PASS_SRC=HOSTGATOR_PASS
+          else
+            VPS_PASS=""; PASS_SRC=none
+          fi
+          echo "senha fonte=$PASS_SRC"
           if [ -z "$VPS_PASS" ]; then
-            echo "::error::Secret HOSTGATOR_PASS ausente. Sem senha root não consigo autorizar automaticamente."
+            echo "::error::Nenhum secret de senha do root do VPS encontrado (VPS_ROOT_PASSWORD / HOSTGATOR_PASS)."
             echo "Opções:"
-            echo "  A) Popular secrets.HOSTGATOR_PASS com a senha root do VPS ($VPS_USER@$VPS_HOST)."
+            echo "  A) Popular secrets.VPS_ROOT_PASSWORD com a senha root do VPS ($VPS_USER@$VPS_HOST)."
             echo "  B) Autorizar manualmente: em qualquer shell com acesso ao VPS,"
             echo "     ssh -p $VPS_PORT $VPS_USER@$VPS_HOST 'mkdir -p ~/.ssh && echo \"$(cat ~/.ssh/deploy_key.pub)\" >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys'"
             echo "     (fingerprint da pública: $FP)"
@@ -114,7 +124,7 @@ jobs:
           RC=$?
           set -e
           if [ "$RC" -ne 0 ]; then
-            echo "::error::sshpass falhou (RC=$RC). Provavelmente HOSTGATOR_PASS está incorreta para $VPS_USER@$VPS_HOST:$VPS_PORT."
+            echo "::error::sshpass falhou (RC=$RC). Provavelmente a senha (fonte=$PASS_SRC) está incorreta para $VPS_USER@$VPS_HOST:$VPS_PORT."
             exit $RC
           fi
 

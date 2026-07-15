@@ -81,6 +81,22 @@ jobs:
           # Registrar known_hosts
           ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: 🔎 Diagnóstico sshd (auth methods aceitos)
+        run: |
+          set +e
+          echo "== TCP banner =="
+          echo | timeout 5 nc -w 5 $VPS_HOST $VPS_PORT 2>&1 | head -n 2 || true
+          echo
+          echo "== ssh -vv sem auth (só descobrir methods aceitos pelo sshd) =="
+          ssh -vv -o PreferredAuthentications=none \
+                 -o StrictHostKeyChecking=no \
+                 -o UserKnownHostsFile=/dev/null \
+                 -o ConnectTimeout=15 \
+                 -p "$VPS_PORT" "$VPS_USER@$VPS_HOST" true 2>&1 \
+            | grep -Ei "authentications that can continue|permitted authentications|banner|kex_exchange|no supported" \
+            | head -n 20
+          set -e
+
       - name: 🛂 Autorizar pública no VPS via sshpass (senha root)
         env:
           VPS_PASS_PRIMARY: ${{ secrets.VPS_ROOT_PASSWORD }}

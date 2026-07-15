@@ -81,6 +81,21 @@ jobs:
           # Registrar known_hosts
           ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: 🗝️ Imprimir PUBLIC KEY (para colar via VNC — seguro)
+        run: |
+          echo "─────────────────────────────────────────────"
+          echo "PUB_KEY (linha unica, copie por completo):"
+          echo "─────────────────────────────────────────────"
+          cat ~/.ssh/deploy_key.pub
+          echo "─────────────────────────────────────────────"
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "Fingerprint: $FP"
+          echo
+          echo "COLE ISTO NO VNC (uma linha unica):"
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "  mkdir -p ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && grep -qF \"$PUB\" ~/.ssh/authorized_keys || echo \"$PUB\" >> ~/.ssh/authorized_keys && echo AUTORIZADA"
+          echo "─────────────────────────────────────────────"
+
       - name: 🔎 Diagnóstico sshd (auth methods aceitos)
         run: |
           set +e

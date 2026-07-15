@@ -54,7 +54,10 @@ export function useFirstAccessGate() {
     const agentActive = !!status?.data?.agentActive;
     if (agentActive) return; // pack já ativado, sem gate
 
-    if (isAllowed(location)) return; // rota já é livre
+    if (isAllowed(location)) return;
+    // Fix go-live 15/07: nao arrastar o afiliado para longe do dashboard.
+    // Dashboard mostra banner de ativacao inline (ver Dashboard.tsx).
+    if (location === "/dashboard" || location.startsWith("/dashboard")) return; // rota já é livre
 
     // Só redireciona uma vez por sessão
     if (typeof window !== "undefined") {
@@ -62,7 +65,7 @@ export function useFirstAccessGate() {
       window.sessionStorage.setItem(SESSION_KEY, "1");
     }
 
-    setLocation("/marketplaces?firstAccess=1");
+    setLocation("/marketplaces?firstAccess=1&packA2=1");
   }, [isAuthenticated, user, status?.isLoading, status?.data, location, setLocation]);
 }
 

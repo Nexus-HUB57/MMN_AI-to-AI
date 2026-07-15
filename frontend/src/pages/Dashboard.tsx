@@ -45,6 +45,25 @@ import AcademiaPopular from "../components/AcademiaPopular";
 
 import AffiliateStatusLights from "@/components/AffiliateStatusLights";
 import NexusJourneyClarifier from "@/components/NexusJourneyClarifier";
+
+function InlineActivateBanner({ agentActive }: { agentActive: boolean }) {
+  if (agentActive) return null;
+  return (
+    <div className="mb-6 rounded-2xl border border-amber-400/40 bg-amber-500/10 p-5 text-sm text-amber-100">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300">Ação necessária</p>
+          <p className="mt-1 text-base font-semibold text-white">Ative seu Pack A² para liberar o Agente Nexus</p>
+          <p className="mt-1 text-slate-200">Sem o Pack A² o agente permanece desligado. A ativação libera skills, comissões e a jornada de afiliado.</p>
+        </div>
+        <div className="flex gap-2">
+          <a href="/pix/checkout?pack=pack-a2" className="rounded-xl bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-300 transition">Adquirir Pack A² (R$ 10)</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -336,6 +355,7 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
+      <InlineActivateBanner agentActive={Boolean((trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined,{retry:false})?.data?.agentActive)} />
       <NotificationCenter />
       <AcademiaPushOptIn />
       <AcademiaResume />

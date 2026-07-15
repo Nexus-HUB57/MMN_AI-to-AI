@@ -221,30 +221,93 @@ export const approvalsRouter = router({
     }),
 
   getStats: publicProcedure.query(async () => {
-    return {
-      pending: {
-        total: 45,
-        byType: {
-          new_affiliate: 20,
-          profile_update: 10,
-          career_upgrade: 12,
-          special_request: 3,
-        },
-        byPriority: {
-          urgent: 2,
-          high: 8,
-          medium: 25,
-          low: 10,
-        },
-      },
-      processed: {
-        today: 15,
-        thisWeek: 85,
-        thisMonth: 320,
-      },
-      averageProcessingTime: 4.5,
-      approvalRate: 0.85,
-    };
+    // Onda go-live 15/07: leitura REAL do banco. Sem mais mock.
+    try {
+      const { Pool } = await import("pg");
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const client = await pool.connect();
+      try {
+        const nowIso = new Date().toISOString();
+
+        // Descoberta defensiva: usar tabela real approvals; se ausente, retorno zero
+        const has = await client.query(
+          "SELECT to_regclass('public.approvals') AS t"
+        );
+        const hasTable = !!has.rows?.[0]?.t;
+        if (!hasTable) {
+          return {
+            pending: { total: 0, byType: {}, byPriority: {} },
+            processed: { today: 0, thisWeek: 0, thisMonth: 0 },
+            averageProcessingTime: 0,
+            approvalRate: 0,
+            source: "db_empty",
+            fetchedAt: nowIso,
+          };
+        }
+
+        const q = await client.query(`
+          SELECT
+            COUNT(*) FILTER (WHERE status='pending')::int AS pending_total,
+            COUNT(*) FILTER (WHERE status='pending' AND priority='urgent')::int AS pending_urgent,
+            COUNT(*) FILTER (WHERE status='pending' AND priority='high')::int   AS pending_high,
+            COUNT(*) FILTER (WHERE status='pending' AND priority='medium')::int AS pending_medium,
+            COUNT(*) FILTER (WHERE status='pending' AND priority='low')::int    AS pending_low,
+            COUNT(*) FILTER (WHERE status IN ('approved','rejected')
+                             AND processed_at::date = NOW()::date)::int          AS processed_today,
+            COUNT(*) FILTER (WHERE status IN ('approved','rejected')
+                             AND processed_at > NOW() - INTERVAL '7 days')::int  AS processed_week,
+            COUNT(*) FILTER (WHERE status IN ('approved','rejected')
+                             AND processed_at > NOW() - INTERVAL '30 days')::int AS processed_month,
+            COUNT(*) FILTER (WHERE status='approved')::int AS approved_total,
+            COUNT(*) FILTER (WHERE status IN ('approved','rejected'))::int AS decided_total,
+            AVG(EXTRACT(EPOCH FROM (processed_at - submitted_at))/3600)
+              FILTER (WHERE processed_at IS NOT NULL AND submitted_at IS NOT NULL)::float AS avg_hours
+          FROM approvals
+        `);
+        const r = q.rows[0] || {};
+        const pendingTotal   = Number(r.pending_total || 0);
+        const decidedTotal   = Number(r.decided_total || 0);
+        const approvedTotal  = Number(r.approved_total || 0);
+        const approvalRate   = decidedTotal > 0 ? approvedTotal / decidedTotal : 0;
+        const avgHours       = Number(r.avg_hours || 0);
+
+        return {
+          pending: {
+            total: pendingTotal,
+            byType: {},
+            byPriority: {
+              urgent: Number(r.pending_urgent || 0),
+              high:   Number(r.pending_high   || 0),
+              medium: Number(r.pending_medium || 0),
+              low:    Number(r.pending_low    || 0),
+            },
+          },
+          processed: {
+            today:     Number(r.processed_today || 0),
+            thisWeek:  Number(r.processed_week  || 0),
+            thisMonth: Number(r.processed_month || 0),
+          },
+          averageProcessingTime: Number(avgHours.toFixed(2)),
+          approvalRate,
+          source: "db_real",
+          fetchedAt: nowIso,
+        };
+      } finally {
+        client.release();
+        await pool.end();
+      }
+    } catch (err) {
+      // Falha honesta: retornar zero em vez de mock
+      return {
+        pending: { total: 0, byType: {}, byPriority: {} },
+        processed: { today: 0, thisWeek: 0, thisMonth: 0 },
+        averageProcessingTime: 0,
+        approvalRate: 0,
+        source: "db_error",
+        error: err instanceof Error ? err.message : "unknown",
+        fetchedAt: new Date().toISOString(),
+      };
+    }
   }),
 
   approveBatch: adminProcedure

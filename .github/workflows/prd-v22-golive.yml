@@ -35,31 +35,83 @@ jobs:
 
       - name: 🔑 Setup SSH key
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          # Fix 15/07: nome canônico VPS_SSH_PRIVATE_KEY com fallback para HOSTGATOR_SSH_KEY,
+          # que é o nome que está atualmente povoado nos Secrets do repo.
+          SSH_KEY_PRIMARY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          # Validar formato da chave
-          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
-            echo "❌ VPS_SSH_PRIVATE_KEY não parece ser uma chave OpenSSH válida"
-            echo "Primeira linha (mascarada):"
-            head -1 ~/.ssh/deploy_key | sed 's/./*/g'
+          # Escolhe o primeiro segredo não vazio
+          if [ -n "$SSH_KEY_PRIMARY" ]; then
+            SRC=VPS_SSH_PRIVATE_KEY
+            printf '%s\n' "$SSH_KEY_PRIMARY" > ~/.ssh/deploy_key
+          elif [ -n "$SSH_KEY_FALLBACK" ]; then
+            SRC=HOSTGATOR_SSH_KEY
+            printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
+          else
+            echo "❌ Nenhum secret de chave privada encontrado."
+            echo "   Esperado: secrets.VPS_SSH_PRIVATE_KEY (preferido) ou secrets.HOSTGATOR_SSH_KEY."
             exit 1
           fi
-          # Configurar known_hosts
+          chmod 600 ~/.ssh/deploy_key
+
+          # Validação forte: BEGIN + END presentes
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key || ! grep -q "END.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo "❌ Secret $SRC não parece ser uma chave OpenSSH válida (faltam marcadores BEGIN/END)."
+            echo "   Bytes: $(wc -c < ~/.ssh/deploy_key)  Linhas: $(wc -l < ~/.ssh/deploy_key)"
+            exit 1
+          fi
+
+          # Derivar e exibir fingerprint da PUBLIC key (nunca a privada)
+          if [ -n "$SSH_KEY_PASSPHRASE" ]; then
+            # Extrai pública sem prompt via ssh-keygen -y (aceita passphrase via -P)
+            ssh-keygen -y -P "$SSH_KEY_PASSPHRASE" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "❌ Passphrase inválida para $SRC"; exit 1; }
+          else
+            ssh-keygen -y -P "" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "❌ Chave $SRC exige passphrase mas HOSTGATOR_SSH_PASSPHRASE não foi definido."; exit 1; }
+          fi
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "✅ SSH key preparada · fonte=$SRC · fingerprint pública=$FP"
+          echo "ℹ️  Autorize esta pública em ~/.ssh/authorized_keys do $VPS_USER@$VPS_HOST se ainda não estiver."
+
+          # Se houver passphrase, carrega em ssh-agent para o restante do job
+          if [ -n "$SSH_KEY_PASSPHRASE" ]; then
+            eval "$(ssh-agent -s)" >/dev/null
+            echo "$SSH_KEY_PASSPHRASE" | SSH_ASKPASS=/bin/cat DISPLAY=:0 ssh-add ~/.ssh/deploy_key <<< "$SSH_KEY_PASSPHRASE" >/dev/null 2>&1 || true
+            # export para os steps seguintes
+            echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+            echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+          fi
+
+          # known_hosts
           ssh-keyscan -p $VPS_PORT $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
-          echo "✅ SSH key preparada (chave de $(wc -l < ~/.ssh/deploy_key) linhas)"
 
       - name: 🩺 Pré-check conexão SSH
         run: |
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT \
+          # BatchMode + PreferredAuthentications=publickey evitam qualquer prompt de senha e log poluído.
+          set +e
+          OUT=$(ssh -i ~/.ssh/deploy_key -p $VPS_PORT \
               -o StrictHostKeyChecking=no \
               -o UserKnownHostsFile=/dev/null \
+              -o BatchMode=yes \
+              -o PreferredAuthentications=publickey \
               -o ConnectTimeout=15 \
               $VPS_USER@$VPS_HOST \
-              "echo '✅ Conectado' && uname -a && pm2 list --no-color | head -15"
+              "echo '✅ Conectado' && uname -a && pm2 list --no-color | head -15" 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::SSH pré-check falhou (RC=$RC)."
+            echo "Provável causa: a chave pública correspondente NÃO está em ~/.ssh/authorized_keys do $VPS_USER@$VPS_HOST:$VPS_PORT."
+            echo "Passos para o COO/CTO:"
+            echo "  1) copiar a fingerprint pública impressa no step Setup SSH key acima"
+            echo "  2) autorizar a pública no VPS:  ssh -p $VPS_PORT $VPS_USER@$VPS_HOST 'echo <PUBKEY> >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'"
+            echo "  3) rerun deste workflow"
+            exit $RC
+          fi
 
       - name: 🗄️ Backup PostgreSQL
         run: |

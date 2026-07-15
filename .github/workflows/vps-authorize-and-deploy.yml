@@ -81,6 +81,53 @@ jobs:
           # Registrar known_hosts
           ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: 🔬 Introspeccao AUTHORIZED_KEY (sem expor valor)
+        env:
+          AUTH_KEY: ${{ secrets.AUTHORIZED_KEY }}
+        run: |
+          set +e
+          if [ -z "$AUTH_KEY" ]; then
+            echo "::warning::Secret AUTHORIZED_KEY vazio ou nao definido"
+            exit 0
+          fi
+          BYTES=$(printf %s "$AUTH_KEY" | wc -c)
+          LINES=$(printf %s "$AUTH_KEY" | wc -l)
+          FIRST_WORD=$(printf %s "$AUTH_KEY" | head -n 1 | awk '{print $1}')
+          FIRST_20=$(printf %s "$AUTH_KEY" | head -n 1 | cut -c1-20)
+          echo "AUTHORIZED_KEY.bytes=$BYTES"
+          echo "AUTHORIZED_KEY.lines=$LINES"
+          echo "AUTHORIZED_KEY.first_word=$FIRST_WORD"
+          echo "AUTHORIZED_KEY.first_20_chars_masked=[$FIRST_20 ...]"
+          # Detectar se e chave privada
+          if printf %s "$AUTH_KEY" | grep -q "BEGIN.*PRIVATE KEY"; then
+            echo "kind=private_key"
+            printf %s "$AUTH_KEY" > /tmp/auth_priv
+            chmod 600 /tmp/auth_priv
+            # tentar derivar publica sem passphrase
+            if ssh-keygen -y -P "" -f /tmp/auth_priv > /tmp/auth_pub 2>/dev/null; then
+              FP=$(ssh-keygen -lf /tmp/auth_pub | awk '{print $2}')
+              echo "AUTHORIZED_KEY.derived_pub_fp=$FP"
+              # tentar SSH real contra VPS de producao com essa chave
+              echo "== tentando SSH -i AUTHORIZED_KEY contra $VPS_USER@$VPS_HOST:$VPS_PORT =="
+              ssh -i /tmp/auth_priv -p "$VPS_PORT" \
+                  -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+                  -o BatchMode=yes -o PreferredAuthentications=publickey -o ConnectTimeout=15 \
+                  "$VPS_USER@$VPS_HOST" "echo AUTHORIZED_KEY_LOGIN_OK && uname -a" 2>&1 | head -n 5
+              echo "== RC=$? =="
+            else
+              echo "AUTHORIZED_KEY: privada com passphrase ou formato invalido"
+            fi
+            rm -f /tmp/auth_priv /tmp/auth_pub
+          elif printf %s "$AUTH_KEY" | grep -Eq '^(ssh-rsa|ssh-ed25519|ssh-dss|ecdsa-sha2-)'; then
+            echo "kind=public_key"
+            printf %s "$AUTH_KEY" > /tmp/auth_pub
+            ssh-keygen -lf /tmp/auth_pub 2>&1 | head -n 1
+            rm -f /tmp/auth_pub
+          else
+            echo "kind=unknown (nao parece chave SSH publica nem privada)"
+          fi
+          set -e
+
       - name: 🗝️ Imprimir PUBLIC KEY (para colar via VNC — seguro)
         run: |
           echo "─────────────────────────────────────────────"

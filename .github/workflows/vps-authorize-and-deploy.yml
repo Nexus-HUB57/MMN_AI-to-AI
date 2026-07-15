@@ -19,8 +19,11 @@ on:
         default: 'yes'
 
 env:
-  VPS_HOST: ${{ secrets.VPS_HOST }}
-  VPS_PORT: ${{ secrets.VPS_PORT }}
+  # Hardcode alinhado ao prd-v22-golive.yml: os secrets VPS_HOST/VPS_PORT do repo
+  # apontam para outro endpoint (dispatch anterior deu Connection refused).
+  # Endpoint canonico do VPS de producao:
+  VPS_HOST: 143.95.213.237
+  VPS_PORT: 22022
   VPS_USER: root
 
 jobs:

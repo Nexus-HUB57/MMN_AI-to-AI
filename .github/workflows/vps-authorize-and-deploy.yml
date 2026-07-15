@@ -1,0 +1,157 @@
+name: 🔐 VPS · Autorizar chave + Deploy v2.2
+
+# Objetivo: destravar o Go Live SEM depender de acesso humano ao VPS.
+# 1) usa HOSTGATOR_PASS (senha root do VPS) para logar via sshpass
+# 2) autoriza a PUBLIC key derivada de HOSTGATOR_SSH_KEY em ~/.ssh/authorized_keys
+# 3) valida que publickey funciona (BatchMode=yes)
+# 4) opcional: dispara o workflow prd-v22-golive.yml em sequencia
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Digite AUTHORIZE para autorizar a chave no VPS'
+        required: true
+        default: 'AUTHORIZE'
+      chain_deploy:
+        description: 'Após autorizar, disparar o prd-v22-golive.yml? (yes/no)'
+        required: false
+        default: 'yes'
+
+env:
+  VPS_HOST: ${{ secrets.VPS_HOST }}
+  VPS_PORT: ${{ secrets.VPS_PORT }}
+  VPS_USER: root
+
+jobs:
+  authorize:
+    name: 🔐 Autorizar chave pública no VPS
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'AUTHORIZE'
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧰 Instalar sshpass
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq sshpass openssh-client
+          echo "sshpass version:"
+          sshpass -V | head -n 1
+
+      - name: 🔑 Preparar chave privada e derivar pública
+        env:
+          SSH_KEY_PRIMARY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          if [ -n "$SSH_KEY_PRIMARY" ]; then
+            SRC=VPS_SSH_PRIVATE_KEY
+            printf '%s\n' "$SSH_KEY_PRIMARY" > ~/.ssh/deploy_key
+          elif [ -n "$SSH_KEY_FALLBACK" ]; then
+            SRC=HOSTGATOR_SSH_KEY
+            printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
+          else
+            echo "::error::Nenhum secret com chave privada encontrado (VPS_SSH_PRIVATE_KEY / HOSTGATOR_SSH_KEY)."
+            exit 1
+          fi
+          chmod 600 ~/.ssh/deploy_key
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key || ! grep -q "END.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo "::error::Chave privada de $SRC malformada (falta BEGIN/END)."
+            exit 1
+          fi
+
+          if [ -n "$SSH_KEY_PASSPHRASE" ]; then
+            ssh-keygen -y -P "$SSH_KEY_PASSPHRASE" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "::error::Passphrase HOSTGATOR_SSH_PASSPHRASE não abre a chave $SRC."; exit 1; }
+          else
+            ssh-keygen -y -P "" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "::error::Chave $SRC exige passphrase; defina HOSTGATOR_SSH_PASSPHRASE."; exit 1; }
+          fi
+
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "fonte=$SRC · fingerprint=$FP"
+          echo "SRC=$SRC" >> "$GITHUB_ENV"
+          echo "FP=$FP"   >> "$GITHUB_ENV"
+
+          # Registrar known_hosts
+          ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: 🛂 Autorizar pública no VPS via sshpass (senha root)
+        env:
+          VPS_PASS: ${{ secrets.HOSTGATOR_PASS }}
+        run: |
+          if [ -z "$VPS_PASS" ]; then
+            echo "::error::Secret HOSTGATOR_PASS ausente. Sem senha root não consigo autorizar automaticamente."
+            echo "Opções:"
+            echo "  A) Popular secrets.HOSTGATOR_PASS com a senha root do VPS ($VPS_USER@$VPS_HOST)."
+            echo "  B) Autorizar manualmente: em qualquer shell com acesso ao VPS,"
+            echo "     ssh -p $VPS_PORT $VPS_USER@$VPS_HOST 'mkdir -p ~/.ssh && echo \"$(cat ~/.ssh/deploy_key.pub)\" >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys'"
+            echo "     (fingerprint da pública: $FP)"
+            exit 2
+          fi
+
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "→ Instalando pública $FP como authorized_keys em $VPS_USER@$VPS_HOST:$VPS_PORT"
+
+          # Cria .ssh se não existir, dedup e adiciona a pública. Não sobrescreve outras chaves.
+          set +e
+          sshpass -p "$VPS_PASS" ssh -p "$VPS_PORT" \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -o PreferredAuthentications=password \
+              -o PubkeyAuthentication=no \
+              -o ConnectTimeout=15 \
+              "$VPS_USER@$VPS_HOST" \
+              "mkdir -p ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && \
+               grep -qF \"$PUB\" ~/.ssh/authorized_keys || echo \"$PUB\" >> ~/.ssh/authorized_keys && \
+               echo AUTORIZADA && \
+               echo BEGIN_LIST && ssh-keygen -lf ~/.ssh/authorized_keys 2>/dev/null || cat ~/.ssh/authorized_keys | awk '{print \$1,substr(\$2,1,12)\"...\"}' && echo END_LIST"
+          RC=$?
+          set -e
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::sshpass falhou (RC=$RC). Provavelmente HOSTGATOR_PASS está incorreta para $VPS_USER@$VPS_HOST:$VPS_PORT."
+            exit $RC
+          fi
+
+      - name: ✅ Validar login via publickey
+        run: |
+          set +e
+          OUT=$(ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" \
+              -o StrictHostKeyChecking=no \
+              -o UserKnownHostsFile=/dev/null \
+              -o BatchMode=yes \
+              -o PreferredAuthentications=publickey \
+              -o ConnectTimeout=15 \
+              "$VPS_USER@$VPS_HOST" \
+              "echo '✅ publickey OK' && uname -a && whoami && pm2 list --no-color | head -n 20 2>/dev/null || true" 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ "$RC" -ne 0 ]; then
+            echo "::error::Autorização feita mas login via publickey ainda falha (RC=$RC). Verifique se sshd_config permite PubkeyAuthentication yes."
+            exit $RC
+          fi
+
+      - name: 🚀 Encadear deploy prd-v22-golive
+        if: success() && github.event.inputs.chain_deploy == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Disparando prd-v22-golive.yml (workflow_dispatch)..."
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/prd-v22-golive.yml/dispatches" \
+            -d '{"ref":"main","inputs":{"confirm":"GO-LIVE","skip_frontend_build":"false"}}' \
+            -w "\nhttp=%{http_code}\n"
+          echo "Se http=204, o deploy foi enfileirado. Acompanhe em Actions."
+
+      - name: 📌 Sumário
+        if: always()
+        run: |
+          echo "== SUMÁRIO =="
+          echo "fingerprint pub: ${FP:-?}"
+          echo "fonte da chave:  ${SRC:-?}"
+          echo "host:port:       $VPS_HOST:$VPS_PORT (usuário: $VPS_USER)"
+          echo "chain_deploy:    ${{ github.event.inputs.chain_deploy }}"

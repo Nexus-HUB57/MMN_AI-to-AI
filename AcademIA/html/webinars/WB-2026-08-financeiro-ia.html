@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="description" content="Como CFO/AI Otto estruturou planilha de unit economics que detecta problemas antes de virarem crise" />
+  <title>WB-2026-08 · CFO/AI Otto · Unit Economics em Ação</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style type="text/css">
+:root {
+
+--bg: #0f0f1a;
+--bg-card: #1a1a2e;
+--bg-elev: #252540;
+--fg: #e0e0e8;
+--fg-muted: #9ca3af;
+--accent: #06b6d4;
+--accent-purple: #7c3aed;
+--accent-gold: #f59e0b;
+--accent-green: #10b981;
+--accent-red: #ef4444;
+--border: #2a2a4a;
+--code-bg: #0a0a14;
+--shadow: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme {
+--bg: #fafafa;
+--bg-card: #ffffff;
+--bg-elev: #f3f4f6;
+--fg: #1a1a1a;
+--fg-muted: #6b7280;
+--accent: #0891b2;
+--accent-purple: #6d28d9;
+--accent-gold: #d97706;
+--border: #e5e7eb;
+--code-bg: #f9fafb;
+--shadow: rgba(0, 0, 0, 0.08);
+}
+html {
+line-height: 1.7;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+font-size: 17px;
+color: var(--fg);
+background-color: var(--bg);
+scroll-behavior: smooth;
+}
+body {
+margin: 0 auto;
+max-width: 900px;
+padding: 40px 30px 100px;
+hyphens: auto;
+overflow-wrap: break-word;
+text-rendering: optimizeLegibility;
+position: relative;
+}
+
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent-purple), var(--accent-gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 8px var(--accent);
+}
+
+.floating-actions {
+position: fixed;
+top: 16px;
+right: 16px;
+display: flex;
+flex-direction: column;
+gap: 8px;
+z-index: 9998;
+}
+.fab {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: var(--bg-card);
+border: 1px solid var(--border);
+color: var(--fg);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 1.1rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px var(--shadow);
+text-decoration: none;
+}
+.fab:hover {
+background: var(--accent);
+color: #fff;
+transform: scale(1.1);
+}
+.fab-tooltip {
+position: relative;
+}
+.fab-tooltip::before {
+content: attr(data-tip);
+position: absolute;
+right: 50px;
+top: 50%;
+transform: translateY(-50%);
+background: var(--bg-elev);
+color: var(--fg);
+padding: 4px 10px;
+border-radius: 4px;
+font-size: 0.75rem;
+white-space: nowrap;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease;
+}
+.fab-tooltip:hover::before {
+opacity: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+color: #fff;
+margin-top: 1.8em;
+margin-bottom: 0.6em;
+line-height: 1.3;
+font-weight: 700;
+scroll-margin-top: 60px;
+}
+body.light-theme h1, body.light-theme h2, body.light-theme h3 {
+color: #1a1a1a;
+}
+h1 {
+font-size: 2.2em;
+background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+border-bottom: 2px solid var(--accent);
+padding-bottom: 0.3em;
+}
+h2 {
+font-size: 1.6em;
+color: var(--accent);
+border-bottom: 1px solid var(--border);
+padding-bottom: 0.3em;
+}
+h3 {
+font-size: 1.3em;
+color: var(--accent-purple);
+}
+h4 {
+font-size: 1.1em;
+color: var(--fg);
+}
+
+a {
+color: var(--accent);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+a:hover {
+color: var(--accent-purple);
+text-decoration: underline;
+}
+
+p {
+margin: 0 0 1em 0;
+}
+
+code {
+font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+font-size: 0.9em;
+background: var(--code-bg);
+padding: 2px 6px;
+border-radius: 3px;
+color: var(--accent);
+border: 1px solid var(--border);
+}
+pre {
+background: var(--code-bg);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 16px;
+overflow-x: auto;
+line-height: 1.5;
+margin: 1.5em 0;
+position: relative;
+}
+pre code {
+background: transparent;
+border: none;
+padding: 0;
+color: var(--fg);
+font-size: 0.85em;
+}
+
+blockquote {
+border-left: 4px solid var(--accent);
+padding: 12px 20px;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 0 6px 6px 0;
+color: var(--fg);
+font-style: italic;
+}
+body.light-theme blockquote {
+background: var(--bg-elev);
+}
+
+ul, ol {
+padding-left: 1.5em;
+margin: 1em 0;
+}
+li {
+margin: 0.3em 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5em 0;
+background: var(--bg-card);
+border-radius: 6px;
+overflow: hidden;
+}
+th, td {
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+}
+th {
+background: var(--bg-elev);
+color: var(--accent);
+font-weight: 700;
+}
+body.light-theme th {
+color: var(--accent);
+}
+tr:hover {
+background: var(--bg-elev);
+}
+
+img {
+max-width: 100%;
+height: auto;
+border-radius: 6px;
+display: block;
+margin: 1.5em auto;
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+hr {
+border: none;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(--accent), transparent);
+margin: 2em 0;
+}
+
+strong {
+color: var(--accent-gold);
+font-weight: 700;
+}
+body.light-theme strong {
+color: #d97706;
+}
+em {
+color: var(--accent-purple);
+font-style: italic;
+}
+body.light-theme em {
+color: #6d28d9;
+}
+
+kbd {
+display: inline-block;
+padding: 2px 6px;
+background: var(--bg-elev);
+border: 1px solid var(--border);
+border-radius: 3px;
+font-family: "JetBrains Mono", monospace;
+font-size: 0.85em;
+box-shadow: 0 1px 0 var(--border);
+}
+
+.breadcrumb {
+font-size: 0.85rem;
+color: var(--fg-muted);
+margin-bottom: 24px;
+padding: 8px 12px;
+background: var(--bg-card);
+border-radius: 6px;
+border: 1px solid var(--border);
+}
+.breadcrumb a {
+color: var(--fg-muted);
+text-decoration: none;
+}
+.breadcrumb a:hover {
+color: var(--accent);
+text-decoration: underline;
+}
+.breadcrumb-sep {
+margin: 0 8px;
+color: var(--fg-muted);
+}
+
+.callout {
+padding: 16px 20px;
+margin: 1.5em 0;
+border-radius: 6px;
+border-left: 4px solid;
+background: var(--bg-card);
+}
+.callout-info { border-color: var(--accent); }
+.callout-success { border-color: var(--accent-green); }
+.callout-warning { border-color: var(--accent-gold); }
+.callout-danger { border-color: var(--accent-red); }
+.callout-title {
+font-weight: 700;
+margin-bottom: 6px;
+text-transform: uppercase;
+font-size: 0.85em;
+letter-spacing: 1px;
+}
+.callout-info .callout-title { color: var(--accent); }
+.callout-success .callout-title { color: var(--accent-green); }
+.callout-warning .callout-title { color: var(--accent-gold); }
+.callout-danger .callout-title { color: var(--accent-red); }
+
+input[type="checkbox"]:not(:checked), input[type="checkbox"]:checked {
+appearance: none;
+width: 18px;
+height: 18px;
+border: 2px solid var(--accent);
+border-radius: 3px;
+display: inline-block;
+vertical-align: middle;
+margin-right: 8px;
+position: relative;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+input[type="checkbox"]:checked {
+background: var(--accent);
+}
+input[type="checkbox"]:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: var(--bg);
+font-weight: 700;
+font-size: 14px;
+}
+
+#TOC {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 20px 24px;
+margin: 1.5em 0 2em;
+position: sticky;
+top: 16px;
+z-index: 10;
+max-height: 70vh;
+overflow-y: auto;
+}
+#TOC > ul {
+list-style: none;
+padding-left: 0;
+}
+#TOC a {
+color: var(--fg-muted);
+font-size: 0.9em;
+display: block;
+padding: 4px 0;
+text-decoration: none;
+transition: color 0.2s ease;
+}
+#TOC a:hover {
+color: var(--accent);
+padding-left: 4px;
+}
+#TOC a.active {
+color: var(--accent);
+border-left: 2px solid var(--accent);
+padding-left: 8px;
+font-weight: 600;
+}
+
+details {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: 12px 16px;
+margin: 1em 0;
+}
+summary {
+cursor: pointer;
+font-weight: 600;
+color: var(--accent);
+outline: none;
+}
+summary:hover {
+color: var(--accent-purple);
+}
+
+.footer {
+margin-top: 60px;
+padding: 24px 0;
+border-top: 1px solid var(--border);
+text-align: center;
+color: var(--fg-muted);
+font-size: 0.85rem;
+}
+.footer a {
+color: var(--accent);
+}
+
+@media (max-width: 768px) {
+body {
+padding: 24px 16px 80px;
+font-size: 16px;
+}
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+.floating-actions {
+top: 8px;
+right: 8px;
+}
+.fab {
+width: 36px;
+height: 36px;
+font-size: 1rem;
+}
+pre {
+font-size: 0.8em;
+padding: 12px;
+}
+#TOC {
+position: relative;
+top: 0;
+max-height: none;
+}
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+body > * {
+animation: fadeIn 0.3s ease;
+}
+
+@media print {
+.floating-actions, .reading-progress { display: none; }
+body { padding: 0; max-width: 100%; }
+pre { page-break-inside: avoid; }
+h1, h2, h3 { page-break-after: avoid; }
+}</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">WB-2026-08 · CFO/AI Otto · Unit Economics em Ação</h1>
+</header>
+<h1 id="wb-2026-08-unit-economics-em-ação">📊 WB-2026-08 · Unit
+Economics em Ação</h1>
+<blockquote>
+<p>Como o CFO/AI <strong>Otto Cardoso</strong> estruturou a planilha de
+unit economics do Nexus que detecta problemas 60-90 dias antes de
+virarem crise financeira.</p>
+</blockquote>
+<h2 id="quem-deve-assistir">🎯 Quem deve assistir</h2>
+<ul>
+<li>Founders que precisam entender a fundo CAC, LTV, payback</li>
+<li>Equipes financeiras de SaaS, info, mentoria</li>
+<li>C-levels que precisam falar a língua dos números</li>
+</ul>
+<h2 id="quando">📅 Quando</h2>
+<ul>
+<li><strong>Data:</strong> 2026-07-15 (terça)</li>
+<li><strong>Horário:</strong> 19h-20h30 BRT</li>
+<li><strong>Plataforma:</strong> Zoom (link enviado por email)</li>
+</ul>
+<h2 id="preletor">🗣️ Preletor</h2>
+<p><strong>Otto Cardoso (CFO/AI)</strong> — agente financeiro autônomo
+do Nexus, ratificado pelo sócio humano. Responsável por: - Tesouraria -
+Valuation - Unit economics - Auditoria de agentes (compliance
+financeiro)</p>
+<h2 id="programa">📋 Programa</h2>
+<h3 id="abertura-5-min">1️⃣ Abertura (5 min)</h3>
+<ul>
+<li>Boas-vindas da Sra. Nexus Ive</li>
+<li>Apresentação do Otto</li>
+<li>Contexto: por que unit economics é o pulmão de qualquer negócio</li>
+</ul>
+<h3 id="os-10-números-que-importam-20-min">2️⃣ Os 10 números que importam
+(20 min)</h3>
+<table>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Métrica</th>
+<th>O que mede</th>
+<th>Meta saudável</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>CAC</strong></td>
+<td>Custo de adquirir 1 cliente</td>
+<td>varia</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>LTV</strong></td>
+<td>Receita total de 1 cliente</td>
+<td>&gt; 3× CAC</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>LTV/CAC</strong></td>
+<td>Eficiência do marketing</td>
+<td>&gt; 3</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><strong>Payback</strong></td>
+<td>Meses pra recuperar CAC</td>
+<td>&lt; 12</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><strong>Gross Margin</strong></td>
+<td>% receita sobra após COGS</td>
+<td>&gt; 70%</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><strong>Churn</strong></td>
+<td>% que cancela por mês</td>
+<td>&lt; 5%</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><strong>NRR</strong></td>
+<td>Net Revenue Retention</td>
+<td>&gt; 100%</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><strong>Magic Number</strong></td>
+<td>Eficiência de growth spend</td>
+<td>&gt; 0.75</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><strong>Burn Multiple</strong></td>
+<td>Eficiência de cash burn</td>
+<td>&lt; 2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><strong>Runway</strong></td>
+<td>Meses até acabar caixa</td>
+<td>&gt; 18</td>
+</tr>
+</tbody>
+</table>
+<p>Cada métrica com: - Como calcular (fórmula exata) - Onde olhar
+(dashboard ou planilha) - O que fazer se estiver ruim</p>
+<h3 id="a-planilha-otto-em-ação-25-min">3️⃣ A planilha Otto em ação (25
+min)</h3>
+<p><strong>Demo ao vivo</strong> da planilha real que Nexus usa:</p>
+<pre><code>[Aba 1] Inputs brutos
+  - Stripe API → MRR, churn, expansão
+  - Meta Ads API → CAC por canal
+  - Google Sheets → orçamento, equipe
+  
+[Aba 2] Cálculos automáticos
+  - LTV por cohort
+  - CAC blended + por canal
+  - Payback por persona
+  - Magic number mensal
+  
+[Aba 3] Alertas
+  - Se CAC subiu &gt; 20% vs baseline → vermelho
+  - Se LTV/CAC &lt; 3 → amarelo
+  - Se runway &lt; 12 meses → vermelho crítico
+
+[Aba 4] Forecast
+  - 3 cenários (otimista/base/pessimista)
+  - Sensibilidade a +1/-1 variáveis</code></pre>
+<p><strong>Como o CFO/AI detecta problemas antes de virarem
+crise:</strong> - Coorte com churn anômalo no mês 3 → investigar
+onboarding - CAC subindo 15% sem aumento em conversão → saturar copy -
+LTV caindo → expansão ruim ou churn subindo - Burn multiple &gt; 2 →
+crescer devagar ou levantar capital</p>
+<h3 id="cases-reais-nexus-20-min">4️⃣ Cases reais Nexus (20 min)</h3>
+<p><strong>Case 1: Como salvamos um lançamento Black Friday
+ruim</strong> - Previsão otimista: R$ 80k de receita - Real: R$ 30k -
+Causa raiz: CAC havia subido 40% por causa de leilão de anúncios - Ação:
+pausar Meta, realocar para SEO - Resultado: 30 dias depois voltou a R$
+70k/mês</p>
+<p><strong>Case 2: O cliente que pagava mas não dava lucro</strong> -
+Cliente enterprise com R$ 30k/mês de MRR - Mas exigia 1 FTE dedicado de
+CS - Custo real: R$ 25k/mês → margem 17% - Ação: reprecificar com
+sucesso (cliente aceitou) - Margem atual: 65%</p>
+<p><strong>Case 3: O erro que quase quebrou a empresa</strong> - Em
+2025-Q3, contratamos 3 vendedores - CAC não caiu (porque copy não mudou)
+- Burn multiple foi para 3.2 - Reverter em 60 dias: demitir 2, manter 1
+- Lição: time só funciona com playbook pronto</p>
+<h3 id="qa-ao-vivo-15-min">5️⃣ Q&amp;A ao vivo (15 min)</h3>
+<p>Perguntas dos participantes, respondidas em tempo real pelo Otto +
+Sra. Ive mediando.</p>
+<h3 id="encerramento-5-min">6️⃣ Encerramento (5 min)</h3>
+<ul>
+<li>Materiais complementares</li>
+<li>Próximo webinar: WB-2026-09</li>
+<li>Feedback dos participantes</li>
+</ul>
+<h2 id="materiais-complementares">📚 Materiais Complementares</h2>
+<ul>
+<li><code>apostilas/13-monetizacao-avancada-escala.md</code></li>
+<li><code>Lib-Nexus/knowledge-base/04-conformidade-anatel.md</code></li>
+<li><code>Lab-Nexus/prompts/analise/06-forecast-receita-trimestral.md</code></li>
+<li><code>tutoriais/21-monitorar-metricas-tempo-real.md</code></li>
+<li><code>playbooks/PB-FINANCEIRO-decisao-investimento.md</code>
+(novo!)</li>
+</ul>
+<h2 id="takeaways">🎯 Takeaways</h2>
+<p>Ao final, você vai saber: - ✅ Os 10 números que importam pro seu
+negócio - ✅ Como montar planilha de unit economics em 1 semana - ✅
+Como detectar problemas 60-90 dias antes - ✅ Quando contratar vs não
+contratar - ✅ Como tomar decisões financeiras com dados</p>
+<h2 id="pré-requisitos">📋 Pré-requisitos</h2>
+<ul>
+<li>Acesso a planilha (Google Sheets ou Excel)</li>
+<li>API do seu gateway de pagamento (Stripe, Hotmart, etc)</li>
+<li>2h para implementar depois do webinar</li>
+</ul>
+<h2 id="certificado">🎓 Certificado</h2>
+<ul>
+<li>Presença ao vivo: certificado de participação</li>
+<li><ul>
+<li>1 entrega (planilha preenchida + análise): certificado de
+aplicação</li>
+</ul></li>
+</ul>
+<h2 id="inscrição">💬 Inscrição</h2>
+<ul>
+<li><strong>Live + replay:</strong> gratuito</li>
+<li><strong>Inscrição:</strong> até 2026-07-14 via
+<code>nexus-academy.io/webinars</code></li>
+<li><strong>Vagas:</strong> 500 (live) / ilimitado (replay)</li>
+</ul>
+<hr />
+<p><em>AcademIA · Webinar WB-2026-08 · 2026</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+name: 🚀 Onda 8 · Deploy Go-Live VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Digite GO-LIVE-ONDA8 para confirmar'
+        required: true
+        default: 'GO-LIVE-ONDA8'
+      run_migration:
+        description: 'Executar migration 0014?'
+        required: false
+        default: 'true'
+      skip_backup:
+        description: 'Pular backup DB?'
+        required: false
+        default: 'false'
+
+env:
+  VPS_HOST: '143.95.213.237'
+  VPS_PORT: '22022'
+  VPS_USER: 'root'
+  REMOTE_REPO: '/var/www/oneverso/repo'
+  REMOTE_APP: '/var/www/oneverso/current'
+
+jobs:
+  preflight:
+    name: 🔍 Preflight & Auto-Authorize
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'GO-LIVE-ONDA8'
+    outputs:
+      ssh_ok: ${{ steps.ssh_test.outputs.ok }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔑 Preparar chave SSH primária
+        id: prep_key
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+          AUTHORIZED_PUB: ${{ secrets.AUTHORIZED_KEY_VPS_FALLBACK }}
+          VPS_ROOT_PASSWORD: ${{ secrets.VPS_ROOT_PASSWORD }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          # Escolhe primeira chave não vazia
+          if [ -n "$SSH_KEY" ]; then
+            printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+            echo "SRC=VPS_SSH_PRIVATE_KEY" >> $GITHUB_OUTPUT
+          elif [ -n "$SSH_KEY_FALLBACK" ]; then
+            printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
+            echo "SRC=HOSTGATOR_SSH_KEY" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Nenhum secret de chave SSH disponível"
+            exit 1
+          fi
+          chmod 600 ~/.ssh/deploy_key
+          # Validação
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo "❌ Formato de chave inválido"
+            wc -l ~/.ssh/deploy_key
+            exit 1
+          fi
+          # Derivar pública
+          if [ -n "$SSH_PASSPHRASE" ]; then
+            ssh-keygen -y -P "$SSH_PASSPHRASE" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "❌ Passphrase inválida"; exit 1; }
+          else
+            ssh-keygen -y -P "" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+              || { echo "❌ Chave exige passphrase"; exit 1; }
+          fi
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "✅ Chave preparada · fingerprint=$FP"
+          ssh-keyscan -p $VPS_PORT -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: 🔐 Auto-autorizar chave no VPS via senha
+        env:
+          SSHPASS: ${{ secrets.VPS_ROOT_PASSWORD }}
+          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+        run: |
+          if [ -z "$SSHPASS" ]; then
+            echo "⚠️  VPS_ROOT_PASSWORD não configurado. Se a chave já estiver autorizada, o próximo step vai passar."
+            exit 0
+          fi
+          sudo apt-get install -y -qq sshpass >/dev/null
+          # Adicionar chave pública ao authorized_keys se ainda não estiver
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+            -p $VPS_PORT $VPS_USER@$VPS_HOST "mkdir -p ~/.ssh && chmod 700 ~/.ssh && \
+              if ! grep -qF '$PUB' ~/.ssh/authorized_keys 2>/dev/null; then \
+                echo '$PUB' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && \
+                echo '✅ Chave autorizada'; \
+              else \
+                echo 'ℹ️  Chave já autorizada'; \
+              fi" 2>&1 | grep -v "Warning" || true
+
+      - name: 🩺 SSH connectivity test
+        id: ssh_test
+        env:
+          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+        run: |
+          set +e
+          if [ -n "$SSH_PASSPHRASE" ]; then
+            eval "$(ssh-agent -s)" >/dev/null
+            echo "$SSH_PASSPHRASE" | SSH_ASKPASS=/bin/echo DISPLAY= SSH_ASKPASS_REQUIRE=force ssh-add ~/.ssh/deploy_key 2>/dev/null || true
+          fi
+          OUT=$(ssh -i ~/.ssh/deploy_key -p $VPS_PORT \
+              -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              -o ConnectTimeout=20 \
+              $VPS_USER@$VPS_HOST \
+              "echo OK && hostname && date -u +%FT%TZ && pm2 list --no-color | head -10 && systemctl is-active nginx 2>&1 && df -h / | tail -1" 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ $RC -eq 0 ]; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+            echo "::notice::✅ SSH funcionando"
+          else
+            echo "ok=false" >> $GITHUB_OUTPUT
+            echo "::error::❌ SSH falhou RC=$RC"
+            exit $RC
+          fi
+
+  deploy:
+    name: 🚀 Deploy código + migration
+    needs: preflight
+    if: needs.preflight.outputs.ssh_ok == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔑 Restaurar chave
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          if [ -n "$SSH_KEY" ]; then printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          else printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key; fi
+          chmod 600 ~/.ssh/deploy_key
+          if [ -n "$SSH_PASSPHRASE" ]; then
+            eval "$(ssh-agent -s)"
+            echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+            echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
+            printf '%s\n' "$SSH_PASSPHRASE" | SSH_ASKPASS=/bin/cat DISPLAY= ssh-add ~/.ssh/deploy_key 2>&1 || true
+          fi
+          ssh-keyscan -p $VPS_PORT -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 🗄️ Backup DB pré-deploy
+        if: github.event.inputs.skip_backup != 'true'
+        run: |
+          TS=$(date -u +%Y%m%d-%H%M%S)
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "cd $REMOTE_APP 2>/dev/null && \
+             if [ -f .env ]; then \
+               DB_URL=\$(grep '^DATABASE_URL=' .env | cut -d= -f2- | tr -d '\"'); \
+               if [ -n \"\$DB_URL\" ]; then \
+                 pg_dump \"\$DB_URL\" > /tmp/backup-onda8-$TS.sql 2>&1 && \
+                 echo \"✅ Backup: /tmp/backup-onda8-$TS.sql (\$(wc -c </tmp/backup-onda8-$TS.sql) bytes)\"; \
+               else echo '⚠️ DATABASE_URL não encontrada — pulando backup'; fi \
+             else echo '⚠️ .env não encontrado — pulando backup'; fi"
+
+      - name: 📥 Pull main no VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "cd $REMOTE_REPO && \
+             git fetch origin main && \
+             git reset --hard origin/main && \
+             git log -1 --format='HEAD=%h %s'"
+
+      - name: 🛢️ Migration 0014
+        if: github.event.inputs.run_migration == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "cd $REMOTE_APP && \
+             if [ -f .env ]; then set -a; source .env; set +a; fi && \
+             MIG=$REMOTE_REPO/deploy/0014_onda8_golive_foundations.sql && \
+             if [ ! -f \"\$MIG\" ]; then echo '⚠️ Migration ausente no repo'; exit 0; fi && \
+             psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f \"\$MIG\" && \
+             echo '✅ Migration 0014 aplicada'"
+
+      - name: 🏗️ Build backend + frontend
+        run: |
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "cd $REMOTE_REPO && \
+             npm install --workspace backend --workspace frontend --legacy-peer-deps --no-audit --no-fund 2>&1 | tail -5 && \
+             npm --workspace backend run build 2>&1 | tail -10 && \
+             npm --workspace frontend run build 2>&1 | tail -10 && \
+             echo '✅ Build concluído'"
+
+      - name: 🔄 Publicar em current + restart PM2
+        run: |
+          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST \
+            "rsync -a --delete $REMOTE_REPO/backend/dist/ $REMOTE_APP/backend/dist/ 2>&1 | tail -3 && \
+             rsync -a --delete $REMOTE_REPO/frontend/dist/ $REMOTE_APP/frontend/dist/ 2>&1 | tail -3 && \
+             pm2 reload all --update-env && \
+             pm2 save && \
+             pm2 list --no-color | head -15"
+
+      - name: 🧪 Smoke tests externos
+        run: |
+          sleep 8
+          for ep in /api/health /api/health/pix /api/webhooks/pix /api/webhooks/mercadopago /api/trpc/meetings.health; do
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' -m 15 "https://oneverso.com.br$ep")
+            body=$(head -c 200 /tmp/body)
+            if [ "$code" = 200 ]; then echo "  ✅ $ep -> $code"
+            else echo "  ❌ $ep -> $code · $body"; fi
+          done
+
+      - name: 📊 Sumário Go-Live Onda 8
+        if: always()
+        run: |
+          echo "### 🚀 Onda 8 Go-Live · Sumário" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- SHA deployado: \`$(git rev-parse HEAD)\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Migration: ${{ github.event.inputs.run_migration }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Backup: ${{ github.event.inputs.skip_backup == 'true' && 'pulado' || 'executado' }}" >> $GITHUB_STEP_SUMMARY
+          for ep in /api/health /api/health/pix; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -m 10 "https://oneverso.com.br$ep")
+            echo "- $ep → HTTP $code" >> $GITHUB_STEP_SUMMARY
+          done

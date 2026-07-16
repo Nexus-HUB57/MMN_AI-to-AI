@@ -1,8 +1,11 @@
 import { adminProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { eq, desc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
+import { eq, desc, asc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
 import { users, affiliates, commissions, payments, network, orders, products } from "../../../database/schemas/schema-final";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 /**
  * Admin Router - Painel Administrativo do MMN AI-to-AI
@@ -26,6 +29,7 @@ export const adminRouter = router({
       limit: z.number().default(20),
       role: z.enum(["user", "admin"]).optional(),
       search: z.string().optional(),
+      includeTestData: z.boolean().default(false),
     }))
     .query(async ({ ctx, input }) => {
       const offset = (input.page - 1) * input.limit;
@@ -39,11 +43,20 @@ export const adminRouter = router({
           sql`(${users.name} LIKE ${`%${input.search}%`} OR ${users.email} LIKE ${`%${input.search}%`})`
         );
       }
+      // FIX 01-07-2026: excluir test data por default
+      if (!input.includeTestData) {
+        conditions.push(sql`COALESCE("users"."is_test_data", FALSE) = FALSE`);
+      }
 
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
       const [usersList, [{ total }]] = await Promise.all([
-        ctx.db.select().from(users)
+        ctx.db.select({
+          id: users.id, name: users.name, email: users.email, role: users.role,
+          createdAt: users.createdAt, lastSignedIn: users.lastSignedIn,
+          affiliateStatus: affiliates.status,
+        }).from(users)
+          .leftJoin(affiliates, eq(affiliates.userId, users.id))
           .where(whereClause)
           .orderBy(desc(users.createdAt))
           .limit(input.limit)
@@ -59,6 +72,7 @@ export const adminRouter = router({
           role: u.role,
           createdAt: u.createdAt,
           lastSignedIn: u.lastSignedIn,
+          affiliateStatus: u.affiliateStatus ?? null,
         })),
         pagination: {
           page: input.page,
@@ -331,376 +345,208 @@ export const adminRouter = router({
    */
   getNetworkTree: adminProcedure
     .input(z.object({
-      userId: z.number().optional(),
-      affiliateId: z.number().optional(),
-      maxDepth: z.number().default(3),
-    }))
-    .query(async ({ ctx, input }) => {
-      const getUserId = async () => {
-        if (input.userId) return input.userId;
-        if (input.affiliateId) {
-          const [aff] = await ctx.db.select().from(affiliates).where(eq(affiliates.id, input.affiliateId));
-          return aff?.userId;
-        }
-        return null;
-      };
+      rootAffiliateId: z.number().optional(),
+      rootUserId: z.number().optional(),
+      maxDepth: z.number().min(1).max(10).default(3),
+    }).optional())
+    .query(async ({ input }) => {
+      const { Pool } = await import("pg");
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const client = await pool.connect();
+      try {
+        const maxDepth = input?.maxDepth ?? 3;
 
-      const sponsorId = await getUserId();
-      if (!sponsorId) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "userId ou affiliateId requerido" });
+        // Resolver rootAffiliateId a partir de rootUserId se necessario
+        let rootId = input?.rootAffiliateId ?? null;
+        if (!rootId && input?.rootUserId) {
+          const r = await client.query(
+            `SELECT id FROM affiliates WHERE "userId" = $1 LIMIT 1`,
+            [input.rootUserId],
+          );
+          rootId = r.rows[0]?.id ?? null;
+        }
+        if (!rootId) {
+          const rootRes = await client.query(
+            `SELECT id FROM affiliates WHERE "affiliateCode" = 'NX-FOUNDER-001' LIMIT 1`,
+          );
+          rootId = rootRes.rows[0]?.id ?? null;
+        }
+        if (!rootId) return { root: null, nodes: [], totalNodes: 0, directs: 0, source: "root_not_found" };
+
+        // Query recursiva SEM filtro is_test_data (para nao esconder cadastros reais em beta)
+        const treeRes = await client.query(`
+          WITH RECURSIVE tree AS (
+            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId",
+                   u.name, u.email, 1 AS depth
+            FROM affiliates a
+            JOIN users u ON u.id = a."userId"
+            WHERE a.id = $1
+            UNION ALL
+            SELECT a.id, a."affiliateCode", a."userId", a."sponsorId",
+                   u.name, u.email, t.depth + 1
+            FROM affiliates a
+            JOIN users u ON u.id = a."userId"
+            JOIN tree t ON a."sponsorId" = t.id
+            WHERE t.depth < $2
+          )
+          SELECT id, "affiliateCode" AS code, "userId", "sponsorId", name, email, depth
+          FROM tree
+          ORDER BY depth, id
+        `, [rootId, maxDepth]);
+
+        const nodes = treeRes.rows;
+        const root = nodes.find((n: any) => n.depth === 1) ?? null;
+        const directs = nodes.filter((n: any) => n.depth === 2).length;
+
+        // Totais operacionais reais
+        const totals = await client.query(`
+          SELECT
+            (SELECT COUNT(*)::int FROM users)      AS users_total,
+            (SELECT COUNT(*)::int FROM affiliates) AS affiliates_total,
+            (SELECT COUNT(*)::int FROM affiliates WHERE "sponsorId" IS NOT NULL) AS connections
+        `);
+        const t = totals.rows[0] || {};
+
+        return {
+          root,
+          nodes,
+          totalNodes: nodes.length,
+          directs,
+          totals: {
+            users: Number(t.users_total || 0),
+            affiliates: Number(t.affiliates_total || 0),
+            connections: Number(t.connections || 0),
+          },
+          source: "db_real",
+        };
+      } finally {
+        client.release();
+        await pool.end();
       }
-
-      const buildTree = async (sponsorId: number, depth: number): Promise<any[]> => {
-        if (depth > (input.maxDepth || 3)) return [];
-
-        const downline = await ctx.db.select({
-          userId: network.userId,
-          level: network.level,
-        }).from(network).where(eq(network.sponsorId, sponsorId));
-
-        const tree = [];
-        for (const member of downline) {
-          const [user] = await ctx.db.select().from(users).where(eq(users.id, member.userId));
-          const [affiliate] = await ctx.db.select().from(affiliates).where(eq(affiliates.userId, member.userId));
-
-          tree.push({
-            userId: member.userId,
-            name: user?.name || "Unknown",
-            email: user?.email,
-            level: member.level,
-            affiliateCode: affiliate?.affiliateCode,
-            status: affiliate?.status,
-            children: await buildTree(member.userId, depth + 1),
-          });
-        }
-
-        return tree;
-      };
-
-      return buildTree(sponsorId, 0);
     }),
 
-  /**
-   * Estatísticas da rede
-   */
-  getNetworkStats: adminProcedure.query(async ({ ctx }) => {
-    const [totalUsers] = await ctx.db.select({ count: count() }).from(users);
-    const [totalAffiliates] = await ctx.db.select({ count: count() }).from(affiliates);
-    const [activeAffiliates] = await ctx.db.select({ count: count() }).from(affiliates).where(eq(affiliates.status, "active"));
-
-    // Calcular uplines únicos (sponsors)
-    const allNetwork = await ctx.db.select().from(network);
-    const uniqueSponsors = new Set(allNetwork.map(n => n.sponsorId));
-
-    return {
-      totalUsers: Number(totalUsers.count),
-      totalAffiliates: Number(totalAffiliates.count),
-      activeAffiliates: Number(activeAffiliates.count),
-      totalConnections: allNetwork.length,
-      uniqueSponsors: uniqueSponsors.size,
-    };
-  }),
-
-  // ============ ORDERS & PRODUCTS ============
-
-  /**
-   * Listar pedidos
-   */
-  listOrders: adminProcedure
-    .input(z.object({
-      page: z.number().default(1),
-      limit: z.number().default(20),
-      status: z.enum(["pending", "confirmed", "shipped", "delivered", "cancelled", "refunded"]).optional(),
-      marketplace: z.string().optional(),
-    }))
-    .query(async ({ ctx, input }) => {
-      const offset = (input.page - 1) * input.limit;
-
-      const conditions = [];
-      if (input.status) conditions.push(eq(orders.status, input.status));
-      if (input.marketplace) conditions.push(eq(orders.marketplace, input.marketplace));
-
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
-
-      const [ordersList, [{ total }]] = await Promise.all([
-        ctx.db.select().from(orders)
-          .where(whereClause)
-          .orderBy(desc(orders.createdAt))
-          .limit(input.limit)
-          .offset(offset),
-        ctx.db.select({ total: count() }).from(orders).where(whereClause),
-      ]);
-
-      return {
-        orders: ordersList,
-        pagination: {
-          page: input.page,
-          limit: input.limit,
-          total: Number(total),
-          totalPages: Math.ceil(Number(total) / input.limit),
-        },
-      };
-    }),
-
-  /**
-   * Estatísticas de vendas
-   */
-  getSalesStats: adminProcedure.query(async ({ ctx }) => {
-    const allOrders = await ctx.db.select().from(orders);
-
-    const byMarketplace = allOrders.reduce((acc, o) => {
-      acc[o.marketplace] = (acc[o.marketplace] || 0) + o.amount;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return {
-      totalOrders: allOrders.length,
-      totalRevenue: allOrders.reduce((sum, o) => sum + o.amount, 0),
-      totalCommissions: allOrders.reduce((sum, o) => sum + o.commissionAmount, 0),
-      byStatus: {
-        pending: allOrders.filter(o => o.status === "pending").length,
-        confirmed: allOrders.filter(o => o.status === "confirmed").length,
-        shipped: allOrders.filter(o => o.status === "shipped").length,
-        delivered: allOrders.filter(o => o.status === "delivered").length,
-        cancelled: allOrders.filter(o => o.status === "cancelled").length,
-      },
-      byMarketplace,
-    };
-  }),
-
-  // ============ PLATFORM SETTINGS ============
-
-  /**
-   * Buscar configurações da plataforma
-   */
-  getSettings: adminProcedure.query(async ({ ctx }) => {
-    // -----------------------------------------------------------------------
-    // Nexus SaaS · IOAID — Regramento oficial de comissionamento
-    // Fonte: docs/planning/Age.txt (Clube de Vantagens · Revenda Multilevel)
-    // -----------------------------------------------------------------------
-    // Estrutura: Matriz Forçada com profundidade máxima de 5 Níveis.
-    // Sem percentual padrão: cada nível tem seu próprio percentual oficial.
-    // -----------------------------------------------------------------------
-    return {
+  // ============ SETTINGS ============
+  getSettings: adminProcedure.query(async () => {
+    const defaults = {
       platformName: "Nexus SaaS · IOAID",
       supportEmail: "suporte@nexus-saas.com.br",
-      // Sem comissão padrão — cada nível é regido pelo regramento oficial
-      defaultCommission: null,
-      networkModel: "forced_matrix",
-      commissionLevels: [
-        {
-          level: 1,
-          percentage: 20,
-          label: "1º Nível",
-          description: "20% de Participação sobre Resultados do N.O 1º Nível (Multilevel)",
-        },
-        {
-          level: 2,
-          percentage: 10,
-          label: "2º Nível",
-          description: "10% de Participação sobre Resultados do N.O 2º Nível (Multilevel)",
-        },
-        {
-          level: 3,
-          percentage: 5,
-          label: "3º Nível",
-          description: "5% de Participação sobre Resultados do N.O 3º Nível (Multilevel)",
-        },
-        {
-          level: 4,
-          percentage: 2.5,
-          label: "4º Nível",
-          description: "2,5% de Participação sobre Resultados do N.O 4º Nível (Multilevel)",
-        },
-        {
-          level: 5,
-          percentage: 1,
-          label: "5º Nível",
-          description: "1% de Participação sobre Resultados do N.O 5º Nível (Multilevel)",
-        },
-      ],
-      // Matriz Forçada padronizada em 5 níveis
       maxNetworkDepth: 5,
       compressionEnabled: true,
+      matrix: { maxDirectsPerNode: 2, maxDepth: 5, compressionEnabled: true },
+      commissionLevels: [
+        { level: 1, percentage: 20, label: "1º Nível", description: "20% N.O 1º Nível" },
+        { level: 2, percentage: 10, label: "2º Nível", description: "10% N.O 2º Nível" },
+        { level: 3, percentage: 5, label: "3º Nível", description: "5% N.O 3º Nível" },
+        { level: 4, percentage: 2.5, label: "4º Nível", description: "2,5% N.O 4º Nível" },
+        { level: 5, percentage: 1, label: "5º Nível", description: "1% N.O 5º Nível" },
+      ],
+    };
+    let persisted: Record<string, unknown> = {};
+    try {
+      const result = await pool.query('SELECT setting_value, updated_at FROM platform_settings WHERE setting_key = $1', ['go_live']);
+      persisted = result.rows[0]?.setting_value ?? {};
+      if (result.rows[0]?.updated_at) persisted.updatedAt = result.rows[0].updated_at.toISOString();
+    } catch {
+      // Migration ainda não aplicada: manter defaults seguros sem inventar dados.
+    }
+    return {
+      ...defaults,
+      ...persisted,
+      matrix: { ...defaults.matrix, ...((persisted.matrix as Record<string, unknown>) ?? {}) },
+      commissionLevels: Array.isArray(persisted.commissionLevels) ? persisted.commissionLevels : defaults.commissionLevels,
       apiStatus: {
-        gemini: Boolean(process.env.GEMINI_API_KEY),
-        openai: Boolean(process.env.OPENAI_API_KEY),
-        database: Boolean(process.env.DATABASE_URL),
-        redis: Boolean(process.env.REDIS_URL),
-        hotmart: Boolean(process.env.HOTMART_CLIENT_ID),
-        shopee: Boolean((process.env.SHOPEE_AFFILIATE_ID && process.env.SHOPEE_AFFILIATE_USERNAME) || (process.env.SHOPEE_PARTNER_ID && process.env.SHOPEE_PARTNER_KEY && (process.env.SHOPEE_REDIRECT_URI || process.env.SHOPEE_PUSH_CALLBACK_URL))),
+        gemini: !!process.env.GEMINI_API_KEY,
+        openai: !!process.env.OPENAI_API_KEY,
+        database: !!process.env.DATABASE_URL,
+        redis: !!process.env.REDIS_URL,
+        hotmart: !!process.env.HOTMART_CLIENT_ID,
+        shopee: !!process.env.SHOPEE_AFFILIATE_ID,
+        mercadopago: !!process.env.MERCADO_PAGO_ACCESS_TOKEN,
       },
     };
   }),
 
-  /**
-   * Atualizar configurações
-   */
   updateSettings: adminProcedure
     .input(z.object({
-      platformName: z.string().optional(),
+      platformName: z.string().trim().min(2).max(120).optional(),
       supportEmail: z.string().email().optional(),
-      defaultCommission: z.number().min(0).max(100).nullable().optional(),
-      maxNetworkDepth: z.number().min(1).max(20).optional(),
+      maxNetworkDepth: z.number().int().min(1).max(20).optional(),
       compressionEnabled: z.boolean().optional(),
-      commissionLevels: z
-        .array(
-          z.object({
-            level: z.number().int().min(1).max(20),
-            percentage: z.number().min(0).max(100),
-            label: z.string().optional(),
-            description: z.string().optional(),
-          }),
-        )
-        .optional(),
+      matrix: z.object({ maxDirectsPerNode: z.number().int().min(1).max(20), maxDepth: z.number().int().min(1).max(20), compressionEnabled: z.boolean() }).optional(),
+      commissionLevels: z.array(z.object({ level: z.number().int().min(1).max(5), percentage: z.number().min(0).max(100), label: z.string().max(80).optional(), description: z.string().max(240).optional() })).length(5).optional(),
     }))
-    .mutation(async ({ input }) => {
-      // Em produção, salvaria em tabela de configurações
-      console.log("Settings updated:", input);
-      return { success: true, message: "Configurações atualizadas" };
-    }),
-
-  /**
-   * Limpar cache de runtime (seguro para produção).
-   */
-  clearRuntimeCache: adminProcedure
-    .mutation(async () => {
-      const clearedAt = new Date().toISOString();
-      (globalThis as any).__ONEVERSO_ADMIN_CACHE_CLEARED_AT = clearedAt;
-      return {
-        success: true,
-        clearedAt,
-        message: "Cache de runtime invalidado com sucesso. Se necessário, atualize o navegador com Ctrl+F5.",
-      };
-    }),
-
-  /**
-   * Prévia do reset operacional de go-live.
-   * Escopo: comissões, saldos, pedidos de teste (admin/zero), progresso e views.
-   */
-  previewGoLiveReset: adminProcedure
-    .mutation(async ({ ctx }) => {
-      const raw: any = await ctx.db.execute(sql`
-        SELECT
-          (SELECT count(*)::int FROM public.commissions) AS commissions,
-          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
-          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
-          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
-          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
-          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
-          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
-          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
-          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
-          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
-          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
-      `);
-      const row: any = Array.isArray(raw) ? raw[0] : (raw?.rows?.[0] ?? {});
-      const getNum = (key: string) => Number(row?.[key] ?? 0);
-      return {
-        success: true,
-        scope: 'Somente dados operacionais de teste',
-        confirmationText: 'RESETAR GO LIVE',
-        callbackUrl: process.env.SHOPEE_PUSH_CALLBACK_URL || 'https://oneverso.com.br/webhooks/shopee',
-        counts: {
-          commissions: getNum('commissions'),
-          affiliateBalances: getNum('affiliate_balances'),
-          affiliatePerformance: getNum('affiliate_performance'),
-          affiliateXp: getNum('affiliate_xp'),
-          lessonProgress: getNum('lesson_progress'),
-          lessonViews: getNum('lesson_views'),
-          lessonCompletionStats: getNum('lesson_completion_stats'),
-          paymentsHomolog: getNum('payments_homolog'),
-          marketplaceOrdersTest: getNum('marketplace_orders_test'),
-          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
-          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
-        },
-      };
-    }),
-
-  /**
-   * Reset controlado para go-live real.
-   * Preserva usuários/admins/config-base; remove apenas dados operacionais de teste.
-   */
-  resetGoLiveOperationalData: adminProcedure
-    .input(z.object({ confirmationText: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      if ((input.confirmationText || '').trim() !== 'RESETAR GO LIVE') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Digite exatamente RESETAR GO LIVE para confirmar.' });
-      }
-      const previewRaw: any = await ctx.db.execute(sql`
-        SELECT
-          (SELECT count(*)::int FROM public.commissions) AS commissions,
-          (SELECT count(*)::int FROM public.affiliate_balances) AS affiliate_balances,
-          (SELECT count(*)::int FROM public.affiliate_performance) AS affiliate_performance,
-          (SELECT count(*)::int FROM public.affiliate_xp) AS affiliate_xp,
-          (SELECT count(*)::int FROM public.lesson_progress) AS lesson_progress,
-          (SELECT count(*)::int FROM public.lesson_views) AS lesson_views,
-          (SELECT count(*)::int FROM public.lesson_completion_stats) AS lesson_completion_stats,
-          (SELECT count(*)::int FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%') AS payments_homolog,
-          (SELECT count(*)::int FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0) AS marketplace_orders_test,
-          (SELECT count(*)::int FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_order_items_test,
-          (SELECT count(*)::int FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)) AS marketplace_user_library_test
-      `);
-      const row: any = Array.isArray(previewRaw) ? previewRaw[0] : (previewRaw?.rows?.[0] ?? {});
-      const getNum = (key: string) => Number(row?.[key] ?? 0);
-
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_user_library WHERE source_order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_order_items WHERE order_id IN (SELECT id FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0)`);
-      await ctx.db.execute(sql`DELETE FROM public.marketplace_orders WHERE payment_method = 'admin' AND COALESCE(total_cents, 0) = 0`);
-      await ctx.db.execute(sql`DELETE FROM public.payments WHERE LOWER(COALESCE(method, '')) LIKE '%homolog%'`);
-      await ctx.db.execute(sql`DELETE FROM public.lesson_views`);
-      await ctx.db.execute(sql`DELETE FROM public.lesson_progress`);
-      await ctx.db.execute(sql`DELETE FROM public.commissions`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_balances`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_performance`);
-      await ctx.db.execute(sql`DELETE FROM public.affiliate_xp`);
-
-      return {
-        success: true,
-        resetAt: new Date().toISOString(),
-        scope: 'Somente dados operacionais de teste',
-        deleted: {
-          commissions: getNum('commissions'),
-          affiliateBalances: getNum('affiliate_balances'),
-          affiliatePerformance: getNum('affiliate_performance'),
-          affiliateXp: getNum('affiliate_xp'),
-          lessonProgress: getNum('lesson_progress'),
-          lessonViews: getNum('lesson_views'),
-          lessonCompletionStats: getNum('lesson_completion_stats'),
-          paymentsHomolog: getNum('payments_homolog'),
-          marketplaceOrdersTest: getNum('marketplace_orders_test'),
-          marketplaceOrderItemsTest: getNum('marketplace_order_items_test'),
-          marketplaceUserLibraryTest: getNum('marketplace_user_library_test'),
-        },
-      };
+      const current = await pool.query('SELECT setting_value FROM platform_settings WHERE setting_key = $1', ['go_live']);
+      const merged = { ...(current.rows[0]?.setting_value ?? {}), ...input, updatedAt: new Date().toISOString() };
+      await pool.query(
+        `INSERT INTO platform_settings (setting_key, setting_value, updated_by, updated_at)
+         VALUES ($1, $2::jsonb, $3, NOW())
+         ON CONFLICT (setting_key) DO UPDATE SET setting_value = EXCLUDED.setting_value, updated_by = EXCLUDED.updated_by, updated_at = NOW()`,
+        ['go_live', JSON.stringify(merged), ctx.user.email ?? String(ctx.user.id)],
+      );
+      await pool.query(
+        'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
+        ['settings.updated', ctx.user.email ?? null, 'platform_settings', 'go_live', JSON.stringify({ updated: Object.keys(input) })],
+      );
+      return { ok: true, updated: Object.keys(input), persistedAt: merged.updatedAt };
     }),
 
-  // ============ DASHBOARD ============
+  setAffiliateOperationalStatus: adminProcedure
+    .input(z.object({ userId: z.number().int().positive(), status: z.enum(['active', 'inactive', 'suspended']) }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await pool.query(
+        'UPDATE affiliates SET status = $1, "updatedAt" = NOW() WHERE "userId" = $2 RETURNING id',
+        [input.status, input.userId],
+      );
+      if (!result.rowCount) throw new TRPCError({ code: 'NOT_FOUND', message: 'Afiliado não encontrado para este usuário.' });
+      await pool.query(
+        'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
+        ['affiliate.status_changed', ctx.user.email ?? null, 'affiliate', String(input.userId), JSON.stringify({ status: input.status })],
+      );
+      return { ok: true, status: input.status };
+    }),
 
-  /**
-   * Métricas do dashboard admin
-   */
-  getDashboardMetrics: adminProcedure.query(async ({ ctx }) => {
-    const [
-      [totalUsers],
-      [totalAffiliates],
-      [activeAffiliates],
-    ] = await Promise.all([
-      ctx.db.select({ count: count() }).from(users),
-      ctx.db.select({ count: count() }).from(affiliates),
-      ctx.db.select({ count: count() }).from(affiliates).where(eq(affiliates.status, "active")),
-    ]);
-
-    const allCommissions = await ctx.db.select().from(commissions);
-    const allPayments = await ctx.db.select().from(payments);
-
-    return {
-      totalUsers: Number(totalUsers.count),
-      totalAffiliates: Number(totalAffiliates.count),
-      activeAffiliates: Number(activeAffiliates.count),
-      totalCommissionsPending: allCommissions.filter(c => c.status === "pending").reduce((sum, c) => sum + c.amount, 0),
-      totalCommissionsPaid: allPayments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + p.amount, 0),
-      recentJoins: allAffiliates.length, // Simplificado
-    };
+  clearRuntimeCache: adminProcedure.mutation(async ({ ctx }) => {
+    await pool.query(
+      'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id) VALUES ($1, $2, $3, $4)',
+      ['runtime.cache_cleared', ctx.user.email ?? null, 'runtime', 'cache'],
+    ).catch(() => undefined);
+    return { ok: true, message: "Cache runtime limpo" };
   }),
+
+  previewGoLiveReset: adminProcedure.query(async () => {
+    const tables = ['users', 'affiliates', 'commissions', 'payments'];
+    const counts: Record<string, number> = {};
+    for (const table of tables) {
+      try {
+        const result = await pool.query(`SELECT COUNT(*)::int AS count FROM ${table} WHERE COALESCE(is_test_data, FALSE) = TRUE`);
+        counts[table] = Number(result.rows[0]?.count ?? 0);
+      } catch { counts[table] = 0; }
+    }
+    return { counts, destructiveScope: 'Somente registros explicitamente marcados is_test_data=true.' };
+  }),
+
+  resetGoLiveOperationalData: adminProcedure
+    .input(z.object({ confirmationText: z.literal('RESETAR GO LIVE') }))
+    .mutation(async ({ ctx }) => {
+      const client = await pool.connect();
+      const deleted: Record<string, number> = {};
+      try {
+        await client.query('BEGIN');
+        for (const table of ['commissions', 'payments', 'affiliates', 'users']) {
+          const result = await client.query(`DELETE FROM ${table} WHERE COALESCE(is_test_data, FALSE) = TRUE`);
+          deleted[table] = result.rowCount ?? 0;
+        }
+        await client.query(
+          'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
+          ['go_live.test_data_reset', ctx.user.email ?? null, 'go_live', 'controlled_reset', JSON.stringify({ deleted })],
+        );
+        await client.query('COMMIT');
+        return { ok: true, deleted };
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally { client.release(); }
+    }),
+
 });

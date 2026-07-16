@@ -43,7 +43,6 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 
-import { trpc } from "../lib/trpc";
 // NEXUS_ONBOARDING_V2
 import OnboardingBundle from "@/components/OnboardingBundle";
 

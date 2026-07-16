@@ -1,6 +1,6 @@
 /* UX_MAX_v1 */
 import { Toaster } from "sonner";
-import { PageSkeleton } from "@/components/ui/Skeleton";
+import { PageSkeleton } from "@/components/ui/PageSkeleton";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -8,6 +8,7 @@ import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import ForgotPassword from "@/pages/ForgotPassword";
 import Logout from "@/pages/Logout";
 import Cadastro from "@/pages/Cadastro";
 import Dashboard from "@/pages/Dashboard";
@@ -79,6 +80,7 @@ function Router() {
     <><RouteProgress /><CommandPalette /><QuickAgentDock /><WelcomeTour /><Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/recuperar-senha" component={ForgotPassword} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />
@@ -119,9 +121,9 @@ function Router() {
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
       <Route path="/profile" component={ProfileSettings} />
-      <Route path="/content/generator" component={ContentGenerator} />
+      <Route path="/content/generator">{() => <ContentGenerator />}</Route>
       <Route path="/content/generation" component={ContentGeneration} />
-      <Route path="/content/image" component={ImageGenerator} />
+      <Route path="/content/image">{() => <ImageGenerator />}</Route>
       <Route path="/marketing/ebooks" component={EbookManager} />
       <Route path="/tracking/links" component={TrackingLinks} />
       <Route path="/social/accounts" component={SocialAccounts} />

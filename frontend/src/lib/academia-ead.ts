@@ -11,7 +11,7 @@ import type { AcademiaTierId } from "@/lib/nexus-academia";
 // ---------------------------------------------------------------------------
 
 export type ContentType = "curso" | "treinamento" | "webinar" | "playbook" | "lab" | "lib";
-export type LevelSlug = "fundamental" | "agente" | "master" | "elite";
+export type LevelSlug = "fundamental" | "agente" | "master" | "elite" | "operador" | "iniciante";
 
 export interface EADLesson {
   id: string;
@@ -991,6 +991,8 @@ export const LEVEL_LABELS: Record<LevelSlug, string> = {
   agente: "Agente",
   master: "Master",
   elite: "Elite",
+  iniciante: "Iniciante",
+  operador: "Operador",
 };
 
 export const LEVEL_COLORS: Record<LevelSlug, string> = {
@@ -998,6 +1000,8 @@ export const LEVEL_COLORS: Record<LevelSlug, string> = {
   agente: "border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime",
   master: "border-amber-400/30 bg-amber-400/10 text-amber-300",
   elite: "border-fuchsia-400/30 bg-fuchsia-400/10 text-fuchsia-300",
+  iniciante: "border-slate-400/30 bg-slate-400/10 text-slate-300",
+  operador: "border-blue-400/30 bg-blue-400/10 text-blue-300",
 };
 
 export const REPO_RAW = "https://raw.githubusercontent.com/Nexus-HUB57/MMN_AI-to-AI/main";

@@ -11,10 +11,10 @@ import { toast } from 'sonner';
 import { Loader2, Download, Copy, ImagePlus } from 'lucide-react';
 
 interface ImageGeneratorProps {
-  agent: Agent;
+  agent?: Agent;
 }
 
-export default function ImageGenerator({ agent }: ImageGeneratorProps) {
+export default function ImageGenerator({ agent }: ImageGeneratorProps = {}) {
   const [prompt, setPrompt] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);

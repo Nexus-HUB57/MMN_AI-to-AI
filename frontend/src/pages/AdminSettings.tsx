@@ -70,6 +70,7 @@ export default function AdminSettings() {
     platformName: "",
     supportEmail: "",
     maxNetworkDepth: 5,
+    maxDirectsPerNode: 2,
     compressionEnabled: true,
   });
 
@@ -81,6 +82,7 @@ export default function AdminSettings() {
         platformName: settings.platformName || "Nexus SaaS · IOAID",
         supportEmail: settings.supportEmail || "",
         maxNetworkDepth: settings.maxNetworkDepth || 5,
+        maxDirectsPerNode: (settings as any).matrix?.maxDirectsPerNode || 2,
         compressionEnabled: settings.compressionEnabled ?? true,
       });
 
@@ -92,7 +94,11 @@ export default function AdminSettings() {
   const handleSave = () => {
     updateSettingsMutation.mutate({
       ...formData,
-      defaultCommission: null,
+      matrix: {
+        maxDirectsPerNode: formData.maxDirectsPerNode,
+        maxDepth: formData.maxNetworkDepth,
+        compressionEnabled: formData.compressionEnabled,
+      },
       commissionLevels,
     } as any);
   };
@@ -236,6 +242,22 @@ export default function AdminSettings() {
                     <span className="font-semibold">Matriz Forçada</span>
                     <span className="text-xs text-slate-500">(regramento oficial · Age.txt)</span>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Lateralidade máxima por nó
+                  </label>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={formData.maxDirectsPerNode}
+                    onChange={(e) => setFormData({ ...formData, maxDirectsPerNode: parseInt(e.target.value) || 2 })}
+                  />
+                  <p className="mt-1 text-xs text-slate-500">
+                    Limite operacional de indicações diretas por afiliado. Default oficial: <strong>2</strong>.
+                  </p>
                 </div>
 
                 <div>

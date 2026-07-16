@@ -43,6 +43,27 @@ import AcademiaPushOptIn from "../components/AcademiaPushOptIn";
 import AcademiaWhatsNew from "../components/AcademiaWhatsNew";
 import AcademiaPopular from "../components/AcademiaPopular";
 
+import AffiliateStatusLights from "@/components/AffiliateStatusLights";
+import NexusJourneyClarifier from "@/components/NexusJourneyClarifier";
+
+function InlineActivateBanner({ agentActive }: { agentActive: boolean }) {
+  if (agentActive) return null;
+  return (
+    <div className="mb-6 rounded-2xl border border-amber-400/40 bg-amber-500/10 p-5 text-sm text-amber-100">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300">Ação necessária</p>
+          <p className="mt-1 text-base font-semibold text-white">Ative seu Pack A² para liberar o Agente Nexus</p>
+          <p className="mt-1 text-slate-200">Sem o Pack A² o agente permanece desligado. A ativação libera skills, comissões e a jornada de afiliado.</p>
+        </div>
+        <div className="flex gap-2">
+          <a href="/pix/checkout?pack=pack-a2" className="rounded-xl bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-300 transition">Adquirir Pack A² (R$ 10)</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function RealCostCenter() {
   const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
     { months: 12 },
@@ -191,9 +212,16 @@ const QUICK_ACTIONS = [
     accent: "from-quantum-purple/30 to-quantum-cyan/0",
   },
   {
+    href: "/pix/checkout?pack=pack-a2",
+    label: "Pack A² · Ativação Essencial",
+    description: "AÇÃO NECESSÁRIA · R$ 10 · Ativa seu Agente Nexus e libera comissões",
+    icon: Zap,
+    accent: "from-quantum-cyan/40 to-emerald-400/20",
+  },
+  {
     href: "/subscriptions",
-    label: "Nexus Partners Pack",
-    description: "Produto SaaS independente com contratação por assinatura",
+    label: "Nexus Partners Pack (opcional)",
+    description: "Produto SaaS complementar · assinatura independente",
     icon: Users,
     accent: "from-amber-400/30 to-quantum-purple/10",
   },
@@ -205,13 +233,6 @@ const QUICK_ACTIONS = [
     accent: "from-quantum-purple/30 to-quantum-cyan/10",
   },
   {
-    href: "/marketplaces/ebooks",
-    label: "E-books IA",
-    description: "5 títulos a R$ 0,50 / revenda R$ 1,00",
-    icon: BookOpen,
-    accent: "from-quantum-lime/30 to-quantum-cyan/0",
-  },
-  {
     href: "/sisu",
     label: "Painel Sub-Redes (SiSu)",
     description: "Sub-contas A² vinculadas ao seu CPF",
@@ -220,43 +241,9 @@ const QUICK_ACTIONS = [
   },
 ];
 
-const RECENT_ACTIVITY = [
-  {
-    title: "Comissão de R$ 150,00",
-    detail: "Recebida no nível 2 da malha",
-    time: "há 5 min",
-    icon: TrendingUp,
-    tone: "good" as const,
-  },
-  {
-    title: "Maria S. entrou na sua rede",
-    detail: "Indicação direta via Minha Loja",
-    time: "há 28 min",
-    icon: Users,
-    tone: "info" as const,
-  },
-  {
-    title: "Bônus de carreira liberado",
-    detail: "Você atingiu o nível Ouro",
-    time: "há 2h",
-    icon: Star,
-    tone: "warn" as const,
-  },
-  {
-    title: "Venda confirmada no marketplace",
-    detail: "Pedido #1284 · R$ 89,90",
-    time: "há 6h",
-    icon: ShoppingCart,
-    tone: "good" as const,
-  },
-];
+const RECENT_ACTIVITY: Array<{title:string;detail:string;time:string;icon:typeof TrendingUp;tone:"good"|"info"|"warn"}> = []; // ONDA-CORRECAO: mocks removidos
 
-const SYSTEM_STATUS = [
-  { label: "API tRPC", value: "online", tone: "good" as const },
-  { label: "Database", value: "ok", tone: "good" as const },
-  { label: "Redis cache", value: "warming", tone: "warn" as const },
-  { label: "Modo", value: "produção", tone: "info" as const },
-];
+const SYSTEM_STATUS: Array<{label:string;value:string;tone:"good"|"info"|"warn"}> = []; // ONDA-CORRECAO: dados reais via system.health
 
 function toneClasses(tone: "good" | "warn" | "info") {
   if (tone === "good") return "text-quantum-lime";
@@ -287,9 +274,10 @@ export default function Dashboard() {
   const btcLocked = isBtcLocked(profile);
   const progress = useMemo(() => getProgressSnapshot(profile), [profile]);
   const academiaSummary = useMemo(() => getAcademiaRuntimeSummary(profile), [profile]);
+  const hasPackA2 = profile.activePackSlugs.includes("pack-a2");
 
-  const displayName = user?.name || "Afiliado IOAID · SaaS";
-  const displayEmail = user?.email || "usuario@demo.mmn.ai";
+  const displayName = user?.name || "Afiliado";
+  const displayEmail = user?.email || "";
   const displayRole = user?.role === "admin" ? "Administrador" : "Afiliado";
 
   // -------------------------------------------------------------------------
@@ -297,8 +285,11 @@ export default function Dashboard() {
   // -------------------------------------------------------------------------
   // ID de Indicador: prefixo NX + primeiros 8 chars do user.id (sem hífens)
   const referralId = useMemo(() => {
-    const raw = (user?.id || profile.userId || "").toString().replace(/[^A-Za-z0-9]/g, "");
-    return raw ? `NX-${raw.substring(0, 8).toUpperCase()}` : "NX-DEMO0001";
+    const rawId = user?.id ?? profile.userId ?? "";
+    const digits = String(rawId).replace(/[^0-9]/g, "");
+    if (!digits) return "NX-PENDING";
+    // Padroniza: NX + 5 dígitos zerados à esquerda (ex: NX-00307)
+    return `NX-${digits.padStart(5, "0").slice(-5)}`;
   }, [user?.id, profile.userId]);
 
   // Link de indicação público (Minha Loja / cadastro)
@@ -357,6 +348,7 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
+      <InlineActivateBanner agentActive={Boolean((trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined,{retry:false})?.data?.agentActive)} />
       <NotificationCenter />
       <AcademiaPushOptIn />
       <AcademiaResume />
@@ -425,6 +417,8 @@ export default function Dashboard() {
             </Link>
           </div>
         </header>
+        <AffiliateStatusLights />
+        <NexusJourneyClarifier hasPackA2={hasPackA2} />
 
         {/* KPIs principais */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -780,7 +774,7 @@ export default function Dashboard() {
 
             <div className="mt-5 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/5 p-4 text-sm text-slate-200">
               <p className="font-semibold text-quantum-cyan">Regra de ativação aplicada</p>
-              <p className="mt-2 leading-6">O Nexus Partners Pack aparece no dashboard como produto comercial autônomo. O acesso ao catálogo e à contratação fica disponível após autenticação; a operação diária segue em painéis dedicados de assinatura e parceiros.</p>
+              <p className="mt-2 leading-6">O Nexus Partners Pack é um produto SaaS COMPLEMENTAR (opcional). A ação necessária para ativar seu Agente Nexus é adquirir o Pack A² por R$ 10. O Nexus Partners Pack fica disponível como upgrade após ativação.</p>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">

@@ -59,11 +59,11 @@ export default function AdminAcademiaAnalytics() {
               <BarChart3 className="h-6 w-6 text-cyan-500" />
               Academ&apos;IA · Analytics
             </h1>
-            <p className="text-sm text-text-secondary mt-1">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
               Telemetria de visualizações por aula. Fonte: tabela <code>lesson_views</code> (SHA-256 IP hash, sem PII).
             </p>
             {lastRefresh && (
-              <p className="text-xs text-text-secondary mt-1">
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                 Última atualização: {lastRefresh.toLocaleString("pt-BR")}
               </p>
             )}
@@ -75,12 +75,12 @@ export default function AdminAcademiaAnalytics() {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <Calendar className="h-4 w-4 text-text-secondary" />
+          <Calendar className="h-4 w-4 text-slate-600 dark:text-slate-300" />
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => setDays(p.value)}
-              className={`px-3 py-1.5 text-xs rounded-md border transition ${days === p.value ? "bg-cyan-500/10 border-cyan-500 text-cyan-600 font-semibold" : "border-border text-text-secondary hover:border-cyan-500/50"}`}
+              className={`px-3 py-1.5 text-xs rounded-md border transition ${days === p.value ? "bg-cyan-500/10 border-cyan-500 text-cyan-600 font-semibold" : "border-border text-slate-600 dark:text-slate-300 hover:border-cyan-500/50"}`}
             >
               {p.label}
             </button>
@@ -89,19 +89,19 @@ export default function AdminAcademiaAnalytics() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <Card className="p-4">
-            <div className="text-xs uppercase tracking-wide text-text-secondary">Total de visualizações</div>
+            <div className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-300">Total de visualizações</div>
             <div className="text-3xl font-bold text-foreground mt-1">{totalViews}</div>
-            <div className="text-xs text-text-secondary mt-1">{days} dias</div>
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-1">{days} dias</div>
           </Card>
           <Card className="p-4">
-            <div className="text-xs uppercase tracking-wide text-text-secondary">Aulas com views</div>
+            <div className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-300">Aulas com views</div>
             <div className="text-3xl font-bold text-foreground mt-1">{items.filter((i) => i.views > 0).length}</div>
-            <div className="text-xs text-text-secondary mt-1">/ {items.length}</div>
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-1">/ {items.length}</div>
           </Card>
           <Card className="p-4">
-            <div className="text-xs uppercase tracking-wide text-text-secondary">Topo do ranking</div>
+            <div className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-300">Topo do ranking</div>
             <div className="text-base font-bold text-foreground mt-1 truncate">{items[0]?.title || "—"}</div>
-            <div className="text-xs text-text-secondary mt-1">{items[0]?.views || 0} views</div>
+            <div className="text-xs text-slate-600 dark:text-slate-300 mt-1">{items[0]?.views || 0} views</div>
           </Card>
         </div>
 
@@ -118,13 +118,13 @@ export default function AdminAcademiaAnalytics() {
             ))}
           </div>
         ) : items.length === 0 ? (
-          <div className="text-center text-text-secondary py-12">
+          <div className="text-center text-slate-600 dark:text-slate-300 py-12">
             Nenhuma aula registrada ainda.
           </div>
         ) : (
           <Card className="p-4">
             <h2 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
-              <Eye className="h-4 w-4 text-text-secondary" />
+              <Eye className="h-4 w-4 text-slate-600 dark:text-slate-300" />
               Ranking de visualizações
             </h2>
             <div className="space-y-2">
@@ -140,7 +140,7 @@ export default function AdminAcademiaAnalytics() {
                         <span className="text-[10px] font-semibold uppercase tracking-wide text-cyan-600">
                           {it.sectionSlug}
                         </span>
-                        <span className="text-[10px] text-text-secondary">{it.lessonId}</span>
+                        <span className="text-[10px] text-slate-600 dark:text-slate-300">{it.lessonId}</span>
                       </div>
                       <div className="text-sm font-semibold text-foreground truncate">
                         {it.title || it.lessonId}
@@ -151,7 +151,7 @@ export default function AdminAcademiaAnalytics() {
                     </div>
                     <div className="text-right flex-shrink-0">
                       <div className="text-lg font-bold text-foreground">{it.views}</div>
-                      <div className="text-[10px] text-text-secondary">views</div>
+                      <div className="text-[10px] text-slate-600 dark:text-slate-300">views</div>
                     </div>
                   </div>
                 );

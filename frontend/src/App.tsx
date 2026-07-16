@@ -8,6 +8,7 @@ import { Route, Switch } from "wouter";
 
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import ForgotPassword from "@/pages/ForgotPassword";
 import Logout from "@/pages/Logout";
 import Cadastro from "@/pages/Cadastro";
 import Dashboard from "@/pages/Dashboard";
@@ -79,6 +80,7 @@ function Router() {
     <><RouteProgress /><CommandPalette /><QuickAgentDock /><WelcomeTour /><Switch>
       <Route path="/" component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/recuperar-senha" component={ForgotPassword} />
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />

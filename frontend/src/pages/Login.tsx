@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { loadMarketplaceProfile } from "@/lib/nexus-marketplace";
 import {
   useAuth,
@@ -235,7 +235,9 @@ export default function Login() {
     setErrorMessage(null);
     setIsSubmitting(true);
     try {
-      await login({ name, password, role: "affiliate" });
+      if (!email.trim()) throw new Error("Informe o e-mail cadastrado.");
+      if (!password) throw new Error("Informe sua senha.");
+      await login({ email, name: name.trim() || email.split("@")[0], password, role: "affiliate" });
       setLocation(searchParams.get("from") || getAffiliateEntryPath());
     } catch (error) {
       setErrorMessage((error as Error).message);
@@ -370,14 +372,15 @@ Afiliado
                   {mode === "affiliate" && (
                     <>
                       <div className="space-y-2">
-                        <Label htmlFor="name">Nome</Label>
+                        <Label htmlFor="affiliate-email">E-mail</Label>
                         <Input
-                          id="name"
-                          value={name}
-                          onChange={(event) => setName(event.target.value)}
-                          placeholder="Nome do usuário"
+                          id="affiliate-email"
+                          type="email"
+                          value={email}
+                          onChange={(event) => setEmail(event.target.value)}
+                          placeholder="E-mail cadastrado"
                           className="bg-background"
-                          autoComplete="username"
+                          autoComplete="email"
                         />
                       </div>
                       <div className="space-y-2">
@@ -447,10 +450,9 @@ Afiliado
                   </Button>
 
                   {mode === "affiliate" && (
-                    <>
-                      <SocialLoginDivider />
-                      <SocialLoginButtons disabled={isSubmitting} />
-                    </>
+                    <div className="text-center text-sm">
+                      <Link href="/recuperar-senha" className="font-medium text-cyan-600 hover:underline">Esqueci minha senha</Link>
+                    </div>
                   )}
                 </div>
               </div>

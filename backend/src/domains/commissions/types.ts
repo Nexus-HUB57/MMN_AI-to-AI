@@ -73,5 +73,5 @@ export interface PendingCommissionSummary {
   affiliateId: number;
   pendingAmount: number;
   pendingCount: number;
-  oldestPendingDate: Date;
+  oldestPendingDate: Date | null;
 }

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2026-12-09" />
+  <title>WB-2026-12 · IA-to-IA Federation</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="/workspace/MMN_AI-to-AI/AcademIA/html/acad-style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">WB-2026-12 · IA-to-IA Federation</h1>
+<p class="date">2026-12-09</p>
+</header>
+<figure>
+<img
+src="../../docs/ebooks/ACAD-apostila-12-ioaid-arquitetura-profunda.webp"
+alt="Capa — IA-to-IA Federation" />
+<figcaption aria-hidden="true">Capa — IA-to-IA Federation</figcaption>
+</figure>
+<p><strong>WB-2026-12 · IA-to-IA Federation</strong></p>
+<p><em>Como agentes de IA se federam em escala — do multi-agente local
+ao ecossistema distribuído</em></p>
+<p><strong>Palestrantes:</strong> Sir Nexus Alencar + convidado
+internacional (TBA) <strong>Data:</strong> 10/07/2026 ·
+<strong>Duração:</strong> 90 min</p>
+<p>Nexus Affil’IA’te · 2026</p>
+<p><strong>Sobre este webinar</strong></p>
+<p>Este é o webinar técnico da temporada — focado no conceito mais
+avançado e menos compreendido do ecossistema Nexus: <strong>federation
+de agentes IA</strong>. Diferente de multi-agente local (que roda num
+único orquestrador), federation envolve <strong>múltiplas instâncias de
+plataforma</strong>, cada uma com seus agentes, se comunicando e
+delegando tarefas via protocolos padronizados. É o que permite a um
+afiliado brasileiro disparar campanha que é executada parcialmente por
+agente na Europa, com PII-gating e compliance local. Vamos abrir a
+caixa-preta.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Multi-agente vs IA-to-IA Federation
+<strong>•</strong> 2. Os 4 níveis de federation <strong>•</strong> 3.
+Caso Nexus: por que federation importa <strong>•</strong> 4. Arquitetura
+técnica do Federation Gateway <strong>•</strong> 5. Protocolo A2A
+(Agent-to-Agent) em produção <strong>•</strong> 6. PII-gating e data
+residency <strong>•</strong> 7. Live demo: agente brasileiro + agente
+europeu + agente asiático <strong>•</strong> 8. Latência, custo e
+resiliência em federation <strong>•</strong> 9. Casos reais (3
+white-labels federados) <strong>•</strong> 10. Quando NÃO usar
+federation (anti-patterns) <strong>•</strong> 11. Roadmap técnico
+2026-2027 <strong>•</strong> 12. Q&amp;A <strong>•</strong> 13.
+Materiais de estudo</p>
+</blockquote>
+<hr />
+<p><strong>1. Multi-agente vs IA-to-IA Federation</strong></p>
+<p>Em 2025, todo mundo falava de <strong>multi-agent systems</strong>:
+CrewAI, AutoGen, LangGraph. Esses frameworks orquestram múltiplos
+agentes num <strong>único processo</strong>. Ótimo para tarefas
+complexas locais.</p>
+<p>Em 2026, o desafio mudou: <strong>federation</strong>. Múltiplas
+<strong>instâncias</strong> de plataforma, cada uma com seus agentes,
+operando em jurisdições diferentes, se coordenando via protocolos.</p>
+<pre><code>Multi-agente (local):
+  ┌─────────────────────────┐
+  │  Orquestrador único     │
+  │  ├── Researcher         │
+  │  ├── Writer             │
+  │  └── Reviewer           │
+  └─────────────────────────┘
+
+IA-to-IA Federation (distribuído):
+  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+  │ Nexus BR     │ ←→ │ Nexus EU     │ ←→ │ Nexus Asia   │
+  │ ├── Research │    │ ├── GDPR     │    │ ├── Locale   │
+  │ ├── Copy     │    │ ├── Custody  │    │ ├── Translat │
+  │ └── Judge    │    │ └── Judge    │    │ └── Reviewer │
+  └──────────────┘    └──────────────┘    └──────────────┘
+        ↑                   ↑                   ↑
+        └─────── Federation Gateway ──────────┘</code></pre>
+<p><strong>Por que importa:</strong> compliance, latência, soberania de
+dados, resiliência.</p>
+<p><strong>2. Os 4 níveis de federation</strong></p>
+<p><strong>Nível 1 — Skill sharing</strong> (simples): - Nós
+compartilham catálogo de skills. - Cada nó roda suas próprias skills
+localmente. - Sem comunicação inter-agente.</p>
+<p><strong>Nível 2 — Agent marketplace</strong> (intermediário): - Nós
+publicam agentes. - Outros nós podem “invocar” agentes remotos. - Sem
+compartilhamento de dados por default.</p>
+<p><strong>Nível 3 — Task delegation</strong> (avançado): - Nó A delega
+parte de tarefa a nó B. - Nó B executa e retorna resultado. -
+Compartilhamento de dados sob contrato.</p>
+<p><strong>Nível 4 — Shared context</strong> (total): - Nós compartilham
+estado de execução. - Memória distribuída via CRDT. - Federação
+quase-simetrica.</p>
+<p><strong>Nexus opera hoje em Nível 3</strong>, migrando para Nível 4
+em 2027.</p>
+<p><strong>3. Caso Nexus: por que federation importa</strong></p>
+<p>Três razões concretas:</p>
+<p><strong>a) Compliance multi-jurisdicional:</strong> - Cliente na
+Europa: dados na UE. - Cliente no Brasil: dados no Brasil. - Mas a
+análise pode envolver modelos em ambos. - Federation resolve:
+<strong>dados ficam em casa, lógica viaja</strong>.</p>
+<p><strong>b) Latência local:</strong> - Afiliado em Tokyo não pode
+esperar 300ms para resposta que atravessa Atlântico. - Cada região tem
+seu nó Nexus. - Federation coordena sem adicionar latência
+significativa.</p>
+<p><strong>c) Resiliência sistêmica:</strong> - Se nó EU cai, nó BR
+assume parte da carga (com degradação). - Sem federation, outage
+regional = outage global.</p>
+<p><strong>4. Arquitetura técnica do Federation Gateway</strong></p>
+<pre><code>┌──────────────────────────────────────────┐
+│ Federation Gateway                       │
+│ ├── Registry (lista de nós, capabilities)│
+│ ├── Router (decide qual nó para cada req)│
+│ ├── Translator (formato, schema, locale) │
+│ ├── Trust manager (auth, certs)          │
+│ ├── Audit logger (cross-node logs)       │
+│ └── Cost tracker (custo por delegação)   │
+└──────────────────────────────────────────┘</code></pre>
+<p>Implementado em Rust para performance. Expõe <strong>API
+interna</strong> que cada nó Nexus consome.</p>
+<p><strong>5. Protocolo A2A (Agent-to-Agent) em produção</strong></p>
+<p>O protocolo A2A usado pela Nexus:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">message_id</span><span class="kw">:</span><span class="at"> uuid</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sender_node</span><span class="kw">:</span><span class="at"> nexus://br.sao/instance-42</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">receiver_node</span><span class="kw">:</span><span class="at"> nexus://eu.frankfurt/instance-7</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">performative</span><span class="kw">:</span><span class="at"> REQUEST</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">content</span><span class="kw">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">action</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;analyze_cohort&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cohort_id</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;abc-123&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">preserve_pii</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">constraints</span><span class="kw">:</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">max_latency_ms</span><span class="kw">:</span><span class="at"> </span><span class="dv">5000</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">data_residency</span><span class="kw">:</span><span class="at"> EU</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">context_ref</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;conv_xyz&quot;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">signature</span><span class="kw">:</span><span class="at"> ed25519</span></span></code></pre></div>
+<p><strong>Características:</strong> - <strong>Assinatura
+digital</strong>: cada mensagem é assinada. - <strong>Contract
+implícito</strong>: cada nó declara o que aceita. -
+<strong>Idempotência</strong>: replay-safe. - <strong>Tracing
+distribuído</strong>: cada hop tem trace_id.</p>
+<p><strong>6. PII-gating e data residency</strong></p>
+<p><strong>Regra de ouro:</strong> dados PII <strong>nunca</strong>
+atravessam fronteira sem consentimento.</p>
+<p>Como funciona na prática:</p>
+<ul>
+<li><strong>Cohort brasileira</strong> (PII de brasileiros) → analisada
+em nó BR.</li>
+<li>Se a análise precisar de modelo maior (e.g., GPT-4 hospedado nos
+EUA):
+<ul>
+<li>Dados são <strong>anonimizados</strong> localmente.</li>
+<li>Só dados não-PII são enviados.</li>
+<li>Resultado volta ao nó BR.</li>
+<li>Tenant vê apenas o resultado, nunca soube que houve federation.</li>
+</ul></li>
+</ul>
+<p><strong>Em código:</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> federated_analyze(cohort_id, target_node):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> load_cohort(cohort_id)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    safe_data <span class="op">=</span> strip_pii(data)  <span class="co"># local</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> target_node.analyze(safe_data)  <span class="co"># remote</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    enriched_result <span class="op">=</span> attach_local_context(result, data)  <span class="co"># local</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> enriched_result</span></code></pre></div>
+<p><strong>7. Live demo: agente brasileiro + agente europeu + agente
+asiático</strong></p>
+<p>Demonstração ao vivo:</p>
+<ol type="1">
+<li>Afiliado brasileiro pede análise de cohort de 5.000 contatos.</li>
+<li>Orchestrator BR identifica que precisa de modelo de linguagem
+avançado.</li>
+<li>Delega para nó UE (que tem Claude Opus hospedado).</li>
+<li>Nó UE recebe apenas dados anonimizados (sem PII).</li>
+<li>Retorna análise em &lt;2s.</li>
+<li>Nó BR re-contextualiza com PII local.</li>
+<li>Afiliado recebe resultado completo.</li>
+</ol>
+<p>Tempo total: ~3.5s. Custo: $0.08. Compliance: 100%.</p>
+<p><strong>8. Latência, custo e resiliência em federation</strong></p>
+<p><strong>Latência:</strong> - Hop local: 50-200ms. - Hop federation:
+200-500ms adicional. - Caching agressivo reduz para &lt;100ms em
+hits.</p>
+<p><strong>Custo:</strong> - Cada hop federation: $0.001-0.01. -
+Tracking granular por tenant.</p>
+<p><strong>Resiliência:</strong> - Se nó UE indisponível, fallback para
+modelo BR. - Degradação graceful: latency sobe, mas funciona. - SHO
+monitora federation health com sensores específicos.</p>
+<p><strong>9. Casos reais (3 white-labels federados)</strong></p>
+<p><strong>Caso 1 — BancoX:</strong> - Operação em 5 países (BR, MX, ES,
+PT, US). - Federation reduziu latência média de 800ms para 120ms. -
+Compliance automatizado por residência.</p>
+<p><strong>Caso 2 — OperadoraY:</strong> - 8 jurisdições latam. - Dados
+pessoais em cada país. - Análise cross-region permitida em dados
+anonimizados. - Resultado: LTV calculado em tempo real.</p>
+<p><strong>Caso 3 — AgênciaGlobal:</strong> - Operação em 3 continentes.
+- Modelo grande centralizado em 1 região. - Federation Gateway gerencia
+fila de tarefas. - Custo reduzido em 40% vs. deploy local.</p>
+<p><strong>10. Quando NÃO usar federation (anti-patterns)</strong></p>
+<p><strong>NÃO use federation quando:</strong></p>
+<ul>
+<li>Tudo é local e cabe num nó.</li>
+<li>Não há requisito multi-jurisdicional.</li>
+<li>Latência adicional é inaceitável (&lt;200ms).</li>
+<li>Compliance não exige separação.</li>
+</ul>
+<p><strong>Use single-node até federation ser claramente
+benéfica.</strong></p>
+<p><strong>11. Roadmap técnico 2026-2027</strong></p>
+<p><strong>Q3 2026:</strong> - Federation Gateway GA (general
+availability). - A2A protocol v1.0 estabilizado. - Suporte a 5 regiões
+iniciais.</p>
+<p><strong>Q4 2026:</strong> - Shared context (Nível 4) em beta. -
+Federation para SMB (não só enterprise). - Marketplace de nós
+federados.</p>
+<p><strong>Q1 2027:</strong> - CRDT-based shared memory. - Federation
+cross-cloud (AWS + GCP + Azure). - 15+ regiões disponíveis.</p>
+<p><strong>12. Q&amp;A</strong></p>
+<p>Perguntas esperadas:</p>
+<ul>
+<li>Como funciona quando tenant não tem nó próprio?</li>
+<li>Qual o custo real de federation?</li>
+<li>Como testar federation em desenvolvimento?</li>
+<li>Federation quebra LGPD?</li>
+</ul>
+<p><strong>13. Materiais de estudo</strong></p>
+<ul>
+<li><strong>Apostila 11</strong> — SHO em Produção</li>
+<li><strong>Apostila 12</strong> — IOAID — Arquitetura Profunda</li>
+<li><strong>Apostila 14</strong> — Multi-Tenant &amp; White-Label</li>
+<li><a
+href="../Lib-Nexus/knowledge-base/01-modelo-ioaid.md">Lib-Nexus/knowledge-base/01-modelo-ioaid.md</a></li>
+<li><a href="../../fase8/">fase8/</a> — código de federation</li>
+</ul>
+<hr />
+<p><em>Nexus Affil’IA’te · Academ’IA · Webinar WB-2026-12 · v1.0.0 ·
+Setembro 2026</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

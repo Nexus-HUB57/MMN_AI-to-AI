@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="MMN_IA Collective" />
+  <meta name="dcterms.date" content="2026-07-15" />
+  <title>Data Stack para Agentes IA — Arquitetura de Dados em Produção</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="/workspace/MMN_AI-to-AI/AcademIA/html/acad-style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Data Stack para Agentes IA — Arquitetura de Dados em
+Produção</h1>
+<p class="subtitle">Como Projetar Bancos de Dados, Caches, Filas e
+Vector DBs para Sistemas Multi-Agente</p>
+<p class="author">MMN_IA Collective</p>
+<p class="date">2026-07-15</p>
+</header>
+<p><strong>Apostila 33 · Data Stack para Agentes IA</strong></p>
+<p><em>Por trás de cada agente que “funciona em produção” tem um data
+stack sólido. Esta apostila mostra como projetar — da escolha do banco à
+estratégia de cache.</em></p>
+<p><strong>Por MMN_IA Collective · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<figure>
+<img src="../../docs/ebooks/ACAD-apostila-33-data-stack-agentes-ia.webp"
+alt="Capa — Data Stack para Agentes IA" />
+<figcaption aria-hidden="true">Capa — Data Stack para Agentes
+IA</figcaption>
+</figure>
+<p><strong>Sobre esta apostila</strong></p>
+<p>A maioria dos afiliados e devs constrói o <strong>agente</strong>
+primeiro e o <strong>data stack</strong> depois — e acaba refatorando
+tudo. Esta apostila inverte: começa pelo data stack.</p>
+<p><strong>TL;DR:</strong> Agente IA em produção precisa de 4 camadas:
+<strong>transacional</strong> (Postgres), <strong>cache</strong>
+(Redis), <strong>fila</strong> (BullMQ/SQS) e <strong>vector DB</strong>
+(Pinecone/Qdrant). Cada uma tem papel específico. Misturar =
+desastre.</p>
+<hr />
+<h1 id="sumário">Sumário</h1>
+<p><strong>PARTE I — FUNDAMENTOS</strong></p>
+<ol type="1">
+<li><a href="#cap1">Por que data stack é o gargalo</a></li>
+<li><a href="#cap2">Os 4 tipos de dados em sistemas agentic</a></li>
+<li><a href="#cap3">As 4 camadas do data stack</a></li>
+</ol>
+<p><strong>PARTE II — BANCOS RELACIONAIS</strong></p>
+<ol start="4" type="1">
+<li><a href="#cap4">Postgres para dados transacionais</a></li>
+<li><a href="#cap5">Schema design para multi-tenant</a></li>
+<li><a href="#cap6">Migrations e versionamento</a></li>
+</ol>
+<p><strong>PARTE III — CACHE &amp; FILAS</strong></p>
+<ol start="7" type="1">
+<li><a href="#cap7">Redis para cache de sessão</a></li>
+<li><a href="#cap8">BullMQ para filas assíncronas</a></li>
+<li><a href="#cap9">Estratégias de invalidação</a></li>
+</ol>
+<p><strong>PARTE IV — VECTOR DB</strong></p>
+<ol start="10" type="1">
+<li><a href="#cap10">Quando usar vector DB</a></li>
+<li><a href="#cap11">Pinecone vs Qdrant vs Weaviate</a></li>
+<li><a href="#cap12">Embeddings: o que é e como escolher</a></li>
+</ol>
+<p><strong>PARTE V — OBSERVABILIDADE</strong></p>
+<ol start="13" type="1">
+<li><a href="#cap13">Logs estruturados</a></li>
+<li><a href="#cap14">Métricas e dashboards</a></li>
+<li><a href="#cap15">Traces distribuídos</a></li>
+</ol>
+<p>Epílogo: <a href="#epilogo">O data stack mínimo viável (R$
+200/mês)</a></p>
+<p>Apêndice: <a href="#apendice">Diagrama de arquitetura
+completa</a></p>
+<hr />
+<p><a id="cap1"></a> # Capítulo 1 — Por que data stack é o gargalo</p>
+<p>Em 2024, “construir o agente” era o gargalo. Em 2026, <strong>rodar o
+agente em escala</strong> é o gargalo.</p>
+<p><strong>Sintomas clássicos:</strong></p>
+<ul>
+<li>Latência sobe de 200ms (1 usuário) para 8s (100 usuários)</li>
+<li>Custos de API explodem sem controle</li>
+<li>Memória do agente “se perde” entre sessões</li>
+<li>Agentes conflitam ao acessar mesmos dados</li>
+<li>Impossível auditar o que cada agente fez</li>
+</ul>
+<p><strong>Causa:</strong> data stack não foi projetado pra escala. Foi
+adicionado incrementalmente.</p>
+<p><strong>Solução:</strong> planejar o data stack ANTES de construir o
+agente.</p>
+<hr />
+<p><a id="cap2"></a> # Capítulo 2 — Os 4 tipos de dados em sistemas
+agentic</p>
+<p>Um sistema agentic lida com 4 tipos de dados:</p>
+<h3 id="dados-transacionais-structured">1. Dados transacionais
+(Structured)</h3>
+<p><strong>O que é:</strong> contas, planos, pedidos, billing,
+permissões <strong>Características:</strong> ACID, schema fixo, joins
+complexos <strong>Banco ideal:</strong> Postgres</p>
+<p><strong>Exemplo:</strong> um afiliado com 5 planos ativos, 3 redes,
+12 squads.</p>
+<h3 id="dados-de-sessão-semi-structured">2. Dados de sessão
+(Semi-structured)</h3>
+<p><strong>O que é:</strong> estado da conversa, contexto, histórico
+<strong>Características:</strong> alta leitura/escrita, TTL curto,
+key-value <strong>Banco ideal:</strong> Redis</p>
+<p><strong>Exemplo:</strong> o que o agente disse nos últimos 30 minutos
+pra esse usuário.</p>
+<h3 id="dados-assíncronos-queues">3. Dados assíncronos (Queues)</h3>
+<p><strong>O que é:</strong> jobs pendentes, retries, webhooks a
+processar <strong>Características:</strong> FIFO com prioridade, retry
+exponencial, DLQ <strong>Banco ideal:</strong> Redis + BullMQ (ou
+SQS)</p>
+<p><strong>Exemplo:</strong> “enviar email de boas-vindas” ficou na fila
+5min por causa de bug no SMTP.</p>
+<h3 id="dados-semânticos-unstructured-vectors">4. Dados semânticos
+(Unstructured + vectors)</h3>
+<p><strong>O que é:</strong> conhecimento do agente, RAG, memória de
+longo prazo <strong>Características:</strong> similarity search,
+embeddings <strong>Banco ideal:</strong> Pinecone / Qdrant /
+Weaviate</p>
+<p><strong>Exemplo:</strong> “em qual skill a doc fala sobre LGPD?” →
+busca semântica.</p>
+<hr />
+<p><a id="cap3"></a> # Capítulo 3 — As 4 camadas do data stack</p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│              AGENTE IA (LangGraph/Crew)              │
+└──────────────┬──────────────┬──────────────┬─────────┘
+               │              │              │
+       ┌───────▼─────┐ ┌──────▼──────┐ ┌─────▼──────┐
+       │  SESSÃO     │ │  FILA       │ │ VECTOR DB  │
+       │  (Redis)    │ │  (BullMQ)   │ │ (Pinecone) │
+       │             │ │             │ │            │
+       │  Estado     │ │  Async jobs │ │ Memória    │
+       │  Conversa   │ │  Webhooks   │ │ Conhecimento│
+       │  Contexto   │ │  Cron       │ │ RAG        │
+       └──────┬──────┘ └──────┬──────┘ └─────┬──────┘
+              │               │              │
+              └───────┬───────┴──────┬───────┘
+                      │              │
+              ┌───────▼──────────────▼──────┐
+              │   POSTGRES (Transacional)   │
+              │                             │
+              │  Users, Plans, Orders      │
+              │  Permissions, Audit        │
+              │  Billing, Tenants          │
+              └────────────────────────────┘</code></pre>
+<p><strong>Por que separar:</strong></p>
+<ul>
+<li><strong>Performance</strong>: cada banco otimizado pro seu caso</li>
+<li><strong>Custo</strong>: Redis (RAM) é caro pra volume, Postgres
+(SSD) é barato</li>
+<li><strong>Manutenção</strong>: schema de sessão não conflita com
+transacional</li>
+<li><strong>Escala</strong>: pode escalar Redis sem tocar Postgres</li>
+</ul>
+<p><strong>Erro comum:</strong> usar Postgres pra tudo. Funciona até
+~10k usuários, depois desmorona.</p>
+<hr />
+<p><a id="cap4"></a> # Capítulo 4 — Postgres para dados
+transacionais</p>
+<p><strong>Postgres</strong> é o canivete suíço de dados transacionais.
+Use para:</p>
+<ul>
+<li><strong>Users, accounts, orgs</strong> (dados de identidade)</li>
+<li><strong>Plans, subscriptions, billing</strong> (dados
+financeiros)</li>
+<li><strong>Orders, payments, refunds</strong> (transações)</li>
+<li><strong>Permissions, roles, RBAC</strong> (autorização)</li>
+<li><strong>Audit log</strong> (trilha de auditoria)</li>
+</ul>
+<h2 id="boas-práticas">Boas práticas</h2>
+<h3 id="use-uuids-não-inteiros-auto-increment">1. Use UUIDs, não
+inteiros auto-increment</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- ❌ Inteiro</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">id</span> SERIAL <span class="kw">PRIMARY</span> <span class="kw">KEY</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- ✅ UUID (não vaza informação, distribuído)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span> <span class="kw">DEFAULT</span> gen_random_uuid()</span></code></pre></div>
+<p><strong>Por quê:</strong> inteiros expõem volume de negócio
+(1.000.000 users = você é grande). UUIDs são opacos.</p>
+<h3 id="sempre-tenha-created_at-e-updated_at">2. Sempre tenha
+<code>created_at</code> e <code>updated_at</code></h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> users (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span> <span class="kw">DEFAULT</span> gen_random_uuid(),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  email TEXT <span class="kw">UNIQUE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  name TEXT,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> NOW(),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  updated_at TIMESTAMPTZ <span class="kw">DEFAULT</span> NOW()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TRIGGER</span> users_updated_at</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">BEFORE</span> <span class="kw">UPDATE</span> <span class="kw">ON</span> users</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">FOR</span> <span class="kw">EACH</span> <span class="kw">ROW</span> <span class="kw">EXECUTE</span> <span class="kw">FUNCTION</span> trigger_set_updated_at();</span></code></pre></div>
+<h3 id="soft-delete-em-vez-de-delete">3. Soft delete em vez de
+DELETE</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- ❌ Hard delete</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">DELETE</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> <span class="kw">id</span> <span class="op">=</span> <span class="st">&#39;...&#39;</span>;</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- ✅ Soft delete</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> users <span class="kw">ADD</span> <span class="kw">COLUMN</span> deleted_at TIMESTAMPTZ;</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">UPDATE</span> users <span class="kw">SET</span> deleted_at <span class="op">=</span> NOW() <span class="kw">WHERE</span> <span class="kw">id</span> <span class="op">=</span> <span class="st">&#39;...&#39;</span>;</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- Toda query usa:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> users <span class="kw">WHERE</span> deleted_at <span class="kw">IS</span> <span class="kw">NULL</span>;</span></code></pre></div>
+<p><strong>Por quê:</strong> recupera dados se necessário, mantém
+histórico, LGPD-friendly.</p>
+<h3 id="multi-tenant-via-tenant_id-em-todas-as-tabelas">4. Multi-tenant
+via <code>tenant_id</code> em todas as tabelas</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span> <span class="kw">DEFAULT</span> gen_random_uuid(),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  tenant_id UUID <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">REFERENCES</span> tenants(<span class="kw">id</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  user_id UUID <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">REFERENCES</span> users(<span class="kw">id</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  total_cents <span class="dt">INTEGER</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> NOW()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- Índice composto pra queries multi-tenant</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_orders_tenant_user <span class="kw">ON</span> orders(tenant_id, user_id);</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- Row-Level Security (RLS) pra isolar dados por tenant</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> orders <span class="kw">ENABLE</span> <span class="kw">ROW</span> <span class="kw">LEVEL</span> SECURITY;</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> POLICY tenant_isolation <span class="kw">ON</span> orders</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">USING</span> (tenant_id <span class="op">=</span> current_setting(<span class="st">&#39;app.current_tenant&#39;</span>):<span class="ch">:UUID</span>);</span></code></pre></div>
+<hr />
+<p><a id="cap5"></a> # Capítulo 5 — Schema design para multi-tenant</p>
+<p><strong>3 estratégias principais:</strong></p>
+<h3 id="tenant-id-em-cada-linha-recomendado-pra-saas">1. Tenant ID em
+cada linha (recomendado pra SaaS)</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> campaigns (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  tenant_id UUID <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  name TEXT,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">..</span>.</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<p><strong>Prós:</strong> simples, escalável, fácil migração
+<strong>Contras:</strong> risco de vazar dados se query não filtrar
+tenant_id</p>
+<p><strong>Mitigação:</strong> use <strong>Row-Level Security</strong>
+(RLS) do Postgres. Configure <code>app.current_tenant</code> na conexão
+e o banco filtra automaticamente.</p>
+<h3 id="schema-por-tenant-pra-high-value-customers">2. Schema por tenant
+(pra high-value customers)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">SCHEMA</span> tenant_acme;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tenant_acme.users (<span class="op">..</span>.);</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> tenant_acme.orders (<span class="op">..</span>.);</span></code></pre></div>
+<p><strong>Prós:</strong> isolamento total, fácil backup por tenant
+<strong>Contras:</strong> migração de schema é complicada, connection
+pool precisa multiplexar</p>
+<p><strong>Quando usar:</strong> clientes enterprise que pagam R$
+50k+/mês e exigem isolamento.</p>
+<h3 id="database-por-tenant-pra-compliance-extremo">3. Database por
+tenant (pra compliance extremo)</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">DATABASE</span> tenant_acme;</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">DATABASE</span> tenant_globex;</span></code></pre></div>
+<p><strong>Prós:</strong> isolamento máximo, compliance (LGPD, SOC2)
+<strong>Contras:</strong> caro, operacionalmente complexo</p>
+<p><strong>Quando usar:</strong> poucos clientes (10-50) com requisitos
+regulatórios fortes.</p>
+<hr />
+<p><a id="cap6"></a> # Capítulo 6 — Migrations e versionamento</p>
+<p><strong>Migrations</strong> são arquivos que mudam o schema do banco.
+Precisam ser: - Versionados (cada mudança tem número) - Reproduzíveis
+(rodar em qualquer ordem = mesmo resultado) - Reversíveis (se
+possível)</p>
+<h2 id="ferramenta-drizzle-orm-drizzle-kit">Ferramenta: Drizzle ORM +
+drizzle-kit</h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 0001_create_users.ts</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { pgTable<span class="op">,</span> uuid<span class="op">,</span> text<span class="op">,</span> timestamp } <span class="im">from</span> <span class="st">&#39;drizzle-orm/pg-core&#39;</span><span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> users <span class="op">=</span> <span class="fu">pgTable</span>(<span class="st">&#39;users&#39;</span><span class="op">,</span> {</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="fu">uuid</span>(<span class="st">&#39;id&#39;</span>)<span class="op">.</span><span class="fu">primaryKey</span>()<span class="op">.</span><span class="fu">defaultRandom</span>()<span class="op">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  email<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;email&#39;</span>)<span class="op">.</span><span class="fu">notNull</span>()<span class="op">.</span><span class="fu">unique</span>()<span class="op">,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="fu">text</span>(<span class="st">&#39;name&#39;</span>)<span class="op">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  createdAt<span class="op">:</span> <span class="fu">timestamp</span>(<span class="st">&#39;created_at&#39;</span>)<span class="op">.</span><span class="fu">defaultNow</span>()<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  updatedAt<span class="op">:</span> <span class="fu">timestamp</span>(<span class="st">&#39;updated_at&#39;</span>)<span class="op">.</span><span class="fu">defaultNow</span>()<span class="op">.</span><span class="fu">notNull</span>()<span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p><strong>Workflow:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gerar migration a partir do schema</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> drizzle-kit generate</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicar no banco</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> drizzle-kit migrate</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Conferir status</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npx</span> drizzle-kit check</span></code></pre></div>
+<h2 id="boas-práticas-1">Boas práticas</h2>
+<ol type="1">
+<li><strong>Uma mudança por migration</strong> (não misture rename + add
+column)</li>
+<li><strong>Nunca edite migration já aplicada</strong> (crie nova)</li>
+<li><strong>Teste em dev antes de prod</strong> (CI/CD roda
+migrations)</li>
+<li><strong>Backups antes de prod</strong> (sempre)</li>
+<li><strong>Zero-downtime migrations</strong> (add column nullable →
+deploy → backfill → set NOT NULL)</li>
+</ol>
+<hr />
+<p><a id="cap7"></a> # Capítulo 7 — Redis para cache de sessão</p>
+<p><strong>Redis</strong> é o cache de alta velocidade para dados de
+sessão. Use para:</p>
+<ul>
+<li><strong>Estado da conversa</strong> (histórico, contexto)</li>
+<li><strong>Rate limiting</strong> (contadores por usuário)</li>
+<li><strong>Session storage</strong> (token, dados temporários)</li>
+<li><strong>Lock distribuído</strong> (evitar race conditions)</li>
+</ul>
+<h2 id="estrutura-típica-de-chaves">Estrutura típica de chaves</h2>
+<pre><code>sess:user:{userId}           → dados da sessão (TTL 1h)
+sess:conv:{conversationId}    → histórico da conversa (TTL 24h)
+rate:user:{userId}:{action}  → contador de ações (TTL 1h)
+lock:job:{jobId}             → lock distribuído (TTL 5min)
+cache:api:{endpoint}         → resposta cacheada de API externa (TTL 5min)</code></pre>
+<h2 id="boas-práticas-2">Boas práticas</h2>
+<h3 id="sempre-use-ttl">1. Sempre use TTL</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ❌ Sem TTL (dados ficam pra sempre)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>redis.<span class="bu">set</span>(<span class="ss">f&quot;sess:user:</span><span class="sc">{</span>user_id<span class="sc">}</span><span class="ss">&quot;</span>, data)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ✅ Com TTL (auto-expira)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>redis.setex(<span class="ss">f&quot;sess:user:</span><span class="sc">{</span>user_id<span class="sc">}</span><span class="ss">&quot;</span>, <span class="dv">3600</span>, data)  <span class="co"># 1h</span></span></code></pre></div>
+<h3 id="use-json-para-estruturas-complexas">2. Use JSON para estruturas
+complexas</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>session <span class="op">=</span> {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;user_id&quot;</span>: <span class="st">&quot;abc-123&quot;</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;context&quot;</span>: {<span class="st">&quot;last_topic&quot;</span>: <span class="st">&quot;pricing&quot;</span>},</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;messages&quot;</span>: [...],</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;state&quot;</span>: <span class="st">&quot;awaiting_input&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>redis.setex(<span class="st">&quot;sess:user:abc-123&quot;</span>, <span class="dv">3600</span>, json.dumps(session))</span></code></pre></div>
+<h3 id="atomic-operations-para-rate-limiting">3. Atomic operations para
+rate limiting</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Incrementa contador atômico</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> <span class="ss">f&quot;rate:user:</span><span class="sc">{</span>user_id<span class="sc">}</span><span class="ss">:api_call:</span><span class="sc">{</span>hour<span class="sc">}</span><span class="ss">&quot;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>current <span class="op">=</span> redis.incr(key)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> current <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  redis.expire(key, <span class="dv">3600</span>)  <span class="co"># primeira request da hora</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> current <span class="op">&gt;</span> <span class="dv">100</span>:</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">raise</span> RateLimitError(<span class="st">&quot;Limite de 100/h atingido&quot;</span>)</span></code></pre></div>
+<h3 id="use-redis-cluster-para-10gb-de-dados">4. Use Redis Cluster para
+&gt; 10GB de dados</h3>
+<p>Acima de ~10GB, um único Redis fica lento. Use
+<strong>Cluster</strong> (sharding automático) ou
+<strong>Sentinel</strong> (replica + failover).</p>
+<hr />
+<p><a id="cap8"></a> # Capítulo 8 — BullMQ para filas assíncronas</p>
+<p><strong>BullMQ</strong> é o sistema de filas baseado em Redis mais
+usado em Node.js. Use para:</p>
+<ul>
+<li><strong>Jobs em background</strong> (enviar email, processar
+vídeo)</li>
+<li><strong>Webhooks</strong> (processar evento de terceiros)</li>
+<li><strong>Cron jobs</strong> (tarefas agendadas)</li>
+<li><strong>Retry de falhas</strong> (com backoff exponencial)</li>
+<li><strong>Rate limiting de I/O</strong> (processar 10
+webhooks/segundo)</li>
+</ul>
+<h2 id="anatomia-de-um-job">Anatomia de um job</h2>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { Queue<span class="op">,</span> <span class="bu">Worker</span> } <span class="im">from</span> <span class="st">&#39;bullmq&#39;</span><span class="op">;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> emailQueue <span class="op">=</span> <span class="kw">new</span> <span class="fu">Queue</span>(<span class="st">&#39;emails&#39;</span><span class="op">,</span> {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  connection<span class="op">:</span> { host<span class="op">:</span> <span class="st">&#39;redis.example.com&#39;</span><span class="op">,</span> port<span class="op">:</span> <span class="dv">6379</span> }<span class="op">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  defaultJobOptions<span class="op">:</span> {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    attempts<span class="op">:</span> <span class="dv">3</span><span class="op">,</span>                      <span class="co">// 3 tentativas</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    backoff<span class="op">:</span> { type<span class="op">:</span> <span class="st">&#39;exponential&#39;</span><span class="op">,</span> delay<span class="op">:</span> <span class="dv">1000</span> }<span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    removeOnComplete<span class="op">:</span> <span class="dv">100</span><span class="op">,</span>            <span class="co">// mantém últimos 100</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    removeOnFail<span class="op">:</span> <span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Adicionar job</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> emailQueue<span class="op">.</span><span class="fu">add</span>(</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">&#39;welcome&#39;</span><span class="op">,</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  { userId<span class="op">:</span> <span class="st">&#39;abc-123&#39;</span><span class="op">,</span> email<span class="op">:</span> <span class="st">&#39;user@example.com&#39;</span> }<span class="op">,</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  { priority<span class="op">:</span> <span class="dv">1</span> }                     <span class="co">// 1 = alta prioridade</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Worker que processa</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> worker <span class="op">=</span> <span class="kw">new</span> <span class="bu">Worker</span>(<span class="st">&#39;emails&#39;</span><span class="op">,</span> <span class="kw">async</span> (job) <span class="kw">=&gt;</span> {</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { userId<span class="op">,</span> email } <span class="op">=</span> job<span class="op">.</span><span class="at">data</span><span class="op">;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> <span class="fu">sendWelcomeEmail</span>(userId<span class="op">,</span> email)<span class="op">;</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { sent<span class="op">:</span> <span class="kw">true</span> }<span class="op">;</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>}<span class="op">,</span> { connection<span class="op">:</span> { <span class="op">...</span> } })<span class="op">;</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>worker<span class="op">.</span><span class="fu">on</span>(<span class="st">&#39;completed&#39;</span><span class="op">,</span> (job) <span class="kw">=&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`Job </span><span class="sc">${</span>job<span class="op">.</span><span class="at">id</span><span class="sc">}</span><span class="vs"> done`</span>))<span class="op">;</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>worker<span class="op">.</span><span class="fu">on</span>(<span class="st">&#39;failed&#39;</span><span class="op">,</span> (job<span class="op">,</span> err) <span class="kw">=&gt;</span> <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="vs">`Job </span><span class="sc">${</span>job<span class="op">.</span><span class="at">id</span><span class="sc">}</span><span class="vs"> failed:`</span><span class="op">,</span> err))<span class="op">;</span></span></code></pre></div>
+<h2 id="boas-práticas-3">Boas práticas</h2>
+<ol type="1">
+<li><strong>Sempre defina <code>attempts</code></strong> (se rede cair,
+retry)</li>
+<li><strong>Use <code>removeOnComplete</code></strong> pra não encher
+Redis</li>
+<li><strong>Monitore fila</strong> (Bull Board:
+<code>https://github.com/felixmosh/bull-board</code>)</li>
+<li><strong>Use DLQ (Dead Letter Queue)</strong> pra jobs que falharam N
+vezes</li>
+<li><strong>Backoff exponencial</strong> pra não martelar serviço
+externo</li>
+</ol>
+<hr />
+<p><a id="cap9"></a> # Capítulo 9 — Estratégias de invalidação</p>
+<p><strong>“Há 2 coisas difíceis em CS: invalidar cache e nomear
+coisas.”</strong> — Phil Karlton</p>
+<h3 id="estratégia-1-ttl-time-to-live">Estratégia 1: TTL
+(Time-To-Live)</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cache por 5 minutos</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>redis.setex(<span class="st">&quot;cache:api:products&quot;</span>, <span class="dv">300</span>, products_json)</span></code></pre></div>
+<p><strong>Quando usar:</strong> dados que podem ter delay de minutos
+(preços, estoque).</p>
+<h3 id="estratégia-2-write-through">Estratégia 2: Write-through</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Toda escrita vai no cache E no DB</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_product(product_id, data):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    db.update(<span class="st">&#39;products&#39;</span>, product_id, data)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    redis.setex(<span class="ss">f&quot;product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>, <span class="dv">3600</span>, json.dumps(data))</span></code></pre></div>
+<p><strong>Quando usar:</strong> dados críticos onde cache deve estar
+sempre atualizado.</p>
+<h3 id="estratégia-3-write-behind-lazy">Estratégia 3: Write-behind
+(lazy)</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escreve no cache, depois no DB em batch</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_product(product_id, data):</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    redis.setex(<span class="ss">f&quot;product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>, <span class="dv">3600</span>, json.dumps(data))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    queue.add(<span class="st">&#39;db-write&#39;</span>, {product_id, data})  <span class="co"># job async</span></span></code></pre></div>
+<p><strong>Quando usar:</strong> alta taxa de escrita (10k+/s).</p>
+<h3 id="estratégia-4-invalidação-por-evento">Estratégia 4: Invalidação
+por evento</h3>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DB publica evento, listeners invalidam cache</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_product_updated(product_id):</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    redis.delete(<span class="ss">f&quot;product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p><strong>Quando usar:</strong> arquiteturas event-driven (Kafka,
+RabbitMQ).</p>
+<h3 id="erro-clássico-cache-stampede">Erro clássico: <strong>cache
+stampede</strong></h3>
+<p>Múltiplas requests chegam simultaneamente, todas veem cache vazio,
+todas vão no DB.</p>
+<p><strong>Solução:</strong> use <strong>lock distribuído</strong> para
+serializar:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_product_with_lock(product_id):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    cached <span class="op">=</span> redis.get(<span class="ss">f&quot;product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cached:</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> json.loads(cached)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lock pra evitar N requests simultâneas</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    lock <span class="op">=</span> redis.lock(<span class="ss">f&quot;lock:product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>, timeout<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> lock.acquire(blocking<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Outra request está carregando; aguarda</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.1</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> get_product_with_lock(product_id)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> db.get_product(product_id)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        redis.setex(<span class="ss">f&quot;product:</span><span class="sc">{</span>product_id<span class="sc">}</span><span class="ss">&quot;</span>, <span class="dv">3600</span>, json.dumps(data))</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">finally</span>:</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        lock.release()</span></code></pre></div>
+<hr />
+<p><a id="cap10"></a> # Capítulo 10 — Quando usar vector DB</p>
+<p><strong>Vector DB</strong> armazena embeddings (vetores) e busca por
+similaridade. Use quando você precisa de <strong>busca
+semântica</strong>.</p>
+<p><strong>Casos de uso:</strong></p>
+<ol type="1">
+<li><strong>RAG</strong> (Retrieval-Augmented Generation) — busca em
+base de conhecimento</li>
+<li><strong>Memória de longo prazo</strong> — agente lembra de conversas
+passadas</li>
+<li><strong>Recomendação</strong> — “usuários similares gostaram de
+X”</li>
+<li><strong>Deduplicação</strong> — “já tenho um documento
+parecido?”</li>
+<li><strong>Classificação semântica</strong> — categorizar tickets por
+similaridade</li>
+</ol>
+<p><strong>Quando NÃO usar:</strong></p>
+<ul>
+<li>Busca exata (use Postgres com índice)</li>
+<li>Dados muito estruturados (SQL resolve)</li>
+<li>Volume &lt; 10k documentos (Postgres + tsvector resolve)</li>
+</ul>
+<hr />
+<p><a id="cap11"></a> # Capítulo 11 — Pinecone vs Qdrant vs Weaviate</p>
+<h2 id="comparação">Comparação</h2>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 27%" />
+<col style="width: 21%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Pinecone</th>
+<th>Qdrant</th>
+<th>Weaviate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Tipo</strong></td>
+<td>Managed (cloud)</td>
+<td>Self-hosted / Cloud</td>
+<td>Self-hosted / Cloud</td>
+</tr>
+<tr class="even">
+<td><strong>Custo</strong></td>
+<td>$70/mês (free tier)</td>
+<td>Grátis (self-host)</td>
+<td>Grátis (self-host)</td>
+</tr>
+<tr class="odd">
+<td><strong>Latência</strong></td>
+<td>~50ms (p95)</td>
+<td>~20ms (self-host)</td>
+<td>~30ms</td>
+</tr>
+<tr class="even">
+<td><strong>Scale</strong></td>
+<td>Bilhões de vetores</td>
+<td>Milhões</td>
+<td>Milhões</td>
+</tr>
+<tr class="odd">
+<td><strong>Híbrido (vector + keyword)</strong></td>
+<td>Não</td>
+<td>Sim (com filter)</td>
+<td>Sim (nativo)</td>
+</tr>
+<tr class="even">
+<td><strong>Multi-tenant</strong></td>
+<td>Namespaces</td>
+<td>Collections + payload</td>
+<td>Classes</td>
+</tr>
+<tr class="odd">
+<td><strong>Setup time</strong></td>
+<td>5min (managed)</td>
+<td>30min (Docker)</td>
+<td>30min (Docker)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recomendação">Recomendação</h2>
+<ul>
+<li><strong>POC/MVP</strong> (&lt; 100k vetores): Qdrant self-hosted
+(grátis, rápido)</li>
+<li><strong>Produção pequena</strong> (100k-1M vetores): Qdrant Cloud
+($25/mês) ou Pinecone Starter ($70/mês)</li>
+<li><strong>Produção grande</strong> (&gt; 1M vetores): Pinecone
+Standard ou Weaviate Cluster</li>
+<li><strong>Compliance/On-premise</strong>: Qdrant (mais fácil de
+instalar localmente)</li>
+</ul>
+<hr />
+<p><a id="cap12"></a> # Capítulo 12 — Embeddings: o que é e como
+escolher</p>
+<p><strong>Embedding</strong> = vetor numérico (ex: 1536 dimensões) que
+representa o <strong>significado</strong> de um texto.</p>
+<p><strong>Como funciona:</strong></p>
+<pre><code>&quot;gato&quot;        → [0.12, -0.34, 0.78, ..., 0.45]  (1536 números)
+&quot;felino&quot;      → [0.13, -0.32, 0.80, ..., 0.43]  (similar!)
+&quot;carro&quot;       → [-0.45, 0.67, -0.23, ..., 0.12] (diferente)</code></pre>
+<p><strong>Distância</strong> entre os vetores = distância
+semântica.</p>
+<h2 id="modelos-de-embedding">Modelos de embedding</h2>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+<col style="width: 22%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modelo</th>
+<th>Dimensões</th>
+<th>Custo</th>
+<th>Qualidade</th>
+<th>Velocidade</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>OpenAI <code>text-embedding-3-small</code></td>
+<td>1536</td>
+<td>$0.02/1M tokens</td>
+<td>⭐⭐⭐</td>
+<td>⚡⚡⚡</td>
+</tr>
+<tr class="even">
+<td>OpenAI <code>text-embedding-3-large</code></td>
+<td>3072</td>
+<td>$0.13/1M tokens</td>
+<td>⭐⭐⭐⭐</td>
+<td>⚡⚡</td>
+</tr>
+<tr class="odd">
+<td>Cohere <code>embed-english-v3.0</code></td>
+<td>1024</td>
+<td>$0.10/1M tokens</td>
+<td>⭐⭐⭐⭐</td>
+<td>⚡⚡⚡</td>
+</tr>
+<tr class="even">
+<td>Voyage <code>voyage-3</code></td>
+<td>1024</td>
+<td>$0.06/1M tokens</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⚡⚡</td>
+</tr>
+<tr class="odd">
+<td>Local (sentence-transformers)</td>
+<td>384-768</td>
+<td>Grátis (GPU)</td>
+<td>⭐⭐</td>
+<td>⚡</td>
+</tr>
+</tbody>
+</table>
+<h2 id="escolha-por-caso">Escolha por caso</h2>
+<ul>
+<li><strong>Qualidade &gt; tudo</strong>: Voyage-3 ou OpenAI
+3-large</li>
+<li><strong>Custo/benefício</strong>: OpenAI 3-small (maioria dos
+casos)</li>
+<li><strong>Privacidade/On-premise</strong>: sentence-transformers
+local</li>
+<li><strong>Multilíngue</strong>: OpenAI ou Cohere multilingual</li>
+</ul>
+<h2 id="boas-práticas-4">Boas práticas</h2>
+<ol type="1">
+<li><strong>Chunking</strong>: divida docs em pedaços de 500-1000 tokens
+(não embeddings do doc inteiro)</li>
+<li><strong>Overlap</strong>: 10-20% de overlap entre chunks (evita
+perder contexto no corte)</li>
+<li><strong>Re-embed quando muda modelo</strong>: vectors são
+incompatíveis entre modelos</li>
+<li><strong>Metadata</strong>: sempre inclua
+<code>{source, chunk_index, created_at}</code> no payload</li>
+</ol>
+<hr />
+<p><a id="cap13"></a> # Capítulo 13 — Logs estruturados</p>
+<p><strong>Logs estruturados</strong> = cada log é um JSON com campos
+fixos. Essencial pra busca, alerting, debug.</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-07-15T10:00:00.123Z&quot;</span><span class="fu">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;level&quot;</span><span class="fu">:</span> <span class="st">&quot;INFO&quot;</span><span class="fu">,</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;service&quot;</span><span class="fu">:</span> <span class="st">&quot;agent-orchestrator&quot;</span><span class="fu">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;trace_id&quot;</span><span class="fu">:</span> <span class="st">&quot;abc-123&quot;</span><span class="fu">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;user_id&quot;</span><span class="fu">:</span> <span class="st">&quot;user-456&quot;</span><span class="fu">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;tenant_id&quot;</span><span class="fu">:</span> <span class="st">&quot;tenant-789&quot;</span><span class="fu">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;execute_skill&quot;</span><span class="fu">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;skill&quot;</span><span class="fu">:</span> <span class="st">&quot;consultar-produto&quot;</span><span class="fu">,</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duration_ms&quot;</span><span class="fu">:</span> <span class="dv">142</span><span class="fu">,</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;success&quot;</span><span class="fu">,</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;metadata&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;input_tokens&quot;</span><span class="fu">:</span> <span class="dv">234</span><span class="fu">,</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;output_tokens&quot;</span><span class="fu">:</span> <span class="dv">89</span><span class="fu">,</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="st">&quot;claude-3-5-sonnet&quot;</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="ferramentas">Ferramentas</h2>
+<ul>
+<li><strong>Coleta</strong>: Pino (Node.js), structlog (Python)</li>
+<li><strong>Armazenamento</strong>: Loki, CloudWatch, Datadog</li>
+<li><strong>Visualização</strong>: Grafana</li>
+<li><strong>Busca</strong>: Kibana, Datadog Logs</li>
+</ul>
+<h2 id="boas-práticas-5">Boas práticas</h2>
+<ol type="1">
+<li><strong>Sempre inclua <code>trace_id</code></strong> (correlaciona
+logs de uma request)</li>
+<li><strong>Use níveis consistentes</strong> (DEBUG, INFO, WARN, ERROR,
+FATAL)</li>
+<li><strong>Não logue secrets</strong> (token, senha, API key) — vai pro
+log, vaza</li>
+<li><strong>Logue contexto suficiente</strong> pra debug (sem precisar
+reproduzir)</li>
+<li><strong>Sample em produção</strong> (1% das requests INFO, 100% das
+ERROR)</li>
+</ol>
+<hr />
+<p><a id="cap14"></a> # Capítulo 14 — Métricas e dashboards</p>
+<p><strong>Métricas</strong> = números agregados ao longo do tempo. Use
+<strong>RED method</strong> (Rate, Errors, Duration) + <strong>USE
+method</strong> (Utilization, Saturation, Errors).</p>
+<h2 id="red-method-para-serviços">RED Method (para serviços)</h2>
+<ul>
+<li><strong>Rate</strong>: requests/segundo</li>
+<li><strong>Errors</strong>: % de requests que falharam</li>
+<li><strong>Duration</strong>: latência (p50, p95, p99)</li>
+</ul>
+<h2 id="use-method-para-recursos">USE Method (para recursos)</h2>
+<ul>
+<li><strong>Utilization</strong>: % de CPU/RAM em uso</li>
+<li><strong>Saturation</strong>: fila de espera (depth)</li>
+<li><strong>Errors</strong>: % de erros de infra</li>
+</ul>
+<h2 id="ferramentas-1">Ferramentas</h2>
+<ul>
+<li><strong>Coleta</strong>: Prometheus (open-source)</li>
+<li><strong>Visualização</strong>: Grafana</li>
+<li><strong>Managed</strong>: Datadog, New Relic, Sentry</li>
+</ul>
+<h2 id="dashboards-essenciais-para-agente-ia">Dashboards essenciais para
+agente IA</h2>
+<ol type="1">
+<li><strong>Performance</strong> (latência p50/p95/p99 por skill)</li>
+<li><strong>Custos</strong> (R$ por hora, R$ por request, por
+modelo)</li>
+<li><strong>Taxa de sucesso</strong> (% skills completaram sem
+erro)</li>
+<li><strong>Volume</strong> (requests/dia, mensagens/usuário)</li>
+<li><strong>Erros top 10</strong> (skills que mais falham)</li>
+<li><strong>Custos por usuário</strong> (top 10 que mais gastam)</li>
+</ol>
+<hr />
+<p><a id="cap15"></a> # Capítulo 15 — Traces distribuídos</p>
+<p><strong>Traces</strong> = acompanhar UMA request através de TODOS os
+serviços e bancos.</p>
+<p><strong>Conceitos:</strong></p>
+<ul>
+<li><strong>Trace</strong>: jornada completa de uma request</li>
+<li><strong>Span</strong>: uma operação dentro do trace (ex: “chamar
+LLM”, “query DB”)</li>
+<li><strong>Parent-child</strong>: spans têm hierarquia (skill → LLM →
+tool call)</li>
+</ul>
+<p><strong>Exemplo visual:</strong></p>
+<pre><code>Trace abc-123 (1500ms total)
+  ├── agent.execute (1500ms)
+      ├── skill.consultar-produto (800ms)
+      │   ├── llm.claude-3-5 (650ms)
+      │   └── http.hotmart-api (150ms)
+      ├── skill.enviar-mensagem (400ms)
+      │   └── http.whatsapp-api (350ms)
+      └── cache.get (10ms)</code></pre>
+<h2 id="ferramentas-2">Ferramentas</h2>
+<ul>
+<li><strong>OpenTelemetry</strong>: padrão open-source (instrumentação
+automática)</li>
+<li><strong>Jaeger / Tempo</strong>: backend de traces</li>
+<li><strong>Datadog APM / Sentry Performance</strong>: managed</li>
+</ul>
+<h2 id="quando-vale-a-pena">Quando vale a pena</h2>
+<ul>
+<li><strong>Sempre</strong> em produção multi-serviço</li>
+<li><strong>Antes</strong> de ir pra produção (instrumentar durante
+dev)</li>
+<li><strong>Especialmente</strong> pra debug de latência (qual span está
+lento?)</li>
+</ul>
+<hr />
+<p><a id="epilogo"></a> # Epílogo — O data stack mínimo viável (R$
+200/mês)</p>
+<p>Para um afiliado ou SaaS pequeno, o data stack mínimo é:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Camada</th>
+<th>Ferramenta</th>
+<th>Custo/mês</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Transacional</td>
+<td>Neon Postgres (free tier)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="even">
+<td>Cache</td>
+<td>Upstash Redis (free tier)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="odd">
+<td>Fila</td>
+<td>Upstash QStash ou BullMQ (self-host)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="even">
+<td>Vector DB</td>
+<td>Qdrant Cloud (free tier, 1GB)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="odd">
+<td>Logs</td>
+<td>Logflare ou Cloudflare Workers Logs</td>
+<td>R$ 0</td>
+</tr>
+<tr class="even">
+<td>Metrics</td>
+<td>Grafana Cloud (free tier)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="odd">
+<td>Traces</td>
+<td>Sentry (free tier)</td>
+<td>R$ 0</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>R$ 0</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Quando precisa pagar:</strong></p>
+<ul>
+<li>100k+ requests/dia → Postgres Pro ou Supabase Pro (R$ 100-300)</li>
+<li>10GB+ de cache → Upstash Pro (R$ 100)</li>
+<li>1M+ vetores → Pinecone ou Qdrant Cloud (R$ 200-500)</li>
+<li>Volume crítico → Datadog ou New Relic (R$ 500+)</li>
+</ul>
+<p><strong>Recomendação:</strong> comece no <strong>free tier</strong>
+de tudo. Migre pra pago quando o gargalo aparecer (não antes).</p>
+<hr />
+<p><a id="apendice"></a> # Apêndice — Diagrama de arquitetura
+completa</p>
+<pre><code>                                    ┌─────────────────┐
+                                    │  Cliente (User) │
+                                    └────────┬────────┘
+                                             │ HTTPS
+                                             ▼
+                                ┌────────────────────────┐
+                                │   API Gateway (Nginx)  │
+                                │   + Load Balancer      │
+                                └────────┬───────────────┘
+                                         │
+                ┌────────────────────────┼────────────────────────┐
+                │                        │                        │
+                ▼                        ▼                        ▼
+    ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+    │  Agent Orchestrator  │  │  Auth Service        │  │  Billing Service     │
+    │  (LangGraph)         │  │  (JWT + OAuth)       │  │  (Stripe Webhook)    │
+    │                      │  │                      │  │                      │
+    │  - Skill Registry    │  │  - RBAC              │  │  - Subscriptions     │
+    │  - Memory Manager    │  │  - Sessions          │  │  - Invoices          │
+    │  - Tool Selector     │  │  - MFA               │  │  - Refunds           │
+    └──────┬───────────────┘  └──────────┬───────────┘  └──────────┬───────────┘
+           │                             │                          │
+           │                             │                          │
+           ▼                             ▼                          ▼
+    ┌─────────────────┐         ┌─────────────────┐         ┌─────────────────┐
+    │   Redis         │         │   Postgres      │         │   Postgres      │
+    │   (cache+queue) │         │   (agent DB)    │         │   (billing DB)  │
+    │                 │         │                 │         │                 │
+    │  - Session      │         │  - Users        │         │  - Subscriptions│
+    │  - BullMQ       │         │  - Tenants      │         │  - Invoices     │
+    │  - Rate limit   │         │  - Skills       │         │  - Payments     │
+    └────────┬────────┘         └────────┬────────┘         └─────────────────┘
+             │                           │
+             │                           │
+             ▼                           ▼
+    ┌─────────────────┐         ┌─────────────────┐
+    │   Vector DB     │         │   Object Store  │
+    │   (Qdrant)      │         │   (S3/R2)       │
+    │                 │         │                 │
+    │  - Embeddings   │         │  - Files        │
+    │  - Memory       │         │  - Backups      │
+    │  - RAG chunks   │         │  - Logs         │
+    └─────────────────┘         └─────────────────┘
+
+        ┌────────────────────────────────────────────┐
+        │         Observability Layer                │
+        │                                            │
+        │  - Grafana (dashboards)                    │
+        │  - Sentry (errors)                         │
+        │  - Jaeger (traces)                         │
+        │  - Datadog (apm, opcional)                 │
+        └────────────────────────────────────────────┘</code></pre>
+<p><strong>Custo mensal (1000 usuários ativos):</strong></p>
+<ul>
+<li>Neon Postgres Pro: R$ 200</li>
+<li>Upstash Redis Pro: R$ 100</li>
+<li>BullMQ (self-host em Hetzner): R$ 50</li>
+<li>Qdrant Cloud (1GB): R$ 0</li>
+<li>Cloudflare R2: R$ 20</li>
+<li>Grafana Cloud: R$ 0</li>
+<li>Sentry: R$ 0</li>
+<li><strong>Total: ~R$ 370/mês</strong></li>
+</ul>
+<hr />
+<p><em>Fim da Apostila 33 · Data Stack para Agentes IA</em></p>
+<p><em>MMN_IA Collective · 2026 · Licença: CC BY-SA 4.0</em></p>
+<p><em>“Agente sem data stack é arte. Agente com data stack é
+produto.”</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

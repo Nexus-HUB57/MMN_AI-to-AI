@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/curso_universo_ia/03_O_que_sao_Skills.webp)
+![Capa](curso-universo-ia--03-o-que-sao-skills.webp)
 
 **O que são Skills?**
 

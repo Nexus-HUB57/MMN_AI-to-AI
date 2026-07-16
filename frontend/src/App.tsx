@@ -1,6 +1,6 @@
 /* UX_MAX_v1 */
 import { Toaster } from "sonner";
-import { PageSkeleton } from "@/components/ui/Skeleton";
+import { PageSkeleton } from "@/components/ui/PageSkeleton";
 import { TRPCProvider } from "@/components/trpc-provider";
 import { ErrorBoundaryWrapper } from "@/components/ErrorBoundaryWrapper";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -121,9 +121,9 @@ function Router() {
       <Route path="/content/calendar" component={ContentCalendar} />
       <Route path="/marketing/materials" component={MarketingMaterials} />
       <Route path="/profile" component={ProfileSettings} />
-      <Route path="/content/generator" component={ContentGenerator} />
+      <Route path="/content/generator">{() => <ContentGenerator />}</Route>
       <Route path="/content/generation" component={ContentGeneration} />
-      <Route path="/content/image" component={ImageGenerator} />
+      <Route path="/content/image">{() => <ImageGenerator />}</Route>
       <Route path="/marketing/ebooks" component={EbookManager} />
       <Route path="/tracking/links" component={TrackingLinks} />
       <Route path="/social/accounts" component={SocialAccounts} />

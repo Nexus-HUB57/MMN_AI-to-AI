@@ -52,19 +52,19 @@ jobs:
       - name: 🔑 Preparar chave SSH (sem senha root)
         id: prep_key
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY: ${{ secrets.AUTHORIZED_KEY_VPS_FALLBACK }}
           SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
           SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           if [ -n "$SSH_KEY" ]; then
             printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-            echo "src=VPS_SSH_PRIVATE_KEY" >> $GITHUB_OUTPUT
+            echo "src=AUTHORIZED_KEY_VPS_FALLBACK" >> $GITHUB_OUTPUT
           elif [ -n "$SSH_KEY_FALLBACK" ]; then
             printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
             echo "src=HOSTGATOR_SSH_KEY" >> $GITHUB_OUTPUT
           else
-            echo '::error::Nenhum secret de chave SSH disponível (esperados: VPS_SSH_PRIVATE_KEY ou HOSTGATOR_SSH_KEY)'
+            echo '::error::Nenhum secret de chave SSH disponível (esperado: AUTHORIZED_KEY_VPS_FALLBACK)'
             exit 1
           fi
           chmod 600 ~/.ssh/deploy_key
@@ -124,7 +124,7 @@ jobs:
 
       - name: 🔑 Restaurar chave SSH
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY: ${{ secrets.AUTHORIZED_KEY_VPS_FALLBACK }}
           SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
           SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |

@@ -9,7 +9,7 @@
 import SlaDashboardCard from "@/components/SlaDashboardCard";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { AutonomyScoreCard } from "@/components/AutonomyScoreCard";
+import AutonomyScoreCard from "@/components/agents/AutonomyScoreCard";
 import { OttoCfoCard } from "@/components/OttoCfoCard";
 import { AutoHealCard } from "@/components/AutoHealCard";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";

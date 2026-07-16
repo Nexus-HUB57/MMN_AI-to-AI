@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Lock, Search, Shield, User } from "lucide-react";
+import { Ban, CheckCircle2, Search, Shield, User } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,9 +30,14 @@ export default function AdminUsers() {
     role: roleFilter === "all" ? undefined : roleFilter,
   });
 
-  const handleRoleEditBlocked = () => {
-    toast.info("Promoção ou alteração de papel administrativo foi bloqueada neste backoffice.");
-  };
+  const utils = trpc.useUtils();
+  const setOperationalStatus = trpc.admin.setAffiliateOperationalStatus.useMutation({
+    onSuccess: (payload: any) => {
+      toast.success(payload.status === "suspended" ? "Usuário bloqueado operacionalmente." : "Usuário reativado.");
+      void utils.admin.listUsers.invalidate();
+    },
+    onError: (error: any) => toast.error(error.message || "Não foi possível atualizar o status operacional."),
+  });
 
   const users = usersQuery.data?.users || [];
   const pagination = usersQuery.data?.pagination;
@@ -117,7 +122,7 @@ export default function AdminUsers() {
               <tr className="border-b border-slate-200 text-left">
                 <th className="px-4 py-3 font-semibold text-slate-900">Usuário</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Email</th>
-                <th className="px-4 py-3 font-semibold text-slate-900">Papel</th>
+                <th className="px-4 py-3 font-semibold text-slate-900">Papel / status</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Cadastro</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Último acesso</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Ações</th>
@@ -161,6 +166,11 @@ export default function AdminUsers() {
                         {user.role === "admin" && <Shield size={14} />}
                         {user.role === "admin" ? "Admin" : "Usuário"}
                       </span>
+                      {user.affiliateStatus && (
+                        <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${user.affiliateStatus === "suspended" ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}`}>
+                          {user.affiliateStatus === "suspended" ? "Bloqueado" : "Ativo"}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-600">
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString("pt-BR") : "N/A"}
@@ -169,16 +179,21 @@ export default function AdminUsers() {
                       {user.lastSignedIn ? new Date(user.lastSignedIn).toLocaleString("pt-BR") : "Sem registro"}
                     </td>
                     <td className="px-4 py-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleRoleEditBlocked}
-                        disabled
-                        title="Alteração de papel administrativo desabilitada"
-                      >
-                        <Lock size={16} />
-                        <span className="ml-2">Papel bloqueado</span>
-                      </Button>
+                      {user.affiliateStatus ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={setOperationalStatus.isPending}
+                          onClick={() => setOperationalStatus.mutate({
+                            userId: user.id,
+                            status: user.affiliateStatus === "suspended" ? "active" : "suspended",
+                          })}
+                          title="Controle operacional: não altera papel administrativo"
+                        >
+                          {user.affiliateStatus === "suspended" ? <CheckCircle2 size={16} /> : <Ban size={16} />}
+                          <span className="ml-2">{user.affiliateStatus === "suspended" ? "Reativar" : "Bloquear"}</span>
+                        </Button>
+                      ) : <span className="text-xs text-slate-500">Sem perfil afiliado</span>}
                     </td>
                   </tr>
                 ))
@@ -220,13 +235,12 @@ export default function AdminUsers() {
         <Card className="bg-white p-4 shadow-sm border-amber-200 bg-amber-50/50">
           <div className="flex items-start gap-3">
             <div className="mt-0.5 rounded-full bg-amber-100 p-2 text-amber-700">
-              <Lock size={16} />
+              <Shield size={16} />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-slate-900">Papel administrativo protegido</h3>
               <p className="mt-1 text-sm text-slate-600">
-                Promoção, despromoção ou troca de papel admin foi desabilitada na interface e no backend.
-                Qualquer ajuste de acesso administrativo exige configuração protegida fora do fluxo operacional.
+                Papéis administrativos são protegidos por governança. Neste painel, administradores podem bloquear ou reativar perfis afiliados sem elevar privilégios.
               </p>
             </div>
           </div>

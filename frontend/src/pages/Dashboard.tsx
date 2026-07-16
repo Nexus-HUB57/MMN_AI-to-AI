@@ -233,13 +233,6 @@ const QUICK_ACTIONS = [
     accent: "from-quantum-purple/30 to-quantum-cyan/10",
   },
   {
-    href: "/marketplaces/ebooks",
-    label: "E-books IA",
-    description: "E-books IA · valores dinâmicos por catálogo",
-    icon: BookOpen,
-    accent: "from-quantum-lime/30 to-quantum-cyan/0",
-  },
-  {
     href: "/sisu",
     label: "Painel Sub-Redes (SiSu)",
     description: "Sub-contas A² vinculadas ao seu CPF",

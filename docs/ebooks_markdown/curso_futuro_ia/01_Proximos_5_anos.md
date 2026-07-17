@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_futuro_ia/01_Proximos_5_anos.webp)
+![Capa](colecao-curso-futuro-ia--01-proximos-5-anos.webp)
 
 **O que se esperar das IAs nos próximos 5 anos?**
 

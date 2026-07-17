@@ -1,0 +1,306 @@
+name: 🚀 Onda 8 · Deploy Go-Live VPS
+
+# Deploy cirúrgico Onda 8 para VPS Nexus Affil'IA'te.
+# HOTFIX Ravi-CTO: usa SSH_GITHUB (chave primária confirmada) +
+# bootstrap automático de authorized_keys via VPS_ROOT_PASSWORD.
+# Sequência: bootstrap-ssh → preflight → backup DB → pull main →
+#            migration → build → publish → PM2 → smoke.
+# Owner: Ravi Nexus · CTO/AI
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Digite GO-LIVE-ONDA8 para confirmar deploy em produção'
+        required: true
+        default: 'GO-LIVE-ONDA8'
+      run_migration:
+        description: 'Executar migration 0014? (true/false)'
+        required: false
+        default: 'true'
+      skip_backup:
+        description: 'Pular backup PostgreSQL? (só para emergência)'
+        required: false
+        default: 'false'
+      skip_smoke:
+        description: 'Pular smoke tests pós-deploy?'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: onda8-golive-deploy
+  cancel-in-progress: false
+
+env:
+  VPS_HOST: '143.95.213.237'
+  VPS_PORT: '22022'
+  VPS_USER: 'root'
+  REMOTE_REPO: '/var/www/oneverso/repo'
+  REMOTE_APP: '/var/www/oneverso/current'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # JOB 0: bootstrap-ssh
+  # Usa VPS_ROOT_PASSWORD (sshpass) para injetar a chave pública SSH_GITHUB
+  # em authorized_keys UMA ÚNICA VEZ — idempotente.
+  # Depois disso, todos os jobs usam só chave SSH.
+  # ---------------------------------------------------------------------------
+  bootstrap-ssh:
+    name: 🔐 Bootstrap authorized_keys (uma vez)
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'GO-LIVE-ONDA8'
+    steps:
+      - name: 📦 Instalar sshpass
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq sshpass
+
+      - name: 🔑 Preparar chave SSH_GITHUB
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Validar que é chave privada
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo '::error::SSH_GITHUB: BEGIN PRIVATE KEY não encontrado'
+            exit 1
+          fi
+          # Extrair chave pública
+          ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+            || { echo '::error::Não foi possível extrair chave pública de SSH_GITHUB'; exit 1; }
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "::notice::Chave SSH_GITHUB preparada · fingerprint=$FP"
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "::notice::Chave pública: ${PUB:0:60}..."
+
+      - name: 🔓 Injetar chave pública via senha (bootstrap idempotente)
+        env:
+          VPS_PASS: ${{ secrets.VPS_ROOT_PASSWORD }}
+        run: |
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "::notice::Injetando chave em authorized_keys via sshpass..."
+
+          # Cria authorized_keys se não existir e adiciona a chave (idempotente: grep antes de append)
+          sshpass -p "$VPS_PASS" ssh \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys && grep -qF '${PUB}' /root/.ssh/authorized_keys || echo '${PUB}' >> /root/.ssh/authorized_keys && echo 'authorized_keys OK: '\$(wc -l < /root/.ssh/authorized_keys)' chaves registradas'"
+
+          echo "::notice::✅ Chave SSH_GITHUB autorizada no VPS"
+
+      - name: ✅ Verificar acesso por chave (sem senha)
+        run: |
+          OUT=$(ssh -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o BatchMode=yes \
+            -o ConnectTimeout=20 \
+            "${VPS_USER}@${VPS_HOST}" \
+            'echo "KEY_AUTH_OK $(hostname) $(date -u +%FT%TZ)"' 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ $RC -eq 0 ]; then
+            echo "::notice::✅ SSH por chave funcionando — authorized_keys configurado com sucesso"
+          else
+            echo "::error::SSH por chave ainda falha após bootstrap (RC=$RC). Verifique VPS_ROOT_PASSWORD."
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------------
+  # JOB 1: preflight — testa SSH e estado do VPS
+  # ---------------------------------------------------------------------------
+  preflight:
+    name: 🩺 Preflight SSH
+    needs: bootstrap-ssh
+    runs-on: ubuntu-latest
+    outputs:
+      ssh_ok: ${{ steps.ssh_test.outputs.ok }}
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔑 Preparar chave SSH_GITHUB
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo '::error::SSH_GITHUB inválido'
+            exit 1
+          fi
+          ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null || true
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "::notice::Chave preparada · fingerprint=$FP"
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: 🧪 Testar conexão SSH
+        id: ssh_test
+        run: |
+          set +e
+          OUT=$(ssh -i ~/.ssh/deploy_key \
+              -p "$VPS_PORT" \
+              -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              -o ConnectTimeout=25 \
+              "${VPS_USER}@${VPS_HOST}" \
+              'echo "SSH_OK $(hostname) $(date -u +%FT%TZ)" && pm2 list --no-color 2>&1 | head -20 && systemctl is-active nginx' 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ $RC -eq 0 ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::✅ SSH funcionando via SSH_GITHUB"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::error::SSH pré-check falhou (RC=$RC)"
+            exit $RC
+          fi
+
+  # ---------------------------------------------------------------------------
+  # JOB 2: deploy
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: 🚀 Deploy Onda 8
+    needs: preflight
+    if: needs.preflight.outputs.ssh_ok == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔑 Restaurar chave SSH_GITHUB
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 🗄️ Backup PostgreSQL pré-deploy
+        if: github.event.inputs.skip_backup != 'true'
+        run: |
+          TS=$(date -u +%Y%m%d-%H%M%S)
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
+            set -e
+            if [ -f $REMOTE_APP/.env ]; then
+              set -a; source $REMOTE_APP/.env; set +a
+              DB_URL=\"\${DATABASE_URL:-}\"
+              if [ -n \"\$DB_URL\" ]; then
+                pg_dump \"\$DB_URL\" > /tmp/backup-onda8-$TS.sql 2>&1 && \
+                  echo \"✅ Backup: /tmp/backup-onda8-$TS.sql (\$(du -h /tmp/backup-onda8-$TS.sql | cut -f1))\"
+              else
+                echo '⚠️ DATABASE_URL não configurada em .env — pulando backup'
+              fi
+            else
+              echo '⚠️ .env não encontrado em $REMOTE_APP — pulando backup'
+            fi
+          "
+
+      - name: 📥 Sync main no VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
+            set -e
+            cd $REMOTE_REPO
+            echo 'HEAD antes: '\$(git log -1 --format='%h %s')
+            git fetch origin main
+            git reset --hard origin/main
+            echo 'HEAD depois: '\$(git log -1 --format='%h %s')
+          "
+
+      - name: 🛢️ Aplicar migration 0014
+        if: github.event.inputs.run_migration == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
+            set -e
+            if [ -f $REMOTE_APP/.env ]; then set -a; source $REMOTE_APP/.env; set +a; fi
+            MIG=$REMOTE_REPO/deploy/0014_onda8_golive_foundations.sql
+            if [ ! -f \"\$MIG\" ]; then
+              echo '⚠️ Migration ausente no repo — pulando (será aplicada em run futuro)'
+              exit 0
+            fi
+            if [ -z \"\${DATABASE_URL:-}\" ]; then
+              echo '❌ DATABASE_URL não disponível'
+              exit 1
+            fi
+            psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f \"\$MIG\" 2>&1 | tail -20
+            echo '✅ Migration 0014 aplicada'
+          "
+
+      - name: 🏗️ Instalar dependências + build
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
+            set -e
+            cd $REMOTE_REPO
+            echo '=== npm install ==='
+            npm install --workspace backend --workspace frontend --legacy-peer-deps --no-audit --no-fund 2>&1 | tail -8
+            echo '=== build backend ==='
+            npm --workspace backend run build 2>&1 | tail -10
+            echo '=== build frontend ==='
+            npm --workspace frontend run build 2>&1 | tail -10
+            echo '✅ Build concluído'
+          "
+
+      - name: 🔄 Publicar em current + PM2 reload
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
+            set -e
+            mkdir -p $REMOTE_APP/backend $REMOTE_APP/frontend
+            rsync -a --delete $REMOTE_REPO/backend/dist/ $REMOTE_APP/backend/dist/ 2>&1 | tail -3
+            rsync -a --delete $REMOTE_REPO/frontend/dist/ $REMOTE_APP/frontend/dist/ 2>&1 | tail -3
+            echo '=== PM2 status antes ==='
+            pm2 list --no-color | head -10
+            echo '=== reload ==='
+            pm2 reload all --update-env
+            pm2 save
+            echo '=== PM2 status depois ==='
+            pm2 list --no-color | head -10
+          "
+
+      - name: 🧪 Smoke tests externos
+        if: github.event.inputs.skip_smoke != 'true'
+        run: |
+          echo '⏳ Aguardando 10s para PM2 estabilizar...'
+          sleep 10
+          FAIL=0
+          for ep in /api/health /api/health/pix /api/webhooks/pix /api/webhooks/mercadopago; do
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' -m 20 "https://oneverso.com.br$ep" || echo 000)
+            body=$(head -c 150 /tmp/body 2>/dev/null | tr -d '\n' || echo '')
+            if [ "$code" = "200" ]; then
+              echo "  ✅ $ep → HTTP $code"
+            else
+              echo "  ❌ $ep → HTTP $code · $body"
+              FAIL=$((FAIL+1))
+            fi
+          done
+          if [ $FAIL -gt 0 ]; then
+            echo "::error::$FAIL endpoints falharam"
+            exit 1
+          fi
+
+      - name: 📊 Sumário Go-Live
+        if: always()
+        run: |
+          {
+            echo '## 🚀 Onda 8 Go-Live · Sumário'
+            echo ''
+            echo "- SHA main deployado: \`$(git rev-parse HEAD | head -c 8)\`"
+            echo "- Data: $(date -u +%FT%TZ)"
+            echo "- Migration 0014: **${{ github.event.inputs.run_migration }}**"
+            echo "- Backup DB: **${{ github.event.inputs.skip_backup == 'true' && 'pulado' || 'executado' }}**"
+            echo "- Chave SSH: **SSH_GITHUB** (primária)"
+            echo ''
+            echo '### Estado dos endpoints:'
+            for ep in /api/health /api/health/pix /api/webhooks/pix; do
+              code=$(curl -sS -o /dev/null -w '%{http_code}' -m 10 "https://oneverso.com.br$ep" || echo 000)
+              echo "- \`$ep\` → HTTP $code"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

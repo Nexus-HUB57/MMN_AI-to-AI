@@ -815,14 +815,26 @@ export function getProgressSnapshot(profile: MarketplaceProfile): ProgressSnapsh
     : NEXUS_PACKS[0] ?? null;
   const xpTarget = nextPack?.requirements.minXp ?? (profile.currentXp || 1);
   const directTarget = nextPack?.requirements.minDirectReferrals ?? (profile.directReferrals || 1);
+  const xpProgressPct = nextPack ? Math.min(100, Math.round((profile.currentXp / Math.max(1, xpTarget)) * 100)) : 100;
+  const directProgressPct = nextPack ? Math.min(100, Math.round((profile.directReferrals / Math.max(1, directTarget)) * 100)) : 100;
   return {
     currentPack, nextPack,
     xpCurrent: profile.currentXp,
     xpTarget,
-    xpProgress: nextPack ? Math.min(100, Math.round((profile.currentXp / Math.max(1, xpTarget)) * 100)) : 100,
+    xpProgress: xpProgressPct,
+    xpProgressPct,
+    xpRemaining: Math.max(0, xpTarget - profile.currentXp),
     directCurrent: profile.directReferrals,
     directTarget,
-    directProgress: nextPack ? Math.min(100, Math.round((profile.directReferrals / Math.max(1, directTarget)) * 100)) : 100,
+    directProgress: directProgressPct,
+    directProgressPct,
+    directRemaining: Math.max(0, directTarget - profile.directReferrals),
+    nextLevel: nextPack ? {
+      label: nextPack.name,
+      subtitle: nextPack.description,
+      requiredXp: nextPack.requirements.minXp,
+      requiredDirects: nextPack.requirements.minDirectReferrals,
+    } : null,
   };
 }
 

@@ -542,11 +542,11 @@ export default function AdminSchedules() {
   const rawSlaData = (slaQuery.data || null) as any;
   const slaIndicators = useMemo<JobSlaIndicator[]>(() => {
     const successRates = Array.isArray(rawSlaData?.successRates) ? rawSlaData.successRates : [];
-    const stuckByJobType = new Map(
-      (Array.isArray(rawSlaData?.stuckJobs) ? rawSlaData.stuckJobs : []).map((item: any) => [item.jobType, item])
+    const stuckByJobType = new Map<string, { jobType: string; stuckMinutes: number; [k: string]: any }>(
+      (Array.isArray(rawSlaData?.stuckJobs) ? rawSlaData.stuckJobs : []).map((item: any) => [item.jobType as string, item])
     );
-    const failuresByJobType = new Map(
-      (Array.isArray(rawSlaData?.consecutiveFailures) ? rawSlaData.consecutiveFailures : []).map((item: any) => [item.jobType, item])
+    const failuresByJobType = new Map<string, { jobType: string; streak: number; [k: string]: any }>(
+      (Array.isArray(rawSlaData?.consecutiveFailures) ? rawSlaData.consecutiveFailures : []).map((item: any) => [item.jobType as string, item])
     );
 
     return successRates.map((rate: any) => {

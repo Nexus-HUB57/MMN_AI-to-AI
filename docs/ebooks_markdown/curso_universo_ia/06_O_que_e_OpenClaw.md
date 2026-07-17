@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/curso_universo_ia/06_O_que_e_OpenClaw.webp)
+![Capa](curso-universo-ia--06-o-que-e-openclaw.webp)
 
 **O que é OpenClaw?**
 

@@ -1,0 +1,117 @@
+# =============================================================================
+# Nexus Affil'IA'te — Deploy production via GitHub Actions (Deploy Key + SSH)
+# =============================================================================
+# Modelo de deploy "correto" recomendado pelo CTO Ravi.
+#
+# Substitui o uso de PAT pessoal + senha root colada em chat por:
+#  - GitHub Actions OIDC para autenticação
+#  - SSH Deploy Key dedicada (sem login root direto)
+#  - Secrets versionados em GitHub Actions Secrets (nunca em chat/log)
+#
+# Para ativar:
+#   1. Em https://github.com/Nexus-HUB57/MMN_AI-to-AI/settings/secrets/actions
+#      criar os secrets:
+#        - DEPLOY_HOST                = 143.95.213.237
+#        - DEPLOY_PORT                = 22022
+#        - DEPLOY_USER                = nexusdeploy   (criar um user dedicado, NÃO root)
+#        - DEPLOY_SSH_PRIVATE_KEY     = chave SSH privada do user nexusdeploy
+#        - DEPLOY_DATABASE_URL        = URL do Postgres em produção
+#        - DEPLOY_REDIS_URL           = URL do Redis em produção
+#        - DEPLOY_OPENAI_API_KEY      = opcional
+#        - DEPLOY_GOOGLE_AI_API_KEY   = opcional
+#
+#   2. No servidor, criar o usuário sem privilégios root:
+#        adduser --disabled-password nexusdeploy
+#        usermod -aG sudo nexusdeploy   # opcional
+#        mkdir -p /home/nexusdeploy/.ssh
+#        # adicionar a chave PUBLICA correspondente ao DEPLOY_SSH_PRIVATE_KEY em authorized_keys
+#        chown -R nexusdeploy:nexusdeploy /home/nexusdeploy/.ssh
+#        chmod 700 /home/nexusdeploy/.ssh
+#        chmod 600 /home/nexusdeploy/.ssh/authorized_keys
+#        # Dar permissão de /opt/nexus-affiliate ao user
+#        mkdir -p /opt/nexus-affiliate
+#        chown -R nexusdeploy:nexusdeploy /opt/nexus-affiliate
+#        # Sudoers granular (só pm2 e psql, sem root completo):
+#        echo 'nexusdeploy ALL=(ALL) NOPASSWD: /usr/bin/pm2, /usr/bin/psql' \
+#          > /etc/sudoers.d/nexusdeploy
+#        chmod 440 /etc/sudoers.d/nexusdeploy
+#
+# Disparo:
+#   - automático: push em main
+#   - manual:     Actions → Deploy production → Run workflow
+# =============================================================================
+
+name: Deploy production
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install workspaces
+        run: |
+          npm install --workspace backend --workspace frontend \
+            --legacy-peer-deps --no-audit --no-fund
+
+      - name: Build backend
+        run: npm --workspace backend run build
+
+      - name: Build frontend
+        run: NODE_OPTIONS=--max-old-space-size=4096 npm --workspace frontend run build
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} -H ${{ secrets.DEPLOY_HOST }} \
+            >> ~/.ssh/known_hosts
+
+      - name: Sync build to server
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${{ secrets.DEPLOY_PORT }}" \
+            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/nexus-affiliate/
+
+      - name: Apply migrations + restart worker
+        env:
+          DEPLOY_DATABASE_URL: ${{ secrets.DEPLOY_DATABASE_URL }}
+        run: |
+          ssh -p ${{ secrets.DEPLOY_PORT }} \
+              ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+              "export DATABASE_URL='$DEPLOY_DATABASE_URL' && \
+               cd /opt/nexus-affiliate && \
+               psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f database/migrations/0012_marketplace_user_library.sql && \
+               psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f database/migrations/0013_nexus_rag.sql && \
+               sudo /usr/bin/pm2 reload nexus-rag-worker --update-env || \
+               sudo /usr/bin/pm2 start backend/src/workers/ragIngestWorker.ts \
+                  --name nexus-rag-worker \
+                  --interpreter ./node_modules/.bin/tsx"
+
+      - name: Healthchecks
+        run: |
+          for path in /api/health /api/trpc/system.info /api/trpc/nexusRag.stats; do
+            curl -fsS "https://nexus-affiliate.com.br${path}" \
+              | head -c 200 && echo
+          done

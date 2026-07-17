@@ -11,7 +11,7 @@ status: agendado (09/12/2026)
 pattern: "MMN_IA"
 ---
 
-![Capa — IA-to-IA Federation](../../assets/ebook_covers/ACAD-apostila-12-ioaid-arquitetura-profunda.webp)
+![Capa — IA-to-IA Federation](../../docs/ebooks/ACAD-apostila-12-ioaid-arquitetura-profunda.webp)
 
 **WB-2026-12 · IA-to-IA Federation**
 

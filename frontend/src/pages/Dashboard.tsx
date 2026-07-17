@@ -336,6 +336,7 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
+      <InlineActivateBanner agentActive={Boolean((trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined,{retry:false})?.data?.agentActive)} />
       <NotificationCenter />
       <AcademiaPushOptIn />
       <AcademiaResume />

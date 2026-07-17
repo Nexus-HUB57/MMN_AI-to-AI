@@ -51,7 +51,12 @@ export const adminRouter = router({
       const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
       const [usersList, [{ total }]] = await Promise.all([
-        ctx.db.select().from(users)
+        ctx.db.select({
+          id: users.id, name: users.name, email: users.email, role: users.role,
+          createdAt: users.createdAt, lastSignedIn: users.lastSignedIn,
+          affiliateStatus: affiliates.status,
+        }).from(users)
+          .leftJoin(affiliates, eq(affiliates.userId, users.id))
           .where(whereClause)
           .orderBy(desc(users.createdAt))
           .limit(input.limit)
@@ -67,6 +72,7 @@ export const adminRouter = router({
           role: u.role,
           createdAt: u.createdAt,
           lastSignedIn: u.lastSignedIn,
+          affiliateStatus: u.affiliateStatus ?? null,
         })),
         pagination: {
           page: input.page,

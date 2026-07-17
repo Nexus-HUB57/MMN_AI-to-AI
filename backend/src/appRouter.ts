@@ -179,6 +179,7 @@ export const appRouter = router({
         nexus: true,
         subscriptions: true,
         academiaEad: true,
+        nexusRag: true,
         meetings: true,
         a2a: true,
         ceoAi: true,

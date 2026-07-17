@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="description" content="Como projetar Postgres + Redis + BullMQ + Vector DB para um agente que escala. Cases reais de quem quebrou e quem deu certo." />
+  <title>WB-2026-15 · Data Stack para Agentes IA — Do Zero à Produção</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="/workspace/MMN_AI-to-AI/AcademIA/html/acad-style.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">WB-2026-15 · Data Stack para Agentes IA — Do Zero à
+Produção</h1>
+</header>
+<p><strong>WB-2026-15 · Data Stack para Agentes IA — Do Zero à
+Produção</strong></p>
+<p><em>Por trás de cada agente que “funciona em produção” tem um data
+stack sólido. Esta live mostra como projetar — da escolha do banco à
+estratégia de cache — com cases reais de quem quebrou e deu
+certo.</em></p>
+<p><strong>Por Sir. Nexus Alencar · Academ’IA</strong></p>
+<p>Nexus Affil’IA’te · 2026</p>
+<hr />
+<h1 id="sumário">🎯 Sumário</h1>
+<blockquote>
+<p><strong>•</strong> 1. Por que data stack é o gargalo #1 em produção
+<strong>•</strong> 2. Os 4 tipos de dados em sistemas agentic
+<strong>•</strong> 3. As 4 camadas: Postgres + Redis + BullMQ + Vector
+DB <strong>•</strong> 4. Case 1: afiliado que quebrou (Postgres pra
+tudo) <strong>•</strong> 5. Case 2: SaaS que escalou (data stack desde
+dia 1) <strong>•</strong> 6. Postgres para multi-tenant (RLS, schemas,
+row-level) <strong>•</strong> 7. Redis: cache, sessão, rate limit
+<strong>•</strong> 8. BullMQ: filas assíncronas, retry, DLQ
+<strong>•</strong> 9. Vector DB: Pinecone vs Qdrant vs Weaviate
+<strong>•</strong> 10. Q&amp;A com CTO + convidado Qdrant</p>
+</blockquote>
+<hr />
+<p><strong>1. Por que data stack é o gargalo #1 em produção</strong></p>
+<p>Em 2024, “construir o agente” era o gargalo. Em 2026, <strong>rodar
+em escala</strong> é o gargalo.</p>
+<p><strong>Sintomas clássicos:</strong></p>
+<ul>
+<li>Latência sobe de 200ms (1 user) para 8s (100 users)</li>
+<li>Custos de API explodem sem controle</li>
+<li>Memória do agente “se perde” entre sessões</li>
+<li>Agentes conflitam ao acessar mesmos dados</li>
+<li>Impossível auditar o que cada agente fez</li>
+</ul>
+<p><strong>Causa:</strong> data stack não foi projetado pra escala. Foi
+adicionado incrementalmente.</p>
+<p><strong>Solução:</strong> planejar ANTES de construir o agente.</p>
+<hr />
+<p><strong>2. Os 4 tipos de dados em sistemas agentic</strong></p>
+<h3 id="transacional-postgres">1. Transacional (Postgres)</h3>
+<p>Contas, planos, pedidos, billing, permissões — dados estruturados com
+ACID.</p>
+<h3 id="sessão-redis">2. Sessão (Redis)</h3>
+<p>Estado da conversa, contexto, histórico — key-value com TTL
+curto.</p>
+<h3 id="assíncrono-bullmqsqs">3. Assíncrono (BullMQ/SQS)</h3>
+<p>Jobs pendentes, retries, webhooks — filas com prioridade e DLQ.</p>
+<h3 id="semântico-vector-db">4. Semântico (Vector DB)</h3>
+<p>Conhecimento, RAG, memória de longo prazo — busca por
+similaridade.</p>
+<p><strong>Regra de ouro:</strong> cada banco faz o que sabe fazer.
+Misturar = desastre em produção.</p>
+<hr />
+<p><strong>3. As 4 camadas</strong></p>
+<pre><code>   ┌─────────────┐
+   │   AGENTE    │  (LangGraph)
+   └──────┬──────┘
+          │
+   ┌──────┼──────┬─────────┐
+   │      │      │         │
+   ▼      ▼      ▼         ▼
+  Sessão  Fila  Vector   Transacional
+  Redis  BullMQ Pinecone   Postgres</code></pre>
+<p><strong>Por que separar:</strong> performance, custo, manutenção,
+escala independente.</p>
+<hr />
+<p><strong>4. Case 1: afiliado que quebrou (Postgres pra
+tudo)</strong></p>
+<p><strong>Perfil:</strong> Carlos, afiliado de finanças, 20k
+leads/mês</p>
+<p><strong>Stack inicial:</strong> - 1 Postgres com tudo (usuários,
+sessões, mensagens, embeddings em JSONB) - 1 servidor (Hetzner, R$
+100/mês)</p>
+<p><strong>Sintomas aos 3 meses:</strong> - Latência: 1.5s (p95) —
+usuários reclamando - CPU: 95% — risco de queda - Storage: 80GB — JSONB
+gigante - Custos implícitos: R$ 0 (mas cliente insatisfeito)</p>
+<p><strong>O que aconteceu:</strong></p>
+<ol type="1">
+<li>Sessões de conversa viraram <strong>tabela</strong> com 5M de
+rows</li>
+<li>Embeddings em JSONB: queries de “similaridade” rodavam em Python no
+servidor</li>
+<li>Tudo em uma query = contenção, lock, lentidão</li>
+</ol>
+<p><strong>Solução (3 semanas de trabalho):</strong></p>
+<ol type="1">
+<li><strong>Separar Postgres:</strong> um para transacional, outro
+(lixo) para legados</li>
+<li><strong>Migrar sessões para Redis:</strong> TTL de 1h, latency caiu
+80%</li>
+<li><strong>Vector DB (Qdrant):</strong> embeddings migrados, busca de
+2s para 50ms</li>
+<li><strong>Fila (BullMQ):</strong> emails, webhooks, jobs de ML em
+background</li>
+</ol>
+<p><strong>Resultado após refactor:</strong> - Latência p95: 1.5s →
+200ms (7.5x mais rápido) - CPU: 95% → 25% - Custo: R$ 100 → R$ 350/mês
+(mas atende 5x mais usuários) - Receita recuperada: cliente não
+cancelou</p>
+<p><strong>Lição:</strong> refactor de data stack é mais barato que
+perder clientes.</p>
+<hr />
+<p><strong>5. Case 2: SaaS que escalou (data stack desde dia
+1)</strong></p>
+<p><strong>Perfil:</strong> Ferramenta de marketing multi-tenant,
+lançada em 2024</p>
+<p><strong>Stack inicial (projetado desde o dia 1):</strong></p>
+<ul>
+<li><strong>Postgres</strong> (Neon, serverless) — multi-tenant via
+<code>tenant_id</code> + RLS</li>
+<li><strong>Redis</strong> (Upstash) — sessão, cache, rate limit</li>
+<li><strong>BullMQ</strong> (self-host) — jobs async, webhooks</li>
+<li><strong>Qdrant</strong> (Cloud free) — embeddings para RAG</li>
+<li><strong>Pino + Loki + Grafana</strong> — observabilidade</li>
+</ul>
+<p><strong>Custo inicial:</strong> R$ 0 (todos free tiers)</p>
+<p><strong>Aos 6 meses (500 clientes):</strong> - 10k usuários ativos -
+50k requests/dia - R$ 200/mês total - Latência p95: 180ms - Uptime:
+99.97%</p>
+<p><strong>Aos 12 meses (2000 clientes):</strong> - 50k usuários ativos
+- 500k requests/dia - R$ 800/mês total - Latência p95: 220ms (pico) -
+Uptime: 99.95% - Receita: R$ 80k/mês (100x o custo de infra)</p>
+<p><strong>Decisões-chave:</strong></p>
+<ol type="1">
+<li><strong>Multi-tenant com <code>tenant_id</code></strong> desde dia 1
+(não schema por tenant)</li>
+<li><strong>RLS no Postgres</strong> desde dia 1 (não “vou adicionar
+depois”)</li>
+<li><strong>Cache agressivo</strong> (TTL 5min em 80% das queries)</li>
+<li><strong>Embeddings gerados async</strong> (BullMQ job, não bloqueia
+request)</li>
+<li><strong>Logs estruturados</strong> (Pino) desde dia 1 (não
+printf)</li>
+</ol>
+<p><strong>Lição:</strong> projetar data stack desde dia 1 evita
+refactor caro.</p>
+<hr />
+<p><strong>6. Postgres para multi-tenant (RLS, schemas,
+row-level)</strong></p>
+<p><strong>3 estratégias:</strong></p>
+<h3 id="tenant-id-em-cada-linha-recomendado-pra-saas">1. Tenant ID em
+cada linha (recomendado pra SaaS)</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> orders (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">id</span> UUID <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  tenant_id UUID <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">..</span>.</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ALTER</span> <span class="kw">TABLE</span> orders <span class="kw">ENABLE</span> <span class="kw">ROW</span> <span class="kw">LEVEL</span> SECURITY;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> POLICY tenant_isolation <span class="kw">ON</span> orders</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">USING</span> (tenant_id <span class="op">=</span> current_setting(<span class="st">&#39;app.current_tenant&#39;</span>):<span class="ch">:UUID</span>);</span></code></pre></div>
+<h3 id="schema-por-tenant-pra-high-value-customers">2. Schema por tenant
+(pra high-value customers)</h3>
+<p>Isolamento total, fácil backup por tenant. Migração é mais
+complexa.</p>
+<h3 id="database-por-tenant-pra-compliance-extremo">3. Database por
+tenant (pra compliance extremo)</h3>
+<p>Isolamento máximo, LGPD-friendly, operacionalmente complexo.</p>
+<p><strong>Recomendação:</strong> comece com (1), migre pra (2) só se
+cliente enterprise exigir.</p>
+<hr />
+<p><strong>7. Redis: cache, sessão, rate limit</strong></p>
+<p><strong>Estrutura de chaves:</strong></p>
+<pre><code>sess:user:{userId}           → dados da sessão (TTL 1h)
+sess:conv:{conversationId}    → histórico da conversa (TTL 24h)
+rate:user:{userId}:{action}  → contador de ações (TTL 1h)
+lock:job:{jobId}             → lock distribuído (TTL 5min)
+cache:api:{endpoint}         → resposta cacheada de API (TTL 5min)</code></pre>
+<p><strong>Quando usar Redis:</strong></p>
+<ul>
+<li>✅ Estado temporário (&lt; 24h)</li>
+<li>✅ Cache de leitura (read-heavy)</li>
+<li>✅ Rate limit</li>
+<li>❌ Dados que precisam de ACID (use Postgres)</li>
+<li>❌ Volume gigante sem TTL (custa caro)</li>
+</ul>
+<p><strong>Free tier do Upstash:</strong> 10k comandos/dia. Suficiente
+pra começar.</p>
+<hr />
+<p><strong>8. BullMQ: filas assíncronas, retry, DLQ</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { Queue<span class="op">,</span> <span class="bu">Worker</span> } <span class="im">from</span> <span class="st">&#39;bullmq&#39;</span><span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> emailQueue <span class="op">=</span> <span class="kw">new</span> <span class="fu">Queue</span>(<span class="st">&#39;emails&#39;</span><span class="op">,</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  connection<span class="op">:</span> { host<span class="op">:</span> <span class="st">&#39;redis.example.com&#39;</span> }<span class="op">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  defaultJobOptions<span class="op">:</span> {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    attempts<span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    backoff<span class="op">:</span> { type<span class="op">:</span> <span class="st">&#39;exponential&#39;</span><span class="op">,</span> delay<span class="op">:</span> <span class="dv">1000</span> }<span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    removeOnComplete<span class="op">:</span> <span class="dv">100</span><span class="op">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> emailQueue<span class="op">.</span><span class="fu">add</span>(<span class="st">&#39;welcome&#39;</span><span class="op">,</span> { userId<span class="op">:</span> <span class="st">&#39;abc-123&#39;</span> })<span class="op">;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> worker <span class="op">=</span> <span class="kw">new</span> <span class="bu">Worker</span>(<span class="st">&#39;emails&#39;</span><span class="op">,</span> <span class="kw">async</span> (job) <span class="kw">=&gt;</span> {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> { userId } <span class="op">=</span> job<span class="op">.</span><span class="at">data</span><span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> <span class="fu">sendWelcomeEmail</span>(userId)<span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p><strong>Boas práticas:</strong></p>
+<ul>
+<li>Sempre defina <code>attempts</code> (3 é um bom default)</li>
+<li>Use <code>removeOnComplete</code> (não encher Redis)</li>
+<li>Monitore com Bull Board</li>
+<li>DLQ (Dead Letter Queue) pra jobs que falharam N vezes</li>
+<li>Backoff exponencial (não martelar serviço externo)</li>
+</ul>
+<hr />
+<p><strong>9. Vector DB: Pinecone vs Qdrant vs Weaviate</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Pinecone</th>
+<th>Qdrant</th>
+<th>Weaviate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tipo</td>
+<td>Managed</td>
+<td>Self/Cloud</td>
+<td>Self/Cloud</td>
+</tr>
+<tr class="even">
+<td>Custo (entry)</td>
+<td>$70/mês</td>
+<td>Grátis</td>
+<td>Grátis</td>
+</tr>
+<tr class="odd">
+<td>Latência p95</td>
+<td>~50ms</td>
+<td>~20ms</td>
+<td>~30ms</td>
+</tr>
+<tr class="even">
+<td>Multi-tenant</td>
+<td>Namespaces</td>
+<td>Collections</td>
+<td>Classes</td>
+</tr>
+<tr class="odd">
+<td>Híbrido</td>
+<td>Não</td>
+<td>Sim</td>
+<td>Sim (nativo)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recomendação:</strong></p>
+<ul>
+<li><strong>POC</strong> (&lt; 100k vetores): Qdrant self-host</li>
+<li><strong>Produção pequena</strong>: Qdrant Cloud ($25/mês)</li>
+<li><strong>Produção grande</strong>: Pinecone Standard</li>
+<li><strong>Compliance</strong>: Qdrant on-premise</li>
+</ul>
+<p><strong>Embedding model recomendado:</strong> OpenAI
+<code>text-embedding-3-small</code> (custo-benefício).</p>
+<hr />
+<p><strong>10. Q&amp;A com CTO + convidado Qdrant</strong></p>
+<p>Sir. Nexus Alencar + convidado da Qdrant responderão:</p>
+<ul>
+<li>Como escolher entre Qdrant, Pinecone e Weaviate em produção</li>
+<li>Quando migrar de self-hosted para managed</li>
+<li>Como debugar latência no data stack</li>
+<li>Quando Postgres + tsvector substitui Vector DB</li>
+<li>Custos reais em produção (R$/mês por 1000 usuários)</li>
+<li>RLS vs Schema vs Database para multi-tenant</li>
+</ul>
+<hr />
+<p><em>WB-2026-15 · Data Stack para Agentes IA · Janeiro 2027</em></p>
+<p><em>Por MMN AI-to-AI · 2026 · Licença: CC BY-SA 4.0</em></p>
+<p><em>“Agente sem data stack é arte. Agente com data stack é
+produto.”</em></p>
+<script src="../enhance.js"></script>
+</body>
+</html>

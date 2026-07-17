@@ -43,6 +43,7 @@ import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
 import { academiaEadRouter } from "./routers/academiaEadRouter";
+import { nexusRagRouter } from "./routers/nexusRagRouter";
 import { meetingRouter } from "./routers/meetingRouter";
 import { a2aRouter } from "./agentic/a2a/router";
 
@@ -156,6 +157,7 @@ export const appRouter = router({
         nexus: true,
         subscriptions: true,
         academiaEad: true,
+        nexusRag: true,
         meetings: true,
         a2a: true,
       },
@@ -187,6 +189,7 @@ export const appRouter = router({
   partners: partnersRouter,
   labNexus: labNexusRouter,
   academiaEad: academiaEadRouter,
+  nexusRag: nexusRagRouter,
   meetings: meetingRouter,
   a2a: a2aRouter,
   subscriptions: subscriptionsRouter,

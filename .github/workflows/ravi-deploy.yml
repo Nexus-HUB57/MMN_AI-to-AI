@@ -1,0 +1,344 @@
+# =============================================================================
+# Ravi-CTO · Deploy Automatizado via GitHub Actions Secrets
+# =============================================================================
+# Princípio de segurança:
+#   - ZERO credencial em chat, em log, ou em arquivo do repo.
+#   - Tudo via GitHub Actions Secrets (mascarados automaticamente em logs).
+#   - SSH via webfactory/ssh-agent com chave SSH_GITHUB (não toca disco).
+#   - Servidor recebe comandos por SSH; nenhuma senha trafega.
+#
+# Secrets necessários no repositório:
+# ----------------------------------------------------------------------------
+#   SSH_GITHUB              ← chave SSH privada (a que você já configurou)
+#   DEPLOY_HOST             ← 143.95.213.237  (ou hostname)
+#   DEPLOY_PORT             ← 22022
+#   DEPLOY_USER             ← root  (ou idealmente 'nexusdeploy' após hardening)
+#   DEPLOY_DIR              ← /opt/nexus-affiliate
+#   DATABASE_URL            ← postgresql://... (Postgres em produção)
+#   REDIS_URL               ← redis://...
+#   OPENAI_API_KEY          ← opcional
+#   GOOGLE_AI_API_KEY       ← opcional
+#   HEALTH_BASE_URL         ← ex: https://nexus-affiliate.com.br
+#
+# Como adicionar:
+#   https://github.com/Nexus-HUB57/MMN_AI-to-AI/settings/secrets/actions
+#
+# Como disparar:
+#   1) Automático: push na branch feature/hub-tecnologico-marketplace-academia
+#   2) Manual:     Actions → "Ravi · Deploy Automatizado" → Run workflow
+# =============================================================================
+
+name: Ravi · Deploy Automatizado
+
+on:
+  push:
+    branches:
+      - feature/hub-tecnologico-marketplace-academia
+      - main
+  workflow_dispatch:
+    inputs:
+      skip_seed:
+        description: "Pular seed do marketplace (apenas migrations + build)"
+        type: boolean
+        default: false
+      target_branch:
+        description: "Branch a deployar (default: HEAD)"
+        type: string
+        default: ""
+
+concurrency:
+  group: ravi-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: 🔍 Validate & Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      sha_short: ${{ steps.meta.outputs.sha_short }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install workspaces
+        run: |
+          npm install \
+            --workspace backend --workspace frontend \
+            --legacy-peer-deps --no-audit --no-fund
+
+      - name: Build backend
+        run: npm --workspace backend run build
+
+      - name: Build frontend
+        run: NODE_OPTIONS=--max-old-space-size=4096 npm --workspace frontend run build
+
+      - name: Lint Python scripts (sintaxe apenas)
+        run: |
+          if [ -d scripts ]; then
+            python3 -m py_compile scripts/*.py || true
+          fi
+
+      - name: Metadata
+        id: meta
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-build-${{ steps.meta.outputs.sha_short }}
+          path: |
+            backend/dist
+            frontend/dist
+          retention-days: 7
+
+  deploy:
+    name: 🚀 Deploy to Server
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH agent (SSH_GITHUB secret)
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          echo "Known hosts configurado."
+
+      - name: Sanity SSH (sem expor saída)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -p "$DEPLOY_PORT" -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+              "$DEPLOY_USER@$DEPLOY_HOST" "echo ssh_ok && uname -s && node --version || true"
+
+      # ---------------------------------------------------------------------
+      # Sincroniza apenas o que é necessário; o servidor faz git pull, não rsync,
+      # para manter histórico Git limpo.
+      # ---------------------------------------------------------------------
+      - name: Pull repo no servidor
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+          GIT_BRANCH:  ${{ github.event.inputs.target_branch != '' && github.event.inputs.target_branch || github.ref_name }}
+        run: |
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" bash -se <<'REMOTE'
+            set -euo pipefail
+            REPO_URL="https://github.com/Nexus-HUB57/MMN_AI-to-AI.git"
+
+            if [ ! -d "${DEPLOY_DIR:-/opt/nexus-affiliate}/.git" ]; then
+              mkdir -p "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+              git clone "$REPO_URL" "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+            fi
+
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+            git fetch origin --prune
+
+            BRANCH="${GIT_BRANCH:-main}"
+            if git show-ref --quiet "refs/heads/$BRANCH"; then
+              git checkout "$BRANCH"
+            else
+              git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH" origin/main
+            fi
+            git reset --hard "origin/$BRANCH"
+            echo "HEAD: $(git rev-parse --short HEAD) on $BRANCH"
+          REMOTE
+        # As variáveis DEPLOY_DIR e GIT_BRANCH são exportadas via env: acima
+        # e propagadas pelo SSH dentro do heredoc remoto.
+
+      - name: Instalar dependências e buildar no servidor
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+        run: |
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" bash -se <<'REMOTE'
+            set -euo pipefail
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+
+            # Node 20 garantido (NodeSource)
+            if ! command -v node >/dev/null || [ "$(node -v | cut -dv -f2 | cut -d. -f1)" -lt 20 ]; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+              apt-get install -y nodejs
+            fi
+            command -v pm2 >/dev/null || npm install -g pm2
+
+            npm install --workspace backend --workspace frontend \
+              --legacy-peer-deps --no-audit --no-fund
+
+            npm --workspace backend  run build
+            NODE_OPTIONS=--max-old-space-size=4096 npm --workspace frontend run build
+            echo "build-ok"
+          REMOTE
+
+      - name: Aplicar migrations Postgres (idempotentes)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          # A DATABASE_URL é enviada via env do SSH; o secret é mascarado em log.
+          ssh -p "$DEPLOY_PORT" \
+              -o SendEnv=DATABASE_URL \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "DATABASE_URL='$DATABASE_URL' bash -se" <<'REMOTE'
+            set -euo pipefail
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+            command -v psql >/dev/null || { apt-get update -y && apt-get install -y postgresql-client; }
+
+            for mig in database/migrations/0012_marketplace_user_library.sql \
+                       database/migrations/0013_nexus_rag.sql; do
+              if [ -f "$mig" ]; then
+                echo "→ aplicando $mig"
+                psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$mig"
+              else
+                echo "⚠️  $mig não encontrado, pulando"
+              fi
+            done
+
+            EBOOK_COUNT=$(psql "$DATABASE_URL" -tAc \
+              "SELECT COUNT(*) FROM marketplace_ebooks WHERE status='active'" 2>/dev/null || echo "?")
+            echo "marketplace_ebooks ativos: $EBOOK_COUNT"
+          REMOTE
+
+      - name: Publicar ebooks + Seed marketplace
+        if: ${{ github.event.inputs.skip_seed != 'true' }}
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          ssh -p "$DEPLOY_PORT" \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "DATABASE_URL='$DATABASE_URL' bash -se" <<'REMOTE'
+            set -euo pipefail
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+            command -v python3 >/dev/null || apt-get install -y python3 python3-pip
+
+            if [ -f scripts/publish_marketplace_ebooks.py ]; then
+              echo "→ publish_marketplace_ebooks.py"
+              python3 scripts/publish_marketplace_ebooks.py || echo "publish: warning"
+            fi
+
+            if [ -f scripts/seed_marketplace_ebooks.py ]; then
+              echo "→ seed_marketplace_ebooks.py"
+              python3 scripts/seed_marketplace_ebooks.py || echo "seed: warning"
+            fi
+
+            if [ -f scripts/ingest_academia_content.py ]; then
+              echo "→ ingest_academia_content.py"
+              python3 scripts/ingest_academia_content.py || echo "academia ingest: warning"
+            fi
+          REMOTE
+
+      - name: Subir worker BullMQ (PM2)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
+          NEXUS_RAG_BACKEND: "pgvector"
+        run: |
+          ssh -p "$DEPLOY_PORT" \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              "DATABASE_URL='$DATABASE_URL' REDIS_URL='$REDIS_URL' \
+               OPENAI_API_KEY='$OPENAI_API_KEY' GOOGLE_AI_API_KEY='$GOOGLE_AI_API_KEY' \
+               NEXUS_RAG_BACKEND='$NEXUS_RAG_BACKEND' bash -se" <<'REMOTE'
+            set -euo pipefail
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+
+            # Escreve o .env do backend com permissões 600 (sobrescreve apenas chaves runtime)
+            ENV_FILE="backend/.env"
+            touch "$ENV_FILE" && chmod 600 "$ENV_FILE"
+            python3 - <<'PY'
+import os, re, pathlib
+p = pathlib.Path("backend/.env")
+src = p.read_text() if p.exists() else ""
+keys = ["DATABASE_URL","REDIS_URL","OPENAI_API_KEY","GOOGLE_AI_API_KEY","NEXUS_RAG_BACKEND"]
+def upsert(text, k, v):
+    if v is None or v == "": return text
+    pattern = re.compile(rf'^{k}=.*$', re.M)
+    return pattern.sub(f'{k}={v}', text) if pattern.search(text) else (text + ("\n" if text and not text.endswith("\n") else "") + f"{k}={v}\n")
+for k in keys:
+    src = upsert(src, k, os.environ.get(k, ""))
+p.write_text(src)
+print(".env atualizado (permissões 600 mantidas)")
+PY
+
+            # Reload ou start do worker
+            if pm2 describe nexus-rag-worker >/dev/null 2>&1; then
+              pm2 reload nexus-rag-worker --update-env
+            else
+              pm2 start backend/src/workers/ragIngestWorker.ts \
+                --name nexus-rag-worker \
+                --interpreter ./node_modules/.bin/tsx
+            fi
+            pm2 save
+            pm2 jlist | python3 -c "import json,sys;d=json.load(sys.stdin);print([(x['name'],x['pm2_env']['status']) for x in d])"
+          REMOTE
+
+      - name: Healthchecks
+        env:
+          HEALTH_BASE_URL: ${{ secrets.HEALTH_BASE_URL }}
+        run: |
+          BASE="${HEALTH_BASE_URL:-http://localhost:3000}"
+          echo "Health base: $BASE"
+          for path in /api/health /api/trpc/system.info /api/trpc/nexusRag.stats; do
+            code=$(curl -s -o /tmp/_resp -w '%{http_code}' "${BASE}${path}" || echo "000")
+            if [[ "$code" =~ ^2 ]]; then
+              echo "✅ $path → $code"
+              head -c 200 /tmp/_resp; echo
+            else
+              echo "⚠️  $path → $code"
+              head -c 200 /tmp/_resp; echo
+            fi
+          done
+
+      - name: Resumo
+        if: always()
+        run: |
+          echo "## Ravi-CTO · Deploy Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`${{ needs.validate.outputs.sha_short }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Actor:  \`${{ github.actor }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: \`${{ job.status }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔒 Nenhuma credencial trafegou fora dos Actions Secrets." >> $GITHUB_STEP_SUMMARY

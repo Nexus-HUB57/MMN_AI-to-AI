@@ -52,24 +52,31 @@ jobs:
       - name: 🔑 Preparar chave SSH (sem senha root)
         id: prep_key
         env:
-          SSH_KEY: ${{ secrets.AUTHORIZED_KEY_VPS_FALLBACK }}
+          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
           SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
           if [ -n "$SSH_KEY" ]; then
             printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-            echo "src=AUTHORIZED_KEY_VPS_FALLBACK" >> $GITHUB_OUTPUT
+            echo "src=VPS_SSH_PRIVATE_KEY" >> $GITHUB_OUTPUT
           elif [ -n "$SSH_KEY_FALLBACK" ]; then
             printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
             echo "src=HOSTGATOR_SSH_KEY" >> $GITHUB_OUTPUT
           else
-            echo '::error::Nenhum secret de chave SSH disponível (esperado: AUTHORIZED_KEY_VPS_FALLBACK)'
+            echo '::error::Nenhum secret de chave SSH disponível (esperados: VPS_SSH_PRIVATE_KEY ou HOSTGATOR_SSH_KEY)'
             exit 1
           fi
           chmod 600 ~/.ssh/deploy_key
           if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
-            echo '::error::Chave inválida (BEGIN PRIVATE KEY não encontrado)'
+            echo '::error::Chave SSH inválida: BEGIN PRIVATE KEY não encontrado.'
+            echo '::warning::Diagnóstico do Secret (primeiros 80 chars):'
+            head -c 80 ~/.ssh/deploy_key | sed 's/^/    /' || true
+            echo ''
+            if head -1 ~/.ssh/deploy_key | grep -qE '^(ssh-rsa|ssh-ed25519|ssh-ecdsa|ssh-dss)'; then
+              echo '::error::O Secret contém uma CHAVE PÚBLICA (formato authorized_keys), não uma chave privada!'
+              echo '::error::Fix: gere/localize a chave PRIVADA correspondente (arquivo id_*, sem .pub) e cole ela como VPS_SSH_PRIVATE_KEY.'
+            fi
             exit 1
           fi
           if [ -n "$SSH_PASSPHRASE" ]; then
@@ -124,7 +131,7 @@ jobs:
 
       - name: 🔑 Restaurar chave SSH
         env:
-          SSH_KEY: ${{ secrets.AUTHORIZED_KEY_VPS_FALLBACK }}
+          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
           SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |

@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/01_O_que_e_Agente_IA.webp)
+![Capa](curso-universo-ia--01-o-que-e-agente-ia.webp)
 
 **O que é Agente IA?**
 

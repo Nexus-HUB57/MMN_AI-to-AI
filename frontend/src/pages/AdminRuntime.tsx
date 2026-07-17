@@ -82,7 +82,7 @@ async function fetchTrpcQuery<T>(procedure: string): Promise<T | null> {
 
 const bandLabel: Record<AutonomyResult["band"], { text: string; color: string }> = {
   low: { text: "Inicial", color: "bg-red-500/10 text-red-300 border-red-500/30" },
-  developing: { text: "Em desenvolvimento", color: "bg-yellow-500/10 text-yellow-300 border-yellow-500/30" },
+  developing: { text: "Em desenvolvimento", color: "bg-yellow-500/10 text-amber-100 border-yellow-500/30" },
   operational: { text: "Operacional", color: "bg-accent-cyan/10 text-accent-cyan border-accent-cyan/30" },
   advanced: { text: "Avançado", color: "bg-accent-green/10 text-accent-green border-accent-green/30" },
 };
@@ -91,7 +91,7 @@ const categoryAccent: Record<string, string> = {
   content: "bg-accent-purple/10 text-accent-purple border-accent-purple/30",
   intelligence: "bg-accent-cyan/10 text-accent-cyan border-accent-cyan/30",
   publishing: "bg-accent-green/10 text-accent-green border-accent-green/30",
-  decision: "bg-yellow-500/10 text-yellow-300 border-yellow-500/30",
+  decision: "bg-yellow-500/10 text-amber-100 border-yellow-500/30",
   sales: "bg-pink-500/10 text-pink-300 border-pink-500/30",
   retention: "bg-orange-500/10 text-orange-300 border-orange-500/30",
   analytics: "bg-blue-500/10 text-blue-300 border-blue-500/30",
@@ -406,7 +406,7 @@ export default function AdminRuntime() {
                 className={`inline-flex items-center gap-1 rounded-full px-2 py-1 border ${
                   backendOnline
                     ? "border-accent-green/30 bg-accent-green/10 text-accent-green"
-                    : "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                    : "border-yellow-500/30 bg-yellow-500/10 text-amber-100"
                 }`}
               >
                 <span className={`h-2 w-2 rounded-full ${backendOnline ? "bg-accent-green" : "bg-yellow-400"}`} />
@@ -466,7 +466,7 @@ export default function AdminRuntime() {
           </Card>
 
           <Card className="p-5 border-yellow-500/30 bg-yellow-500/5">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-yellow-300">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-amber-100">
               <ShieldCheck className="h-4 w-4" /> LLM-as-Judge
             </div>
             <div className="mt-2 flex items-baseline gap-2">
@@ -639,10 +639,10 @@ export default function AdminRuntime() {
         <Card className="p-6">
           <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-yellow-300" /> Fila de Aprovações de Runtime
+              <AlertTriangle className="h-4 w-4 text-amber-100" /> Fila de Aprovações de Runtime
             </h2>
             <div className="flex items-center gap-3 text-xs">
-              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 text-yellow-300">
+              <span className="inline-flex items-center gap-1 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 text-amber-100">
                 <Clock className="h-3 w-3" /> {approvals.stats.pending} pendente(s)
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-accent-green">
@@ -673,7 +673,7 @@ export default function AdminRuntime() {
                         variant="outline"
                         className={`text-[10px] ${
                           item.status === "pending"
-                            ? "border-yellow-500/30 text-yellow-300"
+                            ? "border-yellow-500/30 text-amber-100"
                             : item.status === "approved"
                               ? "border-accent-green/30 text-accent-green"
                               : "border-red-500/30 text-red-300"
@@ -796,7 +796,7 @@ export default function AdminRuntime() {
                   className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 ${
                     analyticsLatest.status.running
                       ? "border-accent-green/30 bg-accent-green/10 text-accent-green"
-                      : "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                      : "border-yellow-500/30 bg-yellow-500/10 text-amber-100"
                   }`}
                 >
                   Cron {analyticsLatest.status.running ? "ativo" : "parado"} · a cada {analyticsLatest.status.intervalHours}h
@@ -813,7 +813,7 @@ export default function AdminRuntime() {
                     signal.severity === "critical"
                       ? "border-red-500/30 bg-red-500/10 text-red-300"
                       : signal.severity === "warn"
-                        ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                        ? "border-yellow-500/30 bg-yellow-500/10 text-amber-100"
                         : "border-accent-green/30 bg-accent-green/10 text-accent-green"
                   }`}
                 >

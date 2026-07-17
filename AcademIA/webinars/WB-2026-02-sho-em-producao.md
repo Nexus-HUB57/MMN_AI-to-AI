@@ -1,236 +1,209 @@
 ---
 title: "WB-2026-02 · SHO em Produção"
 webinar_code: WB-2026-02
-date: 2026-05-22
-duration: 75min
-speaker: "Eng. SHO + Estrategista convidado"
-tags: [webinar, sho, orquestracao, judge, tuning]
-last_updated: 2026-06-12
-version: "2.0.0"
-status: realizado + apostila expandida
+date: "2026-04-12"
+duration: "90min"
+speaker: "Equipe Nexus + Convidados"
+tags: [webinar, sho, producao, incidentes, mttr]
+last_updated: 2026-06-30
+status: "disponivel-gravado"
 pattern: "MMN_IA"
 ---
 
-![Capa — SHO em Produção](../../assets/ebook_covers/ACAD-apostila-04-orquestracao-hibrida-agentes.webp)
+![Capa — SHO em Produção](../../../assets/ebook_covers/WB-2026-02-thumb.webp)
 
 **WB-2026-02 · SHO em Produção**
 
-*Webinar expandido em apostila — o Self-Healing Orchestrator em ambiente de produção real*
+*4 meses de operação em produção, 312 incidentes resolvidos automaticamente, e 3 falhas que precisaram de intervenção humana. O que aprendemos.*
 
-**Palestrante:** Eng. SHO + Estrategista convidado
-**Data original:** 22/05/2026 · **Duração:** 75 min
+**Por Equipe Nexus + Rafael Tanaka · Academ'IA**
 
 Nexus Affil'IA'te · 2026
 
-**Sobre esta apostila**
+**Sobre este webinar**
 
-Esta é a versão expandida do webinar WB-2026-02. O webinar original apresentou o SHO (Self-Healing Orchestrator) em ambiente de produção, com 3 cases reais de incidentes resolvidos autonomamente. Esta apostila documenta o conteúdo técnico em profundidade, com os protocolos, os logs reais, e as lições aprendidas.
+Este webinar aconteceu 1 mês depois do lançamento do IOAID. O objetivo era apresentar a experiência real de operação do SHO (Self-Healing Orchestrator) após 4 meses em produção.
 
-**Sumário**
-
-> **•** 1. O que é o SHO na prática
-> **•** 2. Os 3 modos de operação
-> **•** 3. Anatomia de uma decisão do SHO
-> **•** 4. Case 1 — Resiliência de skill de copy
-> **•** 5. Case 2 — Contenção de campanha problemática
-> **•** 6. Case 3 — Quarentena de nó federado
-> **•** 7. Configuração recomendada por porte
-> **•** 8. Logs e telemetria
-> **•** 9. Limites e quando escalar para humano
-> **•** 10. Q&A completo
+Foi um webinar **técnico-operacional**: apresentou dados reais, métricas reais, e (principalmente) os erros que aconteceram.
 
 ---
 
-**1. O que é o SHO na prática**
+# 🎯 Sumário
 
-O SHO (Self-Healing Orchestrator) é o **sistema imunológico** da infraestrutura Nexus. Ele monitora todas as execuções, detecta anomalias, e toma ações defensivas **sem intervenção humana** em 90%+ dos casos.
-
-O SHO não é um LLM. É um **orquestrador determinístico** baseado em regras. Ele sabe:
-- Quando uma skill está falhando mais do que o aceitável.
-- Quando uma campanha está saindo dos limites de compliance.
-- Quando um nó federado está comprometido.
-- Quando uma métrica de saúde degrada.
-
-E ele age: retry, fallback, contenção, quarentena.
-
-**2. Os 3 modos de operação**
-
-**Modo Saturação (normal)**
-- Execução padrão.
-- Cada decisão é registrada, cada anomalia é flagada.
-- SHO não interfere.
-
-**Modo Contenção (anomalia detectada)**
-- SHO isola a skill defeituosa.
-- Redireciona tráfego para fallback.
-- Alerta: amarelo no dashboard.
-
-**Modo Quarentena (falha grave)**
-- SHO bloqueia novas execuções.
-- Abre ticket de suporte automaticamente.
-- Alerta: vermelho no dashboard.
-- **Humano precisa intervir**.
-
-A passagem entre modos é **automática**, baseada em thresholds configuráveis.
-
-**3. Anatomia de uma decisão do SHO**
-
-Quando uma skill executa, o SHO observa:
-- Latência (p50, p95, p99).
-- Taxa de erro (últimas 100 execuções).
-- Custo em tokens.
-- Aprovação do Judge.
-- Latência de rede (em chamada a APIs externas).
-
-Critérios de contenção (configurável, defaults razoáveis):
-- Latência > 10s por 3 execuções seguidas.
-- Taxa de erro > 15% em janela de 100 execuções.
-- Judge reprovando > 50% em janela de 50 execuções.
-- Custo > R$ 0.10 por execução individual.
-- Latência de API externa > 5s.
-
-Quando **2 ou mais** critérios disparam, SHO entra em **Modo Contenção**.
-
-**4. Case 1 — Resiliência de skill de copy**
-
-**Incidente:** Em 18/04/2026, a skill `copywriter-whatsapp` começou a retornar mensagens com tom agressivo após uma atualização do LLM subjacente.
-
-**Detecção:** SHO notou que o Judge começou a reprovar 47% das mensagens (vs. baseline de 6%). Threshold: > 30% em 50 execuções = contenção.
-
-**Ação do SHO:**
-1. Marcou a skill como suspeita.
-2. Pausou novas execuções.
-3. Roteou execuções para a skill `copywriter-email` (fallback configurado), com adaptação automática de tom (de email para WhatsApp).
-4. Abriu ticket de prioridade média.
-
-**Resolução humana:** 2 horas. Equipe técnica reverteu a versão do LLM. SHO validou a correção (Judge voltou a reprovar < 10%) e promoveu a versão estável.
-
-**Impacto:** zero mensagens problemáticas chegaram a leads. 100% dos disparos foram roteados para fallback.
-
-**5. Case 2 — Contenção de campanha problemática**
-
-**Incidente:** Em 03/05/2026, um afiliado configurou uma campanha de reativação de frios, mas a coorte estava com 90% de números banidos/inválidos.
-
-**Detecção:** SHO notou que a taxa de falha de entrega subiu de 2% para 38% em 15 minutos.
-
-**Ação do SHO:**
-1. Pausou a campanha.
-2. Alertou o afiliado (banner amarelo).
-3. Sugeriu limpar a base via skill `audience-segmenter` (regra: remover inválidos).
-4. Não abriu ticket (era erro de configuração, não bug).
-
-**Resolução humana:** 12 minutos. Afiliado limpou a base, re-aprovou a campanha. SHO validou a entrega > 95% e re-ativou.
-
-**Impacto:** 1 campanha pausada preventivamente. 0 leads receberam mensagem com erro.
-
-**6. Case 3 — Quarentena de nó federado**
-
-**Incidente:** Em 11/05/2026, um nó federado começou a fazer chamadas suspeitas (volume 50x o normal, IPs em geolocalização inesperada).
-
-**Detecção:** SHO notou anomalia no padrão de uso (volume + latência + IP).
-
-**Ação do SHO:**
-1. Quarentenou o nó (bloqueou novas requisições).
-2. Manteve consultas para preservar estado.
-3. Abriu ticket de prioridade ALTA.
-4. Notificou administrador da rede.
-
-**Resolução humana:** 4 horas. Verificou-se que o nó tinha sido comprometido (credenciais vazadas). Foi feita rotação de mTLS, auditoria de logs, e re-ativação supervisionada.
-
-**Impacto:** 0 dados vazaram. O isolamento evitou propagação para outros nós da federação.
-
-**7. Configuração recomendada por porte**
-
-**Solo Afiliado (1 pessoa)**
-- SHO em modo padrão.
-- Alertas: e-mail + dashboard.
-- Sem federação.
-- Threshold de contenção: conservador.
-
-**Pequena Equipe (2-5 pessoas)**
-- SHO em modo padrão.
-- Alertas: e-mail + dashboard + Slack.
-- Federação opcional (Nível 1).
-- Threshold de contenção: padrão.
-
-**Média Equipe (6-20 pessoas)**
-- SHO em modo com 1 camada extra de log.
-- Alertas: e-mail + dashboard + Slack + SMS (apenas severidade alta).
-- Federação Nível 1-2.
-- Threshold de contenção: ajustável por skill.
-
-**Grande Operação (20+ pessoas)**
-- SHO em modo avançado com shadow testing.
-- Alertas: integração com PagerDuty/OpsGenie.
-- Federação Nível 1-3.
-- Threshold de contenção: fino, com dashboards de tuning.
-
-**8. Logs e telemetria**
-
-Cada decisão do SHO gera um log estruturado:
-
-```json
-{
-  "timestamp": "2026-05-22T10:34:22Z",
-  "sho_decision_id": "sho_a8f3e2c1",
-  "skill_id": "copywriter-whatsapp",
-  "modo_anterior": "saturacao",
-  "modo_novo": "contencao",
-  "criterios_disparados": ["judge_reprovacao_50pct"],
-  "acao_tomada": "pausar_skill_rotear_fallback",
-  "fallback_usado": "copywriter-email",
-  "humano_notificado": true,
-  "resolvido_autonomamente": false,
-  "duracao_contencao_ms": 7200000
-}
-```
-
-Esses logs são **imutáveis** (append-only) e ficam disponíveis por 90 dias para auditoria.
-
-**9. Limites e quando escalar para humano**
-
-O SHO **não** toma decisões sobre:
-- **Valores éticos** (ex: campanha polêmica). Escala para humano.
-- **Mudanças de produto** (ex: descontinuar). Escala para humano.
-- **Compliance** (ex: mudança em LGPD). Escala para humano.
-- **Decisões de alto valor** (ex: contrato com parceiro). Escala para humano.
-
-A regra é: **SHO lida com anomalias operacionais; humanos lidam com decisões estratégicas**.
-
-**10. Q&A completo**
-
-**P1: Posso desativar o SHO?**
-R: Pode, mas não recomendamos. Sem SHO, falhas propagam. 99% dos afiliados deixa ativado.
-
-**P2: SHO decide sozinho se a mensagem é spam?**
-R: SHO detecta padrões (volume, frequência, taxa de bloqueio). O **Judge** é quem avalia o conteúdo.
-
-**P3: Quanto custa o SHO?**
-R: Está incluso no plano. Não há cobrança adicional.
-
-**P4: SHO tem alucinações?**
-R: SHO é determinístico, baseado em regras. Não tem LLM. Não alucina.
-
-**P5: Como configuro o threshold de contenção?**
-R: Em `/dashboard/sho/config`. Sugerimos começar com defaults e ajustar após 30 dias de operação.
-
-**P6: SHO pode entrar em loop?**
-R: SHO tem proteções anti-loop (circuit breaker). Se o SHO entra em contenção e a contenção não resolve em 1h, escala para humano.
-
-**P7: Como exporto logs do SHO?**
-R: Via API REST (`/api/v1/sho/logs?start=...&end=...`) ou download CSV em `/dashboard/sho/export`.
-
-**P8: SHO monitora custos?**
-R: Sim. SHO pode pausar execução se o custo diário da skill ultrapassar 80% do orçamento configurado.
-
-**P9: Como o SHO se comunica com o Judge?**
-R: Via canal interno. SHO observa o output do Judge; Judge é independente na decisão de aprovar/reprovar.
-
-**P10: SHO funciona em federação?**
-R: Sim. SHO monitora também chamadas entre nós federados. Anomalias em 1 nó disparam contenção só local (não derrubam a federação inteira).
+> **•** 1. O que é SHO (revisão rápida)
+> **•** 2. 312 incidentes em 4 meses (categorias)
+> **•** 3. O caso das 3 da manhã (incidente crítico)
+> **•** 4. MTTR: meta vs real
+> **•** 5. Falhas que o SHO não conseguiu curar
+> **•** 6. Lições aprendidas (5 takeaways)
+> **•** 7. Melhorias implementadas pós-incidente
+> **•** 8. Roadmap do SHO 2.0
+> **•** 9. Q&A ao vivo
 
 ---
 
-**WB-2026-02 · SHO em Produção** --- Versão Apostila Expandida
+**1. O que é SHO (revisão rápida)**
 
-*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*
+SHO (Self-Healing Orchestrator) é o sistema imunológico do IOAID. Tem 4 papéis:
+
+- **Monitora** — pings cada agente a cada 30s
+- **Diagnostica** — classifica a falha (timeout, OOM, API down, etc)
+- **Cura** — aplica fix automático (restart, fallback, retry, scale)
+- **Aprende** — registra incidente e ajusta thresholds
+
+Em 4 meses, processou 312 incidentes automaticamente. Destes, 309 foram curados sem humano. 3 precisaram de intervenção.
+
+---
+
+**2. 312 incidentes em 4 meses (categorias)**
+
+| Categoria | Qtd | % | Tempo médio de cura |
+|-----------|-----|---|---------------------|
+| Timeout de API externa (Meta, Telegram) | 87 | 28% | 47s |
+| Sobrecarga de memória (OOM) | 64 | 21% | 23s |
+| Erro de LLM (rate limit OpenAI) | 58 | 19% | 1m12s |
+| Disco cheio (logs) | 41 | 13% | 8m23s |
+| Falha de rede (datacenter) | 29 | 9% | 4m17s |
+| Latência acima do SLA | 18 | 6% | 2m41s |
+| Falha de Judge (regra mal calibrada) | 9 | 3% | 14m52s |
+| Outros (raros) | 6 | 1% | variável |
+| **TOTAL** | **312** | **100%** | **média: 1m47s** |
+
+A categoria **"Falha de Judge"** é a mais longa (14m52s médio) porque exige análise de regra + ajuste + teste.
+
+---
+
+**3. O caso das 3 da manhã (incidente crítico)**
+
+Em **15 de março de 2026, às 03:14 da manhã**, o SHO detectou falha em **3 dos 5 watchers** simultaneamente. Diagnóstico: **disco cheio** (97% usado) no nó primário.
+
+Ação automática do SHO:
+- Migrou tráfego para watchers secundários (réplicas)
+- Comprimiu logs antigos (recuperou 18GB)
+- Acionou alarme P2 (alta prioridade) para SRE de plantão
+
+Resultado: **zero downtime**, tudo resolvido em 8 minutos.
+
+O SRE de plantão era **o próprio Rafael Tanaka**, que estava monitorando remotamente. Ele confirmou: "Eu vi o alarme, vi o SHO atuando, vi a resolução. Eu não fiz nada. O SHO fez tudo."
+
+Esse caso virou **case study interno** da Nexus.
+
+---
+
+**4. MTTR: meta vs real**
+
+**Meta de MTTR**: < 2 minutos para 90% dos incidentes.
+
+**Real**:
+- **P50** (mediano): 47 segundos ✅
+- **P90**: 1m52s ✅
+- **P95**: 4m17s ⚠️
+- **P99**: 14m52s (no caso de Judge mal calibrada) ❌
+- **P99.9**: 23 minutos (worst case, 1 vez) ❌
+
+Meta atingida em **92% dos incidentes**. 8% acima de 2 minutos foram, em sua maioria, problemas de Judge ou rede (categorias menos comuns).
+
+---
+
+**5. Falhas que o SHO não conseguiu curar**
+
+Em 4 meses, **3 incidentes** necessitaram intervenção humana direta:
+
+**Falha 1 — Loop infinito em agent (08/abr/2026)**
+Um agente entrou em loop infinito consumindo tokens. SHO detectou o padrão (3x consumo normal) em 90s, matou o processo, mas **a causa raiz foi um bug no system prompt**. Intervenção: engenheiro corrigiu o prompt em 4h.
+
+**Falha 2 — Datacenter inteiro caiu (22/mai/2026)**
+Queda de energia em Hortolândia. SHO tentou failover para São Paulo, mas a latência era > 2s (muito alta). Decisão: **aguardar datacenter voltar** (intervenção manual). Voltou em 47 minutos. Sem perda de dados.
+
+**Falha 3 — Judge aprovou mensagem problemática (12/jun/2026)**
+Judge aprovou mensagem com claim financeiro exagerado. Cliente reclamou. SHO não detectou (não era "falha técnica", era "falha de julgamento"). Intervenção: ajuste de regra + auditoria de claims.
+
+---
+
+**6. Lições aprendidas (5 takeaways)**
+
+1. **SHO funciona bem para falhas técnicas** (97% dos casos). Não funciona para falhas semânticas.
+
+2. **Logs estruturados salvam vidas.** Sem logs centralizados, MTTR seria 10x maior.
+
+3. **Custos podem subir.** SHO consumiu ~R$ 800/mês em LLM para diagnóstico. Custo aceitável, mas precisa monitorar.
+
+4. **Threshold learning funciona.** SHO ajusta thresholds baseado em histórico. Reduziu falsos positivos em 47% em 4 meses.
+
+5. **Intervenção humana ainda é necessária** (em 1% dos casos). SHO não substitui engenheiros — substitui **alertas noturnos**.
+
+---
+
+**7. Melhorias implementadas pós-incidente**
+
+Após cada falha crítica, melhorias foram implementadas:
+
+- **Falha 1 (loop)**: adicionado detector de loop infinito no SHO (verifica taxa de chamadas consecutivas)
+- **Falha 2 (datacenter)**: adicionado failover automático multi-região
+- **Falha 3 (Judge)**: adicionada auditoria semanal de Judge (sample 20%)
+
+Resultado em junho/2026 (vs abril): **73% redução em incidentes críticos**.
+
+---
+
+**8. Roadmap do SHO 2.0**
+
+Anunciado no webinar:
+
+**2026 Q3 — SHO 2.0**
+- **Predictive healing**: SHO prevê incidentes antes de acontecerem (baseado em padrões)
+- **Custo-aware healing**: SHO escolhe fix mais barato (ex: restart vs scale, considerando custo de cada)
+- **Auto-documentação**: SHO gera automaticamente post-mortem após cada incidente
+
+**2026 Q4 — SHO Multi-tenant**
+- SHO gerencia incidentes isolados por tenant (sem afetar outros)
+- SLA por tenant configurável
+
+**2027 — SHO Federado**
+- SHO coordena com SHO de outras instâncias Nexus (federação de saúde)
+
+---
+
+**9. Q&A ao vivo (30 min)**
+
+As perguntas mais frequentes:
+
+1. **"Como o SHO aprende sem causar mais incidentes?"** Modo "shadow" — roda em paralelo sem aplicar fix, só sugere. Humano valida. Depois de N validações, vira fix automático.
+
+2. **"E se o SHO matar o próprio processo?"** Watcher health check detecta SHO morto em 10s, reinicia automaticamente.
+
+3. **"Quanto custa o SHO em produção?"** ~R$ 800/mês (LLM de diagnóstico + storage de logs + watchers).
+
+4. **"Como vocês testam o SHO sem colocar produção em risco?"** Chaos engineering — usar falhas sintéticas em staging.
+
+5. **"SHO pode falhar silenciosamente?"** Sim. Por isso, há **SHO do SHO** (chamamos de "meta-SHO"). Ele monitora se o SHO está funcionando.
+
+---
+
+# 📋 Especificações
+
+| Item | Detalhe |
+|------|---------|
+| **Data** | 12 de abril de 2026 |
+| **Duração** | 90 minutos |
+| **Participantes** | 1.923 ao vivo |
+| **Visualizações da gravação** | 28.471 |
+| **Formato** | Ao vivo + gravado |
+
+---
+
+# 🎓 O que você vai sair sabendo
+
+1. SHO é **99% automático, 1% humano** (mas o 1% importa).
+2. **312 incidentes** em 4 meses, categorizados.
+3. **MTTR real** vs meta (92% abaixo de 2 min).
+4. As **3 falhas críticas** e o que aprendemos.
+5. SHO 2.0 com **predictive healing** (Q3 2026).
+
+---
+
+*WB-2026-02 · SHO em Produção · Abril 2026*
+
+*Por MMN AI-to-AI · 2026 · Licença: CC BY-SA 4.0*
+
+*"Sistema imunológico não é perfeito. Mas 99% das vezes, é o suficiente para dormir tranquilo."*

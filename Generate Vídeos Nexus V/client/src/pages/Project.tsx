@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { Streamdown } from "streamdown";
+import { ArrowLeft, Loader2, Zap } from "lucide-react";
+import { ScriptEditor } from "@/components/ScriptEditor";
+import { ScriptGenerator } from "@/components/ScriptGenerator";
 
 export default function Project() {
   const { isAuthenticated } = useAuth();
@@ -16,11 +17,42 @@ export default function Project() {
 
   const [isEditingScript, setIsEditingScript] = useState(false);
   const [editedScript, setEditedScript] = useState("");
+  const [showGenerator, setShowGenerator] = useState(false);
 
-  const { data: project, isLoading: projectLoading } = trpc.video.getById.useQuery(
+  const { data: project, isLoading: projectLoading, refetch } = trpc.video.getById.useQuery(
     { projectId: projectId || 0 },
     { enabled: isAuthenticated && !!projectId }
   );
+
+  const { data: script } = trpc.video.getScript.useQuery(
+    { projectId: projectId || 0 },
+    { enabled: isAuthenticated && !!projectId && !!project }
+  );
+
+  const updateScriptMutation = trpc.video.updateScript.useMutation({
+    onSuccess: () => {
+      toast.success("Roteiro atualizado com sucesso!");
+      setIsEditingScript(false);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erro ao atualizar roteiro");
+    },
+  });
+
+  const handleSaveScript = async () => {
+    if (!projectId) return;
+    await updateScriptMutation.mutateAsync({
+      projectId,
+      scriptContent: editedScript,
+    });
+  };
+
+  const handleScriptGenerated = (generatedScript: string) => {
+    setEditedScript(generatedScript);
+    setShowGenerator(false);
+    refetch();
+  };
 
   if (!isAuthenticated) {
     return (
@@ -64,6 +96,8 @@ export default function Project() {
       </div>
     );
   }
+
+  const scriptContent = script?.content || editedScript || "";
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -146,60 +180,56 @@ export default function Project() {
           </Card>
         )}
 
-        {/* Script Section */}
-        <Card className="border-2 border-neon-cyan/50 bg-black/50 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-neon-pink">ROTEIRO</h2>
-            {!isEditingScript && (
-              <Button
-                onClick={() => setIsEditingScript(true)}
-                className="bg-neon-cyan text-black hover:bg-neon-cyan/80 font-bold"
-              >
-                EDITAR
-              </Button>
-            )}
+        {/* Script Generator */}
+        {!scriptContent && !showGenerator && (
+          <div className="mb-8">
+            <Button
+              onClick={() => setShowGenerator(true)}
+              className="w-full bg-neon-purple text-black hover:bg-neon-purple/80 font-bold text-lg py-6"
+            >
+              <Zap className="w-5 h-5 mr-2" />
+              GERAR ROTEIRO COM IA
+            </Button>
           </div>
+        )}
 
-          {isEditingScript ? (
-            <div className="space-y-4">
-              <textarea
-                value={editedScript}
-                onChange={(e) => setEditedScript(e.target.value)}
-                className="w-full h-96 bg-black/50 border-2 border-neon-cyan/30 text-neon-cyan p-4 font-mono rounded"
-                placeholder="Edite o roteiro aqui..."
-              />
-              <div className="flex gap-4">
+        {showGenerator && !scriptContent && (
+          <ScriptGenerator
+            projectId={project.id}
+            persona={project.persona}
+            level={project.level}
+            module={project.module}
+            onScriptGenerated={handleScriptGenerated}
+          />
+        )}
+
+        {/* Script Editor/Viewer */}
+        {scriptContent && (
+          <div className="mb-12">
+            {!isEditingScript ? (
+              <div className="flex justify-end mb-4">
                 <Button
                   onClick={() => {
-                    setIsEditingScript(false);
-                    toast.success("Roteiro atualizado!");
+                    setIsEditingScript(true);
+                    setEditedScript(scriptContent);
                   }}
-                  className="bg-neon-pink text-black hover:bg-neon-pink/80 font-bold"
+                  className="bg-neon-cyan text-black hover:bg-neon-cyan/80 font-bold"
                 >
-                  SALVAR
-                </Button>
-                <Button
-                  onClick={() => setIsEditingScript(false)}
-                  variant="outline"
-                  className="border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10"
-                >
-                  CANCELAR
+                  EDITAR ROTEIRO
                 </Button>
               </div>
-            </div>
-          ) : (
-            <div className="prose prose-invert max-w-none">
-              <div className="bg-black/30 p-6 rounded border-l-4 border-neon-pink text-neon-cyan">
-                <p className="text-sm text-neon-cyan/60 mb-4">
-                  Roteiro será gerado aqui via LLM. Clique em EDITAR para modificar.
-                </p>
-                <p className="text-neon-cyan/80">
-                  Status: <span className="text-neon-pink font-bold">{project.status}</span>
-                </p>
-              </div>
-            </div>
-          )}
-        </Card>
+            ) : null}
+
+            <ScriptEditor
+              scriptContent={isEditingScript ? editedScript : scriptContent}
+              isEditing={isEditingScript}
+              onEdit={setEditedScript}
+              onSave={handleSaveScript}
+              onCancel={() => setIsEditingScript(false)}
+              isSaving={updateScriptMutation.isPending}
+            />
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="flex gap-4 mt-12">

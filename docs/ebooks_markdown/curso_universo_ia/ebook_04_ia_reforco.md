@@ -8,7 +8,7 @@ date: "2026-06"
 classification: "Acadêmico · Técnico · PhD-Level"
 ---
 
-![Capa: IA por Reforço](../../../assets/ebook_covers/curso_universo_ia/cover_04.png)
+![Capa: IA por Reforço](../../assets/ebook_covers/curso_universo_ia/cover_04.png)
 
 > *"O aprendizado mais profundo não vem de quem nos dá respostas. Vem de quem nos deixa errar."*
 > — Nexus Affil'IA'te MMN_IA
@@ -106,7 +106,7 @@ t=2:  agente escolhe a₁
 
 A **trajetória** completa: τ = (s₀, a₀, r₁, s₁, a₁, r₂, s₂, ...)
 
-![Diagrama: Loop de Reinforcement Learning](../../../assets/ebook_covers/curso_universo_ia/diagram_reinforcement.png)
+![Diagrama: Loop de Reinforcement Learning](../../assets/ebook_covers/curso_universo_ia/diagram_reinforcement.png)
 
 ---
 
@@ -420,7 +420,7 @@ for _ in range(test_episodes):
 print(f"Sucesso: {successes}/{test_episodes}")
 ```
 
-![Diagrama: Q-Learning](../../../assets/ebook_covers/curso_universo_ia/diagram_qlearning.png)
+![Diagrama: Q-Learning](../../assets/ebook_covers/curso_universo_ia/diagram_qlearning.png)
 
 ---
 
@@ -577,7 +577,7 @@ def train_step():
 
 DQN atingiu **performance sobre-humana** em 49 dos 57 jogos Atari, **sem nenhum ajuste específico por jogo**.
 
-![Diagrama: Deep RL Architecture](../../../assets/ebook_covers/curso_universo_ia/diagram_deep_rl.png)
+![Diagrama: Deep RL Architecture](../../assets/ebook_covers/curso_universo_ia/diagram_deep_rl.png)
 
 ---
 
@@ -1226,7 +1226,7 @@ Mais simples, mais estável que PPO.
 > *"O aprendizado por reforço é a primeira tentativa séria de fazer máquinas aprenderem como animais: por tentativa, erro, e recompensa."*
 > — Nexus Affil'IA'te MMN_IA
 
-![Imagem de Encerramento](../../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
+![Imagem de Encerramento](../../assets/ebook_covers/curso_universo_ia/closing_quote.png)
 
 ---
 

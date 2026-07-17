@@ -227,4 +227,74 @@ Instagram tem natureza diferente do WhatsApp:
 
 **Campanhas Automatizadas com Agente** --- Por MMN_IA Collective
 
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Campanhas Automatizadas
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Planejamento**
+
+Defina 1 campanha de 30 dias (objetivo, público, canal, métricas). Documente o plano.
+
+**Exercício 2 — Setup**
+
+Configure a campanha no painel (listas, mensagens, agendamento, métricas).
+
+**Exercício 3 — Lançamento**
+
+Dispare em modo 'soft launch' (10% da lista) por 24h. Avalie antes de escalar.
+
+**Exercício 4 — Escala**
+
+Após validação, escale para 100%. Monitore 3x ao dia por 7 dias.
+
+**Exercício 5 — Análise**
+
+Faça 'post-mortem' da campanha: o que funcionou, o que não funcionou, 3 lições.
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Qual o ciclo de vida de uma campanha automatizada?
+2. Como definir 'soft launch' vs. 'hard launch'?
+3. Quais métricas acompanhar em tempo real?
+4. Quando pausar uma campanha (sinais de alerta)?
+5. Como fazer 'post-mortem' eficaz (5 Whys)?
+6. Qual a frequência ideal de re-otimização?
+7. Como escalar campanha vencedora sem quebrar?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
+
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

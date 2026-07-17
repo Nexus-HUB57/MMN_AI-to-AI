@@ -6,6 +6,17 @@
  */
 
 import { z } from "zod";
+import { grantPackToUser } from "../services/packEntitlementService";
+import { Pool as PgPoolForHook } from "pg";
+let _hookPool: PgPoolForHook | null = null;
+function getHookPool(): PgPoolForHook {
+  if (!_hookPool) {
+    const connStr = process.env.DATABASE_URL;
+    if (!connStr) throw new Error("DATABASE_URL not configured");
+    _hookPool = new PgPoolForHook({ connectionString: connStr, max: 5 });
+  }
+  return _hookPool;
+}
 import { router, protectedProcedure, publicProcedure, adminProcedure } from "../config/trpc";
 import {
   generatePixStaticPayload,
@@ -308,6 +319,49 @@ export const pixRouter = router({
           }) + "\n",
         );
 
+
+        // === PACK_GRANT_HOOK_V2: dispara entrega de Pack ao confirmar pagamento ===
+        try {
+          // Procura order pendente com este payment_id/txid e identifica se é compra de Pack
+          const orderLookup = await getHookPool().query(
+            `SELECT mo.id AS order_id, mo.user_id, mo.total_cents, moi.item_slug, moi.item_type
+               FROM marketplace_orders mo
+               JOIN marketplace_order_items moi ON moi.order_id = mo.id
+              WHERE (mo.payment_id = $1 OR mo.id = $1)
+                AND moi.item_type = 'pack'
+                AND mo.status IN ('pending', 'awaiting_payment')
+              LIMIT 5`,
+            [txid],
+          );
+          for (const row of orderLookup.rows) {
+            const grantRes = await grantPackToUser(row.user_id, row.item_slug, {
+              paymentRef: txid,
+              paymentMethod: "pix",
+              amountCents: row.total_cents,
+            });
+            process.stdout.write(
+              JSON.stringify({
+                level: "info",
+                tag: "pack-grant-hook",
+                txid,
+                userId: row.user_id,
+                packSlug: row.item_slug,
+                delivered: grantRes.delivered,
+                alreadyGranted: grantRes.alreadyGranted,
+                message: grantRes.message,
+              }) + "\n",
+            );
+          }
+        } catch (grantErr) {
+          process.stderr.write(
+            JSON.stringify({
+              level: "warn",
+              tag: "pack-grant-hook-error",
+              txid,
+              error: String(grantErr),
+            }) + "\n",
+          );
+        }
         processed.push(txid);
       }
 
@@ -511,55 +565,42 @@ export const pixRouter = router({
   listHistory: protectedProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(20),
+        limit: z.number().min(1).max(100).default(50),
         offset: z.number().min(0).default(0),
         startDate: z.string().optional(),
         endDate: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
-      const db = await getDb();
-      if (!db) {
+    .query(async ({ ctx, input }) => {
+      // D15-PH-marketplace : lê marketplace_orders do user logado
+      try {
+        const params: any[] = [ctx.user.id, input.limit, input.offset];
+        let where = `mo.user_id = $1 AND mo.payment_status IN ('paid','approved')`;
+        if (input.startDate) { params.push(new Date(input.startDate)); where += ` AND COALESCE(mo.paid_at, mo.created_at) >= $${params.length}`; }
+        if (input.endDate)   { params.push(new Date(input.endDate));   where += ` AND COALESCE(mo.paid_at, mo.created_at) <= $${params.length}`; }
+        const q = `SELECT mo.id, mo.total_cents, mo.payment_status, mo.payment_method, mo.payment_id, mo.external_reference, mo.metadata, mo.created_at, mo.paid_at FROM marketplace_orders mo WHERE ${where} ORDER BY COALESCE(mo.paid_at, mo.created_at) DESC LIMIT $2 OFFSET $3`;
+        const res: any = await (ctx as any).db.execute(q as any, params as any);
+        const rows = (res?.rows ?? res ?? []) as any[];
+        return {
+          items: rows.map((p: any) => ({
+            id: String(p.id),
+            amount: Number(p.total_cents || 0),
+            status: String(p.payment_status || "pending"),
+            txid: String(p.payment_id || ""),
+            endToEndId: String(p.external_reference || ""),
+            paymentDate: p.paid_at ? new Date(p.paid_at).toISOString() : null,
+            confirmedAt: p.paid_at ? new Date(p.paid_at).toISOString() : null,
+            createdAt: new Date(p.created_at).toISOString(),
+          })),
+          total: rows.length,
+          sandbox: false,
+        };
+      } catch (e) {
+        console.error("[pix.listHistory D15]", (e as any)?.message);
         return { items: [], total: 0, sandbox: PIX_SANDBOX };
       }
-
-      const conditions = [eq(payments.method, "pix")];
-      if (input.startDate) {
-        conditions.push(gte(payments.createdAt, new Date(input.startDate)));
-      }
-      if (input.endDate) {
-        conditions.push(lte(payments.createdAt, new Date(input.endDate)));
-      }
-
-      const items = await db
-        .select()
-        .from(payments)
-        .where(and(...conditions))
-        .orderBy(desc(payments.createdAt))
-        .limit(input.limit)
-        .offset(input.offset);
-
-      return {
-        items: items.map((p) => ({
-          id: p.id,
-          amount: p.amount,
-          status: p.status,
-          txid: p.bankNumber ?? "",
-          endToEndId: p.account ?? "",
-          paymentDate: p.paymentDate?.toISOString() ?? null,
-          confirmedAt: p.confirmedAt?.toISOString() ?? null,
-          createdAt: p.createdAt.toISOString(),
-        })),
-        total: items.length,
-        sandbox: PIX_SANDBOX,
-      };
     }),
 
-  /**
-   * Solicita devolução (estorno) de um pagamento PIX.
-   * Em produção: chama API OpenPix /api/v1/refund.
-   * Em sandbox: simula a devolução.
-   */
   refund: protectedProcedure
     .input(
       z.object({
@@ -675,4 +716,22 @@ export const pixRouter = router({
 
       return { ok: true, confirmation };
     }),
+
+  getPaymentStatus: protectedProcedure
+    .input(z.object({ paymentId: z.string().nullable().optional() }))
+    .query(async ({ ctx, input }) => {
+      // D14-PIX-status
+      if (!input.paymentId) return { status: null, paymentId: null };
+      try {
+        const res: any = await ctx.db.execute(
+          `SELECT id, status FROM marketplace_orders WHERE payment_id = $1 OR id = $1 LIMIT 1`,
+          [input.paymentId] as any
+        );
+        const row = (res?.rows ?? res ?? [])[0];
+        return { status: row?.status ?? null, paymentId: input.paymentId };
+      } catch (e) {
+        return { status: null, paymentId: input.paymentId, error: String((e as any)?.message ?? e) };
+      }
+    }),
+
 });

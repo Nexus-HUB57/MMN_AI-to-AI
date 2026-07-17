@@ -931,3 +931,5 @@ frontend/nexus-partners/
 
 # Workspace cruzado problemático que multiplica testes via npm workspaces
 **/node_modules_root/
+
+node_modules/

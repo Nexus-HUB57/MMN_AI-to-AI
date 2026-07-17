@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/02_O_que_as_IAs_sao_capazes_de_desenvolver.webp)
+![Capa](curso-universo-ia--02-o-que-as-ias-sao-capazes-de-desenvolver.webp)
 
 **O que as IAs são capazes de Desenvolver?**
 

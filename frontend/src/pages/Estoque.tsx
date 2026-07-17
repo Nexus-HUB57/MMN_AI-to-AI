@@ -16,6 +16,8 @@ import {
 import { resolveShowcaseMarketplaceProfile } from "@/lib/public-marketplace";
 import { NEXUS_PARTNERS, getPartnerBySlug, type PartnerConfig } from "@/lib/nexus-partners";
 import { buildMarketplaceCheckoutUrl, parseCurrencyTextToCents } from "@/lib/marketplace-payments";
+// PACK_ENTITLEMENT_CARD_V2
+import PackEntitlementsCard from "@/components/PackEntitlementsCard";
 import {
   buildMiniSiteCatalogItem,
   loadMiniSiteCatalog,
@@ -157,6 +159,14 @@ export default function Estoque() {
   const [tab, setTab] = useState<Tab>("produtos");
   const [catalogVersion, setCatalogVersion] = useState(0);
 
+  // D7: consulta inventário REAL do backend (marketplace_user_library + packs ativos)
+  const myInventoryQuery = (trpc as any).affiliateStore?.myInventory?.useQuery
+    ? (trpc as any).affiliateStore.myInventory.useQuery(undefined, { refetchOnMount: true, retry: false })
+    : null;
+  const dbInventory = (myInventoryQuery?.data?.items ?? []) as any[];
+  const dbActivePacks = (myInventoryQuery?.data?.activePacks ?? []) as string[];
+
+
   const showcaseProfile = useMemo(
     () => resolveShowcaseMarketplaceProfile(profile, isAuthenticated),
     [isAuthenticated, profile],
@@ -175,7 +185,41 @@ export default function Estoque() {
     },
   );
 
-  const stockItems = useMemo(() => getOperationalInventory(showcaseProfile), [showcaseProfile]);
+  const stockItems = useMemo(() => {
+    const fromProfile = getOperationalInventory(showcaseProfile);
+    // Mescla packs ativos vindos do DB
+    const profilePacks = new Set(showcaseProfile.activePackSlugs || []);
+    const extraFromDb: OperationalStockItem[] = [];
+    for (const p of dbActivePacks) {
+      if (!profilePacks.has(p)) {
+        extraFromDb.push({
+          id: `stock-pack-${p}`,
+          type: "pack",
+          title: p.toUpperCase(),
+          description: "Pack ativo entregue após compra (DB).",
+          quantity: 1,
+          badge: p,
+          sourcePackSlug: p,
+          availableForAgent: true,
+        } as any);
+      }
+    }
+    // Itens individuais comprados via marketplace (ebooks da library)
+    const ebookItems: OperationalStockItem[] = dbInventory.map((e: any) => ({
+      id: `stock-ebook-${e.slug}`,
+      type: "ebook",
+      title: e.title || e.slug,
+      description: e.subtitle || e.description || "E-book entregue pelo Marketplace Nexus",
+      quantity: 1,
+      badge: "E-book",
+      sourcePackSlug: e.unlockPackSlug || "",
+      availableForAgent: true,
+      coverPath: e.coverPath,
+      htmlPath: e.htmlPath,
+      pdfPath: e.pdfPath,
+    } as any));
+    return [...fromProfile, ...extraFromDb, ...ebookItems];
+  }, [showcaseProfile, dbInventory, dbActivePacks]);
   const myProducts = stockItems.filter((item) => isSyncableItem(item));
   const packsActivated = stockItems.filter((item) => item.type === "pack");
 
@@ -261,7 +305,7 @@ export default function Estoque() {
               </Badge>
               <h1 className="text-3xl font-bold text-white md:text-4xl">Meu Estoque</h1>
               <p className="max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-                Aqui ficam as unidades disponíveis para revenda. Cada produto pode entrar na sua <strong className="text-white">vitrine</strong>, ser sincronizado com o Agente IA e aparecer no <strong className="text-white">mini-site</strong> para acelerar suas vendas.
+                Aqui ficam as unidades disponíveis para revenda. Cada produto pode entrar na sua <strong className="text-white">vitrine</strong>, ser sincronizado com o Agente IA e aparecer na <strong className="text-white">Minha Loja</strong> para acelerar suas vendas.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -288,10 +332,10 @@ export default function Estoque() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
                   <Store className="h-5 w-5 text-quantum-cyan" />
-                  Vitrine sincronizável com o mini-site
+                  Vitrine sincronizável com a Minha Loja
                 </CardTitle>
                 <CardDescription className="text-slate-300">
-                  Use o botão <strong className="text-white">Sincronizar com Agente</strong> para publicar o produto no mini-site e habilitar a apresentação automatizada da oferta.
+                  Use o botão <strong className="text-white">Sincronizar com Agente</strong> para publicar o produto na Minha Loja e habilitar a apresentação automatizada da oferta.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -355,16 +399,16 @@ export default function Estoque() {
                     Fluxo recomendado
                   </p>
                   <p>
-                    Estoque → sincronização com o agente → mini-site → apresentação da oferta → pagamento.
+                    Estoque → sincronização com o agente → Minha Loja → apresentação da oferta → pagamento.
                   </p>
                   <p className="text-amber-100/80">
                     Produtos de <strong>Pronta Entrega</strong> exigem atenção à quantidade disponível. Itens de <strong>Dropshipping</strong> seguem a disponibilidade das plataformas parceiras.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/minisite">
+                  <Link href="/minha-loja">
                     <Button className="gradient-btn">
-                      Ver mini-site
+                      Ver Minha Loja
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -572,7 +616,7 @@ function StockProductCard({
   const showcaseTags =
     item.type === "ebooks"
       ? MARKETPLACE_EBOOKS.slice(0, 3).map((ebook) => ebook.title)
-      : ["Pack com 25 e-books", "Oferta pronta para revenda", "Ideal para mini-site"]; 
+      : ["Pack com 25 e-books", "Oferta pronta para revenda", "Ideal para Minha Loja"]; 
 
   return (
     <Card className="overflow-hidden border-white/10 bg-white/5 shadow-xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
@@ -627,8 +671,8 @@ function StockProductCard({
           </p>
           <p className="mt-1">
             {isSynced
-              ? "Este produto já está publicado na vitrine do mini-site e pronto para abordagem automatizada."
-              : "Ao sincronizar, ele passa a aparecer no mini-site e entra no fluxo de vendas automatizadas."}
+              ? "Este produto já está publicado na vitrine da Minha Loja e pronto para abordagem automatizada."
+              : "Ao sincronizar, ele passa a aparecer na Minha Loja e entra no fluxo de vendas automatizadas."}
           </p>
         </div>
 
@@ -637,9 +681,9 @@ function StockProductCard({
             {isSynced ? "Remover da sincronização" : "Sincronizar com Agente"}
           </Button>
           <div className="grid w-full gap-2 sm:grid-cols-2">
-            <Link href="/minisite">
+            <Link href="/minha-loja">
               <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
-                Ver mini-site
+                Ver Minha Loja
               </Button>
             </Link>
             <Link href={checkoutUrl}>
@@ -658,6 +702,7 @@ function StockProductCard({
 function KpiBlock({ label, value, tone }: { label: string; value: ReactNode; tone: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center backdrop-blur">
+      <PackEntitlementsCard variant="full" />
       <p className="text-[10px] uppercase tracking-[0.25em] text-slate-500">{label}</p>
       <p className={`mt-1 text-xl font-bold ${tone}`}>{value}</p>
     </div>
@@ -677,14 +722,14 @@ function PublicStockShell({ children }: { children: ReactNode }) {
               <h1 className="text-3xl font-black tracking-tight md:text-4xl">Estoque em modo vitrine</h1>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
                 Você está vendo a versão pública da loja virtual. Os produtos abaixo usam um perfil comercial de demonstração para liberar a experiência
-                <strong className="text-white"> /estoque → sincronização → /minisite</strong> no navegador, mesmo sem login.
+                <strong className="text-white"> /estoque → sincronização → /minha-loja</strong> no navegador, mesmo sem login.
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Link href="/minisite">
-              <Button className="gradient-btn">Abrir mini-site</Button>
+            <Link href="/minha-loja">
+              <Button className="gradient-btn">Abrir Minha Loja</Button>
             </Link>
             <Link href="/login">
               <Button variant="outline" className="border-white/15 bg-white/5 text-white hover:bg-white/10">

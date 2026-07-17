@@ -1,4 +1,4 @@
-![Capa](../../assets/ebook_covers/19_Claude_Conceitos_Fundamentais_1.png)
+![Capa](../../assets/ebook_covers/17_Claude_Conceitos_Fundamentais.png)
 
 **Claude --- Conceitos Fundamentais**
 

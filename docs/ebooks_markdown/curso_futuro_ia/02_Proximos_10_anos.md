@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_futuro_ia/02_Proximos_10_anos.webp)
+![Capa](colecao-curso-futuro-ia--02-proximos-10-anos.webp)
 
 **O que se esperar das IAs nos próximos 10 anos?**
 

@@ -9,22 +9,31 @@
 | Campo | Valor |
 |-------|-------|
 | **Nome completo** | Sir. Nexus Alencar |
-| **Idade** | A definir |
+| **Idade** | Aproximadamente 35-40 anos |
 | **Papel** | Co-representante da marca, figura técnica |
 | **Co-persona** | Sra. Nexus Ive (estratégica) |
-| **Status** | 🔄 Material em desenvolvimento (a enviar) |
+| **Status** | ✅ Material completo disponível |
 
 ---
 
 ## 2. Perfil Visual
 
-**Aparência geral:** Social em tons de azul. Transmite profundidade técnica, clareza e credibilidade.
+**Aparência geral:** Social em tons de azul. Transmite profundidade técnica, clareza e credibilidade. Postura relaxada mas atenta.
 
-*(A definir quando imagem for enviada)*
+**Trajes:** Sociais formais em tons de azul-marinho, azul-acero e grafite.
 
-**Trajes previstos:** Sociais formais em tons de azul-marinho, azul-acero e grafite.
+**Olhar:** Concentrado, sério mas acessível. Olha diretamente para a câmera com confiança.
 
-**Imagem de referência:** *(a anexar)*
+**Cenário típico:** Escritório moderno com tela ao fundo mostrando fluxos de dados abstratos e elegantes em azul.
+
+**Marca registrada:** Tatuagem sutil Nexus em local visível (similar à Ive).
+
+**Imagens de referência:**
+- `Generate Vídeos Nexus V/brand/personas/alencar/alencar_meeting_v1.png` (principal)
+- `Generate Vídeos Nexus V/brand/personas/alencar/alencar_nexus_ref_1.png`
+- `Generate Vídeos Nexus V/brand/personas/alencar/nexus_alencar_1.png`
+- `Generate Vídeos Nexus V/brand/personas/alencar/nexus_alencar_2.png`
+- `Generate Vídeos Nexus V/brand/personas/alencar/nexus_alencar_3.png`
 
 ---
 
@@ -36,14 +45,15 @@
 
 **Estilo:** Didático, claro e preciso. Foco em execução.
 
-**Expressões prováveis:**
-- "Olha só..."
-- "Compreenda..."
-- "Na prática, isso significa..."
-- "Vamos ao ponto..."
-- "Excelente pergunta..."
+**Expressões características:**
+- "Sejam bem-vindos de volta."
+- "Convido vocês a mergulharem comigo em..."
+- "Não se deixem intimidar..."
+- "Pensem nele como..."
+- "Hoje, vamos..."
+- "Excelente pergunta."
 
-**Áudio de referência:** *(a anexar quando enviado)*
+**Áudio de referência:** `Generate Vídeos Nexus V/brand/personas/alencar/voz_sir_nexus_alencar.wav`
 
 ---
 
@@ -87,18 +97,33 @@ Assumi a parte mais didática e detalhada, explicando processos, ferramentas e m
 
 ---
 
-## 6. Frases de Reforço (Co-atuação com Ive)
+## 6. Roteiro Disponível
+
+### 01 · Entendendo o IOAID
+- **Arquivo:** `Generate Vídeos Nexus V/brand/personas/alencar/roteiro-aula01.md`
+- **Slides:**
+- MD: `Generate Vídeos Nexus V/brand/personas/alencar/slides-aula01.md`
+- PNGs: `Generate Vídeos Nexus V/brand/personas/alencar/slides/` (5 slides)
+- **Status:** ✅ Pronto para produção
+- **Persona:** Sir. Nexus Alencar
+- **Voz:** Serena, acolhedora e autoritária
+- **Vestimenta:** Social em tons de azul
+
+**Cena 1 (excerto):**
+> **Sir. Nexus Alencar:** "Sejam bem-vindos de volta. No nosso primeiro encontro, exploramos a superfície do ecossistema Nexus. Hoje, convido vocês a mergulharem comigo no coração pulsante da nossa tecnologia: o **IOAID**. Não se deixem intimidar pela sigla; pensem nele como o sistema nervoso central que transforma suas intenções em ações concretas e seguras no mundo digital."
+
+---
+
+## 7. Frases de Reforço (Co-atuação com Ive)
 
 - "Concordo plenamente, Sra. Ive."
-- "Como a Sra. Ive bem colocou..."
+- "Como a Sra. Ive sempre nos lembra..."
 - "Excelente observação, Sra. Ive."
 - "A Sra. Ive traz um ponto crucial..."
 
 ---
 
-## 7. Diretrizes Técnicas para Produção
-
-*(Mesmas especificações da Sra. Ive)*
+## 8. Diretrizes Técnicas para Produção
 
 ### Áudio
 - **Sample rate:** 24 kHz mínimo
@@ -115,34 +140,36 @@ Assumi a parte mais didática e detalhada, explicando processos, ferramentas e m
 
 ---
 
-## 8. Brand Voice
+## 9. Brand Voice
 
 Sir. Nexus Alencar é a **voz técnica, prática e profunda** da Nexus Affil'IA'te. Traz análise de dados, visão prática e expertise aprofundada. Sua energia e clareza complementam a serenidade de Ive, criando um equilíbrio dinâmico.
 
 ---
 
-## 9. Documentos Relacionados
+## 10. Documentos Relacionados
 
-- `diretrizes_voz_sir_nexus_alencar.md` — *(a criar quando enviado)*
-- `diretrizes_interacao_ive_alencar.md` — co-atuação com Ive
-- `sir_nexus_alencar.png` — *(a anexar)*
-- `voz_sir_nexus_alencar.wav` — *(a anexar)*
+- `Generate Vídeos Nexus V/brand/personas/alencar/roteiro-aula01.md` — roteiro IOAID
+- `Generate Vídeos Nexus V/brand/personas/alencar/slides-aula01.md` — slides de apoio
+- `Generate Vídeos Nexus V/brand/personas/alencar/voz_sir_nexus_alencar.wav` — áudio de referência
+- `Generate Vídeos Nexus V/brand/personas/alencar/*.png` — 5 imagens de referência
+- `Generate Vídeos Nexus V/brand/personas/diretrizes_interacao_ive_alencar.md` — co-atuação
 
 ---
 
-## 10. Status de Preenchimento
+## 11. Status de Preenchimento
 
 | Item | Status |
 |------|--------|
 | Identidade básica | ✅ Definido |
-| Perfil visual detalhado | 🔄 Aguardando envio |
-| Imagem de referência | 🔄 Aguardando envio |
-| Áudio de referência | 🔄 Aguardando envio |
-| Perfil vocal detalhado | 🔄 Aguardando envio |
-| Diretrizes de voz dedicadas | 🔄 Aguardando envio |
-
-**Próximo passo:** Receber material do usuário e atualizar este documento.
+| Perfil visual detalhado | ✅ Definido |
+| Imagens de referência (5) | ✅ Disponíveis |
+| Áudio de referência | ✅ Disponível |
+| Perfil vocal | ✅ Definido |
+| Roteiro de exemplo (IOAID) | ✅ Disponível |
+| Slides de apoio (5 PNGs + MD) | ✅ Disponíveis |
+| Diretrizes de voz dedicadas | ✅ Criadas |
+| Vídeo de teste (image-to-video) | 📋 A gerar |
 
 ---
 
-**Última atualização:** 2026-06-17 · v0.5 (esqueleto)
+**Última atualização:** 2026-06-22 · v1.0 (completo)

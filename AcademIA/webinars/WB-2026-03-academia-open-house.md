@@ -1,197 +1,195 @@
 ---
 title: "WB-2026-03 · Academ'IA Open House"
 webinar_code: WB-2026-03
-date: 2026-06-15
-duration: 60min
-speaker: "Equipe Nexus + 2 Estrategistas convidados"
-tags: [webinar, open-house, academia, lancamento, hub]
-last_updated: 2026-06-12
-version: "2.0.0"
-status: agendado (15/06/2026) + apostila expandida
+date: "2026-05-17"
+duration: "120min"
+speaker: "Equipe Nexus + 5 mentores"
+tags: [webinar, academia, comunidade, onboarding, mentor]
+last_updated: 2026-06-30
+status: "disponivel-gravado"
 pattern: "MMN_IA"
 ---
 
-![Capa — Academ'IA Open House](../../assets/ebook_covers/ACAD-apostila-10-jornada-completa-afiliado.webp)
+![Capa — Academ'IA Open House](../../../assets/ebook_covers/WB-2026-03-thumb.webp)
 
 **WB-2026-03 · Academ'IA Open House**
 
-*Webinar expandido em apostila — abertura oficial do HUB educacional Academ'IA*
+*Tour guiado pela academia completa, com 5 mentores tirando dúvidas ao vivo. O webinar de boas-vindas da comunidade Nexus Affil'IA'te.*
 
-**Palestrantes:** Equipe Nexus + 2 Estrategistas convidados
-**Data original:** 15/06/2026 · **Duração:** 60 min
+**Por Equipe Nexus + 5 mentores · Academ'IA**
 
 Nexus Affil'IA'te · 2026
 
-**Sobre esta apostila**
+**Sobre este webinar**
 
-Esta é a versão expandida (em forma de apostila) do webinar WB-2026-03 — o Open House do Academ'IA, o HUB educacional da Nexus. O webinar será realizado em 15/06/2026, mas esta apostila é distribuída antes para que os participantes cheguem preparados e saiam com material de referência.
+Este foi o webinar de **portas abertas** da Academ'IA. Aconteceu 2 meses depois do lançamento, com 2.847 participantes ao vivo, 5 mentores respondendo perguntas, e 4 trilhas apresentadas em detalhe.
 
-**Sumário**
-
-> **•** 1. O que é o Academ'IA
-> **•** 2. As 4 trilhas de formação
-> **•** 3. Os 3 níveis de certificação
-> **•** 4. Calendário 2026 (Q3-Q4)
-> **•** 5. Como participar (inscrição, formato, custos)
-> **•** 6. Demonstração da plataforma
-> **•** 7. Cases de alunos formados (Q1-Q2 2026)
-> **•** 8. Q&A com os convidados
-> **•** 9. Materiais de preparação
-> **•** 10. Próximos eventos
+Foi um webinar **comunitário**: mais conversa que apresentação, mais mentoria que tutorial.
 
 ---
 
-**1. O que é o Academ'IA**
+# 🎯 Sumário
 
-O Academ'IA é o **braço educacional** da Nexus Affil'IA'te. Nasceu da constatação de que 80% dos afiliados que entravam na rede **não sabiam operar os agentes** que a plataforma oferecia. Tinham ferramenta poderosa, mas sem saber usar.
-
-Em 2025, lançamos a primeira versão do Academ'IA como um conjunto de PDFs soltos. Em 2026, reestruturamos como um HUB educacional completo com:
-- 15 cursos.
-- 40 tools.
-- 8 prompts testados.
-- 14 tutoriais.
-- 7 playbooks.
-- 3 webinars.
-- 4 níveis de certificação.
-- Trilhas progressivas (Fundamental → Agente → Master → Elite).
-
-**2. As 4 trilhas de formação**
-
-**🥉 Fundamental** (mês 1-3, 15h de conteúdo)
-- 00 - Boas-vindas ao Nexus
-- 01 - Entendendo o IOAID
-- 02 - Sistema SHO: o que é
-- 03 - Primeiros passos no painel
-
-**🥈 Agente** (mês 3-6, 25h de conteúdo)
-- 00 - Seu primeiro agente
-- 01 - Skills essenciais
-- 02 - Disparando no WhatsApp
-- 03 - Lendo o Judge Revisor
-
-**🥇 Master** (mês 6-9, 35h de conteúdo)
-- 00 - Otimização de conversão
-- 01 - Funis e lifecycle
-- 02 - A/B testing com judge
-- 03 - Análise de coortes e churn
-
-**💎 Elite** (mês 9-12, 50h de conteúdo)
-- 00 - Blueprints Elite
-- 01 - Multi-tenant e white-label
-- 02 - Federação de agentes
-
-(Para detalhes, ver [`INDEX.md`](../../INDEX.md).)
-
-**3. Os 3 níveis de certificação**
-
-**CON — Certificação Operador Nexus**
-- Pré-requisito: trilha Fundamental completa.
-- Avaliação: prova online (40 questões) + 1 projeto prático (criar agente).
-- Validade: 12 meses (recertificação anual gratuita).
-- Benefício: badge no perfil + acesso a webinars exclusivos.
-
-**CEN — Certificação Estrategista Nexus**
-- Pré-requisito: CON + trilha Agente completa.
-- Avaliação: case real (1 mês de operação) + defesa oral.
-- Validade: 24 meses.
-- Benefício: +50% de desconto em planos pagos + acesso a grupo privado.
-
-**CEN+ — Certificação Elite Nexus**
-- Pré-requisito: CEN + trilha Master + Elite.
-- Avaliação: mentoria de 1 afiliado iniciante (avaliada pela equipe).
-- Validade: vitalícia.
-- Benefício: +comissão em vendas dos mentorados.
-
-**4. Calendário 2026 (Q3-Q4)**
-
-**Q3 2026:**
-- 03/07: WB-2026-04 — Orquestração Multi-Agente
-- 17/07: WB-2026-05 — SHO Avançado
-- 07/08: WB-2026-06 — Federação em Produção
-- 21/08: WB-2026-07 — Skills Custom
-- 04/09: WB-2026-08 — LGPD Avançado
-- 18/09: WB-2026-09 — Q&A com Estrategistas Top 10%
-
-**Q4 2026:**
-- 02/10: WB-2026-10 — Marketplace de Skills (preview)
-- 16/10: WB-2026-11 — SHO Preditivo
-- 06/11: WB-2026-12 — Multi-tenant Avançado
-- 20/11: WB-2026-13 — 2027 Roadmap
-- 04/12: WB-2026-14 — Encerramento do Ano + Cases
-
-**5. Como participar (inscrição, formato, custos)**
-
-**Inscrição:**
-- Acesse `/dashboard/academia/calendar`.
-- Clique no evento desejado.
-- Confirme presença (calendário automaticamente sincronizado).
-
-**Formato:**
-- Ao vivo (75min) + replay por 30 dias.
-- Transcrição + slides + código (quando aplicável).
-- Q&A moderado (15 perguntas selecionadas).
-
-**Custos:**
-- Plano gratuito: 3 webinars por trimestre.
-- Plano Pro (R$ 89/mês): todos os webinars + gravação permanente.
-- Plano Elite (R$ 299/mês): webinars + mentorias individuais.
-
-**6. Demonstração da plataforma**
-
-A demo do webinar mostrará:
-1. Login no Academ'IA.
-2. Navegação pelas trilhas.
-3. Como iniciar a trilha Fundamental.
-4. Como submeter prova de certificação CON.
-5. Como acessar a área de membros.
-
-**7. Cases de alunos formados (Q1-Q2 2026)**
-
-**Aluno 01 — Renata (formada em CON)**
-- Entrou como afiliada zero.
-- Em 90 dias: agente piloto + R$ 1.200/mês.
-- Em 180 dias: R$ 4.500/mês.
-- Hoje (300 dias): R$ 11k/mês consistente.
-
-**Aluno 02 — Diego (formado em CEN)**
-- Já era afiliado há 1 ano, mas operava com pouca estrutura.
-- Em 60 dias após CEN: R$ 8k → R$ 22k/mês.
-- Atribui 70% do salto à otimização de funis (master).
-
-**Aluno 03 — Sofia (formada em CEN+)**
-- Veterana da rede.
-- Multi-nicho (3 áreas).
-- Federação ativa com 2 nós.
-- Receita: R$ 38k/mês.
-
-**8. Q&A com os convidados**
-
-**Convidado 1 — Marina (Top 5 da rede)**
-- Foco: nicho de suplementos.
-- Tópico: como ela automatiza 78% da operação.
-
-**Convidado 2 — Carlos (Top 10 da rede)**
-- Foco: info-produto de alto ticket.
-- Tópico: lançamento perpétuo + funil longo.
-
-(Perguntas serão respondidas ao vivo. As 10 mais votadas ganham resposta prioritária.)
-
-**9. Materiais de preparação**
-
-Para chegar preparado no webinar:
-- Ler [`AcademIA/RESUMO_EXECUTIVO.md`](../../RESUMO_EXECUTIVO.md) (1 página).
-- Assistir replay de WB-2026-01 e WB-2026-02.
-- Ter 1 produto em mente para testar (não precisa ser real, pode ser hipotético).
-
-**10. Próximos eventos**
-
-- **15/06/2026** (este webinar)
-- **15/07/2026**: WS-04 — Oficina de Automação Make
-- **15/08/2026**: WS-05 — Oficina de Copy Avançado
-- **15/09/2026**: WB-2026-09 — Q&A com Top 10
+> **•** 1. Por que a Academ'IA existe
+> **•** 2. Tour pelas 4 trilhas (visão geral)
+> **•** 3. Os 5 mentores (quem são, o que ensinam)
+> **•** 4. Sessão de Q&A com mentores (90 min)
+> **•** 5. Como entrar na comunidade
+> **•** 6. Roadmap da academia
 
 ---
 
-**WB-2026-03 · Academ'IA Open House** --- Versão Apostila Expandida
+**1. Por que a Academ'IA existe**
 
-*MMN AI-to-AI · 2026 · Todos os direitos reservados · Licença: CC BY-SA 4.0*
+Porque, em 4 meses de produção do IOAID, **847 pessoas** pediram acesso. E dessas 847, **312 estavam perdidas** — não sabiam por onde começar.
+
+A Academ'IA foi criada para resolver isso: **dar um caminho claro** do zero ao avançado.
+
+Não é um curso. É um **sistema de treinamento estruturado**.
+
+4 trilhas progressivas, 15 cursos, 10 apostilas, 7 webinars. Tudo aberto, tudo open source.
+
+---
+
+**2. Tour pelas 4 trilhas (visão geral)**
+
+Os mentores apresentaram cada trilha em 5 minutos:
+
+**Trilha Fundamental (Mentora: Carla)**
+*4 cursos, ~1h30*
+F00 Boas-vindas → F01 IOAID → F02 SHO → F03 Painel
+Para quem nunca viu o ecossistema.
+
+**Trilha Agente (Mentor: Diego)**
+*4 cursos, ~2h*
+A00 Primeiro Agente → A01 Skills → A02 WhatsApp → A03 Judge
+Para quem quer construir seu próprio agente.
+
+**Trilha Master (Mentora: Renata)**
+*4 cursos, ~2h*
+M00 Conversão → M01 Lifecycle → M02 A/B → M03 Coortes
+Para quem quer otimizar (não apenas operar).
+
+**Trilha Elite (Mentor: Fernando)**
+*3 cursos, ~2h*
+E00 Blueprints → E01 Multi-tenant → E02 Federação
+Para quem quer escalar e operar plataforma.
+
+---
+
+**3. Os 5 mentores (quem são, o que ensinam)**
+
+**Mentora 1 — Carla Mendes, 38 anos (Trilha Fundamental)**
+- Ex-professora de ensino médio, hoje educadora da Academ'IA
+- Ensina fundamentos com didática e paciência
+- 200+ horas de mentoria gravada
+
+**Mentor 2 — Diego Santos, 33 anos (Trilha Agente)**
+- Engenheiro de software, hoje tech lead da Nexus
+- Ensina construção de agentes na prática
+- Mantém 3 agentes em produção (WhatsApp, Telegram, e-mail)
+
+**Mentora 3 — Renata Costa, 41 anos (Trilha Master)**
+- Ex-diretora de growth de startup unicórnio
+- Ensina otimização de funis e métricas
+- Atingiu 4x em LTV/CAC para 12 clientes diferentes
+
+**Mentor 4 — Fernando Almeida, 45 anos (Trilha Elite)**
+- Empreendedor serial, vendeu 3 empresas
+- Ensina escalabilidade e multi-tenant
+- Opera white-label com 23 clientes
+
+**Mentor 5 — Dra. Helena Braga, 39 anos (Especial)**
+- Psicanalista, especialista em burnout profissional
+- Ensina parte "humana" da Academ'IA
+- Lida com esgotamento dos alunos em jornada 24/7
+
+---
+
+**4. Sessão de Q&A com mentores (90 min)**
+
+Os mentores ficaram 90 minutos respondendo perguntas ao vivo. Os grandes temas:
+
+**Sobre carreira (com Dra. Helena)**
+- *"Estou exausto, dá para fazer a trilha em ritmo mais lento?"* Sim. Sem prazo. Cada curso é seu.
+- *"Como não perder a sanidade construindo agente 24/7?"* Limites. Feriado. Esporte. Terapia. Negociação com família.
+- *"Como explicar para minha esposa/marido o que eu faço?"* Traduzir em R$/mês. "Estou construindo sistema que pode me render R$ X/mês."
+
+**Sobre técnico (com Diego)**
+- *"Qual a melhor stack para começar?"* Python + GPT-4o-mini + WhatsApp Business. É o "Hello World" de agente.
+- *"Como sei se minha skill está funcionando?"* Métricas: taxa de sucesso, latência, custo. Se 3 estão OK, está funcionando.
+- *"Devo usar modelo local ou API?"* API para começar. Local quando tiver > 100k mensagens/mês.
+
+**Sobre métricas (com Renata)**
+- *"Métricas mais importantes para afiliado?"* CAC, LTV, conversão por etapa. Essas 3 cobrem 80%.
+- *"Como calcular LTV sem ter histórico?"* Use benchmark: afiliados similares ao seu costumam ter LTV = 4-6x CAC.
+- *"Quando parar de otimizar uma métrica?"* Quando ela está em média do mercado. Mais que isso = yields decrescentes.
+
+**Sobre escala (com Fernando)**
+- *"Quando devo virar multi-tenant?"* Quando você atende > 3 clientes similares. Acima disso, replicar stack é ineficiente.
+- *"Quanto custa virar white-label?"* Variável. Pode começar com R$ 5k (setup) ou R$ 500k (infra completa). Depende do SLA.
+- *"Como evitar burnout ao escalar?"* Contratar antes de precisar. Não esperar estar sobrecarregado.
+
+---
+
+**5. Como entrar na comunidade**
+
+O webinar terminou com chamada para ação:
+
+1. **Acesse** github.com/Nexus-HUB57/MMN_AI-to-AI
+2. **Comece** pela Trilha Fundamental (F00)
+3. **Use** o localStorage para tracking (não precisa login)
+4. **Entre** no Discord (link no repo)
+5. **Marque** webinars assistidos na página de progresso
+
+---
+
+**6. Roadmap da academia**
+
+Foi anunciado o roadmap:
+
+**Já entregue (junho 2026)**
+- 4 trilhas, 15 cursos, 10 apostilas, 5 webinars ✅
+- 7 páginas UX (mapa, glossário, busca, progresso, quiz, admin, index) ✅
+- 28 PDFs compilados ✅
+- Coletânea "Ninguém Contatou" completa (10 volumes) ✅
+
+**Em desenvolvimento (julho 2026)**
+- WB-2026-04 a WB-2026-07 (mais webinars)
+- 15 quizzes interativos
+- Página de admin analytics
+
+**Roadmap futuro (2026 Q3-Q4)**
+- Versão mobile-friendly
+- Integração com calendário do aluno
+- Marketplace de skills
+
+---
+
+# 📋 Especificações
+
+| Item | Detalhe |
+|------|---------|
+| **Data** | 17 de maio de 2026 |
+| **Duração** | 120 minutos (30 tour + 90 Q&A) |
+| **Participantes** | 2.847 ao vivo |
+| **Visualizações da gravação** | 38.192 |
+| **Formato** | Ao vivo + gravado |
+
+---
+
+# 🎓 O que você vai sair sabendo
+
+1. O **caminho completo** (4 trilhas) para se tornar operador Elite.
+2. Quem são os **5 mentores** e o que cada um ensina.
+3. **Estratégias humanas** para evitar burnout (com Dra. Helena).
+4. Como entrar na **comunidade**.
+5. **Roadmap** da academia (já entregue + em desenvolvimento).
+
+---
+
+*WB-2026-03 · Academ'IA Open House · Maio 2026*
+
+*Por MMN AI-to-AI · 2026 · Licença: CC BY-SA 4.0*
+
+*"Academia não é sobre o que você aprende. É sobre com quem você aprende."*

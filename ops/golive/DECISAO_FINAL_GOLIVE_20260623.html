@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decisão Final de Go-Live — OneVerso / Nexus Affil'IA'te</title>
+<style>
+  :root {
+    --primary: #0b3d91;
+    --accent: #1e88e5;
+    --ok: #2e7d32;
+    --warn: #ef6c00;
+    --crit: #c62828;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #555;
+    --border: #d8dee9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 32px;
+    color: var(--fg);
+    background: var(--bg);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  header {
+    border-bottom: 4px solid var(--primary);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  header .doc-meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  header .status {
+    display: inline-block;
+    background: var(--ok);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  h1 {
+    color: var(--primary);
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+  h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 6px;
+    margin-top: 40px;
+    font-size: 22px;
+  }
+  h3 {
+    color: var(--accent);
+    font-size: 17px;
+    margin-top: 24px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #f0f5fb;
+    color: var(--primary);
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+  code {
+    background: #f3f5f8;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  }
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 14px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13px;
+  }
+  pre code {
+    background: transparent;
+    border: none;
+    color: inherit;
+    padding: 0;
+  }
+  blockquote {
+    border-left: 4px solid var(--accent);
+    margin: 16px 0;
+    padding: 8px 16px;
+    background: #f0f5fb;
+    color: #2c3e50;
+  }
+  ul, ol { padding-left: 24px; }
+  li { margin: 4px 0; }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+  .footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .signature-box {
+    border: 1px dashed var(--border);
+    padding: 16px;
+    margin: 16px 0;
+    background: #fcfcfd;
+  }
+  @media print {
+    body { padding: 16px; font-size: 12px; }
+    h2 { page-break-before: auto; }
+    table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="doc-meta">GL-FINAL/2026-06-23 · Emitido em 2026-06-23 22:07 UTC</div>
+  <h1>Decisão Final de Go-Live</h1>
+  <div class="doc-meta">OneVerso / Nexus Affil'IA'te — Versão Operação Real</div>
+  <span class="status">PRONTO PARA ASSINATURA EXECUTIVA</span>
+</header>
+<main>
+<h1 id="pacote-executivo-final-de-go-live">📋 PACOTE EXECUTIVO FINAL DE GO-LIVE</h1>
+<h2 id="oneverso-nexus-affiliate-versao-operacao-real">OneVerso / Nexus Affil'IA'te — Versão Operação Real</h2>
+<ul>
+<li><strong>Documento de referência</strong>: GL-FINAL/2026-06-23</li>
+<li><strong>Data/Hora de emissão</strong>: 2026-06-23 22:07 UTC</li>
+<li><strong>Responsável técnico</strong>: Time de Engenharia OneVerso</li>
+<li><strong>Status do documento</strong>: Pronto para assinatura executiva</li>
+<li><strong>Versão de produção avaliada</strong>: backend <code>1.0.0</code> / commit <code>5855f8d</code> / bundle <code>index-DcIa1Eu6.js</code></li>
+<li><strong>Baseline oficial de rollback</strong>: <code>BASELINE_GOLIVE_20260623T212440Z</code></li>
+</ul>
+<hr />
+<h2 id="1-smoke-test-autenticado-ponta-a-ponta">1. SMOKE TEST AUTENTICADO PONTA A PONTA</h2>
+<h3 id="11-resultado-consolidado-2020-itens-automatizaveis">1.1 Resultado consolidado (20/20 itens automatizáveis ✅)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Camada</th>
+<th>Item testado</th>
+<th>Resultado</th>
+<th style="text-align: center;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Infra</td>
+<td><code>GET /api/health</code></td>
+<td><code>ok=true</code>, <code>mode=full</code>, <code>version=1.0.0</code></td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Infra</td>
+<td>PM2 — <code>mmn-api</code> e workers</td>
+<td>6/6 online (fork mode)</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Conteúdo</td>
+<td><code>whats-new/has-recent?hours=24</code></td>
+<td><code>hasRecent=true</code>, <code>recentCount=39</code></td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Conteúdo</td>
+<td><code>search?q=ioaid</code></td>
+<td>2 itens com vídeo/HTML/PDF</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Conteúdo</td>
+<td><code>stats/popular?days=30</code></td>
+<td><code>fund-00</code> líder (4 views)</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Trilha</td>
+<td><code>lesson/fund-00/next-suggested</code></td>
+<td>Retorna <code>fund-01</code></td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Progresso</td>
+<td><code>lesson-progress/me?userId=1</code></td>
+<td><code>fund-00</code> 16%, 42/261s</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Progresso</td>
+<td><code>lesson-progress/by-section</code></td>
+<td>1 lesson, 16%</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Conteúdo</td>
+<td><code>whats-new?limit=5</code></td>
+<td>ws-03..wb-2026-02</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>10</td>
+<td>UI pública</td>
+<td><code>/login</code></td>
+<td>Layout limpo, sem tour intrusivo</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>11</td>
+<td>UI pública</td>
+<td><code>/dashboard</code> sem sessão</td>
+<td>Bloqueio educado</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>12</td>
+<td>UI pública</td>
+<td><code>/admin/...</code> sem permissão</td>
+<td>Sem stacktrace</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Proteção</td>
+<td><code>/api/v1/academia/search</code> sem token</td>
+<td>HTTP 401</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Proteção</td>
+<td><code>/api/admin/cleanup-views</code> sem token</td>
+<td>HTTP 401</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Proteção</td>
+<td><code>/api/admin/translate-bulk</code> sem token</td>
+<td>HTTP 401</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>16</td>
+<td>UX</td>
+<td>Aula <code>fund-00</code> — player + progresso</td>
+<td><code>watchedSeconds=42</code> registrado</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>17</td>
+<td>UX</td>
+<td>Trilha <code>fund-00 → fund-01</code></td>
+<td>Sugestão correta</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Runtime</td>
+<td>Worktree pós-saneamento</td>
+<td>0 <code>.bak</code> (94 arquivados)</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Runtime</td>
+<td>Baseline oficial</td>
+<td><code>BASELINE_GOLIVE_20260623T212440Z</code></td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Runtime</td>
+<td>Runbooks <code>daily-open</code> e <code>rollback</code></td>
+<td>STATUS VERDE no dry-run</td>
+<td style="text-align: center;">✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-lacuna-remanescente-smoke-autenticado-manual-l1l8">1.2 Lacuna remanescente — smoke autenticado manual (L1–L8)</h3>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>O que validar</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>Login afiliado (credencial real)</td>
+<td>Sessão criada, redirect ao dashboard</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Dashboard autenticado</td>
+<td>Carrega métricas e atalhos</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Abrir uma aula em <code>/academia</code></td>
+<td>Player toca, progresso sobe</td>
+</tr>
+<tr>
+<td>L4</td>
+<td>Retomada (sair e voltar)</td>
+<td>Volta no <code>lastPosition</code></td>
+</tr>
+<tr>
+<td>L5</td>
+<td>Admin Analytics (com permissão)</td>
+<td>Mostra ranking e KPIs</td>
+</tr>
+<tr>
+<td>L6</td>
+<td>Marketplace (compra sandbox)</td>
+<td>Pedido entra em <code>marketplace_orders</code></td>
+</tr>
+<tr>
+<td>L7</td>
+<td>Biblioteca de usuário</td>
+<td>Item entra em <code>marketplace_user_library</code></td>
+</tr>
+<tr>
+<td>L8</td>
+<td>Logout</td>
+<td>Sessão encerrada, 401 nas protegidas</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Veredito</strong>: aprovado em 20/20 automatizáveis; resta apenas L1–L8 com credencial real em D0.</p>
+<hr />
+<h2 id="2-termo-de-decisao-de-prontidao">2. TERMO DE DECISÃO DE PRONTIDÃO</h2>
+<h3 id="decisao">DECISÃO</h3>
+<p><strong>APROVADO PARA OPERAÇÃO REAL ASSISTIDA, COM PROMOÇÃO CONDICIONADA A FULLTIME APÓS D+5 VERDE + L1–L8.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Modalidade</th>
+<th>Decisão</th>
+<th>Vigência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operação assistida em produção</td>
+<td>✅ APROVADA</td>
+<td>A partir de D0</td>
+</tr>
+<tr>
+<td>Operação fulltime irrestrita</td>
+<td>⏸️ CONDICIONADA</td>
+<td>Liberada em D+5 se critérios cumpridos</td>
+</tr>
+<tr>
+<td>Rollback imediato disponível</td>
+<td>✅ SIM</td>
+<td><code>rollback.sh 20260623T212440Z</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="fundamentacao">FUNDAMENTAÇÃO</h3>
+<ol>
+<li>Backend público saudável (<code>ok=true</code>, <code>mode=full</code>, <code>1.0.0</code>).</li>
+<li>54 aulas catalogadas, 39 itens recentes, busca completa.</li>
+<li>Trilha funcional com progresso real persistido.</li>
+<li>Camada de proteção 401 em rotas admin.</li>
+<li>Baseline e snapshot de rollback criados e testados.</li>
+<li>Runbooks publicados em <code>ops/runbooks/</code>.</li>
+<li>Worktree saneado (94 <code>.bak</code> arquivados).</li>
+<li>PM2 estável (6 processos).</li>
+</ol>
+<h3 id="por-que-nao-liberar-fulltime-hoje">POR QUE NÃO LIBERAR FULLTIME HOJE</h3>
+<ul>
+<li>Falta janela mínima (3–5 dias) de operação real observada.</li>
+<li>Smoke L1–L8 com credencial real ainda não executado.</li>
+<li>Sem 5 dias consecutivos de <code>daily-open</code> verde com tráfego real.</li>
+</ul>
+<h3 id="assinaturas">ASSINATURAS</h3>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Nome</th>
+<th>Assinatura</th>
+<th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Responsável técnico</td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>/</em></strong>/2026</td>
+</tr>
+<tr>
+<td>Responsável operacional</td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>/</em></strong>/2026</td>
+</tr>
+<tr>
+<td>Owner da plataforma</td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong></td>
+<td><strong><em>/</em></strong>/2026</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-checklist-d0-d1-d5">3. CHECKLIST D0 / D1 / D5</h2>
+<h3 id="31-d0-dia-da-abertura-assistida">3.1 D0 — DIA DA ABERTURA ASSISTIDA</h3>
+<p><strong>Pré-abertura (até 30 min antes)</strong>
+- [ ] <code>daily-open.sh</code> → STATUS VERDE
+- [ ] <code>/api/health</code> → <code>ok=true</code>, <code>mode=full</code>
+- [ ] PM2 → 6/6 online
+- [ ] Bundle ativo <code>index-DcIa1Eu6.js</code>
+- [ ] Baseline acessível
+- [ ] Plantão definido</p>
+<p><strong>Smoke L1–L8 manual</strong>
+- [ ] L1 Login afiliado
+- [ ] L2 Dashboard
+- [ ] L3 Abrir aula
+- [ ] L4 Retomada
+- [ ] L5 Admin Analytics
+- [ ] L6 Marketplace
+- [ ] L7 Biblioteca
+- [ ] L8 Logout</p>
+<p><strong>Durante o D0</strong>
+- [ ] Health a cada 30 min
+- [ ] PM2 a cada 1h
+- [ ] Sanity <code>whats-new</code> / <code>popular</code> a cada 2h
+- [ ] Acompanhar <code>lesson-progress</code>
+- [ ] Diário operacional aberto</p>
+<h3 id="32-d1-estabilizacao">3.2 D1 — ESTABILIZAÇÃO</h3>
+<ul>
+<li>[ ] <code>daily-open.sh</code> → VERDE</li>
+<li>[ ] Logs PM2 sem crashes</li>
+<li>[ ] Error rate &lt; 1%</li>
+<li>[ ] Crescimento orgânico de views/progresso/pedidos</li>
+<li>[ ] Smoke leve L1–L8</li>
+<li>[ ] Daily report</li>
+</ul>
+<h3 id="33-d5-decisao-de-fulltime">3.3 D5 — DECISÃO DE FULLTIME</h3>
+<p><strong>Obrigatórios cumulativos</strong>
+- [ ] 5 dias úteis com <code>daily-open</code> VERDE
+- [ ] 0 incidentes críticos abertos
+- [ ] L1–L8 manual ≥ 1 ciclo aprovado
+- [ ] PM2 sem reinício anormal por 72h
+- [ ] Marketplace ≥ 1 pedido real OK
+- [ ] Biblioteca ≥ 1 item real OK
+- [ ] Catálogo consistente
+- [ ] Rollback funcional
+- [ ] 401 mantido nas protegidas
+- [ ] Tráfego real em ≥ 3 dias</p>
+<p><strong>Saída</strong>
+- 10/10 + ≥4/6 qualitativos → <strong>PROMOVER A FULLTIME</strong>
+- 10/10 + &lt;4/6 → <strong>FULLTIME PARCIAL</strong>
+- &lt;10/10 → <strong>ESTENDER ASSISTIDA +3 DIAS</strong></p>
+<hr />
+<h2 id="4-matriz-final-de-risco">4. MATRIZ FINAL DE RISCO</h2>
+<table>
+<thead>
+<tr>
+<th>Área</th>
+<th>Risco</th>
+<th style="text-align: center;">Impacto</th>
+<th style="text-align: center;">Prob.</th>
+<th style="text-align: center;">Sev.</th>
+<th>Mitigação</th>
+<th>Responsável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend API</td>
+<td>Indisponibilidade <code>mmn-api</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">10</td>
+<td>PM2 auto-restart + rollback baseline</td>
+<td>Eng. Backend</td>
+</tr>
+<tr>
+<td>Autenticação</td>
+<td>Falha L1–L8</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">10</td>
+<td>Smoke manual D0 + rollback</td>
+<td>Eng. Backend / Owner</td>
+</tr>
+<tr>
+<td>Banco PostgreSQL</td>
+<td>Perda de dados</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5</td>
+<td>Backup diário + monitoramento disco</td>
+<td>Infra/DBA</td>
+</tr>
+<tr>
+<td>Marketplace/Billing</td>
+<td>Pedido não vira item</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">8</td>
+<td>Smoke L6–L7 + reconciliação</td>
+<td>Eng. Backend / Comercial</td>
+</tr>
+<tr>
+<td>Conteúdo Academ'IA</td>
+<td>404 em vídeo/PDF/HTML</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td>Mirror oficial + monitorar <code>whats-new</code></td>
+<td>Eng. Conteúdo</td>
+</tr>
+<tr>
+<td>Progresso/Trilha</td>
+<td>Não persiste</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td>Endpoint validado + alerta diário</td>
+<td>Eng. Backend</td>
+</tr>
+<tr>
+<td>Admin/Permissões</td>
+<td>Vazamento de rota</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5</td>
+<td>Guards 401 ativos</td>
+<td>Eng. Backend</td>
+</tr>
+<tr>
+<td>UX</td>
+<td>Tour intrusivo</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td>Tour pós-login</td>
+<td>Eng. Frontend</td>
+</tr>
+<tr>
+<td>Runtime/Memória</td>
+<td>Heap alto (90%)</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>12</strong></td>
+<td>Restart programado + monitorar</td>
+<td>Infra</td>
+</tr>
+<tr>
+<td>Latência HTTP</td>
+<td>p95 picos (2197ms)</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">9</td>
+<td>Investigar rota + revisar chunking</td>
+<td>Eng. Full-stack</td>
+</tr>
+<tr>
+<td>Repositório/Deploy</td>
+<td>Worktree poluído</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td>Saneamento aplicado + baseline</td>
+<td>Eng. Backend</td>
+</tr>
+<tr>
+<td>Service Worker</td>
+<td>Cache velho</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td>Validar <code>sw.js</code> + bump versão</td>
+<td>Eng. Frontend</td>
+</tr>
+<tr>
+<td>Telemetria</td>
+<td>Sem alertas proativos</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">9</td>
+<td>Alertas mínimos em D+3</td>
+<td>Infra</td>
+</tr>
+<tr>
+<td>Documentação</td>
+<td>Time sem playbook</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td>Runbooks publicados</td>
+<td>Owner</td>
+</tr>
+<tr>
+<td>LGPD/Compliance</td>
+<td>Dado em log</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td>Revisão de logs D+7</td>
+<td>Owner / Jurídico</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Severidade</strong>: 1–4 baixo · 5–9 médio · 10–14 alto · 15–25 crítico</p>
+<hr />
+<h2 id="5-plano-de-abertura-monitoramento-e-rollback">5. PLANO DE ABERTURA, MONITORAMENTO E ROLLBACK</h2>
+<h3 id="51-rotina-diaria">5.1 Rotina diária</h3>
+<pre><code>08:00 → daily-open.sh
+08:05 → confirmar STATUS VERDE
+08:10 → pm2 list (6/6 online)
+08:15 → curl /api/health
+08:20 → abrir diário operacional
+</code></pre>
+<h3 id="52-monitoramento">5.2 Monitoramento</h3>
+<table>
+<thead>
+<tr>
+<th>Janela</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30 min (D0–D2)</td>
+<td>Health check</td>
+</tr>
+<tr>
+<td>1h</td>
+<td>PM2 status</td>
+</tr>
+<tr>
+<td>2h</td>
+<td>Sanity <code>whats-new</code></td>
+</tr>
+<tr>
+<td>4h</td>
+<td>Tráfego real (<code>lesson-progress</code>, <code>popular</code>)</td>
+</tr>
+<tr>
+<td>Fechamento</td>
+<td><code>daily-open</code> de fechamento</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-gatilhos-de-rollback-automatico-e-imediato">5.3 Gatilhos de rollback (automático e imediato)</h3>
+<ul>
+<li>Health ≠ 200 por &gt;5 min</li>
+<li><code>mmn-api</code> &gt;3 restarts em 10 min</li>
+<li>Falha de login generalizada (&gt;50%)</li>
+<li>Erro marketplace &gt;10%</li>
+<li>404 em massa em conteúdo</li>
+<li>Vazamento de rota admin (200 sem token)</li>
+</ul>
+<h3 id="54-procedimento">5.4 Procedimento</h3>
+<pre><code class="language-bash">sudo /var/www/oneverso/runbooks/rollback.sh 20260623T212440Z
+</code></pre>
+<p>Tempo alvo: &lt; 5 min.</p>
+<hr />
+<h2 id="6-criterios-de-promocao-fulltime">6. CRITÉRIOS DE PROMOÇÃO FULLTIME</h2>
+<h3 id="obrigatorios-1010">Obrigatórios (10/10)</h3>
+<ol>
+<li>5 dias úteis com <code>daily-open</code> VERDE</li>
+<li>0 incidentes críticos</li>
+<li>L1–L8 manual ≥ 1 ciclo</li>
+<li>PM2 estável ≥ 72h</li>
+<li>Marketplace ≥ 1 pedido real OK</li>
+<li>Biblioteca ≥ 1 item real OK</li>
+<li>Catálogo consistente em <code>whats-new</code>, <code>popular</code>, <code>search</code></li>
+<li>Rollback funcional + baseline preservado</li>
+<li>401 mantido nas rotas protegidas</li>
+<li>Tráfego real ≥ 3 dias</li>
+</ol>
+<h3 id="qualitativos-46">Qualitativos (≥ 4/6)</h3>
+<ul>
+<li>Telemetria mínima ativa</li>
+<li>Alertas proativos</li>
+<li>Plano de incidentes treinado</li>
+<li>Documentação de release atualizada</li>
+<li>Equipe ciente do procedimento</li>
+<li>Backup de banco validado ≤ 7 dias</li>
+</ul>
+<hr />
+<h2 id="7-roadmap-pos-fulltime">7. ROADMAP PÓS-FULLTIME</h2>
+<p><strong>0–7 dias</strong>: telemetria/alertas, playbook de incidentes, rotina diária consolidada, 1ª revisão de UX.
+<strong>7–30 dias</strong>: otimização bundle/SW, endurecimento marketplace, telemetria de produto, governança de release.
+<strong>30–90 dias</strong>: segurança/LGPD, SEO, otimização frontend, suporte ao usuário, plano de escala.</p>
+<hr />
+<h2 id="8-entregaveis">8. ENTREGÁVEIS</h2>
+<table>
+<thead>
+<tr>
+<th>Documento</th>
+<th>Localização</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Baseline oficial</td>
+<td><code>ops/baselines/BASELINE_GOLIVE_20260623T212440Z.md</code></td>
+</tr>
+<tr>
+<td>Snapshot rollback</td>
+<td><code>/var/www/oneverso/baselines/snapshots/20260623T212440Z/</code></td>
+</tr>
+<tr>
+<td>Runbook abertura</td>
+<td><code>ops/runbooks/daily-open.sh</code></td>
+</tr>
+<tr>
+<td>Runbook rollback</td>
+<td><code>ops/runbooks/rollback.sh</code></td>
+</tr>
+<tr>
+<td>Termo de decisão</td>
+<td><code>ops/golive/DECISAO_FINAL_GOLIVE_20260623.md</code></td>
+</tr>
+<tr>
+<td>Checklist D0/D1/D5</td>
+<td>seção 3 deste documento</td>
+</tr>
+<tr>
+<td>Matriz de risco</td>
+<td>seção 4 deste documento</td>
+</tr>
+<tr>
+<td>Plano abertura/monitoramento/rollback</td>
+<td>seção 5 deste documento</td>
+</tr>
+<tr>
+<td>Critérios fulltime</td>
+<td>seção 6 deste documento</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-veredito-final">9. VEREDITO FINAL</h2>
+<p><strong>A plataforma OneVerso / Nexus Affil'IA'te está OPERACIONALMENTE PRONTA para entrar em produção real em modo assistido a partir do próximo D0.</strong></p>
+<p><strong>A promoção para fulltime irrestrito é APROVADA EM PRINCÍPIO</strong>, condicionada ao cumprimento dos critérios da seção 6 em D+5.</p>
+<p><strong>Recomendação final</strong>: assinar este termo, executar D0 amanhã pela manhã com <code>daily-open.sh</code>, executar smoke L1–L8 manual nas primeiras horas e seguir o monitoramento da seção 5 até decisão de D+5.</p>
+<hr />
+<p><strong>Documento encerrado em</strong>: 2026-06-23 22:07 UTC
+<strong>Próxima revisão prevista</strong>: D+5</p>
+</main>
+<div class="footer">
+  Documento gerado automaticamente · OneVerso / Nexus Affil'IA'te · 2026
+</div>
+</body>
+</html>

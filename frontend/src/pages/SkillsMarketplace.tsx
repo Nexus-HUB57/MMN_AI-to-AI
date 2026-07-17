@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
 import { getAgentSkillEntitlement, getLevelLabel } from "@/lib/nexus-marketplace";
 import { CheckCircle2, Cpu, Lock, Sparkles } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 type LevelFilter = "all" | "basico" | "intermediario" | "avancado";
 
@@ -22,6 +23,127 @@ const TIER_LABEL: Record<string, string> = {
   pleno: "Acesso Pleno (Básico + Intermediário + Avançado)",
 };
 
+
+// SKILLS_RUNTIME_PANEL_V2
+function SkillsRuntimePanel() {
+  const handlersQuery = trpc.agentSkillsRuntime.listHandlers.useQuery();
+  const executeMutation = trpc.agentSkillsRuntime.execute.useMutation();
+  const [executingSlug, setExecutingSlug] = useState<string | null>(null);
+  const [lastResult, setLastResult] = useState<{ slug: string; ok: boolean; message: string } | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
+  if (handlersQuery.isLoading) {
+    return (
+      <section className="rounded-3xl border border-quantum-cyan/30 bg-quantum-cyan/5 p-6">
+        <p className="text-sm text-slate-300">⏳ Carregando handlers executáveis…</p>
+      </section>
+    );
+  }
+
+  const handlers = handlersQuery.data?.handlers ?? [];
+  const categories = Array.from(new Set(handlers.map((h: any) => h.category))).sort();
+  const filtered = categoryFilter === "all" ? handlers : handlers.filter((h: any) => h.category === categoryFilter);
+
+  const runSkill = async (slug: string) => {
+    setExecutingSlug(slug);
+    setLastResult(null);
+    try {
+      const res: any = await executeMutation.mutateAsync({
+        slug,
+        params: {},
+        dryRun: true,
+      } as any);
+      setLastResult({ slug, ok: true, message: `Skill "${slug}" executada (dry-run). ${typeof res === "object" ? JSON.stringify(res).slice(0, 140) : ""}` });
+    } catch (e: any) {
+      setLastResult({ slug, ok: false, message: e?.message || "Falha na execução" });
+    } finally {
+      setExecutingSlug(null);
+    }
+  };
+
+  const categoryColors: Record<string, string> = {
+    sales: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    content: "bg-quantum-cyan/15 text-quantum-cyan border-quantum-cyan/30",
+    publishing: "bg-quantum-purple/15 text-quantum-purple border-quantum-purple/30",
+    intelligence: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    analytics: "bg-blue-500/15 text-blue-300 border-blue-500/30",
+    finance: "bg-yellow-500/15 text-yellow-300 border-yellow-500/30",
+    decision: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    strategy: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",
+    optimization: "bg-pink-500/15 text-pink-300 border-pink-500/30",
+    retention: "bg-teal-500/15 text-teal-300 border-teal-500/30",
+    i18n: "bg-slate-500/15 text-slate-300 border-slate-500/30",
+  };
+
+  return (
+    <section className="rounded-3xl border border-quantum-cyan/30 bg-[linear-gradient(180deg,rgba(7,89,133,0.15),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-cyan-900/20">
+      <div className="flex flex-col gap-3 mb-5 md:flex-row md:items-center md:justify-between">
+        <div>
+          <Badge className="border border-emerald-400/30 bg-emerald-400/10 text-emerald-300 mb-2">
+            ⚡ Skills Executáveis · Runtime ao vivo
+          </Badge>
+          <h2 className="text-2xl font-bold text-white">{handlers.length} Handlers operacionais no agente</h2>
+          <p className="text-sm text-slate-300 mt-1">
+            Cada handler é uma skill ativa do seu Agente IA. Clique em <strong>"Executar"</strong> para disparar (dry-run) e validar parâmetros antes da execução real.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setCategoryFilter("all")}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${categoryFilter === "all" ? "bg-quantum-cyan text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+          >
+            Todas ({handlers.length})
+          </button>
+          {categories.map((cat: any) => (
+            <button
+              key={cat}
+              onClick={() => setCategoryFilter(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${categoryFilter === cat ? "bg-quantum-cyan text-slate-950" : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+            >
+              {cat} ({handlers.filter((h: any) => h.category === cat).length})
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {lastResult && (
+        <div className={`mb-4 rounded-xl border p-3 text-sm ${lastResult.ok ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200" : "border-rose-500/40 bg-rose-500/10 text-rose-200"}`}>
+          {lastResult.ok ? "✅" : "❌"} <strong>{lastResult.slug}</strong>: {lastResult.message}
+        </div>
+      )}
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filtered.map((h: any) => (
+          <div key={h.slug} className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 hover:border-quantum-cyan/40 transition group">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h3 className="text-sm font-bold text-white leading-tight group-hover:text-quantum-cyan transition">
+                {h.title}
+              </h3>
+              <span className="text-[10px] font-mono text-slate-500">v{h.version}</span>
+            </div>
+            <p className="text-xs text-slate-500 mb-2 font-mono">{h.slug}</p>
+            <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border ${categoryColors[h.category] ?? "bg-white/10 text-slate-300 border-white/20"}`}>
+              {h.category}
+            </span>
+            {h.supportsAutonomous && (
+              <span className="ml-1 inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+                Autônomo
+              </span>
+            )}
+            <button
+              onClick={() => runSkill(h.slug)}
+              disabled={executingSlug === h.slug}
+              className="mt-3 w-full px-3 py-2 rounded-lg text-xs font-bold bg-gradient-to-r from-quantum-cyan to-emerald-400 text-slate-950 hover:from-quantum-cyan/90 hover:to-emerald-300 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            >
+              {executingSlug === h.slug ? "⏳ Executando…" : "▶ Executar (dry-run)"}
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function SkillsMarketplace() {
   const { profile } = useMarketplaceProfile();
   const entitlement = useMemo(() => getAgentSkillEntitlement(profile), [profile]);
@@ -32,6 +154,7 @@ export default function SkillsMarketplace() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
+        <SkillsRuntimePanel />
         <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="space-y-3">

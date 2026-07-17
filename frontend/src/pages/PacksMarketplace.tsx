@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
+// PACK_ENTITLEMENT_CARD_V2
+import PackEntitlementsCard from "@/components/PackEntitlementsCard";
 import {
   CareerStage,
   formatCurrency,
@@ -146,6 +148,7 @@ export default function PacksMarketplace() {
 
   return (
     <DashboardLayout>
+            <PackEntitlementsCard variant="full" />
       <div className="space-y-8 pb-8">
         {checkoutFeedback && (
           <div className="rounded-2xl border border-quantum-lime/20 bg-quantum-lime/10 px-4 py-3 text-sm text-quantum-lime">
@@ -211,24 +214,10 @@ export default function PacksMarketplace() {
                   <p className="mt-2 text-sm leading-6 text-slate-300">{firstAvailable.description}</p>
                   <div className="mt-5 flex items-end justify-between gap-3">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">investimento</p>
-                      <p className="mt-2 text-4xl font-black text-white">{formatCurrency(firstAvailable.priceCents)}</p>
+                      <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">Faixa de carreira</p>
+                      <p className="mt-2 text-xl font-semibold text-white">{STAGE_LABELS[firstAvailable.stage].title}</p>
                     </div>
-                    <Link
-                      href={buildMarketplaceCheckoutUrl({
-                        source: "packs",
-                        type: "pack",
-                        slug: firstAvailable.slug,
-                        name: firstAvailable.name,
-                        amountCents: firstAvailable.priceCents,
-                        description: firstAvailable.description,
-                      })}
-                    >
-                      <Button className="gradient-btn">
-                        Comprar agora
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <Badge className="border border-white/10 bg-white/5 text-slate-200">{firstAvailable.shortName}</Badge>
                   </div>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
@@ -294,8 +283,8 @@ export default function PacksMarketplace() {
                         <p className="mt-2 max-w-xl text-sm text-slate-200">{stageInfo.subtitle}</p>
                       </div>
                       <div className="rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-right">
-                        <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">Preço</p>
-                        <p className="mt-2 text-2xl font-black text-white">{formatCurrency(pack.priceCents)}</p>
+                        <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">Faixa</p>
+                        <p className="mt-2 text-sm font-semibold text-white">{stageInfo.title}</p>
                       </div>
                     </div>
                   </div>
@@ -373,26 +362,14 @@ export default function PacksMarketplace() {
                         Pack ativo
                       </Button>
                     ) : isAvailable ? (
-                      <Link
-                        href={buildMarketplaceCheckoutUrl({
-                          source: "packs",
-                          type: "pack",
-                          slug: pack.slug,
-                          name: pack.name,
-                          amountCents: pack.priceCents,
-                          description: pack.description,
-                        })}
-                      >
-                        <Button className="gradient-btn">
-                          <Zap className="mr-2 h-4 w-4" />
-                          Comprar pack
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
+                      <Button variant="outline" disabled className="border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan">
+                        <Zap className="mr-2 h-4 w-4" />
+                        Disponível na sua jornada
+                      </Button>
                     ) : (
                       <Button variant="outline" disabled className="border-white/10 bg-white/5 text-slate-400">
                         <Lock className="mr-2 h-4 w-4" />
-                        Bloqueado no momento
+                        Aguardando critérios
                       </Button>
                     )}
                   </div>

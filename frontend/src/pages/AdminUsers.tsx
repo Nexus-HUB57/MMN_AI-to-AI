@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Edit2, Search, Shield, User } from "lucide-react";
+import { Ban, CheckCircle2, Search, Shield, User } from "lucide-react";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ export default function AdminUsers() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<"all" | UserRole>("all");
-  const [selectedUser, setSelectedUser] = useState<{ id: number; role: UserRole } | null>(null);
 
   const usersQuery = trpc.admin.listUsers.useQuery({
     page,
@@ -31,15 +30,13 @@ export default function AdminUsers() {
     role: roleFilter === "all" ? undefined : roleFilter,
   });
 
-  const updateUserMutation = trpc.admin.updateUser.useMutation({
-    onSuccess: () => {
-      toast.success("Papel do usuário atualizado com sucesso");
-      usersQuery.refetch();
-      setSelectedUser(null);
+  const utils = trpc.useUtils();
+  const setOperationalStatus = trpc.admin.setAffiliateOperationalStatus.useMutation({
+    onSuccess: (payload: any) => {
+      toast.success(payload.status === "suspended" ? "Usuário bloqueado operacionalmente." : "Usuário reativado.");
+      void utils.admin.listUsers.invalidate();
     },
-    onError: (error) => {
-      toast.error(error.message || "Erro ao atualizar papel do usuário");
-    },
+    onError: (error: any) => toast.error(error.message || "Não foi possível atualizar o status operacional."),
   });
 
   const users = usersQuery.data?.users || [];
@@ -50,15 +47,6 @@ export default function AdminUsers() {
     const regular = users.filter((user) => user.role === "user").length;
     return { admins, regular, total: pagination?.total || 0 };
   }, [pagination?.total, users]);
-
-  const handleUpdateRole = () => {
-    if (!selectedUser) return;
-
-    updateUserMutation.mutate({
-      id: selectedUser.id,
-      role: selectedUser.role,
-    });
-  };
 
   return (
     <AdminDashboardLayout>
@@ -134,7 +122,7 @@ export default function AdminUsers() {
               <tr className="border-b border-slate-200 text-left">
                 <th className="px-4 py-3 font-semibold text-slate-900">Usuário</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Email</th>
-                <th className="px-4 py-3 font-semibold text-slate-900">Papel</th>
+                <th className="px-4 py-3 font-semibold text-slate-900">Papel / status</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Cadastro</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Último acesso</th>
                 <th className="px-4 py-3 font-semibold text-slate-900">Ações</th>
@@ -178,6 +166,11 @@ export default function AdminUsers() {
                         {user.role === "admin" && <Shield size={14} />}
                         {user.role === "admin" ? "Admin" : "Usuário"}
                       </span>
+                      {user.affiliateStatus && (
+                        <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${user.affiliateStatus === "suspended" ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}`}>
+                          {user.affiliateStatus === "suspended" ? "Bloqueado" : "Ativo"}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-600">
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString("pt-BR") : "N/A"}
@@ -186,14 +179,21 @@ export default function AdminUsers() {
                       {user.lastSignedIn ? new Date(user.lastSignedIn).toLocaleString("pt-BR") : "Sem registro"}
                     </td>
                     <td className="px-4 py-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedUser({ id: user.id, role: user.role })}
-                      >
-                        <Edit2 size={16} />
-                        <span className="ml-2">Editar papel</span>
-                      </Button>
+                      {user.affiliateStatus ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={setOperationalStatus.isPending}
+                          onClick={() => setOperationalStatus.mutate({
+                            userId: user.id,
+                            status: user.affiliateStatus === "suspended" ? "active" : "suspended",
+                          })}
+                          title="Controle operacional: não altera papel administrativo"
+                        >
+                          {user.affiliateStatus === "suspended" ? <CheckCircle2 size={16} /> : <Ban size={16} />}
+                          <span className="ml-2">{user.affiliateStatus === "suspended" ? "Reativar" : "Bloquear"}</span>
+                        </Button>
+                      ) : <span className="text-xs text-slate-500">Sem perfil afiliado</span>}
                     </td>
                   </tr>
                 ))
@@ -232,36 +232,19 @@ export default function AdminUsers() {
           </div>
         </Card>
 
-        {selectedUser && (
-          <Card className="bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900">Atualizar papel do usuário</h3>
-            <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">Novo papel</label>
-                <Select
-                  value={selectedUser.role}
-                  onValueChange={(value: UserRole) => setSelectedUser((current) => current ? { ...current, role: value } : current)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">Usuário</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex gap-3">
-                <Button onClick={handleUpdateRole} disabled={updateUserMutation.isPending}>
-                  {updateUserMutation.isPending ? "Salvando..." : "Salvar alteração"}
-                </Button>
-                <Button variant="outline" onClick={() => setSelectedUser(null)}>
-                  Cancelar
-                </Button>
-              </div>
+        <Card className="bg-white p-4 shadow-sm border-amber-200 bg-amber-50/50">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 rounded-full bg-amber-100 p-2 text-amber-700">
+              <Shield size={16} />
             </div>
-          </Card>
-        )}
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Papel administrativo protegido</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Papéis administrativos são protegidos por governança. Neste painel, administradores podem bloquear ou reativar perfis afiliados sem elevar privilégios.
+              </p>
+            </div>
+          </div>
+        </Card>
       </div>
     </AdminDashboardLayout>
   );

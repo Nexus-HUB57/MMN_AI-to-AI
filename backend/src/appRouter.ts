@@ -9,6 +9,7 @@ import { dashboardRouter } from "./routers/dashboardRouter";
 import { dropshippingRouter } from "./routers/dropshippingRouter";
 import { logRouter } from "./routers/logRouter";
 import { marketplacesRouter } from "./domains/marketplace/router";
+import { marketplaceNexusRouter } from "./routers/marketplaceNexusRouter";
 import { affiliateRouter as mmnRouter } from "./domains/affiliate/router";
 import { observabilityRouter } from "./routers/observabilityRouter";
 import { orchestrationRouter } from "./routers/orchestrationRouter";
@@ -41,6 +42,9 @@ import { agentSkillsRuntimeRouter } from "./routers/agentSkillsRuntimeRouter";
 import { pixRouter } from "./routers/pixRouter";
 import { nexusOperationsRouter } from "./routers/nexusOperationsRouter";
 import { labNexusRouter } from "./routers/labNexusRouter";
+import { academiaEadRouter } from "./routers/academiaEadRouter";
+import { meetingRouter } from "./routers/meetingRouter";
+import { a2aRouter } from "./agentic/a2a/router";
 
 export const appRouter = router({
   system: router({
@@ -151,6 +155,9 @@ export const appRouter = router({
         pix: true,
         nexus: true,
         subscriptions: true,
+        academiaEad: true,
+        meetings: true,
+        a2a: true,
       },
     })),
   }),
@@ -166,6 +173,7 @@ export const appRouter = router({
   dropshipping: dropshippingRouter,
   logs: logRouter,
   marketplaces: marketplacesRouter,
+  marketplaceNexus: marketplaceNexusRouter,
   orchestration: orchestrationRouter,
   observability: observabilityRouter,
   payments: paymentsRouter,
@@ -178,6 +186,9 @@ export const appRouter = router({
   marketplaceProfile: marketplaceProfileRouter,
   partners: partnersRouter,
   labNexus: labNexusRouter,
+  academiaEad: academiaEadRouter,
+  meetings: meetingRouter,
+  a2a: a2aRouter,
   subscriptions: subscriptionsRouter,
   newsletter: newsletterRouter,
   cms: cmsRouter,

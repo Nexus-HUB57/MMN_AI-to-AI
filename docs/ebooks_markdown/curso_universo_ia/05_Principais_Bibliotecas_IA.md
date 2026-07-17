@@ -1,4 +1,4 @@
-![Capa](../../../assets/ebook_covers/curso_universo_ia/05_Principais_Bibliotecas_IA.webp)
+![Capa](curso-universo-ia--05-principais-bibliotecas-ia.webp)
 
 **Quais são as principais Bibliotecas IA?**
 

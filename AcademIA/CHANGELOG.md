@@ -2,13 +2,45 @@
 title: "CHANGELOG · Academ'IA"
 description: "Histórico de versões da Academ'IA · HUB de Conhecimento & Sabedoria"
 tags: [changelog, versionamento, historico, academia]
-version: 1.1.1
-last_updated: 2026-06-02
+version: 1.2.0
+last_updated: 2026-06-28
 ---
 
 # 📜 CHANGELOG · Academ'IA
 
 > Histórico de versões do HUB Academ'IA — Nexus Affil'IA'te. Segue **Semantic Versioning**: MAJOR (breaking), MINOR (compatível, novo asset), PATCH (correções, polish).
+
+---
+
+## [1.2.0] — 2026-06-28 · "Expansão Master & Elite"
+
+### ✨ Novos Materiais (8)
+
+**Apostilas (2 novas):**
+- `apostilas/11-seo-marketing-conteudo-ia.md` — Framework AEO/GEO para ser citado por IAs generativas (substituindo SEO clássico). 7 camadas de conteúdo, schema markup para IAs, métricas de GEO.
+- `apostilas/12-seguranca-ofensiva-pentest-agentes-ia.md` — Red Team Bible com 23 vetores de ataque contra sistemas multi-agente. Prompt injection, tool abuse, memory poisoning, federation attacks, supply chain.
+
+**Tutoriais (5 novos):**
+- `tutoriais/11-auditoria-skills-master.md` (TUT-MAS-04) — Análise completa de uso, segurança e saúde das skills do agente.
+- `tutoriais/12-configurar-ab-test-judge.md` (TUT-MAS-05) — A/B testing com significância estatística (p < 0.05) e decisão automática via Judge.
+- `tutoriais/13-deploy-multi-tenant-elite.md` (TUT-ELI-01) — Plataforma SaaS white-label com RLS, billing, e 3 planos.
+- `tutoriais/14-agente-federado-elite.md` (TUT-ELI-02) — mTLS, marketplace de skills, billing settlement, governança.
+- `tutoriais/15-auditoria-lgpd-automatizada.md` (TUT-ELI-03) — Scanner de PII, DPIA, right to be forgotten, notificação 72h.
+
+**Certificações (1 nova):**
+- `certificacoes/MAS-plus-certificacao-master-plus.md` — Master Plus (MAS+), intermediária entre CEN e CEN+. 60 dias, 5 core skills + 3 advanced skills + soft skills.
+
+### 📊 Estatísticas
+- Apostilas: 10 → **12** (+20%)
+- Tutoriais: 10 → **15** (+50%)
+- Certificações: 4 → **5** (+25%)
+
+### 🎯 Tópicos Cobertos
+- **SEO/GEO** — novo framework AEO/GEO com 7 padrões para citar em IAs generativas
+- **Red Team** — 23 vetores de ataque + PoC + defesas
+- **Multi-tenant SaaS** — RLS + billing + white-label
+- **Federated Agents** — mTLS + marketplace + governance
+- **LGPD Automation** — DPIA + right to be forgotten + incident notification
 
 ---
 
@@ -148,7 +180,41 @@ last_updated: 2026-06-02
 
 ---
 
-## 📊 Métricas de Crescimento
+## [1.2.0] — 2026-06-28 · "Análise Técnica + Materiais Pendentes"
+
+### 🆕 Novos Materiais
+
+- **`ANALISE_TECNICA_E_ROADMAP.md`**: auditoria completa + roadmap de 90 dias (4 sprints)
+- **`FAQ.md`**: 30 perguntas frequentes sobre AcademIA, cursos, certificações e operação
+- **`certificacoes/banco-questoes-con.md`**: 50 questões oficiais da certificação CON com gabarito comentado
+
+### 🎯 Gaps Identificados (próximas sprints)
+
+- **GAP-01** Banco de questões CEN e CEN+ (atual só CON)
+- **GAP-02** Tutoriais #15-30 (atual só vai até #14)
+- **GAP-03** Cursos de RAG, Deploy, Segurança (atual só cobre 2015-level)
+- **GAP-04** Materiais em vídeo (atual 100% texto)
+- **GAP-05** Landing page pública (atualmente só HTML não-indexado)
+- **GAP-07** Trilha paralela Comercial vs Técnica
+
+### 📋 Próximas Entregas (Sprint 1 - 3 semanas)
+
+- 6 tutoriais novos: RAG, Whisper, OpenAI API, fine-tuning, deploy, prompt CTR
+- 3 cursos novos: RAG em Produção, Deploy em Produção, Segurança/Jailbreaks
+- 3 bancos de questões: CON, CEN, CEN+
+
+### 📊 Métricas de Crescimento Atualizadas
+
+| Versão | Data | Cursos | Tools | Prompts | Templates | Workflows | Tutoriais | Playbooks | Apostilas |
+|---|---|---|---|---|---|---|---|---|---|
+| 1.0.0 | 2026-06-02 | 15 | 38 | 6 | 3 | 3 | 12 | 7 | 0 |
+| 1.1.0 | 2026-06-02 | 15 | 40 | 8 | 3 | 3 | 14 | 7 | 0 |
+| 1.2.0 | **2026-06-28** | 15 | 40+ | 8 | 3 | 3 | 14 | 7 | 10 |
+
+**Total estimado de arquivos**: 100+ .md · 15.000+ linhas
+**Próximo milestone**: v1.3 (Sprint 1) → 18+ cursos, 20+ tutoriais, 3 bancos de questões
+
+---
 
 | Versão | Data | Cursos | Tools | Prompts | Templates | Workflows | Tutoriais | Playbooks |
 |---|---|---|---|---|---|---|---|---|

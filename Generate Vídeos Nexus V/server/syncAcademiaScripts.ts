@@ -20,14 +20,14 @@ function parseScriptFile(filePath: string): AcademiaScript | null {
     const fileName = path.basename(filePath);
     
     // Extract module ID and name from filename
-    const match = fileName.match(/^(\d+)-(.+?)-roteiro\.md$/);
+    const match = fileName.match(/^(?:(\d+)-)?(.+?)-roteiro\.md$/);
     if (!match) return null;
     
-    const [, moduleId, moduleName] = match;
-    const title = moduleName
-      .split('-')
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
+    const [, moduleId, moduleSlug] = match;
+    
+    // Try to extract title from markdown frontmatter
+    const titleMatch = content.match(/# Roteiro da Vídeo Aula: (.+?)\n/);
+    const title = titleMatch ? titleMatch[1].trim() : moduleSlug.replace(/[-_]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     
     // Detect persona
     let persona = 'Desconhecida';
@@ -64,7 +64,9 @@ function scanAcademiaScripts(basePath: string): AcademiaScript[] {
     const levelPath = path.join(basePath, 'AcademIA', 'cursos', level);
     if (!fs.existsSync(levelPath)) continue;
     
-    const files = fs.readdirSync(levelPath).filter(f => f.endsWith('-roteiro.md'));
+    const files = fs.readdirSync(levelPath, { recursive: true, withFileTypes: true })
+      .filter(dirent => dirent.isFile() && dirent.name.endsWith('-roteiro.md'))
+      .map(dirent => path.join(dirent.path, dirent.name));
     
     for (const file of files) {
       const scriptData = parseScriptFile(path.join(levelPath, file));
@@ -106,7 +108,7 @@ export async function syncAcademiaScripts(
         const project = await createVideoProject({
           userId,
           title: script.title,
-          description: `Sincronizado de AcademIA - ${script.level}`,
+          description: `Sincronizado de AcademIA - ${script.level} - ${script.title}`,
           persona: script.persona as any,
           level: script.level as any,
           module: script.module,

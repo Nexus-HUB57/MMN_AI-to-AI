@@ -18,6 +18,34 @@ interface QuoteCacheEntry {
 const CACHE_TTL_MS = 30_000;
 let cache: QuoteCacheEntry | null = null;
 
+
+// D18-mercadobitcoin
+async function fetchFromMercadoBitcoin(): Promise<number | null> {
+  try {
+    const res = await fetch("https://api.mercadobitcoin.net/api/v4/tickers?symbols=BTC-BRL", {
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as Array<{ last?: string }>;
+    const price = Number(data?.[0]?.last);
+    return Number.isFinite(price) && price > 0 ? price : null;
+  } catch { return null; }
+}
+
+async function fetchFromFoxbit(): Promise<number | null> {
+  try {
+    const res = await fetch("https://api.foxbit.com.br/rest/v3/markets/btcbrl/ticker/24hr", {
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return null;
+    const j = await res.json();
+    const price = Number(j?.data?.[0]?.last_trade?.price);
+    return Number.isFinite(price) && price > 0 ? price : null;
+  } catch { return null; }
+}
+
 async function fetchFromBinance(): Promise<number | null> {
   try {
     const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCBRL", {
@@ -69,6 +97,19 @@ export async function getBtcBrlQuote(): Promise<BtcBrlQuote> {
       fetchedAt: new Date(cache.fetchedAt).toISOString(),
       ttlSeconds: Math.max(0, Math.floor((CACHE_TTL_MS - (now - cache.fetchedAt)) / 1000)),
     };
+  }
+
+  // D18-orchestrator: Mercado Bitcoin (BR) → Foxbit → Binance → CoinGecko
+  const mb = await fetchFromMercadoBitcoin();
+  if (mb) {
+    cache = { brlPerBtc: mb, source: "mercadobitcoin" as any, fetchedAt: now };
+    return { brlPerBtc: mb, btcPerBrl: 1/mb, source: "mercadobitcoin" as any, custodian: "Mercado Bitcoin" as any, fetchedAt: new Date(now).toISOString(), ttlSeconds: 30 };
+  }
+
+  const fox = await fetchFromFoxbit();
+  if (fox) {
+    cache = { brlPerBtc: fox, source: "foxbit" as any, fetchedAt: now };
+    return { brlPerBtc: fox, btcPerBrl: 1/fox, source: "foxbit" as any, custodian: "Foxbit" as any, fetchedAt: new Date(now).toISOString(), ttlSeconds: 30 };
   }
 
   const binance = await fetchFromBinance();

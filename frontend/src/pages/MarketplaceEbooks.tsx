@@ -1,353 +1,779 @@
-import { useMemo, useState } from "react";
-import DashboardLayout from "@/components/DashboardLayout";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useMarketplaceProfile } from "@/hooks/useMarketplaceProfile";
-import { formatCurrency, getMarketplaceEbooks, getPackBySlug } from "@/lib/nexus-marketplace";
-import {
-  BookOpen,
-  CheckCircle2,
-  Download,
-  ExternalLink,
-  Lock,
-  ShoppingCart,
-  Sparkles,
-  Star,
-  Tag,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
+/**
+ * MarketplaceEbooks — Vitrine do Marketplace Nexus (v2 — UX Premium)
+ *
+ * Features:
+ *  1. Cabeçalho sticky por coleção (scroll spy + âncoras + scroll suave)
+ *  2. Busca com debounce + highlight
+ *  3. Skeleton loading enquanto API responde
+ *  4. Toggle: grade densa ↔ carrossel horizontal por coleção (Netflix-style)
+ *  5. Quick-view modal ao clicar na capa
+ *  6. Toggle de visualização (compact / large / carousel)
+ *
+ * Usa /api/trpc/marketplaceNexus.*
+ */
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
+import { sortByCollectionRank } from "@/lib/collectionRanking";
+import { Link } from "wouter";
+import { trpc } from "../lib/trpc";
 
-type FilterMode = "all" | "active" | "locked";
+const BRL = (cents: number) =>
+  (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-const FILTERS: Array<{ id: FilterMode; label: string }> = [
-  { id: "all", label: "Todos" },
-  { id: "active", label: "Liberados" },
-  { id: "locked", label: "Bloqueados" },
-];
+type Ebook = {
+  slug: string;
+  order: number;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  costCents: number;
+  resalePriceCents: number;
+  pages: number;
+  category: string;
+  coverGradient: string | null;
+  htmlPath: string;
+  pdfPath: string;
+  coverPath: string | null;
+  highlights: string[];
+  unlockPackSlug: string;
+};
 
-export default function MarketplaceEbooks() {
-  const { profile } = useMarketplaceProfile();
-  const ebooks = getMarketplaceEbooks(profile);
-  const [filter, setFilter] = useState<FilterMode>("all");
-  const [category, setCategory] = useState<string>("all");
+type ViewMode = "compact" | "large" | "carousel";
 
-  const activeCount = ebooks.filter((ebook) => ebook.status === "active").length;
-  const lockedCount = ebooks.length - activeCount;
-  const totalMarginCents = useMemo(
-    () => ebooks.reduce((sum, ebook) => sum + (ebook.resalePriceCents - ebook.costCents), 0),
-    [ebooks],
+// ────────────────────────────────────────────────────────────────────────────
+// Hook: debounce
+// ────────────────────────────────────────────────────────────────────────────
+function useDebounce<T>(value: T, delay = 250): T {
+  const [v, setV] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setV(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return v;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Highlight do termo buscado
+// ────────────────────────────────────────────────────────────────────────────
+function highlight(text: string, q: string) {
+  if (!q.trim()) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig");
+  const parts = text.split(re);
+  return parts.map((p, i) =>
+    re.test(p) ? (
+      <mark key={i} className="bg-cyan-400/30 text-cyan-100 rounded px-0.5">
+        {p}
+      </mark>
+    ) : (
+      <span key={i}>{p}</span>
+    )
   );
+}
 
-  const categories = useMemo(() => ["all", ...Array.from(new Set(ebooks.map((ebook) => ebook.category)))], [ebooks]);
+// ────────────────────────────────────────────────────────────────────────────
+// Skeleton placeholder
+// ────────────────────────────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden animate-pulse">
+      <div className="h-44 bg-slate-800/60" />
+      <div className="p-4 space-y-2">
+        <div className="h-3 w-1/2 bg-slate-800 rounded" />
+        <div className="h-4 w-full bg-slate-800 rounded" />
+        <div className="h-3 w-2/3 bg-slate-800 rounded" />
+        <div className="flex gap-2 mt-3">
+          <div className="h-8 flex-1 bg-slate-800 rounded-lg" />
+          <div className="h-8 flex-1 bg-slate-800 rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
-  const filtered = useMemo(() => {
-    return ebooks.filter((ebook) => {
-      const matchesFilter =
-        filter === "all" ? true : filter === "active" ? ebook.status === "active" : ebook.status === "locked";
-      const matchesCategory = category === "all" ? true : ebook.category === category;
-      return matchesFilter && matchesCategory;
-    });
-  }, [category, ebooks, filter]);
-
-  const featured = filtered[0] ?? ebooks[0];
+// ────────────────────────────────────────────────────────────────────────────
+// Quick-view modal
+// ────────────────────────────────────────────────────────────────────────────
+function QuickViewModal({
+  ebook,
+  onClose,
+  onAdd,
+  isAuth,
+  isPending,
+  searchTerm,
+}: {
+  ebook: Ebook;
+  onClose: () => void;
+  onAdd: () => void;
+  isAuth: boolean;
+  isPending: boolean;
+  searchTerm: string;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
   return (
-    <DashboardLayout>
-      <div className="space-y-8 pb-8">
-        <section className="overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(124,255,178,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(0,229,255,0.12),transparent_30%),linear-gradient(180deg,rgba(15,23,42,0.94),rgba(2,6,23,0.98))] p-6 shadow-2xl shadow-black/30 md:p-8">
-          <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-center">
-            <div className="space-y-5">
-              <div className="flex flex-wrap gap-2">
-                <Badge className="border border-quantum-lime/30 bg-quantum-lime/10 text-quantum-lime">Loja Virtual de e-books</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">Margem de 100% na revenda</Badge>
-                <Badge className="border border-white/10 bg-white/5 text-slate-200">HTML + PDF prontos</Badge>
-              </div>
-              <div className="space-y-4">
-                <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-5xl xl:text-6xl">
-                  Uma vitrine de <span className="text-quantum-lime">e-books digitais</span> com visual de loja moderna.
-                </h1>
-                <p className="max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
-                  Reorganizamos a biblioteca em formato mais comercial: capas em destaque, filtros de catálogo, margem explícita, entrega digital imediata
-                  e botões de ação mais claros para transformar o Marketplace em uma experiência de compra mais atraente.
-                </p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">liberados</p>
-                  <p className="mt-3 text-3xl font-bold text-quantum-lime">{activeCount}</p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">bloqueados</p>
-                  <p className="mt-3 text-3xl font-bold text-amber-300">{lockedCount}</p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-slate-500">margem total</p>
-                  <p className="mt-3 text-3xl font-bold text-white">{formatCurrency(totalMarginCents)}</p>
-                </div>
-              </div>
-            </div>
-
-            <Card className="overflow-hidden border-white/10 bg-white/6 backdrop-blur">
-              <div className={`relative h-56 bg-gradient-to-br ${featured.coverGradient}`}>
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.12),rgba(2,6,23,0.78))]" />
-                <div className="relative flex h-full flex-col justify-between p-6 text-white">
-                  <div className="flex items-start justify-between gap-3">
-                    <Badge className="border border-white/20 bg-white/10 text-white">
-                      <Tag className="mr-1 h-3 w-3" />
-                      {featured.category}
-                    </Badge>
-                    <Badge className="border border-white/20 bg-black/25 text-white">{featured.pages} páginas</Badge>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-black leading-tight">{featured.title}</p>
-                    <p className="mt-2 text-sm text-slate-100/90">{featured.subtitle}</p>
-                  </div>
-                </div>
-              </div>
-              <CardContent className="space-y-4 p-6">
-                <div>
-                  <p className="text-lg font-semibold text-white">Produto em destaque</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">{featured.description}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">custo afiliado</p>
-                    <p className="mt-2 text-xl font-bold text-white">{formatCurrency(featured.costCents)}</p>
-                  </div>
-                  <div className="rounded-2xl border border-quantum-lime/25 bg-quantum-lime/10 p-4">
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-quantum-lime">preço de revenda</p>
-                    <p className="mt-2 text-xl font-bold text-quantum-lime">{formatCurrency(featured.resalePriceCents)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="qv-title"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-slate-900 to-slate-950 border border-cyan-500/30 rounded-3xl shadow-2xl shadow-cyan-500/20"
+      >
+        <button
+          onClick={onClose}
+          aria-label="Fechar"
+          className="absolute top-3 right-3 z-10 w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-xl"
+        >
+          ×
+        </button>
+        <div className="grid md:grid-cols-2 gap-0">
+          <div
+            className="h-72 md:h-full relative"
+            style={{ background: ebook.coverGradient ?? "linear-gradient(135deg,#1e293b,#0f172a)" }}
+          >
+            {ebook.coverPath && (
+              <img
+                src={ebook.coverPath}
+                alt={ebook.title}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            )}
           </div>
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-4">
-          {[
-            {
-              title: "Capa premium",
-              description: "Cada card agora funciona como mini-vitrine com impacto visual melhor na primeira leitura.",
-              icon: Star,
-              accent: "text-amber-300",
-            },
-            {
-              title: "Lucro claro",
-              description: "Preço de custo, revenda e margem aparecem com mais destaque para acelerar decisão comercial.",
-              icon: TrendingUp,
-              accent: "text-quantum-lime",
-            },
-            {
-              title: "Entrega instantânea",
-              description: "Arquivos HTML e PDF ficam prontos para visualização e download quando desbloqueados.",
-              icon: Zap,
-              accent: "text-quantum-cyan",
-            },
-            {
-              title: "Experiência de loja",
-              description: "Filtros, badges e CTAs deixam o Marketplace mais próximo de um mini e-commerce moderno.",
-              icon: ShoppingCart,
-              accent: "text-quantum-purple",
-            },
-          ].map((item) => (
-            <Card key={item.title} className="border-white/10 bg-white/5 backdrop-blur transition hover:-translate-y-1 hover:border-white/20">
-              <CardContent className="space-y-3 p-5">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 ${item.accent}`}>
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-white">{item.title}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.description}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
-
-        <section className="rounded-[32px] border border-white/10 bg-white/5 p-5 backdrop-blur md:p-6">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <div>
-              <Badge className="border border-white/10 bg-white/5 text-slate-200">Catálogo filtrável</Badge>
-              <h2 className="mt-3 text-2xl font-bold text-white md:text-3xl">Encontre o produto certo para sua vitrine</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-                Explore por status e categoria para navegar como em uma loja digital profissional.
+          <div className="p-6 flex flex-col">
+            <p className="text-[11px] uppercase tracking-wider text-cyan-300 font-semibold mb-2">
+              {ebook.category}
+            </p>
+            <h2 id="qv-title" className="text-2xl font-bold mb-2 leading-tight">
+              {highlight(ebook.title, searchTerm)}
+            </h2>
+            {ebook.subtitle && ebook.subtitle !== ebook.title && (
+              <p className="text-slate-300 mb-3">{highlight(ebook.subtitle, searchTerm)}</p>
+            )}
+            {ebook.description && (
+              <p className="text-sm text-slate-400 mb-4 line-clamp-6">
+                {highlight(ebook.description, searchTerm)}
               </p>
+            )}
+            <div className="grid grid-cols-2 gap-3 text-xs text-slate-300 my-3">
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <p className="text-slate-500">Páginas</p>
+                <p className="font-bold text-lg">{ebook.pages}</p>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <p className="text-slate-500">Pack</p>
+                <p className="font-bold text-sm">{ebook.unlockPackSlug}</p>
+              </div>
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+                <p className="text-slate-400">Custo</p>
+                <p className="font-bold text-lg text-emerald-300">{BRL(ebook.costCents)}</p>
+              </div>
+              <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
+                <p className="text-slate-400">Revenda sugerida</p>
+                <p className="font-bold text-lg text-cyan-300">{BRL(ebook.resalePriceCents)}</p>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setFilter(item.id)}
-                  className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition ${
-                    filter === item.id
-                      ? "border-quantum-lime/60 bg-quantum-lime/15 text-quantum-lime"
-                      : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            <div className="flex gap-2 mt-auto">
+              <a
+                href={ebook.htmlPath}
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 text-center bg-slate-800 hover:bg-slate-700 rounded-xl py-3 text-sm font-semibold transition"
+              >
+                Ver Prévia
+              </a>
+              <button
+                disabled={!isAuth || isPending}
+                onClick={onAdd}
+                className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 rounded-xl py-3 text-sm font-bold transition"
+              >
+                {isAuth ? "+ Adicionar ao Carrinho" : "Faça Login"}
+              </button>
             </div>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((item) => (
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Card de ebook
+// ────────────────────────────────────────────────────────────────────────────
+function EbookCard({
+  eb,
+  searchTerm,
+  isAuth,
+  isPending,
+  onAdd,
+  onQuickView,
+  compact,
+}: {
+  eb: Ebook;
+  searchTerm: string;
+  isAuth: boolean;
+  isPending: boolean;
+  onAdd: () => void;
+  onQuickView: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <article
+      className={[
+        "group bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden",
+        "hover:border-cyan-500/40 transition-all duration-300",
+        "hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20",
+        "flex flex-col",
+        compact ? "" : "",
+      ].join(" ")}
+    >
+      <button
+        onClick={onQuickView}
+        aria-label={`Quick view: ${eb.title}`}
+        className={`${compact ? "h-36" : "h-52"} relative cursor-pointer block w-full overflow-hidden`}
+        style={{
+          background: eb.coverGradient ?? "linear-gradient(135deg,#1e293b,#0f172a)",
+        }}
+      >
+        {eb.coverPath && (
+          <img
+            loading="lazy"
+            decoding="async"
+            src={eb.coverPath}
+            alt={eb.title}
+            className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition" />
+        <span className="absolute top-2 right-2 bg-emerald-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full shadow-lg">
+          {BRL(eb.costCents)}
+        </span>
+        <span className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition bg-cyan-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded-full">
+          👁 Ver detalhes
+        </span>
+      </button>
+      <div className="p-4 flex-1 flex flex-col">
+        <p className="text-[10px] uppercase tracking-wider text-cyan-400/80 mb-1">
+          {eb.category}
+        </p>
+        <h3 className={`font-bold ${compact ? "text-xs" : "text-sm"} leading-snug mb-1 line-clamp-2`}>
+          {highlight(eb.title, searchTerm)}
+        </h3>
+        {!compact && eb.subtitle && eb.subtitle !== eb.title && (
+          <p className="text-xs text-slate-400 mb-2 line-clamp-2">
+            {highlight(eb.subtitle, searchTerm)}
+          </p>
+        )}
+        <p className="text-xs text-slate-500 mt-auto">
+          {eb.pages} págs · {eb.unlockPackSlug}
+        </p>
+        <div className="mt-3 flex gap-2">
+          <a
+            href={eb.htmlPath}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 text-center bg-slate-800 hover:bg-slate-700 rounded-lg py-2 text-xs font-semibold transition"
+          >
+            Prévia
+          </a>
+          <button
+            disabled={!isAuth || isPending}
+            onClick={onAdd}
+            className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 rounded-lg py-2 text-xs font-bold transition"
+          >
+            {isAuth ? "+ Carrinho" : "Login"}
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Carrossel horizontal por coleção
+// ────────────────────────────────────────────────────────────────────────────
+function CarouselRow({
+  ebooks,
+  cardProps,
+}: {
+  ebooks: Ebook[];
+  cardProps: Omit<Parameters<typeof EbookCard>[0], "eb">;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = (dir: 1 | -1) => {
+    if (!ref.current) return;
+    ref.current.scrollBy({ left: dir * 600, behavior: "smooth" });
+  };
+  return (
+    <div className="relative group/row">
+      <button
+        onClick={() => scroll(-1)}
+        aria-label="Anterior"
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-cyan-500 hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => scroll(1)}
+        aria-label="Próximo"
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-slate-950/80 hover:bg-cyan-500 hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl"
+      >
+        ›
+      </button>
+      <div
+        ref={ref}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 px-2 scroll-smooth scrollbar-thin scrollbar-thumb-slate-700"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {ebooks.map((eb) => (
+          <div key={eb.slug} className="snap-start flex-shrink-0 w-56 md:w-64">
+            <EbookCard
+              eb={eb}
+              {...cardProps}
+              onAdd={() => cardProps.onAdd()}
+              onQuickView={() => cardProps.onQuickView()}
+              compact
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Página principal
+// ────────────────────────────────────────────────────────────────────────────
+export default function MarketplaceEbooksPage() {
+  const ebooksQuery = trpc.marketplaceNexus.listEbooks.useQuery();
+  const packsQuery = trpc.marketplaceNexus.listPacks.useQuery();
+  const cartQuery = trpc.marketplaceNexus.getCart.useQuery(undefined, {
+    retry: false,
+    refetchOnMount: false,
+  });
+  const utils = trpc.useUtils();
+
+  const addItem = trpc.marketplaceNexus.addToCart.useMutation({
+    onSuccess: () => utils.marketplaceNexus.getCart.invalidate(),
+  });
+
+  const [filterCategory, setFilterCategory] = useState<string>("");
+  const [filterPack, setFilterPack] = useState<string>("");
+  const [searchRaw, setSearchRaw] = useState<string>("");
+  const search = useDebounce(searchRaw, 220);
+
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window === "undefined") return "compact";
+    return (localStorage.getItem("nexus_viewmode") as ViewMode) || "compact";
+  });
+  useEffect(() => {
+    localStorage.setItem("nexus_viewmode", viewMode);
+  }, [viewMode]);
+
+  const [quickView, setQuickView] = useState<Ebook | null>(null);
+
+  const ebooks = (ebooksQuery.data ?? []) as Ebook[];
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    ebooks.forEach((e) => set.add(e.category));
+    return Array.from(set);
+  }, [ebooks]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return sortByCollectionRank(
+      ebooks.filter((e) => {
+        if (filterCategory && e.category !== filterCategory) return false;
+        if (filterPack && e.unlockPackSlug !== filterPack) return false;
+        if (q && !`${e.title} ${e.subtitle ?? ""} ${e.description ?? ""}`.toLowerCase().includes(q))
+          return false;
+        return true;
+      })
+    );
+  }, [ebooks, filterCategory, filterPack, search]);
+
+  // Agrupar por coleção mantendo ordem do sortByCollectionRank
+  const groups = useMemo(() => {
+    const map = new Map<string, Ebook[]>();
+    filtered.forEach((e) => {
+      const k = e.category || "Outras";
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(e);
+    });
+    return Array.from(map.entries()); // já ordenado pelo sort
+  }, [filtered]);
+
+  // Slug helpers
+  const slugify = useCallback(
+    (s: string) => "col-" + s.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    []
+  );
+
+  // Scroll-spy: detecta coleção visível
+  const [activeAnchor, setActiveAnchor] = useState<string>("");
+  useEffect(() => {
+    if (groups.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActiveAnchor(visible[0].target.id);
+      },
+      { rootMargin: "-30% 0% -55% 0%", threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    groups.forEach(([cat]) => {
+      const el = document.getElementById(slugify(cat));
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [groups, slugify]);
+
+  const scrollToAnchor = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const cartCount = cartQuery.data?.lines.length ?? 0;
+  const cartTotal = cartQuery.data?.totalCents ?? 0;
+  const isAuth = !cartQuery.error;
+
+  const cardCommonProps = (eb: Ebook) => ({
+    searchTerm: search,
+    isAuth,
+    isPending: addItem.isPending,
+    onAdd: () => addItem.mutate({ itemType: "ebook" as const, itemSlug: eb.slug }),
+    onQuickView: () => setQuickView(eb),
+  });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Header principal */}
+      <header className="sticky top-0 z-30 backdrop-blur bg-slate-950/85 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold truncate">Marketplace Nexus</h1>
+            <p className="text-[11px] text-slate-400 truncate">
+              {ebooks.length} ebooks · {packsQuery.data?.length ?? 0} packs · custo R$ 0,50 · venda R$ 0,99
+            </p>
+          </div>
+          <Link href="/marketplaces/cart">
+            <a className="relative px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition shrink-0">
+              🛒 {BRL(cartTotal)}
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </a>
+          </Link>
+        </div>
+
+        {/* Sub-header: filtros + view toggle */}
+        <div className="max-w-7xl mx-auto px-4 pb-3 grid md:grid-cols-[1fr_auto_auto_auto] gap-2">
+          <div className="relative">
+            <input
+              value={searchRaw}
+              onChange={(e) => setSearchRaw(e.target.value)}
+              placeholder="🔍 Buscar título, subtítulo, descrição…"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition"
+              aria-label="Buscar ebook"
+            />
+            {searchRaw && (
               <button
-                key={item}
-                type="button"
-                onClick={() => setCategory(item)}
-                className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
-                  category === item
-                    ? "border-quantum-cyan/60 bg-quantum-cyan/15 text-quantum-cyan"
-                    : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20 hover:text-white"
+                onClick={() => setSearchRaw("")}
+                aria-label="Limpar busca"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-700 hover:bg-slate-600 text-xs"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500"
+            aria-label="Filtrar por coleção"
+          >
+            <option value="">Todas as coleções</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filterPack}
+            onChange={(e) => setFilterPack(e.target.value)}
+            className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500"
+            aria-label="Filtrar por pack"
+          >
+            <option value="">Todos os Packs</option>
+            {(packsQuery.data ?? [])
+              .filter((p) => ["affiliate", "predictive"].includes(p.type))
+              .map((p) => (
+                <option key={p.code} value={p.code}>
+                  {p.name}
+                </option>
+              ))}
+          </select>
+          {/* View mode toggle */}
+          <div role="radiogroup" aria-label="Modo de visualização" className="flex bg-slate-900 border border-slate-700 rounded-xl overflow-hidden text-xs">
+            {(
+              [
+                { v: "compact", label: "▦", title: "Grade densa" },
+                { v: "large", label: "▢", title: "Cards grandes" },
+                { v: "carousel", label: "↔", title: "Carrossel horizontal" },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.v}
+                role="radio"
+                aria-checked={viewMode === opt.v}
+                title={opt.title}
+                onClick={() => setViewMode(opt.v)}
+                className={`px-3 py-2 transition ${
+                  viewMode === opt.v
+                    ? "bg-cyan-500 text-slate-950 font-bold"
+                    : "hover:bg-slate-800"
                 }`}
               >
-                {item === "all" ? "Todas as categorias" : item}
+                {opt.label}
               </button>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((ebook, index) => {
-            const isActive = ebook.status === "active";
-            const unlockPack = getPackBySlug(ebook.unlockPackSlug);
-            const isFeatured = index === 0;
+        {/* Tabs de coleções (scroll-spy) */}
+        {!ebooksQuery.isLoading && groups.length > 1 && (
+          <nav
+            aria-label="Coleções"
+            className="max-w-7xl mx-auto px-4 pb-2 flex gap-2 overflow-x-auto scrollbar-thin"
+          >
+            {groups.map(([cat, items]) => {
+              const id = slugify(cat);
+              const active = activeAnchor === id;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => scrollToAnchor(id)}
+                  className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition border ${
+                    active
+                      ? "bg-cyan-500 text-slate-950 border-cyan-400 shadow-lg shadow-cyan-500/30"
+                      : "bg-slate-900/60 border-slate-700 text-slate-300 hover:border-cyan-500/40 hover:text-cyan-200"
+                  }`}
+                >
+                  {cat} <span className="opacity-60">· {items.length}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
+      </header>
 
-            return (
-              <Card
-                key={ebook.slug}
-                className={`overflow-hidden border backdrop-blur transition hover:-translate-y-1 hover:border-white/20 ${
-                  isActive ? "border-quantum-lime/30 bg-quantum-lime/5" : "border-white/10 bg-white/5"
-                }`}
-              >
-                <div className={`relative h-44 bg-gradient-to-br ${ebook.coverGradient}`}>
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.10),rgba(2,6,23,0.76))]" />
-                  <div className="relative flex h-full flex-col justify-between p-5 text-white">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex flex-wrap gap-2">
-                        <Badge className="border border-white/20 bg-white/10 text-white">
-                          <Tag className="mr-1 h-3 w-3" />
-                          {ebook.category}
-                        </Badge>
-                        {isFeatured && (
-                          <Badge className="border border-amber-300/30 bg-amber-300/10 text-amber-200">Destaque</Badge>
-                        )}
-                      </div>
-                      <span className="rounded-full bg-black/25 px-2.5 py-1 text-xs">{ebook.pages} págs</span>
-                    </div>
-                    <div>
-                      <p className="text-2xl font-black leading-tight">{ebook.title}</p>
-                      <p className="mt-2 text-sm text-slate-100/85">{ebook.subtitle}</p>
-                    </div>
-                  </div>
-                </div>
+      <section className="max-w-7xl mx-auto px-4 py-6">
+        {/* Skeleton */}
+        {ebooksQuery.isLoading && (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
+        {ebooksQuery.error && (
+          <p className="text-center py-12 text-red-400">
+            Erro ao carregar catálogo: {ebooksQuery.error.message}
+          </p>
+        )}
 
-                <CardContent className="space-y-4 p-5">
-                  <p className="text-sm leading-6 text-slate-300">{ebook.description}</p>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Custo</p>
-                      <p className="mt-1 text-lg font-bold text-white">{formatCurrency(ebook.costCents)}</p>
-                    </div>
-                    <div className="rounded-2xl border border-quantum-lime/20 bg-quantum-lime/10 p-3">
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-quantum-lime">Revenda</p>
-                      <p className="mt-1 text-lg font-bold text-quantum-lime">{formatCurrency(ebook.resalePriceCents)}</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300">
-                    <p className="flex items-center gap-1.5">
-                      <TrendingUp className="h-3.5 w-3.5 text-quantum-lime" />
-                      <span>
-                        Margem por unidade: <strong className="text-quantum-lime">{formatCurrency(ebook.resalePriceCents - ebook.costCents)}</strong>
-                      </span>
-                    </p>
-                    <p className="mt-2 flex items-center gap-1.5">
-                      <BookOpen className="h-3.5 w-3.5 text-quantum-cyan" />
-                      <span>Desbloqueio pelo pack {unlockPack?.shortName ?? "A²"}</span>
-                    </p>
+        {/* Vitrine agrupada */}
+        {!ebooksQuery.isLoading && (
+          <div className="space-y-12">
+            {groups.map(([cat, items]) => {
+              const id = slugify(cat);
+              return (
+                <section key={cat} id={id} className="scroll-mt-44">
+                  <div className="flex items-baseline justify-between mb-4 border-b border-slate-800 pb-2">
+                    <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-300 to-emerald-300 bg-clip-text text-transparent">
+                      {cat}
+                    </h2>
+                    <span className="text-xs text-slate-400">{items.length} ebooks</span>
                   </div>
 
-                  <ul className="space-y-1.5 text-xs text-slate-300">
-                    {ebook.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-2">
-                        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-quantum-cyan" />
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {isActive ? (
-                      <>
-                        <a href={ebook.htmlPath} target="_blank" rel="noreferrer" className="flex-1 min-w-[150px]">
-                          <Button variant="outline" className="w-full border-white/15 bg-white/5 text-white hover:bg-white/10">
-                            <ExternalLink className="mr-1 h-4 w-4" />
-                            Visualizar
-                          </Button>
-                        </a>
-                        <a href={ebook.pdfPath} download className="flex-1 min-w-[150px]">
-                          <Button className="gradient-btn w-full">
-                            <Download className="mr-1 h-4 w-4" />
-                            Baixar PDF
-                          </Button>
-                        </a>
-                      </>
-                    ) : (
-                      <Button variant="outline" disabled className="w-full border-white/10 bg-white/5 text-slate-400">
-                        <Lock className="mr-2 h-4 w-4" />
-                        Bloqueado até ativar {unlockPack?.shortName ?? "Pack A²"}
-                      </Button>
-                    )}
-                  </div>
-
-                  {isActive && (
-                    <div className="flex items-center gap-2 rounded-full border border-quantum-lime/20 bg-quantum-lime/10 px-3 py-1.5 text-[11px] text-quantum-lime">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      Produto liberado para sua loja e mini-site
+                  {viewMode === "carousel" ? (
+                    <div className="relative group/row">
+                      <CarouselScroll items={items} cardPropsFn={cardCommonProps} />
+                    </div>
+                  ) : (
+                    <div
+                      className={
+                        viewMode === "compact"
+                          ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
+                          : "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                      }
+                    >
+                      {items.map((eb) => (
+                        <EbookCard
+                          key={eb.slug}
+                          eb={eb}
+                          {...cardCommonProps(eb)}
+                          compact={viewMode === "compact"}
+                        />
+                      ))}
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </section>
+                </section>
+              );
+            })}
+          </div>
+        )}
 
-        <section className="grid gap-4 md:grid-cols-3">
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <ShoppingCart className="h-5 w-5 text-quantum-cyan" />
-              <p className="mt-3 text-sm font-semibold text-white">Venda direta com posicionamento claro</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                A experiência de loja destaca custo, revenda, margem e desbloqueio para facilitar seu uso comercial.
+        {filtered.length === 0 && !ebooksQuery.isLoading && (
+          <div className="text-center py-16">
+            <p className="text-5xl mb-3">🔍</p>
+            <p className="text-slate-400 mb-2">Nenhum ebook encontrado com esses filtros.</p>
+            <button
+              onClick={() => {
+                setSearchRaw("");
+                setFilterCategory("");
+                setFilterPack("");
+              }}
+              className="text-cyan-400 hover:text-cyan-300 text-sm underline"
+            >
+              Limpar filtros
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Banner Packs */}
+      <section className="max-w-7xl mx-auto px-4 pb-12">
+        <h2 className="text-2xl font-bold mb-2">
+          Compre um Pack e desbloqueie ebooks aleatoriamente
+        </h2>
+        <p className="text-slate-400 text-sm mb-6">
+          Cada pack libera uma quantidade fixa de ebooks sorteados do pool. Sorteio determinístico
+          e auditável (seed SHA-256 registrado).
+        </p>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {(packsQuery.data ?? []).slice(0, 5).map((p) => (
+            <button
+              key={p.code}
+              onClick={() => addItem.mutate({ itemType: "pack", itemSlug: p.code })}
+              disabled={!isAuth || addItem.isPending}
+              className="text-left bg-slate-900/60 border border-slate-800 hover:border-cyan-500/40 rounded-2xl p-4 transition disabled:opacity-40 hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/10 duration-300"
+              style={{ borderTopColor: p.color ?? undefined, borderTopWidth: 3 }}
+            >
+              <p className="text-xs uppercase text-slate-400 mb-1">{p.type}</p>
+              <h3 className="font-bold text-sm leading-tight mb-2">{p.name}</h3>
+              <p className="text-emerald-400 font-bold text-lg">{BRL(p.priceCents)}</p>
+              <p className="text-xs text-slate-500 mt-1">
+                {p.ebookQuotaIfPurchased} ebooks aleatórios de {p.ebookPoolSize}
               </p>
-            </CardContent>
-          </Card>
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <BookOpen className="h-5 w-5 text-quantum-lime" />
-              <p className="mt-3 text-sm font-semibold text-white">Conteúdo entregue em múltiplos formatos</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                Cada item fica pronto em HTML e PDF, permitindo revenda rápida e distribuição organizada.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border-white/10 bg-white/5 backdrop-blur">
-            <CardContent className="p-5">
-              <Sparkles className="h-5 w-5 text-quantum-purple" />
-              <p className="mt-3 text-sm font-semibold text-white">Pronto para expansão futura</p>
-              <p className="mt-2 text-xs leading-6 text-slate-400">
-                A nova estrutura aceita novos produtos, coleções, combos e futuros destaques promocionais com muito mais elegância.
-              </p>
-            </CardContent>
-          </Card>
-        </section>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Quick-view modal */}
+      {quickView && (
+        <QuickViewModal
+          ebook={quickView}
+          onClose={() => setQuickView(null)}
+          onAdd={() => {
+            addItem.mutate({ itemType: "ebook", itemSlug: quickView.slug });
+            setQuickView(null);
+          }}
+          isAuth={isAuth}
+          isPending={addItem.isPending}
+          searchTerm={search}
+        />
+      )}
+
+      {/* FAB voltar ao topo */}
+      <BackToTop />
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Carousel scroller (componente interno)
+// ────────────────────────────────────────────────────────────────────────────
+function CarouselScroll({
+  items,
+  cardPropsFn,
+}: {
+  items: Ebook[];
+  cardPropsFn: (eb: Ebook) => Omit<Parameters<typeof EbookCard>[0], "eb">;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = (dir: 1 | -1) => {
+    if (!ref.current) return;
+    ref.current.scrollBy({ left: dir * 600, behavior: "smooth" });
+  };
+  return (
+    <div className="relative group/row -mx-4 md:mx-0">
+      <button
+        onClick={() => scroll(-1)}
+        aria-label="Anterior"
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-slate-950/90 hover:bg-cyan-500 hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl text-xl font-bold"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => scroll(1)}
+        aria-label="Próximo"
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-slate-950/90 hover:bg-cyan-500 hover:text-slate-950 items-center justify-center opacity-0 group-hover/row:opacity-100 transition shadow-xl text-xl font-bold"
+      >
+        ›
+      </button>
+      <div
+        ref={ref}
+        className="flex gap-4 overflow-x-auto snap-x pb-3 px-4 md:px-2 scroll-smooth"
+        style={{ scrollbarWidth: "thin" }}
+      >
+        {items.map((eb) => (
+          <div key={eb.slug} className="snap-start flex-shrink-0 w-48 md:w-56">
+            <EbookCard eb={eb} {...cardPropsFn(eb)} compact />
+          </div>
+        ))}
       </div>
-    </DashboardLayout>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// FAB voltar ao topo
+// ────────────────────────────────────────────────────────────────────────────
+function BackToTop() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  if (!show) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      aria-label="Voltar ao topo"
+      className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xl shadow-xl shadow-cyan-500/40 transition hover:scale-110"
+    >
+      ↑
+    </button>
   );
 }

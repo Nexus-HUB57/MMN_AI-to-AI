@@ -53,6 +53,8 @@ Pense no IOAID como um **restaurante de luxo**:
 - **M4 — Persistence** é o **livro de registro**. Anota tudo: hora, quem pediu, quanto custou, qualidade.
 - **M5 — Response** é o **garçom**. Devolve o prato pronto (resultado) ao cliente, com recibo (metadados).
 
+![Infográfico — Os 5 Módulos do IOAID](../../assets/ebook_covers/ACAD-diagrama-03-fluxo-ioaid.png)
+
 Cada módulo é independente. Se o livro de registro (M4) falhar, o restaurante continua servindo (M1, M2, M3, M5 funcionam), só não conseguimos cobrar direito. Se a estação de sobremesa (uma skill) falhar, o resto da cozinha segue.
 
 **3. O fluxo completo de um disparo de WhatsApp**
@@ -169,5 +171,75 @@ Tenha em mãos também: plano do seu nó, sua coorte de teste (se aplicável), e
 ---
 
 **Infraestrutura Operacional de IA** --- Por MMN_IA Collective
+
+---
+
+## 🎯 Exercícios Práticos Aprofundados — Apostila: Infra Operacional de IA
+
+> **Tempo sugerido:** 2-4 horas (apostila é aprofundamento, não curso)
+> **Formato:** individual ou em dupla, com consulta ao painel/ambiente real
+> **Entrega:** resultados documentados em caderno/planilha/notion pessoal
+
+**Exercício 1 — Provisionamento**
+
+Provisione o setup completo (Postgres + Redis + 3 APIs) em uma VM de teste (R$ 50/mês). Meça tempo de setup.
+
+**Exercício 2 — Observabilidade**
+
+Configure Prometheus + Grafana para 3 métricas: latência P99, taxa de erro, throughput. Crie 3 dashboards.
+
+**Exercício 3 — Alertas**
+
+Configure alertas para: latência > 1s (warning), erro > 1% (critical), fila > 1000 mensagens (warning).
+
+**Exercício 4 — Disaster recovery**
+
+Simule 1 falha completa (deleta VM). Documente o tempo de restore. Meta: < 30 minutos.
+
+**Exercício 5 — Custos**
+
+Calcule custo mensal de operação (cloud + licenças + manutenção). Compare com 2 alternativas (serverless, on-prem).
+
+---
+
+## ✅ Checklist de Conclusão
+
+Marque conforme for completando:
+
+- [ ] Li a apostila inteira, sem pular seções.
+- [ ] Completei os 5 exercícios práticos.
+- [ ] Documentei cada exercício (resultados, decisões, próximos passos).
+- [ ] Respondi às 7 questões de auto-avaliação (mentalmente, sem colar).
+- [ ] Anotei 3 dúvidas que surgiram (para perguntar em webinar/fórum).
+- [ ] Identifiquei 1 insight acionável que vou aplicar nas próximas 24h.
+- [ ] Compartilhei 1 aprendizado com pelo menos 1 pessoa.
+- [ ] Documentei o que essa apostila mudou na minha operação.
+
+---
+
+## 🧠 Auto-Avaliação Avançada (7 questões)
+
+Tente responder **sem consultar a apostila**. Depois, valide:
+
+1. Quais são os 3 componentes de infra essenciais (Postgres, Redis, API gateway)?
+2. Qual a diferença entre 'infra como código' e 'infra manual'?
+3. Cite 3 ferramentas de observabilidade open-source.
+4. Como definir SLO (Service Level Objective) realista?
+5. Qual a estratégia de disaster recovery recomendada (3-2-1)?
+6. Como otimizar custos sem comprometer SLA?
+7. O que é 'horizontal scaling' vs. 'vertical scaling'?
+
+---
+
+## 🚀 Próximos Passos Recomendados
+
+1. **Aplicar imediatamente:** pegue 1 insight e aplique HOJE.
+2. **Medir em 7-30 dias:** meça o impacto (qualitativo + quantitativo).
+3. **Documentar:** escreva 1 página sobre o que aprendeu + o que mudou.
+4. **Compartilhar:** publique 1 post/conteúdo sobre o tema.
+5. **Avançar:** siga para a próxima apostila da trilha.
+
+6. **Consultar materiais relacionados:**
+
 
 *MMN AI-to-AI · 2026 · Todos os direitos reservados*

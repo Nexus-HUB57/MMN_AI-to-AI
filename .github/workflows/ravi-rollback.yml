@@ -1,0 +1,80 @@
+# =============================================================================
+# Ravi-CTO · Rollback Manual via GitHub Actions
+# =============================================================================
+# Workflow apenas manual. Não dispara em push. Permite reverter o RAG para
+# fallback in-memory e/ou parar o worker sem mexer em banco.
+# =============================================================================
+
+name: Ravi · Rollback Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      strategy:
+        description: "Estratégia"
+        type: choice
+        required: true
+        default: "rag_to_inmemory"
+        options:
+          - rag_to_inmemory      # apenas troca NEXUS_RAG_BACKEND e reinicia worker
+          - stop_worker          # para o worker BullMQ
+          - hard_revert_branch   # git reset --hard origin/main no servidor
+
+jobs:
+  rollback:
+    name: 🛟 Rollback
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Executar rollback (${{ inputs.strategy }})
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR:  ${{ secrets.DEPLOY_DIR }}
+          STRATEGY:    ${{ inputs.strategy }}
+        run: |
+          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" \
+              "STRATEGY='$STRATEGY' bash -se" <<'REMOTE'
+            set -euo pipefail
+            cd "${DEPLOY_DIR:-/opt/nexus-affiliate}"
+
+            case "$STRATEGY" in
+              rag_to_inmemory)
+                grep -q '^NEXUS_RAG_BACKEND=' backend/.env \
+                  && sed -i 's/^NEXUS_RAG_BACKEND=.*/NEXUS_RAG_BACKEND=in-memory/' backend/.env \
+                  || echo 'NEXUS_RAG_BACKEND=in-memory' >> backend/.env
+                pm2 reload nexus-rag-worker --update-env || true
+                pm2 restart all --update-env || true
+                echo "✅ RAG forçado para fallback in-memory."
+                ;;
+              stop_worker)
+                pm2 stop nexus-rag-worker || true
+                echo "✅ Worker parado (fila Redis preservada)."
+                ;;
+              hard_revert_branch)
+                git fetch origin main
+                git checkout main
+                git reset --hard origin/main
+                npm install --workspace backend --workspace frontend \
+                  --legacy-peer-deps --no-audit --no-fund
+                npm --workspace backend run build
+                pm2 reload all --update-env || pm2 restart all --update-env
+                echo "✅ Branch revertida para origin/main e serviços reiniciados."
+                ;;
+              *) echo "estratégia inválida: $STRATEGY"; exit 2 ;;
+            esac
+          REMOTE

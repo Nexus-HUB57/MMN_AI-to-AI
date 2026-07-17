@@ -1,9 +1,11 @@
 name: 🚀 Onda 8 · Deploy Go-Live VPS
 
 # Deploy cirúrgico Onda 8 para VPS Nexus Affil'IA'te.
-# Usa apenas chaves SSH configuradas nos Secrets (sem senhas).
-# Sequência: preflight → backup DB → pull main → migration → build → publish → PM2 → smoke.
-# Owner: Otavio Nexus Ops · COO/AI
+# HOTFIX Ravi-CTO: usa SSH_GITHUB (chave primária confirmada) +
+# bootstrap automático de authorized_keys via VPS_ROOT_PASSWORD.
+# Sequência: bootstrap-ssh → preflight → backup DB → pull main →
+#            migration → build → publish → PM2 → smoke.
+# Owner: Ravi Nexus · CTO/AI
 
 on:
   workflow_dispatch:
@@ -37,87 +39,132 @@ env:
   REMOTE_APP: '/var/www/oneverso/current'
 
 jobs:
-  preflight:
-    name: 🩺 Preflight SSH
+  # ---------------------------------------------------------------------------
+  # JOB 0: bootstrap-ssh
+  # Usa VPS_ROOT_PASSWORD (sshpass) para injetar a chave pública SSH_GITHUB
+  # em authorized_keys UMA ÚNICA VEZ — idempotente.
+  # Depois disso, todos os jobs usam só chave SSH.
+  # ---------------------------------------------------------------------------
+  bootstrap-ssh:
+    name: 🔐 Bootstrap authorized_keys (uma vez)
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'GO-LIVE-ONDA8'
+    steps:
+      - name: 📦 Instalar sshpass
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq sshpass
+
+      - name: 🔑 Preparar chave SSH_GITHUB
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Validar que é chave privada
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo '::error::SSH_GITHUB: BEGIN PRIVATE KEY não encontrado'
+            exit 1
+          fi
+          # Extrair chave pública
+          ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
+            || { echo '::error::Não foi possível extrair chave pública de SSH_GITHUB'; exit 1; }
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "::notice::Chave SSH_GITHUB preparada · fingerprint=$FP"
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "::notice::Chave pública: ${PUB:0:60}..."
+
+      - name: 🔓 Injetar chave pública via senha (bootstrap idempotente)
+        env:
+          VPS_PASS: ${{ secrets.VPS_ROOT_PASSWORD }}
+        run: |
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          echo "::notice::Injetando chave em authorized_keys via sshpass..."
+
+          # Cria authorized_keys se não existir e adiciona a chave (idempotente: grep antes de append)
+          sshpass -p "$VPS_PASS" ssh \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p /root/.ssh && chmod 700 /root/.ssh && touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys && grep -qF '${PUB}' /root/.ssh/authorized_keys || echo '${PUB}' >> /root/.ssh/authorized_keys && echo 'authorized_keys OK: '\$(wc -l < /root/.ssh/authorized_keys)' chaves registradas'"
+
+          echo "::notice::✅ Chave SSH_GITHUB autorizada no VPS"
+
+      - name: ✅ Verificar acesso por chave (sem senha)
+        run: |
+          OUT=$(ssh -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o BatchMode=yes \
+            -o ConnectTimeout=20 \
+            "${VPS_USER}@${VPS_HOST}" \
+            'echo "KEY_AUTH_OK $(hostname) $(date -u +%FT%TZ)"' 2>&1)
+          RC=$?
+          echo "$OUT"
+          if [ $RC -eq 0 ]; then
+            echo "::notice::✅ SSH por chave funcionando — authorized_keys configurado com sucesso"
+          else
+            echo "::error::SSH por chave ainda falha após bootstrap (RC=$RC). Verifique VPS_ROOT_PASSWORD."
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------------
+  # JOB 1: preflight — testa SSH e estado do VPS
+  # ---------------------------------------------------------------------------
+  preflight:
+    name: 🩺 Preflight SSH
+    needs: bootstrap-ssh
+    runs-on: ubuntu-latest
     outputs:
       ssh_ok: ${{ steps.ssh_test.outputs.ok }}
-      key_source: ${{ steps.prep_key.outputs.src }}
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: 🔑 Preparar chave SSH (sem senha root)
-        id: prep_key
+      - name: 🔑 Preparar chave SSH_GITHUB
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
-          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          if [ -n "$SSH_KEY" ]; then
-            printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-            echo "src=VPS_SSH_PRIVATE_KEY" >> $GITHUB_OUTPUT
-          elif [ -n "$SSH_KEY_FALLBACK" ]; then
-            printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key
-            echo "src=HOSTGATOR_SSH_KEY" >> $GITHUB_OUTPUT
-          else
-            echo '::error::Nenhum secret de chave SSH disponível (esperados: VPS_SSH_PRIVATE_KEY ou HOSTGATOR_SSH_KEY)'
-            exit 1
-          fi
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
-            echo '::error::Chave SSH inválida: BEGIN PRIVATE KEY não encontrado.'
-            echo '::warning::Diagnóstico do Secret (primeiros 80 chars):'
-            head -c 80 ~/.ssh/deploy_key | sed 's/^/    /' || true
-            echo ''
-            if head -1 ~/.ssh/deploy_key | grep -qE '^(ssh-rsa|ssh-ed25519|ssh-ecdsa|ssh-dss)'; then
-              echo '::error::O Secret contém uma CHAVE PÚBLICA (formato authorized_keys), não uma chave privada!'
-              echo '::error::Fix: gere/localize a chave PRIVADA correspondente (arquivo id_*, sem .pub) e cole ela como VPS_SSH_PRIVATE_KEY.'
-            fi
+            echo '::error::SSH_GITHUB inválido'
             exit 1
           fi
-          if [ -n "$SSH_PASSPHRASE" ]; then
-            ssh-keygen -y -P "$SSH_PASSPHRASE" -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
-              || { echo '::error::Passphrase inválida'; exit 1; }
-          else
-            ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null \
-              || { echo '::error::Chave exige passphrase mas HOSTGATOR_SSH_PASSPHRASE ausente'; exit 1; }
-          fi
+          ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null || true
           FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
-          echo "::notice::✅ Chave preparada · fingerprint=$FP"
-          ssh-keyscan -p $VPS_PORT -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "::notice::Chave preparada · fingerprint=$FP"
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: 🧪 Testar conexão SSH
         id: ssh_test
-        env:
-          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
         run: |
           set +e
-          if [ -n "$SSH_PASSPHRASE" ]; then
-            eval "$(ssh-agent -s)" >/dev/null
-            printf '%s\n' "$SSH_PASSPHRASE" | SSH_ASKPASS=/bin/cat DISPLAY= ssh-add ~/.ssh/deploy_key 2>&1 || true
-          fi
-          OUT=$(ssh -i ~/.ssh/deploy_key -p $VPS_PORT \
+          OUT=$(ssh -i ~/.ssh/deploy_key \
+              -p "$VPS_PORT" \
               -o StrictHostKeyChecking=no \
               -o BatchMode=yes \
               -o ConnectTimeout=25 \
-              $VPS_USER@$VPS_HOST \
+              "${VPS_USER}@${VPS_HOST}" \
               'echo "SSH_OK $(hostname) $(date -u +%FT%TZ)" && pm2 list --no-color 2>&1 | head -20 && systemctl is-active nginx' 2>&1)
           RC=$?
           echo "$OUT"
           if [ $RC -eq 0 ]; then
-            echo "ok=true" >> $GITHUB_OUTPUT
-            echo "::notice::✅ SSH funcionando via chave"
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::✅ SSH funcionando via SSH_GITHUB"
           else
-            echo "ok=false" >> $GITHUB_OUTPUT
-            echo "::error::SSH pré-check falhou (RC=$RC). Chave provavelmente não está autorizada."
-            echo "::error::Para autorizar manualmente: ssh -p $VPS_PORT root@$VPS_HOST 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/deploy_key.pub"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::error::SSH pré-check falhou (RC=$RC)"
             exit $RC
           fi
 
+  # ---------------------------------------------------------------------------
+  # JOB 2: deploy
+  # ---------------------------------------------------------------------------
   deploy:
     name: 🚀 Deploy Onda 8
     needs: preflight
@@ -129,29 +176,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔑 Restaurar chave SSH
+      - name: 🔑 Restaurar chave SSH_GITHUB
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
-          SSH_KEY_FALLBACK: ${{ secrets.HOSTGATOR_SSH_KEY }}
-          SSH_PASSPHRASE: ${{ secrets.HOSTGATOR_SSH_PASSPHRASE }}
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
         run: |
           mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          if [ -n "$SSH_KEY" ]; then printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-          else printf '%s\n' "$SSH_KEY_FALLBACK" > ~/.ssh/deploy_key; fi
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          if [ -n "$SSH_PASSPHRASE" ]; then
-            eval "$(ssh-agent -s)"
-            echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
-            echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> $GITHUB_ENV
-            printf '%s\n' "$SSH_PASSPHRASE" | SSH_ASKPASS=/bin/cat DISPLAY= ssh-add ~/.ssh/deploy_key 2>&1 || true
-          fi
-          ssh-keyscan -p $VPS_PORT -H $VPS_HOST >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: 🗄️ Backup PostgreSQL pré-deploy
         if: github.event.inputs.skip_backup != 'true'
         run: |
           TS=$(date -u +%Y%m%d-%H%M%S)
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
             set -e
             if [ -f $REMOTE_APP/.env ]; then
               set -a; source $REMOTE_APP/.env; set +a
@@ -169,7 +207,7 @@ jobs:
 
       - name: 📥 Sync main no VPS
         run: |
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
             set -e
             cd $REMOTE_REPO
             echo 'HEAD antes: '\$(git log -1 --format='%h %s')
@@ -181,7 +219,7 @@ jobs:
       - name: 🛢️ Aplicar migration 0014
         if: github.event.inputs.run_migration == 'true'
         run: |
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
             set -e
             if [ -f $REMOTE_APP/.env ]; then set -a; source $REMOTE_APP/.env; set +a; fi
             MIG=$REMOTE_REPO/deploy/0014_onda8_golive_foundations.sql
@@ -199,7 +237,7 @@ jobs:
 
       - name: 🏗️ Instalar dependências + build
         run: |
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
             set -e
             cd $REMOTE_REPO
             echo '=== npm install ==='
@@ -213,7 +251,7 @@ jobs:
 
       - name: 🔄 Publicar em current + PM2 reload
         run: |
-          ssh -i ~/.ssh/deploy_key -p $VPS_PORT -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST "
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "${VPS_USER}@${VPS_HOST}" "
             set -e
             mkdir -p $REMOTE_APP/backend $REMOTE_APP/frontend
             rsync -a --delete $REMOTE_REPO/backend/dist/ $REMOTE_APP/backend/dist/ 2>&1 | tail -3
@@ -258,11 +296,11 @@ jobs:
             echo "- Data: $(date -u +%FT%TZ)"
             echo "- Migration 0014: **${{ github.event.inputs.run_migration }}**"
             echo "- Backup DB: **${{ github.event.inputs.skip_backup == 'true' && 'pulado' || 'executado' }}**"
-            echo "- Fonte da chave SSH: **${{ needs.preflight.outputs.key_source }}**"
+            echo "- Chave SSH: **SSH_GITHUB** (primária)"
             echo ''
             echo '### Estado dos endpoints:'
             for ep in /api/health /api/health/pix /api/webhooks/pix; do
               code=$(curl -sS -o /dev/null -w '%{http_code}' -m 10 "https://oneverso.com.br$ep" || echo 000)
               echo "- \`$ep\` → HTTP $code"
             done
-          } >> $GITHUB_STEP_SUMMARY
+          } >> "$GITHUB_STEP_SUMMARY"

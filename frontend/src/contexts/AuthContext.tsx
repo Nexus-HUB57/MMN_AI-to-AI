@@ -402,6 +402,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
     setUser(nextUser);
     persistUser(nextUser);
+    // HOTFIX D18.6: resolve user_id numerico real via API para evitar fallback fantasma
+    if (nextUser.email) {
+      try {
+        const resp = await fetch(`/api/auth/resolve-user-id?email=${encodeURIComponent(nextUser.email.toLowerCase())}`);
+        if (resp.ok) {
+          const j = await resp.json();
+          if (j && typeof j.id === "number") {
+            window.localStorage.setItem("mmn-ai-resolved-user-id", String(j.id));
+          }
+        }
+      } catch {}
+    }
     ensureAffiliateMarketplaceProfile({
       id: nextUser.id,
       name: nextUser.name,

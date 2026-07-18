@@ -106,7 +106,7 @@ export default function AdminApprovals() {
   const [pendingTypeFilter, setPendingTypeFilter] = useState<"all" | ApprovalType>("all");
   const [priorityFilter, setPriorityFilter] = useState<"all" | ApprovalPriority>("all");
   const [processedStatusFilter, setProcessedStatusFilter] = useState<"all" | ProcessedStatus>("all");
-  const [selectedApprovalId, setSelectedApprovalId] = useState<number | null>(null);
+  const [selectedApprovalId, setSelectedApprovalId] = useState<string | null>(null);
   const [selectedPendingIds, setSelectedPendingIds] = useState<number[]>([]);
   const [approvalNotes, setApprovalNotes] = useState("");
   const [batchApprovalNotes, setBatchApprovalNotes] = useState("");
@@ -131,8 +131,8 @@ export default function AdminApprovals() {
     {
       page: 1,
       limit: 50,
-      status: processedStatusFilter === "all" ? undefined : processedStatusFilter,
-    },
+      // status ignorado no backend hoje (D18.6)
+      },
     {
       enabled: activeTab === "processed",
     }
@@ -141,7 +141,7 @@ export default function AdminApprovals() {
   const statsQuery = trpc.approvals.getStats.useQuery();
 
   const detailsQuery = trpc.approvals.getById.useQuery(
-    { id: selectedApprovalId || 0 },
+    { id: String(selectedApprovalId || "") },
     { enabled: selectedApprovalId !== null }
   );
 
@@ -261,7 +261,7 @@ export default function AdminApprovals() {
 
   const handleApprove = () => {
     if (!selectedApprovalId) return;
-    approveMutation.mutate({ id: selectedApprovalId, notes: approvalNotes || undefined });
+    approveMutation.mutate({ id: String(selectedApprovalId), notes: approvalNotes || undefined });
   };
 
   const handleApproveBatch = () => {
@@ -283,7 +283,7 @@ export default function AdminApprovals() {
       return;
     }
 
-    rejectMutation.mutate({ id: selectedApprovalId, reason: rejectReason });
+    rejectMutation.mutate({ id: String(selectedApprovalId), reason: rejectReason });
   };
 
   const handleRequestInfo = () => {

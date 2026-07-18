@@ -396,6 +396,25 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
   }
 };
 
+
+// HOTFIX D18.6: rota REST auxiliar para resolver user_id numerico por email
+app.get("/api/auth/resolve-user-id", async (req, res) => {
+  try {
+    const email = String(req.query.email || "").toLowerCase().trim();
+    if (!email) return res.status(400).json({ error: "email required" });
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      const r = await c.query(`SELECT id, name, email, role FROM users WHERE lower(email) = $1 LIMIT 1`, [email]);
+      if (!r.rows.length) return res.status(404).json({ error: "not found" });
+      return res.json({ id: r.rows[0].id, name: r.rows[0].name, email: r.rows[0].email, role: r.rows[0].role });
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch (e) {
+    return res.status(500).json({ error: String((e as any)?.message ?? e) });
+  }
+});
+
 app.post("/webhooks/mercadopago", handleMercadoPagoWebhook);
 app.post("/api/webhooks/mercadopago", handleMercadoPagoWebhook);
 

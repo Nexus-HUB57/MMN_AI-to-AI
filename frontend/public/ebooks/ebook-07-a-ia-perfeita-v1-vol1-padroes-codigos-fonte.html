@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/colecao-a-ia-perfeita--07-a-ia-perfeita-v1-vol1-padroes-codigos-fonte.webp" /></p>
+<p><strong>A IA Perfeita — Volume I: Padrões e Códigos-Fonte da Inteligência Impecável</strong></p>
+<p><em>A engenharia secreta dos sistemas que não erram em silêncio — padrões arquiteturais, design patterns e o repositório vivo de código-fonte do MMN_IA</em></p>
+<p><em>Coletânea MMN_IA · A IA Perfeita · Vol. 1 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>"Perfeito", em engenharia, nunca é absoluto. É uma régua. A IA Perfeita, neste volume, não é a IA que nunca erra — é a IA cujos erros são <strong>previsíveis, detectáveis, reversíveis e didáticos</strong>. Quem busca infalibilidade no software de fronteira está perseguindo um espelho. Quem busca <strong>previsibilidade sob estresse</strong> está perseguindo engenharia de verdade. Este é o primeiro volume da Coletânea <em>A IA Perfeita</em> — três volumes que desenham, juntos, o método MMN_IA para construir sistemas inteligentes que se aproximam assintoticamente da perfeição. Neste tomo cobrimos: padrões arquiteturais comprovados, design patterns agênticos, anti-padrões mortais com seus antídotos, e — diferencial absoluto — <strong>trechos de código-fonte de referência</strong> prontos para serem adaptados, em Python e TypeScript, organizados em uma biblioteca viva publicada no repositório oficial do MMN_IA. É a engenharia secreta dos sistemas que não erram em silêncio.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é "Perfeição" em IA — definição operacional
+<strong>•</strong> 2. Os três princípios fundadores da IA Perfeita
+<strong>•</strong> 3. Padrão Determinístico-Sistêmico (DS) — o coração do método
+<strong>•</strong> 4. Padrão Verificador-Crítico (Critic Pattern)
+<strong>•</strong> 5. Padrão Sandbox-First — o que ainda não é seguro vive em areia
+<strong>•</strong> 6. Padrão Idempotência Total — toda ação pode ser repetida
+<strong>•</strong> 7. Padrão Schema-Driven Output (function calling + JSON Schema)
+<strong>•</strong> 8. Padrão Retrieve-Then-Reason — RAG com auditoria de fonte
+<strong>•</strong> 9. Padrão Self-Repair — quando o agente conserta a si mesmo
+<strong>•</strong> 10. Padrão Observabilidade Total (logs, traces, replays)
+<strong>•</strong> 11. Anti-padrões mortais (e seus antídotos)
+<strong>•</strong> 12. O repositório vivo de código MMN_IA
+<strong>•</strong> 13. Código-fonte de referência — Orquestrador SHO em Python
+<strong>•</strong> 14. Código-fonte de referência — Critic Pattern em TypeScript
+<strong>•</strong> 15. Código-fonte de referência — Schema-Driven Output
+<strong>•</strong> 16. Código-fonte de referência — Self-Repair loop
+<strong>•</strong> 17. Checklist da IA Perfeita Vol. I
+<strong>•</strong> 18. Fechamento: a perfeição como assíntota</p>
+</blockquote>
+<hr />
+<h2>1. O QUE É "PERFEIÇÃO" EM IA — DEFINIÇÃO OPERACIONAL</h2>
+<h3>1.1 O erro filosófico</h3>
+<p>A maioria das discussões sobre "IA infalível" começa pela definição errada. Tratam perfeição como <strong>ausência de erro</strong>. Em sistemas complexos, isso é incoerente: todo sistema interessante erra; o que muda é <strong>como ele erra</strong>.</p>
+<h3>1.2 A definição MMN_IA de IA Perfeita</h3>
+<blockquote>
+<p><strong>IA Perfeita</strong> é o sistema cujos erros são (a) <strong>previsíveis</strong> em distribuição, (b) <strong>detectáveis</strong> em tempo útil, (c) <strong>reversíveis</strong> sem dano permanente e (d) <strong>didáticos</strong> — alimentam o próprio aperfeiçoamento.</p>
+</blockquote>
+<p>Os quatro adjetivos formam o acrônimo <strong>PDRD</strong>. Se algum falta, o sistema não é perfeito — é <strong>arriscado disfarçado de competente</strong>.</p>
+<h3>1.3 Tabela de classificação</h3>
+<table>
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Previsível</th>
+<th>Detectável</th>
+<th>Reversível</th>
+<th>Didático</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM puro chamado direto</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td>Não</td>
+<td><strong>Inseguro</strong></td>
+</tr>
+<tr>
+<td>LLM + validação de output</td>
+<td>Parcial</td>
+<td>Sim</td>
+<td>Não</td>
+<td>Não</td>
+<td>Funcional</td>
+</tr>
+<tr>
+<td>LLM + tools + eval</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Parcial</td>
+<td>Não</td>
+<td>Robusto</td>
+</tr>
+<tr>
+<td><strong>MMN_IA-DS completo</strong></td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Sim</td>
+<td>Sim</td>
+<td><strong>IA Perfeita</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>2. OS TRÊS PRINCÍPIOS FUNDADORES DA IA PERFEITA</h2>
+<h3>2.1 Princípio 1 — Determinismo onde possível, IA onde inevitável</h3>
+<p>Toda etapa do fluxo que pode ser código tradicional <strong>deve</strong> ser código tradicional. O LLM entra apenas onde não há regra escrevível. Isso reduz superfície de erro em ordens de magnitude.</p>
+<h3>2.2 Princípio 2 — Verificação sistêmica antes de entrega</h3>
+<p>Nenhum output de modelo chega ao usuário sem passar por <strong>camada de verificação automática</strong>: schema, regras, crítico LLM, e (quando necessário) humano.</p>
+<h3>2.3 Princípio 3 — Auditabilidade integral</h3>
+<p>Todo prompt, toda resposta, toda decisão intermediária é registrada. Replay é um direito do operador — sempre.</p>
+<pre><code>PRINCÍPIO 1 ── reduz a área onde o erro pode nascer
+PRINCÍPIO 2 ── intercepta o erro antes que cause dano
+PRINCÍPIO 3 ── aprende com o erro quando ele passa
+</code></pre>
+<p>Juntos, formam o triângulo da IA Perfeita.</p>
+<hr />
+<h2>3. PADRÃO DETERMINÍSTICO-SISTÊMICO (DS) — O CORAÇÃO DO MÉTODO</h2>
+<h3>3.1 Definição</h3>
+<p>O <strong>Padrão DS</strong> estrutura todo fluxo em três zonas claras:</p>
+<pre><code>[ZONA DETERMINÍSTICA]   código tradicional, regras, validações
+        ↓
+[ZONA INFERENCIAL]      LLM, sob constituição declarada
+        ↓
+[ZONA DETERMINÍSTICA]   validação, formatação, persistência
+</code></pre>
+<h3>3.2 Por que funciona</h3>
+<p>Cerca a "magia" entre duas paredes de código previsível. Antes da zona inferencial, o input é normalizado, validado, restringido. Depois, o output é parseado, verificado contra schema, eventualmente reescrito. O LLM nunca toca diretamente o usuário ou o estado de produção sem mediação.</p>
+<h3>3.3 Exemplo prático</h3>
+<p>Para um agente que classifica e responde a-mails:</p>
+<pre><code>1. [DET] Lê e-mail, extrai metadados, sanitiza HTML
+2. [DET] Classifica em categorias pré-existentes (regex/regra)
+3. [INF] Se ambíguo, LLM-classifier sob system prompt fixo
+4. [DET] Valida classificação contra lista permitida
+5. [INF] LLM-responder gera resposta sob constituição
+6. [DET] Filtros de PII, política de comunicação, comprimento
+7. [DET] Persiste, envia, registra evento
+</code></pre>
+<p>Sete passos. Apenas dois com LLM. Cada um sob controle estrito.</p>
+<hr />
+<h2>4. PADRÃO VERIFICADOR-CRÍTICO (CRITIC PATTERN)</h2>
+<h3>4.1 A ideia</h3>
+<p>Adicionar um segundo LLM (ou o mesmo, em outro prompt) cuja única função é <strong>criticar</strong> a saída do primeiro contra rubrica explícita. É o "olho externo" sintético.</p>
+<h3>4.2 Por que funciona</h3>
+<p>LLMs são melhores <strong>avaliando</strong> do que <strong>gerando</strong> em muitos domínios. Verificadores capturam: alucinações, violações de política, baixa qualidade, fuga de escopo, erros lógicos detectáveis.</p>
+<h3>4.3 Estrutura mínima</h3>
+<pre><code>OUTPUT do agente principal
+    ↓
+CRÍTICO com prompt-rubrica:
+  - Está dentro do escopo? (sim/não)
+  - Cita fontes verificáveis? (sim/não/n/a)
+  - Há afirmação não suportada? (sim/não)
+  - Estilo apropriado? (1-5)
+  - Score geral? (0-100)
+    ↓
+SE score &lt; limiar → reexecuta com feedback
+SE score ≥ limiar → entrega
+</code></pre>
+<h3>4.4 Custo vs benefício</h3>
+<p>Adiciona ~30-40% de custo de tokens e latência. Em domínios críticos, paga-se múltiplos por causa: cada saída-ruim-evitada vale dezenas a milhares de saídas-comuns-baratas.</p>
+<hr />
+<h2>5. PADRÃO SANDBOX-FIRST — O QUE AINDA NÃO É SEGURO VIVE EM AREIA</h2>
+<h3>5.1 A regra</h3>
+<p>Qualquer <strong>tool execution</strong> (código, shell, browser, banco, API com efeito colateral) acontece <strong>primeiro em sandbox</strong> isolado, com timeout, sem acesso a recursos sensíveis, e com saída inspecionada antes de ser promovida.</p>
+<h3>5.2 Por que é não-negociável</h3>
+<p>Modelos podem ser induzidos a executar código malicioso, vazar segredos, modificar produção. Sem sandbox, uma única prompt injection comprometida torna-se incidente real.</p>
+<h3>5.3 Implementação prática</h3>
+<ul>
+<li>Code execution: E2B / Modal / Daytona / Firecracker VMs descartáveis</li>
+<li>Browser: Browserbase / Playwright em container efêmero</li>
+<li>Banco: réplicas read-only, ou ambiente staging</li>
+<li>Pagamento: gateway em modo sandbox até confirmação humana</li>
+</ul>
+<h3>5.4 A regra do "dry-run obrigatório"</h3>
+<p>Para qualquer ação irreversível em produção, o agente gera <strong>plano de execução</strong>, mostra ao operador (ou validador automático), e só executa após <strong>aprovação explícita</strong>.</p>
+<hr />
+<h2>6. PADRÃO IDEMPOTÊNCIA TOTAL — TODA AÇÃO PODE SER REPETIDA</h2>
+<h3>6.1 Definição</h3>
+<p>Operação é idempotente quando executá-la N vezes produz o mesmo efeito que executá-la 1 vez. Em sistemas IA, idempotência é <strong>escudo contra retentativa</strong>.</p>
+<h3>6.2 Por que é crítico</h3>
+<p>LLMs falham, redes falham, timeouts acontecem. Sem idempotência, retentativa vira <strong>bug</strong>: e-mail duplicado, pagamento dobrado, registro repetido. Com idempotência, retentativa é <strong>resiliência</strong>.</p>
+<h3>6.3 Como implementar</h3>
+<ul>
+<li><strong>Chaves idempotentes</strong> em toda ação externa (UUID do evento, header <code>Idempotency-Key</code>)</li>
+<li><strong>Estado declarado</strong>, não acumulado — operações lêem-modificam-escrevem com versão</li>
+<li><strong>Verificação prévia:</strong> "este efeito já existe?" antes de criar</li>
+<li><strong>Logs antes da ação:</strong> se a ação foi tentada, registra antes; se foi confirmada, registra depois</li>
+</ul>
+<h3>6.4 Antipattern típico</h3>
+<p>Agente envia e-mail. Timeout. Sistema tenta de novo. Cliente recebe dois e-mails. Solução: registrar <strong>intenção de enviar</strong> com chave única; ação real verifica a chave antes de executar.</p>
+<hr />
+<h2>7. PADRÃO SCHEMA-DRIVEN OUTPUT (FUNCTION CALLING + JSON SCHEMA)</h2>
+<h3>7.1 A regra</h3>
+<p>Output de LLM <strong>não é texto livre quando há estrutura esperada</strong>. É JSON validado contra schema. Sempre.</p>
+<h3>7.2 Por que melhora a perfeição</h3>
+<ul>
+<li>Parsing previsível</li>
+<li>Erros de formato detectados imediatamente</li>
+<li>Validação automática por tipo/range</li>
+<li>Auto-retry com feedback estruturado</li>
+<li>Documentação viva do contrato</li>
+</ul>
+<h3>7.3 Stack de validação</h3>
+<pre><code>LLM gera JSON ───► JSON.parse() ───► JSONSchema validate ───► Zod/Pydantic
+                                                                  ↓
+                                                            Aplicação confiante
+</code></pre>
+<h3>7.4 Quando o LLM "falha" no schema</h3>
+<p>Modelos modernos com function calling raramente falham. Quando falham:</p>
+<ol>
+<li>Capturar erro de validação</li>
+<li>Reapresentar ao LLM com o erro como contexto</li>
+<li>Pedir correção (mensagem do tipo "seu output anterior falhou em X; corrija")</li>
+<li>Limitar a 2-3 tentativas, depois fallback</li>
+</ol>
+<p>Em pipelines bem desenhados, taxa de falha de schema fica abaixo de 0.5%.</p>
+<hr />
+<h2>8. PADRÃO RETRIEVE-THEN-REASON — RAG COM AUDITORIA DE FONTE</h2>
+<h3>8.1 A versão "Perfeita" de RAG</h3>
+<p>Não basta recuperar + responder. A IA Perfeita exige:</p>
+<pre><code>1. Multi-query rewriting (3 variantes)
+2. Multi-retrieval (vetor + BM25 + filtros)
+3. Reranking com cross-encoder
+4. Geração com IDs de fonte exigidos
+5. Verificação pós-geração:
+   - Cada afirmação tem source_id?
+   - O source_id existe?
+   - O texto da source suporta a afirmação? (LLM-as-judge)
+6. Se algum check falha → reescreve sem a afirmação ou recusa
+</code></pre>
+<h3>8.2 O contrato com o usuário</h3>
+<p>Toda resposta com RAG entrega:</p>
+<ul>
+<li>Texto da resposta</li>
+<li>Lista de fontes citadas (com link/ID)</li>
+<li>Score de "faithfulness" interno</li>
+<li>Aviso se alguma afirmação não foi totalmente verificada</li>
+</ul>
+<p>Isso muda o relacionamento: o usuário sabe <strong>onde</strong> o sistema está confiante e onde não.</p>
+<h3>8.3 Métricas de aceitação</h3>
+<pre><code>Faithfulness ≥ 0.95   (95% das afirmações ancoradas)
+Context Precision ≥ 0.8
+Context Recall ≥ 0.7
+Citation Validity = 1.0  (todos os IDs existem)
+</code></pre>
+<p>Abaixo desse limiar, pipeline não vai para produção. Período.</p>
+<hr />
+<h2>9. PADRÃO SELF-REPAIR — QUANDO O AGENTE CONSERTA A SI MESMO</h2>
+<h3>9.1 A ideia</h3>
+<p>Em vez de falhar e parar, o sistema <strong>detecta a falha</strong> e tenta <strong>se corrigir</strong>. Não confiamos cegamente nessa correção — ela é também verificada — mas evita que o pipeline trave em erros recuperáveis.</p>
+<h3>9.2 Os três níveis de auto-reparo</h3>
+<pre><code>NÍVEL 1 ── retry com mesmo input (transient errors)
+NÍVEL 2 ── retry com prompt enriquecido pelo erro
+NÍVEL 3 ── retry com modelo diferente (escalada)
+</code></pre>
+<h3>9.3 Critérios de parada do self-repair</h3>
+<ul>
+<li><strong>Limite de iterações</strong> (ex.: 3)</li>
+<li><strong>Limite de custo</strong> (ex.: 5x o custo normal)</li>
+<li><strong>Limite de tempo</strong> (ex.: 30s)</li>
+<li><strong>Falha do crítico</strong> após N reescritas</li>
+</ul>
+<p>Após qualquer limite atingido → <strong>fallback humano</strong> ou <strong>resposta segura padrão</strong> ("não consegui completar; foi encaminhado a um especialista").</p>
+<h3>9.4 O loop completo</h3>
+<pre><code>EXECUTA → SE OK → ENTREGA
+        → SE FALHA →
+            DIAGNOSTICA (erro de schema? alucinação? timeout?)
+            CORRIGE CONTEXTO
+            REEXECUTA
+            (até N vezes)
+            SE AINDA FALHA → ESCALA
+</code></pre>
+<hr />
+<h2>10. PADRÃO OBSERVABILIDADE TOTAL (LOGS, TRACES, REPLAYS)</h2>
+<h3>10.1 O que é "total"</h3>
+<p>Não apenas guardar o que o usuário viu. Guardar <strong>tudo</strong>: prompts internos, decisões do roteador, scores do crítico, tentativas de retry, latências por etapa, custos por chamada, identidade do modelo/versão/parâmetros.</p>
+<h3>10.2 As três camadas</h3>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>O que registra</th>
+<th>Retenção</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Logs</strong></td>
+<td>Eventos estruturados</td>
+<td>30-90 dias</td>
+</tr>
+<tr>
+<td><strong>Traces</strong></td>
+<td>Spans OTel da execução</td>
+<td>7-30 dias</td>
+</tr>
+<tr>
+<td><strong>Replays</strong></td>
+<td>Snapshot completo para reprodução</td>
+<td>indefinido</td>
+</tr>
+</tbody>
+</table>
+<h3>10.3 O ritual semanal</h3>
+<p>Time MMN_IA dedica 1-2 horas por semana a <strong>revisar replays</strong> de:</p>
+<ul>
+<li>Falhas reportadas</li>
+<li>Outliers de latência</li>
+<li>Outliers de custo</li>
+<li>Amostra aleatória de execuções "normais"</li>
+</ul>
+<p>Esse ritual é onde a perfeição <strong>aprende</strong>.</p>
+<hr />
+<h2>11. ANTI-PADRÕES MORTAIS (E SEUS ANTÍDOTOS)</h2>
+<table>
+<thead>
+<tr>
+<th>Anti-padrão</th>
+<th>Sintoma</th>
+<th>Antídoto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mega-prompt monolítico</strong></td>
+<td>Mudar uma coisa quebra três</td>
+<td>Decompor em chamadas modulares</td>
+</tr>
+<tr>
+<td><strong>Output em texto livre</strong></td>
+<td>Parsing instável</td>
+<td>Schema-driven output</td>
+</tr>
+<tr>
+<td><strong>Sem crítico</strong></td>
+<td>Saídas ruins chegam ao usuário</td>
+<td>Critic pattern</td>
+</tr>
+<tr>
+<td><strong>Sem sandbox</strong></td>
+<td>Execução compromete sistema</td>
+<td>Sandbox-first</td>
+</tr>
+<tr>
+<td><strong>Sem idempotência</strong></td>
+<td>Retry duplica efeitos</td>
+<td>Chaves idempotentes</td>
+</tr>
+<tr>
+<td><strong>RAG cego</strong></td>
+<td>Citação errada / fonte fantasma</td>
+<td>Retrieve-then-Reason</td>
+</tr>
+<tr>
+<td><strong>Sem self-repair</strong></td>
+<td>Pipeline trava em erro transitório</td>
+<td>Self-Repair com limites</td>
+</tr>
+<tr>
+<td><strong>Sem observabilidade</strong></td>
+<td>Não dá para entender o que aconteceu</td>
+<td>Observabilidade total</td>
+</tr>
+<tr>
+<td><strong>Sem versionamento</strong></td>
+<td>"Funcionava ontem"</td>
+<td>Git para prompts</td>
+</tr>
+<tr>
+<td><strong>Sem eval</strong></td>
+<td>Mudança vira aposta</td>
+<td>Eval suite em CI</td>
+</tr>
+<tr>
+<td><strong>Acoplamento a 1 modelo</strong></td>
+<td>Novo modelo quebra tudo</td>
+<td>Camada de abstração + eval portátil</td>
+</tr>
+<tr>
+<td><strong>HITL improvisado</strong></td>
+<td>Humano vira gargalo ou ignora</td>
+<td>HITL desenhado</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>12. O REPOSITÓRIO VIVO DE CÓDIGO MMN_IA</h2>
+<h3>12.1 Onde mora</h3>
+<p>Pasta canônica: <code>Nexus-HUB57/MMN_AI-to-AI/AcademIA/Lab-Nexus/templates/</code> e <code>auxiliary/orquestrador-dashboard/</code> no repositório oficial.</p>
+<h3>12.2 O que contém</h3>
+<ul>
+<li><strong>patterns/</strong> — implementações de referência de cada padrão deste ebook</li>
+<li><strong>prompts/</strong> — biblioteca de prompts versionados</li>
+<li><strong>schemas/</strong> — JSON Schemas reaproveitáveis</li>
+<li><strong>evals/</strong> — suites de avaliação por domínio</li>
+<li><strong>observability/</strong> — templates Langfuse / OTel</li>
+<li><strong>playbooks/</strong> — receitas de implantação por caso de uso</li>
+</ul>
+<h3>12.3 Política de contribuição</h3>
+<ul>
+<li>Cada padrão tem <strong>dono nomeado</strong> no ecossistema</li>
+<li>Mudanças passam por PR com eval comparativo</li>
+<li>Cada commit referencia o capítulo deste ebook que documenta o padrão</li>
+</ul>
+<p>A biblioteca é viva: o código nestes capítulos é o snapshot v1.0; a versão atual está sempre no repositório.</p>
+<hr />
+<h2>13. CÓDIGO-FONTE DE REFERÊNCIA — ORQUESTRADOR SHO EM PYTHON</h2>
+<pre><code class="language-python"># mmn_ia/orchestrator/sho.py
+# Sistema Híbrido de Orquestração - Núcleo Mínimo (v1.0)
+from __future__ import annotations
+from dataclasses import dataclass
+from typing import Callable, Any
+import uuid, time, json, logging
+
+log = logging.getLogger(&quot;sho&quot;)
+
+@dataclass
+class Task:
+    id: str
+    payload: dict
+    zone: str  # &quot;green&quot; | &quot;yellow&quot; | &quot;red&quot;
+
+@dataclass
+class AgentSpec:
+    name: str
+    handler: Callable[[dict], dict]
+    schema_out: dict  # JSON Schema do output
+    max_retries: int = 2
+    cost_budget_tokens: int = 8000
+
+class SHO:
+    def __init__(self, agents: list[AgentSpec], critic: Callable[[dict], dict]):
+        self.agents = {a.name: a for a in agents}
+        self.critic = critic
+        self.log = []
+
+    def route(self, task: Task) -&gt; str:
+        # Roteamento determinístico antes do LLM (Padrão DS)
+        kind = task.payload.get(&quot;kind&quot;)
+        mapping = {
+            &quot;classify&quot;: &quot;classifier_agent&quot;,
+            &quot;extract&quot;:  &quot;extractor_agent&quot;,
+            &quot;respond&quot;:  &quot;responder_agent&quot;,
+        }
+        return mapping.get(kind, &quot;responder_agent&quot;)
+
+    def execute(self, task: Task) -&gt; dict:
+        if task.zone == &quot;red&quot;:
+            return {&quot;status&quot;: &quot;escalated_to_human&quot;, &quot;task_id&quot;: task.id}
+
+        agent_name = self.route(task)
+        agent = self.agents[agent_name]
+        attempt = 0
+        last_err = None
+
+        while attempt &lt;= agent.max_retries:
+            try:
+                output = agent.handler(task.payload)
+                self._validate_schema(output, agent.schema_out)
+                review = self.critic(output)
+                if review[&quot;score&quot;] &gt;= 0.8:
+                    self._record(task, agent_name, output, review)
+                    return {&quot;status&quot;: &quot;ok&quot;, &quot;output&quot;: output, &quot;review&quot;: review}
+                else:
+                    task.payload[&quot;critic_feedback&quot;] = review[&quot;feedback&quot;]
+                    attempt += 1
+            except Exception as e:
+                last_err = str(e)
+                task.payload[&quot;last_error&quot;] = last_err
+                attempt += 1
+
+        self._record(task, agent_name, None, {&quot;score&quot;: 0, &quot;error&quot;: last_err})
+        return {&quot;status&quot;: &quot;failed&quot;, &quot;error&quot;: last_err, &quot;task_id&quot;: task.id}
+
+    def _validate_schema(self, output: dict, schema: dict):
+        # Validação JSON Schema — falha cedo (Schema-Driven Output)
+        from jsonschema import validate
+        validate(instance=output, schema=schema)
+
+    def _record(self, task: Task, agent_name: str, output: Any, review: dict):
+        self.log.append({
+            &quot;ts&quot;: time.time(),
+            &quot;task_id&quot;: task.id,
+            &quot;agent&quot;: agent_name,
+            &quot;output&quot;: output,
+            &quot;review&quot;: review,
+        })
+        log.info(&quot;sho_event&quot;, extra={&quot;task_id&quot;: task.id, &quot;agent&quot;: agent_name})
+
+# Uso:
+# sho = SHO(agents=[...], critic=my_critic_fn)
+# result = sho.execute(Task(id=str(uuid.uuid4()), payload={...}, zone=&quot;yellow&quot;))
+</code></pre>
+<h3>13.1 O que esse código demonstra</h3>
+<ul>
+<li><strong>Padrão DS:</strong> roteamento determinístico antes do LLM</li>
+<li><strong>Schema-driven:</strong> validação obrigatória de output</li>
+<li><strong>Critic pattern:</strong> crítico avalia score e dá feedback</li>
+<li><strong>Self-repair:</strong> retry com feedback enriquecido</li>
+<li><strong>Observabilidade:</strong> log estruturado de cada evento</li>
+<li><strong>Zona de risco:</strong> zona "red" escalada automaticamente</li>
+</ul>
+<hr />
+<h2>14. CÓDIGO-FONTE DE REFERÊNCIA — CRITIC PATTERN EM TYPESCRIPT</h2>
+<pre><code class="language-typescript">// mmn_ia/critic/critic.ts
+// Critic Pattern - Implementação MMN_IA v1.0
+import { z } from &quot;zod&quot;;
+
+const ReviewSchema = z.object({
+  in_scope: z.boolean(),
+  cites_sources: z.boolean().nullable(),
+  unsupported_claims: z.array(z.string()),
+  style_score: z.number().min(1).max(5),
+  overall_score: z.number().min(0).max(1),
+  feedback: z.string(),
+});
+
+export type Review = z.infer&lt;typeof ReviewSchema&gt;;
+
+const CRITIC_SYSTEM_PROMPT = `
+Você é o Crítico do ecossistema MMN_IA. Sua única função é
+avaliar a saída de outro agente contra a rubrica abaixo.
+Você não reescreve. Você apenas julga e dá feedback.
+
+RUBRICA:
+1. A resposta está dentro do escopo da pergunta?
+2. Se aplicável, cita fontes verificáveis?
+3. Há afirmações não suportadas por evidência?
+4. O estilo é apropriado (1-5)?
+5. Score geral (0-1)?
+6. Feedback acionável para correção.
+
+Responda APENAS com JSON válido no schema fornecido.
+`;
+
+export async function critic(
+  agentOutput: string,
+  llm: (system: string, user: string) =&gt; Promise&lt;string&gt;
+): Promise&lt;Review&gt; {
+  const raw = await llm(
+    CRITIC_SYSTEM_PROMPT,
+    `Avalie:\n\n${agentOutput}`
+  );
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error(&quot;CRITIC_OUTPUT_NOT_JSON&quot;);
+  }
+
+  const review = ReviewSchema.safeParse(parsed);
+  if (!review.success) {
+    throw new Error(`CRITIC_OUTPUT_INVALID: ${review.error.message}`);
+  }
+  return review.data;
+}
+
+// Helper: aceita ou rejeita o output do agente
+export function acceptOrReject(
+  review: Review,
+  thresholds = { overall: 0.8, style: 3 }
+): &quot;accept&quot; | &quot;reject&quot; {
+  if (!review.in_scope) return &quot;reject&quot;;
+  if (review.unsupported_claims.length &gt; 0) return &quot;reject&quot;;
+  if (review.overall_score &lt; thresholds.overall) return &quot;reject&quot;;
+  if (review.style_score &lt; thresholds.style) return &quot;reject&quot;;
+  return &quot;accept&quot;;
+}
+</code></pre>
+<h3>14.1 Notas de implementação</h3>
+<ul>
+<li>Usar <strong>Zod</strong> (ou Pydantic em Python) para validar saída do crítico</li>
+<li>Crítico tem prompt <strong>fixo, versionado</strong>, idealmente em arquivo separado</li>
+<li>Crítico pode usar <strong>modelo menor/mais barato</strong> que o gerador — vale o trade-off</li>
+<li>Em produção, registre <strong>todos os reviews</strong> para análise de drift</li>
+</ul>
+<hr />
+<h2>15. CÓDIGO-FONTE DE REFERÊNCIA — SCHEMA-DRIVEN OUTPUT</h2>
+<pre><code class="language-python"># mmn_ia/io/schema_driven.py
+# Schema-Driven Output via Function Calling - MMN_IA v1.0
+from pydantic import BaseModel, Field, ValidationError
+from typing import Literal
+import json
+
+class ClassificationOut(BaseModel):
+    category: Literal[&quot;sales&quot;, &quot;support&quot;, &quot;billing&quot;, &quot;other&quot;]
+    confidence: float = Field(ge=0.0, le=1.0)
+    rationale: str = Field(min_length=10, max_length=400)
+
+CLASSIFIER_PROMPT = &quot;&quot;&quot;
+Classifique a mensagem do usuário em UMA das categorias permitidas.
+Devolva JSON estritamente conforme o schema fornecido.
+&quot;&quot;&quot;
+
+def classify(message: str, llm_with_tools) -&gt; ClassificationOut:
+    raw = llm_with_tools(
+        system=CLASSIFIER_PROMPT,
+        user=message,
+        response_schema=ClassificationOut.model_json_schema(),
+        max_retries=2,
+    )
+    try:
+        return ClassificationOut.model_validate_json(raw)
+    except ValidationError as e:
+        # Padrão Self-Repair: reapresenta erro ao LLM
+        repaired = llm_with_tools(
+            system=CLASSIFIER_PROMPT,
+            user=f&quot;{message}\n\nSeu output anterior falhou: {e}. Corrija.&quot;,
+            response_schema=ClassificationOut.model_json_schema(),
+            max_retries=1,
+        )
+        return ClassificationOut.model_validate_json(repaired)
+</code></pre>
+<hr />
+<h2>16. CÓDIGO-FONTE DE REFERÊNCIA — SELF-REPAIR LOOP</h2>
+<pre><code class="language-python"># mmn_ia/repair/self_repair.py
+# Self-Repair Loop - MMN_IA v1.0
+from typing import Callable, Any
+import time
+
+def self_repair(
+    action: Callable[[dict], Any],
+    diagnose: Callable[[Exception], str],
+    inputs: dict,
+    max_attempts: int = 3,
+    timeout_s: float = 30.0,
+    cost_cap_tokens: int = 20000,
+) -&gt; dict:
+    start = time.time()
+    attempts = 0
+    tokens_used = 0
+    history = []
+
+    while attempts &lt; max_attempts:
+        if time.time() - start &gt; timeout_s:
+            return {&quot;status&quot;: &quot;timeout&quot;, &quot;history&quot;: history}
+        if tokens_used &gt; cost_cap_tokens:
+            return {&quot;status&quot;: &quot;cost_exceeded&quot;, &quot;history&quot;: history}
+
+        try:
+            result = action(inputs)
+            tokens_used += result.get(&quot;tokens&quot;, 0)
+            history.append({&quot;attempt&quot;: attempts, &quot;ok&quot;: True, &quot;result&quot;: result})
+            return {&quot;status&quot;: &quot;ok&quot;, &quot;result&quot;: result, &quot;history&quot;: history}
+        except Exception as e:
+            diagnosis = diagnose(e)
+            history.append({&quot;attempt&quot;: attempts, &quot;error&quot;: str(e), &quot;diagnosis&quot;: diagnosis})
+            inputs[&quot;repair_context&quot;] = diagnosis
+            attempts += 1
+
+    return {&quot;status&quot;: &quot;exhausted&quot;, &quot;history&quot;: history}
+</code></pre>
+<h3>16.1 Como integrar</h3>
+<p>Esse helper envolve qualquer ação que possa falhar transitoriamente:</p>
+<pre><code class="language-python">result = self_repair(
+    action=agent.execute,
+    diagnose=lambda e: f&quot;Erro detectado: {type(e).__name__}: {e}&quot;,
+    inputs={&quot;task&quot;: &quot;...&quot;},
+)
+if result[&quot;status&quot;] != &quot;ok&quot;:
+    escalate_to_human(result[&quot;history&quot;])
+</code></pre>
+<hr />
+<h2>17. CHECKLIST DA IA PERFEITA VOL. I</h2>
+<p>Antes de declarar qualquer pipeline como "IA Perfeita" pelo padrão MMN_IA:</p>
+<pre><code>□ PDRD documentado para cada modo de falha conhecido
+□ Padrão DS aplicado — zonas determinísticas/inferenciais separadas
+□ Critic pattern em produção com rubrica versionada
+□ Sandbox-first para todas as tools com efeito colateral
+□ Idempotência implementada em toda ação externa
+□ Schema-driven output com validação obrigatória
+□ Retrieve-then-Reason quando há RAG, com citation validity = 100%
+□ Self-repair com limites de iteração, custo e tempo
+□ Observabilidade total: logs + traces + replays
+□ Anti-padrões da seção 11 auditados e ausentes
+□ Repositório de código MMN_IA referenciado nos commits
+□ Eval suite cobrindo casos de PDRD
+□ Ritual semanal de revisão de replays agendado
+□ Documentação do contrato com usuário (faithfulness, citação, recusa)
+□ Plano de incidente escrito
+</code></pre>
+<hr />
+<h2>18. FECHAMENTO: A PERFEIÇÃO COMO ASSÍNTOTA</h2>
+<p>A IA Perfeita, ao fim deste primeiro volume, revela-se pelo que é: <strong>um regime de engenharia disciplinada, não um milagre</strong>. Sistemas que se aproximam da perfeição não são mais inteligentes — são mais <strong>honestos sobre seus limites</strong>, mais <strong>detectivos sobre seus erros</strong> e mais <strong>didáticos com seus próprios fracassos</strong>.</p>
+<p>Quem entende isso para de perseguir um deus e começa a construir uma máquina. E é a máquina, no fim, que faz a diferença econômica.</p>
+<blockquote>
+<p><em>"Perfection is the willingness to be imperfect."</em>
+— Lao Tzu (atribuído)</p>
+</blockquote>
+<p>Aceite a imperfeição. Engenheiramente, ela vira o seu maior diferencial.</p>
+<hr />
+<p><strong>Continue a Coletânea</strong></p>
+<p>Vol. 2 — <em>A IA Perfeita · Prompts, Algoritmos e Skills Determinísticas</em> aprofunda a parte cognitiva: como falar com o modelo, como escolher o algoritmo, como cultivar skills reaproveitáveis.</p>
+<p>Vol. 3 — <em>A IA Perfeita · Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</em> fecha a trilogia com o tema das skills de auto-reparo, auto-modelagem e maturidade operacional.</p>
+<p>Acesse: <strong>github.com/Nexus-HUB57/MMN_AI-to-AI</strong> · <strong>docs/ebooks_markdown/colecao_A_IA_Perfeita/</strong></p>
+<p><em>Nexus HUB57 · Ecossistema MMN_IA · 2026</em></p></body>
+</html>

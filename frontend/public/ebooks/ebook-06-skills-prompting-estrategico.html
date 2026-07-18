@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Skills de IA Vol. 1 — Prompting Estratégico</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/colecao-mmn-ia--06-skills-prompting-estrategico.webp" /></p>
+<p><strong>Skills de IA Vol. 1 — Prompting Estratégico</strong></p>
+<p><em>Como pensar, estruturar e comandar sistemas de IA com clareza, contexto e intenção</em></p>
+<p><em>Coleção MMN_IA – Skills • Vol. 6 de 10</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<p><strong>Sobre este ebook</strong></p>
+<p>Este volume da Coleção MMN_IA – Skills apresenta <strong>Skills de IA Vol. 1 — Prompting Estratégico</strong> de forma aplicada, com linguagem premium, visão estratégica, frameworks práticos, checklists e direcionamento executivo. Ao longo dos capítulos, o leitor encontra um caminho estruturado para transformar o tema em execução real dentro do ecossistema MMN_IA.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. O que é prompting estratégico
+<strong>•</strong> 2. Por que prompts ruins geram operações ruins
+<strong>•</strong> 3. A anatomia de um prompt forte
+<strong>•</strong> 4. Clareza, contexto, restrições e formato
+<strong>•</strong> 5. Como pedir profundidade sem gerar ruído
+<strong>•</strong> 6. Prompting para negócio
+<strong>•</strong> 7. Prompting para marketing e conteúdo
+<strong>•</strong> 8. Prompting para análise e síntese
+<strong>•</strong> 9. Prompting para aprendizagem
+<strong>•</strong> 10. Prompting para times e processos
+<strong>•</strong> 11. Biblioteca de estruturas reutilizáveis
+<strong>•</strong> 12. Anti-padrões de prompting
+<strong>•</strong> 13. Como medir qualidade de prompts
+<strong>•</strong> 14. Prompt stack profissional
+<strong>•</strong> 15. Framework MMN_IA de prompting
+<strong>•</strong> 16. Glossário
+<strong>•</strong> 17. Checklist executivo
+<strong>•</strong> 18. Plano de evolução de skill</p>
+</blockquote>
+<h3>1. Papel</h3>
+<p>Quem a IA deve ser naquele contexto.</p>
+<p>Exemplo: analista estratégico, copywriter premium, revisor técnico, arquiteto de automação, editor literário.</p>
+<h3>2. Objetivo</h3>
+<p>Qual entrega precisa ser produzida.</p>
+<h3>3. Contexto</h3>
+<p>Quais informações definem o cenário, o público, a situação e as restrições.</p>
+<h3>4. Critérios de qualidade</h3>
+<p>O que torna a resposta boa, útil, elegante, segura ou acionável.</p>
+<h3>5. Formato de saída</h3>
+<p>Lista, tabela, roteiro, markdown, etapas, framework, resumo executivo.</p>
+<h3>6. Limites</h3>
+<p>O que não fazer, o que evitar, quais áreas não extrapolar.</p>
+<p>Quando essas seis camadas aparecem com coerência, a qualidade sobe com grande previsibilidade.</p>
+<hr />
+<h2>CAPÍTULO 4 — CLAREZA, CONTEXTO, RESTRIÇÕES E FORMATO</h2>
+<p>Quatro alavancas determinam a maioria dos resultados:</p>
+<h3>Clareza</h3>
+<p>Frases objetivas, verbos precisos, objetivo inequívoco.</p>
+<h3>Contexto</h3>
+<p>Sem contexto, a IA completa lacunas com probabilidade. Com contexto, ela responde com direção.</p>
+<h3>Restrições</h3>
+<p>Toda boa criação precisa de limites. Limite não reduz potência; reduz dispersão.</p>
+<h3>Formato</h3>
+<p>Se você não define o formato, a resposta vem no formato preferido do modelo, não no formato ideal para seu processo.</p>
+<hr />
+<h2>CAPÍTULO 5 — COMO PEDIR PROFUNDIDADE SEM GERAR RUÍDO</h2>
+<p>Muitas pessoas confundem profundidade com volume. Pedem respostas “mais completas” e recebem blocos longos, redundantes e pouco operacionais.</p>
+<p>Para obter profundidade real, peça:</p>
+<ul>
+<li>critérios</li>
+<li>comparações</li>
+<li>trade-offs</li>
+<li>riscos</li>
+<li>exemplos de aplicação</li>
+<li>decisão recomendada</li>
+<li>plano de execução</li>
+</ul>
+<p>Profundidade útil é densidade com direção.</p>
+<hr />
+<h2>CAPÍTULO 6 — PROMPTING PARA NEGÓCIO</h2>
+<p>Prompting estratégico em ambiente de negócio precisa responder a perguntas como:</p>
+<ul>
+<li>qual decisão isso ajuda a tomar?</li>
+<li>qual etapa do processo será acelerada?</li>
+<li>quem consumirá a saída?</li>
+<li>qual grau de precisão é exigido?</li>
+<li>qual o risco de erro?</li>
+</ul>
+<p>Um prompt corporativo madura quando deixa de ser uma pergunta isolada e vira parte de um fluxo maior.</p>
+<hr />
+<h2>CAPÍTULO 7 — PROMPTING PARA MARKETING E CONTEÚDO</h2>
+<p>No marketing, a principal falha é pedir “criatividade” sem direcionamento de posicionamento. Isso gera texto bonito e marca fraca.</p>
+<p>Prompting de conteúdo precisa incluir:</p>
+<ul>
+<li>promessa editorial</li>
+<li>tom de voz</li>
+<li>maturidade do público</li>
+<li>estágio do funil</li>
+<li>transformação desejada</li>
+<li>CTA esperado</li>
+<li>diferenciação competitiva</li>
+</ul>
+<p>Sem isso, a IA escreve para ninguém.</p>
+<hr />
+<h2>CAPÍTULO 8 — PROMPTING PARA ANÁLISE E SÍNTESE</h2>
+<p>Uma das habilidades mais poderosas é converter grandes massas de informação em visão utilizável.</p>
+<p>Boas instruções analíticas incluem:</p>
+<ul>
+<li>tese central</li>
+<li>critérios de comparação</li>
+<li>hierarquia do que importa</li>
+<li>separação entre fato, inferência e recomendação</li>
+<li>indicação explícita de lacunas</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 9 — PROMPTING PARA APRENDIZAGEM</h2>
+<p>IA pode ser professora, mentora, debatedora, avaliadora e simuladora. Para isso, o prompting precisa organizar progressão.</p>
+<p>Peça à IA para:</p>
+<ul>
+<li>explicar do simples ao avançado</li>
+<li>usar analogias controladas</li>
+<li>testar retenção</li>
+<li>apontar erros de entendimento</li>
+<li>criar exercícios graduais</li>
+<li>adaptar profundidade ao seu nível</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 10 — PROMPTING PARA TIMES E PROCESSOS</h2>
+<p>O grande salto acontece quando prompts deixam de morar em chats pessoais e passam a operar como ativos do time.</p>
+<p>Isso exige:</p>
+<ul>
+<li>biblioteca compartilhada</li>
+<li>convenção de nomenclatura</li>
+<li>versão</li>
+<li>dono do prompt</li>
+<li>objetivo definido</li>
+<li>critério de uso</li>
+<li>revisão periódica</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 11 — BIBLIOTECA DE ESTRUTURAS REUTILIZÁVEIS</h2>
+<h3>Estrutura 1 — Diagnóstico</h3>
+<p>“Analise o cenário abaixo, identifique os 5 problemas mais críticos, explique causas, impacto e prioridade de ação.”</p>
+<h3>Estrutura 2 — Reescrita estratégica</h3>
+<p>“Reescreva o texto a seguir preservando o sentido, elevando clareza, sofisticação e persuasão, sem exagero promocional.”</p>
+<h3>Estrutura 3 — Plano executivo</h3>
+<p>“Transforme o tema em um plano de 90 dias com frentes, responsáveis, entregas, riscos e métricas.”</p>
+<h3>Estrutura 4 — Comparação</h3>
+<p>“Compare A e B usando critérios X, Y e Z; depois recomende a melhor escolha para o contexto descrito.”</p>
+<h3>Estrutura 5 — Crítica construtiva</h3>
+<p>“Avalie o material abaixo como um editor sênior, identificando lacunas, inconsistências e oportunidades de refinamento.”</p>
+<hr />
+<h2>CAPÍTULO 12 — ANTI-PADRÕES DE PROMPTING</h2>
+<ul>
+<li>pedir algo amplo demais</li>
+<li>misturar muitos objetivos na mesma instrução</li>
+<li>omitir o público-alvo</li>
+<li>não definir formato de saída</li>
+<li>não impor limites</li>
+<li>esperar precisão sem contexto</li>
+<li>pedir “criatividade” sem estratégia</li>
+<li>reaproveitar prompts sem adaptação</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 13 — COMO MEDIR QUALIDADE DE PROMPTS</h2>
+<p>Prompts profissionais devem ser avaliados por:</p>
+<ul>
+<li>aderência ao objetivo</li>
+<li>consistência entre execuções</li>
+<li>economia de edição posterior</li>
+<li>velocidade de uso</li>
+<li>transferência para o time</li>
+<li>capacidade de escala</li>
+</ul>
+<p>Se um prompt só funciona com o autor original, ele ainda não virou skill organizacional.</p>
+<hr />
+<h2>CAPÍTULO 14 — PROMPT STACK PROFISSIONAL</h2>
+<p>Um profissional de alta performance geralmente opera uma pilha de prompts, não um prompt isolado.</p>
+<p>Exemplo:</p>
+<ol>
+<li>prompt de diagnóstico</li>
+<li>prompt de estruturação</li>
+<li>prompt de refinamento</li>
+<li>prompt de crítica</li>
+<li>prompt de formatação final</li>
+</ol>
+<p>Essa lógica em camadas reduz improviso e aumenta previsibilidade.</p>
+<hr />
+<h2>CAPÍTULO 15 — FRAMEWORK MMN_IA DE PROMPTING</h2>
+<h3>M — Missão</h3>
+<p>O que precisa ser entregue.</p>
+<h3>M — Moldura</h3>
+<p>Qual contexto, limite e papel definem a execução.</p>
+<h3>N — Nível de qualidade</h3>
+<p>Qual profundidade, tom e padrão devem ser alcançados.</p>
+<h3>I — Interface</h3>
+<p>Em qual formato a saída precisa ser entregue.</p>
+<h3>A — Ajustes</h3>
+<p>O que revisar, corrigir, evitar e melhorar na próxima iteração.</p>
+<hr />
+<h2>CAPÍTULO 16 — GLOSSÁRIO ESSENCIAL</h2>
+<p><strong>Prompt</strong>: instrução dirigida ao modelo.<br />
+<strong>Contexto</strong>: informações que orientam a resposta.<br />
+<strong>Restrição</strong>: limite operacional da saída.<br />
+<strong>Output</strong>: entrega produzida.<br />
+<strong>Iteração</strong>: refinamento progressivo.<br />
+<strong>Template</strong>: estrutura reutilizável.<br />
+<strong>Prompt stack</strong>: conjunto encadeado de prompts.  </p>
+<hr />
+<h2>CAPÍTULO 17 — CHECKLIST EXECUTIVO</h2>
+<ul>
+<li>[ ] o objetivo está claro</li>
+<li>[ ] o papel da IA foi definido</li>
+<li>[ ] o público está identificado</li>
+<li>[ ] há contexto suficiente</li>
+<li>[ ] o formato de saída foi especificado</li>
+<li>[ ] há restrições explícitas</li>
+<li>[ ] critérios de qualidade foram declarados</li>
+<li>[ ] o prompt é reutilizável pelo time</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 18 — PLANO DE EVOLUÇÃO DE SKILL</h2>
+<h3>Nível 1 — Usuário casual</h3>
+<p>Faz perguntas simples e depende da sorte.</p>
+<h3>Nível 2 — Usuário consciente</h3>
+<p>Já organiza objetivo e contexto.</p>
+<h3>Nível 3 — Operador de qualidade</h3>
+<p>Constrói prompts replicáveis e úteis.</p>
+<h3>Nível 4 — Designer de workflows</h3>
+<p>Encadeia prompts e produz processos.</p>
+<h3>Nível 5 — Arquiteto de inteligência aplicada</h3>
+<p>Transforma prompting em ativo estratégico do negócio.</p>
+<hr />
+<h2>FECHAMENTO</h2>
+<p>Prompting estratégico é a skill que inaugura todas as outras. Antes de automatizar, é preciso instruir. Antes de escalar, é preciso enquadrar. Antes de confiar na IA, é preciso aprender a dirigir sua força.</p>
+<hr />
+<h2>CAPÍTULO 19 — PROMPTS PARA DECISÃO EXECUTIVA</h2>
+<p>Quando a IA é usada para apoiar liderança, a instrução precisa reduzir ambiguidade e aumentar governança. Não basta pedir “analise isso”. É necessário informar o tipo de decisão, o horizonte temporal, as restrições, os indicadores relevantes e o formato esperado da recomendação.</p>
+<h3>Estrutura recomendada</h3>
+<ul>
+<li>contexto do negócio</li>
+<li>objetivo decisório</li>
+<li>critérios de análise</li>
+<li>limitações conhecidas</li>
+<li>cenários possíveis</li>
+<li>recomendação final com justificativa</li>
+</ul>
+<h3>Exemplo prático</h3>
+<p>“Analise este cenário comercial considerando margem, velocidade de implantação, risco reputacional e potencial de recorrência. Apresente três caminhos, compare trade-offs e recomende o mais adequado para uma operação digital em fase de escala.”</p>
+<p>Esse tipo de instrução força a IA a sair do genérico e entrar em lógica executiva.</p>
+<hr />
+<h2>CAPÍTULO 20 — PROMPTS PARA DIAGNÓSTICO DE NEGÓCIO</h2>
+<p>Uma das aplicações mais poderosas do prompting é o diagnóstico. Mas diagnóstico de qualidade não nasce de perguntas vagas. Nasce de uma moldura precisa.</p>
+<h3>O que incluir</h3>
+<ul>
+<li>descrição do problema</li>
+<li>sintomas observados</li>
+<li>contexto de mercado</li>
+<li>metas não alcançadas</li>
+<li>hipóteses preliminares</li>
+<li>formato de priorização desejado</li>
+</ul>
+<h3>Resultado esperado</h3>
+<p>A IA deve responder com:</p>
+<ul>
+<li>causas prováveis</li>
+<li>fatores agravantes</li>
+<li>lacunas de informação</li>
+<li>prioridades</li>
+<li>plano inicial de ação</li>
+</ul>
+<p>Prompting estratégico é especialmente forte quando usado para organizar problemas difusos.</p>
+<hr />
+<h2>CAPÍTULO 21 — PROMPTS PARA REUNIÕES, ATAS E SÍNTESE DE CONVERSAS</h2>
+<p>Equipes perdem enorme energia em reuniões mal consolidadas. A IA pode transformar atas, decisões e encaminhamentos em ativos claros.</p>
+<h3>Estrutura útil</h3>
+<p>“Com base nesta transcrição, gere: 1) resumo executivo da reunião, 2) decisões tomadas, 3) pendências por responsável, 4) riscos abertos, 5) próximos passos em ordem de prioridade.”</p>
+<h3>Por que isso importa</h3>
+<p>Porque o valor não está apenas em resumir. Está em converter fala dispersa em coordenação operacional.</p>
+<hr />
+<h2>CAPÍTULO 22 — PROMPTS PARA PESQUISA E CURADORIA</h2>
+<p>Pesquisar com IA exige pedir fontes, critérios, classificação e lacunas. Quando isso não é feito, a resposta parece informativa, mas pode ser superficial ou mal priorizada.</p>
+<h3>Estrutura de curadoria</h3>
+<ul>
+<li>tema central</li>
+<li>critérios de seleção</li>
+<li>profundidade esperada</li>
+<li>exclusões desejadas</li>
+<li>formato de saída</li>
+<li>nível de confiabilidade necessário</li>
+</ul>
+<h3>Exemplo</h3>
+<p>“Mapeie os principais temas emergentes em IA aplicada a creators, organize por impacto prático, maturidade e risco de adoção, e entregue um quadro comparativo com recomendações.”</p>
+<hr />
+<h2>CAPÍTULO 23 — PROMPTS PARA COPY DE ALTA CONVERSÃO</h2>
+<p>Copy com IA melhora muito quando o prompt inclui mecanismo de persuasão e não apenas o produto.</p>
+<h3>Componentes essenciais</h3>
+<ul>
+<li>dor específica</li>
+<li>desejo central</li>
+<li>mecanismo único</li>
+<li>objeção dominante</li>
+<li>prova ou plausibilidade</li>
+<li>CTA compatível com o estágio do público</li>
+</ul>
+<p>Sem isso, a saída tende a soar como marketing genérico.</p>
+<hr />
+<h2>CAPÍTULO 24 — PROMPTS PARA REVISÃO E CRÍTICA</h2>
+<p>A skill mais valiosa de muitos profissionais não é gerar do zero, mas revisar com inteligência. Para isso, a IA precisa ser convocada como avaliadora crítica.</p>
+<h3>Exemplo de instrução</h3>
+<p>“Assuma o papel de editor sênior. Avalie o texto a seguir quanto a clareza, densidade, lógica, fluidez, tom de marca e força argumentativa. Indique problemas e proponha correções específicas.”</p>
+<p>Esse tipo de prompt reduz complacência e acelera melhoria real.</p>
+<hr />
+<h2>CAPÍTULO 25 — PROMPTS PARA ENSINO, TREINAMENTO E ONBOARDING</h2>
+<p>Empresas que treinam times com IA precisam de instruções pedagógicas melhores. O objetivo não é gerar conteúdo bonito. É gerar progressão de aprendizagem.</p>
+<h3>Um bom prompt pedagógico pede</h3>
+<ul>
+<li>diagnóstico de nível</li>
+<li>explicação modular</li>
+<li>analogias úteis</li>
+<li>exemplos contextualizados</li>
+<li>exercício aplicável</li>
+<li>avaliação rápida</li>
+<li>reforço dos erros comuns</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 26 — COMO CRIAR UMA BIBLIOTECA PROFISSIONAL DE PROMPTS</h2>
+<p>Biblioteca de prompts é infraestrutura. Ela permite padronização, escala e reaproveitamento.</p>
+<h3>Campos recomendados</h3>
+<ul>
+<li>nome do prompt</li>
+<li>finalidade</li>
+<li>área usuária</li>
+<li>exemplo de uso</li>
+<li>variáveis editáveis</li>
+<li>versão</li>
+<li>autor ou dono</li>
+<li>data de revisão</li>
+<li>risco associado</li>
+</ul>
+<h3>Benefício real</h3>
+<p>Quando o prompt vira ativo organizacional, a empresa para de depender do improviso de indivíduos.</p>
+<hr />
+<h2>CAPÍTULO 27 — PROMPTS COMO PROPRIEDADE INTELECTUAL OPERACIONAL</h2>
+<p>Existe um ponto em que prompts deixam de ser truques e viram know-how. Isso acontece quando refletem metodologia própria, linguagem de marca, lógica comercial e processo decisório.</p>
+<p>Nessa fase, os prompts passam a compor um patrimônio invisível da organização. Eles materializam como a empresa pensa, diagnostica, comunica e executa.</p>
+<hr />
+<h2>CAPÍTULO 28 — PADRÕES DE QUALIDADE PARA TIMES DE ALTA PERFORMANCE</h2>
+<p>Equipes maduras em prompting definem padrões.</p>
+<h3>Alguns exemplos</h3>
+<ul>
+<li>toda tarefa recorrente deve ter prompt-base</li>
+<li>toda saída crítica exige prompt com critério de revisão</li>
+<li>prompts de marca precisam refletir tom e promessa institucional</li>
+<li>prompts de decisão devem separar fatos, inferências e recomendações</li>
+<li>prompts compartilhados devem ter versão e responsável</li>
+</ul>
+<hr />
+<h2>CAPÍTULO 29 — MATRIZ DE EVOLUÇÃO DE PROMPTS</h2>
+<h3>Prompt exploratório</h3>
+<p>Usado para pensar e levantar hipóteses.</p>
+<h3>Prompt operacional</h3>
+<p>Usado para executar tarefas frequentes.</p>
+<h3>Prompt especializado</h3>
+<p>Usado em áreas críticas com mais contexto e limites.</p>
+<h3>Prompt sistêmico</h3>
+<p>Usado dentro de automações, agentes ou rotinas escaláveis.</p>
+<p>Quanto mais avançado o tipo de prompt, maior a exigência de controle de qualidade.</p>
+<hr />
+<h2>CAPÍTULO 30 — O FUTURO DA SKILL</h2>
+<p>O futuro do prompting não é escrever instruções cada vez maiores. É desenhar interfaces cognitivas mais inteligentes, bibliotecas mais reutilizáveis, agentes mais dirigidos e padrões mais auditáveis.</p>
+<p>Quem dominar prompting estratégico não será apenas um bom usuário de IA. Será um tradutor entre intenção humana e execução aumentada.</p></body>
+</html>

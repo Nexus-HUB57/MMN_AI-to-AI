@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import { createLabNexusRestRouter } from "./routes/labNexusRestRouter";
@@ -286,10 +287,96 @@ app.get("/cron/status", (_req, res) => {
 
 app.get("/metrics", metricsHandler);
 
+
+const MERCADO_PAGO_WEBHOOK_SECRET = (
+  process.env.MERCADO_PAGO_WEBHOOK_SECRET ||
+  process.env.MP_WEBHOOK_SECRET ||
+  ""
+).trim();
+
+function parseMercadoPagoSignature(headerValue?: string | string[]) {
+  const raw = Array.isArray(headerValue) ? headerValue[0] : headerValue;
+  const parts = String(raw || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const parsed: Record<string, string> = {};
+  for (const part of parts) {
+    const idx = part.indexOf("=");
+    if (idx <= 0) continue;
+    parsed[part.slice(0, idx).trim().toLowerCase()] = part.slice(idx + 1).trim();
+  }
+  return {
+    ts: parsed.ts || "",
+    v1: (parsed.v1 || "").toLowerCase(),
+  };
+}
+
+function resolveMercadoPagoDataId(req: express.Request) {
+  const queryDataId = req.query?.["data.id"] ?? req.query?.data_id ?? req.query?.id;
+  const bodyDataId = (req.body as any)?.data?.id ?? (req.body as any)?.id;
+  const value = queryDataId ?? bodyDataId;
+  return value == null ? "" : String(value).trim();
+}
+
+function buildMercadoPagoManifest(req: express.Request, ts: string) {
+  const parts: string[] = [];
+  const dataId = resolveMercadoPagoDataId(req);
+  const requestId = String(req.header("x-request-id") || "").trim();
+  if (dataId) parts.push(`id:${dataId};`);
+  if (requestId) parts.push(`request-id:${requestId};`);
+  if (ts) parts.push(`ts:${ts};`);
+  return parts.join("");
+}
+
+function validateMercadoPagoWebhookSignature(req: express.Request) {
+  if (!MERCADO_PAGO_WEBHOOK_SECRET) {
+    return { ok: true, reason: "secret_not_configured", manifest: "" };
+  }
+
+  const { ts, v1 } = parseMercadoPagoSignature(req.header("x-signature"));
+  const manifest = buildMercadoPagoManifest(req, ts);
+
+  if (!ts || !v1 || !manifest) {
+    return { ok: false, reason: "missing_signature_parts", manifest };
+  }
+
+  const expected = createHmac("sha256", MERCADO_PAGO_WEBHOOK_SECRET)
+    .update(manifest)
+    .digest("hex")
+    .toLowerCase();
+
+  const expectedBuf = Buffer.from(expected, "utf8");
+  const receivedBuf = Buffer.from(v1, "utf8");
+  if (expectedBuf.length !== receivedBuf.length) {
+    return { ok: false, reason: "length_mismatch", manifest };
+  }
+
+  const ok = timingSafeEqual(expectedBuf, receivedBuf);
+  return { ok, reason: ok ? "ok" : "hash_mismatch", manifest };
+}
+
 const handleMercadoPagoWebhook = async (req: express.Request, res: express.Response) => {
   try {
+    const signatureCheck = validateMercadoPagoWebhookSignature(req);
+    if (!signatureCheck.ok) {
+      console.warn("[mp-webhook-signature] rejeitado", {
+        reason: signatureCheck.reason,
+        requestId: String(req.header("x-request-id") || ""),
+        topic: String((req.body as any)?.type || (req.body as any)?.action || (req.query as any)?.type || (req.query as any)?.topic || ""),
+      });
+      return res.status(401).json({
+        ok: false,
+        provider: "mercado_pago",
+        action: "ignored",
+        error: "Invalid webhook signature",
+      });
+    }
+
     const body = (req.body ?? {}) as Record<string, any>;
     const query = req.query as Record<string, any>;
+    // D18.9: assinatura HMAC validada antes do processamento
     // 1) Roda o processamento de assinatura existente (não rompe contrato anterior)
     let subscriptionResult: any = null;
     try {

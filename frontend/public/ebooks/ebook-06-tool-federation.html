@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>**NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA**</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 6
+roman: "VI"
+title: "Tool Federation e Skills Compartilhadas"
+subtitle: "Como ferramentas e skills se federam entre agentes, equipes e organizações."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="/ebooks/covers/colecao-nexus-protocol--06-tool-federation.webp" /></p>
+<h2>Volume VI — Tool Federation e Skills Compartilhadas</h2>
+<p><strong>Como ferramentas e skills se federam entre agentes, equipes e organizações.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como uma skill criada por um agente vira ativo de uma rede inteira?</p>
+</blockquote>
+<hr />
+<h2>Sumário</h2>
+<blockquote>
+<ol>
+<li>A diferença entre tool, skill e capability</li>
+<li>Skill Registry: o npm dos agentes</li>
+<li>Versionamento semântico aplicado a skills</li>
+<li>Contract testing: input, output e modo de falha</li>
+<li>Discovery: pull, push e marketplace híbrido</li>
+<li>Composição: skills que chamam skills</li>
+<li>Skills com side-effects: idempotência, retry, compensação</li>
+<li>Monetização: skills pagas e billing por execução</li>
+<li>Skill drift: quando o modelo embaixo muda</li>
+<li>Manifesto: skill é produto, não código</li>
+</ol>
+</blockquote>
+<hr />
+<h2>1. A diferença entre tool, skill e capability</h2>
+<p>Três termos costumam ser usados como sinônimos e não são. A confusão é
+responsável por arquiteturas que parecem federadas mas não compõem:</p>
+<p><strong>Tool.</strong> Função atômica, baixo nível, sem inteligência. <code>read_file(path)</code>,
+<code>send_email(to, body)</code>. Vive em servidores MCP. Determinística no
+comportamento; a inteligência fica no agente que decide quando chamar.</p>
+<p><strong>Skill.</strong> Competência composta, pode envolver múltiplas tools, múltiplos
+turnos com o usuário, decisões locais. "Renegociar fatura com cliente",
+"Preparar onboarding técnico", "Auditar contrato de fornecedor". Vive no
+Agent Card (Volume II). É <strong>comportamento embalado</strong>.</p>
+<p><strong>Capability.</strong> Conjunto declarado de skills + restrições operacionais
+(modelos suportados, idiomas, SLA). Capability é o que aparece no
+discovery. "Atendimento financeiro PT-BR, 24/7, com SLA de 30s para
+classificação."</p>
+<p>A regra prática: <strong>tools são átomos, skills são moléculas, capabilities
+são produtos</strong>. Federação opera principalmente na camada de skills —
+átomos são baratos de duplicar; produtos são caros de produzir.</p>
+<h2>2. Skill Registry: o npm dos agentes</h2>
+<p>O componente que torna federação possível é o <strong>skill registry</strong>: um
+catálogo onde skills são publicadas, versionadas, descobertas e
+consumidas. O paralelo com gerenciadores de pacotes (npm, PyPI, Maven) é
+direto, com três adaptações importantes.</p>
+<pre><code class="language-json">{
+  &quot;skill_id&quot;: &quot;@acme/renegotiate-invoice&quot;,
+  &quot;version&quot;: &quot;2.3.1&quot;,
+  &quot;author&quot;: &quot;did:web:billing.acme.com&quot;,
+  &quot;published_at&quot;: &quot;2026-05-12T10:00:00Z&quot;,
+  &quot;license&quot;: &quot;Apache-2.0&quot;,
+  &quot;description&quot;: &quot;Renegocia fatura em aberto com base em política do plano do cliente.&quot;,
+  &quot;input_schema&quot;: &quot;https://schemas.acme.com/skills/renegotiate-invoice/2.x/input.json&quot;,
+  &quot;output_schema&quot;: &quot;https://schemas.acme.com/skills/renegotiate-invoice/2.x/output.json&quot;,
+  &quot;failure_modes&quot;: [
+    &quot;customer_not_found&quot;,
+    &quot;invoice_already_paid&quot;,
+    &quot;policy_denied&quot;,
+    &quot;max_attempts_exceeded&quot;
+  ],
+  &quot;required_tools&quot;: [
+    &quot;crm.read@&gt;=1.0&quot;,
+    &quot;billing.write@&gt;=2.0&quot;,
+    &quot;policy-engine.evaluate@&gt;=1.5&quot;
+  ],
+  &quot;compatible_models&quot;: [&quot;claude-3.7&quot;, &quot;gpt-5&quot;, &quot;gemini-2.5&quot;],
+  &quot;telemetry_endpoint&quot;: &quot;https://telemetry.acme.com/skills/v1&quot;,
+  &quot;trust_score&quot;: 0.94,
+  &quot;executions_30d&quot;: 12_847
+}
+</code></pre>
+<p>Adaptações em relação a um registry de software clássico:</p>
+<ol>
+<li><strong>Compatibilidade de modelo é cidadã de primeira classe.</strong> Skill pode
+   funcionar em Claude e falhar em GPT por mudanças de instruction following.</li>
+<li><strong>Failure modes são documentados estruturalmente.</strong> Não é só "lê o
+   readme" — é contrato consumível por código.</li>
+<li><strong>Trust score é parte do índice.</strong> Discovery prioriza skills com
+   reputação medida em execuções reais (ver Volume VII).</li>
+</ol>
+<h2>3. Versionamento semântico aplicado a skills</h2>
+<p>Skills versionam por semver, mas com regras adaptadas:</p>
+<ul>
+<li><strong>MAJOR.</strong> Mudança de input/output schema <strong>ou</strong> mudança de prompt
+  interno que altera materialmente o comportamento (ex.: skill que antes
+  pedia confirmação humana e agora age direto). Major obriga consumidor
+  a revisar.</li>
+<li><strong>MINOR.</strong> Adição de campos opcionais, adição de failure mode, melhoria
+  de prompt sem mudar contrato observável. Compatível para trás.</li>
+<li><strong>PATCH.</strong> Correção de bugs, melhoria de mensagens internas, ajustes
+  imperceptíveis ao consumidor.</li>
+</ul>
+<p>A regra menos óbvia: <strong>mudança de modelo embaixo é MAJOR</strong> se a skill foi
+testada e calibrada para um modelo específico. Trocar Claude 3.5 por
+Claude 3.7 sem notificar consumidores é o tipo de mudança que parece
+patch e quebra produção. (Mais sobre isso no Capítulo 9.)</p>
+<p>Convenção canônica para depreciar uma skill:</p>
+<pre><code class="language-yaml">deprecation:
+  status: deprecated
+  since: &quot;2026-04-01&quot;
+  sunset: &quot;2026-10-01&quot;
+  reason: &quot;Substituída por @acme/renegotiate-invoice-v3&quot;
+  migration_guide: &quot;https://docs.acme.com/migrations/renegotiate-v2-to-v3&quot;
+</code></pre>
+<p>Skill deprecada continua respondendo (não some), mas o registry retorna
+flag de aviso. Consumidores recebem 6 meses para migrar.</p>
+<h2>4. Contract testing: input, output e modo de falha</h2>
+<p>Skill federada sem contract testing é dívida prestes a virar incidente.
+Três níveis de teste canônicos:</p>
+<p><strong>Schema test.</strong> Inputs reais (anonimizados) validam contra
+<code>input_schema</code>; outputs validam contra <code>output_schema</code>. Roda em CI da
+skill e em CI do consumidor.</p>
+<p><strong>Behavioral test.</strong> Conjunto de cenários golden (input → output esperado
+estruturalmente). Falhas aqui sinalizam regressão semântica — mesmo que
+o schema continue válido.</p>
+<p><strong>Failure-mode test.</strong> Para cada <code>failure_mode</code> declarado, existe
+fixture que dispara aquela falha exatamente. Garante que o contrato de
+falha não é decorativo.</p>
+<p>Implementação típica de behavioral test:</p>
+<pre><code class="language-python">@pytest.mark.parametrize(&quot;case&quot;, load_cases(&quot;golden/renegotiate-invoice&quot;))
+def test_renegotiate_invoice_golden(case):
+    result = run_skill(
+        &quot;@acme/renegotiate-invoice@2.x&quot;,
+        input=case.input,
+        model=case.model,
+    )
+    # tolerância semântica: campos críticos devem bater; texto livre, não.
+    assert result.status == case.expected.status
+    assert result.new_amount == case.expected.new_amount
+    assert_within(result.confidence, case.expected.confidence, 0.05)
+</code></pre>
+<p>A pergunta diagnóstica para skill federada: <em>"se eu mudar o prompt
+interno amanhã, que teste pega a regressão antes do cliente?"</em>. Se a
+resposta é "nenhum", a skill ainda não está em produção — está em demo.</p>
+<h2>5. Discovery: pull, push e marketplace híbrido</h2>
+<p>Três modelos de discovery competem em 2026:</p>
+<p><strong>Pull (cliente consulta registry).</strong> Consumidor faz query: "skill que
+classifique tickets de billing em PT-BR com SLA &lt;2s". Registry retorna
+candidatos ranqueados. Vantagem: cliente mantém controle. Desvantagem:
+exige registry confiável e bem indexado.</p>
+<p><strong>Push (provedor anuncia capacidades).</strong> Skills se inscrevem em "feeds"
+temáticos. Consumidores assinam feeds relevantes e recebem notificações
+de novas versões. Vantagem: descoberta passiva. Desvantagem: spam de
+skills irrelevantes.</p>
+<p><strong>Marketplace híbrido.</strong> Registry curado + ratings + paid placement +
+recomendação algorítmica. Modelo do app store. Vantagem: descoberta
+fácil. Desvantagem: gatekeeper pode capturar renda. É o modelo que
+provavelmente vence — pela mesma razão que app stores venceram sobre
+APT/yum: humanos preferem catálogo curado.</p>
+<p>Em arquiteturas internas (não-públicas), o padrão recomendado é <strong>pull
+sobre registry interno</strong>, com tags de governança próprias da organização.</p>
+<h2>6. Composição: skills que chamam skills</h2>
+<p>Skills compõem. A skill <code>prepare-customer-onboarding</code> chama
+<code>create-account</code> (atômica), <code>send-welcome-email</code> (atômica) e
+<code>schedule-kickoff-meeting</code> (composta, que por sua vez chama outras três).</p>
+<p>Composição traz três problemas que precisam de protocolo:</p>
+<p><strong>Propagação de versão.</strong> Quando uma skill depende de outra com <code>&gt;=2.0</code>,
+e a 2.0 vira 3.0 incompatível, alguém precisa atualizar. Estratégia
+canônica: lockfile por skill (tipo <code>package-lock.json</code>), atualizações
+explícitas, dependabot agêntico.</p>
+<p><strong>Propagação de contexto.</strong> Sub-skill precisa saber em nome de quem está
+agindo, com que escopo de autorização. Caso de uso para o
+<strong>capability token</strong> descendente:</p>
+<pre><code>parent_token  → derived_token(parent, restrict_to=[&quot;billing.read&quot;])
+                                    ↓
+                          sub-skill executa com escopo reduzido
+</code></pre>
+<p><strong>Propagação de falha.</strong> Sub-skill falha → super-skill decide se compensa
+(undo das ações anteriores) ou propaga. Política de compensação faz parte
+do contrato; não é decisão do runtime.</p>
+<p>A regra prática: composição funciona quando cada skill tem <strong>contrato
+completo</strong> (input/output/failures/compensação) e o orquestrador respeita
+o contrato. Composição quebra quando algum nó "se vira" no meio.</p>
+<h2>7. Skills com side-effects: idempotência, retry, compensação</h2>
+<p>Skill que muda o mundo (cobra cartão, envia email, agenda reunião) precisa
+de três propriedades operacionais:</p>
+<p><strong>Idempotência via chave externa.</strong> Toda chamada carrega
+<code>idempotency_key</code>. Skill registra a chave após sucesso; chamada repetida
+com mesma chave retorna o resultado anterior em vez de re-executar.</p>
+<pre><code class="language-python">def charge_card(amount, customer, idempotency_key):
+    cached = idem_store.get(idempotency_key)
+    if cached:
+        return cached  # retorno seguro, sem cobrança dupla
+    result = payment_gateway.charge(amount, customer)
+    idem_store.put(idempotency_key, result, ttl=24h)
+    return result
+</code></pre>
+<p><strong>Retry policy explícita.</strong> Skill declara: quais erros são retryáveis,
+quantas tentativas, qual backoff, qual timeout total. Consumidores leem
+da metadata; runtime do agente respeita.</p>
+<p><strong>Saga / compensação.</strong> Operações de múltiplos passos em sistemas
+distintos não suportam rollback transacional. A compensação é uma
+ação inversa explícita por passo. Toda skill multi-passo declara seu
+mapa de compensação no metadata.</p>
+<p>A pergunta diagnóstica: <em>"se o consumidor chamar essa skill 5 vezes com
+o mesmo input por engano, o que acontece?"</em>. Se a resposta inclui dano
+real (5 cobranças, 5 emails, 5 reuniões), a skill não está pronta para
+federação.</p>
+<h2>8. Monetização: skills pagas e billing por execução</h2>
+<p>Skills viram economia quando podem ser monetizadas. Modelos canônicos:</p>
+<p><strong>Per-execution.</strong> US$ 0,02 por chamada. Simples para consumidor;
+imprevisível para provedor (custos variáveis de tokens).</p>
+<p><strong>Per-seat.</strong> Assinatura por agente consumidor, calls ilimitadas dentro
+de quota. Previsível, premium.</p>
+<p><strong>Per-outcome.</strong> Cobra apenas em sucesso ("fatura efetivamente
+renegociada", "lead efetivamente convertido"). Alinha incentivo, exige
+oráculo de outcome confiável.</p>
+<p><strong>Híbrido.</strong> Base assinatura + per-execution acima da quota. Modelo
+dominante em SaaS, replicável aqui.</p>
+<p>Infraestrutura mínima de billing:</p>
+<ul>
+<li><strong>Metering.</strong> Cada execução gera evento com <code>skill_id</code>, <code>version</code>,
+  <code>consumer_id</code>, <code>cost_tokens</code>, <code>outcome</code>, <code>timestamp</code>. Imutável.</li>
+<li><strong>Atribuição.</strong> O provedor da skill paga o fornecedor de modelo
+  (custo de tokens) e fica com a margem. Repassar custo bruto vira
+  unsustainable rápido.</li>
+<li><strong>Disputa.</strong> Mecanismo de contestação de cobrança com janela definida
+  (típico 30 dias). Sem isso, federação não atravessa fronteiras
+  organizacionais.</li>
+</ul>
+<p>Quem trata billing como pós-pensamento descobre, em escala, que estava
+operando subsidiando consumidores. A regra: <strong>billing nasce com a skill,
+não depois</strong>.</p>
+<h2>9. Skill drift: quando o modelo embaixo muda</h2>
+<p>A falha invisível mais perigosa de skill federada é o <strong>drift por troca
+de modelo</strong>. A skill foi calibrada com Claude 3.5; provedor sobe para 3.7
+silenciosamente; o instruction following muda em 3% dos casos; consumidor
+descobre semanas depois quando uma cliente importante reclama.</p>
+<p>Mitigações canônicas:</p>
+<ol>
+<li><strong>Pin de modelo no metadata.</strong> Skill v2.3.1 declara
+   <code>compatible_models: ["claude-3.5"]</code>. Mudar exige bump de versão.</li>
+<li><strong>Canary deployment de skill.</strong> Nova versão recebe 5% do tráfego por
+   N dias; métricas comparadas com versão estável; promote/rollback
+   automático.</li>
+<li><strong>Eval continuous.</strong> Suite de golden cases roda diariamente contra a
+   skill em produção. Regressão dispara alerta antes de incidente.</li>
+<li><strong>Versão de assinatura.</strong> Output da skill carrega <code>signed_by:
+   skill@version+model_id</code>. Consumidor pode auditar qual combinação
+   produziu determinado output.</li>
+</ol>
+<p>Drift de modelo é o equivalente agêntico de "atualização silenciosa de
+dependência transitiva" — destrutivo, sutil, evitável com disciplina.</p>
+<h2>10. Manifesto: skill é produto, não código</h2>
+<p>A indústria de software passou décadas aprendendo que biblioteca não é
+produto: produto tem documentação, suporte, SLA, política de versionamento,
+canal de feedback, billing. Skill federada está repetindo a mesma curva,
+mais rápido.</p>
+<p>A skill que sobrevive em federação não é a mais clever — é a que tem:</p>
+<ul>
+<li>Contrato completo (input/output/failures/compensação).</li>
+<li>Versionamento honesto (major quando muda comportamento, não só schema).</li>
+<li>Testes que pegam regressão antes do cliente.</li>
+<li>Telemetria que permite ao provedor saber se está degradando.</li>
+<li>Billing alinhado com custo real.</li>
+<li>Policy de drift de modelo declarada.</li>
+</ul>
+<p>Skill sem essas seis propriedades funciona em demo e custa caro em produção.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A próxima década da economia agêntica será
+dominada por quem entendeu que skill é produto, não snippet de código.
+Provedores que tratam skill com a disciplina que SaaS B2B já trata APIs
+vão capturar a renda; os demais vão competir por preço até o zero.</p>
+</blockquote>
+<hr />
+<h2>Checklist Canônico — Tool Federation</h2>
+<ul>
+<li>[ ] Distinção tool/skill/capability documentada no design system.</li>
+<li>[ ] Skill Registry interno ou contratado em uso.</li>
+<li>[ ] Semver aplicado com regra de "modelo embaixo = major".</li>
+<li>[ ] Contract tests (schema + behavioral + failure-mode) em CI.</li>
+<li>[ ] Lockfile de dependências de skill em cada agente consumidor.</li>
+<li>[ ] Skills com side-effects declaram idempotência, retry, compensação.</li>
+<li>[ ] Telemetria estruturada exportada por execução.</li>
+<li>[ ] Política de drift de modelo definida e canary deployment ativo.</li>
+<li>[ ] Billing/metering implementado se skill é monetizada.</li>
+<li>[ ] Política de deprecation (sunset &gt;= 6 meses) documentada.</li>
+</ul>
+<h2>Glossário do Volume</h2>
+<ul>
+<li><strong>Tool</strong> — função atômica determinística (típica em MCP).</li>
+<li><strong>Skill</strong> — competência composta, embalada com contrato.</li>
+<li><strong>Capability</strong> — conjunto declarado de skills com restrições operacionais.</li>
+<li><strong>Skill Registry</strong> — catálogo onde skills publicam, versionam e descobrem.</li>
+<li><strong>Idempotency key</strong> — identificador externo que garante chamada repetida = uma execução.</li>
+<li><strong>Saga</strong> — composição de passos com compensação por passo.</li>
+<li><strong>Skill drift</strong> — degradação por mudança de modelo embaixo.</li>
+<li><strong>Canary deployment</strong> — release gradual de nova versão com fallback automático.</li>
+</ul>
+<h2>Gancho para o Próximo Volume</h2>
+<p>Federação de skills só funciona se confiamos em quem publicou. E confiança
+em sistemas distribuídos não é sentimento — é assinatura criptográfica,
+histórico verificável, atestação. Como provar que um agente é quem diz
+ser? Esse é o terreno do <strong>Volume VII — Identidade, Reputação e Trust Layer</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume VI · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p></body>
+</html>

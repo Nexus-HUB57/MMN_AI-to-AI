@@ -90,10 +90,28 @@ function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: str
       <span className="text-xs text-slate-400">Escaneie com o app do seu banco</span>
       {/* HOTFIX D18.5: badge do provedor */}
       <MpProviderBadge configured={true} />
+      <MpFullCheckoutButton initPoint={checkoutSession?.mercadoPago?.initPoint ?? null} />
     </div>
   );
 }
 
+
+
+function MpFullCheckoutButton({ initPoint }: { initPoint: string | null }) {
+  if (!initPoint) return null;
+  return (
+    <div className="mx-auto mt-4 max-w-md">
+      <a href={initPoint} target="_blank" rel="noreferrer"
+         className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition">
+        <span aria-hidden>💳</span>
+        <span>Pagar via saldo, cartão ou débito (Mercado Pago)</span>
+      </a>
+      <p className="mt-2 text-center text-xs text-slate-400">
+        Ou pague o QR Code PIX acima para confirmação imediata.
+      </p>
+    </div>
+  );
+}
 
 function MpProviderBadge({ configured }: { configured: boolean }) {
   return (

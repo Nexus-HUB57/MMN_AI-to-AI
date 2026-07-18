@@ -33,6 +33,7 @@ import {
   isMercadoPagoConfigured,
   resolveMercadoPagoCheckoutUrl,
 } from "../services/mercadoPagoService";
+import { createMercadoPagoPreference } from "../services/mercadoPagoService";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../../../database/schemas/db";
 import { payments } from "../../../database/schemas/schema-final";
@@ -450,6 +451,31 @@ export const pixRouter = router({
         },
         warnings,
       };
+
+      // HOTFIX D18.8: cria preferência MP com múltiplos métodos (pix + saldo + cartão)
+      try {
+        const pref = await createMercadoPagoPreference({
+          externalReference,
+          title: input.name,
+          description: input.description,
+          amountCents: input.amountCents,
+          payerEmail,
+          payerName,
+          notificationUrl: process.env.MERCADO_PAGO_NOTIFICATION_URL || undefined,
+          backUrls: {
+            success: input.returnUrl || undefined,
+            pending: input.returnUrl || undefined,
+            failure: input.returnUrl || undefined,
+          },
+        });
+        if (pref) {
+          result.mercadoPago.preferenceId = pref.id || null;
+          result.mercadoPago.initPoint = pref.init_point || null;
+          result.mercadoPago.sandboxInitPoint = pref.sandbox_init_point || null;
+        }
+      } catch (prefErr) {
+        warnings.push(`Preferencia MP com multiplos metodos nao disponivel: ${prefErr instanceof Error ? prefErr.message : "erro"}`);
+      }
 
       if (!isMercadoPagoConfigured()) {
         warnings.push("MERCADO_PAGO_ACCESS_TOKEN não configurado no servidor. O checkout manterá apenas o PIX manual com a chave definida.");

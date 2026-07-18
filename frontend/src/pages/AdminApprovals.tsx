@@ -154,6 +154,17 @@ export default function AdminApprovals() {
     }
   };
 
+  const markDeliveredMutation = (trpc as any).approvals?.markDelivered?.useMutation?.({
+    onSuccess: () => {
+      toast.success("Pedido marcado como entregue");
+      pendingQuery.refetch();
+      processedQuery.refetch();
+      statsQuery.refetch();
+      setSelectedApprovalId(null);
+    },
+    onError: (error: any) => toast.error(error?.message || "Erro ao marcar entrega"),
+  });
+
   const approveMutation = trpc.approvals.approve.useMutation({
     onSuccess: (data) => {
       toast.success("Solicitação aprovada com sucesso");
@@ -766,6 +777,14 @@ export default function AdminApprovals() {
                       placeholder="Observações da aprovação"
                       className="mt-3 bg-white"
                     />
+                    <Button
+                      variant="secondary"
+                      className="mt-2 w-full"
+                      onClick={() => selectedApprovalId && markDeliveredMutation?.mutate({ id: String(selectedApprovalId) })}
+                      disabled={markDeliveredMutation?.isPending}
+                    >
+                      {markDeliveredMutation?.isPending ? "Entregando..." : "Marcar como entregue"}
+                    </Button>
                     <Button className="mt-3 w-full" onClick={handleApprove} disabled={approveMutation.isPending}>
                       {approveMutation.isPending ? "Aprovando..." : "Confirmar aprovação"}
                     </Button>

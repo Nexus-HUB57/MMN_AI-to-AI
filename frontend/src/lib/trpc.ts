@@ -18,15 +18,45 @@ function getRuntimeHeaders() {
   try {
     const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) return {} as Record<string, string>;
-    const parsed = JSON.parse(raw) as { id?: string | number; role?: string };
+    const parsed = JSON.parse(raw) as { id?: string | number; email?: string; role?: string };
     const role = parsed.role === "admin" ? "admin" : "user";
-    const numericId = typeof parsed.id === "number"
-      ? parsed.id
-      : typeof parsed.id === "string" && /^\d+$/.test(parsed.id)
-        ? Number(parsed.id)
-        : role === "admin"
-          ? 1
-          : 2;
+
+    // HOTFIX D18.6: prioridade estrita para resolver o user_id real do backend.
+    // 1) Se localStorage tem "mmn-ai-resolved-user-id" (id do backend), usa.
+    // 2) Se parsed.id é numérico (novos logins social já retornam int), usa.
+    // 3) Senão, para admin usa 1; para user comum NÃO cai mais no fallback fantasma "2":
+    //    envia string vazia (backend rejeita com 401 e frontend força re-login/resolução).
+    const resolvedFromCache = window.localStorage.getItem("mmn-ai-resolved-user-id");
+    let numericId: number | null = null;
+
+    if (resolvedFromCache && /^\d+$/.test(resolvedFromCache)) {
+      numericId = Number(resolvedFromCache);
+    } else if (typeof parsed.id === "number") {
+      numericId = parsed.id;
+    } else if (typeof parsed.id === "string" && /^\d+$/.test(parsed.id)) {
+      numericId = Number(parsed.id);
+    } else if (role === "admin") {
+      numericId = 1;
+    }
+
+    if (numericId === null) {
+      // Dispara resolução assíncrona por email (não bloqueia esta chamada).
+      if (parsed.email) {
+        try {
+          const email = String(parsed.email).toLowerCase();
+          fetch(`/api/auth/resolve-user-id?email=${encodeURIComponent(email)}`)
+            .then((r) => r.json())
+            .then((j) => {
+              if (j && typeof j.id === "number") {
+                window.localStorage.setItem("mmn-ai-resolved-user-id", String(j.id));
+              }
+            })
+            .catch(() => undefined);
+        } catch {}
+      }
+      // Sem numericId, retorna sem headers (auth vai negar corretamente com 401)
+      return { "x-user-role": role };
+    }
 
     return {
       "x-user-id": String(numericId),

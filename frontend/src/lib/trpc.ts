@@ -55,12 +55,13 @@ function getRuntimeHeaders() {
         } catch {}
       }
       // Sem numericId, retorna sem headers (auth vai negar corretamente com 401)
-      return { "x-user-role": role };
+      return { "x-user-role": role, "x-user-email": String(parsed.email || "").toLowerCase() };
     }
 
     return {
       "x-user-id": String(numericId),
       "x-user-role": role,
+      "x-user-email": String(parsed.email || "").toLowerCase(),
     };
   } catch {
     return {} as Record<string, string>;

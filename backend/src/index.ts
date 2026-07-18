@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { verifyFirebaseIdToken } from "./services/firebaseAdmin";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
@@ -47,37 +48,80 @@ function resolveOrigin(origin?: string) {
 }
 
 async function createContext(opts: { req: express.Request; res: express.Response }): Promise<Context> {
+  // D18.12 Firebase Auth real (fonte primária) + headers legados (backward-compat)
+  const authHeader = String(opts.req.header("authorization") || "").trim();
   const rawUserId = opts.req.header("x-user-id");
-  const userRole = opts.req.header("x-user-role") || "user";
-  const userEmail = String(opts.req.header("x-user-email") || "").toLowerCase().trim();
+  const userRoleHeader = opts.req.header("x-user-role") || "user";
+  const userEmailHeader = String(opts.req.header("x-user-email") || "").toLowerCase().trim();
   const db = await getDb();
 
-  // HOTFIX D18.7: valida user_id no banco; se invalido, tenta email; senao undefined
   let resolvedId: number | undefined = undefined;
   let resolvedEmail: string | undefined = undefined;
   let resolvedName: string | undefined = undefined;
+  let resolvedRole: string = String(userRoleHeader);
+  let authMode: "firebase" | "header" | "none" = "none";
+
+  // 1) FIREBASE AUTH (primário) — Bearer ID token
+  let firebaseEmail: string | undefined;
+  let firebaseUid: string | undefined;
+  let firebaseName: string | undefined;
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    const idToken = authHeader.slice(7).trim();
+    if (idToken.length > 20) {
+      const decoded = await verifyFirebaseIdToken(idToken).catch(() => null);
+      if (decoded) {
+        firebaseUid = decoded.uid;
+        firebaseEmail = decoded.email ? String(decoded.email).toLowerCase().trim() : undefined;
+        firebaseName = decoded.name;
+        authMode = "firebase";
+      }
+    }
+  }
 
   try {
     const { Pool } = await import("pg");
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const c = await pool.connect();
     try {
-      const idNum = rawUserId && /^\d+$/.test(String(rawUserId)) ? Number(rawUserId) : NaN;
-      if (Number.isFinite(idNum) && idNum > 0) {
-        const r = await c.query(`SELECT id, email, name FROM users WHERE id = $1 LIMIT 1`, [idNum]);
+      // 1a) Firebase: resolve por openId (uid) ou email
+      if (firebaseUid || firebaseEmail) {
+        const r = await c.query(
+          `SELECT id, email, name, role
+             FROM users
+            WHERE "openId" = $1 OR lower(email) = $2
+            LIMIT 1`,
+          [firebaseUid || "__no_uid__", firebaseEmail || "__no_email__"]
+        );
         if (r.rows.length) {
           resolvedId = Number(r.rows[0].id);
           resolvedEmail = r.rows[0].email;
           resolvedName = r.rows[0].name;
+          resolvedRole = String(r.rows[0].role || userRoleHeader);
         }
       }
-      // fallback: se id não resolveu, tenta email
-      if (!resolvedId && userEmail) {
-        const r2 = await c.query(`SELECT id, email, name FROM users WHERE lower(email) = $1 LIMIT 1`, [userEmail]);
-        if (r2.rows.length) {
-          resolvedId = Number(r2.rows[0].id);
-          resolvedEmail = r2.rows[0].email;
-          resolvedName = r2.rows[0].name;
+
+      // 2) HEADERS LEGADOS (fallback backward-compat)
+      if (!resolvedId) {
+        const idNum = rawUserId && /^\d+$/.test(String(rawUserId)) ? Number(rawUserId) : NaN;
+        if (Number.isFinite(idNum) && idNum > 0) {
+          const r = await c.query(`SELECT id, email, name, role FROM users WHERE id = $1 LIMIT 1`, [idNum]);
+          if (r.rows.length) {
+            resolvedId = Number(r.rows[0].id);
+            resolvedEmail = r.rows[0].email;
+            resolvedName = r.rows[0].name;
+            resolvedRole = String(r.rows[0].role || userRoleHeader);
+            if (authMode === "none") authMode = "header";
+          }
+        }
+        if (!resolvedId && userEmailHeader) {
+          const r2 = await c.query(`SELECT id, email, name, role FROM users WHERE lower(email) = $1 LIMIT 1`, [userEmailHeader]);
+          if (r2.rows.length) {
+            resolvedId = Number(r2.rows[0].id);
+            resolvedEmail = r2.rows[0].email;
+            resolvedName = r2.rows[0].name;
+            resolvedRole = String(r2.rows[0].role || userRoleHeader);
+            if (authMode === "none") authMode = "header";
+          }
         }
       }
     } finally { c.release(); await pool.end().catch(() => undefined); }
@@ -90,9 +134,10 @@ async function createContext(opts: { req: express.Request; res: express.Response
     user: resolvedId
       ? {
           id: resolvedId,
-          role: userRole,
+          role: resolvedRole,
           email: resolvedEmail,
           name: resolvedName,
+          authMode,
         }
       : undefined,
   };
@@ -118,7 +163,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role",
+    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role, x-user-email",
   );
   res.header(
     "Access-Control-Expose-Headers",
@@ -517,6 +562,67 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
   }
 };
 
+
+
+// D18.12: Sessão via Firebase ID Token (POST /api/auth/session)
+app.post("/api/auth/session", async (req, res) => {
+  try {
+    const body = (req.body ?? {}) as { idToken?: string };
+    const authHeader = String(req.header("authorization") || "").trim();
+    const bearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+    const token = (body.idToken || bearer || "").trim();
+    if (!token || token.length < 20) return res.status(400).json({ error: "idToken required" });
+
+    const decoded = await verifyFirebaseIdToken(token);
+    if (!decoded) return res.status(401).json({ error: "invalid_token" });
+
+    const email = decoded.email ? String(decoded.email).toLowerCase().trim() : "";
+    const uid = decoded.uid;
+
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      let userRow: any = null;
+      const rUid = await c.query(`SELECT id, name, email, role, "openId" FROM users WHERE "openId" = $1 LIMIT 1`, [uid]);
+      if (rUid.rows.length) userRow = rUid.rows[0];
+      if (!userRow && email) {
+        const rEmail = await c.query(`SELECT id, name, email, role, "openId" FROM users WHERE lower(email) = $1 LIMIT 1`, [email]);
+        if (rEmail.rows.length) {
+          userRow = rEmail.rows[0];
+          // vincula openId se estiver vazio
+          if (!userRow.openId) {
+            await c.query(`UPDATE users SET "openId" = $1, "updatedAt" = NOW() WHERE id = $2`, [uid, userRow.id]);
+            userRow.openId = uid;
+          }
+        }
+      }
+
+      if (!userRow) {
+        return res.status(404).json({
+          ok: false,
+          error: "user_not_found",
+          hint: "Cadastro necessário antes de autenticar via Firebase.",
+          firebase: { uid, email, name: decoded.name || null },
+        });
+      }
+
+      return res.json({
+        ok: true,
+        authMode: "firebase",
+        user: {
+          id: Number(userRow.id),
+          name: userRow.name,
+          email: userRow.email,
+          role: userRow.role,
+          openId: userRow.openId || uid,
+        },
+      });
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch (e) {
+    return res.status(500).json({ error: String((e as any)?.message ?? e) });
+  }
+});
 
 // HOTFIX D18.6: rota REST auxiliar para resolver user_id numerico por email
 app.get("/api/auth/resolve-user-id", async (req, res) => {

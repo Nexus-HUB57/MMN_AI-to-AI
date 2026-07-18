@@ -200,7 +200,7 @@ async function main() {
     // ==== 3) ebooks markdown ====
     const ebooksDir = "/var/www/oneverso/current/docs/ebooks_markdown";
     if (fs.existsSync(ebooksDir)) {
-      const files = fs.readdirSync(ebooksDir).filter((f) => f.endsWith(".md")).slice(0, 20);
+      const files = fs.readdirSync(ebooksDir).filter((f) => f.endsWith(".md")).slice(0, 500);
       console.log(`[ebooks] ${files.length} arquivos markdown`);
       let n = 0;
       for (const f of files) {
@@ -240,7 +240,7 @@ async function main() {
     }
 
     // ==== 5) marketplace_ebooks direto do banco (234 rows) ====
-    const mkt = await client.query(`SELECT slug AS id, slug, title, description, category, subtitle, highlights FROM marketplace_ebooks LIMIT 30 LIMIT 500`);
+    const mkt = await client.query(`SELECT slug AS id, slug, title, description, category, subtitle, highlights FROM marketplace_ebooks LIMIT 500`);
     console.log(`[marketplace_ebooks] ${mkt.rowCount} rows do banco`);
     for (const row of mkt.rows) {
       try {

@@ -46,18 +46,52 @@ function resolveOrigin(origin?: string) {
 }
 
 async function createContext(opts: { req: express.Request; res: express.Response }): Promise<Context> {
-  const userId = opts.req.header("x-user-id");
+  const rawUserId = opts.req.header("x-user-id");
   const userRole = opts.req.header("x-user-role") || "user";
+  const userEmail = String(opts.req.header("x-user-email") || "").toLowerCase().trim();
   const db = await getDb();
+
+  // HOTFIX D18.7: valida user_id no banco; se invalido, tenta email; senao undefined
+  let resolvedId: number | undefined = undefined;
+  let resolvedEmail: string | undefined = undefined;
+  let resolvedName: string | undefined = undefined;
+
+  try {
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      const idNum = rawUserId && /^\d+$/.test(String(rawUserId)) ? Number(rawUserId) : NaN;
+      if (Number.isFinite(idNum) && idNum > 0) {
+        const r = await c.query(`SELECT id, email, name FROM users WHERE id = $1 LIMIT 1`, [idNum]);
+        if (r.rows.length) {
+          resolvedId = Number(r.rows[0].id);
+          resolvedEmail = r.rows[0].email;
+          resolvedName = r.rows[0].name;
+        }
+      }
+      // fallback: se id não resolveu, tenta email
+      if (!resolvedId && userEmail) {
+        const r2 = await c.query(`SELECT id, email, name FROM users WHERE lower(email) = $1 LIMIT 1`, [userEmail]);
+        if (r2.rows.length) {
+          resolvedId = Number(r2.rows[0].id);
+          resolvedEmail = r2.rows[0].email;
+          resolvedName = r2.rows[0].name;
+        }
+      }
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch {}
 
   return {
     req: opts.req,
     res: opts.res,
     db,
-    user: userId
+    user: resolvedId
       ? {
-          id: Number(userId),
+          id: resolvedId,
           role: userRole,
+          email: resolvedEmail,
+          name: resolvedName,
         }
       : undefined,
   };

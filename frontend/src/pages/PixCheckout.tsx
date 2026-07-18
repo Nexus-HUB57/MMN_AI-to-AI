@@ -108,6 +108,35 @@ function MpProviderBadge({ configured }: { configured: boolean }) {
   );
 }
 
+
+function PaidConfirmedBanner({ amount }: { amount?: number }) {
+  return (
+    <div className="mx-auto mb-6 max-w-3xl rounded-2xl border-2 border-emerald-400 bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 p-6 shadow-lg shadow-emerald-500/20 animate-pulse">
+      <div className="flex items-start gap-4">
+        <div className="rounded-full bg-emerald-400 p-3">
+          <svg className="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+        </div>
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold text-emerald-100">🎉 Pagamento Realizado com Sucesso!</h2>
+          <p className="mt-1 text-sm text-emerald-200">
+            Recebemos a confirmação do Mercado Pago. Seu Pack Agente Afiliado A² foi ativado.
+            Aguarde a efetivação em até <strong>72 horas</strong> para desbloqueios completos.
+          </p>
+          {amount ? (
+            <p className="mt-2 text-lg font-semibold text-emerald-300">
+              Valor pago: R$ {Number(amount).toFixed(2)}
+            </p>
+          ) : null}
+          <div className="mt-4 flex gap-3">
+            <a href="/estoque" className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600">Ver meu estoque</a>
+            <a href="/dashboard" className="rounded-lg border border-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/10">Ir ao Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PixCheckout() {
   const { user } = useAuth();
   // ONDA 19: Gate anti-recompra Pack A²
@@ -123,6 +152,7 @@ export default function PixCheckout() {
   const [payerDocument, setPayerDocument] = useState(user?.cpf ?? "");
   const [copiedPixCode, setCopiedPixCode] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [paidConfirmed, setPaidConfirmed] = useState(false); // HOTFIX D18.7
   const [checkoutSession, setCheckoutSession] = useState<MarketplaceCheckoutSession | null>(null);
   
   // ONDA 15 POLL: verificar status do PIX a cada 5s (auto-detect confirmação)
@@ -139,6 +169,7 @@ export default function PixCheckout() {
           .catch(() => null);
         if (statusRes?.status === "approved") {
           setCheckoutSession((prev: any) => prev ? { ...prev, pix: { ...prev.pix, status: "approved" } } : prev);
+          setPaidConfirmed(true);
           setFeedback("✅ Pagamento confirmado! Ebooks liberados no seu estoque.");
           clearInterval(interval);
         }
@@ -169,6 +200,7 @@ export default function PixCheckout() {
     if (!s) return;
     setPixStatus(s);
     if (s === 'paid' || s === 'approved') {
+      setPaidConfirmed(true);
       setFeedback("✅ Pagamento PIX confirmado! +" + Math.floor((checkoutSession?.amount ?? 0)) + " XP creditado.");
     }
   }, [pixStatusQuery?.data, checkoutSession?.amount]);
@@ -180,7 +212,7 @@ export default function PixCheckout() {
   });
 
   useEffect(() => {
-    if (user?.email) setPayerEmail((current) => current || user.email);
+    if (user?.email) setPayerEmail((current) => current && current.trim() ? current : user.email);
     if (user?.cpf) setPayerDocument((current) => current || user.cpf || "");
   }, [user?.cpf, user?.email]);
 
@@ -288,6 +320,7 @@ export default function PixCheckout() {
           const data = await resp.json();
           if (data?.status === "approved" || data?.paid === true) {
             setPaymentConfirmed(true);
+            setPaidConfirmed(true);
             setFeedback("✅ Pagamento confirmado automaticamente! Ebooks entregues no seu estoque.");
             clearInterval(timer);
             // Redirecionar para /estoque após 3s
@@ -367,6 +400,7 @@ export default function PixCheckout() {
 
   return (
     <DashboardLayout>
+      {paidConfirmed && <PaidConfirmedBanner amount={checkoutSession?.amount} />}
       <div className="mx-auto max-w-6xl space-y-6 p-6">
         <section className="rounded-3xl border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.88),rgba(2,6,23,0.96))] p-6 shadow-2xl shadow-black/20">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">

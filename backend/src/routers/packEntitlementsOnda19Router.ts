@@ -102,6 +102,57 @@ export const packEntitlementsRouter = router({
           };
         }
 
+        // HOTFIX D18.7: fallback para marketplace_pack_grants
+        try {
+          const grantRes = await pool.query(
+            `SELECT id, pack_slug, status, created_at, order_id
+               FROM marketplace_pack_grants
+              WHERE user_id = $1
+                AND pack_slug = ANY($2::text[])
+                AND status IN ('granted','active','completed','delivered')
+              ORDER BY created_at DESC LIMIT 1`,
+            [userId, PACK_A2_CODES]
+          );
+          if (grantRes.rows.length > 0) {
+            const g = grantRes.rows[0];
+            return {
+              ok: true,
+              hasPackA2: true,
+              activationId: g.id,
+              status: g.status,
+              packCode: "A²",
+              packName: "Pack Agente Afiliado A²",
+              activatedAt: g.created_at,
+              expiresAt: null,
+              source: "marketplace_pack_grants",
+            };
+          }
+        } catch {}
+
+        // HOTFIX D18.7: fallback marketplace_orders (delivered pack-a2)
+        try {
+          const orderRes = await pool.query(
+            `SELECT id, created_at FROM marketplace_orders
+              WHERE user_id = $1 AND status='delivered' AND (metadata->>'slug') = 'pack-a2'
+              ORDER BY created_at DESC LIMIT 1`,
+            [userId]
+          );
+          if (orderRes.rows.length > 0) {
+            const o = orderRes.rows[0];
+            return {
+              ok: true,
+              hasPackA2: true,
+              activationId: null,
+              status: "delivered",
+              packCode: "A²",
+              packName: "Pack Agente Afiliado A²",
+              activatedAt: o.created_at,
+              expiresAt: null,
+              source: "marketplace_orders",
+            };
+          }
+        } catch {}
+
         return {
           ok: true,
           hasPackA2: false,

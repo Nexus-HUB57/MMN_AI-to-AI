@@ -127,6 +127,7 @@ function Router() {
       <Route path="/admin/status" component={AdminRuntime} />
       <Route path="/admin/runtime" component={AdminRuntime} />
       <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/config" component={AdminSettings} />
       <Route path="/profile" component={ProfileSettings} />
       <Route path="/admin/skills" component={AdminSkills} />
       <Route path="/admin/pack-tickets" component={AdminPackTickets} />

@@ -361,6 +361,132 @@ export const adminRouter = router({
   /**
    * Processar pagamento (aprovar/rejeitar)
    */
+  
+  /**
+   * D18.10: marketplaceStats — Observabilidade financeira/comercial (dashboard /admin/marketplace)
+   */
+  marketplaceStats: adminProcedure
+    .input(z.object({
+      periodDays: z.number().int().min(1).max(365).default(30),
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      const days = Math.max(1, Math.min(365, input?.periodDays ?? 30));
+      const { Pool } = await import("pg");
+      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+      const runOne = async (sql: string, params: any[] = []) => {
+        const c = await pool.connect();
+        try {
+          const r: any = await c.query(sql, params);
+          return (r?.rows ?? []) as any[];
+        } catch (e) { console.error("[marketplaceStats] query error:", (e as any)?.message || e); return [] as any[]; }
+        finally { c.release(); }
+      };
+
+      const [totalsRow] = await runOne(`
+        SELECT
+          COUNT(*)::int AS total_orders,
+          COUNT(*) FILTER (WHERE payment_status IN ('paid','approved','delivered'))::int AS paid_orders,
+          COUNT(*) FILTER (WHERE payment_status='pending' AND status='pending')::int AS pending_orders,
+          COUNT(*) FILTER (WHERE payment_status IN ('failed','rejected','cancelled') OR status='cancelled')::int AS failed_orders,
+          COALESCE(SUM(total_cents) FILTER (WHERE payment_status IN ('paid','approved','delivered')),0)::bigint AS gross_paid_cents,
+          COALESCE(AVG(total_cents) FILTER (WHERE payment_status IN ('paid','approved','delivered')),0)::bigint AS avg_ticket_cents,
+          COUNT(DISTINCT user_id) FILTER (WHERE payment_status IN ('paid','approved','delivered'))::int AS unique_buyers,
+          COUNT(*) FILTER (WHERE payment_status IN ('paid','approved','delivered') AND COALESCE(paid_at,updated_at) > NOW() - INTERVAL '1 day')::int AS paid_today,
+          COALESCE(SUM(total_cents) FILTER (WHERE payment_status IN ('paid','approved','delivered') AND COALESCE(paid_at,updated_at) > NOW() - INTERVAL '1 day'),0)::bigint AS gross_today_cents,
+          COALESCE(SUM(total_cents) FILTER (WHERE payment_status IN ('paid','approved','delivered') AND COALESCE(paid_at,updated_at) > NOW() - (INTERVAL '1 day' * $1)),0)::bigint AS gross_period_cents,
+          COUNT(*) FILTER (WHERE payment_status IN ('paid','approved','delivered') AND COALESCE(paid_at,updated_at) > NOW() - (INTERVAL '1 day' * $1))::int AS paid_period_orders
+        FROM marketplace_orders
+        WHERE COALESCE(is_test_data,false)=false
+      `, [days]);
+
+      const byMethod = await runOne(`
+        SELECT COALESCE(payment_method,'unknown') AS method,
+               COUNT(*)::int AS total,
+               COALESCE(SUM(total_cents),0)::bigint AS gross_cents
+          FROM marketplace_orders
+         WHERE payment_status IN ('paid','approved','delivered')
+           AND COALESCE(is_test_data,false)=false
+         GROUP BY 1
+         ORDER BY total DESC
+      `);
+
+      const byDay = await runOne(`
+        SELECT to_char(COALESCE(paid_at,updated_at,created_at)::date,'YYYY-MM-DD') AS day,
+               COUNT(*)::int AS orders,
+               COALESCE(SUM(total_cents),0)::bigint AS gross_cents
+          FROM marketplace_orders
+         WHERE payment_status IN ('paid','approved','delivered')
+           AND COALESCE(paid_at,updated_at,created_at) > NOW() - (INTERVAL '1 day' * $1)
+           AND COALESCE(is_test_data,false)=false
+         GROUP BY 1
+         ORDER BY day ASC
+      `, [days]);
+
+      const topBuyers = await runOne(`
+        SELECT mo.user_id,
+               COALESCE(u.name,u.email,('user#'||mo.user_id)) AS name,
+               u.email AS email,
+               COUNT(*)::int AS orders,
+               COALESCE(SUM(mo.total_cents),0)::bigint AS gross_cents
+          FROM marketplace_orders mo
+          LEFT JOIN users u ON u.id = mo.user_id
+         WHERE mo.payment_status IN ('paid','approved','delivered')
+           AND COALESCE(mo.is_test_data,false)=false
+         GROUP BY mo.user_id, u.name, u.email
+         ORDER BY gross_cents DESC
+         LIMIT 10
+      `);
+
+      const recent = await runOne(`
+        SELECT mo.id,
+               mo.user_id,
+               COALESCE(u.name,u.email,('user#'||mo.user_id)) AS name,
+               u.email,
+               mo.total_cents,
+               mo.payment_method,
+               mo.payment_status,
+               mo.status,
+               COALESCE(mo.paid_at,mo.updated_at,mo.created_at) AS at
+          FROM marketplace_orders mo
+          LEFT JOIN users u ON u.id = mo.user_id
+         WHERE COALESCE(mo.is_test_data,false)=false
+         ORDER BY COALESCE(mo.paid_at,mo.updated_at,mo.created_at) DESC
+         LIMIT 15
+      `);
+
+      const t = totalsRow || {};
+      return {
+        periodDays: days,
+        totals: {
+          totalOrders: Number(t.total_orders || 0),
+          paidOrders: Number(t.paid_orders || 0),
+          pendingOrders: Number(t.pending_orders || 0),
+          failedOrders: Number(t.failed_orders || 0),
+          uniqueBuyers: Number(t.unique_buyers || 0),
+          grossPaidCents: Number(t.gross_paid_cents || 0),
+          avgTicketCents: Number(t.avg_ticket_cents || 0),
+          paidToday: Number(t.paid_today || 0),
+          grossTodayCents: Number(t.gross_today_cents || 0),
+          paidPeriodOrders: Number(t.paid_period_orders || 0),
+          grossPeriodCents: Number(t.gross_period_cents || 0),
+        },
+        byMethod: byMethod.map((r:any)=>({ method:String(r.method||'unknown'), total:Number(r.total||0), grossCents:Number(r.gross_cents||0) })),
+        byDay: byDay.map((r:any)=>({ day:String(r.day), orders:Number(r.orders||0), grossCents:Number(r.gross_cents||0) })),
+        topBuyers: topBuyers.map((r:any)=>({ userId:Number(r.user_id), name:String(r.name||''), email:String(r.email||''), orders:Number(r.orders||0), grossCents:Number(r.gross_cents||0) })),
+        recent: recent.map((r:any)=>({
+          id:String(r.id),
+          userId:Number(r.user_id),
+          name:String(r.name||''),
+          email:String(r.email||''),
+          totalCents:Number(r.total_cents||0),
+          method:String(r.payment_method||''),
+          paymentStatus:String(r.payment_status||''),
+          status:String(r.status||''),
+          at:(r.at instanceof Date)?r.at.toISOString():String(r.at||''),
+        })),
+      };
+    }),
+
   processPayment: adminProcedure
     .input(z.object({
       id: z.union([z.string(), z.number()]),

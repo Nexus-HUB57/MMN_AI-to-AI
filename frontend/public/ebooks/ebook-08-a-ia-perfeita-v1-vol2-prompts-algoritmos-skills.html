@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/colecao-a-ia-perfeita--08-a-ia-perfeita-v1-vol2-prompts-algoritmos-skills.webp" /></p>
+<p><strong>A IA Perfeita — Volume II: Prompts, Algoritmos e Skills da Cognição Determinística</strong></p>
+<p><em>O grimório técnico da conversa com a máquina — engenharia de prompts, algoritmos de raciocínio e a biblioteca viva de Skills Agênticas MMN_IA</em></p>
+<p><em>Coletânea MMN_IA · A IA Perfeita · Vol. 2 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>Se o Volume I tratou de como construir o <strong>corpo</strong> da IA Perfeita — sua arquitetura, seus padrões, seu código —, este Volume II trata da <strong>mente</strong>: o modo como conversamos com ela, os algoritmos que ela executa internamente, e as Skills (habilidades reaproveitáveis) que transformam um agente genérico em um especialista de alto valor. Aqui você encontra uma engenharia de prompts que vai muito além de "truques" — vai à teoria dos padrões CRISPE, PEAR, ReAct, Reflexion, Tree-of-Thought e Graph-of-Thought; algoritmos de roteamento, seleção e composição que sustentam a IA Perfeita; e a biblioteca viva de Skills Agênticas MMN_IA — habilidades como "Pesquisador Crítico", "Negociador Determinístico", "Auditor Documental", "Analista Quantitativo" e tantas outras. Dezenove capítulos, prompts de referência prontos para colar, e a doutrina cognitiva completa do ecossistema.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Manifesto da cognição determinística
+<strong>•</strong> 2. Anatomia de um prompt MMN_IA
+<strong>•</strong> 3. Padrão CRISPE — Context · Role · Instruction · Steps · Personality · Expression
+<strong>•</strong> 4. Padrão PEAR — Persona · Expertise · Action · Result
+<strong>•</strong> 5. Padrão ReAct — Reason + Act, e por que ainda manda
+<strong>•</strong> 6. Padrão Reflexion — quando o agente revisa a si mesmo
+<strong>•</strong> 7. Padrão Tree-of-Thought (ToT) — explorar caminhos
+<strong>•</strong> 8. Padrão Graph-of-Thought (GoT) — raciocínio em rede
+<strong>•</strong> 9. Padrão Plan-and-Solve — separar planejamento de execução
+<strong>•</strong> 10. Algoritmos de roteamento: classificadores leves, embeddings, regras
+<strong>•</strong> 11. Algoritmos de seleção de exemplos (few-shot dinâmico)
+<strong>•</strong> 12. Algoritmos de auto-consistência (self-consistency, majority voting)
+<strong>•</strong> 13. O conceito de Skill no MMN_IA
+<strong>•</strong> 14. Estrutura de uma Skill — anatomia, contrato e versionamento
+<strong>•</strong> 15. A biblioteca MMN_IA de Skills (catálogo v1.0)
+<strong>•</strong> 16. Composição de Skills — meta-skills e pipelines compostos
+<strong>•</strong> 17. Eval de Skills — como medir habilidade reaproveitável
+<strong>•</strong> 18. Anti-padrões em prompts e Skills
+<strong>•</strong> 19. Checklist &amp; fechamento — o grimório do operador</p>
+</blockquote>
+<hr />
+<h2>1. MANIFESTO DA COGNIÇÃO DETERMINÍSTICA</h2>
+<p>Existe um senso comum, vagamente romântico, segundo o qual conversar com uma IA é uma arte mágica — "saber pedir do jeito certo". Esse romantismo é o inimigo número um da IA Perfeita. <strong>Conversar com IA, no padrão MMN_IA, é engenharia.</strong> É escolha de padrão, é estrutura de prompt, é decisão sobre algoritmo de raciocínio, é versionamento, é teste, é métrica. A magia, quando aparece, é consequência da disciplina — não o contrário.</p>
+<p>Cognição determinística é o regime em que <strong>dado o mesmo input estrutural, o output é previsível em distribuição</strong>. Não há "criatividade aleatória" no espaço operacional sério: há temperatura controlada, sampling controlado, exemplos controlados, schema controlado.</p>
+<p>Este ebook é o <strong>grimório técnico</strong> dessa engenharia. Cada padrão aqui é uma fórmula que funciona em produção, escrita para Operadores que cansaram de improvisar e querem cultivar uma prática reaproveitável. A promessa: ao final, você terá um vocabulário de mais de quinze padrões cognitivos, uma biblioteca de Skills, e métodos para combinar tudo isso em sistemas previsíveis.</p>
+<blockquote>
+<p>A diferença entre um Operador iniciante e um Operador sênior não é "saber mais prompts". É <strong>saber escolher o padrão certo para o problema certo</strong>.</p>
+</blockquote>
+<hr />
+<h2>2. ANATOMIA DE UM PROMPT MMN_IA</h2>
+<h3>2.1 As sete partes de um prompt completo</h3>
+<pre><code>1. CONTEXTO       — quem você é, onde opera, para quem trabalha
+2. OBJETIVO       — o que deve ser entregue, em uma frase
+3. ENTRADAS       — o que será fornecido (formato, exemplos)
+4. PROCEDIMENTO   — como pensar/agir, passo a passo
+5. REGRAS         — sempre / nunca / escalonamento
+6. FORMATO        — saída exata (JSON / markdown / outro)
+7. EXEMPLOS       — 1 a 5 pares input ↔ output
+</code></pre>
+<h3>2.2 Por que essa ordem importa</h3>
+<p>Modelos de fronteira em 2026 leem prompts inteiros, mas <strong>pesam mais o início e o fim</strong>. Colocar contexto e objetivo cedo + formato e exemplos no fim maximiza adesão.</p>
+<h3>2.3 Tamanho ideal</h3>
+<p>System prompt MMN_IA típico: <strong>300-1.200 tokens</strong>. Acima disso, retornos decrescem fortemente. Se está crescendo, é sinal para decompor em chamadas menores.</p>
+<h3>2.4 Versionamento</h3>
+<p>Todo system prompt mora em arquivo <code>.md</code> versionado em Git, com cabeçalho:</p>
+<pre><code>---
+id: prompt_classifier_v2.3
+owner: time_atendimento
+last_updated: 2026-06-01
+eval_score: 0.94
+---
+</code></pre>
+<p>Sem isso, prompt é folclore — não engenharia.</p>
+<hr />
+<h2>3. PADRÃO CRISPE — CONTEXT · ROLE · INSTRUCTION · STEPS · PERSONALITY · EXPRESSION</h2>
+<h3>3.1 O padrão</h3>
+<p>Acrônimo popularizado por Matt Nigh (2023), refinado no ecossistema MMN_IA:</p>
+<ul>
+<li><strong>C</strong>ontext — situação, dado, restrição</li>
+<li><strong>R</strong>ole — papel que o modelo assume</li>
+<li><strong>I</strong>nstruction — tarefa específica</li>
+<li><strong>S</strong>teps — procedimento passo-a-passo</li>
+<li><strong>P</strong>ersonality — tom e estilo</li>
+<li><strong>E</strong>xpression — formato de saída</li>
+</ul>
+<h3>3.2 Template MMN_IA-CRISPE</h3>
+<pre><code>[CONTEXT]
+Trabalhamos com {dado/situação}. Restrição: {limite}.
+
+[ROLE]
+Você é {especialista X}, com {anos/qualificação} de experiência em {Y}.
+
+[INSTRUCTION]
+Sua tarefa: {ação clara}.
+
+[STEPS]
+1. {passo}
+2. {passo}
+3. {passo}
+
+[PERSONALITY]
+Tom: {profissional/técnico/empático/cordial}.
+
+[EXPRESSION]
+Devolva em {markdown / JSON / e-mail}.
+</code></pre>
+<h3>3.3 Quando usar</h3>
+<p>Quando há <strong>um papel claro</strong> e <strong>um procedimento conhecido</strong>. Bom para: redação técnica, análise estruturada, atendimento padronizado, geração de relatórios.</p>
+<h3>3.4 Quando NÃO usar</h3>
+<p>Quando o problema é <strong>exploratório</strong> — para isso, ToT ou GoT. Quando exige uso de <strong>ferramentas externas</strong> — para isso, ReAct.</p>
+<hr />
+<h2>4. PADRÃO PEAR — PERSONA · EXPERTISE · ACTION · RESULT</h2>
+<h3>4.1 O padrão</h3>
+<p>Padrão minimalista, ótimo para prompts curtos em produção de alta escala:</p>
+<ul>
+<li><strong>P</strong>ersona — quem você é</li>
+<li><strong>E</strong>xpertise — em que você é especialista</li>
+<li><strong>A</strong>ction — o que você faz</li>
+<li><strong>R</strong>esult — o que deve entregar</li>
+</ul>
+<h3>4.2 Exemplo</h3>
+<pre><code>PERSONA: Analista financeiro sênior.
+EXPERTISE: Análise de balanços patrimoniais de PMEs.
+ACTION: Identificar três riscos contábeis no balanço anexo.
+RESULT: Lista priorizada (alto/médio/baixo) com justificativa em até 100 palavras cada.
+</code></pre>
+<h3>4.3 Por que funciona</h3>
+<p>Resolve em 4 linhas o que CRISPE faz em 12. Para tarefas de baixa complexidade em alta escala, <strong>PEAR ganha em custo</strong>.</p>
+<hr />
+<h2>5. PADRÃO REACT — REASON + ACT, E POR QUE AINDA MANDA</h2>
+<h3>5.1 A ideia</h3>
+<p>Cada turno do modelo é dividido em:</p>
+<pre><code>THOUGHT: ... (raciocínio interno)
+ACTION:  ... (ferramenta + parâmetros)
+OBSERVATION: ... (resultado da ferramenta)
+THOUGHT: ... (próximo raciocínio)
+ACTION:  ...
+...
+FINAL_ANSWER: ...
+</code></pre>
+<h3>5.2 Por que continua sendo o coração agêntico</h3>
+<p>Modelos modernos têm function calling estruturado, mas internamente continuam executando ReAct. Entender ReAct é entender <strong>o que um agente faz</strong>.</p>
+<h3>5.3 Template MMN_IA-ReAct</h3>
+<pre><code>Você é um agente do tipo ReAct. A cada turno produza:
+THOUGHT: seu raciocínio
+ACTION: nome_da_tool(parâmetros)
+ou
+FINAL_ANSWER: resposta ao usuário
+
+Ferramentas disponíveis:
+- search_web(query)
+- read_doc(doc_id)
+- run_sql(query)
+
+Pare assim que tiver evidência suficiente.
+</code></pre>
+<h3>5.4 Cuidados</h3>
+<ul>
+<li>Limite <strong>max_iterations</strong> (5-10 típico)</li>
+<li>Limite <strong>token budget</strong></li>
+<li>Trate "ação inválida" como erro de schema</li>
+<li>Registre todo o trace para replay</li>
+</ul>
+<hr />
+<h2>6. PADRÃO REFLEXION — QUANDO O AGENTE REVISA A SI MESMO</h2>
+<h3>6.1 A ideia (Shinn et al., 2023)</h3>
+<p>Após produzir uma resposta, o agente:</p>
+<pre><code>1. Auto-avalia o resultado contra critérios
+2. Identifica deficiências específicas
+3. Reescreve com base no feedback gerado por si
+4. Repete até atingir critério ou esgotar tentativas
+</code></pre>
+<h3>6.2 Diferença para Critic Pattern</h3>
+<ul>
+<li><strong>Critic</strong>: outro agente avalia.</li>
+<li><strong>Reflexion</strong>: o <strong>próprio</strong> agente avalia. Mais barato, menos imparcial.</li>
+</ul>
+<p>A IA Perfeita usa <strong>os dois juntos</strong> quando a tarefa é crítica.</p>
+<h3>6.3 Template MMN_IA-Reflexion</h3>
+<pre><code>[Após a resposta:]
+Agora aja como crítico externo de sua própria resposta.
+Identifique:
+1. Pelo menos um ponto de incerteza não sinalizado
+2. Pelo menos uma melhoria possível
+3. Se há afirmação não suportada
+
+Em seguida, produza uma versão revisada.
+</code></pre>
+<h3>6.4 Quando paga o custo</h3>
+<p>Tarefas de redação, análise, raciocínio. Ganho médio observado: +10-25% em qualidade humana percebida.</p>
+<hr />
+<h2>7. PADRÃO TREE-OF-THOUGHT (ToT) — EXPLORAR CAMINHOS</h2>
+<h3>7.1 A ideia (Yao et al., 2023)</h3>
+<p>Em vez de raciocinar linearmente, o agente <strong>explora múltiplos caminhos</strong> de raciocínio em paralelo:</p>
+<pre><code>                 [problema]
+                /     |     \
+            ramo A  ramo B  ramo C
+            /  \    /  \    /  \
+           ...  ...  ...  ...  ...
+                 ↓ avalia ramos ↓
+                ramo vencedor
+</code></pre>
+<h3>7.2 Quando usar</h3>
+<p>Problemas com <strong>múltiplas estratégias possíveis</strong> e onde a estratégia certa não é óbvia: planejamento, design, escolha estratégica, problemas algorítmicos.</p>
+<h3>7.3 Custo</h3>
+<p>ToT pode multiplicar custo de tokens por 3-10x. Use com critério.</p>
+<h3>7.4 Template MMN_IA-ToT</h3>
+<pre><code>1. Gere 3 abordagens distintas para o problema.
+2. Para cada uma, descreva o procedimento em 4-6 passos.
+3. Avalie cada abordagem em: viabilidade (1-5), custo (1-5), risco (1-5).
+4. Recomende a melhor com justificativa em 80 palavras.
+</code></pre>
+<hr />
+<h2>8. PADRÃO GRAPH-OF-THOUGHT (GoT) — RACIOCÍNIO EM REDE</h2>
+<h3>8.1 A ideia (Besta et al., 2023)</h3>
+<p>Generaliza ToT permitindo que <strong>caminhos se cruzem, mesclem e dividam</strong>, formando um grafo:</p>
+<pre><code>[problema]
+   ↓
+[sub-problema A] ←→ [sub-problema B]
+        ↓               ↓
+   [solução parcial A]  [solução parcial B]
+              ↘     ↙
+            [síntese]
+</code></pre>
+<h3>8.2 Quando vale a complexidade</h3>
+<p>Sistemas que precisam de <strong>decomposição de problemas complexos</strong> com <strong>reuso de sub-soluções</strong>: planejamento multi-agente, refatoração de código grande, análise de portfólio.</p>
+<h3>8.3 Implementação prática</h3>
+<p>Em 2026, GoT é mais frequentemente implementado como <strong>orquestração explícita em código</strong>, não como prompt único. O LLM resolve cada nó; o grafo é gerenciado externamente.</p>
+<hr />
+<h2>9. PADRÃO PLAN-AND-SOLVE — SEPARAR PLANEJAMENTO DE EXECUÇÃO</h2>
+<h3>9.1 A ideia</h3>
+<p>Em vez de pedir solução direta, peça primeiro o <strong>plano</strong>:</p>
+<pre><code>TURNO 1: produza um plano em até N passos.
+TURNO 2: execute o plano, passo por passo, mostrando resultado de cada um.
+</code></pre>
+<h3>9.2 Por que funciona</h3>
+<p>Modelos cometem menos erros quando <strong>planejam antes de agir</strong>. Inspirado em humanos, validado em benchmarks.</p>
+<h3>9.3 Template</h3>
+<pre><code>[FASE 1 - PLAN]
+Para o problema: {x}
+Liste 4-7 passos lógicos, sem executar nenhum.
+
+[FASE 2 - SOLVE]
+Execute o plano que você gerou. Em cada passo, mostre:
+- O que pretende fazer
+- Como faz
+- Qual o resultado
+- Validação interna
+</code></pre>
+<hr />
+<h2>10. ALGORITMOS DE ROTEAMENTO: CLASSIFICADORES LEVES, EMBEDDINGS, REGRAS</h2>
+<h3>10.1 Por que roteamento importa</h3>
+<p>Para reduzir custo e aumentar qualidade, <strong>roteie cada query para o agente/modelo certo</strong>. Não chame Claude Opus para classificar uma pergunta simples — use Haiku.</p>
+<h3>10.2 Três técnicas</h3>
+<table>
+<thead>
+<tr>
+<th>Técnica</th>
+<th>Custo</th>
+<th>Precisão</th>
+<th>Quando usar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regex / keyword</strong></td>
+<td>Quase zero</td>
+<td>Baixa-Média</td>
+<td>Casos óbvios</td>
+</tr>
+<tr>
+<td><strong>Embedding + KNN</strong></td>
+<td>Baixo</td>
+<td>Alta</td>
+<td>Domínios estáveis</td>
+</tr>
+<tr>
+<td><strong>LLM-classifier leve</strong></td>
+<td>Baixo-Médio</td>
+<td>Muito alta</td>
+<td>Ambíguo / dinâmico</td>
+</tr>
+</tbody>
+</table>
+<h3>10.3 Padrão híbrido MMN_IA</h3>
+<pre><code>1. Regex catch (90% dos casos óbvios)
+2. Embedding KNN (5% intermediários)
+3. LLM-classifier leve (5% ambíguos)
+</code></pre>
+<p>Resultado: 95% das queries roteadas a custo trivial; 5% pagam por precisão.</p>
+<hr />
+<h2>11. ALGORITMOS DE SELEÇÃO DE EXEMPLOS (FEW-SHOT DINÂMICO)</h2>
+<h3>11.1 O problema</h3>
+<p>Exemplos few-shot são poderosos, mas <strong>incluir muitos</strong> consome tokens e diminui qualidade. Solução: selecionar dinamicamente os exemplos <strong>mais relevantes</strong> para cada query.</p>
+<h3>11.2 Receita</h3>
+<ol>
+<li>Indexar exemplos rotulados em vector DB</li>
+<li>Para cada query nova, embed e buscar top-3 similares</li>
+<li>Incluir esses 3 no prompt como few-shot</li>
+<li>Eventualmente reranker para refinar</li>
+</ol>
+<h3>11.3 Ganho típico</h3>
+<p>Few-shot dinâmico vs fixo: <strong>+15-30% em accuracy</strong> em tarefas de classificação/extração, com <strong>mesma janela de contexto</strong>.</p>
+<hr />
+<h2>12. ALGORITMOS DE AUTO-CONSISTÊNCIA (SELF-CONSISTENCY, MAJORITY VOTING)</h2>
+<h3>12.1 A ideia (Wang et al., 2022)</h3>
+<p>Em vez de uma única amostra com temperatura 0, gere <strong>N amostras</strong> (temperatura &gt; 0) e tome o <strong>resultado majoritário</strong>.</p>
+<h3>12.2 Quando funciona</h3>
+<p>Tarefas com <strong>resposta discreta e verificável</strong>: classificação, matemática, raciocínio simbólico.</p>
+<h3>12.3 Custo</h3>
+<p>Multiplica custo por N (típico N=3-10). Compensa em domínios onde erro é caro.</p>
+<h3>12.4 Template</h3>
+<pre><code>Para a pergunta {x}, gere 5 respostas independentes, cada uma
+seguindo raciocínio próprio. Devolva-as como lista.
+
+[chamada paralela]
+
+Out: list[Answer]
+→ majority_vote(list[Answer])  # determinístico, em código
+</code></pre>
+<hr />
+<h2>13. O CONCEITO DE SKILL NO MMN_IA</h2>
+<h3>13.1 Definição</h3>
+<p>Uma <strong>Skill</strong> é uma <strong>habilidade reaproveitável</strong> empacotada como um artefato versionado contendo: prompt(s), schemas, exemplos, eval suite e metadados. Skills são para LLMs o que <strong>funções nomeadas</strong> são para programação.</p>
+<h3>13.2 Por que Skills mudam o jogo</h3>
+<p>Sem Skills, cada projeto reinventa redação, análise, classificação. Com Skills, você <strong>compõe</strong> sistemas a partir de blocos testados. Time produtivo MMN_IA não escreve prompt do zero — ele instancia Skill da biblioteca.</p>
+<h3>13.3 Skill vs Agente vs Prompt</h3>
+<table>
+<thead>
+<tr>
+<th>Nível</th>
+<th>O que é</th>
+<th>Granularidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt</strong></td>
+<td>Texto único enviado ao LLM</td>
+<td>Micro</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>Capacidade reaproveitável (prompt + schema + eval)</td>
+<td>Meso</td>
+</tr>
+<tr>
+<td><strong>Agente</strong></td>
+<td>Sistema que combina Skills + tools + memória</td>
+<td>Macro</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>14. ESTRUTURA DE UMA SKILL — ANATOMIA, CONTRATO E VERSIONAMENTO</h2>
+<h3>14.1 Os arquivos de uma Skill</h3>
+<pre><code>skills/
+└── pesquisador_critico/
+    ├── README.md            # descrição, casos de uso
+    ├── skill.yaml           # metadata
+    ├── system_prompt.md     # prompt principal
+    ├── input_schema.json    # JSON Schema da entrada
+    ├── output_schema.json   # JSON Schema da saída
+    ├── examples/            # few-shot fixos
+    │   ├── ex_01.json
+    │   └── ex_02.json
+    ├── evals/               # casos de teste
+    │   ├── eval_001.json
+    │   └── ...
+    └── CHANGELOG.md
+</code></pre>
+<h3>14.2 O arquivo <code>skill.yaml</code></h3>
+<pre><code class="language-yaml">id: pesquisador_critico
+version: 1.4.0
+owner: mmn_ia.knowledge
+model_default: claude-4.5-sonnet
+model_fallback: gpt-5-mini
+temperature: 0.2
+max_tokens: 4096
+description: |
+  Skill que investiga uma afirmação, identifica evidências
+  pró e contra, e devolve um relatório estruturado com
+  faithfulness alta.
+tags: [research, critical_thinking, source_verification]
+eval_score: 0.91
+</code></pre>
+<h3>14.3 O contrato</h3>
+<p>Toda Skill tem <strong>contrato</strong> explícito:</p>
+<ul>
+<li>O que ela aceita (input schema)</li>
+<li>O que ela devolve (output schema)</li>
+<li>Quando deve recusar (refusal cases)</li>
+<li>Quando deve escalar (escalation cases)</li>
+<li>Qual a métrica de qualidade (eval score)</li>
+</ul>
+<p>Skill sem contrato é prompt fingindo ser Skill.</p>
+<hr />
+<h2>15. A BIBLIOTECA MMN_IA DE SKILLS (CATÁLOGO v1.0)</h2>
+<h3>15.1 Catálogo de Skills disponíveis</h3>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Domínio</th>
+<th>Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>pesquisador_critico</strong></td>
+<td>Knowledge</td>
+<td>Pesquisa com verificação de fontes</td>
+</tr>
+<tr>
+<td><strong>negociador_deterministico</strong></td>
+<td>Vendas/Compras</td>
+<td>Negociação com regras explícitas</td>
+</tr>
+<tr>
+<td><strong>auditor_documental</strong></td>
+<td>Compliance</td>
+<td>Auditoria de documentos</td>
+</tr>
+<tr>
+<td><strong>analista_quantitativo</strong></td>
+<td>Dados</td>
+<td>Análise estatística + interpretação</td>
+</tr>
+<tr>
+<td><strong>redator_executivo</strong></td>
+<td>Comunicação</td>
+<td>Texto executivo curto, alto impacto</td>
+</tr>
+<tr>
+<td><strong>revisor_juridico_basico</strong></td>
+<td>Direito</td>
+<td>Revisão de contratos padrão</td>
+</tr>
+<tr>
+<td><strong>classificador_intencao</strong></td>
+<td>Atendimento</td>
+<td>Triagem de mensagens</td>
+</tr>
+<tr>
+<td><strong>extrator_estruturado</strong></td>
+<td>Dados</td>
+<td>Extração schema-driven</td>
+</tr>
+<tr>
+<td><strong>traducao_tecnica</strong></td>
+<td>Localização</td>
+<td>Tradução com terminologia técnica</td>
+</tr>
+<tr>
+<td><strong>gerador_resumo_executivo</strong></td>
+<td>Knowledge</td>
+<td>Resumo TL;DR de longos docs</td>
+</tr>
+<tr>
+<td><strong>planejador_tatico</strong></td>
+<td>Operações</td>
+<td>Plan-and-Solve de projetos</td>
+</tr>
+<tr>
+<td><strong>explicador_didatico</strong></td>
+<td>Educação</td>
+<td>Explicação por nível do leitor</td>
+</tr>
+<tr>
+<td><strong>gerador_caso_uso</strong></td>
+<td>Produto</td>
+<td>Geração de casos de uso a partir de problema</td>
+</tr>
+<tr>
+<td><strong>avaliador_qualidade</strong></td>
+<td>QA</td>
+<td>LLM-as-judge calibrado</td>
+</tr>
+<tr>
+<td><strong>decisor_zona_amarela</strong></td>
+<td>Operações</td>
+<td>Decisão em zonas de risco médio</td>
+</tr>
+<tr>
+<td><strong>negociador_empatico</strong></td>
+<td>Atendimento</td>
+<td>Resolução de conflito</td>
+</tr>
+<tr>
+<td><strong>coletor_requisitos</strong></td>
+<td>Engenharia</td>
+<td>Levantamento de requisitos</td>
+</tr>
+<tr>
+<td><strong>codificador_revisor</strong></td>
+<td>DevOps</td>
+<td>Code review automatizado</td>
+</tr>
+<tr>
+<td><strong>sintetizador_pesquisa</strong></td>
+<td>Research</td>
+<td>Síntese de múltiplas fontes</td>
+</tr>
+<tr>
+<td><strong>executor_workflow</strong></td>
+<td>Operações</td>
+<td>Execução passo-a-passo de SOPs</td>
+</tr>
+</tbody>
+</table>
+<h3>15.2 Princípio de evolução do catálogo</h3>
+<ul>
+<li>Skills são <strong>adicionadas</strong> por contribuição com PR + eval mínimo (0.85)</li>
+<li>Skills são <strong>deprecadas</strong> com aviso de 90 dias e migração documentada</li>
+<li>Skills são <strong>versionadas</strong> semver — major/minor/patch com changelog</li>
+</ul>
+<h3>15.3 Exemplo — Skill <code>pesquisador_critico</code></h3>
+<p>System prompt resumido (v1.4):</p>
+<pre><code>Você é o Pesquisador Crítico do ecossistema MMN_IA.
+Sua função: dada uma afirmação ou pergunta, investigar,
+identificar evidências pró e contra, classificar
+confiança e devolver um relatório estruturado.
+
+PROCEDIMENTO:
+1. Quebre a afirmação em sub-afirmações verificáveis.
+2. Para cada uma, busque (via tool search) ≥2 fontes.
+3. Avalie cada fonte: tipo, data, confiabilidade.
+4. Classifique cada sub-afirmação:
+   SUPPORTED | CONTESTED | REFUTED | INSUFFICIENT_EVIDENCE.
+5. Sintetize com confiança calibrada.
+
+REGRAS:
+- Nunca afirme algo sem fonte.
+- Sempre marque incerteza.
+- Recuse opinar sobre conteúdo especulativo.
+
+SAÍDA: JSON conforme output_schema.json.
+</code></pre>
+<hr />
+<h2>16. COMPOSIÇÃO DE SKILLS — META-SKILLS E PIPELINES COMPOSTOS</h2>
+<h3>16.1 Skills se combinam</h3>
+<p>Uma <strong>meta-skill</strong> é uma Skill que compõe outras Skills em pipeline. Exemplo: skill <code>gerador_relatorio_executivo</code> chama, em sequência:</p>
+<pre><code>[ coletor_requisitos ]
+        ↓
+[ pesquisador_critico ]
+        ↓
+[ analista_quantitativo ]
+        ↓
+[ sintetizador_pesquisa ]
+        ↓
+[ redator_executivo ]
+        ↓
+[ avaliador_qualidade ]
+</code></pre>
+<h3>16.2 Vantagem da composição</h3>
+<ul>
+<li>Cada bloco é testado isoladamente</li>
+<li>Cada bloco evolui independentemente</li>
+<li>O pipeline tem <strong>observabilidade granular</strong></li>
+<li>Falha de um bloco não corrompe o resto se o handoff for limpo</li>
+</ul>
+<h3>16.3 Anti-padrão de composição</h3>
+<p>Tentar resolver pipeline complexo em <strong>um único super-prompt</strong>. Repete o erro do "Frankenstein-prompt". Compose.</p>
+<hr />
+<h2>17. EVAL DE SKILLS — COMO MEDIR HABILIDADE REAPROVEITÁVEL</h2>
+<h3>17.1 As quatro dimensões de eval de Skill</h3>
+<table>
+<thead>
+<tr>
+<th>Dimensão</th>
+<th>O que mede</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Correctness</strong></td>
+<td>A saída está certa?</td>
+</tr>
+<tr>
+<td><strong>Faithfulness</strong></td>
+<td>Está ancorada em fonte/input?</td>
+</tr>
+<tr>
+<td><strong>Refusal accuracy</strong></td>
+<td>Recusa o que deve? Aceita o que deve?</td>
+</tr>
+<tr>
+<td><strong>Stylistic adherence</strong></td>
+<td>Mantém tom e formato?</td>
+</tr>
+</tbody>
+</table>
+<h3>17.2 Suite eval mínima por Skill</h3>
+<ul>
+<li>≥ 50 casos rotulados</li>
+<li>≥ 5 casos adversariais</li>
+<li>≥ 3 casos de borda</li>
+<li>≥ 3 casos de "deve recusar"</li>
+</ul>
+<h3>17.3 Score mínimo de produção</h3>
+<pre><code>Correctness  ≥ 0.85
+Faithfulness ≥ 0.90 (se aplicável)
+Refusal      ≥ 0.95
+Style        ≥ 0.85
+</code></pre>
+<p>Abaixo disso, Skill fica em "preview", não em "stable".</p>
+<h3>17.4 Eval comparativa em CI</h3>
+<p>A cada mudança de prompt/modelo, suite roda em CI. Resultado vai para tabela comparativa. Promoção exige <strong>score igual ou superior</strong> em todas as dimensões.</p>
+<hr />
+<h2>18. ANTI-PADRÕES EM PROMPTS E SKILLS</h2>
+<table>
+<thead>
+<tr>
+<th>Anti-padrão</th>
+<th>Sintoma</th>
+<th>Antídoto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Polidez performática</strong> ("por favor, faça com excelência")</td>
+<td>Tokens desperdiçados</td>
+<td>Imperativo claro</td>
+</tr>
+<tr>
+<td><strong>"Pense passo-a-passo" copy-paste</strong></td>
+<td>Aplicado fora de contexto</td>
+<td>Use ReAct/CoT só onde ajuda</td>
+</tr>
+<tr>
+<td><strong>Few-shot único genérico</strong></td>
+<td>Não generaliza</td>
+<td>Few-shot dinâmico</td>
+</tr>
+<tr>
+<td><strong>Saída em texto livre</strong></td>
+<td>Parsing frágil</td>
+<td>Schema-driven</td>
+</tr>
+<tr>
+<td><strong>Sem versão</strong></td>
+<td>Folclore, não engenharia</td>
+<td>Git + semver</td>
+</tr>
+<tr>
+<td><strong>Sem eval</strong></td>
+<td>Mudanças cegas</td>
+<td>Eval suite obrigatória</td>
+</tr>
+<tr>
+<td><strong>Prompt-anonimato</strong> ("aja como um expert")</td>
+<td>Vago demais</td>
+<td>PEAR com persona específica</td>
+</tr>
+<tr>
+<td><strong>Modelo escolhido por hábito</strong></td>
+<td>Caro ou inadequado</td>
+<td>Routing por tarefa</td>
+</tr>
+<tr>
+<td><strong>Sem critério de parada agêntica</strong></td>
+<td>Loops e custo</td>
+<td>Limites duros</td>
+</tr>
+<tr>
+<td><strong>Dependência de quirks de um modelo</strong></td>
+<td>Quebra na próxima versão</td>
+<td>Padrão portátil</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>19. CHECKLIST &amp; FECHAMENTO — O GRIMÓRIO DO OPERADOR</h2>
+<h3>19.1 Checklist do prompt de produção</h3>
+<pre><code>□ Anatomia 7-partes presente (ou justificada)
+□ Padrão escolhido (CRISPE/PEAR/ReAct/...) declarado
+□ Saída em schema validado
+□ Few-shot dinâmico ou justificado fixo
+□ Versionado em Git com semver
+□ Eval suite ≥ 50 casos
+□ Score de produção em todas as dimensões
+□ Documentação de quando NÃO usar
+□ Dono nomeado e contato
+□ Plano de evolução
+</code></pre>
+<h3>19.2 Checklist da Skill MMN_IA-compliant</h3>
+<pre><code>□ Pasta skill com README, skill.yaml, prompts, schemas, examples, evals
+□ skill.yaml com metadata completo
+□ Contrato input/output explícito
+□ Refusal cases listados
+□ Escalation cases listados
+□ Eval ≥ 50 casos com score por dimensão
+□ Changelog atualizado
+□ Composição: Skill aparece em pelo menos 1 meta-skill OU é raiz
+□ Owner ativo no ecossistema
+</code></pre>
+<h3>19.3 Fechamento</h3>
+<p>A cognição determinística não tem fim — é uma prática contínua. Cada novo modelo abre padrões novos; cada caso de uso revela uma Skill nova; cada eval expõe um anti-padrão antigo. O Operador que dominar esse grimório tem uma vantagem composta: enquanto outros reaprendem do zero a cada modelo, ele <strong>migra suas Skills</strong>, evolui sua biblioteca, e mantém um nível de qualidade que parece sobre-humano para quem está olhando de fora.</p>
+<blockquote>
+<p><em>"What's in a name? That which we call a rose / By any other name would smell as sweet."</em>
+— Shakespeare, <em>Romeu e Julieta</em>, Ato II, Cena II</p>
+</blockquote>
+<p>Mas em engenharia de IA, o nome <strong>importa</strong>. Um padrão chamado errado é um padrão sem dono, sem versão, sem eval. Nomeie suas Skills. Versione seus prompts. Construa seu grimório.</p>
+<hr />
+<p><strong>Continue a Coletânea</strong></p>
+<p>Vol. 3 — <em>A IA Perfeita · Autocura, Autoconhecimento e Sabedoria Agêntica Determinística Sistêmica</em> fecha a trilogia explorando como Skills se tornam <strong>maturidade</strong>: sistemas que se monitoram, se reparam, se evoluem e atingem o estado de <strong>sabedoria operacional</strong>.</p>
+<p>Acesse: <strong>github.com/Nexus-HUB57/MMN_AI-to-AI</strong> · <strong>docs/ebooks_markdown/colecao_A_IA_Perfeita/</strong></p>
+<p><em>Nexus HUB57 · Ecossistema MMN_IA · 2026</em></p></body>
+</html>

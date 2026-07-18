@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quais são os tipos de Agentes IA e quais as diferenças entre eles?</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/curso-universo-ia--04-tipos-de-agentes-ia-e-diferencas.webp" /></p>
+<p><strong>Quais são os tipos de Agentes IA e quais as diferenças entre eles?</strong></p>
+<p><em>O Mapa Definitivo Da Taxonomia Agêntica: Dos Reflexos Simples aos Sistemas Multi-Agente Autônomos</em></p>
+<p><em>Domine a classificação que separa amadores de arquitetos de IA.</em></p>
+<p><strong>Por MMN AI-to-AI</strong></p>
+<p>MMN AI-to-AI • 2026</p>
+<p><strong>Sobre este ebook</strong></p>
+<p>Nem todo agente é igual. Alguns reagem por reflexo a estímulos simples. Outros planejam semanas à frente. Alguns aprendem com cada interação. Outros colaboram em time. Conhecer os <strong>tipos de Agentes IA</strong> --- e saber quando usar cada um --- é o divisor de águas entre construir uma solução ineficiente e arquitetar um sistema escalável, robusto e inteligente. Este ebook é a sua <strong>taxonomia de bolso</strong>: didática, atualizada e recheada de exemplos reais. Ao final, você será capaz de olhar para qualquer projeto de IA e dizer: "este precisa de um agente X, com arquitetura Y, otimizado para Z". Vamos lá.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. A Classificação Clássica de Russell &amp; Norvig</p>
+<p><strong>•</strong> 2. Agentes Reflexos Simples</p>
+<p><strong>•</strong> 3. Agentes Reflexos Baseados em Modelo</p>
+<p><strong>•</strong> 4. Agentes Baseados em Objetivos</p>
+<p><strong>•</strong> 5. Agentes Baseados em Utilidade</p>
+<p><strong>•</strong> 6. Agentes de Aprendizado (Learning Agents)</p>
+<p><strong>•</strong> 7. Agentes Hierárquicos</p>
+<p><strong>•</strong> 8. Agentes Multi-Agente (Sistemas Multi-Agente)</p>
+<p><strong>•</strong> 9. Arquiteturas Avançadas: ReAct, MRKL, Tool-Former, Agentic Loops</p>
+<p><strong>•</strong> 10. Como Escolher o Tipo Certo Para Seu Projeto</p>
+</blockquote>
+<p><strong>1. A Classificação Clássica de Russell &amp; Norvig</strong></p>
+<p><strong>O livro que definiu o campo</strong></p>
+<p>O livro <strong>"Artificial Intelligence: A Modern Approach"</strong>, de Stuart Russell e Peter Norvig, é a bíblia da IA acadêmica. Nele, os autores definem a taxonomia clássica de agentes que se tornou padrão na indústria. A classificação vai do mais simples ao mais sofisticado, em camadas crescentes de capacidade. Vamos percorrer cada uma com profundidade, exemplos práticos e indicações de quando usar.</p>
+<p><strong>Por que essa taxonomia ainda é relevante em 2026</strong></p>
+<p>Apesar de a IA generativa ter explodido, os princípios dessa taxonomia permanecem válidos. Modelos de raciocínio, ferramentas agênticas e sistemas multi-agente <strong>encaixam-se perfeitamente</strong> nessas categorias --- e entendê-las evita erros caros de arquitetura.</p>
+<p><strong>2. Agentes Reflexos Simples</strong></p>
+<p><strong>Definição</strong></p>
+<p>Agentes reflexos simples reagem diretamente a percepções atuais com regras do tipo <strong>SE condição ENTÃO ação</strong>. Eles <strong>não consideram histórico</strong>, não raciocinam sobre o futuro e não aprendem. É o tipo mais básico de agente --- equivalente a um reflexo pavloviano.</p>
+<p><strong>Exemplos práticos</strong>
+- Termostato que liga o ar-condicionado quando a temperatura passa de 26°C.
+- Filtro de spam que marca e-mail com certas palavras como "spam".
+- Bot de atendimento que responde "Horário de funcionamento: 9h às 18h" quando recebe a palavra "horário".
+- Robô aspirador que muda de direção ao bater em uma parede.</p>
+<p><strong>Quando usar</strong>
+- Tarefas determinísticas e bem definidas.
+- Ambientes totalmente observáveis e estáveis.
+- Quando latência ultra-baixa é mais importante que inteligência.
+- Em sistemas embarcados simples ou hardwares com pouca capacidade.</p>
+<p><strong>Limitações</strong>
+Quebram completamente quando o ambiente muda ou quando o histórico importa. Não servem para diálogo, estratégia ou personalização.</p>
+<p><strong>3. Agentes Reflexos Baseados em Modelo</strong></p>
+<p><strong>Definição</strong></p>
+<p>Esses agentes mantêm um <strong>modelo interno do mundo</strong>. Eles sabem como o ambiente evolui e usam esse modelo para escolher ações melhores. É o "reflexo com memória de contexto": o agente entende o estado atual e antecipa o que vai acontecer se agir de certo modo.</p>
+<p><strong>Exemplos práticos</strong>
+- Carro autônomo que mantém um mapa interno dos carros ao redor, prevendo trajetórias.
+- Robô de estoque que lembra onde cada item está e qual foi o último a ser retirado.
+- Assistente de e-mail que sabe quais mensagens você já respondeu e sugere follow-up.
+- Agente de monitoramento de servidor que correlaciona logs para detectar incidentes.</p>
+<p><strong>Quando usar</strong>
+- Ambientes parcialmente observáveis.
+- Quando o histórico recente é crucial.
+- Em sistemas físicos (robótica, IoT) e em automações que precisam de continuidade.</p>
+<p><strong>Vantagem sobre o reflexo simples</strong>
+Reduz ações erradas em até 70% em ambientes dinâmicos, segundo benchmarks de robótica.</p>
+<p><strong>4. Agentes Baseados em Objetivos</strong></p>
+<p><strong>Definição</strong></p>
+<p>Aqui o agente recebe um <strong>objetivo explícito</strong> e <strong>planeja uma sequência de ações</strong> para alcançá-lo. Ele raciocina sobre o futuro, avalia alternativas e escolhe o caminho que leva ao objetivo. É o tipo mais usado em aplicações de IA generativa com LLMs.</p>
+<p><strong>Exemplos práticos</strong>
+- Agente de viagem que recebe "quero ir para o Rio em julho, gastando menos de R$ 3.000" e busca voos, hotéis, roteiros.
+- Agente de marketing que recebe "aumentar conversão da landing page em 20%" e propõe testes A/B, copy novo, redesign.
+- Agente de logística que recebe "entregar 500 pedidos em São Paulo em 48h" e calcula rotas, escalas e alocações.
+- Agente de pesquisa que recebe "escrever um relatório sobre o mercado de EVs no Brasil" e planeja fontes, tópicos, estrutura.</p>
+<p><strong>Como funcionam</strong>
+Usam técnicas de busca (BFS, A*, busca em grafo) e, mais recentemente, modelos de linguagem com cadeia de pensamento (chain-of-thought) e planejamento hierárquico. O objetivo é descrito em linguagem natural ou em formato estruturado.</p>
+<p><strong>Quando usar</strong>
+- Problemas com objetivo claro e mensurável.
+- Quando há múltiplos caminhos possíveis.
+- Em projetos que envolvem planejamento de médio/longo prazo.</p>
+<p><strong>5. Agentes Baseados em Utilidade</strong></p>
+<p><strong>Definição</strong></p>
+<p>Esses agentes não buscam apenas "atingir o objetivo", mas <strong>maximizar uma função de utilidade</strong> --- ou seja, encontrar a melhor solução possível entre várias aceitáveis. Eles ranqueiam opções com base em preferências e trade-offs.</p>
+<p><strong>Exemplos práticos</strong>
+- Agente de investimento que escolhe a carteira com melhor relação risco/retorno dado seu perfil.
+- Agente de pricing dinâmico que ajusta o preço de um produto para maximizar margem sem perder conversão.
+- Agente de compras que escolhe o melhor fornecedor considerando preço, prazo, qualidade e histórico.
+- Agente de roteirização de entregas que escolhe a rota com menor custo total considerando tempo, combustível e SLA.</p>
+<p><strong>Diferença sutil para agentes baseados em objetivo</strong>
+Objetivo = "chegar ao destino". Utilidade = "chegar ao destino <strong>o mais rápido, barato e confortável possível</strong>". A função de utilidade combina múltiplos critérios ponderados.</p>
+<p><strong>Quando usar</strong>
+- Problemas de otimização multiobjetivo.
+- Quando há trade-offs reais e o "melhor" depende do contexto.
+- Em sistemas de recomendação, precificação, alocação de recursos.</p>
+<p><strong>6. Agentes de Aprendizado (Learning Agents)</strong></p>
+<p><strong>Definição</strong></p>
+<p>Agentes que <strong>melhoram seu desempenho com o tempo</strong> através de experiência. Eles têm 4 componentes: elemento de desempenho (decisor), elemento de crítica (avalia o resultado), elemento de aprendizado (ajusta o comportamento) e gerador de problemas (sugere novas explorações).</p>
+<p><strong>Exemplos práticos</strong>
+- Sistema de recomendação que aprende com seus cliques e compras.
+- Modelo de detecção de fraude que aprende com novos padrões de ataque.
+- Agente de trading que aprende com resultados de operações passadas.
+- Agente de vendas que aprende qual abordagem funciona melhor com cada perfil de lead.</p>
+<p><strong>Como aprendem</strong>
+- <strong>Aprendizado por reforço</strong> (RL): o agente recebe recompensas e penalidades.
+- <strong>Aprendizado supervisionado:</strong> dados rotulados corrigem as previsões.
+- <strong>Aprendizado por feedback humano (RLHF/RLAIF):</strong> humanos avaliam respostas.
+- <strong>Fine-tuning contínuo:</strong> o modelo é retreinado periodicamente com novos dados.</p>
+<p><strong>Quando usar</strong>
+- Quando o ambiente muda com frequência.
+- Quando há volume de dados suficiente para aprendizado significativo.
+- Em sistemas de longo prazo que precisam evoluir.</p>
+<p><strong>7. Agentes Hierárquicos</strong></p>
+<p><strong>Definição</strong></p>
+<p>Agentes organizados em <strong>camadas</strong>: o nível alto define a estratégia, o nível médio coordena taticamente, o nível baixo executa operacionalmente. É o equivalente a um exército: general, tenente, soldado.</p>
+<p><strong>Exemplos práticos</strong>
+- Sistema de trading com agente macro (define alocação), agente setorial (escolhe setores) e agente operacional (escolhe ativos).
+- Robô industrial com agente de missão (define a tarefa), agente de planejamento (define etapas) e agente motor (executa movimentos).
+- Plataforma de e-commerce com agente de estratégia (define promoções), agente de campanha (cria peças) e agente de mídia (executa veiculação).
+- Agente de software com planejador (arquiteta solução), codificador (escreve código) e crítico (revisa e testa).</p>
+<p><strong>Vantagem</strong>
+Permite dividir problemas complexos em subproblemas gerenciáveis. Cada camada tem escopo limitado, o que melhora a qualidade e a auditabilidade.</p>
+<p><strong>Quando usar</strong>
+- Projetos grandes e complexos.
+- Quando diferentes partes do problema exigem raciocínios diferentes.
+- Em sistemas que precisam ser explicáveis e modulares.</p>
+<p><strong>8. Agentes Multi-Agente (Sistemas Multi-Agente)</strong></p>
+<p><strong>Definição</strong></p>
+<p>São <strong>vários agentes colaborando</strong> (ou competindo) em um sistema maior. Cada agente tem um papel, habilidades e objetivos específicos. O sistema emergente é mais capaz que a soma das partes.</p>
+<p><strong>Topologias comuns</strong>
+- <strong>Supervisor + workers:</strong> um agente central distribui tarefas para agentes especializados.
+- <strong>Pipeline sequencial:</strong> cada agente processa e passa adiante.
+- <strong>Debate:</strong> dois ou mais agentes argumentam lados opostos, e um juiz decide.
+- <strong>Collaborative mesh:</strong> todos se comunicam com todos (estilo CrewAI, AutoGen).
+- <strong>Mercado:</strong> agentes competem para resolver partes, e o melhor vence (estilo mecanismo de leilão).</p>
+<p><strong>Exemplos práticos</strong>
+- Crew de marketing: pesquisador + redator + designer + revisor + programador de pauta.
+- Equipe de desenvolvimento: arquiteto + coder + tester + reviewer + DevOps.
+- Time de análise: extrator de dados + analista + estatístico + gerador de relatório.
+- Time jurídico: pesquisador de leis + analista de casos + redator de petição + revisor.</p>
+<p><strong>Frameworks</strong>
+<strong>CrewAI, AutoGen (Microsoft), LangGraph, Swarm (OpenAI), Claude Agent SDK com multi-agent patterns</strong>.</p>
+<p><strong>Quando usar</strong>
+- Problemas que exigem múltiplas especialidades.
+- Quando um único agente ficaria sobrecarregado de contexto.
+- Quando você quer paralelismo, resiliência e modularidade.</p>
+<p><strong>9. Arquiteturas Avançadas: ReAct, MRKL, Tool-Former, Agentic Loops</strong></p>
+<p><strong>ReAct (Reasoning + Acting)</strong></p>
+<p>O padrão mais usado: o agente pensa (Thought), age (Action) e observa (Observation) em loop até resolver. Equilibra raciocínio com ação.</p>
+<p><strong>MRKL (Modular Reasoning, Knowledge, Language)</strong></p>
+<p>Combina módulos neurais (LLM) com módulos simbólicos (calculadora, banco, API). O LLM é o "roteador" que decide qual módulo chamar.</p>
+<p><strong>Tool-Former</strong></p>
+<p>Modelo treinado para <strong>saber quando e como chamar ferramentas</strong> de forma nativa, sem precisar de prompt hack. Meta, OpenAI e Anthropic usam variantes disso.</p>
+<p><strong>Agentic Loops (Loops Agênticos)</strong></p>
+<p>Ciclos estruturados como Plan → Execute → Reflect → Adjust, com persistência de memória e capacidade de re-planejamento. É a base dos agentes mais sofisticados atuais.</p>
+<p><strong>10. Como Escolher o Tipo Certo Para Seu Projeto</strong></p>
+<p><strong>Framework de decisão</strong></p>
+<ol>
+<li><strong>A tarefa é determinística e repetitiva?</strong> → Agente reflexo simples ou baseado em modelo.</li>
+<li><strong>Precisa de planejamento para atingir um objetivo?</strong> → Agente baseado em objetivo.</li>
+<li><strong>Há múltiplos critérios em conflito?</strong> → Agente baseado em utilidade.</li>
+<li><strong>O ambiente muda e o agente precisa evoluir?</strong> → Agente de aprendizado.</li>
+<li><strong>O problema é grande demais para um agente só?</strong> → Hierárquico ou multi-agente.</li>
+<li><strong>Precisa de baixo custo e baixíssima latência?</strong> → Reflexo simples com cache.</li>
+<li><strong>Precisa de raciocínio profundo e ferramentas?</strong> → Baseado em objetivo + ReAct + tools.</li>
+<li><strong>Precisa de especialização máxima?</strong> → Multi-agente com papéis bem definidos.</li>
+</ol>
+<p><strong>Combinações comuns em 2026</strong>
+- <strong>Chatbot de atendimento:</strong> baseado em objetivo + tools + memória + human-in-the-loop.
+- <strong>SDR de vendas:</strong> baseado em utilidade + aprendizado + multi-agente (pesquisa, copy, follow-up).
+- <strong>Agente de pesquisa:</strong> baseado em objetivo + ReAct + RAG + critic (auto-revisão).
+- <strong>Agente de software:</strong> hierárquico (arquiteto + coder + tester + reviewer) + aprendizado.</p>
+<p><strong>A Arquitetura Certa Multiplica Resultados!</strong></p>
+<p><em>Você agora domina a taxonomia dos agentes IA. Sabe quando usar reflexo, quando usar utilidade, quando montar um time de agentes, quando ir de hierárquico. No próximo ebook, vamos explorar as </em><em>principais Bibliotecas IA</em><em> do mercado: LangChain, LlamaIndex, Haystack, CrewAI, AutoGen, Semantic Kernel, DSPy e muitas outras --- o arsenal que torna tudo isso construível. O Universo IA continua revelando suas engrenagens.</em></p>
+<p>Quais são os tipos de Agentes IA e quais as diferenças entre eles --- Por MMN AI-to-AI</p>
+<p><em>MMN AI-to-AI • 2026 • Todos os direitos reservados</em></p></body>
+</html>

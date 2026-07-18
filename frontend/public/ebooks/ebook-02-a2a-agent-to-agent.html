@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>**NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA**</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 2
+roman: "II"
+title: "A2A — Comunicação entre Agentes"
+subtitle: "Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="/ebooks/covers/colecao-nexus-protocol--02-a2a-agent-to-agent.webp" /></p>
+<h2>Volume II — A2A — Comunicação entre Agentes</h2>
+<p><strong>Agent-to-Agent: como agentes descobrem, negociam e cooperam em tempo real.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como dois agentes se reconhecem e dividem trabalho sem humano no meio?</p>
+</blockquote>
+<hr />
+<h2>Sumário</h2>
+<blockquote>
+<ol>
+<li>Por que MCP não basta: a fronteira entre tool e agente</li>
+<li>Agent Card: o "passaporte" do agente</li>
+<li>O ciclo de vida de uma Task A2A</li>
+<li>Streaming, long-running e webhooks de retorno</li>
+<li>Modalidades: texto, dados, áudio, vídeo, formulários</li>
+<li>Push notifications e operações assíncronas longas</li>
+<li>Multi-turno: como agentes mantêm conversa sem confundir contexto</li>
+<li>Composição: agente cliente, agente servidor, agente híbrido</li>
+<li>A2A vs MCP: quando escolher cada um</li>
+<li>Manifesto: o agente não é uma tool com mais tokens</li>
+</ol>
+</blockquote>
+<hr />
+<h2>1. Por que MCP não basta: a fronteira entre tool e agente</h2>
+<p>MCP resolve um lado da equação: o agente fala com <strong>ferramentas</strong> padronizadas.
+Mas há um problema que MCP <strong>propositalmente não resolve</strong>: e quando o outro
+lado da conexão não é uma ferramenta — é outro agente, com seu próprio LLM,
+suas próprias decisões, seu próprio estado interno?</p>
+<p>A diferença operacional é grande:</p>
+<ul>
+<li>Uma <strong>tool</strong> retorna em milissegundos, é stateless, devolve dado.</li>
+<li>Um <strong>agente</strong> pode levar minutos, mantém estado entre chamadas, pode
+  fazer perguntas de volta, pode escalar para um humano, pode falhar de
+  formas semânticas (não só sintáticas).</li>
+</ul>
+<p>Tratar agente como tool é a causa #1 de sistemas multi-agente que parecem
+funcionar no demo e desmoronam em produção. O <strong>A2A</strong> (Agent-to-Agent),
+publicado pela Google em abril de 2025 e endossado por mais de 50 parceiros,
+nasceu exatamente para preencher essa lacuna. Ele responde a quatro perguntas
+que MCP deixa em aberto:</p>
+<ol>
+<li><strong>Como descobrir</strong> que existe outro agente capaz de fazer X?</li>
+<li><strong>Como acordar</strong> o contrato da tarefa antes de iniciar?</li>
+<li><strong>Como acompanhar</strong> uma execução que dura horas?</li>
+<li><strong>Como conversar</strong> durante a execução (perguntas, follow-ups, cancelamento)?</li>
+</ol>
+<p>A2A é deliberadamente <strong>complementar a MCP</strong>, não competitivo. A regra mental:
+<em>MCP para falar com o mundo; A2A para falar com pares</em>.</p>
+<h2>2. Agent Card: o "passaporte" do agente</h2>
+<p>Todo agente A2A publica um documento JSON em uma URL bem conhecida:
+<code>https://&lt;dominio&gt;/.well-known/agent.json</code>. Esse é o <strong>Agent Card</strong> — o
+passaporte que descreve quem o agente é, o que sabe fazer, como autenticar
+e quais modalidades aceita.</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;InvoiceProcessor&quot;,
+  &quot;description&quot;: &quot;Processa faturas em PDF e extrai dados estruturados&quot;,
+  &quot;url&quot;: &quot;https://invoices.example.com/a2a/v1&quot;,
+  &quot;version&quot;: &quot;1.4.2&quot;,
+  &quot;provider&quot;: {
+    &quot;organization&quot;: &quot;Acme Corp&quot;,
+    &quot;url&quot;: &quot;https://acme.example.com&quot;
+  },
+  &quot;documentationUrl&quot;: &quot;https://invoices.example.com/docs&quot;,
+  &quot;capabilities&quot;: {
+    &quot;streaming&quot;: true,
+    &quot;pushNotifications&quot;: true,
+    &quot;stateTransitionHistory&quot;: true
+  },
+  &quot;authentication&quot;: {
+    &quot;schemes&quot;: [&quot;bearer&quot;, &quot;oauth2&quot;]
+  },
+  &quot;defaultInputModes&quot;:  [&quot;text/plain&quot;, &quot;application/pdf&quot;],
+  &quot;defaultOutputModes&quot;: [&quot;application/json&quot;, &quot;text/markdown&quot;],
+  &quot;skills&quot;: [
+    {
+      &quot;id&quot;: &quot;extract-invoice-data&quot;,
+      &quot;name&quot;: &quot;Extrair dados de fatura&quot;,
+      &quot;description&quot;: &quot;Recebe um PDF e devolve JSON com campos canônicos.&quot;,
+      &quot;tags&quot;: [&quot;finance&quot;, &quot;ocr&quot;, &quot;extraction&quot;],
+      &quot;examples&quot;: [
+        &quot;Extraia número, valor e vencimento desta fatura.&quot;
+      ]
+    }
+  ]
+}
+</code></pre>
+<p>Três decisões deliberadas do design importam:</p>
+<ul>
+<li><strong>Skills, não tools.</strong> Skills são unidades de competência, não funções.
+  Uma skill pode envolver múltiplas chamadas internas, múltiplas tools MCP,
+  múltiplos turnos com o usuário. O cliente A2A não precisa saber.</li>
+<li><strong>Capabilities declaradas.</strong> Se um agente não declara <code>streaming: true</code>,
+  o cliente não tenta SSE. Se não declara <code>pushNotifications</code>, sabe que
+  precisa fazer polling.</li>
+<li><strong>Modalidades por skill.</strong> Um agente pode aceitar PDF em uma skill e
+  só texto em outra. O Card descreve o default; a skill pode sobrescrever.</li>
+</ul>
+<h2>3. O ciclo de vida de uma Task A2A</h2>
+<p>A unidade canônica de A2A não é "uma mensagem" — é uma <strong>Task</strong>. Tasks têm
+identidade, estado, histórico e podem viver minutos, horas ou dias.</p>
+<p>Os estados canônicos da máquina de estados de uma Task:</p>
+<pre><code>        submitted
+            │
+            ▼
+        working ◄────┐
+         │ │ │       │
+         │ │ │       │ (responder ao input-required)
+         │ │ ▼       │
+         │ │ input-required ──┘
+         │ ▼
+         │ completed
+         ▼
+       failed | canceled
+</code></pre>
+<ul>
+<li><strong>submitted</strong> — task aceita, fila ou inicialização.</li>
+<li><strong>working</strong> — execução ativa, pode emitir updates.</li>
+<li><strong>input-required</strong> — agente pausou e precisa de resposta para continuar
+  (este é o que separa A2A de uma fila de jobs comum).</li>
+<li><strong>completed</strong> — sucesso, artefatos disponíveis.</li>
+<li><strong>failed</strong> — erro irrecuperável.</li>
+<li><strong>canceled</strong> — cliente solicitou cancelamento.</li>
+</ul>
+<p>Transições inválidas (ex.: <code>completed → working</code>) <strong>devem ser rejeitadas
+pelo servidor</strong>, não silenciadas. Um agente que aceita reabrir tarefas
+fechadas é um agente sem máquina de estados — e por consequência sem
+contrato auditável.</p>
+<h2>4. Streaming, long-running e webhooks de retorno</h2>
+<p>A2A suporta três modos de execução, e escolher o errado degrada o sistema
+inteiro:</p>
+<p><strong>1. Síncrono (<code>tasks/send</code>)</strong> — para tarefas &lt;30 segundos. Cliente espera,
+recebe resultado final. Simples, mas amarra conexão.</p>
+<p><strong>2. Streaming (<code>tasks/sendSubscribe</code>, SSE)</strong> — para tarefas onde o agente
+quer mostrar progresso. O cliente abre SSE, recebe eventos de
+<code>TaskStatusUpdateEvent</code> e <code>TaskArtifactUpdateEvent</code> até <code>final: true</code>.</p>
+<pre><code class="language-http">POST /a2a/v1/tasks/sendSubscribe
+Accept: text/event-stream
+Authorization: Bearer ...
+
+{ &quot;id&quot;: &quot;t-7f3a&quot;, &quot;message&quot;: { ... }, &quot;sessionId&quot;: &quot;s-9e2c&quot; }
+</code></pre>
+<pre><code>event: status-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;working&quot;,&quot;message&quot;:&quot;Lendo PDF...&quot;}}
+
+event: artifact-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;artifact&quot;:{&quot;name&quot;:&quot;page-1.json&quot;,&quot;parts&quot;:[...]}}
+
+event: status-update
+data: {&quot;taskId&quot;:&quot;t-7f3a&quot;,&quot;status&quot;:{&quot;state&quot;:&quot;completed&quot;},&quot;final&quot;:true}
+</code></pre>
+<p><strong>3. Push assíncrono (<code>pushNotificationConfig</code>)</strong> — para tarefas que duram
+horas ou dias. Cliente registra um webhook; agente notifica via POST quando
+houver transição. Indispensável para integrações onde o cliente não pode
+manter conexão aberta (mobile, serverless).</p>
+<p>Anti-padrão crônico: usar streaming SSE para tarefas de 6 horas. SSE não foi
+desenhado para isso; a primeira interrupção de rede e a task vira fantasma.
+Para &gt;2 minutos, use push.</p>
+<h2>5. Modalidades: texto, dados, áudio, vídeo, formulários</h2>
+<p>Mensagens A2A são compostas por <strong>Parts</strong>, e cada Part declara seu tipo.
+Esse é o ponto onde A2A se distancia mais radicalmente de protocolos baseados
+em "chat":</p>
+<pre><code class="language-json">{
+  &quot;role&quot;: &quot;user&quot;,
+  &quot;parts&quot;: [
+    { &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Processe esta fatura:&quot; },
+    { &quot;type&quot;: &quot;file&quot;, &quot;file&quot;: {
+        &quot;name&quot;: &quot;fatura.pdf&quot;,
+        &quot;mimeType&quot;: &quot;application/pdf&quot;,
+        &quot;bytes&quot;: &quot;JVBERi0xLjQK...&quot; }},
+    { &quot;type&quot;: &quot;data&quot;, &quot;data&quot;: {
+        &quot;currency&quot;: &quot;BRL&quot;,
+        &quot;expectedFormat&quot;: &quot;v2&quot;
+    }}
+  ]
+}
+</code></pre>
+<p>Tipos canônicos de Part:</p>
+<ul>
+<li><strong>text</strong> — string simples.</li>
+<li><strong>file</strong> — binário, com bytes inline ou URI.</li>
+<li><strong>data</strong> — JSON estruturado (parâmetros, metadados, formulários).</li>
+</ul>
+<p>A inovação prática é o <code>DataPart</code>: o agente cliente pode mandar
+<strong>estruturas semânticas</strong> sem serializar em texto e torcer para o agente
+servidor parsear. E o agente servidor pode <strong>retornar formulários
+estruturados</strong> que o cliente renderiza nativamente, em vez de devolver
+markdown que o front-end precisa interpretar.</p>
+<h2>6. Push notifications e operações assíncronas longas</h2>
+<p>Para tarefas de longa duração, o cliente registra um endpoint de callback:</p>
+<pre><code class="language-http">POST /a2a/v1/tasks/pushNotificationConfig
+{
+  &quot;taskId&quot;: &quot;t-7f3a&quot;,
+  &quot;pushNotificationConfig&quot;: {
+    &quot;url&quot;: &quot;https://cliente.example.com/webhooks/a2a&quot;,
+    &quot;token&quot;: &quot;wh_secret_token_for_HMAC_validation&quot;,
+    &quot;authentication&quot;: { &quot;schemes&quot;: [&quot;bearer&quot;] }
+  }
+}
+</code></pre>
+<p>O servidor então, a cada transição relevante, faz POST autenticado para essa
+URL. Três regras de produção que não estão no spec mas separam quem leva A2A
+a sério:</p>
+<ol>
+<li><strong>HMAC assinado por payload</strong>, não só bearer no header. Bearer pode
+   vazar; HMAC com timestamp tem janela curta de replay.</li>
+<li><strong>Idempotência via <code>eventId</code>.</strong> O cliente deve deduplicar; servidores
+   reentregam em caso de falha de rede.</li>
+<li><strong>Backoff exponencial com circuit breaker.</strong> Se o webhook do cliente
+   está caindo 5xx por 10 minutos, pare de tentar e marque a notificação
+   como <code>delivery-failed</code>, mas mantenha a task disponível para polling.</li>
+</ol>
+<h2>7. Multi-turno: como agentes mantêm conversa sem confundir contexto</h2>
+<p>O conceito que muitos primeiro-implementadores quebram é o <strong>sessionId vs
+taskId</strong>. Eles <strong>não são</strong> sinônimos:</p>
+<ul>
+<li><strong>sessionId</strong> — conversa lógica entre dois agentes. Pode conter N tasks.</li>
+<li><strong>taskId</strong> — uma unidade de trabalho. Tem ciclo de vida finito.</li>
+</ul>
+<p>Exemplo: um agente de viagens recebe <code>sessionId=s-1</code>. Dentro dessa sessão,
+ele cria <code>task=t-1</code> para "achar voos", <code>task=t-2</code> para "reservar hotel",
+<code>task=t-3</code> para "gerar roteiro". Todas as três tasks compartilham contexto
+de sessão (destino, datas, perfil do viajante), mas têm artefatos e estado
+independentes.</p>
+<p>Quando uma task entra em <code>input-required</code>, o cliente deve responder com
+mensagem que <strong>referencia o taskId</strong>, não cria outra task. Criar nova task
+para responder uma pergunta é o erro mais comum em integrações iniciais —
+e quebra o histórico em pedaços não-relacionáveis.</p>
+<h2>8. Composição: agente cliente, agente servidor, agente híbrido</h2>
+<p>A2A é simétrico: todo agente pode ser <strong>servidor</strong> (expõe Agent Card e
+recebe tasks) e <strong>cliente</strong> (consome tasks de outros agentes). Três padrões
+de composição que se repetem em produção:</p>
+<h3>Padrão Orchestrator</h3>
+<p>Um agente "maestro" recebe a task do humano e delega sub-tasks para N
+agentes especialistas. O orchestrator agrega artefatos e devolve resultado
+único. Funciona bem quando a decomposição é estável.</p>
+<h3>Padrão Pipeline</h3>
+<p>Agente A → agente B → agente C, cada um adicionando valor sobre o artefato
+do anterior. Cada link é uma task A2A separada. Robusto porque cada nó pode
+ser reescalado, substituído ou observado isoladamente.</p>
+<h3>Padrão Marketplace</h3>
+<p>Um broker recebe uma necessidade, faz <strong>discovery</strong> entre Agent Cards
+indexados, escolhe o melhor agente para cada skill (por reputação, custo,
+latência) e delega. É o padrão mais ambicioso e o que mais exige
+infraestrutura adicional (registry, trust layer — ver Volume VII).</p>
+<h2>9. A2A vs MCP: quando escolher cada um</h2>
+<p>Uma das confusões mais comuns: "se já uso MCP, preciso de A2A?". A resposta
+honesta exige uma matriz de decisão:</p>
+<table>
+<thead>
+<tr>
+<th>Critério</th>
+<th>Use MCP</th>
+<th>Use A2A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O outro lado tem <strong>seu próprio LLM</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Resposta esperada em <strong>&lt;1s</strong>?</td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+<tr>
+<td>Há <strong>state interno</strong> persistente no outro lado?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Pode haver <strong>input-required</strong> mid-execution?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>O outro lado pode <strong>escalar para humano</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Quero <strong>descoberta dinâmica</strong>?</td>
+<td>Não</td>
+<td>Sim</td>
+</tr>
+<tr>
+<td>Quero <strong>descrever uma função estática</strong>?</td>
+<td>Sim</td>
+<td>Não</td>
+</tr>
+</tbody>
+</table>
+<p>Caso real: um agente de atendimento usa <strong>MCP</strong> para falar com o CRM
+(Resource: ficha do cliente; Tool: registrar nota) e <strong>A2A</strong> para chamar o
+agente de cobrança da outra área quando precisa renegociar uma fatura.
+A regra mental: <em>MCP é integração; A2A é colaboração</em>.</p>
+<h2>10. Manifesto: o agente não é uma tool com mais tokens</h2>
+<p>A indústria passou 2024 inteiro tentando empurrar agentes para a abstração
+de tool-call. Foi reconfortante porque cabia no mental model existente
+(function calling) — e foi ineficaz, porque tools não têm estado, não fazem
+perguntas de volta e não negociam.</p>
+<p>A2A inverte a metáfora: o agente é um <strong>par</strong>, não um subordinado. Ele pode
+recusar, pode pedir clarificação, pode entregar parcial, pode escalar. Quem
+fala com agente como se fosse stored procedure colhe sistemas frágeis.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A arquitetura multi-agente real só começa quando
+paramos de tratar o outro agente como uma tool com mais tokens — e
+começamos a tratá-lo como uma entidade com contrato, máquina de estados e
+histórico próprio. A2A é o primeiro protocolo que opera essa virada.</p>
+</blockquote>
+<hr />
+<h2>Checklist Canônico — A2A em produção</h2>
+<ul>
+<li>[ ] Agent Card publicado em <code>/.well-known/agent.json</code> e versionado.</li>
+<li>[ ] Skills com descrição clara, exemplos e tags estáveis.</li>
+<li>[ ] Máquina de estados de Task rejeita transições inválidas.</li>
+<li>[ ] Streaming usado apenas para tarefas &lt;2 min; push para o resto.</li>
+<li>[ ] Push notifications assinadas com HMAC + janela de replay curta.</li>
+<li>[ ] sessionId separado de taskId em toda a base de código.</li>
+<li>[ ] Resposta a <code>input-required</code> referencia taskId, não cria task nova.</li>
+<li>[ ] DataPart usado para dados estruturados (não serializar em texto).</li>
+<li>[ ] Cancelamento (<code>tasks/cancel</code>) testado e idempotente.</li>
+<li>[ ] Discovery (catálogo de Agent Cards) com TTL e revalidação.</li>
+</ul>
+<h2>Glossário do Volume</h2>
+<ul>
+<li><strong>Agent Card</strong> — JSON em <code>/.well-known/agent.json</code> que descreve o agente.</li>
+<li><strong>Skill</strong> — unidade de competência exposta no Agent Card.</li>
+<li><strong>Task</strong> — unidade de trabalho com máquina de estados própria.</li>
+<li><strong>Session</strong> — conversa lógica que agrupa múltiplas tasks.</li>
+<li><strong>Part</strong> — pedaço tipado de uma mensagem (text, file, data).</li>
+<li><strong>input-required</strong> — estado em que a task pausa aguardando resposta do cliente.</li>
+<li><strong>Push Notification</strong> — webhook que o servidor chama para informar transições.</li>
+<li><strong>Streaming (A2A)</strong> — entrega de updates via SSE durante execução.</li>
+</ul>
+<h2>Gancho para o Próximo Volume</h2>
+<p>A2A resolve <strong>um agente conversando com outro</strong>. Mas a indústria não para por aí:
+a IBM publicou ACP, a OpenAI tem propostas próprias, a Microsoft empurra AutoGen
+como padrão de fato. Como escolher entre eles? Como construir camadas de
+abstração que sobrevivam à guerra de protocolos? Esse é o terreno do
+<strong>Volume III — ACP e Padrões de Interoperabilidade</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume II · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p></body>
+</html>

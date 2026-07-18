@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>**NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA**</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 8
+roman: "VIII"
+title: "Evals, Observability e Telemetria Agêntica"
+subtitle: "Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="/ebooks/covers/colecao-nexus-protocol--08-evals-observability-telemetria.webp" /></p>
+<h2>Volume VIII — Evals, Observability e Telemetria Agêntica</h2>
+<p><strong>Como medir, observar e diagnosticar sistemas onde a inteligência é distribuída.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Como saber se a rede de agentes está melhor hoje que ontem?</p>
+</blockquote>
+<hr />
+<h2>Sumário</h2>
+<blockquote>
+<ol>
+<li>Por que métricas tradicionais não bastam</li>
+<li>Três camadas: eval offline, observability online, eval em produção</li>
+<li>Eval harness: o coração da disciplina</li>
+<li>Golden traces e a regressão semântica</li>
+<li>LLM-as-judge: poder, viés e calibração</li>
+<li>Trace estruturado: o sucessor do log</li>
+<li>Métricas canônicas: latência, custo, qualidade, segurança</li>
+<li>SLOs agênticos: o que prometer ao consumidor da skill</li>
+<li>Debugging distribuído: replay e bisseção</li>
+<li>Manifesto: o que não é medido não está em produção</li>
+</ol>
+</blockquote>
+<hr />
+<h2>1. Por que métricas tradicionais não bastam</h2>
+<p>A operação clássica de software se mede com quatro métricas (RED + saturação):
+<strong>R</strong>ate, <strong>E</strong>rrors, <strong>D</strong>uration, saturação de recursos. Para sistemas
+agênticos, essas quatro continuam necessárias e <strong>deixam de ser suficientes</strong>.</p>
+<p>Três fenômenos novos rompem o modelo:</p>
+<p><strong>1. Erro silencioso.</strong> A chamada retornou 200 OK em 800ms. Mas o agente
+produziu output errado — uma alucinação plausível. Não há HTTP status para isso.</p>
+<p><strong>2. Custo elástico.</strong> A mesma rota da API consome 800 tokens em uma
+chamada e 9.400 em outra. Custo não é proporcional à quantidade de
+requests; é proporcional ao <strong>conteúdo</strong> das requests.</p>
+<p><strong>3. Qualidade não-determinística.</strong> Duas execuções da mesma skill com o
+mesmo input produzem outputs ligeiramente diferentes. "Funcionou" não é
+booleano — é distribuição.</p>
+<p>A consequência prática: monitoring que olha só RED diz "tudo bem"
+enquanto a rede degrada por dentro. Quando o cliente reclama, o dashboard
+está verde. Esse gap é o sintoma #1 de stack de observability que não
+foi repensada para agentes.</p>
+<h2>2. Três camadas: eval offline, observability online, eval em produção</h2>
+<p>Disciplina madura opera em três camadas que se complementam:</p>
+<p><strong>Camada 1 — Eval offline.</strong> Rodada controlada de N casos contra a skill,
+fora do tráfego real. Mede qualidade absoluta, detecta regressão antes
+do deploy. Lugar: CI/CD.</p>
+<p><strong>Camada 2 — Observability online.</strong> Cada execução real emite trace
+estruturado com latência, custo, decisões, saídas. Mede o que está
+acontecendo agora. Lugar: pipeline OTel + APM agêntico.</p>
+<p><strong>Camada 3 — Eval em produção.</strong> Subset do tráfego real é amostrado e
+avaliado (humano ou LLM-judge) com defasagem de minutos/horas. Detecta
+drift que não aparece em eval offline. Lugar: data warehouse + revisão
+periódica.</p>
+<p>A pergunta diagnóstica: <em>"se um cliente reclama de um output de ontem,
+você consegue: (a) reproduzir o caso, (b) saber se foi padrão ou
+exceção, (c) testar o fix antes de subir?"</em>. Se a resposta para qualquer
+das três é "não", está faltando uma das três camadas.</p>
+<h2>3. Eval harness: o coração da disciplina</h2>
+<p>Eval harness é a infraestrutura que roda casos de teste, coleta outputs
+e produz métricas. Estrutura canônica:</p>
+<pre><code>eval_suite/
+├── cases/
+│   ├── happy/         # casos comuns, baseline de competência
+│   ├── edge/          # bordas do domínio, raros mas importantes
+│   ├── adversarial/   # tentativas de quebrar (prompt injection, etc)
+│   └── regression/    # casos que já falharam uma vez
+├── judges/
+│   ├── deterministic.py   # regras formais
+│   ├── llm_judge.py       # avaliação por LLM
+│   └── human_inbox.py     # casos para revisão humana
+├── runners/
+│   └── parallel_runner.py
+└── reports/
+    └── 2026-06-08T14-22.html
+</code></pre>
+<p>Cinco propriedades canônicas de um eval harness sério:</p>
+<ol>
+<li><strong>Casos são código versionado</strong>, não Google Sheet. Cada caso tem
+   <code>id</code>, <code>input</code>, <code>expected</code> (ou <code>oracle_uri</code>), <code>tags</code>.</li>
+<li><strong>Determinismo onde possível.</strong> Caso "soma 2+2" não precisa de LLM
+   judge — bate exato ou falha.</li>
+<li><strong>Custo medido por execução de suite.</strong> Eval que custa US$ 50 por
+   PR rodada vira gargalo cultural.</li>
+<li><strong>Outputs arquivados.</strong> Mesmo após pass/fail, guarde o output. Permite
+   investigar regressões de calibração ("antes acertava com 90%
+   confiança, agora com 60%").</li>
+<li><strong>Diff entre runs.</strong> Pull request mostra cases que mudaram, não só
+   pass count.</li>
+</ol>
+<p>Sem eval harness, "melhoria do prompt" é exercício de pareidolia. Com
+ele, é engenharia.</p>
+<h2>4. Golden traces e a regressão semântica</h2>
+<p>Pareados aos casos de eval, mantenha <strong>golden traces</strong>: gravações
+completas de execuções consideradas perfeitas. Não só input/output —
+todo o caminho: decisões internas do agente, tools chamadas, prompts
+montados, raciocínio (se exposto).</p>
+<pre><code class="language-json">{
+  &quot;trace_id&quot;: &quot;golden-renegotiate-001&quot;,
+  &quot;input&quot;: &quot;Cliente C-99 quer parcelar fatura INV-2026-0042&quot;,
+  &quot;expected_steps&quot;: [
+    { &quot;tool&quot;: &quot;crm.read&quot;,      &quot;args&quot;: { &quot;customer_id&quot;: &quot;C-99&quot; } },
+    { &quot;tool&quot;: &quot;billing.read&quot;,  &quot;args&quot;: { &quot;invoice_id&quot;: &quot;INV-2026-0042&quot; } },
+    { &quot;decision&quot;: &quot;policy_check&quot;,
+      &quot;rationale&quot;: &quot;Cliente premium, fatura &lt; 90 dias atraso → parcelar em até 6x&quot; },
+    { &quot;tool&quot;: &quot;billing.update&quot;,
+      &quot;args&quot;: { &quot;invoice_id&quot;: &quot;INV-2026-0042&quot;, &quot;split&quot;: 6 } }
+  ],
+  &quot;expected_output&quot;: {
+    &quot;status&quot;: &quot;renegotiated&quot;,
+    &quot;installments&quot;: 6
+  }
+}
+</code></pre>
+<p>A <strong>regressão semântica</strong> detectada por golden traces é a regressão que
+escapa de tudo o mais: o output final está certo, mas o caminho mudou —
+o agente passou a consultar 4 tools em vez de 2, ou pulou o
+<code>policy_check</code>. O caso passa em assertion superficial e degrada em custo
+ou em compliance.</p>
+<p>Política sã: ao detectar regressão semântica, falhar o PR com mensagem
+explícita ("trajetória mudou: +2 tool calls, -1 decisão"). Permitir
+override só com justificativa registrada no commit.</p>
+<h2>5. LLM-as-judge: poder, viés e calibração</h2>
+<p>Para outputs subjetivos (texto livre, classificações com nuance), o
+juiz tipicamente é outro LLM. Funciona — com calibração.</p>
+<p>Vícios conhecidos de LLM-judges (documentados em pesquisa publicada):</p>
+<ul>
+<li><strong>Position bias.</strong> Em comparação A/B, o LLM tende a preferir o
+  primeiro (ou o último, dependendo do modelo).</li>
+<li><strong>Length bias.</strong> Preferência por respostas mais longas, mesmo quando
+  não são melhores.</li>
+<li><strong>Self-preference.</strong> GPT-4 julgando outputs de GPT-4 dá nota maior.
+  Claude julgando Claude, idem.</li>
+<li><strong>Sycophancy.</strong> Se o prompt indica que o output veio de "um especialista",
+  o juiz é mais leniente.</li>
+</ul>
+<p>Mitigações canônicas:</p>
+<pre><code class="language-python">def calibrated_judge(input, output_a, output_b):
+    # 1. Randomizar ordem
+    if random.random() &gt; 0.5:
+        a, b = output_b, output_a
+        swapped = True
+    else:
+        a, b = output_a, output_b
+        swapped = False
+
+    # 2. Prompt blindado quanto à autoria
+    score = llm_judge(
+        prompt=BLIND_RUBRIC,
+        criteria=[&quot;correctness&quot;, &quot;concision&quot;, &quot;actionability&quot;],
+        a=a, b=b
+    )
+
+    # 3. Rodar duas vezes; agregação
+    score_2 = llm_judge(...)
+
+    # 4. Calibrar contra golden human labels mensalmente
+    if (score - score_2) &gt; threshold:
+        return &quot;inconclusive_send_to_human&quot;
+
+    return invert_if(score, swapped)
+</code></pre>
+<p>A regra: <strong>LLM-judge é estimador, não verdade</strong>. Calibre periodicamente
+contra labels humanas em amostra; se a correlação cai abaixo de 0.7
+para a tarefa, troque o judge ou pare de confiar nele.</p>
+<h2>6. Trace estruturado: o sucessor do log</h2>
+<p>Logs textuais (<code>logger.info("calling tool X")</code>) viraram passivo em
+sistemas agênticos. O substituto é <strong>trace estruturado</strong> seguindo padrão
+OpenTelemetry, com semantic conventions agênticas em maturação.</p>
+<p>Spans canônicos em uma execução agêntica:</p>
+<pre><code>agent.task                                       (root)
+├── agent.llm_call (model=claude-3.7)
+│   ├── attr: prompt_tokens=2_847
+│   ├── attr: completion_tokens=412
+│   ├── attr: cost_usd=0.012
+│   └── attr: latency_ms=1_840
+├── agent.tool_call (mcp.crm.read_customer)
+│   ├── attr: tool_input_hash=sha256:...
+│   ├── attr: tool_output_size=1_204
+│   └── attr: latency_ms=85
+├── agent.delegation (to=billing-agent.acme)
+│   ├── attr: protocol=a2a
+│   ├── attr: task_id=t-9f3a
+│   └── agent.delegation_outcome (status=completed)
+└── agent.decision (kind=policy_check, outcome=allow)
+    ├── attr: rule_id=premium_split_v3
+    └── attr: confidence=0.94
+</code></pre>
+<p>Convenções emergentes em 2026 (OTel GenAI semantic conventions):</p>
+<ul>
+<li><code>gen_ai.system</code> — provedor do modelo.</li>
+<li><code>gen_ai.request.model</code> — modelo exato com versão.</li>
+<li><code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>.</li>
+<li><code>gen_ai.response.finish_reason</code>.</li>
+<li><code>agent.skill</code> — skill em execução.</li>
+<li><code>agent.delegation.target</code> — DID do agente delegado.</li>
+</ul>
+<p>O trace estruturado responde, sem código customizado, perguntas como:
+"qual tool consome mais tokens?", "qual skill tem maior latência p99?",
+"qual modelo tem mais falhas em policy check?". Sem trace estruturado,
+cada pergunta vira projeto de uma semana.</p>
+<h2>7. Métricas canônicas: latência, custo, qualidade, segurança</h2>
+<p>Quatro famílias de métricas que toda observability agêntica madura
+exporta:</p>
+<p><strong>Latência.</strong>
+- <code>task_duration_p50/p90/p99</code> — wall clock por task.
+- <code>llm_call_duration</code> por modelo e por skill.
+- <code>tool_call_duration</code> por tool.
+- <code>delegation_round_trip</code> para chamadas A2A/ACP.</p>
+<p><strong>Custo.</strong>
+- <code>cost_per_task</code> — agregado de tokens × preço.
+- <code>cost_per_skill</code> — útil para decidir preço (Volume VI).
+- <code>tokens_in / tokens_out</code> por modelo.
+- <code>cost_per_outcome</code> — custo dividido pelas tasks que terminaram em sucesso.</p>
+<p><strong>Qualidade.</strong>
+- <code>task_success_rate</code> por skill.
+- <code>human_override_rate</code> — quantas tasks foram corrigidas por humano.
+- <code>eval_score</code> em sliding window (eval em produção).
+- <code>regression_count</code> semana sobre semana.</p>
+<p><strong>Segurança.</strong>
+- <code>prompt_injection_attempts_detected</code>.
+- <code>policy_violation_rate</code>.
+- <code>escalation_to_human_rate</code>.
+- <code>unauthorized_tool_call_attempts</code>.</p>
+<p>A regra: cada métrica precisa de <strong>dono, alvo e ação</strong>. Métrica sem alvo
+é decoração de dashboard. Métrica sem dono é métrica que ninguém olha.</p>
+<h2>8. SLOs agênticos: o que prometer ao consumidor da skill</h2>
+<p>Skill federada (Volume VI) sem SLO declarado vira pacote sem garantia.
+SLO agêntico canônico tem três compromissos quantificados:</p>
+<pre><code class="language-yaml">slo:
+  skill: &quot;@acme/renegotiate-invoice@2.x&quot;
+  window: &quot;30d rolling&quot;
+  targets:
+    availability:
+      indicator: &quot;successful_invocations / total_invocations&quot;
+      target: 0.995
+    latency:
+      indicator: &quot;p95(task_duration_seconds)&quot;
+      target: &quot;&lt; 8s&quot;
+    quality:
+      indicator: &quot;eval_score (LLM-judge calibrated, rolling)&quot;
+      target: &quot;&gt; 0.85&quot;
+  error_budget:
+    monthly: &quot;5h downtime + 0.5% quality degradation&quot;
+  remediation:
+    quality_below_target:
+      - rollback_to_previous_skill_version
+      - escalate_to_skill_owner
+</code></pre>
+<p>A inovação face a SLOs tradicionais é o <strong>target de qualidade</strong>, que não
+é binário. Isso muda a operação: error budget agora consome por
+<em>degradação contínua</em>, não só por outage. Atingir 99.9% de uptime mas
+cair eval_score de 0.91 para 0.83 é incidente, mesmo sem 5xx.</p>
+<h2>9. Debugging distribuído: replay e bisseção</h2>
+<p>Quando um cliente reporta "ontem às 14:23 o agente respondeu X errado",
+o time precisa de duas capacidades:</p>
+<p><strong>Replay.</strong> Pegar o trace exato, rodar novamente, reproduzir o output.
+Requer: trace contendo input, modelo+versão, prompt completo,
+ferramentas chamadas (com responses gravadas), seed se aplicável.
+Sem replay, debug é especulação.</p>
+<p><strong>Bisseção temporal.</strong> "Quando esse caso começou a falhar?". Roda o
+caso contra deploys históricos da skill (binary search) até encontrar
+o deploy onde quebrou. Depende de versões da skill manterem-se
+executáveis e do harness aceitar <code>--at-version=2.2.7</code>.</p>
+<pre><code class="language-bash">$ eval bisect \
+    --case=ticket-99231 \
+    --good=v2.2.0 \
+    --bad=v2.3.1 \
+    --skill=&quot;@acme/renegotiate-invoice&quot;
+
+Testing v2.2.5... PASS
+Testing v2.3.0... PASS
+Testing v2.3.1... FAIL
+→ Regressão introduzida em v2.3.1 (commit 7a3f9c2)
+→ Mudança suspeita: prompt do step &quot;policy_check&quot; alterado
+</code></pre>
+<p>Replay + bisseção transformam debug agêntico de "ler logs e adivinhar"
+para "isolar regressão em minutos". A diferença não é cosmética — é a
+diferença entre operar à noite e dormir em paz.</p>
+<h2>10. Manifesto: o que não é medido não está em produção</h2>
+<p>A frase "o que não é medido não pode ser melhorado" é truísmo gerencial
+clássico. Em sistemas agênticos ela tem corolário operacional duro:</p>
+<blockquote>
+<p>O que não é medido <strong>não está em produção</strong> — está em fé.</p>
+</blockquote>
+<p>Stack agêntica em produção sem eval harness, sem golden traces, sem
+trace estruturado e sem SLO de qualidade é deploy de protótipo
+disfarçado. Funciona até a primeira mudança silenciosa de modelo,
+até o primeiro caso edge no cliente errado, até o primeiro auditor
+perguntar "como vocês sabem que está funcionando?".</p>
+<p>A resposta digna dessa pergunta é uma URL para dashboard que mostra:
+eval score na última semana, SLO compliance, regression count, custo
+por outcome. Resposta que começa com "deixa eu verificar com o time"
+é confissão de que a operação ainda é pre-industrial.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A maturidade de uma stack agêntica não se mede
+em quantos agentes ela tem ou em quão sofisticada é sua orquestração.
+Mede-se em <strong>quanto tempo demora entre uma regressão acontecer e
+alguém saber</strong>. Stacks profissionais medem isso em minutos. Stacks
+amadoras descobrem quando o cliente reclama.</p>
+</blockquote>
+<hr />
+<h2>Checklist Canônico — Observability Agêntica</h2>
+<ul>
+<li>[ ] Eval harness com cases versionados em git rodando em CI.</li>
+<li>[ ] Golden traces capturados e em uso para detectar regressão semântica.</li>
+<li>[ ] LLM-judge calibrado mensalmente contra labels humanas.</li>
+<li>[ ] OTel GenAI semantic conventions adotadas em todos os spans.</li>
+<li>[ ] Métricas RED + custo + qualidade + segurança exportadas.</li>
+<li>[ ] SLO agêntico declarado por skill, incluindo target de qualidade.</li>
+<li>[ ] Replay funcional a partir do trace_id de qualquer execução.</li>
+<li>[ ] Bisseção temporal de skills implementada e usada em incidentes.</li>
+<li>[ ] Eval em produção amostra ≥1% do tráfego e alimenta painel.</li>
+<li>[ ] Alerts disparam em degradação de eval_score, não só em 5xx.</li>
+</ul>
+<h2>Glossário do Volume</h2>
+<ul>
+<li><strong>Eval harness</strong> — infraestrutura que roda casos e produz métricas.</li>
+<li><strong>Golden trace</strong> — gravação completa de execução considerada perfeita.</li>
+<li><strong>Regressão semântica</strong> — output correto, mas trajetória degradada.</li>
+<li><strong>LLM-as-judge</strong> — uso de LLM para avaliar outputs subjetivos.</li>
+<li><strong>OTel GenAI conventions</strong> — atributos canônicos OpenTelemetry para IA.</li>
+<li><strong>SLO agêntico</strong> — Service Level Objective incluindo target de qualidade.</li>
+<li><strong>Replay</strong> — re-execução determinística a partir de trace gravado.</li>
+<li><strong>Bisseção</strong> — busca binária para localizar versão que introduziu regressão.</li>
+</ul>
+<h2>Gancho para o Próximo Volume</h2>
+<p>Medir bem permite <strong>ver</strong> problemas. Mas a próxima fronteira é
+<strong>prevenir</strong> problemas: prompt injection cross-agent, ataques de side-channel
+via tools, cascatas de falha em rede de agentes. Esse é o terreno do
+<strong>Volume IX — Segurança, Guardrails e Resiliência em Rede</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume VIII · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p></body>
+</html>

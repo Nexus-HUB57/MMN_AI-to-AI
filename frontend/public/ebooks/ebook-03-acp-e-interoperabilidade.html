@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>**NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA**</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>collection: "NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA"
+volume: 3
+roman: "III"
+title: "ACP e Padrões de Interoperabilidade"
+subtitle: "Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões."
+edition: "Edição Canônica 1.0.0"
+issued: "2026-06-08"
+authors: ["MMN AI-to-AI", "Nexus HUB57"]
+language: pt-BR
+canonical_edition: true</p>
+<hr />
+<h1><strong>NEXUS PROTOCOL — 10 Protocolos Canônicos IA-to-IA</strong></h1>
+<p><img alt="Capa" src="/ebooks/covers/colecao-nexus-protocol--03-acp-e-interoperabilidade.webp" /></p>
+<h2>Volume III — ACP e Padrões de Interoperabilidade</h2>
+<p><strong>Agent Communication Protocol, OpenAgents, schemas abertos e a guerra dos padrões.</strong></p>
+<p><em>Edição Canônica 1.0.0 · 2026-06-08 · MMN AI-to-AI · Nexus HUB57</em></p>
+<blockquote>
+<p><strong>Pergunta-âncora:</strong> Quais protocolos sobrevivem ao próximo ciclo e por quê?</p>
+</blockquote>
+<hr />
+<h2>Sumário</h2>
+<blockquote>
+<ol>
+<li>A guerra dos padrões nunca é técnica, é política</li>
+<li>ACP (IBM): a proposta enterprise</li>
+<li>AGNTCY, OpenAgents e o esforço de neutralidade</li>
+<li>AutoGen, LangGraph e os "padrões de fato"</li>
+<li>Mapa comparativo: MCP × A2A × ACP × proprietários</li>
+<li>Arquitetura de tradução: o gateway interoperável</li>
+<li>Schemas JSON-LD e a camada semântica compartilhada</li>
+<li>Adoção estratégica: aposta única, dual stack ou agnóstico?</li>
+<li>Migração entre protocolos sem reescrever agentes</li>
+<li>Manifesto: o padrão que vence é o que perde menos</li>
+</ol>
+</blockquote>
+<hr />
+<h2>1. A guerra dos padrões nunca é técnica, é política</h2>
+<p>A história dos protocolos é uma sequência previsível: três fornecedores publicam
+especificações concorrentes, um consórcio tenta unificar, a maioria adota o que
+o maior player suporta nativamente, os perdedores viram footnote. Aconteceu com
+SOAP×REST, OpenID×SAML, gRPC×REST. Está acontecendo com protocolos agênticos.</p>
+<p>Em 2026, o mapa do território é:</p>
+<ul>
+<li><strong>MCP</strong> (Anthropic, 2024) — vencedor de fato na camada agente↔ferramenta.</li>
+<li><strong>A2A</strong> (Google, abril 2025) — vencedor de fato na camada agente↔agente.</li>
+<li><strong>ACP</strong> (IBM via Linux Foundation/BeeAI, 2025) — desafio enterprise com REST puro.</li>
+<li><strong>AGNTCY</strong> (Cisco, LangChain, Galileo) — colectivo da Internet of Agents.</li>
+<li><strong>AutoGen runtime / Microsoft</strong> — padrão de fato em ambientes .NET/Azure.</li>
+</ul>
+<p>Quem decide o vencedor não é o comitê técnico — são três forças:</p>
+<ol>
+<li><strong>Adoção dos hyperscalers</strong> (AWS, Azure, GCP exporem SDKs nativos).</li>
+<li><strong>Suporte dos modelos foundation</strong> (Claude, GPT, Gemini falarem nativamente).</li>
+<li><strong>Inércia das ferramentas existentes</strong> (IDE, observability, frameworks).</li>
+</ol>
+<p>Quem ignora essa dinâmica e escolhe protocolo "pelo design mais elegante"
+costuma pagar caro em 18 meses, quando o ecossistema correu para o outro lado.</p>
+<h2>2. ACP (IBM): a proposta enterprise</h2>
+<p>O <strong>Agent Communication Protocol (ACP)</strong>, doado pela IBM à Linux Foundation
+em 2025, faz uma aposta diferente das anteriores: <strong>REST puro, sem SDK
+obrigatório, async-first por design</strong>. A premissa filosófica é que, para
+adoção enterprise massiva, o protocolo precisa ser consumível com um
+<code>curl</code> e auditável com Wireshark.</p>
+<p>Diferenças canônicas em relação ao A2A:</p>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>A2A</th>
+<th>ACP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td>JSON-RPC + SSE</td>
+<td>REST + SSE/webhooks</td>
+</tr>
+<tr>
+<td>Discovery</td>
+<td><code>/.well-known/agent.json</code></td>
+<td>Registry centralizado opcional</td>
+</tr>
+<tr>
+<td>Identidade</td>
+<td>OAuth 2.1</td>
+<td>OAuth 2.1 + mTLS recomendado</td>
+</tr>
+<tr>
+<td>Async</td>
+<td>Push notifications</td>
+<td>Async-first nativo (job IDs)</td>
+</tr>
+<tr>
+<td>SDK</td>
+<td>Recomendado</td>
+<td>Opcional por design</td>
+</tr>
+</tbody>
+</table>
+<p>ACP brilha em três cenários:</p>
+<ul>
+<li><strong>Integrações corporativas legadas</strong> onde o time já fala REST e pipelines
+  Jenkins/Tekton precisam consumir agentes sem instalar SDK específico.</li>
+<li><strong>Auditoria regulatória</strong> (finance, saúde) que exige logs HTTP puros para
+  retenção legal.</li>
+<li><strong>Multi-vendor neutralidade</strong> quando a organização decide não amarrar
+  arquitetura a um fornecedor de modelo.</li>
+</ul>
+<p>A fraqueza honesta do ACP: ecossistema menor, ferramentas de observability
+ainda primitivas, falta de implementações de referência maduras fora do
+BeeAI. Em 2026, adotar ACP é apostar em uma versão de longo prazo onde
+neutralidade pesa mais que time-to-market.</p>
+<h2>3. AGNTCY, OpenAgents e o esforço de neutralidade</h2>
+<p>O <strong>AGNTCY collective</strong> (Cisco + LangChain + Galileo + outros) opera em uma
+camada acima: em vez de propor outro wire protocol, propõe um <strong>Agent
+Directory</strong> federado e uma camada de <strong>identity + trust</strong> que pode plugar
+em MCP, A2A ou ACP.</p>
+<p>O modelo mental é a comparação correta com DNS: AGNTCY não substitui HTTP, ele
+substitui a forma como você <strong>acha</strong> o servidor HTTP certo. Em concreto:</p>
+<ul>
+<li><strong>Agent Directory</strong> — registry federado de Agent Cards (ou equivalentes).</li>
+<li><strong>AID</strong> (Agent Identifier) — DID-like, resolvível, com chave de assinatura.</li>
+<li><strong>OASF</strong> (Open Agent Schema Framework) — schema compartilhado para descrever
+  capacidades de forma machine-actionable.</li>
+</ul>
+<p>OpenAgents (Salesforce, Apple e outros, 2025) é uma proposta menos
+empolgante mas com peso institucional: padroniza um subset de
+funcionalidades A2A/ACP e oferece um conformance kit. É menos um protocolo
+e mais um <strong>compliance layer</strong> sobre os existentes.</p>
+<p>Lição prática: protocolos "neutros" raramente substituem incumbentes; eles
+viram <strong>camadas de tradução</strong>. Quem investe neles trata-os como seguro
+contra lock-in, não como aposta principal.</p>
+<h2>4. AutoGen, LangGraph e os "padrões de fato"</h2>
+<p>Há uma categoria de "protocolo" que nunca foi RFC e nunca será: os formatos
+que se tornaram padrão <strong>por uso</strong>. AutoGen 0.4 (Microsoft) e LangGraph
+(LangChain) são os maiores casos.</p>
+<p>AutoGen define um <strong>runtime de mensagens</strong> com <code>AgentId</code>, <code>MessageContext</code>
+e tipagem Python forte. Não é wire protocol, é <strong>biblioteca de orquestração</strong>.
+Mas como dezenas de milhares de projetos rodam AutoGen em produção, os
+artefatos que ele gera (logs, traces, formatos de mensagem) viraram <strong>input
+de fato</strong> para ferramentas de observability.</p>
+<p>LangGraph foi além e definiu um formato serializável para grafos de
+agentes — checkpoints, state, edges condicionais. Esse formato hoje é
+consumido por inspectors, visualizadores e até por outros frameworks.</p>
+<p>A regra mental para 2026: <strong>wire protocols</strong> competem em RFCs;
+<strong>runtime protocols</strong> competem por adoção em frameworks. Os dois importam
+e raramente são os mesmos.</p>
+<h2>5. Mapa comparativo: MCP × A2A × ACP × proprietários</h2>
+<table>
+<thead>
+<tr>
+<th>Pergunta operacional</th>
+<th>MCP</th>
+<th>A2A</th>
+<th>ACP</th>
+<th>AutoGen Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agente fala com ferramenta?</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Agente fala com agente?</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅ (intra-runtime)</td>
+</tr>
+<tr>
+<td>Async de horas?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Discovery sem registry central?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Multi-language sem SDK?</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Suporte Anthropic</td>
+<td>✅✅</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Suporte Google</td>
+<td>✅</td>
+<td>✅✅</td>
+<td>⚠️</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Suporte Microsoft</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅</td>
+<td>✅✅</td>
+</tr>
+<tr>
+<td>Suporte IBM</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅✅</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td>Maturidade observability</td>
+<td>✅</td>
+<td>✅</td>
+<td>⚠️</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p>Leitura honesta: nenhum protocolo é vencedor universal. A arquitetura
+canônica para 2026 não é "escolher um", é <strong>estratificar</strong>:</p>
+<ul>
+<li><strong>MCP</strong> na camada inferior (agente↔ferramentas).</li>
+<li><strong>A2A ou ACP</strong> na camada intermediária (agente↔agente externo).</li>
+<li><strong>Runtime proprietário</strong> na camada interna (agentes do mesmo cluster).</li>
+</ul>
+<h2>6. Arquitetura de tradução: o gateway interoperável</h2>
+<p>A consequência prática do mapa acima é o surgimento de uma figura
+arquitetural nova: o <strong>Agent Gateway</strong>. Ele faz para protocolos agênticos o
+que API Gateway fez para REST nos anos 2010.</p>
+<p>Funções canônicas de um Agent Gateway:</p>
+<pre><code>                  ┌─────────────────────────────┐
+   A2A inbound    │                             │
+   ──────────────►│                             │
+                  │      AGENT GATEWAY          │  ACP outbound
+   ACP inbound    │   ┌─────────────────────┐   │  ───────────►
+   ──────────────►│   │  - Protocol bridge  │   │
+                  │   │  - Auth translation │   │  MCP outbound
+   MCP inbound    │   │  - Rate limiting    │   │  ───────────►
+   ──────────────►│   │  - Audit logging    │   │
+                  │   │  - Schema validation│   │  Runtime call
+                  │   └─────────────────────┘   │  ───────────►
+                  └─────────────────────────────┘
+</code></pre>
+<p>Cinco capacidades indispensáveis em um gateway maduro:</p>
+<ol>
+<li><strong>Protocol bridging</strong> — receber A2A e despachar como ACP (ou vice-versa).</li>
+<li><strong>Auth translation</strong> — OAuth client A → mTLS B, sem expor credenciais cruzadas.</li>
+<li><strong>Schema validation por contrato</strong> — rejeitar requests que violam contrato declarado.</li>
+<li><strong>Rate limiting por skill</strong>, não por endpoint genérico.</li>
+<li><strong>Audit log unificado</strong> — independente do protocolo de origem.</li>
+</ol>
+<p>Quem trata gateway como afterthought paga em fragilidade: cada protocolo
+novo vira código duplicado em cada agente. Quem trata como cidadão de
+primeira classe ganha mobilidade entre padrões.</p>
+<h2>7. Schemas JSON-LD e a camada semântica compartilhada</h2>
+<p>A interoperabilidade real não é sintática — é semântica. Dois agentes podem
+falar A2A perfeitamente e ainda assim discordar do que "invoice" significa.
+A resposta para isso, herdada da web semântica, é JSON-LD com contextos
+compartilhados.</p>
+<pre><code class="language-json">{
+  &quot;@context&quot;: &quot;https://schema.agentic.org/v1/invoice&quot;,
+  &quot;@type&quot;: &quot;Invoice&quot;,
+  &quot;invoiceNumber&quot;: &quot;INV-2026-0042&quot;,
+  &quot;amount&quot;: { &quot;@type&quot;: &quot;MonetaryAmount&quot;, &quot;value&quot;: 1500, &quot;currency&quot;: &quot;BRL&quot; },
+  &quot;dueDate&quot;: &quot;2026-07-15&quot;,
+  &quot;issuer&quot;:  { &quot;@id&quot;: &quot;did:web:acme.com&quot; }
+}
+</code></pre>
+<p>O <code>@context</code> resolve para um schema público; os campos têm semântica
+estável; ferramentas de validação aceitam ou rejeitam por contrato. Isso
+é distinto de "JSON com campos comuns" — é uma camada onde a <strong>referência
+canônica é externa ao agente</strong>.</p>
+<p>Iniciativas relevantes em 2026:</p>
+<ul>
+<li><strong>schema.org/agent</strong> — extensão tentativa, ainda limitada.</li>
+<li><strong>OASF</strong> (AGNTCY) — schemas para capacidades agênticas.</li>
+<li><strong>OpenInvoice, OpenContract, OpenTicket</strong> — verticais setoriais.</li>
+</ul>
+<p>Usar JSON-LD não é gratuito (parsers maiores, validação adicional), mas é
+o único caminho conhecido para <strong>interoperabilidade sem coordenação prévia</strong>.</p>
+<h2>8. Adoção estratégica: aposta única, dual stack ou agnóstico?</h2>
+<p>Três estratégias dominam decisões de arquitetura em 2026:</p>
+<p><strong>Aposta única.</strong> Adota um protocolo e otimiza para ele. Time-to-market
+máximo; risco de lock-in se o padrão perder tração. Recomendado para
+startups com janela curta.</p>
+<p><strong>Dual stack.</strong> Implementa dois protocolos com adapter compartilhado.
+Custo de manutenção 1.4×, mas resiliência a mudanças de mercado.
+Recomendado para scale-ups com janela 12-24 meses.</p>
+<p><strong>Agnóstico (gateway-first).</strong> Toda comunicação passa por gateway; agentes
+falam um "dialeto interno". Custo inicial alto, flexibilidade máxima.
+Recomendado para enterprise com horizonte 3+ anos.</p>
+<p>A decisão real não é "qual escolher" — é <strong>em que horizonte estou apostando</strong>.</p>
+<h2>9. Migração entre protocolos sem reescrever agentes</h2>
+<p>Quando a aposta inicial precisa mudar, três técnicas reduzem o custo de migração:</p>
+<p><strong>1. Strangler Fig pattern.</strong> Coloca gateway novo na frente, gradualmente
+roteia tráfego do protocolo antigo para o novo, mantém ambos vivos durante
+janela de coexistência. Funciona quando os dois protocolos têm
+mapeamento semântico claro.</p>
+<p><strong>2. Adapter de runtime.</strong> Mantém o protocolo do código interno e adiciona
+um shim que traduz para o protocolo externo. Útil quando o investimento em
+SDK interno é grande.</p>
+<p><strong>3. Dual-write transitório.</strong> Por uma janela definida, agentes respondem
+em ambos os protocolos. Custo dobrado por 60-90 dias, depois deprecate o antigo.</p>
+<p>A regra de ouro: <strong>nunca migre sem replay logs</strong>. A capacidade de re-rodar
+1000 chamadas reais do tráfego antigo no novo protocolo é o que diferencia
+migração de roleta russa.</p>
+<h2>10. Manifesto: o padrão que vence é o que perde menos</h2>
+<p>O critério canônico para apostar em um protocolo agêntico em 2026 não é
+"qual é o mais elegante". É:</p>
+<ul>
+<li>Qual tem o <strong>menor número de breaking changes</strong> desde a v1?</li>
+<li>Qual tem o <strong>maior número de implementações independentes</strong> vivas?</li>
+<li>Qual deixou de quebrar <strong>observability tooling existente</strong>?</li>
+<li>Qual sobrevive ao <strong>próximo realinhamento de big tech</strong>?</li>
+</ul>
+<p>Protocolos vencem por durabilidade, não por brilho. MCP venceu por aceitar
+ser feio em troca de adoção. A2A venceu por amarrar Google + 50 parceiros
+no dia do anúncio. ACP pode vencer no enterprise por aceitar REST simples
+quando todos os outros se complicaram.</p>
+<blockquote>
+<p><strong>Tese final do volume:</strong> A guerra dos padrões agênticos não terá um
+vencedor único. Terá três camadas coexistindo por uma década, e a
+arquitetura competente será a que <strong>declara explicitamente em que
+camada está apostando — e mantém um gateway pronto para o caso de
+estar errada</strong>.</p>
+</blockquote>
+<hr />
+<h2>Checklist Canônico — Interoperabilidade Estratégica</h2>
+<ul>
+<li>[ ] Estratégia documentada: aposta única, dual stack ou agnóstico.</li>
+<li>[ ] Mapa de protocolos ativos por camada (tool, agent, runtime).</li>
+<li>[ ] Agent Gateway implementado se há mais de um protocolo externo.</li>
+<li>[ ] Schemas semânticos versionados (JSON-LD ou equivalente).</li>
+<li>[ ] Plano de migração com replay de logs definido.</li>
+<li>[ ] Audit log unificado independente do protocolo.</li>
+<li>[ ] Auth translation testada entre todos os pares.</li>
+<li>[ ] Conformance tests rodando contra mais de uma implementação.</li>
+<li>[ ] Revisão trimestral do mapa de adoção da indústria.</li>
+<li>[ ] Cláusula contratual de portabilidade com fornecedores principais.</li>
+</ul>
+<h2>Glossário do Volume</h2>
+<ul>
+<li><strong>ACP</strong> — Agent Communication Protocol (IBM/Linux Foundation).</li>
+<li><strong>AGNTCY</strong> — Coletivo de neutralidade da Internet of Agents.</li>
+<li><strong>OpenAgents</strong> — Compliance kit para padrões agênticos.</li>
+<li><strong>Agent Gateway</strong> — Componente de bridge/translation entre protocolos.</li>
+<li><strong>JSON-LD</strong> — JSON com contexto semântico resolvível.</li>
+<li><strong>OASF</strong> — Open Agent Schema Framework.</li>
+<li><strong>AID</strong> — Agent Identifier, DID-like, federado.</li>
+<li><strong>Strangler Fig</strong> — Padrão de migração gradual via proxy.</li>
+</ul>
+<h2>Gancho para o Próximo Volume</h2>
+<p>Decidido o protocolo de fio, surge a pergunta sobre <strong>estado</strong>: como agentes
+compartilham memória sem violar isolamento? Como uma lembrança nascida em
+um agente vira ativo de outro sem corromper identidade? Esse é o terreno do
+<strong>Volume IV — Memória Distribuída entre Agentes</strong>.</p>
+<hr />
+<p><em>NEXUS PROTOCOL · Volume III · Edição Canônica 1.0.0 · 2026-06-08</em>
+<em>MMN AI-to-AI · Nexus HUB57 · Ecossistema MMN AI-to-AI</em></p></body>
+</html>

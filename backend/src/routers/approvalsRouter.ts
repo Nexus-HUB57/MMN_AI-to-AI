@@ -153,7 +153,7 @@ export const approvalsRouter = router({
            LEFT JOIN users u ON u.id = mo.user_id
            LEFT JOIN affiliates a ON a."userId" = mo.user_id
            LEFT JOIN affiliates sp ON sp.id = a."sponsorAffiliateId"
-          WHERE mo.status IN ('delivered','cancelled')
+          WHERE mo.status IN ('delivered','cancelled','paid')
              OR mo.payment_status IN ('failed','cancelled')
           ORDER BY COALESCE(mo.delivered_at, mo.paid_at, mo.updated_at) DESC
           LIMIT $1 OFFSET $2`,
@@ -161,7 +161,7 @@ export const approvalsRouter = router({
       );
       const [{ total }] = await q<{ total: number }>(
         `SELECT count(*)::int AS total FROM marketplace_orders
-          WHERE status IN ('delivered','cancelled') OR payment_status IN ('failed','cancelled')`
+          WHERE status IN ('delivered','cancelled','paid') OR payment_status IN ('failed','cancelled')`
       );
       return {
         approvals: rows.map(mapOrderToApproval),
@@ -185,6 +185,43 @@ export const approvalsRouter = router({
         audit: buildAudit({
           domain: "approvals",
           action: "approve",
+          performedBy: (ctx as any).user?.email ?? "admin",
+          targetId: input.id,
+          metadata: { notes: input.notes ?? "" },
+        }),
+      };
+    }),
+
+  markDelivered: adminProcedure
+    .input(z.object({ id: z.string(), notes: z.string().optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const rows = await q(
+        `UPDATE marketplace_orders
+            SET status='delivered', delivered_at=COALESCE(delivered_at, NOW()), updated_at=NOW()
+          WHERE id=$1 RETURNING id, user_id`,
+        [input.id]
+      );
+      if (!rows.length) throw new TRPCError({ code: "NOT_FOUND", message: "Pedido nao encontrado" });
+      // Tenta criar grant se ainda não existe (para pack-a2 principalmente)
+      try {
+        const meta = await q(`SELECT metadata FROM marketplace_orders WHERE id=$1`, [input.id]);
+        const slug = meta[0]?.metadata?.slug;
+        if (slug && slug.startsWith("pack-")) {
+          await q(
+            `INSERT INTO marketplace_pack_grants (user_id, pack_slug, order_id, payment_method, amount_cents, status, metadata)
+             SELECT user_id, $2, id, 'mercado_pago', total_cents, 'granted', jsonb_build_object('source','admin_markDelivered')
+             FROM marketplace_orders WHERE id=$1
+             ON CONFLICT DO NOTHING`,
+            [input.id, slug]
+          );
+        }
+      } catch {}
+      return {
+        success: true,
+        message: "Pedido marcado como entregue",
+        audit: buildAudit({
+          domain: "approvals",
+          action: "mark_delivered",
           performedBy: (ctx as any).user?.email ?? "admin",
           targetId: input.id,
           metadata: { notes: input.notes ?? "" },

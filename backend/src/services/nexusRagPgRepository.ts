@@ -193,6 +193,36 @@ export async function isAvailable(): Promise<boolean> {
   }
 }
 
+
+// HOTFIX D18.8: Embeddings OpenAI reais (fallback para determinístico se sem API key ou erro)
+async function openaiEmbedding(text: string, dimensions = 1536): Promise<number[] | null> {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return null;
+  try {
+    const resp = await fetch("https://api.openai.com/v1/embeddings", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "text-embedding-3-small",
+        input: text.slice(0, 8000), // OpenAI limit ~8191 tokens
+        dimensions,
+      }),
+    });
+    if (!resp.ok) return null;
+    const json: any = await resp.json();
+    const vec = json?.data?.[0]?.embedding;
+    return Array.isArray(vec) && vec.length === dimensions ? vec : null;
+  } catch { return null; }
+}
+
+async function getEmbedding(text: string): Promise<number[]> {
+  const real = await openaiEmbedding(text);
+  return real ?? deterministicEmbedding(text);
+}
+
 export async function pgIngest(
   input: PgIngestInput
 ): Promise<PgIngestResult | null> {
@@ -241,7 +271,7 @@ export async function pgIngest(
       for (let i = 0; i < chunks.length; i++) {
         const content = chunks[i];
         const emb = vectorLiteral(
-          deterministicEmbedding(
+          await getEmbedding(
             `${input.sourceKind}:${input.sourceRef}:${i}:${content}`
           )
         );

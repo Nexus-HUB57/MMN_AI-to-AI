@@ -21,6 +21,14 @@
  */
 
 import crypto from "node:crypto";
+import {
+  isAvailable as pgIsAvailable,
+  pgIngest,
+  pgQuery,
+  pgStats,
+  pgListRuns,
+  pgRecordRun,
+} from "./nexusRagPgRepository";
 
 // -----------------------------------------------------------------------------
 // Tipos públicos
@@ -198,10 +206,22 @@ export async function ingest(input: RagIngestInput): Promise<RagIngestResult> {
   const run = newRun("ingest", input.sourceKind);
 
   try {
-    if (mode() === "pgvector") {
-      // O caminho pgvector é finalizado quando a migration 0011 estiver aplicada;
-      // por ora caímos no caminho in-memory para não bloquear o bootstrap.
-      console.warn("[nexusRag] pgvector backend ainda não conectado em runtime — caindo para in-memory.");
+    // HOTFIX D18.5: tenta pgvector real primeiro
+    if (await pgIsAvailable()) {
+      const pgRes = await pgIngest({
+        sourceKind: input.sourceKind,
+        sourceRef: input.sourceRef,
+        title: input.title,
+        content: input.content,
+        tags: input.tags,
+        tenantId: input.tenantId,
+        metadata: input.metadata,
+      });
+      if (pgRes) {
+        finishRun(run, "ok", { chunks: pgRes.chunks, sourceId: pgRes.sourceId, backend: "pgvector" });
+        try { await pgRecordRun({ runId: run.runId, action: "ingest", scope: input.sourceKind, status: "ok", chunks: pgRes.chunks, sourceId: pgRes.sourceId }); } catch {}
+        return { runId: run.runId, sourceId: pgRes.sourceId, chunks: pgRes.chunks, mode: "pgvector" };
+      }
     }
 
     const key = `${input.sourceKind}::${input.sourceRef}::${EMBEDDING_MODEL_VERSION}`;
@@ -241,6 +261,27 @@ export async function ingest(input: RagIngestInput): Promise<RagIngestResult> {
 export async function query(input: RagQueryInput): Promise<RagQueryResult> {
   const start = Date.now();
   const topK = Math.max(1, Math.min(input.topK ?? 6, 20));
+
+  // HOTFIX D18.5: tenta pgvector
+  if (await pgIsAvailable()) {
+    const rows = await pgQuery({
+      question: input.question,
+      topK,
+      scope: input.scope,
+      tenantId: input.tenantId,
+    });
+    if (rows) {
+      const matches: Array<RagMatch> = rows.map((r: any) => ({
+        sourceKind: r.source_kind as RagSourceKind,
+        sourceRef: r.source_ref,
+        title: r.title,
+        score: Number(r.score ?? 0),
+        content: r.content,
+      }));
+      return { matches, latencyMs: Date.now() - start, mode: "pgvector" };
+    }
+  }
+
   const scope = input.scope?.length ? new Set(input.scope) : null;
   const queryTokens = tokenize(input.question);
 
@@ -306,6 +347,10 @@ export async function answer(input: RagAnswerInput): Promise<RagAnswerResult> {
 }
 
 export async function listRuns(limit = 20): Promise<RagRunRecord[]> {
+  if (await pgIsAvailable()) {
+    const pg = await pgListRuns(limit);
+    if (pg && pg.length) return pg as any;
+  }
   return memStore.runs.slice(0, Math.max(1, Math.min(limit, 200)));
 }
 
@@ -320,7 +365,20 @@ export async function reindex(scope: RagSourceKind | "all"): Promise<{ runId: st
   return { runId: run.runId, scope: String(scope) };
 }
 
-export function stats() {
+export async function stats() {
+  // HOTFIX D18.5: pgvector real
+  if (await pgIsAvailable()) {
+    const pg = await pgStats();
+    if (pg) {
+      return {
+        backend: "pgvector" as const,
+        sources: Number((pg as any).sources ?? 0),
+        chunks: Number((pg as any).chunks ?? 0),
+        runs: Number((pg as any).runs ?? 0),
+        embeddingModelVersion: EMBEDDING_MODEL_VERSION,
+      };
+    }
+  }
   return {
     backend: mode(),
     sources: memStore.sources.size,

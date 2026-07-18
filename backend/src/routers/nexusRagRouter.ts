@@ -58,7 +58,7 @@ export const nexusRagRouter = router({
   /**
    * Diagnóstico básico do backend RAG (público para health checks).
    */
-  stats: publicProcedure.query(() => stats()),
+  stats: publicProcedure.query(async () => await stats()),
 
   /**
    * Busca canônica.

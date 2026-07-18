@@ -88,6 +88,22 @@ function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: str
         <img src={imageSrc} alt="QR Code PIX" width={280} height={280} className="rounded-xl" />
       </div>
       <span className="text-xs text-slate-400">Escaneie com o app do seu banco</span>
+      {/* HOTFIX D18.5: badge do provedor */}
+      <MpProviderBadge configured={true} />
+    </div>
+  );
+}
+
+
+function MpProviderBadge({ configured }: { configured: boolean }) {
+  return (
+    <div className="mt-3 flex items-center justify-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-xs font-medium text-blue-200">
+      <span aria-hidden>💳</span>
+      <span>
+        {configured
+          ? "Pagamento processado via Mercado Pago (PIX/QR ou saldo MP)"
+          : "Pagamento PIX manual (Mercado Pago indisponível no momento)"}
+      </span>
     </div>
   );
 }

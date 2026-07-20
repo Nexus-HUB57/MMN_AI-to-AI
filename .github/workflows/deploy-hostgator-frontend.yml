@@ -118,7 +118,7 @@ jobs:
           rsync -az --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.VPS_PORT }} -o StrictHostKeyChecking=no" \
             ./frontend/dist/ \
-            ${{ env.VPS_USER }}@${ env.VPS_HOST }}:${{ env.REMOTE_APP }}/frontend/dist/
+            ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.REMOTE_APP }}/frontend/dist/
 
       - name: Reload nginx (if present)
         run: |

@@ -725,6 +725,36 @@ export const authRouter = router({
         );
         const affId = affIns.rows[0].id;
 
+        // === FIX CEO-005: Vincular sponsor na rede binaria ===
+        // Resolve o sponsorCode, atualiza affiliates.sponsorId e insere na tabela network
+        if (input.sponsorCode) {
+          try {
+            const sponsorRes = await client.query(
+              "SELECT id, \"userId\" FROM affiliates WHERE \"affiliateCode\" = $1 LIMIT 1",
+              [input.sponsorCode.trim()]
+            );
+            if (sponsorRes.rows.length > 0) {
+              const sponsorAffId = sponsorRes.rows[0].id;
+              // Atualiza sponsorId no affiliate recem-criado
+              await client.query(
+                "UPDATE affiliates SET \"sponsorId\" = $1, \"updatedAt\" = NOW() WHERE id = $2",
+                [sponsorAffId, affId]
+              );
+              // Insere na tabela network (nivel 1 = direto)
+              await client.query(
+                "INSERT INTO network (\"userId\", \"sponsorId\", level, \"createdAt\") VALUES ($1, $2, 1, NOW())",
+                [userId, sponsorAffId]
+              );
+              console.log(`[CEO-005] User ${userId} linked to sponsor ${sponsorAffId} via code ${input.sponsorCode}`);
+            } else {
+              console.warn(`[CEO-005] Sponsor code not found: ${input.sponsorCode}`);
+            }
+          } catch (sponsorErr: any) {
+            console.error("[CEO-005] Sponsor linking failed:", sponsorErr?.message);
+            // Nao aborta o cadastro
+          }
+        }
+
         await client.query(
           "INSERT INTO niko_operational_memory (episode_type, subject, decision, rationale, autonomy_level, linked_metrics) VALUES ('signup', $1, $2, 'Cadastro autonomo via authRouter.signUp - modo privado whitelist', 'execute_low', $3::jsonb)",
           [

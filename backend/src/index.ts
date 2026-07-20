@@ -41,6 +41,25 @@ const APP_COMMIT_SHA =
   process.env.COMMIT_SHA ||
   process.env.SOURCE_VERSION ||
   null;
+// FIX CEO-004: Fallback para commit SHA em VPS (lê do .git ou arquivo)
+let _fallbackSha: string | null = null;
+if (!APP_COMMIT_SHA) {
+  try {
+    const { execSync } = require('child_process');
+    _fallbackSha = execSync('git rev-parse --short HEAD 2>/dev/null || echo ""', { timeout: 3000, encoding: 'utf-8' }).trim();
+  } catch {}
+  // Se git não está disponível, tenta ler de arquivo de build
+  if (!_fallbackSha) {
+    try {
+      const fs = require('fs');
+      const paths = ['../../.git-commit', '../../COMMIT_SHA.txt', '/etc/nexus-commit-sha'];
+      for (const p of paths) {
+        if (fs.existsSync(p)) { _fallbackSha = fs.readFileSync(p, 'utf-8').trim().slice(0, 12); break; }
+      }
+    } catch {}
+  }
+}
+const RESOLVED_COMMIT_SHA = APP_COMMIT_SHA || _fallbackSha || null;
 
 function resolveOrigin(origin?: string) {
   if (!origin) return ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
@@ -197,7 +216,7 @@ app.get("/health", (_req, res) => {
     service: "mmn-ai-to-ai-backend",
     mode: "full",
     version: APP_VERSION,
-    commit: APP_COMMIT_SHA,
+    commit: RESOLVED_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });
@@ -208,7 +227,7 @@ app.get("/api/health", (_req, res) => {
     service: "mmn-ai-to-ai-backend",
     mode: "full",
     version: APP_VERSION,
-    commit: APP_COMMIT_SHA,
+    commit: RESOLVED_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });
@@ -471,7 +490,32 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                   [order.id, String(paymentId)]
                 );
               }
-              // Carrega itens e tenta entregar
+              // === FIX CEO-001: Entrega de Packs via grantPackToUser ===
+              // Antes de entregar ebooks, verifica se o pedido é um PACK e ativa a entrega
+              let packGrantResult: any = null;
+              try {
+                const meta = order.metadata
+                  ? (typeof order.metadata === 'string' ? JSON.parse(order.metadata) : order.metadata)
+                  : {};
+                const orderType = String(meta?.type || '').toLowerCase();
+                const orderSlug = String(meta?.slug || '');
+
+                if ((orderType === 'pack' || orderType === 'subscription') && orderSlug) {
+                  const { grantPackToUser } = await import('./services/packEntitlementService');
+                  console.log(`[CEO-001] Granting pack ${orderSlug} to user ${order.user_id} for order ${order.id}`);
+                  packGrantResult = await grantPackToUser(order.user_id, orderSlug, {
+                    paymentRef: String(paymentId),
+                    paymentMethod: 'mercado_pago',
+                    amountCents: Number(order.total_cents || 0),
+                  });
+                  console.log(`[CEO-001] Pack grant result:`, JSON.stringify(packGrantResult));
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-001] Pack grant failed:', packErr?.message);
+                // Não aborta a transação — o pedido já está pago
+              }
+
+              // Carrega itens e tenta entregar ebooks
               const items = await client.query(
                 `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
                 [order.id]
@@ -529,7 +573,7 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                     })),
                   });
                   await sendEmail({ to: customerEmail, subject: tpl.subject, html: tpl.html });
-                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: customerEmail };
+                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: customerEmail, packGrant: packGrantResult };
                 } else {
                   marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: null };
                 }
@@ -647,6 +691,7 @@ app.post("/api/webhooks/mercadopago", handleMercadoPagoWebhook);
 
 
 // ONDA 15: REST endpoint para polling status pagamento
+// FIX CEO-002: Agora reconcilia (escreve no DB) quando MP confirma pagamento
 app.get("/api/pix/status", async (req, res) => {
   try {
     const paymentId = String(req.query.paymentId || "");
@@ -654,7 +699,7 @@ app.get("/api/pix/status", async (req, res) => {
     
     // 1) Query no DB local primeiro
     const localOrder = await _balancePool.query(
-      `SELECT id, payment_status, paid_at, delivered_at 
+      `SELECT id, user_id, status, payment_status, total_cents, paid_at, delivered_at, metadata
        FROM marketplace_orders 
        WHERE payment_id=$1 OR external_reference=$1 
        LIMIT 1`,
@@ -663,18 +708,22 @@ app.get("/api/pix/status", async (req, res) => {
     
     if ((localOrder.rowCount ?? 0) > 0) {
       const row = localOrder.rows[0];
-      return res.json({
-        paymentId,
-        status: row.payment_status,
-        paid: row.payment_status === "paid",
-        paidAt: row.paid_at,
-        deliveredAt: row.delivered_at,
-        source: "local",
-      });
+      // Já está pago — retorna imediatamente
+      if (row.payment_status === "paid" || row.status === "paid" || row.status === "delivered") {
+        return res.json({
+          paymentId,
+          orderId: row.id,
+          status: "paid",
+          paid: true,
+          paidAt: row.paid_at,
+          deliveredAt: row.delivered_at,
+          source: "local",
+        });
+      }
     }
     
-    // 2) Consultar Mercado Pago se token disponível
-    const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || "";
+    // 2) Consultar Mercado Pago se token disponível (reconciliação ativa)
+    const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || "";
     if (mpToken && paymentId.match(/^\d+$/)) {
       try {
         const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -682,15 +731,69 @@ app.get("/api/pix/status", async (req, res) => {
         });
         if (mpResp.ok) {
           const mp = await mpResp.json();
+          const mpStatus = String(mp.status || "").toLowerCase();
+
+          // FIX CEO-002: Se MP aprovou, reconcilia no DB local + entrega pack
+          if (mpStatus === "approved") {
+            const orderRow = localOrder.rows?.[0];
+            let reconciled = false;
+            let packGranted = false;
+
+            if (orderRow && orderRow.payment_status !== "paid") {
+              // Atualiza pedido local
+              await _balancePool.query(
+                `UPDATE marketplace_orders 
+                 SET payment_status='paid', status='paid', payment_id=$2, paid_at=NOW(), updated_at=NOW()
+                 WHERE id=$1 AND payment_status <> 'paid'`,
+                [orderRow.id, paymentId]
+              );
+              reconciled = true;
+
+              // Entrega pack se aplicável
+              try {
+                const meta = orderRow.metadata
+                  ? (typeof orderRow.metadata === 'string' ? JSON.parse(orderRow.metadata) : orderRow.metadata)
+                  : {};
+                const orderType = String(meta?.type || '').toLowerCase();
+                const orderSlug = String(meta?.slug || '');
+                if ((orderType === 'pack' || orderType === 'subscription') && orderSlug && orderRow.user_id) {
+                  const { grantPackToUser } = await import('./services/packEntitlementService');
+                  const grant = await grantPackToUser(orderRow.user_id, orderSlug, {
+                    paymentRef: paymentId,
+                    paymentMethod: 'mercado_pago',
+                    amountCents: Number(orderRow.total_cents || 0),
+                  });
+                  packGranted = grant.ok;
+                  console.log(`[CEO-002] REST poll pack grant for ${orderSlug}:`, JSON.stringify(grant));
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-002] Pack grant via poll failed:', packErr?.message);
+              }
+            }
+
+            return res.json({
+              paymentId,
+              orderId: orderRow?.id || null,
+              status: "paid",
+              paid: true,
+              externalReference: mp.external_reference,
+              source: "mp_reconcile",
+              reconciled,
+              packGranted,
+            });
+          }
+
           return res.json({
             paymentId,
-            status: mp.status,
-            paid: mp.status === "approved",
+            status: mpStatus,
+            paid: false,
             externalReference: mp.external_reference,
             source: "mp_api",
           });
         }
-      } catch {}
+      } catch (e: any) {
+        console.error('[CEO-002] MP reconcile error:', e?.message);
+      }
     }
     
     return res.json({ paymentId, status: "pending", paid: false, source: "unknown" });

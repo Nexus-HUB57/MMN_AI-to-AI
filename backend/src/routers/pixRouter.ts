@@ -843,6 +843,36 @@ export const pixRouter = router({
                   [paymentId]
                 );
               } catch {}
+
+              // FIX CEO-003: Entrega pack no polling tRPC se aplicável
+              try {
+                if (orderId) {
+                  const metaRow = await _statClient.query(
+                    `SELECT user_id, total_cents, metadata FROM marketplace_orders WHERE id=$1 LIMIT 1`,
+                    [orderId]
+                  );
+                  const metaOrder = metaRow.rows?.[0];
+                  if (metaOrder) {
+                    const meta = metaOrder.metadata
+                      ? (typeof metaOrder.metadata === 'string' ? JSON.parse(metaOrder.metadata) : metaOrder.metadata)
+                      : {};
+                    const orderType = String(meta?.type || '').toLowerCase();
+                    const orderSlug = String(meta?.slug || '');
+                    if ((orderType === 'pack' || orderType === 'subscription') && orderSlug && metaOrder.user_id) {
+                      const { grantPackToUser } = await import('../services/packEntitlementService');
+                      const grant = await grantPackToUser(metaOrder.user_id, orderSlug, {
+                        paymentRef: paymentId,
+                        paymentMethod: 'mercado_pago',
+                        amountCents: Number(metaOrder.total_cents || 0),
+                      });
+                      console.log(`[CEO-003] tRPC poll pack grant for ${orderSlug}:`, JSON.stringify(grant));
+                    }
+                  }
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-003] Pack grant via tRPC poll failed:', packErr?.message);
+              }
+
               return { status: "approved", paymentStatus: "paid", orderId, paymentId, source: "mp_reconcile" };
             }
             return { status: mpStatus || localStatus, paymentStatus: localPaymentStatus, orderId, paymentId, mpStatus };

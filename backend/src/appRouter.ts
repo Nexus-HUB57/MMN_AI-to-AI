@@ -189,7 +189,6 @@ export const appRouter = router({
         governanceLoop: true,
         multiTenant: true,
         cSuite: true,
-        nexusRag: true,
         marketplaceNexus: true,
         orchestratorAdmin: true,
       onda1: true,

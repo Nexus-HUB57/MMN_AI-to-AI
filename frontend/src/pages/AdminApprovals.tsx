@@ -170,7 +170,7 @@ export default function AdminApprovals() {
       toast.success("Solicitação aprovada com sucesso");
       refreshAll();
       setApprovalNotes("");
-      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setSelectedPendingIds((current) => current.filter((id) => String(id) !== selectedApprovalId));
       setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
@@ -196,7 +196,7 @@ export default function AdminApprovals() {
       toast.success("Solicitação rejeitada com sucesso");
       refreshAll();
       setRejectReason("");
-      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setSelectedPendingIds((current) => current.filter((id) => String(id) !== selectedApprovalId));
       setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
@@ -581,7 +581,7 @@ export default function AdminApprovals() {
                           </td>
                           <td className="px-4 py-4 text-sm text-slate-600">{queueHours}h</td>
                           <td className="px-4 py-4">
-                            <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
+                            <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(String(approval.id))}>
                               Revisar
                             </Button>
                           </td>
@@ -677,7 +677,7 @@ export default function AdminApprovals() {
                           {approval.processedAt ? new Date(approval.processedAt).toLocaleDateString("pt-BR") : "N/A"}
                         </td>
                         <td className="px-4 py-4">
-                          <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
+                          <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(String(approval.id))}>
                             Ver detalhes
                           </Button>
                         </td>

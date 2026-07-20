@@ -90,7 +90,7 @@ function QrCodeImage({ payload, base64 }: { payload: string | null; base64?: str
       <span className="text-xs text-slate-400">Escaneie com o app do seu banco</span>
       {/* HOTFIX D18.5: badge do provedor */}
       <MpProviderBadge configured={true} />
-      <MpFullCheckoutButton initPoint={checkoutSession?.mercadoPago?.initPoint ?? null} />
+      {/* MpFullCheckoutButton moved to parent scope (CEO-008) */}
     </div>
   );
 }

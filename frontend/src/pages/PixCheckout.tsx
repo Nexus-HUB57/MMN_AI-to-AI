@@ -370,7 +370,7 @@ export default function PixCheckout() {
         description: paymentContext.description,
         amountCents,
         returnUrl: absoluteReturnUrl,
-        payerEmail: payerEmail || undefined,
+        payerEmail: payerEmail || user?.email || undefined,
         payerName: payerName || user?.name || undefined,
         payerDocument: payerDocument || undefined,
         subscriptionId: paymentContext.subscriptionId,
@@ -574,14 +574,21 @@ export default function PixCheckout() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-1.5">
                       <Label htmlFor="payerEmail">E-mail do comprador</Label>
-                      <Input
-                        id="payerEmail"
-                        type="email"
-                        placeholder="seu@email.com"
-                        className="border-white/10 bg-white/5 text-white"
-                        value={payerEmail}
-                        onChange={(event) => setPayerEmail(event.target.value)}
-                      />
+                      {user?.email ? (
+                        <div className="flex h-10 w-full items-center rounded-md border border-white/10 bg-white/5 px-3 text-sm text-slate-300">
+                          <span className="truncate">{user.email}</span>
+                          <span className="ml-auto text-xs text-emerald-400">preenchido</span>
+                        </div>
+                      ) : (
+                        <Input
+                          id="payerEmail"
+                          type="email"
+                          placeholder="seu@email.com"
+                          className="border-white/10 bg-white/5 text-white"
+                          value={payerEmail}
+                          onChange={(event) => setPayerEmail(event.target.value)}
+                        />
+                      )}
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="payerDocument">CPF/CNPJ para geração do checkout</Label>

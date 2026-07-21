@@ -223,18 +223,23 @@ function sanitizePixText(value: string, maxLength: number) {
 export function generateMarketplacePixPayload({
   amountCents,
   description,
+  pixKey,
 }: {
   amountCents: number;
   description?: string;
+  pixKey?: string;
 }) {
   const merchantName = sanitizePixText("ONEVERSO MMN AI", 25);
   const merchantCity = sanitizePixText("SAO PAULO", 15);
   const txid = "***";
   const amount = Math.max(0, amountCents) / 100;
-  const descriptionPart = description ? tlv("02", sanitizePixText(description, 25)) : "";
+  // CEO-012: Usar chave do servidor quando disponível (via parâmetro), senão fallback hardcoded
+  const effectivePixKey = pixKey || MARKETPLACE_PIX_KEY;
+  // CEO-012: Removida descrição do interior do tag 26 (causava rejeição em parsers bancários)
+  // A descrição, quando necessária, deve ir em tag 62 sub-tag 05 concatenada ao txid, ou ser omitida
   const merchantAccountInfo = tlv(
     "26",
-    tlv("00", "BR.GOV.BCB.PIX") + tlv("01", MARKETPLACE_PIX_KEY) + descriptionPart,
+    tlv("00", "BR.GOV.BCB.PIX") + tlv("01", effectivePixKey),
   );
   const amountPart = amount > 0 ? tlv("54", amount.toFixed(2)) : "";
   const additionalDataField = tlv("62", tlv("05", txid));

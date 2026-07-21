@@ -519,7 +519,30 @@ export const pixRouter = router({
       }
 
       if (!payerEmail) {
-        warnings.push("O e-mail do comprador não está disponível na sessão atual. O QR PIX do Mercado Pago pode depender desse dado; o fallback com chave PIX manual permanece ativo.");
+        warnings.push("O e-mail do comprador não está disponível na sessão atual. O QR PIX do Mercado Pago requer esse dado; o fallback com QR estático será gerado.");
+        // CEO-012: Gerar QR estático válido via pixService (com a chave correta do .env)
+        try {
+          const staticQr = generatePixStaticPayload({
+            pixKey: MARKETPLACE_PIX_KEY,
+            merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+            merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+            amount,
+            txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+            description: input.description || input.name,
+          });
+          result.pix = {
+            provider: "manual_key",
+            paymentId: null,
+            status: null,
+            qrCode: staticQr.fullPayload,
+            qrCodeBase64: null,
+            ticketUrl: null,
+            expiresAt: null,
+            fallback: fallbackPix,
+          };
+        } catch (staticErr) {
+          warnings.push(`Falha ao gerar QR estático de fallback: ${staticErr instanceof Error ? staticErr.message : "erro"}`);
+        }
         return result;
       }
 
@@ -598,10 +621,34 @@ export const pixRouter = router({
             fallback: fallbackPix,
           };
         } else {
-          warnings.push("O Mercado Pago não retornou QR PIX nesta tentativa. O checkout exibirá a chave PIX manual como fallback.");
+          // CEO-012: MP não retornou QR — gerar estático como fallback
+          try {
+            const staticQr = generatePixStaticPayload({
+              pixKey: MARKETPLACE_PIX_KEY,
+              merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+              merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+              amount,
+              txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+              description: input.description || input.name,
+            });
+            result.pix.qrCode = staticQr.fullPayload;
+          } catch (_) { /* keep null */ }
+          warnings.push("O Mercado Pago não retornou QR PIX nesta tentativa. O checkout exibirá QR estático como fallback.");
         }
       } catch (error) {
-        warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com a chave PIX manual.`);
+        // CEO-012: MP falhou totalmente — gerar estático como fallback
+        try {
+          const staticQr = generatePixStaticPayload({
+            pixKey: MARKETPLACE_PIX_KEY,
+            merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+            merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+            amount,
+            txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+            description: input.description || input.name,
+          });
+          result.pix.qrCode = staticQr.fullPayload;
+        } catch (_) { /* keep null */ }
+        warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com QR estático.`);
       }
 
       return result;

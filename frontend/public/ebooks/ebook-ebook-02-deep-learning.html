@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📘 Sumário</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>title: "Deep Learning: CNNs, RNNs e Transformers"
+subtitle: "A Anatomia dos Modelos que Mudaram o Mundo"
+author: "Nexus Affil'IA'te MMN_IA"
+collection: "Curso Universo IA — Coletânea Técnica Vol. 02"
+version: "1.0"
+date: "2026-06"
+classification: "Acadêmico · Técnico · PhD-Level"</p>
+<hr />
+<p><img alt="Capa" src="/ebooks/covers/curso-universo-ia--ebook-02-deep-learning.svg" /></p>
+<blockquote>
+<p><em>"Deep Learning não é uma tecnologia. É uma mudança na forma como representamos conhecimento."</em>
+— Nexus Affil'IA'te MMN_IA</p>
+</blockquote>
+<hr />
+<h1>📘 Sumário</h1>
+<ol>
+<li><strong>Prólogo — A Revolução Profunda</strong></li>
+<li><strong>Capítulo 1 — O Neurônio Artificial</strong></li>
+<li><strong>Capítulo 2 — A Rede Neural Feedforward</strong></li>
+<li><strong>Capítulo 3 — Funções de Ativação</strong></li>
+<li><strong>Capítulo 4 — Forward Propagation</strong></li>
+<li><strong>Capítulo 5 — Backpropagation — A Mágica do Aprendizado</strong></li>
+<li><strong>Capítulo 6 — Gradient Descent e suas Variantes</strong></li>
+<li><strong>Capítulo 7 — Inicialização de Pesos</strong></li>
+<li><strong>Capítulo 8 — Batch Normalization e Layer Norm</strong></li>
+<li><strong>Capítulo 9 — Regularização em Deep Learning</strong></li>
+<li><strong>Capítulo 10 — Otimizadores Modernos (Adam, AdamW)</strong></li>
+<li><strong>Capítulo 11 — Redes Neurais Convolucionais (CNN)</strong></li>
+<li><strong>Capítulo 12 — Aritmética da Convolução</strong></li>
+<li><strong>Capítulo 13 — Pooling e Arquiteturas Clássicas</strong></li>
+<li><strong>Capítulo 14 — ResNet, Inception, EfficientNet</strong></li>
+<li><strong>Capítulo 15 — Transfer Learning e Fine-Tuning</strong></li>
+<li><strong>Capítulo 16 — Redes Neurais Recorrentes (RNN)</strong></li>
+<li><strong>Capítulo 17 — LSTM e GRU — Portas que Resolvem o Esquecimento</strong></li>
+<li><strong>Capítulo 18 — Seq2Seq e Attention</strong></li>
+<li><strong>Capítulo 19 — A Arquitetura Transformer</strong></li>
+<li><strong>Capítulo 20 — Self-Attention Multi-Cabeça</strong></li>
+<li><strong>Capítulo 21 — Positional Encoding</strong></li>
+<li><strong>Capítulo 22 — Vision Transformers (ViT)</strong></li>
+<li><strong>Capítulo 23 — Multimodal Deep Learning</strong></li>
+<li><strong>Capítulo 24 — Treinamento em Escala (Distributed Training)</strong></li>
+<li><strong>Capítulo 25 — O Estado da Arte em 2026</strong></li>
+<li><strong>Glossário</strong></li>
+<li><strong>Referências</strong></li>
+</ol>
+<hr />
+<h1>Prólogo — A Revolução Profunda</h1>
+<p>Em 2012, três pesquisadores — <strong>Alex Krizhevsky, Ilya Sutskever e Geoffrey Hinton</strong> — apresentaram a <strong>AlexNet</strong> e venceram o ImageNet por uma margem absurda (15.3% vs. 26.2% de erro top-5). Foi o Big Bang do Deep Learning moderno.</p>
+<p>O que havia de especial? <strong>Profundidade</strong>. Uma rede com 8 camadas, 60 milhões de parâmetros, treinada em GPUs, que aprendeu representações hierárquicas de imagens — sozinha, sem feature engineering manual.</p>
+<p>Esse foi o início de uma década de revolução:</p>
+<ul>
+<li><strong>2014:</strong> GANs (Goodfellow), VGG, Inception.</li>
+<li><strong>2015:</strong> ResNet (He et al.), BatchNorm, AlphaGo.</li>
+<li><strong>2016:</strong> AlphaGo derrota Lee Sedol.</li>
+<li><strong>2017:</strong> Transformer (Vaswani et al.) — "Attention is all you need".</li>
+<li><strong>2018:</strong> BERT, GPT-2.</li>
+<li><strong>2020:</strong> GPT-3 (175B parâmetros).</li>
+<li><strong>2022:</strong> ChatGPT — IA generativa entra na cultura popular.</li>
+<li><strong>2023-2026:</strong> Foundation models multimodais, AI agents autônomos.</li>
+</ul>
+<p>Este volume é a <strong>anatomia</strong> desses modelos. Vamos dissecar neurônio por neurônio, camada por camada, atenção por atenção.</p>
+<hr />
+<h1>Capítulo 1 — O Neurônio Artificial</h1>
+<h2>1.1 Inspiração Biológica</h2>
+<p>O neurônio biológico:
+1. Recebe sinais nos dendritos.
+2. Processa no soma.
+3. Gera spike no axônio se ultrapassar threshold.</p>
+<p>O neurônio artificial (McCulloch-Pitts, 1943; Perceptron de Rosenblatt, 1958) imita isso:</p>
+<p>$$z = \sum_{i=1}^{n} w_i x_i + b, \quad a = \sigma(z)$$</p>
+<h2>1.2 O Perceptron</h2>
+<p>Função de ativação <strong>step</strong>:
+$$a = \begin{cases} 1 &amp; \text{se } z \geq 0 \ 0 &amp; \text{caso contrário} \end{cases}$$</p>
+<p><strong>Limitação:</strong> Não resolve XOR (Minsky &amp; Papert, 1969).</p>
+<h2>1.3 Solução: Múltiplas Camadas</h2>
+<p>Empilhar perceptrons em camadas resolve problemas não-lineares. <strong>A função de ativação não-linear</strong> é o ingrediente mágico.</p>
+<p><img alt="Diagrama: Rede Neural Profunda" src="../../assets/ebook_covers/curso_universo_ia/diagram_neural_net.png" /></p>
+<hr />
+<h1>Capítulo 2 — A Rede Neural Feedforward</h1>
+<h2>2.1 Arquitetura</h2>
+<p>Uma rede feedforward (MLP — Multi-Layer Perceptron) tem:
+- <strong>Camada de entrada (L0):</strong> n neurônios (uma por feature).
+- <strong>Camadas ocultas (L1, L2, ..., Lk):</strong> Processamento intermediário.
+- <strong>Camada de saída (Lk+1):</strong> m neurônios (uma por classe ou 1 para regressão).</p>
+<h2>2.2 Notação</h2>
+<ul>
+<li>$a^{(l)}$: Ativações da camada l</li>
+<li>$W^{(l)}$: Matriz de pesos da camada l (shape: nₗ × nₗ₋₁)</li>
+<li>$b^{(l)}$: Vetor de bias da camada l</li>
+<li>$z^{(l)} = W^{(l)} a^{(l-1)} + b^{(l)}$</li>
+<li>$a^{(l)} = \sigma(z^{(l)})$</li>
+</ul>
+<h2>2.3 Capacidade Representacional</h2>
+<p><strong>Teorema da Aproximação Universal (Cybenko, 1989):</strong>
+Uma rede neural feedforward com uma única camada oculta e ativação sigmoidal pode aproximar <strong>qualquer função contínua</strong> em um compacto, com precisão arbitrária, desde que tenha neurônios suficientes.</p>
+<p><strong>Limitação do teorema:</strong> Não diz <strong>quão</strong> muitos neurônios, nem como <strong>encontrar</strong> os pesos certos.</p>
+<h2>2.4 Por que Profundidade &gt; Largura?</h2>
+<p>Pesquisa recente (Eldan &amp; Shamir, 2016; Telgarsky, 2016) mostra que redes profundas são <strong>exponencialmente mais eficientes</strong> que rasas para certas funções.</p>
+<hr />
+<h1>Capítulo 3 — Funções de Ativação</h1>
+<h2>3.1 Sigmoid</h2>
+<p>$$\sigma(x) = \frac{1}{1 + e^{-x}}$$</p>
+<p><strong>Problemas:</strong>
+- Vanishing gradient (saturação em ±x)
+- Output não centrado em zero
+- Custo computacional (exp)</p>
+<h2>3.2 Tanh</h2>
+<p>$$\tanh(x) = 2\sigma(2x) - 1$$</p>
+<p>Centrada em zero, mas ainda sofre vanishing gradient.</p>
+<h2>3.3 ReLU (Rectified Linear Unit)</h2>
+<p>$$\text{ReLU}(x) = \max(0, x)$$</p>
+<p><strong>Vantagens:</strong>
+- Computacionalmente barato
+- Não satura para x &gt; 0
+- Induz esparsidade
+- Convergência 6x mais rápida que sigmoid/tanh (Krizhevsky, 2012)</p>
+<p><strong>Problema:</strong> "Dying ReLU" — neurônios podem morrer (gradient = 0 para x &lt; 0).</p>
+<h2>3.4 Leaky ReLU</h2>
+<p>$$\text{LeakyReLU}(x) = \max(\alpha x, x), \quad \alpha = 0.01$$</p>
+<p>Resolve o dying ReLU.</p>
+<h2>3.5 GELU (Gaussian Error Linear Unit)</h2>
+<p>$$\text{GELU}(x) = x \cdot \Phi(x)$$</p>
+<p>Usada em <strong>GPT</strong>, BERT, e transformers modernos.</p>
+<h2>3.6 SwiGLU e Swish</h2>
+<p>$$\text{Swish}(x) = x \cdot \sigma(\beta x)$$
+$$\text{SwiGLU}(x) = \text{Swish}(xW) \otimes xV$$</p>
+<p>Usadas em <strong>LLaMA</strong>, <strong>PaLM</strong>, <strong>Mistral</strong>.</p>
+<h2>3.7 Softmax (Camada de Saída)</h2>
+<p>$$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$$</p>
+<p>Converte logits em distribuição de probabilidade (classificação multi-classe).</p>
+<hr />
+<h1>Capítulo 4 — Forward Propagation</h1>
+<h2>4.1 Algoritmo</h2>
+<pre><code>def forward(x, params):
+    a = x
+    for l in range(L):
+        z[l+1] = W[l+1] @ a + b[l+1]
+        a = activation(z[l+1])
+    return a
+</code></pre>
+<h2>4.2 Vectorização</h2>
+<p>Em vez de loops, processe <strong>batches</strong> com matrizes:</p>
+<p>$$Z^{[l+1]} = W^{[l+1]} A^{[l]} + b^{[l+1]}$$</p>
+<p>Onde A tem shape (n_features, batch_size).</p>
+<h2>4.3 Custo Computacional</h2>
+<p>Para uma camada densa com n entrada e m saída:
+- <strong>Multiplicações:</strong> n·m
+- <strong>Memória para ativações:</strong> batch_size · m</p>
+<hr />
+<h1>Capítulo 5 — Backpropagation — A Mágica do Aprendizado</h1>
+<h2>5.1 A Ideia</h2>
+<p>Backprop (Rumelhart, Hinton, Williams, 1986) calcula o gradiente da loss em relação a <strong>todos os pesos</strong> da rede, de trás para frente, usando a <strong>regra da cadeia</strong>.</p>
+<h2>5.2 Regra da Cadeia</h2>
+<p>Se $L = f(g(h(x)))$, então:</p>
+<p>$$\frac{dL}{dx} = \frac{df}{dg} \cdot \frac{dg}{dh} \cdot \frac{dh}{dx}$$</p>
+<h2>5.3 Algoritmo</h2>
+<pre><code>def backward(y_true, y_pred, cache):
+    dA[L] = - (y_true / y_pred) + ((1 - y_true) / (1 - y_pred))
+    for l in reversed(range(L)):
+        dZ[l] = dA[l] * activation_derivative(Z[l])
+        dW[l] = (1/m) * dZ[l] @ A[l-1].T
+        db[l] = (1/m) * np.sum(dZ[l], axis=1, keepdims=True)
+        dA[l-1] = W[l].T @ dZ[l]
+    return dW, db
+</code></pre>
+<h2>5.4 Intuição</h2>
+<ul>
+<li><strong>Forward:</strong> computa a predição.</li>
+<li><strong>Backward:</strong> mede a "culpa" de cada peso pelo erro.</li>
+<li><strong>Update:</strong> ajusta pesos na direção que reduz erro.</li>
+</ul>
+<h2>5.5 Vanishing e Exploding Gradients</h2>
+<p>Em redes profundas, gradientes podem:
+- <strong>Desaparecer</strong> → 0 (ativação sigmoidal, inicialização ruim)
+- <strong>Explodir</strong> → ∞ (multiplicação por pesos grandes)</p>
+<p><strong>Soluções:</strong>
+- Ativações ReLU
+- Inicialização He/Xavier
+- Batch Normalization
+- Residual connections (ResNet)
+- Gradient clipping</p>
+<hr />
+<h1>Capítulo 6 — Gradient Descent e suas Variantes</h1>
+<h2>6.1 Batch Gradient Descent (BGD)</h2>
+<p>Usa <strong>todo</strong> o dataset para calcular o gradiente:
+$$\theta := \theta - \alpha \nabla_\theta J(\theta)$$</p>
+<p><strong>Prós:</strong> Convergência suave.
+<strong>Contras:</strong> Lento para datasets grandes, pode ficar preso em mínimos locais.</p>
+<h2>6.2 Stochastic Gradient Descent (SGD)</h2>
+<p>Usa <strong>uma amostra</strong> por vez:
+$$\theta := \theta - \alpha \nabla_\theta J(\theta; x^{(i)}; y^{(i)})$$</p>
+<p><strong>Prós:</strong> Rápido, pode escapar de mínimos locais.
+<strong>Contras:</strong> Ruidoso, nunca converge "exatamente".</p>
+<h2>6.3 Mini-Batch SGD</h2>
+<p>Compromisso: usa <strong>batches</strong> de 32-512 amostras.
+- Mais eficiente computacionalmente (vetorização).
+- Menos ruído que SGD puro.</p>
+<h2>6.4 SGD com Momentum</h2>
+<p>$$v_t = \beta v_{t-1} + \nabla_\theta J(\theta)$$
+$$\theta := \theta - \alpha v_t$$</p>
+<p>Acelera convergência em vales alongados.</p>
+<h2>6.5 Nesterov Accelerated Gradient (NAG)</h2>
+<p>Olha adiante antes de calcular o gradiente:
+$$v_t = \beta v_{t-1} + \nabla_\theta J(\theta - \beta v_{t-1})$$</p>
+<p><img alt="Diagrama: Gradient Descent no Loss Landscape" src="../../assets/ebook_covers/curso_universo_ia/diagram_gradient.png" /></p>
+<hr />
+<h1>Capítulo 7 — Inicialização de Pesos</h1>
+<h2>7.1 Por que Importa</h2>
+<p>Inicialização ruim = vanishing/exploding gradient. Boa inicialização = treino estável e rápido.</p>
+<h2>7.2 Xavier/Glorot (2010)</h2>
+<p>Para ativação <strong>tanh</strong>:
+$$W \sim \mathcal{N}\left(0, \frac{1}{n_{in}}\right) \text{ ou } U\left(-\frac{1}{\sqrt{n_{in}}}, \frac{1}{\sqrt{n_{in}}}\right)$$</p>
+<h2>7.3 He/Kaiming (2015)</h2>
+<p>Para ativação <strong>ReLU</strong>:
+$$W \sim \mathcal{N}\left(0, \frac{2}{n_{in}}\right)$$</p>
+<h2>7.4 Inicialização LeCun</h2>
+<p>$$W \sim \mathcal{N}\left(0, \frac{1}{n_{in}}\right)$$</p>
+<p>Para SELU e outras ativações self-normalizing.</p>
+<hr />
+<h1>Capítulo 8 — Batch Normalization e Layer Norm</h1>
+<h2>8.1 Batch Normalization (Ioffe &amp; Szegedy, 2015)</h2>
+<p>Normaliza as ativações de uma camada <strong>por batch</strong>:</p>
+<p>$$\hat{z}^{(i)} = \frac{z^{(i)} - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$$</p>
+<p>$$a^{(i)} = \gamma \hat{z}^{(i)} + \beta$$</p>
+<p><strong>Benefícios:</strong>
+- Permite learning rates maiores
+- Reduz sensibilidade à inicialização
+- Atua como regularizador
+- Acelera convergência</p>
+<h2>8.2 Layer Normalization</h2>
+<p>Normaliza <strong>por feature</strong> (cada exemplo isoladamente), não por batch.</p>
+<p>Usada em <strong>Transformers</strong> (ao invés de BatchNorm) porque batches em NLP têm tamanhos variáveis.</p>
+<h2>8.3 Group Normalization e Instance Norm</h2>
+<ul>
+<li><strong>Group Norm:</strong> Divide canais em grupos, normaliza cada grupo.</li>
+<li><strong>Instance Norm:</strong> Normaliza por canal, útil em style transfer.</li>
+</ul>
+<hr />
+<h1>Capítulo 9 — Regularização em Deep Learning</h1>
+<h2>9.1 Dropout (Srivastava et al., 2014)</h2>
+<p>Durante treino, <strong>desativa aleatoriamente</strong> p% dos neurônios. Força a rede a não depender de features específicas.</p>
+<p><strong>Inverted dropout:</strong></p>
+<pre><code>def train_step(x):
+    mask = (np.random.rand(*x.shape) &lt; keep_prob) / keep_prob
+    return x * mask
+</code></pre>
+<h2>9.2 L1 e L2 Regularization</h2>
+<ul>
+<li><strong>L1 (Lasso):</strong> Adiciona λ‖w‖₁ à loss. Induz esparsidade.</li>
+<li><strong>L2 (Ridge):</strong> Adiciona λ‖w‖². Penaliza pesos grandes.</li>
+</ul>
+<h2>9.3 Early Stopping</h2>
+<p>Monitora val loss. Quando não melhora por N epochs, para o treino e retorna ao melhor checkpoint.</p>
+<h2>9.4 Data Augmentation</h2>
+<p>Cria variações dos dados:
+- <strong>Imagens:</strong> rotação, flip, crop, color jitter, mixup, cutmix.
+- <strong>Texto:</strong> substituição por sinônimos, back-translation.
+- <strong>Áudio:</strong> ruído, pitch shift, time stretch.</p>
+<h2>9.5 Label Smoothing</h2>
+<p>Substitui one-hot por $(1-\epsilon)\mathbf{y} + \epsilon/K$ para evitar overconfidence.</p>
+<hr />
+<h1>Capítulo 10 — Otimizadores Modernos</h1>
+<h2>10.1 Adam (Kingma &amp; Ba, 2015)</h2>
+<p>Combina momentum e adaptive learning rates:</p>
+<p>$$m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t$$
+$$v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2$$
+$$\hat{m}_t = \frac{m_t}{1-\beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1-\beta_2^t}$$
+$$\theta := \theta - \alpha \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$$</p>
+<h2>10.2 AdamW (Loshchilov &amp; Hutter, 2019)</h2>
+<p>Decoupling weight decay do gradiente:
+$$\theta := \theta - \alpha\left(\frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} + \lambda \theta\right)$$</p>
+<p>Padrão para treinar <strong>Transformers</strong>.</p>
+<h2>10.3 RMSProp</h2>
+<p>Adapta learning rate por parâmetro:
+$$v_t = \beta v_{t-1} + (1-\beta) g_t^2$$
+$$\theta := \theta - \alpha \frac{g_t}{\sqrt{v_t + \epsilon}}$$</p>
+<h2>10.4 Lion (Chen et al., 2023)</h2>
+<p>Mais memory-efficient que AdamW, com sign-based update.</p>
+<h2>10.5 Schedule Free Optimizers (2024)</h2>
+<p>Elimina a necessidade de learning rate schedules, usado em foundation models.</p>
+<hr />
+<h1>Capítulo 11 — Redes Neurais Convolucionais (CNN)</h1>
+<h2>11.1 A Inspiração</h2>
+<p>Hubel &amp; Wiesel (1959) descobriram que o córtex visual de gatos tem neurônios que respondem a <strong>padrões locais</strong> (bordas, orientações). CNNs imitam isso.</p>
+<h2>11.2 Três Ideias Fundamentais</h2>
+<ol>
+<li><strong>Conectividade local:</strong> Cada neurônio vê apenas uma região local.</li>
+<li><strong>Pesos compartilhados:</strong> O mesmo filtro é aplicado em toda a imagem.</li>
+<li><strong>Pooling:</strong> Reduz dimensionalidade e adiciona invariância.</li>
+</ol>
+<h2>11.3 Aplicações</h2>
+<ul>
+<li><strong>Visão computacional:</strong> classificação, detecção, segmentação.</li>
+<li><strong>Imagem médica:</strong> raio-X, ressonância.</li>
+<li><strong>Self-driving cars:</strong> detecção de pedestres, sinais.</li>
+<li><strong>Reconhecimento facial:</strong> FaceNet, ArcFace.</li>
+</ul>
+<p><img alt="Diagrama: CNN Architecture" src="../../assets/ebook_covers/curso_universo_ia/diagram_cnn.png" /></p>
+<hr />
+<h1>Capítulo 12 — Aritmética da Convolução</h1>
+<h2>12.1 Convolução Discreta 2D</h2>
+<p>$$(I * K)(i, j) = \sum_{m}\sum_{n} I(i+m, j+n) K(m, n)$$</p>
+<p>Onde I é a imagem e K é o kernel (filtro).</p>
+<h2>12.2 Parâmetros</h2>
+<ul>
+<li><strong>Kernel size (k):</strong> geralmente 3×3 ou 5×5.</li>
+<li><strong>Stride (s):</strong> passo do filtro. s=1 mantém, s=2 reduz pela metade.</li>
+<li><strong>Padding (p):</strong> zeros ao redor para manter dimensões.</li>
+</ul>
+<h2>12.3 Dimensão de Saída</h2>
+<p>$$n_{out} = \left\lfloor \frac{n_{in} + 2p - k}{s} \right\rfloor + 1$$</p>
+<h2>12.4 Tipos de Convolução</h2>
+<ul>
+<li><strong>Standard Conv:</strong> Cada filtro olha todos os canais de entrada.</li>
+<li><strong>Depthwise Separable Conv (MobileNet):</strong> Fatoriza em depthwise + pointwise. 9x menos parâmetros.</li>
+<li><strong>Dilated/Atrous Conv:</strong> Pula pixels, expande receptive field.</li>
+<li><strong>Transposed Conv:</strong> Aumenta resolução (usada em GANs, U-Net).</li>
+</ul>
+<hr />
+<h1>Capítulo 13 — Pooling e Arquiteturas Clássicas</h1>
+<h2>13.1 Max Pooling</h2>
+<p>Seleciona o maior valor em cada janela (ex: 2×2). Reduz dimensionalidade e adiciona invariância a translação.</p>
+<h2>13.2 Average Pooling</h2>
+<p>Tira a média. Menos agressivo, preserva mais informação.</p>
+<h2>13.3 Global Average Pooling</h2>
+<p>Reduz cada feature map a um único número (média de todos os pixels). Usada em vez de flatten no final de muitas CNNs.</p>
+<h2>13.4 LeNet-5 (1998)</h2>
+<p>Primeira CNN bem-sucedida, usada para dígitos MNIST.</p>
+<h2>13.5 AlexNet (2012)</h2>
+<p>8 camadas, 60M parâmetros, venceu ImageNet. Introduziu ReLU, dropout, GPU training.</p>
+<h2>13.6 VGG-16 (2014)</h2>
+<p>13 camadas convolucionais + 3 fully connected. Simples, 138M parâmetros. Demonstrou que <strong>profundidade ajuda</strong>.</p>
+<hr />
+<h1>Capítulo 14 — ResNet, Inception, EfficientNet</h1>
+<h2>14.1 O Problema da Profundidade</h2>
+<p>Em 2015, redes com 50+ camadas tinham <strong>pior</strong> performance que redes de 20 camadas. Por quê? Otimização, não capacidade.</p>
+<h2>14.2 ResNet (He et al., 2015)</h2>
+<p><strong>Residual Connection:</strong>
+$$H(x) = F(x) + x$$</p>
+<p>A camada aprende o <strong>residual</strong> $F(x) = H(x) - x$, que é mais fácil que aprender $H(x)$ do zero.</p>
+<p><strong>ResNet-50:</strong> 50 camadas, 25M parâmetros.
+<strong>ResNet-152:</strong> 152 camadas, 60M parâmetros.</p>
+<p><strong>Variação:</strong> ResNeXt, Wide ResNet, DenseNet (cada camada conecta todas as anteriores).</p>
+<h2>14.3 Inception/GoogLeNet (Szegedy et al., 2014)</h2>
+<p>Aplica <strong>múltiplos filtros</strong> (1×1, 3×3, 5×5, pool) em paralelo, concatena resultados. Mais eficiente que uma convolução grande.</p>
+<p><strong>Inception-v3, v4:</strong> Refinamentos.</p>
+<h2>14.4 EfficientNet (Tan &amp; Le, 2019)</h2>
+<p><strong>Compound Scaling:</strong> Escala uniformemente profundidade, largura e resolução.</p>
+<p>$$\text{depth} = \alpha^\phi, \quad \text{width} = \beta^\phi, \quad \text{resolution} = \gamma^\phi$$</p>
+<p><strong>EfficientNet-B7:</strong> Melhor accuracy/FLOPs trade-off.</p>
+<h2>14.5 ConvNeXt (2022)</h2>
+<p>"Modernizar" uma CNN padrão com idéias de Transformers (depthwise conv, LayerNorm, GELU). Supera Swin Transformer em muitas tarefas.</p>
+<hr />
+<h1>Capítulo 15 — Transfer Learning e Fine-Tuning</h1>
+<h2>15.1 O Conceito</h2>
+<p>Modelos treinados em datasets grandes (ex: ImageNet) aprendem <strong>representações gerais</strong>. Podemos reusar para tarefas específicas.</p>
+<h2>15.2 Estratégia</h2>
+<ol>
+<li><strong>Carregue</strong> modelo pré-treinado (ex: ResNet-50 no ImageNet).</li>
+<li><strong>Remova</strong> a última camada (classificador).</li>
+<li><strong>Adicione</strong> nova cabeça para sua tarefa.</li>
+<li><strong>Congele</strong> as primeiras camadas (features genéricas).</li>
+<li><strong>Treine</strong> apenas a nova cabeça.</li>
+<li><strong>Fine-tune</strong> (opcional) das últimas camadas com learning rate baixo.</li>
+</ol>
+<h2>15.3 Por que Funciona?</h2>
+<p>Camadas iniciais aprendem features genéricas (bordas, texturas), camadas finais aprendem features específicas da tarefa. Reusar as primeiras é eficiente.</p>
+<h2>15.4 Foundation Models</h2>
+<p>Modelos treinados em escala massiva que servem como base para múltiplas tarefas:
+- <strong>CLIP (OpenAI):</strong> Texto + Imagem.
+- <strong>DINOv2 (Meta):</strong> Features visuais self-supervisionadas.
+- <strong>BERT/GPT:</strong> Texto.
+- <strong>Whisper:</strong> Áudio.</p>
+<hr />
+<h1>Capítulo 16 — Redes Neurais Recorrentes (RNN)</h1>
+<h2>16.1 A Motivação</h2>
+<p>Redes feedforward processam cada entrada <strong>independentemente</strong>. Mas texto, áudio e séries temporais são <strong>sequências</strong> — a ordem importa.</p>
+<h2>16.2 A Arquitetura</h2>
+<p>$$h_t = \sigma(W_h h_{t-1} + W_x x_t + b)$$
+$$y_t = \text{softmax}(W_y h_t)$$</p>
+<p>O <strong>hidden state</strong> $h_t$ carrega informação do passado.</p>
+<h2>16.3 Tipos de Sequência</h2>
+<ul>
+<li><strong>One-to-many:</strong> Imagem → Descrição (captioning).</li>
+<li><strong>Many-to-one:</strong> Texto → Sentimento.</li>
+<li><strong>Many-to-many:</strong> Tradução, vídeo captioning.</li>
+<li><strong>Sync many-to-many:</strong> Cada timestep tem saída (tagging).</li>
+</ul>
+<h2>16.4 O Problema: Vanishing/Exploding Gradient</h2>
+<p>Em sequências longas, gradientes são multiplicados muitas vezes pela mesma matriz $W_h$:
+- Se maior que 1 → explode.
+- Se menor que 1 → desaparece.</p>
+<p><strong>Consequência:</strong> RNNs "esquecem" dependências de longo prazo.</p>
+<h2>16.5 Backpropagation Through Time (BPTT)</h2>
+<p>Aplicar backprop "desenrolando" a RNN ao longo de T timesteps. Custo computacional alto, memória alta.</p>
+<p><img alt="Diagrama: RNN e LSTM" src="../../assets/ebook_covers/curso_universo_ia/diagram_rnn.png" /></p>
+<hr />
+<h1>Capítulo 17 — LSTM e GRU — Portas que Resolvem o Esquecimento</h1>
+<h2>17.1 LSTM (Long Short-Term Memory) (Hochreiter &amp; Schmidhuber, 1997)</h2>
+<p>LSTM resolve o vanishing gradient com <strong>gates</strong> que controlam o fluxo de informação:</p>
+<p><strong>Forget gate:</strong> $f_t = \sigma(W_f [h_{t-1}, x_t] + b_f)$
+<strong>Input gate:</strong> $i_t = \sigma(W_i [h_{t-1}, x_t] + b_i)$
+<strong>Candidate:</strong> $\tilde{C}<em>t = \tanh(W_C [h</em>{t-1}, x_t] + b_C)$
+<strong>Cell state:</strong> $C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}<em>t$
+<strong>Output gate:</strong> $o_t = \sigma(W_o [h</em>{t-1}, x_t] + b_o)$
+<strong>Hidden state:</strong> $h_t = o_t \odot \tanh(C_t)$</p>
+<h2>17.2 GRU (Gated Recurrent Unit) (Cho et al., 2014)</h2>
+<p>Versão simplificada do LSTM, com 2 gates ao invés de 3:
+- <strong>Update gate:</strong> Decide quanto do passado manter.
+- <strong>Reset gate:</strong> Decide quanto do passado esquecer.</p>
+<h2>17.3 Performance</h2>
+<ul>
+<li><strong>LSTM</strong> ≈ <strong>GRU</strong> em performance, GRU é mais rápido.</li>
+<li>Ambos superam vanilla RNN em sequências longas.</li>
+<li>Transformers superam ambos em NLP moderno.</li>
+</ul>
+<hr />
+<h1>Capítulo 18 — Seq2Seq e Attention</h1>
+<h2>18.1 Seq2Seq (Sutskever et al., 2014)</h2>
+<p>Encoder-Decoder para tradução:
+- <strong>Encoder:</strong> Lê sequência inteira, gera contexto $C$.
+- <strong>Decoder:</strong> Gera saída a partir de $C$.</p>
+<p><strong>Problema:</strong> $C$ tem tamanho fixo. Sequências longas comprimem informação.</p>
+<h2>18.2 Attention Mechanism (Bahdanau et al., 2015)</h2>
+<p>Em vez de usar um único $C$, <strong>attention</strong> permite ao decoder olhar para <strong>todos os hidden states</strong> do encoder, pesando por relevância:</p>
+<p>$$\alpha_t = \text{softmax}(e_t), \quad e_{t,i} = \text{score}(s_{t-1}, h_i)$$
+$$c_t = \sum_i \alpha_{t,i} h_i$$</p>
+<h2>18.3 Self-Attention</h2>
+<p>Attention <strong>dentro da mesma sequência</strong>:
+- Cada posição atende a todas as posições.
+- Captura dependências de longo alcance.
+- <strong>Base dos Transformers</strong>.</p>
+<hr />
+<h1>Capítulo 19 — A Arquitetura Transformer</h1>
+<h2>19.1 O Paper</h2>
+<p>"Attention is all you need" (Vaswani et al., 2017) eliminou RNNs e CNNs em favor de <strong>apenas attention</strong>.</p>
+<h2>19.2 Arquitetura Geral</h2>
+<pre><code>Input → Embedding + Positional Encoding
+     → N × [Multi-Head Self-Attention + Add&amp;Norm + FFN + Add&amp;Norm]
+     → Output
+</code></pre>
+<p><strong>Encoder:</strong> 6 camadas idênticas.
+<strong>Decoder:</strong> 6 camadas, com masked self-attention + encoder-decoder attention.</p>
+<p><img alt="Diagrama: Transformer Architecture" src="../../assets/ebook_covers/curso_universo_ia/diagram_transformer.png" /></p>
+<h2>19.3 Componentes</h2>
+<ol>
+<li><strong>Embedding</strong> — Mapeia tokens em vetores densos.</li>
+<li><strong>Positional Encoding</strong> — Adiciona informação de posição.</li>
+<li><strong>Multi-Head Attention</strong> — Múltiplas atenções em paralelo.</li>
+<li><strong>Feed-Forward Network (FFN)</strong> — 2 camadas densas com ReLU/GELU.</li>
+<li><strong>Add &amp; Norm</strong> — Conexão residual + LayerNorm.</li>
+</ol>
+<h2>19.4 Vantagens sobre RNN</h2>
+<ul>
+<li><strong>Paralelização:</strong> Atenção é O(1) em distância, RNN é O(n).</li>
+<li><strong>Long-range dependencies:</strong> Conexão direta entre quaisquer posições.</li>
+<li><strong>Treinamento mais rápido</strong> em hardware moderno.</li>
+</ul>
+<h2>19.5 Complexidade</h2>
+<p>Por camada:
+- <strong>Self-attention:</strong> O(n² · d) — atenção quadrática no comprimento.
+- <strong>FFN:</strong> O(n · d²)</p>
+<p>A complexidade quadrática no comprimento é o <strong>gargalo</strong> — alvo de muitas otimizações (Longformer, Flash Attention).</p>
+<hr />
+<h1>Capítulo 20 — Self-Attention Multi-Cabeça</h1>
+<h2>20.1 Scaled Dot-Product Attention</h2>
+<p>$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V$$</p>
+<p><strong>Interpretação:</strong>
+- $Q$ (Query): O que estou procurando?
+- $K$ (Key): O que cada posição oferece?
+- $V$ (Value): Informação a ser agregada.
+- $QK^T$: Similaridade entre queries e keys.
+- $\sqrt{d_k}$: Scaling para evitar softmax saturado.</p>
+<h2>20.2 Multi-Head</h2>
+<p>Em vez de uma atenção, fazemos $h$ atenções em paralelo, cada uma com diferentes projeções:</p>
+<p>$$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h) W^O$$</p>
+<p>$$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$</p>
+<p><strong>Por que múltiplas cabeças?</strong> Cada cabeça aprende a focar em diferentes aspectos (sintaxe, semântica, posição).</p>
+<h2>20.3 Attention Masking</h2>
+<ul>
+<li><strong>Padding mask:</strong> Ignora tokens de padding.</li>
+<li><strong>Causal mask:</strong> No decoder, impede olhar para o futuro.</li>
+</ul>
+<h2>20.4 Attention Visualizations</h2>
+<p>Pesos de atenção revelam o que o modelo "olha" —útil para interpretabilidade.</p>
+<p><img alt="Diagrama: Attention Mechanism" src="../../assets/ebook_covers/curso_universo_ia/diagram_attention.png" /></p>
+<hr />
+<h1>Capítulo 21 — Positional Encoding</h1>
+<h2>21.1 O Problema</h2>
+<p>Self-attention é <strong>permutation-equivariant</strong>: trocar tokens de ordem não muda o output. Precisamos injetar informação de posição.</p>
+<h2>21.2 Positional Encoding Sinusoidal (Transformer original)</h2>
+<p>$$PE_{(pos, 2i)} = \sin(pos / 10000^{2i/d})$$
+$$PE_{(pos, 2i+1)} = \cos(pos / 10000^{2i/d})$$</p>
+<p><strong>Vantagens:</strong>
+- Cada posição tem encoding único.
+- Pode generalizar para sequências mais longas.
+- Suave e contínuo.</p>
+<h2>21.3 Learned Positional Embeddings</h2>
+<p>Em BERT e GPT, posições são aprendidas como embeddings normais.</p>
+<h2>21.4 Rotary Position Embedding (RoPE)</h2>
+<p>Usado em <strong>LLaMA, Mistral, PaLM</strong>. Codifica posição com rotação no espaço:</p>
+<p>$$q'<em>i = R</em>{\theta, i} q_i, \quad k'<em>i = R</em>{\theta, i} k_i$$</p>
+<p><strong>Vantagem:</strong> Generaliza bem para comprimentos não vistos no treino.</p>
+<h2>21.5 ALiBi (Attention with Linear Biases)</h2>
+<p>Adiciona bias linear à attention matrix. Mais simples, boa generalização.</p>
+<hr />
+<h1>Capítulo 22 — Vision Transformers (ViT)</h1>
+<h2>22.1 A Ideia (Dosovitskiy et al., 2020)</h2>
+<p>Aplicar Transformer puro em imagens:
+1. Divida a imagem em <strong>patches</strong> (ex: 16×16).
+2. <strong>Achate</strong> cada patch em um vetor.
+3. <strong>Linear project</strong> para um embedding.
+4. Adicione <strong>positional embeddings</strong>.
+5. Passe por Transformer encoder padrão.</p>
+<h2>22.2 ViT-Base/Large/Huge</h2>
+<ul>
+<li><strong>ViT-B:</strong> 86M parâmetros, 12 camadas.</li>
+<li><strong>ViT-L:</strong> 307M parâmetros, 24 camadas.</li>
+<li><strong>ViT-H:</strong> 632M parâmetros, 32 camadas.</li>
+</ul>
+<h2>22.3 ViT vs. CNN</h2>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>CNN</th>
+<th>ViT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inductive bias</strong></td>
+<td>Localidade, translation equivariance</td>
+<td>Fraco (precisa de muito dado)</td>
+</tr>
+<tr>
+<td><strong>Data efficiency</strong></td>
+<td>Bom em datasets pequenos</td>
+<td>Precisa de milhões de imagens</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Saturates</td>
+<td>Improves com scale</td>
+</tr>
+<tr>
+<td><strong>Interpretabilidade</strong></td>
+<td>Filtros visíveis</td>
+<td>Attention maps</td>
+</tr>
+</tbody>
+</table>
+<h2>22.4 Híbridos CNN-Transformer</h2>
+<ul>
+<li><strong>CoAtNet:</strong> Convolução nos estágios iniciais, attention nos finais.</li>
+<li><strong>Swin Transformer:</strong> Hierarchical + shifted windows.</li>
+<li><strong>ConvNeXt:</strong> CNN com idéias de Transformer.</li>
+</ul>
+<hr />
+<h1>Capítulo 23 — Multimodal Deep Learning</h1>
+<h2>23.1 Os 4 Paradigmas</h2>
+<ol>
+<li><strong>Late Fusion:</strong> Modelos separados, combine features no final.</li>
+<li><strong>Early Fusion:</strong> Combine no nível de input.</li>
+<li><strong>Cross-Attention:</strong> Attention entre modalidades.</li>
+<li><strong>Unified Tokenization:</strong> Mesma representação para todas modalidades.</li>
+</ol>
+<h2>23.2 CLIP (Contrastive Language-Image Pre-training)</h2>
+<p>Treina um modelo com dois encoders (texto + imagem) usando <strong>contrastive loss</strong>:</p>
+<p>$$\mathcal{L} = -\frac{1}{N}\sum_i \log\frac{\exp(\text{sim}(I_i, T_i)/\tau)}{\sum_j \exp(\text{sim}(I_i, T_j)/\tau)}$$</p>
+<h2>23.3 Stable Diffusion / DALL-E</h2>
+<p>Modelos de <strong>diffusion</strong> que geram imagens a partir de texto.</p>
+<h2>23.4 Gemini (Google DeepMind)</h2>
+<p>Modelo <strong>nativamente multimodal</strong> — texto, imagem, áudio, vídeo em um único modelo desde o pré-treinamento.</p>
+<hr />
+<h1>Capítulo 24 — Treinamento em Escala</h1>
+<h2>24.1 Os Desafios</h2>
+<ul>
+<li><strong>Memória:</strong> Modelos grandes não cabem em uma GPU.</li>
+<li><strong>Tempo:</strong> Treinar GPT-4 custou ~3 meses em 25k GPUs.</li>
+<li><strong>Comunicação:</strong> Sincronizar gradientes em milhares de GPUs.</li>
+</ul>
+<h2>24.2 Data Parallelism</h2>
+<p>Cada GPU tem uma cópia do modelo, processa um mini-batch diferente. Sincroniza gradientes via <strong>all-reduce</strong>.</p>
+<h2>24.3 Model Parallelism</h2>
+<p>Divide o modelo entre GPUs:
+- <strong>Pipeline parallelism:</strong> Camadas diferentes em GPUs diferentes.
+- <strong>Tensor parallelism:</strong> Operações matriciais divididas.
+- <strong>Expert parallelism (MoE):</strong> Cada token ativa apenas alguns "experts".</p>
+<h2>24.4 ZeRO (Zero Redundancy Optimizer)</h2>
+<p>Da DeepSpeed (Microsoft). Divide optimizer state, gradients e parameters entre GPUs.</p>
+<h2>24.5 Mixed Precision Training</h2>
+<p>Usar <strong>FP16/BF16</strong> para forward/backward, <strong>FP32</strong> para atualização de pesos. Reduz memória e acelera treino.</p>
+<h2>24.6 Flash Attention (Dao et al., 2022)</h2>
+<p>Reformula attention para ser <strong>IO-aware</strong> — reduz memória de O(n²) para O(n) e acelera 2-4x.</p>
+<h2>24.7 FSDP (Fully Sharded Data Parallel)</h2>
+<p>Equivalente do ZeRO-3 no PyTorch nativo.</p>
+<hr />
+<h1>Capítulo 25 — O Estado da Arte em 2026</h1>
+<h2>25.1 Foundation Models Dominantes</h2>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Empresa</th>
+<th>Parâmetros</th>
+<th>Modalidades</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPT-4o / GPT-5</strong></td>
+<td>OpenAI</td>
+<td>~trilhões (MoE)</td>
+<td>Texto, visão, áudio</td>
+</tr>
+<tr>
+<td><strong>Claude 4 Opus</strong></td>
+<td>Anthropic</td>
+<td>?</td>
+<td>Texto, visão</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.0 Ultra</strong></td>
+<td>Google DeepMind</td>
+<td>trilhões</td>
+<td>Texto, visão, áudio, vídeo</td>
+</tr>
+<tr>
+<td><strong>Llama 4</strong></td>
+<td>Meta</td>
+<td>70B-405B</td>
+<td>Texto, visão</td>
+</tr>
+<tr>
+<td><strong>Mistral Large 3</strong></td>
+<td>Mistral</td>
+<td>123B</td>
+<td>Texto</td>
+</tr>
+<tr>
+<td><strong>Grok 3</strong></td>
+<td>xAI</td>
+<td>?</td>
+<td>Texto, visão</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V4</strong></td>
+<td>DeepSeek</td>
+<td>670B (MoE)</td>
+<td>Texto, código</td>
+</tr>
+</tbody>
+</table>
+<h2>25.2 Tendências</h2>
+<ul>
+<li><strong>Mixture of Experts (MoE):</strong> Ativação esparsa, escala de parâmetros sem escala de compute.</li>
+<li><strong>Long Context:</strong> 1M+ tokens (Gemini 1.5 Pro, Claude 3.5).</li>
+<li><strong>Reasoning Models:</strong> o1, o3, R1 — chain-of-thought latente.</li>
+<li><strong>Agentic AI:</strong> LLMs que usam ferramentas e tomam ações.</li>
+<li><strong>Synthetic Data:</strong> Modelos treinando modelos.</li>
+<li><strong>Constitutional AI:</strong> Alinhamento por princípios escritos.</li>
+</ul>
+<h2>25.3 O Que Falta Resolver</h2>
+<ul>
+<li><strong>Hallucination:</strong> Modelos ainda inventam fatos.</li>
+<li><strong>Reasoning:</strong> LLM ainda falha em lógica multi-step complexa.</li>
+<li><strong>Eficiência:</strong> Treinar um modelo grande custa milhões de dólares.</li>
+<li><strong>Alignment:</strong> Como garantir que IAs façam o que queremos, especialmente em agentic settings.</li>
+<li><strong>Interpretabilidade:</strong> Mecanistic interpretability (Anthropic) está apenas começando.</li>
+</ul>
+<hr />
+<h1>Glossário</h1>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Backpropagation</strong></td>
+<td>Algoritmo para calcular gradientes em redes neurais.</td>
+</tr>
+<tr>
+<td><strong>CNN</strong></td>
+<td>Rede Neural Convolucional.</td>
+</tr>
+<tr>
+<td><strong>Embedding</strong></td>
+<td>Representação densa de dados discretos em ℝᵈ.</td>
+</tr>
+<tr>
+<td><strong>Fine-Tuning</strong></td>
+<td>Ajuste de modelo pré-treinado em tarefa específica.</td>
+</tr>
+<tr>
+<td><strong>Gradient Descent</strong></td>
+<td>Algoritmo de otimização.</td>
+</tr>
+<tr>
+<td><strong>Layer Norm</strong></td>
+<td>Normalização por feature.</td>
+</tr>
+<tr>
+<td><strong>LSTM</strong></td>
+<td>Long Short-Term Memory.</td>
+</tr>
+<tr>
+<td><strong>Momentum</strong></td>
+<td>Técnica para acelerar gradient descent.</td>
+</tr>
+<tr>
+<td><strong>ReLU</strong></td>
+<td>Função de ativação linear retificada.</td>
+</tr>
+<tr>
+<td><strong>RNN</strong></td>
+<td>Rede Neural Recorrente.</td>
+</tr>
+<tr>
+<td><strong>Self-Attention</strong></td>
+<td>Attention dentro da mesma sequência.</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>Unidade básica processada por um modelo.</td>
+</tr>
+<tr>
+<td><strong>Transformer</strong></td>
+<td>Arquitetura baseada em atenção.</td>
+</tr>
+<tr>
+<td><strong>Vanishing Gradient</strong></td>
+<td>Gradiente que se torna muito pequeno.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1>Referências</h1>
+<ol>
+<li><strong>LeCun, Y., Bengio, Y., Hinton, G.</strong> (2015). <em>Deep learning</em>. Nature.</li>
+<li><strong>Goodfellow, I., Bengio, Y., Courville, A.</strong> (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li><strong>He, K. et al.</strong> (2016). <em>Deep Residual Learning for Image Recognition</em>. CVPR.</li>
+<li><strong>Vaswani, A. et al.</strong> (2017). <em>Attention is all you need</em>. NeurIPS.</li>
+<li><strong>Hochreiter, S., Schmidhuber, J.</strong> (1997). <em>Long Short-Term Memory</em>. Neural Computation.</li>
+<li><strong>Devlin, J. et al.</strong> (2018). <em>BERT: Pre-training of Deep Bidirectional Transformers</em>. NAACL.</li>
+<li><strong>Brown, T. et al.</strong> (2020). <em>Language Models are Few-Shot Learners</em>. NeurIPS.</li>
+<li><strong>Dosovitskiy, A. et al.</strong> (2020). <em>An Image is Worth 16x16 Words</em>. ICLR.</li>
+<li><strong>Kingma, D., Ba, J.</strong> (2015). <em>Adam: A Method for Stochastic Optimization</em>. ICLR.</li>
+<li><strong>Ioffe, S., Szegedy, C.</strong> (2015). <em>Batch Normalization</em>. ICML.</li>
+<li><strong>Srivastava, N. et al.</strong> (2014). <em>Dropout</em>. JMLR.</li>
+<li><strong>Dao, T. et al.</strong> (2022). <em>FlashAttention: Fast and Memory-Efficient Exact Attention</em>. NeurIPS.</li>
+<li><strong>Bahdanau, D. et al.</strong> (2015). <em>Neural Machine Translation by Jointly Learning to Align and Translate</em>. ICLR.</li>
+<li><strong>Mnih, V. et al.</strong> (2015). <em>Human-level control through deep reinforcement learning</em>. Nature.</li>
+</ol>
+<hr />
+<p><strong>Fim do Volume 02</strong></p>
+<blockquote>
+<p><em>"O Transformer é a invenção mais importante em Deep Learning desde o backpropagation. Ele mudou não só o que a IA pode fazer, mas o que podemos imaginar."</em>
+— Nexus Affil'IA'te MMN_IA</p>
+</blockquote>
+<p><img alt="Imagem de Encerramento" src="../../assets/ebook_covers/curso_universo_ia/closing_quote.png" /></p>
+<hr />
+<p><strong>© 2026 Nexus Affil'IA'te MMN_IA · Curso Universo IA · Coletânea Técnica</strong></p></body>
+</html>

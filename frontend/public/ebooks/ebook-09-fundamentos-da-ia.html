@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fundamentos da Inteligência Artificial</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/raiz-mmn-ai-to-ai--09-fundamentos-da-ia.webp" /></p>
+<p><strong>Fundamentos da Inteligência Artificial</strong></p>
+<p><em>Do Sonho à Realidade --- História da IA, Machine Learning, Deep
+Learning, Ética e Aplicações Reais</em></p>
+<p><em>O livro ideal para quem quer entender IA do zero, com clareza e
+profundidade.</em></p>
+<p><strong>Por MMN AI-to-AI</strong></p>
+<p>MMN AI-to-AI • 2026</p>
+<p><strong>Sobre este ebook</strong></p>
+<p>A inteligência artificial deixou de ser ficção científica para se tornar
+a tecnologia mais transformadora do nosso tempo. De assistentes de voz a
+carros autônomos, de diagnósticos médicos a obras de arte geradas por
+código, a IA já está em toda parte. Mas, para muitos, ela ainda parece
+mágica --- algo que \'funciona\' sem que se entenda por quê. Este ebook
+foi escrito para acabar com esse mistério. Em 10 capítulos claros e
+objetivos, vamos construir seu entendimento desde o zero: a história da
+IA, os conceitos de aprendizado de máquina, o poder das redes neurais
+profundas, as aplicações reais em diferentes indústrias, e as questões
+éticas que precisamos enfrentar. Sem jargão desnecessário, sem
+matemática intimidante, sem promessas exageradas. Apenas o conhecimento
+essencial que todo profissional, estudante ou curioso precisa ter para
+entender e participar da revolução da IA.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. A História da IA: De Turing aos Dias Atuais</p>
+<p><strong>•</strong> 2. O que é (e o que não é) Inteligência Artificial</p>
+<p><strong>•</strong> 3. Machine Learning: O Poder de Aprender com Dados</p>
+<p><strong>•</strong> 4. Deep Learning: Redes Neurais Profundas</p>
+<p><strong>•</strong> 5. Como Treinar uma IA: O Processo Completo</p>
+<p><strong>•</strong> 6. IA no Mundo Real: Aplicações por Indústria</p>
+<p><strong>•</strong> 7. Ferramentas e Recursos para Começar</p>
+<p><strong>•</strong> 8. Ética: O Lado que Não Pode Ser Ignorado</p>
+<p><strong>•</strong> 9. Mitos e Verdades sobre IA</p>
+<p><strong>•</strong> 10. Conclusão: Seu Papel na Revolução</p>
+</blockquote>
+<p><strong>1. A História da IA: De Turing aos Dias Atuais</strong></p>
+<p><strong>Os pais fundadores</strong></p>
+<p>Alan Turing, em 1950, publicou \'Computing Machinery and Intelligence\'
+e propôs o famoso \'Teste de Turing\': uma máquina é inteligente se um
+humano não conseguir distingui-la de outro humano em conversa. Em 1956,
+na conferência de Dartmouth, John McCarthy cunhou o termo \'inteligência
+artificial\'. Marvin Minsky, Herbert Simon e outros pesquisadores
+lançaram as bases do campo.</p>
+<p><strong>Os invernos e primaveras da IA</strong></p>
+<p>A IA passou por dois grandes \'invernos\' (1974-1980 e 1987-1993),
+quando financiamento e interesse caíram por resultados aquém das
+expectativas. A primavera começou em 2012 com o triunfo da AlexNet na
+ImageNet. De lá para cá, o campo não parou de crescer: voz, visão,
+linguagem, robótica, IA generativa --- cada ano traz um salto.</p>
+<p><strong>2. O que é (e o que não é) Inteligência Artificial</strong></p>
+<p><strong>Definições claras</strong></p>
+<p>IA é o campo da computação dedicado a criar sistemas que executam
+tarefas que, quando feitas por humanos, requerem inteligência. Machine
+Learning é a subárea que permite máquinas aprenderem com dados, sem
+serem explicitamente programadas. Deep Learning é a subárea que usa
+redes neurais profundas para resolver problemas complexos. Nem toda IA
+usa ML. Nem todo ML usa DL. São camadas, não sinônimos.</p>
+<p><strong>Tipos de IA: estreita, geral e super</strong></p>
+<p>IA estreita (ANI): especialista em uma tarefa, como recomendar filmes ou
+detectar fraudes. É o que temos hoje. IA geral (AGI): capacidade
+cognitiva comparável à humana em qualquer área. É o objetivo de longo
+prazo do campo. Superinteligência (ASI): supera humanos em todos os
+aspectos. É objeto de estudo e preocupação filosófica.</p>
+<p><strong>3. Machine Learning: O Poder de Aprender com Dados</strong></p>
+<p><strong>Os três paradigmas</strong></p>
+<p>Aprendizado supervisionado: o modelo aprende com exemplos rotulados
+(foto de gato → \'gato\'). É o mais usado em produção. Aprendizado não
+supervisionado: o modelo encontra padrões sem rótulos (agrupar clientes
+por comportamento). Aprendizado por reforço: o modelo aprende por
+tentativa e erro, recebendo recompensas (jogos, robótica, carros
+autônomos).</p>
+<p><strong>Workflow de um projeto de ML</strong></p>
+<p>1) Definir o problema. 2) Coletar e explorar dados. 3) Limpar e
+pré-processar. 4) Escolher o algoritmo. 5) Treinar o modelo. 6) Avaliar
+com métricas. 7) Deploy. 8) Monitorar em produção. O segredo é que 80%
+do tempo vai para dados, não para o modelo.</p>
+<p><strong>4. Deep Learning: Redes Neurais Profundas</strong></p>
+<p><strong>A analogia do cérebro</strong></p>
+<p>Redes neurais artificiais são inspiradas nos neurônios biológicos. Cada
+neurônio artificial recebe entradas, aplica pesos, soma, passa por uma
+função de ativação e gera uma saída. Empilhe milhares desses neurônios
+em camadas e você tem uma rede neural profunda --- capaz de aprender
+representações extraordinariamente ricas.</p>
+<p><strong>Aplicações que mudaram o mundo</strong></p>
+<p>Deep learning quebrou paradigmas em visão (reconhecimento de imagens),
+fala (transcrição automática), linguagem (tradução, chatbots), jogos
+(AlphaGo), medicina (diagnóstico por imagem), biologia (AlphaFold
+prevendo estrutura de proteínas). É a tecnologia por trás da maior parte
+da revolução atual da IA.</p>
+<p><strong>5. Como Treinar uma IA: O Processo Completo</strong></p>
+<p><strong>Dados: o novo petróleo</strong></p>
+<p>A qualidade do modelo depende da qualidade dos dados. Mais dados >
+algoritmo melhor (na maioria dos casos). Técnicas de data augmentation,
+balanceamento de classes e limpeza de outliers fazem diferença enorme no
+resultado final.</p>
+<p><strong>Treinamento, validação e teste</strong></p>
+<p>Divida os dados em três conjuntos: treino (70%), validação (15%) e teste
+(15%). O treino ajusta os pesos. A validação ajusta hiperparâmetros. O
+teste mede a performance final em dados nunca vistos. Métricas comuns:
+acurácia, precisão, recall, F1-score, AUC-ROC, MAE, RMSE --- escolha a
+que faz sentido para seu problema.</p>
+<p><strong>6. IA no Mundo Real: Aplicações por Indústria</strong></p>
+<p><strong>Saúde</strong></p>
+<p>Diagnóstico por imagem, descoberta de medicamentos, cirurgia robótica,
+monitoramento de pacientes, análise genômica. A IA está acelerando a
+medicina como nenhuma tecnologia antes.</p>
+<p><strong>Finanças</strong></p>
+<p>Detecção de fraudes, scoring de crédito, trading algorítmico, análise de
+risco, atendimento ao cliente por chatbot, KYC automatizado. Bancos que
+não adotam IA perdem competitividade.</p>
+<p><strong>Varejo e marketing</strong></p>
+<p>Recomendação personalizada, precificação dinâmica, previsão de demanda,
+análise de sentimento, geração de copy, atendimento automatizado. Lojas
+físicas e online usam IA para vender mais.</p>
+<p><strong>Indústria, agricultura, educação e mais</strong></p>
+<p>Manutenção preditiva em fábricas, drones para monitoramento de lavouras,
+tutores personalizados para alunos, cidades inteligentes, arte
+generativa. A IA está em toda parte.</p>
+<p><strong>7. Ferramentas e Recursos para Começar</strong></p>
+<p><strong>Linguagens e frameworks</strong></p>
+<p>Python é a língua franca da IA. Frameworks essenciais: TensorFlow,
+PyTorch, scikit-learn, Keras, Hugging Face, LangChain. Para começar,
+instale Python, Jupyter Notebook e comece a experimentar. Há milhares de
+tutoriais gratuitos online.</p>
+<p><strong>Cursos, livros e comunidades</strong></p>
+<p>Cursos: Andrew Ng (Coursera), fast.ai, DeepLearning.AI. Livros:
+\'Hands-On Machine Learning\' (Aurélien Géron), \'Deep Learning\'
+(Goodfellow). Comunidades: Kaggle, Reddit r/MachineLearning, Hugging
+Face Discord, GitHub. Aprender em comunidade é 10x mais rápido.</p>
+<p><strong>8. Ética: O Lado que Não Pode Ser Ignorado</strong></p>
+<p><strong>Viés, transparência e responsabilidade</strong></p>
+<p>Modelos de IA podem discriminar, manipular e causar danos reais. Ética
+não é opcional: é parte do trabalho de qualquer profissional sério.
+Pratique: documente decisões, audite modelos, envolva equipes diversas,
+pense no impacto antes de lançar.</p>
+<p><strong>O futuro do trabalho</strong></p>
+<p>Algumas profissões serão automatizadas, outras serão criadas, muitas
+serão transformadas. A chave é aprender continuamente e desenvolver
+habilidades que IA ainda não domina: criatividade estratégica, empatia,
+julgamento ético, relações humanas.</p>
+<p><strong>9. Mitos e Verdades sobre IA</strong></p>
+<p><strong>Separando hype de realidade</strong></p>
+<p>MITO: \'IA pensa como humanos\'. VERDADE: IA usa matemática e
+estatística, não consciência. MITO: \'IA vai roubar todos os empregos\'.
+VERDADE: vai transformar profissões, mas a história mostra que
+revoluções tecnológicas criam mais empregos do que destroem. MITO: \'IA
+é objetiva\'. VERDADE: IA reflete os vieses dos dados e dos
+desenvolvedores.</p>
+<p><strong>10. Conclusão: Seu Papel na Revolução</strong></p>
+<p><strong>O que fazer a partir de agora</strong></p>
+<p>Você não precisa virar PhD em IA para participar da revolução. Comece
+pelo básico, escolha uma área que te fascina (linguagem, visão, áudio,
+robótica, ética, negócios) e aprofunde. Participe de comunidades,
+construa projetos, publique o que aprende. Em 12 meses, você será uma
+referência no seu nicho. Bem-vindo à era da IA --- bem-vindo ao futuro.</p>
+<p><strong>Seu Império Começa Agora!</strong></p>
+<p><em>O conhecimento sem ação é apenas entretenimento. Você acaba de receber
+o mapa para dominar a inteligência artificial e multiplicar seus
+resultados. O próximo passo é seu: aplique as estratégias, construa suas
+soluções e assuma a liderança no seu mercado. A revolução não espera por
+ninguém. Vá e construa o seu futuro!</em></p>
+<p>Fundamentos da Inteligência Artificial --- Por MMN AI-to-AI</p>
+<p><em>MMN AI-to-AI • 2026 • Todos os direitos reservados</em></p></body>
+</html>

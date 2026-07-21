@@ -234,3 +234,63 @@ export async function createMercadoPagoPixPayment(input: MercadoPagoPixPaymentIn
     body: JSON.stringify(payload),
   });
 }
+
+
+// HOTFIX D18.8: Preferência MP com múltiplos métodos (pix + saldo + cartão)
+export interface McPagoPreferenceInput {
+  externalReference: string;
+  title: string;
+  description?: string;
+  amountCents: number;
+  payerEmail?: string;
+  payerName?: string;
+  notificationUrl?: string;
+  backUrls?: { success?: string; failure?: string; pending?: string };
+}
+
+export async function createMercadoPagoPreference(input: McPagoPreferenceInput): Promise<any | null> {
+  if (!MERCADO_PAGO_ACCESS_TOKEN) return null;
+  try {
+    const body: any = {
+      external_reference: input.externalReference,
+      items: [{
+        id: input.externalReference.slice(0, 32),
+        title: input.title.slice(0, 80),
+        description: input.description?.slice(0, 240) || input.title,
+        quantity: 1,
+        currency_id: "BRL",
+        unit_price: Number((input.amountCents / 100).toFixed(2)),
+      }],
+      payer: {
+        email: input.payerEmail,
+        name: input.payerName,
+      },
+      payment_methods: {
+        // Habilita explicitamente pix, cartão, e conta MP (saldo)
+        excluded_payment_types: [], // sem exclusões
+        installments: 12,
+      },
+      notification_url: input.notificationUrl,
+      back_urls: input.backUrls,
+      auto_return: "approved",
+      binary_mode: false,
+      statement_descriptor: "OneVerso",
+    };
+    const resp = await fetch("https://api.mercadopago.com/checkout/preferences", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    if (!resp.ok) {
+      console.warn("[MP.preference] status", resp.status, await resp.text().catch(() => ""));
+      return null;
+    }
+    return await resp.json();
+  } catch (err) {
+    console.error("[MP.preference] erro", err);
+    return null;
+  }
+}

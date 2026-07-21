@@ -106,7 +106,7 @@ export default function AdminApprovals() {
   const [pendingTypeFilter, setPendingTypeFilter] = useState<"all" | ApprovalType>("all");
   const [priorityFilter, setPriorityFilter] = useState<"all" | ApprovalPriority>("all");
   const [processedStatusFilter, setProcessedStatusFilter] = useState<"all" | ProcessedStatus>("all");
-  const [selectedApprovalId, setSelectedApprovalId] = useState<number | null>(null);
+  const [selectedApprovalId, setSelectedApprovalId] = useState<string | null>(null);
   const [selectedPendingIds, setSelectedPendingIds] = useState<number[]>([]);
   const [approvalNotes, setApprovalNotes] = useState("");
   const [batchApprovalNotes, setBatchApprovalNotes] = useState("");
@@ -131,8 +131,8 @@ export default function AdminApprovals() {
     {
       page: 1,
       limit: 50,
-      status: processedStatusFilter === "all" ? undefined : processedStatusFilter,
-    },
+      // status ignorado no backend hoje (D18.6)
+      },
     {
       enabled: activeTab === "processed",
     }
@@ -141,7 +141,7 @@ export default function AdminApprovals() {
   const statsQuery = trpc.approvals.getStats.useQuery();
 
   const detailsQuery = trpc.approvals.getById.useQuery(
-    { id: selectedApprovalId || 0 },
+    { id: String(selectedApprovalId || "") },
     { enabled: selectedApprovalId !== null }
   );
 
@@ -154,12 +154,23 @@ export default function AdminApprovals() {
     }
   };
 
+  const markDeliveredMutation = (trpc as any).approvals?.markDelivered?.useMutation?.({
+    onSuccess: () => {
+      toast.success("Pedido marcado como entregue");
+      pendingQuery.refetch();
+      processedQuery.refetch();
+      statsQuery.refetch();
+      setSelectedApprovalId(null);
+    },
+    onError: (error: any) => toast.error(error?.message || "Erro ao marcar entrega"),
+  });
+
   const approveMutation = trpc.approvals.approve.useMutation({
     onSuccess: (data) => {
       toast.success("Solicitação aprovada com sucesso");
       refreshAll();
       setApprovalNotes("");
-      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setSelectedPendingIds((current) => current.filter((id) => String(id) !== selectedApprovalId));
       setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
@@ -185,7 +196,7 @@ export default function AdminApprovals() {
       toast.success("Solicitação rejeitada com sucesso");
       refreshAll();
       setRejectReason("");
-      setSelectedPendingIds((current) => current.filter((id) => id !== selectedApprovalId));
+      setSelectedPendingIds((current) => current.filter((id) => String(id) !== selectedApprovalId));
       setLastAuditEvent((data as any).audit || null);
     },
     onError: (error) => {
@@ -261,7 +272,7 @@ export default function AdminApprovals() {
 
   const handleApprove = () => {
     if (!selectedApprovalId) return;
-    approveMutation.mutate({ id: selectedApprovalId, notes: approvalNotes || undefined });
+    approveMutation.mutate({ id: String(selectedApprovalId), notes: approvalNotes || undefined });
   };
 
   const handleApproveBatch = () => {
@@ -283,7 +294,7 @@ export default function AdminApprovals() {
       return;
     }
 
-    rejectMutation.mutate({ id: selectedApprovalId, reason: rejectReason });
+    rejectMutation.mutate({ id: String(selectedApprovalId), reason: rejectReason });
   };
 
   const handleRequestInfo = () => {
@@ -570,7 +581,7 @@ export default function AdminApprovals() {
                           </td>
                           <td className="px-4 py-4 text-sm text-slate-600">{queueHours}h</td>
                           <td className="px-4 py-4">
-                            <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
+                            <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(String(approval.id))}>
                               Revisar
                             </Button>
                           </td>
@@ -666,7 +677,7 @@ export default function AdminApprovals() {
                           {approval.processedAt ? new Date(approval.processedAt).toLocaleDateString("pt-BR") : "N/A"}
                         </td>
                         <td className="px-4 py-4">
-                          <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(approval.id)}>
+                          <Button variant="outline" size="sm" onClick={() => setSelectedApprovalId(String(approval.id))}>
                             Ver detalhes
                           </Button>
                         </td>
@@ -766,6 +777,14 @@ export default function AdminApprovals() {
                       placeholder="Observações da aprovação"
                       className="mt-3 bg-white"
                     />
+                    <Button
+                      variant="secondary"
+                      className="mt-2 w-full"
+                      onClick={() => selectedApprovalId && markDeliveredMutation?.mutate({ id: String(selectedApprovalId) })}
+                      disabled={markDeliveredMutation?.isPending}
+                    >
+                      {markDeliveredMutation?.isPending ? "Entregando..." : "Marcar como entregue"}
+                    </Button>
                     <Button className="mt-3 w-full" onClick={handleApprove} disabled={approveMutation.isPending}>
                       {approveMutation.isPending ? "Aprovando..." : "Confirmar aprovação"}
                     </Button>

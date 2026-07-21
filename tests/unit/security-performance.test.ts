@@ -223,7 +223,7 @@ describe("Data Protection", () => {
       const cardNumber = "1234567890123456";
       const masked = "*".repeat(12) + cardNumber.slice(-4);
 
-      expect(masked).toBe("****1456");
+      expect(masked).toBe("************3456");
     });
 
     it("should mask email addresses", () => {

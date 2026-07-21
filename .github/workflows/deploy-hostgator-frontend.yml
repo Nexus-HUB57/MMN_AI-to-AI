@@ -2,7 +2,7 @@ name: Deploy Frontend to HostGator
 
 on:
   workflow_run:
-    workflows: [CI]
+    workflows: ["CI"]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -18,69 +18,127 @@ env:
   CI: "true"
   FORCE_COLOR: "1"
   NODE_OPTIONS: --max-old-space-size=4096
+  VPS_HOST: "143.95.213.237"
+  VPS_PORT: "22022"
+  VPS_USER: "root"
+  REMOTE_APP: "/var/www/oneverso/current"
 
 jobs:
-  deploy-frontend:
-    name: Build e publicar frontend em oneverso.com.br
+  # ---------------------------------------------------------------------------
+  # Bootstrap SSH key into VPS authorized_keys (idempotent, one-time setup)
+  # ---------------------------------------------------------------------------
+  bootstrap-ssh:
+    name: Bootstrap SSH key
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
-
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
 
-      - name: Validar secrets obrigatórios
+      - name: Prepare SSH key
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
         run: |
-          missing=0
-          for secret_name in HOSTGATOR_USER HOSTGATOR_PASS; do
-            if [ -z "${!secret_name}" ]; then
-              echo "Secret ausente: $secret_name"
-              missing=1
-            fi
-          done
-          if [ "$missing" -ne 0 ]; then
-            echo "Configure HOSTGATOR_USER e HOSTGATOR_PASS no repositório antes do deploy."
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          if ! grep -q "BEGIN.*PRIVATE KEY" ~/.ssh/deploy_key; then
+            echo '::error::SSH_GITHUB secret invalid: missing BEGIN PRIVATE KEY header'
             exit 1
           fi
-        env:
-          HOSTGATOR_USER: ${{ secrets.HOSTGATOR_USER }}
-          HOSTGATOR_PASS: ${{ secrets.HOSTGATOR_PASS }}
+          ssh-keygen -y -P '' -f ~/.ssh/deploy_key > ~/.ssh/deploy_key.pub 2>/dev/null || true
+          FP=$(ssh-keygen -lf ~/.ssh/deploy_key.pub | awk '{print $2}')
+          echo "::notice::SSH key ready · fingerprint=$FP"
 
-      - name: Configurar Node.js
+      - name: Inject public key via password (bootstrap)
+        env:
+          VPS_PASS: ${{ secrets.VPS_ROOT_PASSWORD }}
+        run: |
+          PUB=$(cat ~/.ssh/deploy_key.pub)
+          sshpass -p "$VPS_PASS" ssh \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=30 \
+            "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
+             touch /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys && \
+             grep -qF '${PUB}' /root/.ssh/authorized_keys || echo '${PUB}' >> /root/.ssh/authorized_keys && \
+             echo 'authorized_keys updated: '$(wc -l < /root/.ssh/authorized_keys)' keys'"
+
+      - name: Verify key-based SSH
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=no \
+            -o BatchMode=yes \
+            -o ConnectTimeout=20 \
+            "${VPS_USER}@${VPS_HOST}" \
+            'echo "SSH_KEY_AUTH_OK $(hostname) $(date -u +%FT%TZ)"'
+
+  # ---------------------------------------------------------------------------
+  # Build frontend locally and deploy via rsync+SSH
+  # ---------------------------------------------------------------------------
+  deploy-frontend:
+    name: Build & deploy frontend via SSH
+    needs: bootstrap-ssh
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --no-fund
 
-      - name: Instalar lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
-      - name: Build do frontend
+      - name: Build frontend
         run: npm run build:frontend
 
-      - name: Publicar via FTPS na HostGator
-        run: ./scripts/deploy-hostgator-frontend.sh
+      - name: Prepare SSH key
         env:
-          HOSTGATOR_HOST: ${{ secrets.HOSTGATOR_HOST }}
-          HOSTGATOR_USER: ${{ secrets.HOSTGATOR_USER }}
-          HOSTGATOR_PASS: ${{ secrets.HOSTGATOR_PASS }}
-          HOSTGATOR_REMOTE_PATH: ${{ secrets.HOSTGATOR_REMOTE_PATH }}
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Resumo do deploy
+      - name: Ensure remote dirs exist
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no \
+            "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p ${{ env.REMOTE_APP }}/frontend/dist"
+
+      - name: Rsync frontend build to VPS
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ env.VPS_PORT }} -o StrictHostKeyChecking=no" \
+            ./frontend/dist/ \
+            ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.REMOTE_APP }}/frontend/dist/
+
+      - name: Reload nginx (if present)
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no \
+            "${VPS_USER}@${VPS_HOST}" \
+            "nginx -t 2>/dev/null && nginx -s reload 2>/dev/null && echo 'nginx reloaded' || echo 'nginx not present or no reload needed'"
+
+      - name: Summary
         if: always()
         run: |
           {
-            echo "## 🌐 Deploy Frontend HostGator"
-            echo
+            echo "## Deploy Frontend via SSH"
+            echo ""
             if [ "${{ job.status }}" = "success" ]; then
-              echo "### ✅ Publicação concluída"
+              echo "### Published"
               echo "- Portal: https://oneverso.com.br"
               echo "- API: https://api.oneverso.com.br"
+              echo "- Method: rsync over SSH (no FTPS)"
             else
-              echo "### ❌ Falha na publicação"
-              echo "Verifique os secrets HOSTGATOR_* e os logs do job."
+              echo "### Failed"
+              echo "Check VPS_ROOT_PASSWORD and SSH_GITHUB secrets."
             fi
           } >> "$GITHUB_STEP_SUMMARY"

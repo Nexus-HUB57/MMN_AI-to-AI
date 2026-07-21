@@ -19,6 +19,8 @@ import {
   Sparkles,
   LayoutDashboard,
   Settings,
+  Database,
+  ShoppingCart,
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useRoute } from "wouter";
@@ -39,6 +41,8 @@ const MENU_ITEMS = [
   { label: "Agendamentos", path: "/admin/scheduler", icon: Calendar },
   { label: "Aprovações", path: "/admin/approvals", icon: CheckCircle2 },
   { label: "Status Sistema", path: "/admin/status", icon: Cpu },
+  { label: "Admin RAG", path: "/admin/rag", icon: Database },
+  { label: "Marketplace", path: "/admin/marketplace", icon: ShoppingCart },
   { label: "Skills", path: "/admin/skills", icon: Sparkles },
   { label: "Painel Operacional", path: "/admin/panel", icon: LayoutDashboard },
   { label: "Configurações", path: "/admin/config", icon: Settings },

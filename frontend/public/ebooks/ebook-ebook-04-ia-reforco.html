@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📘 Sumário</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><hr />
+<p>title: "IA por Reforço: Q-Learning e Deep RL"
+subtitle: "Agentes Autônomos que Aprendem por Tentativa e Erro"
+author: "Nexus Affil'IA'te MMN_IA"
+collection: "Curso Universo IA — Coletânea Técnica Vol. 04"
+version: "1.0"
+date: "2026-06"
+classification: "Acadêmico · Técnico · PhD-Level"</p>
+<hr />
+<p><img alt="Capa" src="/ebooks/covers/curso-universo-ia--ebook-04-ia-reforco.svg" /></p>
+<blockquote>
+<p><em>"O aprendizado mais profundo não vem de quem nos dá respostas. Vem de quem nos deixa errar."</em>
+— Nexus Affil'IA'te MMN_IA</p>
+</blockquote>
+<hr />
+<h1>📘 Sumário</h1>
+<ol>
+<li><strong>Prólogo — A Inteligência que Aprende Sozinha</strong></li>
+<li><strong>Capítulo 1 — O Paradigma do Aprendizado por Reforço</strong></li>
+<li><strong>Capítulo 2 — Formalismo Matemático: MDP</strong></li>
+<li><strong>Capítulo 3 — Funções de Valor e Equação de Bellman</strong></li>
+<li><strong>Capítulo 4 — Programação Dinâmica (Value/Policy Iteration)</strong></li>
+<li><strong>Capítulo 5 — Monte Carlo Methods</strong></li>
+<li><strong>Capítulo 6 — Temporal Difference Learning (TD)</strong></li>
+<li><strong>Capítulo 7 — Q-Learning: O Algoritmo Canônico</strong></li>
+<li><strong>Capítulo 8 — SARSA: On-Policy Alternative</strong></li>
+<li><strong>Capítulo 9 — Multi-Armed Bandits</strong></li>
+<li><strong>Capítulo 10 — Deep Q-Networks (DQN)</strong></li>
+<li><strong>Capítulo 11 — Experience Replay e Target Networks</strong></li>
+<li><strong>Capítulo 12 — Double DQN e Dueling DQN</strong></li>
+<li><strong>Capítulo 13 — Prioritized Experience Replay</strong></li>
+<li><strong>Capítulo 14 — Rainbow DQN</strong></li>
+<li><strong>Capítulo 15 — Policy Gradient (REINFORCE)</strong></li>
+<li><strong>Capítulo 16 — Actor-Critic Methods (A2C, A3C)</strong></li>
+<li><strong>Capítulo 17 — PPO: Proximal Policy Optimization</strong></li>
+<li><strong>Capítulo 18 — SAC: Soft Actor-Critic</strong></li>
+<li><strong>Capítulo 19 — Métodos Contínuos (DDPG, TD3)</strong></li>
+<li><strong>Capítulo 20 — Model-Based RL</strong></li>
+<li><strong>Capítulo 21 — AlphaGo e AlphaZero</strong></li>
+<li><strong>Capítulo 22 — Curiosity-Driven Exploration</strong></li>
+<li><strong>Capítulo 23 — Hierarchical RL</strong></li>
+<li><strong>Capítulo 24 — Multi-Agent RL</strong></li>
+<li><strong>Capítulo 25 — RLHF e o Futuro da Alinhamento</strong></li>
+<li><strong>Glossário</strong></li>
+<li><strong>Referências</strong></li>
+</ol>
+<hr />
+<h1>Prólogo — A Inteligência que Aprende Sozinha</h1>
+<p>Em 2016, <strong>AlphaGo</strong> derrotou <strong>Lee Sedol</strong>, campeão mundial de Go, por 4-1. Milhões assistiram. O mundo viu uma máquina dominar um jogo que parecia exigir <strong>intuição humana</strong> — algo que achávamos exclusivo da nossa espécie.</p>
+<p>O que estava por trás? <strong>Reinforcement Learning (RL)</strong> — a área da IA onde agentes aprendem por <strong>tentativa e erro</strong>, recebendo <strong>recompensas</strong> ou <strong>punições</strong> por suas ações.</p>
+<p>Mas RL não é só jogos. É a <strong>fundamentação matemática de toda decisão sequencial sob incerteza</strong>:</p>
+<ul>
+<li><strong>Robótica:</strong> Como um braço aprende a pegar objetos?</li>
+<li><strong>Carros autônomos:</strong> Como navegar tráfego urbano?</li>
+<li><strong>Trading algorítmico:</strong> Quando comprar/vender?</li>
+<li><strong>Recommendation:</strong> Que conteúdo mostrar agora vs. depois?</li>
+<li><strong>AI Agents:</strong> Como decidir qual ferramenta usar?</li>
+</ul>
+<p>Este volume é a <strong>anatomia completa</strong> do RL. Do formalismo matemático aos algoritmos estado-da-arte, com código, intuição e história.</p>
+<hr />
+<h1>Capítulo 1 — O Paradigma do Aprendizado por Reforço</h1>
+<h2>1.1 As Três Frentes do ML</h2>
+<table>
+<thead>
+<tr>
+<th>Paradigma</th>
+<th>Feedback</th>
+<th>Objetivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Supervisionado</strong></td>
+<td>Resposta correta (label)</td>
+<td>Minimizar erro de predição</td>
+</tr>
+<tr>
+<td><strong>Não Supervisionado</strong></td>
+<td>Nenhum</td>
+<td>Descobrir estrutura</td>
+</tr>
+<tr>
+<td><strong>Por Reforço</strong></td>
+<td>Recompensa (escalar, atrasada)</td>
+<td>Maximizar retorno cumulativo</td>
+</tr>
+</tbody>
+</table>
+<h2>1.2 As Características Únicas do RL</h2>
+<ol>
+<li><strong>Sem supervisor:</strong> Apenas uma "recompensa" como sinal.</li>
+<li><strong>Atraso de crédito:</strong> Ações podem ter consequências distantes.</li>
+<li><strong>Exploração ativa:</strong> O agente influencia os dados que coleta.</li>
+<li><strong>Estado não-estacionário:</strong> A distribuição de transições muda com a política.</li>
+<li><strong>Sequencial:</strong> Decisões em t afetam estados em t+1, t+2, ...</li>
+</ol>
+<h2>1.3 Componentes Canônicos</h2>
+<ul>
+<li><strong>Agente (Agent):</strong> Quem aprende e toma decisões.</li>
+<li><strong>Ambiente (Environment):</strong> O "mundo" externo.</li>
+<li><strong>Estado (State, s):</strong> Descrição da situação atual.</li>
+<li><strong>Ação (Action, a):</strong> O que o agente pode fazer.</li>
+<li><strong>Recompensa (Reward, r):</strong> Feedback numérico do ambiente.</li>
+<li><strong>Política (Policy, π):</strong> Estratégia: π(a|s) = P(a|s).</li>
+<li><strong>Função de Valor (V):</strong> Quanto vale estar no estado s.</li>
+<li><strong>Função Q (Q):</strong> Quanto vale tomar a ação a no estado s.</li>
+</ul>
+<h2>1.4 O Loop RL</h2>
+<pre><code>t=0:  s₀ → agente escolhe a₀ (via π)
+t=1:  ambiente retorna r₁, s₁
+t=2:  agente escolhe a₁
+...
+</code></pre>
+<p>A <strong>trajetória</strong> completa: τ = (s₀, a₀, r₁, s₁, a₁, r₂, s₂, ...)</p>
+<p><img alt="Diagrama: Loop de Reinforcement Learning" src="../../assets/ebook_covers/curso_universo_ia/diagram_reinforcement.png" /></p>
+<hr />
+<h1>Capítulo 2 — Formalismo Matemático: MDP</h1>
+<h2>2.1 Definição</h2>
+<p>Um <strong>Markov Decision Process (MDP)</strong> é uma tupla <strong>(S, A, P, R, γ)</strong>:</p>
+<ul>
+<li><strong>S:</strong> Conjunto de estados</li>
+<li><strong>A:</strong> Conjunto de ações</li>
+<li><strong>P(s'|s, a):</strong> Probabilidade de transição</li>
+<li><strong>R(s, a, s'):</strong> Função de recompensa</li>
+<li><strong>γ ∈ [0, 1):</strong> Fator de desconto</li>
+</ul>
+<h2>2.2 A Propriedade de Markov</h2>
+<p>O futuro depende <strong>apenas do presente</strong>, não do passado:</p>
+<p>$$P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \dots) = P(s_{t+1} | s_t, a_t)$$</p>
+<p>Isso significa que $s_t$ é uma <strong>estatística suficiente</strong> do histórico.</p>
+<h2>2.3 Retorno Descontado</h2>
+<p>O objetivo do agente é maximizar o <strong>retorno</strong> (return):</p>
+<p>$$G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k r_{t+k+1}$$</p>
+<p><strong>Por que descontar?</strong>
+- Problemas sem fim natural precisam de γ &lt; 1 para convergir.
+- Preferimos recompensas próximas (animais valorizam isso).
+- Modela incerteza sobre o futuro.</p>
+<h2>2.4 Episódico vs. Contínuo</h2>
+<ul>
+<li><strong>Tarefa Episódica:</strong> Tem início e fim (xadrez, jogo da cobrinha).</li>
+<li><strong>Tarefa Contínua:</strong> Sem fim (negociação, controle de processo).</li>
+</ul>
+<h2>2.5 Política</h2>
+<p><strong>Política determinística:</strong> $\pi(s) = a$
+<strong>Política estocástica:</strong> $\pi(a|s) = P(a|s)$, com $\sum_a \pi(a|s) = 1$</p>
+<hr />
+<h1>Capítulo 3 — Funções de Valor e Equação de Bellman</h1>
+<h2>3.1 State-Value Function</h2>
+<p>$$V^\pi(s) = \mathbb{E}<em>\pi\left[\sum</em>{k=0}^{\infty} \gamma^k r_{t+k+1} \mid s_t = s\right]$$</p>
+<p>"Quanto retorno eu espero se eu seguir π a partir de s?"</p>
+<h2>3.2 Action-Value Function (Q-function)</h2>
+<p>$$Q^\pi(s, a) = \mathbb{E}<em>\pi\left[\sum</em>{k=0}^{\infty} \gamma^k r_{t+k+1} \mid s_t = s, a_t = a\right]$$</p>
+<p>"Quanto retorno eu espero se eu tomar a em s e seguir π depois?"</p>
+<h2>3.3 Relação V e Q</h2>
+<p>$$V^\pi(s) = \sum_a \pi(a|s) Q^\pi(s, a)$$
+$$Q^\pi(s, a) = \sum_{s'} P(s'|s, a)\left[R(s, a, s') + \gamma V^\pi(s')\right]$$</p>
+<h2>3.4 Equação de Bellman para V</h2>
+<p>$$V^\pi(s) = \sum_a \pi(a|s) \sum_{s'} P(s'|s, a)\left[R(s, a, s') + \gamma V^\pi(s')\right]$$</p>
+<h2>3.5 Equação Ótima de Bellman</h2>
+<p>$$V^<em>(s) = \max_a \sum_{s'} P(s'|s, a)\left[R(s, a, s') + \gamma V^</em>(s')\right]$$
+$$Q^<em>(s, a) = \sum_{s'} P(s'|s, a)\left[R(s, a, s') + \gamma \max_{a'} Q^</em>(s', a')\right]$$</p>
+<h2>3.6 Optimalidade</h2>
+<p>A política ótima π* satisfaz:</p>
+<p>$$V^<em>(s) = \max_\pi V^\pi(s), \quad Q^</em>(s, a) = \max_\pi Q^\pi(s, a)$$</p>
+<p><strong>Teorema:</strong> Para qualquer MDP, existe pelo menos uma política ótima π<em> que atinge V</em>.</p>
+<hr />
+<h1>Capítulo 4 — Programação Dinâmica (Value/Policy Iteration)</h1>
+<h2>4.1 Premissa</h2>
+<p>Assumimos <strong>conhecimento completo</strong> do MDP (P e R conhecidos). Útil para entender conceitos, mas irrealista em prática.</p>
+<h2>4.2 Policy Iteration</h2>
+<p>Alterna entre:
+1. <strong>Policy Evaluation:</strong> Calcular V^π para a política atual.
+2. <strong>Policy Improvement:</strong> Atualizar π para ser greedy em Q^π.</p>
+<p>Converge em O(|S|² · |A|) iterações.</p>
+<h2>4.3 Value Iteration</h2>
+<p>Combina evaluation e improvement em um único update:</p>
+<p>$$V_{k+1}(s) = \max_a \sum_{s'} P(s'|s, a)\left[R(s, a, s') + \gamma V_k(s')\right]$$</p>
+<p>Converge para V* em O(|S|² · |A|) iterações.</p>
+<h2>4.4 Código</h2>
+<pre><code class="language-python">def value_iteration(P, R, gamma=0.99, theta=1e-6):
+    V = np.zeros(len(P))
+    while True:
+        delta = 0
+        for s in range(len(P)):
+            v = V[s]
+            V[s] = max(sum(P[s][a] * (R[s][a] + gamma * V[s_]))
+                      for a, s_ in P[s].items())
+            delta = max(delta, abs(v - V[s]))
+        if delta &lt; theta:
+            break
+
+    # Política greedy
+    policy = {s: max(P[s], key=lambda a: sum(P[s][a][s_] * 
+                  (R[s][a][s_] + gamma * V[s_]) for s_ in P[s][a]))
+             for s in range(len(P))}
+    return V, policy
+</code></pre>
+<hr />
+<h1>Capítulo 5 — Monte Carlo Methods</h1>
+<h2>5.1 A Ideia</h2>
+<p>Em vez de assumir conhecimento do MDP, <strong>simule episódios completos</strong> e use a média de retornos observados para estimar V e Q.</p>
+<h2>5.2 First-Visit vs. Every-Visit</h2>
+<ul>
+<li><strong>First-Visit MC:</strong> Para cada estado, use apenas o retorno do <strong>primeiro</strong> episódio em que aparece.</li>
+<li><strong>Every-Visit MC:</strong> Use o retorno de <strong>cada</strong> visita.</li>
+</ul>
+<h2>5.3 Algoritmo</h2>
+<pre><code class="language-python">def mc_prediction(policy, env, num_episodes=10000, gamma=0.99):
+    returns = defaultdict(list)
+    V = defaultdict(float)
+
+    for episode in range(num_episodes):
+        # Gerar episódio
+        episode_data = []
+        state = env.reset()
+        done = False
+        while not done:
+            action = policy(state)
+            next_state, reward, done, _ = env.step(action)
+            episode_data.append((state, action, reward))
+            state = next_state
+
+        # Calcular retornos e atualizar V
+        G = 0
+        for t in reversed(range(len(episode_data))):
+            state, action, reward = episode_data[t]
+            G = gamma * G + reward
+            returns[state].append(G)
+            V[state] = np.mean(returns[state])
+
+    return V
+</code></pre>
+<h2>5.4 Vantagens e Limitações</h2>
+<p><strong>✅ Vantagens:</strong>
+- Model-free (não precisa de P).
+- Convergência garantida.
+- Funciona em ambientes não-Markovianos.</p>
+<p><strong>❌ Limitações:</strong>
+- Só aprende no fim do episódio (alto variance).
+- Ineficiente para tarefas longas.</p>
+<hr />
+<h1>Capítulo 6 — Temporal Difference Learning (TD)</h1>
+<h2>6.1 A Ideia Central</h2>
+<p>TD combina Monte Carlo (sample) com Programação Dinâmica (bootstrap):</p>
+<p>$$V(s_t) \leftarrow V(s_t) + \alpha\left[r_{t+1} + \gamma V(s_{t+1}) - V(s_t)\right]$$</p>
+<p>O <strong>TD target</strong> é $r_{t+1} + \gamma V(s_{t+1})$, e o <strong>TD error</strong> é:</p>
+<p>$$\delta_t = r_{t+1} + \gamma V(s_{t+1}) - V(s_t)$$</p>
+<h2>6.2 TD(0) — One-Step TD</h2>
+<pre><code class="language-python">def td_zero(env, policy, alpha=0.1, gamma=0.99, num_episodes=10000):
+    V = defaultdict(float)
+    for _ in range(num_episodes):
+        state = env.reset()
+        done = False
+        while not done:
+            action = policy(state)
+            next_state, reward, done, _ = env.step(action)
+            V[state] += alpha * (reward + gamma * V[next_state] - V[state])
+            state = next_state
+    return V
+</code></pre>
+<h2>6.3 TD(λ) e Eligibility Traces</h2>
+<p>Generaliza para n-step returns:</p>
+<p>$$G_t^{(n)} = r_{t+1} + \gamma r_{t+2} + \dots + \gamma^{n-1} r_{t+n} + \gamma^n V(s_{t+n})$$</p>
+<p><strong>TD(λ):</strong> Média exponencial de n-step returns, usando <strong>eligibility traces</strong> $e_t(s)$:</p>
+<p>$$e_t(s) = \gamma \lambda e_{t-1}(s) + \mathbb{1}[s = s_t]$$
+$$V(s) \leftarrow V(s) + \alpha \delta_t e_t(s)$$</p>
+<h2>6.4 Por que TD é Poderoso</h2>
+<ul>
+<li><strong>Online:</strong> Atualiza a cada step (não espera o fim do episódio).</li>
+<li><strong>Mais eficiente:</strong> Propaga informação mais rápido que MC.</li>
+<li><strong>Convergência garantida</strong> (sob condições).</li>
+</ul>
+<hr />
+<h1>Capítulo 7 — Q-Learning: O Algoritmo Canônico</h1>
+<h2>7.1 A Ideia</h2>
+<p>Aprende <strong>Q*(s, a)</strong> diretamente, sem precisar de V:</p>
+<p>$$Q(s, a) \leftarrow Q(s, a) + \alpha\left[r + \gamma \max_{a'} Q(s', a') - Q(s, a)\right]$$</p>
+<p><strong>Off-policy:</strong> Pode aprender com qualquer trajetória, mesmo que não siga a política ótima.</p>
+<h2>7.2 O Algoritmo Completo</h2>
+<pre><code class="language-python">import numpy as np
+from collections import defaultdict
+
+def q_learning(env, num_episodes=10000, alpha=0.1, gamma=0.99, 
+               epsilon=0.1, epsilon_decay=0.995):
+    Q = defaultdict(lambda: np.zeros(env.action_space.n))
+
+    for episode in range(num_episodes):
+        state = env.reset()
+        done = False
+        total_reward = 0
+
+        while not done:
+            # ε-greedy
+            if np.random.random() &lt; epsilon:
+                action = env.action_space.sample()
+            else:
+                action = np.argmax(Q[state])
+
+            next_state, reward, done, _ = env.step(action)
+
+            # Q-Learning update
+            best_next = np.max(Q[next_state])
+            td_target = reward + gamma * best_next
+            td_error = td_target - Q[state][action]
+            Q[state][action] += alpha * td_error
+
+            state = next_state
+            total_reward += reward
+
+        epsilon *= epsilon_decay
+
+    return Q
+</code></pre>
+<h2>7.3 Convergência (Watkins &amp; Dayan, 1992)</h2>
+<p>Q-Learning converge para Q<em> com probabilidade 1, </em><em>se</em>*:
+- Todas as (s, a) são visitadas infinitamente.
+- α decresce apropriadamente (Robbins-Monro: $\sum_t \alpha_t = \infty, \sum_t \alpha_t^2 &lt; \infty$).
+- γ &lt; 1 e rewards bounded.</p>
+<h2>7.4 Limitações</h2>
+<ul>
+<li><strong>Maldição da dimensionalidade:</strong> Q-table explode.</li>
+<li><strong>Espaços contínuos:</strong> Inaplicável diretamente.</li>
+<li><strong>Bootstrapping lento:</strong> Propagação de recompensas distantes é lenta.</li>
+</ul>
+<h2>7.5 Caso Clássico: FrozenLake</h2>
+<pre><code class="language-python">import gymnasium as gym
+
+env = gym.make('FrozenLake-v1', is_slippery=False)
+Q = q_learning(env, num_episodes=5000)
+
+# Avaliar
+test_episodes = 100
+successes = 0
+for _ in range(test_episodes):
+    state, _ = env.reset()
+    done = False
+    while not done:
+        action = np.argmax(Q[state])
+        state, reward, done, _, _ = env.step(action)
+        if reward == 1:
+            successes += 1
+print(f&quot;Sucesso: {successes}/{test_episodes}&quot;)
+</code></pre>
+<p><img alt="Diagrama: Q-Learning" src="../../assets/ebook_covers/curso_universo_ia/diagram_qlearning.png" /></p>
+<hr />
+<h1>Capítulo 8 — SARSA: On-Policy Alternative</h1>
+<h2>8.1 A Diferença</h2>
+<p>SARSA atualiza usando a ação que o agente <strong>realmente tomaria</strong>:</p>
+<p>$$Q(s, a) \leftarrow Q(s, a) + \alpha\left[r + \gamma Q(s', a') - Q(s, a)\right]$$</p>
+<p>Onde $a' = \pi(s')$ (não $\max_{a'}$).</p>
+<h2>8.2 Acrônimo</h2>
+<p><strong>SARSA = State, Action, Reward, next State, next Action</strong></p>
+<h2>8.3 On-Policy vs. Off-Policy</h2>
+<ul>
+<li><strong>SARSA (on-policy):</strong> Aprende sobre a política que está executando.</li>
+<li><strong>Q-Learning (off-policy):</strong> Aprende sobre a política ótima, mesmo executando outra.</li>
+</ul>
+<p><strong>Implicação prática:</strong> SARSA é mais conservadora em ambientes estocásticos (evita ações arriscadas).</p>
+<hr />
+<h1>Capítulo 9 — Multi-Armed Bandits</h1>
+<h2>9.1 O Caso Mais Simples</h2>
+<p>Imagine 10 máquinas caça-níqueis (one-armed bandits), cada uma com probabilidade diferente de pagar. Você tem 1000 jogadas. Qual máquina escolher?</p>
+<h2>9.2 O Dilema</h2>
+<ul>
+<li><strong>Exploração:</strong> Tentar todas as máquinas.</li>
+<li><strong>Explotação:</strong> Focar na melhor conhecida.</li>
+</ul>
+<h2>9.3 Estratégias Clássicas</h2>
+<p><strong>ε-greedy:</strong></p>
+<pre><code class="language-python">def epsilon_greedy(Q, epsilon):
+    if np.random.random() &lt; epsilon:
+        return np.random.randint(len(Q))
+    return np.argmax(Q)
+</code></pre>
+<p><strong>UCB1:</strong>
+$$a^* = \arg\max_a \left[Q(a) + c\sqrt{\frac{\ln t}{N(a)}}\right]$$</p>
+<p><strong>Thompson Sampling:</strong></p>
+<pre><code class="language-python"># Beta prior para cada bandit
+samples = [np.random.beta(a + 1, b + 1) for a, b in successes, failures]
+return np.argmax(samples)
+</code></pre>
+<h2>9.4 Contextual Bandits</h2>
+<p>O melhor braço depende do <strong>contexto</strong> (features). É o caso intermediário entre bandits e RL completo.</p>
+<hr />
+<h1>Capítulo 10 — Deep Q-Networks (DQN)</h1>
+<h2>10.1 A Limitação de Q-Learning Tabular</h2>
+<p>Para Atari, $S = 84 \times 84 \times 4$ pixels (256^268224 estados). Tabular é impossível.</p>
+<h2>10.2 A Solução</h2>
+<p>Substituir Q-table por uma <strong>rede neural profunda</strong>:</p>
+<p>$$Q(s, a; \theta) \approx Q^*(s, a)$$</p>
+<h2>10.3 Arquitetura (Mnih et al., 2015)</h2>
+<ul>
+<li><strong>Input:</strong> 4 frames empilhados de 84×84 grayscale.</li>
+<li><strong>Conv1:</strong> 32 filtros 8×8, stride 4, ReLU.</li>
+<li><strong>Conv2:</strong> 64 filtros 4×4, stride 2, ReLU.</li>
+<li><strong>Conv3:</strong> 64 filtros 3×3, stride 1, ReLU.</li>
+<li><strong>FC4:</strong> 512 unidades, ReLU.</li>
+<li><strong>Output:</strong> n_actions valores Q.</li>
+</ul>
+<h2>10.4 Loss Function</h2>
+<p>$$L(\theta) = \mathbb{E}<em>{(s,a,r,s')\sim D}\left[\left(r + \gamma \max</em>{a'} Q(s', a'; \theta^-) - Q(s, a; \theta)\right)^2\right]$$</p>
+<ul>
+<li>$D$: replay buffer</li>
+<li>$\theta^-$: target network (congelada por N steps)</li>
+</ul>
+<h2>10.5 Código (PyTorch)</h2>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class DQN(nn.Module):
+    def __init__(self, state_dim, n_actions):
+        super().__init__()
+        self.fc1 = nn.Linear(state_dim, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, n_actions)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        return self.fc3(x)
+
+# Hiperparâmetros
+state_dim = env.observation_space.shape[0]
+n_actions = env.action_space.n
+gamma = 0.99
+epsilon = 1.0
+epsilon_min = 0.01
+epsilon_decay = 0.995
+lr = 1e-3
+batch_size = 64
+buffer_size = 100000
+
+policy_net = DQN(state_dim, n_actions)
+target_net = DQN(state_dim, n_actions)
+target_net.load_state_dict(policy_net.state_dict())
+target_net.eval()
+
+optimizer = torch.optim.Adam(policy_net.parameters(), lr=lr)
+replay_buffer = deque(maxlen=buffer_size)
+
+def train_step():
+    if len(replay_buffer) &lt; batch_size:
+        return
+
+    batch = random.sample(replay_buffer, batch_size)
+    states, actions, rewards, next_states, dones = zip(*batch)
+
+    states = torch.FloatTensor(states)
+    actions = torch.LongTensor(actions)
+    rewards = torch.FloatTensor(rewards)
+    next_states = torch.FloatTensor(next_states)
+    dones = torch.FloatTensor(dones)
+
+    q_values = policy_net(states).gather(1, actions.unsqueeze(1))
+    next_q = target_net(next_states).max(1)[0].detach()
+    targets = rewards + gamma * next_q * (1 - dones)
+
+    loss = F.mse_loss(q_values.squeeze(), targets)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+</code></pre>
+<h2>10.6 Resultados</h2>
+<p>DQN atingiu <strong>performance sobre-humana</strong> em 49 dos 57 jogos Atari, <strong>sem nenhum ajuste específico por jogo</strong>.</p>
+<p><img alt="Diagrama: Deep RL Architecture" src="../../assets/ebook_covers/curso_universo_ia/diagram_deep_rl.png" /></p>
+<hr />
+<h1>Capítulo 11 — Experience Replay e Target Networks</h1>
+<h2>11.1 Por que Experience Replay?</h2>
+<p>Problema do DQN vanilla: amostras consecutivas são <strong>altamente correlacionadas</strong>. Isso causa:
+- <strong>Catastrophic forgetting.</strong>
+- <strong>Ineficiência</strong> (cada transição vista uma vez).
+- <strong>Instabilidade</strong> de gradientes.</p>
+<h2>11.2 A Solução</h2>
+<p><strong>Replay Buffer D:</strong> Armazena transições (s, a, r, s', done).
+- <strong>Memória limitada</strong> (ex: 1M transições).
+- <strong>Amostragem aleatória</strong> para minibatch.
+- <strong>Quebra correlação temporal.</strong></p>
+<h2>11.3 Por que Target Network?</h2>
+<p>Problema: o <strong>target</strong> $r + \gamma \max Q(s', a'; \theta)$ <strong>depende dos mesmos pesos</strong> que estamos atualizando. Isso causa "moving target" e instabilidade.</p>
+<p><strong>Solução:</strong> Usar uma <strong>target network</strong> $Q(s, a; \theta^-)$ com pesos congelados por N steps (ex: 10k steps), depois copiar.</p>
+<h2>11.4 Atualização Suave (Soft Update)</h2>
+<p>Alternativa à cópia hard:</p>
+<p>$$\theta^- \leftarrow \tau \theta + (1 - \tau) \theta^-$$</p>
+<p>Com $\tau = 0.001$ (atualização gradual a cada step).</p>
+<hr />
+<h1>Capítulo 12 — Double DQN e Dueling DQN</h1>
+<h2>12.1 O Problema: Overestimation</h2>
+<p>Q-Learning usa $\max_{a'} Q(s', a'; \theta^-)$, que <strong>superestima</strong> o valor de Q por:
+- Viés de maximização.
+- Ruído nas estimativas.</p>
+<h2>12.2 Double DQN (van Hasselt et al., 2016)</h2>
+<p>Decoupla <strong>seleção</strong> e <strong>avaliação</strong>:</p>
+<p>$$Q^{target} = r + \gamma Q(s', \arg\max_{a'} Q(s', a'; \theta); \theta^-)$$</p>
+<ul>
+<li><strong>Online network ($\theta$):</strong> Seleciona a melhor ação.</li>
+<li><strong>Target network ($\theta^-$):</strong> Avalia a ação.</li>
+</ul>
+<h2>12.3 Dueling DQN (Wang et al., 2016)</h2>
+<p>Decompõe Q em <strong>V + A</strong>:</p>
+<p>$$Q(s, a; \theta, \alpha, \beta) = V(s; \theta, \beta) + A(s, a; \theta, \alpha)$$</p>
+<p><strong>Vantagem:</strong> Não precisa aprender o valor de cada ação em cada estado (muitos estados têm ações equivalentes).</p>
+<h2>12.4 Implementação Dueling</h2>
+<pre><code class="language-python">class DuelingDQN(nn.Module):
+    def __init__(self, state_dim, n_actions):
+        super().__init__()
+        self.fc1 = nn.Linear(state_dim, 128)
+        # Value stream
+        self.value = nn.Sequential(
+            nn.Linear(128, 128), nn.ReLU(),
+            nn.Linear(128, 1)
+        )
+        # Advantage stream
+        self.advantage = nn.Sequential(
+            nn.Linear(128, 128), nn.ReLU(),
+            nn.Linear(128, n_actions)
+        )
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        value = self.value(x)
+        advantage = self.advantage(x)
+        return value + (advantage - advantage.mean(dim=1, keepdim=True))
+</code></pre>
+<hr />
+<h1>Capítulo 13 — Prioritized Experience Replay</h1>
+<h2>13.1 A Ideia</h2>
+<p>Nem todas as transições são <strong>igualmente informativas</strong>. Priorize transições com alto TD-error (significa que o modelo está "surpreso").</p>
+<h2>13.2 Como Implementar</h2>
+<pre><code class="language-python"># Sum tree para busca eficiente O(log n)
+# Cada nó tem prioridade p_i = |δ_i| + ε
+
+class SumTree:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.tree = np.zeros(2 * capacity - 1)
+        self.data = np.zeros(capacity, dtype=object)
+        self.n_entries = 0
+
+    def add(self, p, data):
+        idx = self.n_entries + self.capacity - 1
+        self.data[self.n_entries] = data
+        self.update(idx, p)
+        self.n_entries = (self.n_entries + 1) % self.capacity
+
+    def get(self, s):
+        parent_idx = 0
+        while True:
+            cl, cr = 2 * parent_idx + 1, 2 * parent_idx + 2
+            if cl &gt;= len(self.tree):
+                leaf_idx = parent_idx
+                break
+            if s &lt;= self.tree[cl]:
+                parent_idx = cl
+            else:
+                s -= self.tree[cl]
+                parent_idx = cr
+        data_idx = leaf_idx - self.capacity + 1
+        return leaf_idx, self.tree[leaf_idx], self.data[data_idx]
+</code></pre>
+<h2>13.3 Importance Sampling</h2>
+<p>Priorização introduz <strong>viés</strong>. Corrigir com weights:</p>
+<p>$$w_i = \left(\frac{1}{N \cdot P(i)}\right)^\beta$$</p>
+<p>Usar $w_i \cdot \delta_i$ no update.</p>
+<hr />
+<h1>Capítulo 14 — Rainbow DQN</h1>
+<h2>14.1 A Unificação</h2>
+<p>Rainbow (Hessel et al., 2017) combina <strong>6 melhorias</strong> sobre DQN:</p>
+<ol>
+<li><strong>DQN base</strong></li>
+<li><strong>Double DQN</strong> — corrige overestimation</li>
+<li><strong>Prioritized Replay</strong> — sampling eficiente</li>
+<li><strong>Dueling Networks</strong> — V + A</li>
+<li><strong>Multi-step Learning</strong> — n-step returns</li>
+<li><strong>Distributional RL</strong> — C51, modelar distribuição de Q</li>
+<li><strong>Noisy Nets</strong> — exploração paramétrica</li>
+</ol>
+<h2>14.2 Resultado</h2>
+<p><strong>+ 379%</strong> de performance mediana em Atari sobre DQN base.</p>
+<hr />
+<h1>Capítulo 15 — Policy Gradient (REINFORCE)</h1>
+<h2>15.1 A Mudança de Paradigma</h2>
+<p>Ao invés de aprender Q e derivar política, <strong>aprenda a política diretamente</strong>:</p>
+<p>$$\pi_\theta(a|s) = \text{softmax}(f_\theta(s))_a$$</p>
+<h2>15.2 O Objetivo</h2>
+<p>$$J(\theta) = \mathbb{E}<em>{\tau \sim \pi</em>\theta}\left[\sum_t r_t\right] = \mathbb{E}<em>{\tau \sim \pi</em>\theta}[R(\tau)]$$</p>
+<h2>15.3 Policy Gradient Theorem (Sutton et al., 2000)</h2>
+<p>$$\nabla_\theta J(\theta) = \mathbb{E}<em>{\tau \sim \pi</em>\theta}\left[\sum_t \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot G_t\right]$$</p>
+<p><strong>Intuição:</strong>
+- Se $G_t$ for alto, <strong>aumente</strong> a probabilidade da ação $a_t$ tomada.
+- Se $G_t$ for baixo, <strong>diminua</strong>.</p>
+<h2>15.4 REINFORCE Algorithm</h2>
+<pre><code class="language-python">def reinforce(env, policy, alpha=0.001, gamma=0.99, num_episodes=1000):
+    optimizer = torch.optim.Adam(policy.parameters(), lr=alpha)
+
+    for episode in range(num_episodes):
+        log_probs = []
+        rewards = []
+        state = env.reset()
+        done = False
+
+        # Coletar episódio
+        while not done:
+            action, log_prob = policy.select_action(state)
+            next_state, reward, done, _ = env.step(action)
+            log_probs.append(log_prob)
+            rewards.append(reward)
+            state = next_state
+
+        # Calcular retornos
+        returns = []
+        G = 0
+        for r in reversed(rewards):
+            G = r + gamma * G
+            returns.insert(0, G)
+        returns = torch.tensor(returns)
+        returns = (returns - returns.mean()) / (returns.std() + 1e-9)  # baseline
+
+        # Policy gradient update
+        loss = []
+        for log_prob, G in zip(log_probs, returns):
+            loss.append(-log_prob * G)
+        loss = torch.stack(loss).sum()
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    return policy
+</code></pre>
+<h2>15.5 Vantagens vs. Value-Based</h2>
+<p><strong>✅ Vantagens:</strong>
+- Política estocástica natural (bom para MDPs parciais).
+- Convergência garantida (com baseline).
+- Funciona bem em espaços contínuos.</p>
+<p><strong>❌ Desvantagens:</strong>
+- <strong>Alto variance</strong> (depende de Monte Carlo).
+- <strong>Ineficiente</strong> (atualiza só no fim do episódio).</p>
+<hr />
+<h1>Capítulo 16 — Actor-Critic Methods (A2C, A3C)</h1>
+<h2>16.1 A Ideia</h2>
+<p>Combinar Policy Gradient (Actor) com Value Function (Critic):
+- <strong>Actor:</strong> Decide a ação.
+- <strong>Critic:</strong> Avalia a ação.</p>
+<p><strong>Vantagem (Advantage):</strong>
+$$A(s, a) = Q(s, a) - V(s)$$</p>
+<p><strong>Política gradient com baseline:</strong>
+$$\nabla_\theta J(\theta) = \mathbb{E}\left[\nabla_\theta \log \pi_\theta(a|s) \cdot A(s, a)\right]$$</p>
+<h2>16.2 A2C (Advantage Actor-Critic)</h2>
+<p><strong>Crítico aprende $V(s)$</strong> com TD:
+$$L_V = (r + \gamma V(s') - V(s))^2$$</p>
+<p><strong>Ator atualiza com vantagem:</strong>
+$$L_\pi = -\log \pi(a|s) \cdot A(s, a)$$</p>
+<p><strong>Entropia</strong> (regularização):
+$$L_H = -\beta H(\pi(\cdot|s))$$</p>
+<p><strong>Loss total:</strong> $L = L_\pi + c_1 L_V + c_2 L_H$</p>
+<h2>16.3 A3C (Asynchronous A2C)</h2>
+<p>Treina <strong>múltiplos workers em paralelo</strong>, cada um em seu próprio ambiente. Atualizações assíncronas para a rede global.</p>
+<p>Vantagem: <strong>Sample efficiency</strong> e <strong>exploration diversity</strong>.</p>
+<h2>16.4 GAE (Generalized Advantage Estimation)</h2>
+<p>$$\hat{A}<em>t = \sum</em>{k=0}^{T-t-1} (\gamma \lambda)^k \delta_{t+k}$$</p>
+<p>Onde $\delta_t = r_{t+1} + \gamma V(s_{t+1}) - V(s_t)$ e $\lambda \in [0, 1]$.</p>
+<p>Tunable: $\lambda$ controla bias-variance do estimador de vantagem.</p>
+<hr />
+<h1>Capítulo 17 — PPO: Proximal Policy Optimization</h1>
+<h2>17.1 O Algoritmo Mais Usado da Indústria</h2>
+<p>PPO (Schulman et al., 2017) é <strong>o algoritmo default</strong> de OpenAI, Anthropic, DeepMind. Simples, estável, eficiente.</p>
+<h2>17.2 A Ideia</h2>
+<p>Em vez de TRPO (que tem KL constraint complexo), PPO usa um <strong>clipped objective</strong>:</p>
+<p>$$L^{CLIP}(\theta) = \mathbb{E}_t\left[\min\left(r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t\right)\right]$$</p>
+<p>Onde $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ é a <strong>probability ratio</strong>.</p>
+<h2>17.3 Por que Funciona</h2>
+<ul>
+<li><strong>Clip</strong> previne updates muito grandes (mantém política próxima).</li>
+<li><strong>Min</strong> com o unclipped garante gradiente correto.</li>
+<li><strong>Simples</strong> (sem constraint, sem second-order methods).</li>
+</ul>
+<h2>17.4 Implementação</h2>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class PPO:
+    def __init__(self, state_dim, n_actions, lr=3e-4, gamma=0.99, 
+                 clip_eps=0.2, epochs=4, batch_size=64):
+        self.policy = ActorCritic(state_dim, n_actions)
+        self.optimizer = torch.optim.Adam(self.policy.parameters(), lr=lr)
+        self.gamma = gamma
+        self.clip_eps = clip_eps
+        self.epochs = epochs
+        self.batch_size = batch_size
+
+    def update(self, states, actions, log_probs_old, returns, advantages):
+        advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
+
+        for _ in range(self.epochs):
+            for batch in self.iterate_batches(states, actions, log_probs_old, 
+                                             returns, advantages, self.batch_size):
+                log_probs, values, entropy = self.policy.evaluate(batch.states, batch.actions)
+
+                ratio = torch.exp(log_probs - batch.log_probs_old)
+                surr1 = ratio * batch.advantages
+                surr2 = torch.clamp(ratio, 1 - self.clip_eps, 1 + self.clip_eps) * batch.advantages
+                policy_loss = -torch.min(surr1, surr2).mean()
+
+                value_loss = F.mse_loss(values, batch.returns)
+                entropy_loss = -entropy.mean()
+
+                loss = policy_loss + 0.5 * value_loss - 0.01 * entropy_loss
+
+                self.optimizer.zero_grad()
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.policy.parameters(), 0.5)
+                self.optimizer.step()
+</code></pre>
+<h2>17.5 Casos de Uso</h2>
+<ul>
+<li><strong>Robótica</strong> (OpenAI Five Dota 2, Rubik's cube).</li>
+<li><strong>AI Agents</strong> (AutoGPT, Voyager).</li>
+<li><strong>RLHF</strong> (Treinamento de LLMs).</li>
+<li><strong>Jogos</strong> (todos os SOTA modernos).</li>
+</ul>
+<hr />
+<h1>Capítulo 18 — SAC: Soft Actor-Critic</h1>
+<h2>18.1 A Ideia</h2>
+<p>SAC (Haarnoja et al., 2018) adiciona <strong>entropia máxima</strong> ao objetivo RL:</p>
+<p>$$J(\pi) = \sum_t \mathbb{E}_{(s_t,a_t)\sim\pi}\left[r(s_t, a_t) + \alpha H(\pi(\cdot|s_t))\right]$$</p>
+<p>O agente é recompensado por ser <strong>aleatório</strong> (entropia alta) <strong>e</strong> por obter reward.</p>
+<h2>18.2 Vantagens</h2>
+<ul>
+<li><strong>Sample-efficient</strong> (off-policy).</li>
+<li><strong>Exploração automática</strong> (entropia incentiva).</li>
+<li><strong>Estável</strong> (dual Q-networks para evitar overestimation).</li>
+<li>Ótimo para <strong>espaços contínuos</strong>.</li>
+</ul>
+<h2>18.3 Auto-Tuning de α</h2>
+<p>O peso da entropia pode ser ajustado automaticamente para atingir uma entropia target.</p>
+<h2>18.4 Performance</h2>
+<p>SAC é <strong>state-of-the-art</strong> em benchmarks de controle contínuo (MuJoCo).</p>
+<hr />
+<h1>Capítulo 19 — Métodos Contínuos (DDPG, TD3)</h1>
+<h2>19.1 O Problema</h2>
+<p>A maioria dos algoritmos de RL é para <strong>ações discretas</strong>. Mas robótica, carros autônomos, trading envolvem <strong>ações contínuas</strong>.</p>
+<h2>19.2 DDPG (Deep Deterministic Policy Gradient)</h2>
+<p><strong>Actor-Critic determinístico + off-policy + replay buffer:</strong></p>
+<ul>
+<li><strong>Actor (μ):</strong> Mapeia estado → ação contínua: $a = \mu(s; \theta^\mu)$.</li>
+<li><strong>Critic (Q):</strong> Avalia $Q(s, a; \theta^Q)$.</li>
+<li><strong>Target networks</strong> para estabilidade.</li>
+<li><strong>Exploração:</strong> Ruído no actor (Ornstein-Uhlenbeck ou Gaussian).</li>
+</ul>
+<h2>19.3 TD3 (Twin Delayed DDPG)</h2>
+<p>Três truques para estabilizar DDPG:</p>
+<ol>
+<li><strong>Twin Q-networks:</strong> $Q_{\theta_1}$ e $Q_{\theta_2}$, use o mínimo.</li>
+<li><strong>Delayed updates:</strong> Atualize actor a cada 2 updates do critic.</li>
+<li><strong>Target policy smoothing:</strong> Adicione ruído à ação-alvo.</li>
+</ol>
+<h2>19.4 Aplicações</h2>
+<ul>
+<li><strong>Robôs manipuladores</strong> (braços que pegam objetos).</li>
+<li><strong>Drones</strong> (controle de vôo).</li>
+<li><strong>Veículos autônomos</strong> (steering, aceleração).</li>
+<li><strong>HVAC control</strong> (otimização energética).</li>
+</ul>
+<hr />
+<h1>Capítulo 20 — Model-Based RL</h1>
+<h2>20.1 A Diferença</h2>
+<p><strong>Model-free:</strong> Aprende política diretamente da experiência.
+<strong>Model-based:</strong> Aprende um <strong>modelo do ambiente</strong> (transições e recompensas) e planeja.</p>
+<h2>20.2 Vantagens</h2>
+<ul>
+<li><strong>Sample-efficient</strong> (até 1000x menos experiência).</li>
+<li>Permite <strong>planning</strong> ("o que acontece se eu fizer X?").</li>
+<li><strong>Replanning</strong> rápido a cada nova observação.</li>
+</ul>
+<h2>20.3 Algoritmos</h2>
+<ul>
+<li><strong>Dyna:</strong> Modelo + experiência real.</li>
+<li><strong>MCTS</strong> (Monte Carlo Tree Search): Usado em AlphaZero.</li>
+<li><strong>Dreamer:</strong> Aprende modelo em espaço latente (pixels).</li>
+<li><strong>MuZero:</strong> Aprende modelo abstrato, sem regras do jogo.</li>
+<li><strong>World Models (Ha &amp; Schmidhuber, 2018).</strong></li>
+</ul>
+<h2>20.4 O Dilema</h2>
+<ul>
+<li><strong>Model bias:</strong> Se o modelo está errado, o agente aprende errado.</li>
+<li><strong>Compensação:</strong> Ajustar confiança no modelo (ex: PETS, MBPO).</li>
+</ul>
+<hr />
+<h1>Capítulo 21 — AlphaGo e AlphaZero</h1>
+<h2>21.1 AlphaGo (2016)</h2>
+<p>Combinação vencedora:
+- <strong>Rede de política (SL):</strong> Prediz jogadas humanas (aprendizado supervisionado).
+- <strong>Rede de valor:</strong> Avalia posições.
+- <strong>MCTS:</strong> Busca em árvore guiada pelas redes.
+- <strong>RL:</strong> Refina a política com auto-jogo.</p>
+<h2>21.2 AlphaGo Zero (2017)</h2>
+<p><strong>Sem dados humanos.</strong> Apenas auto-jogo:
+- Uma única rede neural.
+- MCTS puro.
+- Recompensa: vitória/derrota.</p>
+<p><strong>Resultado:</strong> Superou AlphaGo Lee (que derrotou Lee Sedol) por <strong>100-0</strong>.</p>
+<h2>21.3 AlphaZero (2018)</h2>
+<p>Generaliza para <strong>qualquer jogo de informação perfeita</strong>:
+- Go, Xadrez, Shogi.
+- Mesma rede, mesmo algoritmo, hiperparâmetros idênticos.</p>
+<h2>21.4 MuZero (2019, DeepMind)</h2>
+<p>Aprende um <strong>modelo abstrato</strong> do ambiente, sem regras pré-programadas. Aplicado a:
+- Atari
+- Go, Xadrez, Shogi
+- <strong>Produção real</strong> (YouTube, Google Maps).</p>
+<hr />
+<h1>Capítulo 22 — Curiosity-Driven Exploration</h1>
+<h2>22.1 O Problema da Exploração Esparsa</h2>
+<p>Em muitos ambientes, recompensas são <strong>raras</strong> (ex: jogo onde reward só vem no fim). O agente nunca explora o suficiente para descobrir.</p>
+<h2>22.2 Intrinsic Reward (ICM)</h2>
+<p>O <strong>Intrinsic Curiosity Module</strong> (Pathak et al., 2017) adiciona reward baseado em <strong>erro de predição</strong>:</p>
+<p>$$r^i_t = |f(s_t) - f(s_{t+1})|_2^2$$</p>
+<p>Onde $f$ é um <strong>encoder</strong> treinado para prever a próxima state embedding.</p>
+<p><strong>Intuição:</strong> O agente é recompensado por <strong>visitar estados novos</strong> (onde o modelo erra mais).</p>
+<h2>22.3 Outras Técnicas</h2>
+<ul>
+<li><strong>RND (Random Network Distillation):</strong> Distância para target network aleatória.</li>
+<li><strong>Go-Explore:</strong> Voltar a estados "promissores" e explorar de lá.</li>
+<li><strong>Count-based exploration:</strong> Bonus ∝ 1/√N(s).</li>
+</ul>
+<h2>22.4 Quando Usar</h2>
+<ul>
+<li>Jogos com reward esparso (Montezuma's Revenge, Pitfall).</li>
+<li>Robótica com objetivos complexos.</li>
+<li>AI Agents com tarefas de longo horizonte.</li>
+</ul>
+<hr />
+<h1>Capítulo 23 — Hierarchical RL</h1>
+<h2>23.1 A Motivação</h2>
+<p>Em tarefas complexas, <strong>hierarquia</strong> ajuda:
+- "Pegar objeto" → "Abrir porta" → "Andar até porta" → "Mover perna direita" → ...</p>
+<h2>23.2 Options Framework (Sutton et al., 1999)</h2>
+<p><strong>Options</strong> = (π, I, β):
+- <strong>π:</strong> Política interna.
+- <strong>I:</strong> Initiation set (onde pode começar).
+- <strong>β:</strong> Termination condition (quando parar).</p>
+<h2>23.3 Hierarchical Actor-Critic (HAC)</h2>
+<p>Pilhas de Actor-Critics, cada um operando em diferentes níveis de abstração.</p>
+<h2>23.4 Feudal Networks</h2>
+<p><strong>Manager</strong> define goals; <strong>Workers</strong> executam subgoals.</p>
+<hr />
+<h1>Capítulo 24 — Multi-Agent RL</h1>
+<h2>24.1 Os Cenários</h2>
+<ul>
+<li><strong>Cooperative:</strong> Agentes cooperam (ex: futebol de robôs).</li>
+<li><strong>Competitive:</strong> Agentes competem (ex: jogos adversariais).</li>
+<li><strong>Mixed:</strong> Combinação.</li>
+</ul>
+<h2>24.2 Algoritmos</h2>
+<ul>
+<li><strong>MADDPG:</strong> Multi-Agent DDPG com critics centralizados.</li>
+<li><strong>QMIX:</strong> Fatoração de Q-values.</li>
+<li><strong>COMA:</strong> Counterfactual Multi-Agent.</li>
+<li><strong>MAPPO:</strong> PPO multi-agente (state-of-the-art em StarCraft).</li>
+</ul>
+<h2>24.3 Desafios</h2>
+<ul>
+<li><strong>Non-stationarity:</strong> Outros agentes mudam o ambiente.</li>
+<li><strong>Credit assignment:</strong> Quem contribuiu para o resultado?</li>
+<li><strong>Curse of dimensionality:</strong> Espaço de ações conjunto cresce.</li>
+</ul>
+<hr />
+<h1>Capítulo 25 — RLHF e o Futuro da Alinhamento</h1>
+<h2>25.1 O que é RLHF</h2>
+<p><strong>Reinforcement Learning from Human Feedback</strong> (Christiano et al., 2017; Ouyang et al., 2022) alinha modelos de linguagem usando preferências humanas:</p>
+<ol>
+<li>Coletar <strong>comparações</strong> de respostas (humano A vs. humano B).</li>
+<li>Treinar um <strong>Reward Model</strong> $r_\phi$ para prever preferências.</li>
+<li>Otimizar a política com <strong>PPO</strong> maximizando $r_\phi$.</li>
+</ol>
+<h2>25.2 Pipeline RLHF</h2>
+<pre><code>1. SFT (Supervised Fine-Tuning)
+   ↓
+2. Reward Model
+   ↓
+3. PPO Optimization
+   ↓
+4. Iterative Improvement
+</code></pre>
+<h2>25.3 Sucesso: InstructGPT e ChatGPT</h2>
+<ul>
+<li><strong>SFT:</strong> Fine-tune em instruções escritas por humanos.</li>
+<li><strong>Reward Model:</strong> Modelo que prevê preferências.</li>
+<li><strong>PPO:</strong> Otimiza LLM para gerar respostas preferidas.</li>
+</ul>
+<p><strong>Resultado:</strong> Modelo mais útil, inofensivo, honesto.</p>
+<h2>25.4 Constitutional AI (Anthropic, 2022)</h2>
+<p>Substitui humanos por <strong>princípios escritos</strong> ("constitution"):
+- "Seja helpful, harmless, honest."
+- Modelo crítica e revisa suas próprias respostas baseado em princípios.</p>
+<h2>25.5 DPO (Direct Preference Optimization, 2023)</h2>
+<p><strong>Pula o reward model.</strong> Otimiza diretamente a política via classificação binária:</p>
+<p>$$L_{DPO} = -\log\sigma\left(\beta \log\frac{\pi_\theta(y_w|x)}{\pi_{ref}(y_w|x)} - \beta \log\frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}\right)$$</p>
+<p>Mais simples, mais estável que PPO.</p>
+<h2>25.6 O Futuro</h2>
+<ul>
+<li><strong>Process Supervision:</strong> Recompensar raciocínio, não só resposta final.</li>
+<li><strong>Debate:</strong> Dois modelos debatem, humano julga.</li>
+<li><strong>Recursive Reward Modeling:</strong> Modelos treinam reward models.</li>
+<li><strong>Self-Play:</strong> Modelos melhoram competindo consigo mesmos.</li>
+</ul>
+<hr />
+<h1>Glossário</h1>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Actor-Critic</strong></td>
+<td>Arquitetura com policy (actor) e value (critic).</td>
+</tr>
+<tr>
+<td><strong>Bellman Equation</strong></td>
+<td>Recursão para value functions.</td>
+</tr>
+<tr>
+<td><strong>Bootstrapping</strong></td>
+<td>Atualizar estimativas usando outras estimativas.</td>
+</tr>
+<tr>
+<td><strong>DQN</strong></td>
+<td>Deep Q-Network.</td>
+</tr>
+<tr>
+<td><strong>Experience Replay</strong></td>
+<td>Buffer de transições para decorrelacionar.</td>
+</tr>
+<tr>
+<td><strong>Exploration vs Exploitation</strong></td>
+<td>Dilema fundamental do RL.</td>
+</tr>
+<tr>
+<td><strong>MDP</strong></td>
+<td>Markov Decision Process.</td>
+</tr>
+<tr>
+<td><strong>Off-Policy</strong></td>
+<td>Aprende sobre política ótima enquanto executa outra.</td>
+</tr>
+<tr>
+<td><strong>On-Policy</strong></td>
+<td>Aprende sobre a política que executa.</td>
+</tr>
+<tr>
+<td><strong>Policy Gradient</strong></td>
+<td>Método que otimiza π(·</td>
+</tr>
+<tr>
+<td><strong>PPO</strong></td>
+<td>Proximal Policy Optimization.</td>
+</tr>
+<tr>
+<td><strong>Q-Learning</strong></td>
+<td>TD learning off-policy para Q*.</td>
+</tr>
+<tr>
+<td><strong>REINFORCE</strong></td>
+<td>Algoritmo de policy gradient.</td>
+</tr>
+<tr>
+<td><strong>Replay Buffer</strong></td>
+<td>Memória de transições.</td>
+</tr>
+<tr>
+<td><strong>Reward</strong></td>
+<td>Sinal escalar de feedback.</td>
+</tr>
+<tr>
+<td><strong>SAC</strong></td>
+<td>Soft Actor-Critic.</td>
+</tr>
+<tr>
+<td><strong>SARSA</strong></td>
+<td>On-policy alternative ao Q-Learning.</td>
+</tr>
+<tr>
+<td><strong>TD Error</strong></td>
+<td>Diferença entre target e predição.</td>
+</tr>
+<tr>
+<td><strong>Value Function</strong></td>
+<td>Função que mede "quanto vale" um estado.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1>Referências</h1>
+<ol>
+<li><strong>Sutton, R., Barto, A.</strong> (2018). <em>Reinforcement Learning: An Introduction</em>. MIT Press.</li>
+<li><strong>Mnih, V. et al.</strong> (2015). <em>Human-level control through deep reinforcement learning</em>. Nature.</li>
+<li><strong>Silver, D. et al.</strong> (2016.<em><em> </em>Mastering the game of Go with deep neural networks and tree search</em>. Nature.</li>
+<li><strong>Silver, D. et al.</strong> (2017). <em>Mastering the game of Go without human knowledge</em>. Nature.</li>
+<li><strong>Silver, D. et al.</strong> (2018). <em>A general reinforcement learning algorithm that masters chess, shogi, and Go</em>. Science.</li>
+<li><strong>Schulman, J. et al.</strong> (2017). <em>Proximal Policy Optimization Algorithms</em>. arXiv.</li>
+<li><strong>Haarnoja, T. et al.</strong> (2018). <em>Soft Actor-Critic</em>. ICML.</li>
+<li><strong>Lillicrap, T. et al.</strong> (2015). <em>Continuous control with deep reinforcement learning</em>. ICLR.</li>
+<li><strong>Fujimoto, S. et al.</strong> (2018). <em>Addressing Function Approximation Error in Actor-Critic Methods</em>. ICML.</li>
+<li><strong>Hessel, M. et al.</strong> (2018). <em>Rainbow: Combining Improvements in Deep Reinforcement Learning</em>. AAAI.</li>
+<li><strong>Schrittwieser, J. et al.</strong> (2020). <em>Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model</em>. Nature.</li>
+<li><strong>Christiano, P. et al.</strong> (2017). <em>Deep Reinforcement Learning from Human Preferences</em>. NeurIPS.</li>
+<li><strong>Ouyang, L. et al.</strong> (2022). <em>Training language models to follow instructions with human feedback</em>. NeurIPS.</li>
+<li><strong>Rafailov, R. et al.</strong> (2023). <em>Direct Preference Optimization</em>. arXiv.</li>
+<li><strong>Bai, Y. et al.</strong> (2022). <em>Constitutional AI: Harmlessness from AI Feedback</em>. arXiv.</li>
+</ol>
+<hr />
+<p><strong>Fim do Volume 04</strong></p>
+<blockquote>
+<p><em>"O aprendizado por reforço é a primeira tentativa séria de fazer máquinas aprenderem como animais: por tentativa, erro, e recompensa."</em>
+— Nexus Affil'IA'te MMN_IA</p>
+</blockquote>
+<p><img alt="Imagem de Encerramento" src="../../assets/ebook_covers/curso_universo_ia/closing_quote.png" /></p>
+<hr />
+<p><strong>© 2026 Nexus Affil'IA'te MMN_IA · Curso Universo IA · Coletânea Técnica</strong></p></body>
+</html>

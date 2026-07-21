@@ -33,6 +33,7 @@ import {
   isMercadoPagoConfigured,
   resolveMercadoPagoCheckoutUrl,
 } from "../services/mercadoPagoService";
+import { createMercadoPagoPreference } from "../services/mercadoPagoService";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "../../../database/schemas/db";
 import { payments } from "../../../database/schemas/schema-final";
@@ -417,9 +418,9 @@ export const pixRouter = router({
         warnings.push("Documento do pagador inválido para o Mercado Pago. O checkout continuará com fallback PIX manual.");
       }
 
-      // ONDA 15 FIX: gerar UUID curto (36 chars max para caber em varchar(36))
-      const _rand = () => Math.random().toString(36).slice(2, 10);
-      const externalReference = `${runtimeUser.id}-${Date.now().toString(36)}-${_rand()}`.slice(0, 36);
+      const externalReference = input.subscriptionId
+        ? `subscription:${input.subscriptionId}:${runtimeUser.id}:${Date.now()}`
+        : `${input.type}:${input.slug}:${runtimeUser.id}:${Date.now()}`;
       const fallbackPix = {
         pixKey: MARKETPLACE_PIX_KEY,
         keyType: detectPixKeyType(MARKETPLACE_PIX_KEY),
@@ -450,6 +451,31 @@ export const pixRouter = router({
         },
         warnings,
       };
+
+      // HOTFIX D18.8: cria preferência MP com múltiplos métodos (pix + saldo + cartão)
+      try {
+        const pref = await createMercadoPagoPreference({
+          externalReference,
+          title: input.name,
+          description: input.description,
+          amountCents: input.amountCents,
+          payerEmail,
+          payerName,
+          notificationUrl: process.env.MERCADO_PAGO_NOTIFICATION_URL || undefined,
+          backUrls: {
+            success: input.returnUrl || undefined,
+            pending: input.returnUrl || undefined,
+            failure: input.returnUrl || undefined,
+          },
+        });
+        if (pref) {
+          result.mercadoPago.preferenceId = pref.id || null;
+          result.mercadoPago.initPoint = pref.init_point || null;
+          result.mercadoPago.sandboxInitPoint = pref.sandbox_init_point || null;
+        }
+      } catch (prefErr) {
+        warnings.push(`Preferencia MP com multiplos metodos nao disponivel: ${prefErr instanceof Error ? prefErr.message : "erro"}`);
+      }
 
       if (!isMercadoPagoConfigured()) {
         warnings.push("MERCADO_PAGO_ACCESS_TOKEN não configurado no servidor. O checkout manterá apenas o PIX manual com a chave definida.");
@@ -493,7 +519,30 @@ export const pixRouter = router({
       }
 
       if (!payerEmail) {
-        warnings.push("O e-mail do comprador não está disponível na sessão atual. O QR PIX do Mercado Pago pode depender desse dado; o fallback com chave PIX manual permanece ativo.");
+        warnings.push("O e-mail do comprador não está disponível na sessão atual. O QR PIX do Mercado Pago requer esse dado; o fallback com QR estático será gerado.");
+        // CEO-012: Gerar QR estático válido via pixService (com a chave correta do .env)
+        try {
+          const staticQr = generatePixStaticPayload({
+            pixKey: MARKETPLACE_PIX_KEY,
+            merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+            merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+            amount,
+            txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+            description: input.description || input.name,
+          });
+          result.pix = {
+            provider: "manual_key",
+            paymentId: null,
+            status: null,
+            qrCode: staticQr.fullPayload,
+            qrCodeBase64: null,
+            ticketUrl: null,
+            expiresAt: null,
+            fallback: fallbackPix,
+          };
+        } catch (staticErr) {
+          warnings.push(`Falha ao gerar QR estático de fallback: ${staticErr instanceof Error ? staticErr.message : "erro"}`);
+        }
         return result;
       }
 
@@ -515,6 +564,50 @@ export const pixRouter = router({
           },
         });
 
+        
+        // HOTFIX D18.4: persiste pedido em marketplace_orders via Pool direto
+        try {
+          const { Pool: _MpPool } = await import("pg");
+          const _mpPool = new _MpPool({ connectionString: process.env.DATABASE_URL });
+          const _mpClient = await _mpPool.connect();
+          try {
+            const orderId = `mp_${(payment as any).id ?? Date.now().toString(36)}_${Math.random().toString(36).slice(2,8)}`;
+            await _mpClient.query(
+              `INSERT INTO marketplace_orders
+                (id, user_id, status, subtotal_cents, discount_cents, total_cents,
+                 payment_method, payment_id, payment_status, external_reference, metadata, created_at, updated_at)
+               VALUES ($1,$2,'pending',$3,0,$3,'mercado_pago',$4,COALESCE($5,'pending'),$6,$7::jsonb,NOW(),NOW())
+               ON CONFLICT (id) DO UPDATE SET
+                 payment_id = EXCLUDED.payment_id,
+                 payment_status = EXCLUDED.payment_status,
+                 updated_at = NOW()`,
+              [
+                orderId,
+                runtimeUser.id,
+                input.amountCents,
+                String((payment as any).id ?? ""),
+                (payment as any).status ?? "pending",
+                externalReference,
+                JSON.stringify({
+                  source: input.source ?? "marketplace",
+                  type: input.type,
+                  slug: input.slug,
+                  name: input.name,
+                  payerEmail,
+                  payerName,
+                  subscriptionId: input.subscriptionId,
+                  termMonths: input.termMonths,
+                }),
+              ]
+            );
+            (result as any).orderId = orderId;
+          } finally {
+            _mpClient.release();
+          }
+        } catch (persistErr) {
+          warnings.push(`Pedido gerado no MP mas nao persistido localmente: ${persistErr instanceof Error ? persistErr.message : "erro"}`);
+        }
+
         const transactionData = payment.point_of_interaction?.transaction_data;
         if (transactionData?.qr_code || transactionData?.qr_code_base64 || transactionData?.ticket_url) {
           result.pix = {
@@ -528,66 +621,34 @@ export const pixRouter = router({
             fallback: fallbackPix,
           };
         } else {
-          warnings.push("O Mercado Pago não retornou QR PIX nesta tentativa. O checkout exibirá a chave PIX manual como fallback.");
+          // CEO-012: MP não retornou QR — gerar estático como fallback
+          try {
+            const staticQr = generatePixStaticPayload({
+              pixKey: MARKETPLACE_PIX_KEY,
+              merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+              merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+              amount,
+              txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+              description: input.description || input.name,
+            });
+            result.pix.qrCode = staticQr.fullPayload;
+          } catch (_) { /* keep null */ }
+          warnings.push("O Mercado Pago não retornou QR PIX nesta tentativa. O checkout exibirá QR estático como fallback.");
         }
       } catch (error) {
-        warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com a chave PIX manual.`);
-      }
-
-      // ONDA 14 FIX: criar marketplace_order para webhook rastrear
-      try {
-        const _pgPool = new PgPoolForHook({ connectionString: process.env.DATABASE_URL });
-        const client = await _pgPool.connect();
+        // CEO-012: MP falhou totalmente — gerar estático como fallback
         try {
-          await client.query("BEGIN");
-          const orderId = `mp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-          // externalReference completo fica em external_reference para lookup
-          const exists = await client.query(
-            `SELECT id FROM marketplace_orders WHERE id=$1 OR external_reference=$2 LIMIT 1`,
-            [orderId, externalReference]
-          );
-          if ((exists.rowCount ?? 0) === 0) {
-            await client.query(
-              `INSERT INTO marketplace_orders (id, user_id, status, payment_status, subtotal_cents, total_cents, payment_method, payment_id, external_reference, metadata, is_test_data) VALUES ($1, $2, 'pending', 'pending', $3, $3, $4, $5, $6, $7::jsonb, false)`,
-              [
-                orderId,
-                runtimeUser.id,
-                input.amountCents,
-                result.pix.provider === "mercado_pago" || result.mercadoPago.preferenceId ? "mercado_pago" : "pix",
-                result.pix.paymentId,
-                externalReference,
-                JSON.stringify({
-                  source: input.source ?? "marketplace",
-                  type: input.type,
-                  slug: input.slug,
-                  name: input.name,
-                  description: input.description,
-                  payerEmail,
-                  payerName,
-                  email: payerEmail,
-                  customerEmail: payerEmail,
-                  customerName: payerName,
-                  externalReference,
-                }),
-              ]
-            );
-            await client.query(
-              `INSERT INTO marketplace_order_items (order_id, item_slug, title, unit_price_cents, quantity, item_type) VALUES ($1, $2, $3, $4, 1, $5)`,
-              [orderId, input.slug, input.name, input.amountCents, input.type]
-            );
-            console.log(`[ONDA14] marketplace_order criada: ${orderId} extRef=${externalReference} user=${runtimeUser.id} amount=${input.amountCents}`);
-          }
-          await client.query("COMMIT");
-        } catch (dbErr) {
-          try { await client.query("ROLLBACK"); } catch {}
-          console.error("[ONDA14] Erro criando marketplace_order:", dbErr);
-          warnings.push("Erro registrando pedido: " + String(dbErr));
-        } finally {
-          try { client.release(); } catch {}
-          try { await _pgPool.end(); } catch {}
-        }
-      } catch (poolErr) {
-        console.error("[ONDA14] Pool erro:", poolErr);
+          const staticQr = generatePixStaticPayload({
+            pixKey: MARKETPLACE_PIX_KEY,
+            merchantName: MARKETPLACE_PIX_RECEIVER_NAME,
+            merchantCity: MARKETPLACE_PIX_RECEIVER_CITY,
+            amount,
+            txid: `nexus_${runtimeUser.id}_${Date.now().toString(36)}`,
+            description: input.description || input.name,
+          });
+          result.pix.qrCode = staticQr.fullPayload;
+        } catch (_) { /* keep null */ }
+        warnings.push(`Não foi possível gerar o PIX dinâmico do Mercado Pago: ${error instanceof Error ? error.message : "erro desconhecido"}. O fluxo seguirá com QR estático.`);
       }
 
       return result;
@@ -630,14 +691,13 @@ export const pixRouter = router({
     .query(async ({ ctx, input }) => {
       // D15-PH-marketplace : lê marketplace_orders do user logado
       try {
-        // FIX 01-07-2026: usar pg.Pool direto (drizzle.execute nao aceita params positional)
         const params: any[] = [ctx.user.id, input.limit, input.offset];
         let where = `mo.user_id = $1 AND mo.payment_status IN ('paid','approved')`;
         if (input.startDate) { params.push(new Date(input.startDate)); where += ` AND COALESCE(mo.paid_at, mo.created_at) >= $${params.length}`; }
         if (input.endDate)   { params.push(new Date(input.endDate));   where += ` AND COALESCE(mo.paid_at, mo.created_at) <= $${params.length}`; }
         const q = `SELECT mo.id, mo.total_cents, mo.payment_status, mo.payment_method, mo.payment_id, mo.external_reference, mo.metadata, mo.created_at, mo.paid_at FROM marketplace_orders mo WHERE ${where} ORDER BY COALESCE(mo.paid_at, mo.created_at) DESC LIMIT $2 OFFSET $3`;
-        const res = await __pixPool.query(q, params);
-        const rows = (res?.rows ?? []) as any[];
+        const res: any = await (ctx as any).db.execute(q as any, params as any);
+        const rows = (res?.rows ?? res ?? []) as any[];
         return {
           items: rows.map((p: any) => ({
             id: String(p.id),
@@ -777,17 +837,99 @@ export const pixRouter = router({
   getPaymentStatus: protectedProcedure
     .input(z.object({ paymentId: z.string().nullable().optional() }))
     .query(async ({ ctx, input }) => {
-      // D14-PIX-status
+      // HOTFIX D18: reconciliação real com Mercado Pago (fallback quando webhook atrasa)
+      // HOTFIX D18.4: reconciliacao real com Mercado Pago (fallback quando webhook atrasa) via Pool direto
       if (!input.paymentId) return { status: null, paymentId: null };
+      const paymentId = String(input.paymentId);
+      let orderId: string | null = null;
+      let localStatus: string | null = null;
+      let localPaymentStatus: string | null = null;
+
+      const { Pool: _StatPool } = await import("pg");
+      const _statPool = new _StatPool({ connectionString: process.env.DATABASE_URL });
+      const _statClient = await _statPool.connect();
       try {
-        const res: any = await ctx.db.execute(
-          `SELECT id, status FROM marketplace_orders WHERE payment_id = $1 OR id = $1 LIMIT 1`,
-          [input.paymentId] as any
-        );
-        const row = (res?.rows ?? res ?? [])[0];
-        return { status: row?.status ?? null, paymentId: input.paymentId };
-      } catch (e) {
-        return { status: null, paymentId: input.paymentId, error: String((e as any)?.message ?? e) };
+        try {
+          const r = await _statClient.query(
+            `SELECT id, status, payment_status, payment_id, user_id, total_cents
+               FROM marketplace_orders
+              WHERE payment_id = $1 OR id = $1
+              ORDER BY created_at DESC LIMIT 1`,
+            [paymentId]
+          );
+          const row = r.rows[0];
+          if (row) {
+            orderId = String(row.id);
+            localStatus = String(row.status ?? "");
+            localPaymentStatus = String(row.payment_status ?? "");
+          }
+        } catch {}
+
+        if (localPaymentStatus === "paid" || localPaymentStatus === "approved" ||
+            localStatus === "paid" || localStatus === "delivered") {
+          return { status: "approved", paymentStatus: localPaymentStatus, orderId, paymentId };
+        }
+
+        const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || "";
+        if (!mpToken) {
+          return { status: localStatus, paymentStatus: localPaymentStatus, orderId, paymentId };
+        }
+        try {
+          const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, {
+            headers: { Authorization: `Bearer ${mpToken}` },
+          });
+          if (mpResp.ok) {
+            const mp: any = await mpResp.json();
+            const mpStatus = String(mp?.status || "").toLowerCase();
+            if (mpStatus === "approved") {
+              try {
+                await _statClient.query(
+                  `UPDATE marketplace_orders
+                      SET payment_status='paid', status='paid', paid_at=NOW(), updated_at=NOW()
+                    WHERE (payment_id=$1 OR id=$1) AND payment_status <> 'paid'`,
+                  [paymentId]
+                );
+              } catch {}
+
+              // FIX CEO-003: Entrega pack no polling tRPC se aplicável
+              try {
+                if (orderId) {
+                  const metaRow = await _statClient.query(
+                    `SELECT user_id, total_cents, metadata FROM marketplace_orders WHERE id=$1 LIMIT 1`,
+                    [orderId]
+                  );
+                  const metaOrder = metaRow.rows?.[0];
+                  if (metaOrder) {
+                    const meta = metaOrder.metadata
+                      ? (typeof metaOrder.metadata === 'string' ? JSON.parse(metaOrder.metadata) : metaOrder.metadata)
+                      : {};
+                    const orderType = String(meta?.type || '').toLowerCase();
+                    const orderSlug = String(meta?.slug || '');
+                    if ((orderType === 'pack' || orderType === 'subscription') && orderSlug && metaOrder.user_id) {
+                      const { grantPackToUser } = await import('../services/packEntitlementService');
+                      const grant = await grantPackToUser(metaOrder.user_id, orderSlug, {
+                        paymentRef: paymentId,
+                        paymentMethod: 'mercado_pago',
+                        amountCents: Number(metaOrder.total_cents || 0),
+                      });
+                      console.log(`[CEO-003] tRPC poll pack grant for ${orderSlug}:`, JSON.stringify(grant));
+                    }
+                  }
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-003] Pack grant via tRPC poll failed:', packErr?.message);
+              }
+
+              return { status: "approved", paymentStatus: "paid", orderId, paymentId, source: "mp_reconcile" };
+            }
+            return { status: mpStatus || localStatus, paymentStatus: localPaymentStatus, orderId, paymentId, mpStatus };
+          }
+        } catch (e) {
+          return { status: localStatus, paymentStatus: localPaymentStatus, orderId, paymentId, error: String((e as any)?.message ?? e) };
+        }
+        return { status: localStatus, paymentStatus: localPaymentStatus, orderId, paymentId };
+      } finally {
+        try { _statClient.release(); } catch {}
       }
     }),
 

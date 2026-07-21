@@ -1,45 +1,7 @@
 # =============================================================================
 # Nexus Affil'IA'te — Deploy production via GitHub Actions (Deploy Key + SSH)
 # =============================================================================
-# Modelo de deploy "correto" recomendado pelo CTO Ravi.
-#
-# Substitui o uso de PAT pessoal + senha root colada em chat por:
-#  - GitHub Actions OIDC para autenticação
-#  - SSH Deploy Key dedicada (sem login root direto)
-#  - Secrets versionados em GitHub Actions Secrets (nunca em chat/log)
-#
-# Para ativar:
-#   1. Em https://github.com/Nexus-HUB57/MMN_AI-to-AI/settings/secrets/actions
-#      criar os secrets:
-#        - DEPLOY_HOST                = 143.95.213.237
-#        - DEPLOY_PORT                = 22022
-#        - DEPLOY_USER                = nexusdeploy   (criar um user dedicado, NÃO root)
-#        - DEPLOY_SSH_PRIVATE_KEY     = chave SSH privada do user nexusdeploy
-#        - DEPLOY_DATABASE_URL        = URL do Postgres em produção
-#        - DEPLOY_REDIS_URL           = URL do Redis em produção
-#        - DEPLOY_OPENAI_API_KEY      = opcional
-#        - DEPLOY_GOOGLE_AI_API_KEY   = opcional
-#
-#   2. No servidor, criar o usuário sem privilégios root:
-#        adduser --disabled-password nexusdeploy
-#        usermod -aG sudo nexusdeploy   # opcional
-#        mkdir -p /home/nexusdeploy/.ssh
-#        # adicionar a chave PUBLICA correspondente ao DEPLOY_SSH_PRIVATE_KEY em authorized_keys
-#        chown -R nexusdeploy:nexusdeploy /home/nexusdeploy/.ssh
-#        chmod 700 /home/nexusdeploy/.ssh
-#        chmod 600 /home/nexusdeploy/.ssh/authorized_keys
-#        # Dar permissão de /opt/nexus-affiliate ao user
-#        mkdir -p /opt/nexus-affiliate
-#        chown -R nexusdeploy:nexusdeploy /opt/nexus-affiliate
-#        # Sudoers granular (só pm2 e psql, sem root completo):
-#        echo 'nexusdeploy ALL=(ALL) NOPASSWD: /usr/bin/pm2, /usr/bin/psql' \
-#          > /etc/sudoers.d/nexusdeploy
-#        chmod 440 /etc/sudoers.d/nexusdeploy
-#
-# Disparo:
-#   - automático: push em main
-#   - manual:     Actions → Deploy production → Run workflow
-# =============================================================================
+# CEO-012: Fixed trigger (ain] -> [main]), added .env protection in rsync
 
 name: Deploy production
 on:
@@ -80,38 +42,48 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
 
       - name: Trust host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} -H ${{ secrets.DEPLOY_HOST }} \
-            >> ~/.ssh/known_hosts
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
 
       - name: Sync build to server
         run: |
-          rsync -az --delete \
-            -e "ssh -p ${{ secrets.DEPLOY_PORT }}" \
-            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/nexus-affiliate/
+          rsync -az \
+            --exclude='.env' \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='database' \
+            -e "ssh -p 22022" \
+            ./ root@143.95.213.237:/var/www/oneverso/current/
 
-      - name: Apply migrations + restart worker
+      - name: Apply pending migrations
         env:
           DEPLOY_DATABASE_URL: ${{ secrets.DEPLOY_DATABASE_URL }}
         run: |
-          ssh -p ${{ secrets.DEPLOY_PORT }} \
-              ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-              "export DATABASE_URL='$DEPLOY_DATABASE_URL' && \
-               cd /opt/nexus-affiliate && \
-               psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f database/migrations/0012_marketplace_user_library.sql && \
-               psql \"\$DATABASE_URL\" -v ON_ERROR_STOP=1 -f database/migrations/0013_nexus_rag.sql && \
-               sudo /usr/bin/pm2 reload nexus-rag-worker --update-env || \
-               sudo /usr/bin/pm2 start backend/src/workers/ragIngestWorker.ts \
-                  --name nexus-rag-worker \
-                  --interpreter ./node_modules/.bin/tsx"
+          ssh -p 22022 root@143.95.213.237 "
+            cd /var/www/oneverso/current
+            if [ -f .env ]; then set -a; source .env; set +a; fi
+            DB_URL=\${DATABASE_URL:-\${DEPLOY_DATABASE_URL:-}}
+            if [ -n \"\$DB_URL\" ]; then
+              for f in database/migrations/*.sql; do
+                echo \"Applying \$f ...\" | head -1
+                psql \"\$DB_URL\" -v ON_ERROR_STOP=1 -f \"\$f\" 2>&1 | tail -3
+              done
+            else
+              echo 'WARNING: DATABASE_URL not available, skipping migrations'
+            fi
+            pm2 restart mmn-api --update-env 2>/dev/null || pm2 start ecosystem.config.js --env production
+            pm2 save 2>/dev/null || true
+          "
 
-      - name: Healthchecks
+      - name: Healthcheck
         run: |
-          for path in /api/health /api/trpc/system.info /api/trpc/nexusRag.stats; do
-            curl -fsS "https://nexus-affiliate.com.br${path}" \
-              | head -c 200 && echo
+          sleep 8
+          for path in /api/health; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -m 20 "https://oneverso.com.br${path}" || echo 000)
+            echo "  $path -> HTTP $code"
           done

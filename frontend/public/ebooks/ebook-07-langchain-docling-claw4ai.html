@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>O que é LangChain, Docling e Claw4AI?</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/curso-universo-ia--07-langchain-docling-claw4ai.webp" /></p>
+<p><strong>O que é LangChain, Docling e Claw4AI?</strong></p>
+<p><em>O Guia Definitivo do Trio de Frameworks que Está Moldando a Nova Geração de Aplicações de IA: Orquestração, Documentos e Agentes Locais</em></p>
+<p><em>Domine as três engrenagens que transformam dados brutos em inteligência acionável.</em></p>
+<p><strong>Por MMN AI-to-AI</strong></p>
+<p>MMN AI-to-AI • 2026</p>
+<p><strong>Sobre este ebook</strong></p>
+<p>No arsenal de qualquer builder sério de IA em 2026, há três nomes que aparecem juntos com frequência --- <strong>LangChain, Docling e Claw4AI</strong>. Cada um resolve um problema diferente, e juntos eles formam uma stack poderosa: LangChain orquestra, Docling destrava o conhecimento preso em documentos, e Claw4AI coloca agentes autônomos rodando localmente em qualquer máquina. Este ebook é o seu <strong>mergulho profundo</strong> nos três: origens, arquitetura, casos de uso, quando usar cada um, como combiná-los, e o que esperar do futuro. Se você quer sair do "hello world" e construir produtos de IA que escalam, esse trio é obrigatório.</p>
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Visão Geral: O Trio que Move a IA Moderna</p>
+<p><strong>•</strong> 2. LangChain: O Maestro da Orquestração</p>
+<p><strong>•</strong> 3. LangGraph: O Estado da Arte em Agentes Statefull</p>
+<p><strong>•</strong> 4. Docling: O Destranca-Documentos</p>
+<p><strong>•</strong> 5. Claw4AI: Agentes Locais, Soberanos e Poderosos</p>
+<p><strong>•</strong> 6. Como os Três se Complementam</p>
+<p><strong>•</strong> 7. Comparativo Detalhado</p>
+<p><strong>•</strong> 8. Stacks Combinadas: Receitas Para Cada Caso</p>
+<p><strong>•</strong> 9. Limitações e Cuidados</p>
+<p><strong>•</strong> 10. O Futuro do Trio e da Engenharia de IA</p>
+</blockquote>
+<p><strong>1. Visão Geral: O Trio que Move a IA Moderna</strong></p>
+<p><strong>A divisão de trabalho</strong></p>
+<ul>
+<li><strong>LangChain:</strong> o maestro. Conecta modelos, tools, memória, dados, lógica. Faz a IA conversar com o mundo.</li>
+<li><strong>Docling:</strong> o tradutor. Pega PDFs, DOCX, PPT, imagens, HTML e transforma em dados estruturados prontos para RAG, fine-tuning e agentes.</li>
+<li><strong>Claw4AI:</strong> o executor local. Roda agentes autônomos na sua máquina, sem enviar dados para a nuvem, com modelos open source.</li>
+</ul>
+<p><strong>Por que esses três juntos?</strong></p>
+<p>Porque <strong>90% dos projetos reais de IA</strong> precisam:
+1. <strong>Orquestrar</strong> chamadas a LLMs, tools, bancos de dados (LangChain).
+2. <strong>Ingerir e processar</strong> documentos do mundo real (Docling).
+3. <strong>Rodar</strong> pelo menos parte do pipeline localmente, por custo, latência ou privacidade (Claw4AI).</p>
+<p><strong>2. LangChain: O Maestro da Orquestração</strong></p>
+<p><strong>Origem e evolução</strong></p>
+<p>Lançado em outubro de 2022 por Harrison Chase, <strong>LangChain</strong> foi o framework que popularizou a construção de aplicações com LLMs. Em pouco tempo, virou o padrão de fato da indústria. Hoje, tem versões estáveis em <strong>Python</strong> e <strong>JavaScript/TypeScript</strong>, mais de 700 integrações, e um ecossistema de extensões (LangGraph, LangSmith, LangServe).</p>
+<p><strong>Os blocos fundamentais</strong></p>
+<ul>
+<li><strong>Models:</strong> wrappers para OpenAI, Anthropic, Google, Mistral, Cohere, Hugging Face, Ollama, vLLM.</li>
+<li><strong>Prompts:</strong> templates, few-shot selectors, output parsers.</li>
+<li><strong>Indexes:</strong> document loaders, text splitters, vector stores, retrievers.</li>
+<li><strong>Memory:</strong> buffers, summaries, entity memories, vector-backed memory.</li>
+<li><strong>Chains:</strong> sequências de chamadas, LCEL (LangChain Expression Language).</li>
+<li><strong>Agents:</strong> ReAct, OpenAI Functions, Structured Chat, Custom.</li>
+<li><strong>Callbacks:</strong> tracing, logging, streaming, human approval.</li>
+</ul>
+<p><strong>LCEL: a DSL que mudou tudo</strong></p>
+<p>A <strong>LangChain Expression Language (LCEL)</strong> é uma DSL declarativa para compor chains com o operador <code>|</code>. Exemplo:</p>
+<pre><code class="language-python">from langchain.chat_models import init_chat_model
+from langchain.prompts import ChatPromptTemplate
+from langchain.output_parsers import StrOutputParser
+
+prompt = ChatPromptTemplate.from_template(&quot;Traduza para {idioma}: {texto}&quot;)
+model = init_chat_model(&quot;claude-sonnet-4&quot;)
+parser = StrOutputParser()
+
+chain = prompt | model | parser
+result = chain.invoke({&quot;idioma&quot;: &quot;inglês&quot;, &quot;texto&quot;: &quot;Olá, mundo!&quot;})
+</code></pre>
+<p><strong>3. LangGraph: O Estado da Arte em Agentes Stateful</strong></p>
+<p><strong>Por que LangGraph importa</strong></p>
+<p>Para agentes que precisam de <strong>loops, persistência, ciclos de reflexão e multi-agente</strong>, o LangGraph é a evolução natural do LangChain. Conceitos:
+- <strong>State:</strong> o estado compartilhado do grafo (TypedDict).
+- <strong>Nodes:</strong> funções que processam e atualizam o estado.
+- <strong>Edges:</strong> conexões (simples ou condicionais).
+- <strong>Checkpoints:</strong> persistência automática em SQLite, Postgres ou Redis.
+- <strong>Human-in-the-loop:</strong> approval/resume em qualquer nó.</p>
+<p><strong>Exemplo: agente ReAct com reflexão</strong></p>
+<pre><code class="language-python">from langgraph.graph import StateGraph, END
+from typing import TypedDict
+
+class State(TypedDict):
+    input: str
+    plan: str
+    draft: str
+    critique: str
+    revision: int
+
+def planner(state): ...
+def writer(state): ...
+def critic(state): ...
+def should_revise(state): return &quot;writer&quot; if state[&quot;revision&quot;] &lt; 2 else END
+
+graph = StateGraph(State)
+graph.add_node(&quot;planner&quot;, planner)
+graph.add_node(&quot;writer&quot;, writer)
+graph.add_node(&quot;critic&quot;, critic)
+graph.add_conditional_edges(&quot;critic&quot;, should_revise)
+graph.set_entry_point(&quot;planner&quot;)
+
+app = graph.compile()
+</code></pre>
+<p><strong>4. Docling: O Destranca-Documentos</strong></p>
+<p><strong>O problema que o Docling resolve</strong></p>
+<p>A maior parte do conhecimento corporativo está presa em <strong>documentos não estruturados</strong>: PDFs escaneados, contratos escaneados, relatórios em PPT, faturas antigas, livros digitalizados. LLMs precisam de <strong>texto limpo, estruturado, com metadados</strong>. É aí que o <strong>Docling</strong> entra.</p>
+<p><strong>O que é o Docling</strong></p>
+<p><strong>Docling</strong> é um toolkit open source da IBM (mas com governança independente) para <strong>parse, understand and convert</strong> documentos. Ele:
+- Lê PDF, DOCX, PPTX, XLSX, HTML, imagens, áudio (com Whisper).
+- Extrai <strong>texto, layout, tabelas, imagens, fórmulas, código, estrutura hierárquica</strong>.
+- Conhece a <strong>ordem de leitura</strong> (não só o texto bruto).
+- Exporta para <strong>Markdown, JSON, HTML, DocTags</strong> (formato nativo do IBM Granite).
+- Preserva <strong>metadados</strong>: autor, data, página, seção, legenda de imagem.</p>
+<p><strong>Modelos avançados do Docling</strong></p>
+<ul>
+<li><strong>Docling-Parse:</strong> parser de PDF de alta performance, escrito em Rust.</li>
+<li><strong>Docling-OCR:</strong> OCR para PDFs escaneados, com suporte a 100+ idiomas.</li>
+<li><strong>TableFormer:</strong> modelo de deep learning que entende tabelas complexas (células mescladas, cabeçalhos multinível).</li>
+<li><strong>LayoutModel:</strong> detecta seções, cabeçalhos, listas, figuras.</li>
+<li><strong>Granite-Docling:</strong> modelo IBM que entende a estrutura semântica do documento.</li>
+</ul>
+<p><strong>Exemplo: parsing de contrato</strong></p>
+<pre><code class="language-python">from docling import DocumentConverter
+
+converter = DocumentConverter()
+result = converter.convert(&quot;contrato.pdf&quot;)
+doc = result.document
+
+# Exporta para markdown
+markdown = doc.export_to_markdown()
+
+# Itera por elementos
+for element in doc.elements:
+    print(element.type, element.text)
+</code></pre>
+<p><strong>Por que Docling é superior a outros parsers</strong></p>
+<ul>
+<li><strong>Precisão de tabela:</strong> 95%+ em contratos e relatórios financeiros.</li>
+<li><strong>Velocidade:</strong> 10x mais rápido que alternativas Python puro.</li>
+<li><strong>Offline:</strong> roda 100% local, sem chamadas a APIs externas.</li>
+<li><strong>Multilíngue:</strong> funciona em PT, EN, ES, FR, DE, etc.</li>
+<li><strong>Integração nativa:</strong> tem loaders prontos para LangChain e LlamaIndex.</li>
+</ul>
+<p><strong>5. Claw4AI: Agentes Locais, Soberanos e Poderosos</strong></p>
+<p><strong>O que é o Claw4AI</strong></p>
+<p><strong>Claw4AI</strong> é o <strong>runtime de agentes do projeto Claw</strong> (o mesmo do OpenClaw, mas focado em uso local). É um <strong>engine open source, escrito em Rust + Python</strong>, que permite rodar agentes autônomos <strong>100% na sua máquina</strong>, com modelos open source, sem dependência de cloud.</p>
+<p><strong>Por que ele existe</strong></p>
+<p>Empresas e devs precisam de:
+- <strong>Privacidade total:</strong> dados sensíveis não saem da máquina.
+- <strong>Custo zero por chamada:</strong> depois de instalar o modelo, não há custo marginal.
+- <strong>Latência baixa:</strong> sem round-trip para API.
+- <strong>Soberania:</strong> rodar mesmo sem internet.
+- <strong>Customização:</strong> modelos open source podem ser fine-tuneados.</p>
+<p><strong>Arquitetura do Claw4AI</strong></p>
+<ul>
+<li><strong>Claw Engine:</strong> runtime em Rust que gerencia o loop agêntico com altíssima performance.</li>
+<li><strong>Claw Python SDK:</strong> interface amigável em Python para definir agentes.</li>
+<li><strong>Model Server:</strong> servidor local compatível com OpenAI API (suporta Ollama, vLLM, llama.cpp).</li>
+<li><strong>Tool Registry:</strong> sistema de tools com descoberta automática.</li>
+<li><strong>Memory Store:</strong> persistência em SQLite ou DuckDB.</li>
+<li><strong>MCP Client:</strong> suporte nativo ao Model Context Protocol.</li>
+</ul>
+<p><strong>Exemplo: agente local completo</strong></p>
+<pre><code class="language-python">from claw4ai import Agent, Tool
+from claw4ai.models import LocalModel
+
+# Carrega modelo local
+llm = LocalModel(&quot;qwen2.5:72b&quot;)
+
+# Define tool customizada
+@Tool(name=&quot;calcular_frete&quot;, description=&quot;Calcula frete Correios&quot;)
+def calcular_frete(cep_origem, cep_destino, peso):
+    ...
+
+# Cria agente
+agent = Agent(
+    name=&quot;assistente&quot;,
+    model=llm,
+    tools=[calcular_frete],
+    memory=True
+)
+
+# Roda
+response = agent.run(&quot;Quanto custa enviar 2kg de SP para o RJ?&quot;)
+</code></pre>
+<p><strong>6. Como os Três se Complementam</strong></p>
+<p><strong>A stack combinada</strong></p>
+<pre><code>[ Documento PDF/Word ]
+        ↓ Docling (parse, OCR, estrutura)
+[ Markdown/JSON limpo ]
+        ↓ LangChain (chunking, embedding, RAG, agent)
+[ IA inteligente com contexto ]
+        ↓ Claw4AI (deploy local, on-prem, soberano)
+[ Produção ]
+</code></pre>
+<p><strong>Exemplo end-to-end</strong></p>
+<ol>
+<li><strong>Docling</strong> converte 1.000 contratos PDF em markdown estruturado.</li>
+<li><strong>LangChain</strong> indexa em vector DB, monta chain RAG + agente jurídico.</li>
+<li><strong>Claw4AI</strong> empacota tudo num container local que roda on-prem em servidor do cliente.</li>
+</ol>
+<p><strong>7. Comparativo Detalhado</strong></p>
+<table>
+<thead>
+<tr>
+<th>Critério</th>
+<th>LangChain</th>
+<th>Docling</th>
+<th>Claw4AI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Função principal</td>
+<td>Orquestração</td>
+<td>Parsing de documentos</td>
+<td>Runtime de agentes local</td>
+</tr>
+<tr>
+<td>Linguagem</td>
+<td>Python, JS</td>
+<td>Python (Rust interno)</td>
+<td>Rust + Python</td>
+</tr>
+<tr>
+<td>Open source</td>
+<td>Sim (MIT)</td>
+<td>Sim (MIT)</td>
+<td>Sim (MIT)</td>
+</tr>
+<tr>
+<td>Curva de aprendizado</td>
+<td>Alta</td>
+<td>Baixa-média</td>
+<td>Média</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Boa</td>
+<td>Excelente</td>
+<td>Excelente</td>
+</tr>
+<tr>
+<td>Cloud-ready</td>
+<td>Sim</td>
+<td>Sim (parcial)</td>
+<td>Não (foco local)</td>
+</tr>
+<tr>
+<td>Documentação</td>
+<td>Excelente</td>
+<td>Boa</td>
+<td>Boa</td>
+</tr>
+<tr>
+<td>Comunidade</td>
+<td>Gigante</td>
+<td>Crescente</td>
+<td>Crescente</td>
+</tr>
+</tbody>
+</table>
+<p><strong>8. Stacks Combinadas: Receitas Para Cada Caso</strong></p>
+<p><strong>Receita 1: Chatbot RAG corporativo</strong>
+- Docling para parse da base de conhecimento (PDFs, Word, PPTs).
+- LangChain + LangGraph para chain RAG com memória.
+- Pinecone ou Weaviate como vector DB.
+- Claude Sonnet 4 ou GPT-4.1 como LLM.
+- LangSmith para observabilidade.</p>
+<p><strong>Receita 2: Agente on-prem para setor financeiro</strong>
+- Docling para parse de balanços e relatórios.
+- Claw4AI rodando com Llama 3.3 70B ou Qwen 2.5 72B local.
+- LangChain como camada de compatibilidade (opcional).
+- DuckDB para análise local de dados.
+- Frontend em Streamlit ou Reflex.</p>
+<p><strong>Receita 3: Plataforma SaaS de análise documental</strong>
+- Docling como parser de upload.
+- LangChain + LangGraph para orquestração multi-tenant.
+- Claw4AI rodando em Workers (Fly.io, Railway) para tarefas sensíveis.
+- OpenAI/Anthropic para tarefas gerais.
+- Stripe para billing, Supabase para auth + DB.</p>
+<p><strong>9. Limitações e Cuidados</strong></p>
+<p><strong>LangChain</strong>
+- Abstração pesada: para casos simples, Python puro com a SDK do modelo é mais limpo.
+- Mudanças frequentes: a API evolui rápido; fique atento a deprecations.
+- Overhead de latência: chains complexas adicionam overhead; meça sempre.</p>
+<p><strong>Docling</strong>
+- PDFs com layout muito exótico (jornais antigos, formulários) podem exigir ajustes.
+- OCR em idiomas raros tem acurácia menor.
+- Tabelas muito complexas (com gráficos embutidos) ainda exigem revisão humana.</p>
+<p><strong>Claw4AI</strong>
+- Requer GPU razoável (mínimo 24GB VRAM para modelos 70B quantizados).
+- Modelos menores (7B-13B) podem ter alucinações --- use em tarefas mais simples.
+- Setup inicial exige conhecimento de Docker, modelos, GPUs.</p>
+<p><strong>10. O Futuro do Trio e da Engenharia de IA</strong></p>
+<p><strong>Tendências para 2026-2028</strong></p>
+<ul>
+<li><strong>LangChain:</strong> foco em <strong>LangGraph</strong> (agentes stateful) e <strong>LangSmith</strong> (observabilidade). LCEL mais expressivo.</li>
+<li><strong>Docling:</strong> modelos Granite-Docling cada vez mais precisos. Suporte nativo a <strong>vídeo</strong> e <strong>áudio longo</strong>. Integração profunda com RAG agêntico.</li>
+<li><strong>Claw4AI:</strong> reescrita em Rust puro, ganho de 5-10x em performance. <strong>Skill Marketplace</strong> próprio. <strong>MCP nativo</strong> em todas as tools.</li>
+</ul>
+<p><strong>A engenharia de IA como disciplina</strong></p>
+<p>Trabalhar com IA em 2026 não é mais "fazer prompt". É engenharia de software completa: parsing, orquestração, agentes, observabilidade, deploy, segurança, custo. Dominar esse trio é um dos melhores investimentos que um profissional de IA pode fazer em 2026.</p>
+<p><strong>A Stack Certa Multiplica Resultados!</strong></p>
+<p><em>Você agora tem um domínio profundo de LangChain, Docling e Claw4AI. Sabe o que cada um faz, quando usar, como combinar. No próximo ebook, vamos colocar a mão na massa: </em><em>Como construir um Agente IA</em><em> do zero, com arquitetura profissional, escolha de stack, design de tools, memória, observabilidade e deploy. O Universo IA agora ganha forma nas suas mãos.</em></p>
+<p>O que é LangChain, Docling e Claw4AI --- Por MMN AI-to-AI</p>
+<p><em>MMN AI-to-AI • 2026 • Todos os direitos reservados</em></p></body>
+</html>

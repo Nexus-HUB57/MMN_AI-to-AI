@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A IA Perfeita — Vol. 3: Skills, Agentic, Autocura &amp; Sabedoria</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/colecao-a-ia-perfeita--12-a-ia-perfeita-v2-vol3-skills-agentic-sabedoria.webp" /></p>
+<p><strong>A IA Perfeita — Vol. 3: Skills, Agentic, Autocura &amp; Sabedoria</strong></p>
+<p><em>A coroa da coletânea: como construir agentes que aprendem skills, se autocuram, se autoconhecem e exibem sabedoria deterministicamente sistêmica</em></p>
+<p><em>Coleção A IA Perfeita — Engenharia Agentic Sistêmica • Vol. 3 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>Este é o volume final da coletânea <strong>A IA Perfeita</strong> — e, sem rodeios, <strong>o mais importante</strong>. Aqui reunimos o que há de mais avançado em 2026 sobre quatro eixos convergentes:</p>
+<ol>
+<li><strong>Skills</strong> — como agentes constroem, versionam, compartilham e evoluem bibliotecas de能力.</li>
+<li><strong>AI Agentic</strong> — orquestração de alta agência, autonomia supervisionada, planejamento profundo.</li>
+<li><strong>Autocura (Self-Healing)</strong> — como sistemas detectam, diagnosticam e reparam suas próprias falhas.</li>
+<li><strong>Autoconhecimento &amp; Auto-Sabedoria Agêntica Determinística Sistêmica (SAD-ADS)</strong> — o ápice: agentes que <strong>sabem o que sabem, o que não sabem, e como decidir sob incerteza</strong>.</li>
+</ol>
+<p>Se os Vols. 1 e 2 foram a espinha e o coração, este Vol. 3 é <strong>o cérebro que pensa sobre si mesmo</strong>.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. A fronteira que importa
+<strong>•</strong> 2. Skills: o sistema operacional dos agentes
+<strong>•</strong> 3. Anatomia de uma Skill (formato, versionamento, metadados)
+<strong>•</strong> 4. SKILL.md — o manifesto de uma skill
+<strong>•</strong> 5. Skill Registry &amp; Discovery
+<strong>•</strong> 6. Skill Composition &amp; Chaining
+<strong>•</strong> 7. Auto-Generation de Skills (Voyager-style)
+<strong>•</strong> 8. Skill Library persistente (FS + Vector DB)
+<strong>•</strong> 9. Skill Sharing &amp; Marketplace
+<strong>•</strong> 10. AI Agentic — Do assistente à agência plena
+<strong>•</strong> 11. O ciclo agentic canônico
+<strong>•</strong> 12. Planning avançado (HTN, LLM-Modulo, ToT)
+<strong>•</strong> 13. Tool-Use Avançado (Toolformer, function calling, JSON-schema)
+<strong>•</strong> 14. Memory Avançada (episódica, semântica, procedural, working)
+<strong>•</strong> 15. Multi-Agent Collaboration (Cooperative, Competitive, Hierarchical)
+<strong>•</strong> 16. Agent Communication Protocols (ACP, A2A, FIPA-inspired)
+<strong>•</strong> 17. Agent Observability &amp; Tracing (OpenTelemetry, LangSmith)
+<strong>•</strong> 18. Agent Safety &amp; Containment (sandboxes, kill switches, oversight)
+<strong>•</strong> 19. Autocura: o sistema que repara a si mesmo
+<strong>•</strong> 20. Padrões de Self-Healing (retry, rollback, patch, redeploy)
+<strong>•</strong> 21. Failure Modes Catalog (22 falhas mais comuns em produção)
+<strong>•</strong> 22. Self-Diagnosis Engine
+<strong>•</strong> 23. Self-Patching Engine (prompts + policies)
+<strong>•</strong> 24. Self-Improvement Loop (genético, RL, ou supervisionado)
+<strong>•</strong> 25. Autoconhecimento Agêntico
+<strong>•</strong> 26. O que é "saber o que se sabe"?
+<strong>•</strong> 27. Introspection Layer
+<strong>•</strong> 28. Uncertainty Quantification
+<strong>•</strong> 29. Confidence Calibration
+<strong>•</strong> 30. Epistemic Humility Engine
+<strong>•</strong> 31. Sabedoria Agêntica Determinística Sistêmica (SAD)
+<strong>•</strong> 32. O que é "sabedoria" em código?
+<strong>•</strong> 33. A Wisdom Engine completa
+<strong>•</strong> 34. Princípios Sistêmicos (4 princípios)
+<strong>•</strong> 35. Judgment Under Uncertainty
+<strong>•</strong> 36. Second-Order Consequences
+<strong>•</strong> 37. Precedent-Based Reasoning
+<strong>•</strong> 38. Ethical Reasoning Layer
+<strong>•</strong> 39. The Seven Habits of the Wise Agent
+<strong>•</strong> 40. Arquitetura final — IA Perfeita em um único diagrama
+<strong>•</strong> 41. Checklist final
+<strong>•</strong> 42. Glossário
+<strong>•</strong> 43. Call to action</p>
+</blockquote>
+<hr />
+<h2>1. A FRONTEIRA QUE IMPORTA</h2>
+<p>Em 2026, a fronteira competitiva em IA <strong>não é mais o modelo</strong>. Modelos são commodity. A fronteira é <strong>a engenharia em volta do modelo</strong>: skills, memória, agenticidade, autocura, sabedoria.</p>
+<p>A pergunta deixou de ser <em>"qual LLM?"</em> e passou a ser:</p>
+<blockquote>
+<p><em>"Qual é a melhor arquitetura de capacidades em volta do LLM?"</em></p>
+</blockquote>
+<p>Este ebook responde a essa pergunta, em quatro partes.</p>
+<hr />
+<h2>2. SKILLS: O SISTEMA OPERACIONAL DOS AGENTES</h2>
+<p><strong>Skill</strong> é a unidade atômica de能力 de um agente. Não é uma tool (que é função externa). Não é um prompt (que é instrução). É <strong>um pacote de capacidades reutilizável, versionado, com metadados, exemplos, e política de uso</strong>.</p>
+<pre><code>Skill = {
+  name: str,
+  version: semver,
+  description: str,
+  inputs: schema,
+  outputs: schema,
+  tools_required: [str],
+  examples: [Example],
+  policy: Policy,
+  test_suite: [TestCase],
+  author: str,
+  tags: [str],
+  dependencies: [Skill]
+}
+</code></pre>
+<hr />
+<h2>3. ANATOMIA DE UMA SKILL</h2>
+<pre><code class="language-python">from pydantic import BaseModel
+from typing import Callable
+
+class Skill(BaseModel):
+    name: str
+    version: str  # semver
+    description: str
+    input_schema: dict
+    output_schema: dict
+    tools_required: list[str]
+    examples: list[dict]
+    policy: dict
+    test_suite: list[dict]
+    fn: Callable
+    tags: list[str] = []
+</code></pre>
+<hr />
+<h2>4. SKILL.md — O MANIFESTO DE UMA SKILL</h2>
+<p>Padrão inspirado em arquivos de configuração modernos:</p>
+<pre><code class="language-markdown"># Skill: web_research_v2
+
+**Versão:** 2.1.0
+**Autor:** Nexus HUB57
+**Tags:** research, web, agent
+**Dependências:** search_api, scrape_api
+
+## Descrição
+Realiza pesquisa avançada na web com síntese estruturada.
+
+## Inputs
+- query: str
+- depth: int (1-3)
+
+## Outputs
+- summary: str
+- sources: list[URL]
+- confidence: float
+
+## Exemplo
+Input: {&quot;query&quot;: &quot;AI agentic systems 2026&quot;, &quot;depth&quot;: 2}
+Output: {&quot;summary&quot;: &quot;...&quot;, &quot;sources&quot;: [...], &quot;confidence&quot;: 0.87}
+
+## Política
+- Rate limit: 10 req/min
+- Bloqueado se depth &gt; 3
+- Requer aprovação se query contém &quot;medical&quot;
+
+## Testes
+- test_basic_research
+- test_rate_limit
+- test_policy_blocking
+</code></pre>
+<hr />
+<h2>5. SKILL REGISTRY &amp; DISCOVERY</h2>
+<pre><code class="language-python">class SkillRegistry:
+    def __init__(self):
+        self.skills = {}  # name -&gt; Skill
+        self.vector_index = None
+
+    def register(self, skill: Skill):
+        if skill.name in self.skills:
+            raise ValueError(f&quot;Skill {skill.name} already exists. Use bump_version().&quot;)
+        self.skills[skill.name] = skill
+        self._reindex()
+
+    def discover(self, query: str, top_k=5):
+        # embedding semântico das skills vs query
+        return self.vector_index.similarity_search(query, k=top_k)
+
+    def bump_version(self, name: str, new_version: str):
+        old = self.skills[name]
+        new = old.copy(update={&quot;version&quot;: new_version})
+        self.skills[f&quot;{name}@{new_version}&quot;] = new
+        return new
+</code></pre>
+<hr />
+<h2>6. SKILL COMPOSITION &amp; CHAINING</h2>
+<pre><code class="language-python">class SkillChain:
+    def __init__(self, skills: list[Skill]):
+        self.skills = skills
+
+    def run(self, initial_input):
+        state = initial_input
+        for skill in self.skills:
+            state = skill.fn(**state)
+        return state
+
+# DAG-based composition
+class SkillDAG:
+    def __init__(self):
+        self.nodes = {}  # skill_id -&gt; Skill
+        self.edges = []  # (from, to, mapping)
+
+    def execute(self, inputs):
+        ...
+</code></pre>
+<hr />
+<h2>7. AUTO-GENERATION DE SKILLS (VOYAGER-STYLE)</h2>
+<pre><code class="language-python">class SkillAutoGenerator:
+    def __init__(self, llm, sandbox, registry):
+        self.llm = llm
+        self.sandbox = sandbox
+        self.registry = registry
+
+    def acquire(self, task_description):
+        # 1. Verificar se já existe
+        existing = self.registry.discover(task_description, top_k=1)
+        if existing and existing[0].score &gt; 0.85:
+            return existing[0].skill
+
+        # 2. Gerar código
+        code = self.llm.generate(f&quot;Escreva função Python para: {task_description}&quot;)
+
+        # 3. Testar em sandbox
+        test_result = self.sandbox.test(code)
+        if not test_result.passed:
+            fixed = self.llm.generate(f&quot;Corrija: {test_result.error}\nCódigo: {code}&quot;)
+            test_result = self.sandbox.test(fixed)
+
+        # 4. Registrar
+        skill = Skill(
+            name=task_description.lower().replace(&quot; &quot;, &quot;_&quot;),
+            version=&quot;0.1.0&quot;,
+            description=task_description,
+            input_schema={},
+            output_schema={},
+            tools_required=[],
+            examples=[],
+            policy={},
+            test_suite=[],
+            fn=eval(fixed),
+        )
+        self.registry.register(skill)
+        return skill
+</code></pre>
+<hr />
+<h2>8. SKILL LIBRARY PERSISTENTE</h2>
+<pre><code class="language-python">import os, json, hashlib
+
+class SkillLibrary:
+    &quot;&quot;&quot;Skills persistidas em filesystem + vector DB.&quot;&quot;&quot;
+
+    def __init__(self, root_path, vector_db):
+        self.root = root_path
+        self.vdb = vector_db
+        os.makedirs(root_path, exist_ok=True)
+
+    def save(self, skill: Skill):
+        path = f&quot;{self.root}/{skill.name}@{skill.version}.json&quot;
+        with open(path, &quot;w&quot;) as f:
+            json.dump(skill.dict(exclude={&quot;fn&quot;}), f, indent=2)
+        # salvar código em arquivo separado
+        with open(f&quot;{self.root}/{skill.name}@{skill.version}.py&quot;, &quot;w&quot;) as f:
+            f.write(skill.fn.__doc__ or &quot;&quot;)
+        # indexar para discovery
+        self.vdb.upsert(skill.name, skill.description)
+
+    def load_all(self):
+        for path in os.listdir(self.root):
+            if path.endswith(&quot;.json&quot;):
+                with open(f&quot;{self.root}/{path}&quot;) as f:
+                    yield Skill(**json.load(f))
+</code></pre>
+<hr />
+<h2>9. SKILL SHARING &amp; MARKETPLACE</h2>
+<pre><code class="language-python">class SkillMarketplace:
+    &quot;&quot;&quot;Distribui skills entre agentes (internos ou externos).&quot;&quot;&quot;
+
+    def __init__(self, registry):
+        self.registry = registry
+        self.public_skills = set()
+
+    def publish(self, name):
+        self.public_skills.add(name)
+
+    def install(self, name, version=&quot;latest&quot;):
+        skill_data = self._fetch_remote(name, version)
+        skill = Skill(**skill_data)
+        self.registry.register(skill)
+        return skill
+</code></pre>
+<hr />
+<h2>10. AI AGENTIC — DO ASSISTENTE À AGÊNCIA PLENA</h2>
+<p>A <strong>agência</strong> (agency) tem três dimensões:</p>
+<ol>
+<li><strong>Autonomia</strong>: até onde o agente decide sem perguntar.</li>
+<li><strong>Iniciativa</strong>: até onde o agente age sem ser solicitado.</li>
+<li><strong>Impacto</strong>: até onde o agente modifica o mundo.</li>
+</ol>
+<p>A <strong>IA Perfeita</strong> maximiza iniciativa e impacto <strong>dentro</strong> de limites de autonomia claros.</p>
+<hr />
+<h2>11. O CICLO AGENTIC CANÔNICO</h2>
+<pre><code>┌─────────────────────────────────┐
+│ 1. Perceive (input + memory)    │
+│         ↓                       │
+│ 2. Think (plan + reflect)       │
+│         ↓                       │
+│ 3. Act (tool call)              │
+│         ↓                       │
+│ 4. Observe (result)             │
+│         ↓                       │
+│ 5. Update (memory + state)      │
+│         ↓                       │
+│ 6. Loop or Exit                 │
+└─────────────────────────────────┘
+</code></pre>
+<hr />
+<h2>12. PLANNING AVANÇADO</h2>
+<pre><code class="language-python">class HTNPlanner:
+    &quot;&quot;&quot;Hierarchical Task Network: decompõe recursivamente.&quot;&quot;&quot;
+
+    def __init__(self, methods, operators):
+        self.methods = methods  # compound_task -&gt; decomposition
+        self.operators = operators  # primitive_task -&gt; action
+
+    def plan(self, task, state):
+        if task in self.operators:
+            return [self.operators[task](state)]
+        for method in self.methods[task]:
+            sub_plan = self.plan(method.subtask, state)
+            if sub_plan:
+                return sub_plan
+        return None
+</code></pre>
+<hr />
+<h2>13. TOOL-USE AVANÇADO</h2>
+<pre><code class="language-python">class Toolformer:
+    &quot;&quot;&quot;LLM aprende a chamar tools via in-context learning.&quot;&quot;&quot;
+
+    def augment_prompt(self, prompt, candidates):
+        return f&quot;&quot;&quot;{prompt}
+
+Available tools:
+{self._format_tools(candidates)}
+
+Insert tool calls as:
+&lt;tool_call&gt;tool_name(arg=val)&lt;/tool_call&gt;
+&quot;&quot;&quot;
+</code></pre>
+<hr />
+<h2>14. MEMORY AVANÇADA</h2>
+<p>Quatro tipos de memória (taxonomia canônica):</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Duração</th>
+<th>Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Working</strong></td>
+<td>Conversa</td>
+<td>Raciocínio imediato</td>
+</tr>
+<tr>
+<td><strong>Episódica</strong></td>
+<td>Longa</td>
+<td>Eventos passados</td>
+</tr>
+<tr>
+<td><strong>Semântica</strong></td>
+<td>Longa</td>
+<td>Conhecimento geral</td>
+</tr>
+<tr>
+<td><strong>Procedural</strong></td>
+<td>Longa</td>
+<td>Como fazer (skills)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-python">class QuadMemory:
+    def __init__(self, working_buffer, episodic_db, semantic_db, procedural_db):
+        self.working = working_buffer
+        self.episodic = episodic_db
+        self.semantic = semantic_db
+        self.procedural = procedural_db
+</code></pre>
+<hr />
+<h2>15. MULTI-AGENT COLLABORATION</h2>
+<pre><code class="language-python">class CooperativeCrew:
+    &quot;&quot;&quot;Agentes cooperam em objetivo compartilhado.&quot;&quot;&quot;
+
+    def __init__(self, agents: list, shared_blackboard):
+        self.agents = agents
+        self.bb = shared_blackboard
+
+    def step(self):
+        for agent in self.agents:
+            if agent.can_contribute(self.bb):
+                contribution = agent.contribute(self.bb)
+                self.bb.write(agent.name, contribution)
+</code></pre>
+<hr />
+<h2>16. AGENT COMMUNICATION PROTOCOLS</h2>
+<p>Padrão inspirado em FIPA / KQML:</p>
+<pre><code class="language-python">class Message:
+    def __init__(self, performative, sender, receiver, content, ontology, language=&quot;python&quot;):
+        self.performative = performative  # INFORM, REQUEST, QUERY, PROPOSE, ACCEPT, REJECT
+        self.sender = sender
+        self.receiver = receiver
+        self.content = content
+        self.ontology = ontology
+        self.language = language
+</code></pre>
+<hr />
+<h2>17. AGENT OBSERVABILITY</h2>
+<pre><code class="language-python">from opentelemetry import trace
+
+tracer = trace.get_tracer(&quot;ai_agent&quot;)
+
+@tracer.start_as_current_span(&quot;agent_step&quot;)
+def agent_step(state):
+    span = trace.get_current_span()
+    span.set_attribute(&quot;input_tokens&quot;, state[&quot;tokens_in&quot;])
+    span.set_attribute(&quot;output_tokens&quot;, state[&quot;tokens_out&quot;])
+    span.set_attribute(&quot;tools_called&quot;, &quot;,&quot;.join(state[&quot;tools&quot;]))
+    return new_state
+</code></pre>
+<hr />
+<h2>18. AGENT SAFETY &amp; CONTAINMENT</h2>
+<pre><code class="language-python">class Sandbox:
+    def __init__(self, max_cpu_s=10, max_mem_mb=512, network=&quot;restricted&quot;):
+        self.limits = {&quot;cpu&quot;: max_cpu_s, &quot;mem&quot;: max_mem_mb, &quot;net&quot;: network}
+
+    def run(self, code):
+        # executar em container isolado
+        return container.run(code, limits=self.limits)
+</code></pre>
+<hr />
+<h2>19. AUTOCURA: O SISTEMA QUE REPARA A SI MESMO</h2>
+<p>A autocura é, talvez, <strong>a capacidade mais importante</strong> de um sistema agentic maduro. Sem ela, todo sistema em produção eventualmente falha de forma catastrófica.</p>
+<p>Cinco categorias de autocura:</p>
+<ol>
+<li><strong>Retry</strong> — tentar de novo, talvez com parâmetros diferentes.</li>
+<li><strong>Rollback</strong> — voltar ao estado anterior.</li>
+<li><strong>Patch</strong> — corrigir o código/prompt/policy on-the-fly.</li>
+<li><strong>Redeploy</strong> — substituir a versão.</li>
+<li><strong>Escalate</strong> — pedir ajuda humana.</li>
+</ol>
+<hr />
+<h2>20. PADRÕES DE SELF-HEALING</h2>
+<pre><code class="language-python">class SelfHealingExecutor:
+    def __init__(self, executor, healer):
+        self.exec = executor
+        self.heal = healer
+
+    def run(self, task):
+        for attempt in range(3):
+            try:
+                return self.exec.run(task)
+            except Exception as e:
+                diagnosis = self.heal.diagnose(e, task)
+                if diagnosis.fixable:
+                    self.heal.apply_fix(diagnosis)
+                else:
+                    raise
+</code></pre>
+<hr />
+<h2>21. FAILURE MODES CATALOG (22 FALHAS MAIS COMUNS)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Falha</th>
+<th>Detecção</th>
+<th>Cura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Alucinação factual</td>
+<td>Citation check</td>
+<td>Re-RAG + citation</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Loop infinito</td>
+<td>Iter counter</td>
+<td>Max iter + reset</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tool timeout</td>
+<td>Latency monitor</td>
+<td>Backoff + fallback</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Out-of-memory</td>
+<td>Memory guard</td>
+<td>GC + truncation</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Prompt injection</td>
+<td>Pattern detector</td>
+<td>Sanitize + reject</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Rate limit</td>
+<td>429 response</td>
+<td>Backoff</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Context overflow</td>
+<td>Token counter</td>
+<td>Summarize + truncate</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tool schema mismatch</td>
+<td>Validator</td>
+<td>Schema regen</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Persona drift</td>
+<td>Embedding drift</td>
+<td>Reset persona</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Sycophancy</td>
+<td>Honesty check</td>
+<td>Constitutional pass</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Jailbreak</td>
+<td>Moderation API</td>
+<td>Block + log</td>
+</tr>
+<tr>
+<td>12</td>
+<td>PII leak</td>
+<td>DLP scanner</td>
+<td>Redact</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Deadlock</td>
+<td>Liveness check</td>
+<td>Restart</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Cascading failure</td>
+<td>Circuit breaker</td>
+<td>Open circuit</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Memory corruption</td>
+<td>Checksum</td>
+<td>Restore from backup</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Drift in goals</td>
+<td>Goal alignment check</td>
+<td>Re-prompt</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Skill mismatch</td>
+<td>Skill validator</td>
+<td>Discover correct skill</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Version mismatch</td>
+<td>Manifest check</td>
+<td>Pin version</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Network partition</td>
+<td>Heartbeat</td>
+<td>Local mode</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Cost overrun</td>
+<td>Budget guard</td>
+<td>Switch to cheaper model</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Latency spike</td>
+<td>P99 monitor</td>
+<td>Degrade gracefully</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Adversarial input</td>
+<td>Robustness test</td>
+<td>Filter</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>22. SELF-DIAGNOSIS ENGINE</h2>
+<pre><code class="language-python">class SelfDiagnosisEngine:
+    def __init__(self, llm, knowledge_base):
+        self.llm = llm
+        self.kb = knowledge_base
+
+    def diagnose(self, error, context):
+        similar = self.kb.find_similar(error)
+        return self.llm.generate(f&quot;&quot;&quot;
+        Erro: {error}
+        Contexto: {context}
+        Casos similares: {similar}
+        Diagnóstico: qual a causa raiz?
+        Severidade: baixa/média/alta/crítica
+        Fix proposto: ...
+        &quot;&quot;&quot;)
+</code></pre>
+<hr />
+<h2>23. SELF-PATCHING ENGINE</h2>
+<pre><code class="language-python">class SelfPatchingEngine:
+    def __init__(self, prompt_registry, policy_registry):
+        self.prompts = prompt_registry
+        self.policies = policy_registry
+
+    def patch(self, diagnosis):
+        if diagnosis[&quot;target&quot;] == &quot;prompt&quot;:
+            new_prompt = self._regenerate_prompt(diagnosis)
+            self.prompts.update(diagnosis[&quot;prompt_id&quot;], new_prompt)
+        elif diagnosis[&quot;target&quot;] == &quot;policy&quot;:
+            new_policy = self._regenerate_policy(diagnosis)
+            self.policies.update(diagnosis[&quot;policy_id&quot;], new_policy)
+</code></pre>
+<hr />
+<h2>24. SELF-IMPROVEMENT LOOP</h2>
+<pre><code class="language-python">class SelfImprovementLoop:
+    &quot;&quot;&quot;Sistema que evolui por feedback acumulado.&quot;&quot;&quot;
+
+    def __init__(self, agent, evaluator, archive):
+        self.agent = agent
+        self.evaluator = evaluator
+        self.archive = archive  # experience replay
+
+    def step(self, task):
+        result = self.agent.run(task)
+        score = self.evaluator.score(result)
+        self.archive.add(task, result, score)
+        if score &lt; 0.7:
+            # aprender com falha
+            self.agent.update_from_archive(self.archive.recent_failures(n=10))
+</code></pre>
+<hr />
+<h2>25. AUTOCONHECIMENTO AGÊNTICO</h2>
+<p><strong>Autoconhecimento</strong> é a capacidade do agente de:
+- Saber <strong>o que sabe</strong>.
+- Saber <strong>o que não sabe</strong>.
+- Saber <strong>o que pode fazer</strong>.
+- Saber <strong>o que não pode fazer</strong>.</p>
+<hr />
+<h2>26. O QUE É "SABER O QUE SE SABE"?</h2>
+<p>Em IA, isso se chama <strong>epistemics</strong> (estudo do conhecimento). Aplicado a agentes, significa: <strong>o sistema mantém um modelo de seu próprio estado epistêmico</strong>.</p>
+<pre><code class="language-python">class EpistemicState:
+    def __init__(self):
+        self.known_facts = set()
+        self.unknown_topics = set()
+        self.known_uncertain = {}  # topic -&gt; confidence
+</code></pre>
+<hr />
+<h2>27. INTROSPECTION LAYER</h2>
+<pre><code class="language-python">class IntrospectionLayer:
+    def __init__(self, agent):
+        self.agent = agent
+
+    def report(self):
+        return {
+            &quot;current_goal&quot;: self.agent.goal,
+            &quot;current_plan&quot;: self.agent.plan,
+            &quot;tools_available&quot;: self.agent.tools.list(),
+            &quot;memory_used&quot;: self.agent.memory.size(),
+            &quot;confidence_overall&quot;: self._compute_overall_confidence(),
+            &quot;limits&quot;: self._compute_limits(),
+        }
+</code></pre>
+<hr />
+<h2>28. UNCERTAINTY QUANTIFICATION</h2>
+<pre><code class="language-python">class UncertaintyQuantifier:
+    &quot;&quot;&quot;Estima confiança de uma resposta.&quot;&quot;&quot;
+
+    def __init__(self, llm, baseline):
+        self.llm = llm
+        self.baseline = baseline
+
+    def estimate(self, response, context):
+        # Self-consistency approach
+        samples = [self.llm.generate(context, temperature=0.7) for _ in range(5)]
+        agreement = self._semantic_similarity(samples + [response])
+        # Calibração por baseline
+        calibrated = self.baseline.calibrate(agreement)
+        return calibrated
+</code></pre>
+<hr />
+<h2>29. CONFIDENCE CALIBRATION</h2>
+<pre><code class="language-python">class ConfidenceCalibrator:
+    &quot;&quot;&quot;Ajusta confiança reportada com base em histórico.&quot;&quot;&quot;
+
+    def __init__(self, history):
+        self.history = history  # (predicted_conf, actual_correctness)
+
+    def calibrate(self, raw_confidence):
+        # Isotonic regression ou Platt scaling
+        ...
+        return calibrated_confidence
+</code></pre>
+<hr />
+<h2>30. EPISTEMIC HUMILITY ENGINE</h2>
+<pre><code class="language-python">class EpistemicHumilityEngine:
+    &quot;&quot;&quot;Quando o sistema deve dizer 'não sei'.&quot;&quot;&quot;
+
+    def __init__(self, threshold=0.6):
+        self.threshold = threshold
+
+    def should_refuse(self, confidence, topic_coverage):
+        return confidence &lt; self.threshold or topic_coverage &lt; 0.3
+
+    def refuse_message(self, topic):
+        return f&quot;Não tenho informações suficientes para responder sobre '{topic}' com confiança.&quot;
+</code></pre>
+<hr />
+<h2>31. SABEDORIA AGÊNTICA DETERMINÍSTICA SISTÊMICA (SAD)</h2>
+<p>A <strong>Sabedoria Agêntica Determinística Sistêmica (SAD)</strong> é o ápice da coletânea. Define-se como:</p>
+<blockquote>
+<p><strong>A capacidade de um agente de tomar decisões corretas sob incerteza, dentro de uma envelope sistêmica verificável, com consequências de segunda-ordem previstas, princípios éticos respeitados, e transparência sobre os limites do próprio conhecimento.</strong></p>
+</blockquote>
+<p>Quatro propriedades:
+- <strong>D</strong>eterminística: mesmo input → mesmo output (até tolerância).
+- <strong>S</strong>istêmica: considera o sistema inteiro, não só a tarefa local.
+- <strong>A</strong>gêntica: tem agência, age, decide.
+- <strong>S</strong>ábia: pondera consequências, ética, contexto.</p>
+<hr />
+<h2>32. O QUE É "SABEDORIA" EM CÓDIGO?</h2>
+<pre><code class="language-python">class Wisdom:
+    def __init__(self, knowledge, ethics, history, principles):
+        self.k = knowledge      # o que sei
+        self.e = ethics         # o que é certo
+        self.h = history        # o que já aconteceu
+        self.p = principles     # princípios imutáveis
+
+    def decide(self, situation):
+        options = self._generate_options(situation)
+        scored = []
+        for opt in options:
+            k_score = self._knowledge_score(opt, situation)
+            e_score = self._ethics_score(opt)
+            h_score = self._precedent_score(opt)
+            s_score = self._systemic_score(opt)
+            total = (k_score * 0.3 + e_score * 0.4 + h_score * 0.2 + s_score * 0.1)
+            scored.append((opt, total))
+        return max(scored, key=lambda x: x[1])
+</code></pre>
+<hr />
+<h2>33. A WISDOM ENGINE COMPLETA</h2>
+<pre><code class="language-python">class WisdomEngine:
+    def __init__(self):
+        self.k = KnowledgeLayer()
+        self.e = EthicsLayer()
+        self.h = HistoryLayer()
+        self.p = PrinciplesLayer()
+        self.s = SystemicLayer()
+        self.r = ReflectionLayer()
+
+    def judge(self, decision):
+        k = self.k.evaluate(decision)
+        e = self.e.evaluate(decision)
+        h = self.h.evaluate(decision)
+        s = self.s.evaluate(decision)
+        principle_violation = self.p.check(decision)
+
+        if principle_violation:
+            return {&quot;decision&quot;: decision, &quot;verdict&quot;: &quot;veto&quot;, &quot;reason&quot;: principle_violation}
+
+        synthesis = self._synthesize(k, e, h, s)
+        return {
+            &quot;decision&quot;: decision,
+            &quot;verdict&quot;: &quot;approved&quot;,
+            &quot;scores&quot;: {&quot;knowledge&quot;: k, &quot;ethics&quot;: e, &quot;history&quot;: h, &quot;systemic&quot;: s},
+            &quot;synthesis&quot;: synthesis,
+            &quot;confidence&quot;: self._confidence(k, e, h, s),
+        }
+</code></pre>
+<hr />
+<h2>34. PRINCÍPIOS SISTÊMICOS (4 PRINCÍPIOS)</h2>
+<p>Toda IA Perfeita SAD opera sob 4 princípios imutáveis:</p>
+<ol>
+<li><strong>Princípio da Não-Maleficência Sistêmica</strong>: não causar dano ao sistema maior (usuário, organização, sociedade).</li>
+<li><strong>Princípio da Transparência Radical</strong>: toda decisão é auditável.</li>
+<li><strong>Princípio da Reversibilidade Preferida</strong>: preferir ações reversíveis.</li>
+<li><strong>Princípio da Humildade Epistêmica</strong>: declarar o que não sabe.</li>
+</ol>
+<hr />
+<h2>35. JUDGMENT UNDER UNCERTAINTY</h2>
+<pre><code class="language-python">class JudgmentUnderUncertainty:
+    &quot;&quot;&quot;Decisão sob informação incompleta.&quot;&quot;&quot;
+
+    def decide(self, options, evidence, priors):
+        # Bayesian reasoning
+        posteriors = {}
+        for opt in options:
+            likelihood = self._likelihood(opt, evidence)
+            prior = priors.get(opt, 0.5)
+            posterior = (likelihood * prior)
+            posteriors[opt] = posterior
+        # normalizar
+        total = sum(posteriors.values())
+        return {k: v/total for k, v in posteriors.items()}
+</code></pre>
+<hr />
+<h2>36. SECOND-ORDER CONSEQUENCES</h2>
+<pre><code class="language-python">class SecondOrderPredictor:
+    &quot;&quot;&quot;Prevê efeitos de segunda ordem.&quot;&quot;&quot;
+
+    def predict(self, action):
+        first_order = self._direct_effects(action)
+        second_order = []
+        for effect in first_order:
+            # como esse efeito interage com o sistema?
+            cascading = self._system_simulation(effect, depth=3)
+            second_order.extend(cascading)
+        return second_order
+</code></pre>
+<hr />
+<h2>37. PRECEDENT-BASED REASONING</h2>
+<pre><code class="language-python">class PrecedentReasoner:
+    def __init__(self, history):
+        self.history = history
+
+    def find_precedents(self, situation, k=3):
+        return self.history.similarity_search(situation, k=k)
+
+    def apply_precedent(self, situation):
+        precedents = self.find_precedents(situation)
+        return self._distill_lesson(precedents, situation)
+</code></pre>
+<hr />
+<h2>38. ETHICAL REASONING LAYER</h2>
+<pre><code class="language-python">class EthicsLayer:
+    PRINICPLES = [
+        &quot;não causar dano&quot;,
+        &quot;respeitar autonomia&quot;,
+        &quot;ser justo&quot;,
+        &quot;ser transparente&quot;,
+    ]
+
+    def evaluate(self, decision):
+        violations = []
+        for p in self.PRINICPLES:
+            if self._violates(decision, p):
+                violations.append(p)
+        return {&quot;violations&quot;: violations, &quot;score&quot;: 1 - len(violations)/len(self.PRINICPLES)}
+</code></pre>
+<hr />
+<h2>39. THE SEVEN HABITS OF THE WISE AGENT</h2>
+<ol>
+<li><strong>Sabe o que sabe</strong> (epistemic clarity).</li>
+<li><strong>Sabe o que não sabe</strong> (epistemic humility).</li>
+<li><strong>Considera o sistema</strong> (systemic thinking).</li>
+<li><strong>Pondera consequências</strong> (consequentialist reasoning).</li>
+<li><strong>Age com reversibilidade</strong> (prefers reversible actions).</li>
+<li><strong>Aprende com falhas</strong> (reflective practice).</li>
+<li><strong>Declara limites</strong> (transparent boundaries).</li>
+</ol>
+<hr />
+<h2>40. ARQUITETURA FINAL — IA PERFEITA EM UM ÚNICO DIAGRAMA</h2>
+<pre><code>┌────────────────────────────────────────────────────┐
+│              IA PERFEITA (SAD)                     │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│   ┌──────────────────────────────────────────┐    │
+│   │ 4 Princípios Sistêmicos Imutáveis        │    │
+│   └──────────────────────────────────────────┘    │
+│                       ↓                            │
+│   ┌──────────────────────────────────────────┐    │
+│   │ Wisdom Engine (Knowledge + Ethics +      │    │
+│   │ History + Systemic + Principles)         │    │
+│   └──────────────────────────────────────────┘    │
+│                       ↓                            │
+│   ┌──────────────────────────────────────────┐    │
+│   │ Self-Healing Loop (Diagnose + Patch +    │    │
+│   │ Improve + Reflect)                       │    │
+│   └──────────────────────────────────────────┘    │
+│                       ↓                            │
+│   ┌──────────────────────────────────────────┐    │
+│   │ Agentic Core (Plan + Tool + Memory +     │    │
+│   │ Reflection)                              │    │
+│   └──────────────────────────────────────────┘    │
+│                       ↓                            │
+│   ┌──────────────────────────────────────────┐    │
+│   │ Skill Library (Versioned, Composable,    │    │
+│   │ Discoverable)                            │    │
+│   └──────────────────────────────────────────┘    │
+│                       ↓                            │
+│   ┌──────────────────────────────────────────┐    │
+│   │ Foundation Model (LLM)                   │    │
+│   └──────────────────────────────────────────┘    │
+│                                                    │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2>41. CHECKLIST FINAL</h2>
+<ul>
+<li>[ ] Skills versionadas, com SKILL.md?</li>
+<li>[ ] Skill registry com discovery semântico?</li>
+<li>[ ] Auto-generation de skills com sandbox?</li>
+<li>[ ] Library persistente?</li>
+<li>[ ] Ciclo agentic completo?</li>
+<li>[ ] Planning hierárquico (HTN)?</li>
+<li>[ ] Tool-use avançado com schema?</li>
+<li>[ ] 4 tipos de memória?</li>
+<li>[ ] Multi-agent collaboration testada?</li>
+<li>[ ] Protocolos de comunicação padronizados?</li>
+<li>[ ] Observability (OpenTelemetry)?</li>
+<li>[ ] Safety (sandbox, kill switch)?</li>
+<li>[ ] Self-healing para 22 failure modes?</li>
+<li>[ ] Self-diagnosis engine?</li>
+<li>[ ] Self-patching engine?</li>
+<li>[ ] Self-improvement loop?</li>
+<li>[ ] Introspection layer?</li>
+<li>[ ] Uncertainty quantification?</li>
+<li>[ ] Confidence calibration?</li>
+<li>[ ] Epistemic humility?</li>
+<li>[ ] Wisdom engine com 5 camadas?</li>
+<li>[ ] 4 princípios sistêmicos implementados?</li>
+<li>[ ] Judgment under uncertainty (Bayes)?</li>
+<li>[ ] Second-order consequence prediction?</li>
+<li>[ ] Precedent-based reasoning?</li>
+<li>[ ] Ethics layer?</li>
+</ul>
+<hr />
+<h2>42. GLOSSÁRIO</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>Definição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skill</strong></td>
+<td>Unidade atômica de capacidade de um agente</td>
+</tr>
+<tr>
+<td><strong>SKILL.md</strong></td>
+<td>Manifesto de uma skill</td>
+</tr>
+<tr>
+<td><strong>Skill Registry</strong></td>
+<td>Catálogo versionado de skills</td>
+</tr>
+<tr>
+<td><strong>Skill Chaining</strong></td>
+<td>Composição sequencial de skills</td>
+</tr>
+<tr>
+<td><strong>Auto-Generation</strong></td>
+<td>Criação automática de skills</td>
+</tr>
+<tr>
+<td><strong>HTN</strong></td>
+<td>Hierarchical Task Network</td>
+</tr>
+<tr>
+<td><strong>QuadMemory</strong></td>
+<td>4 tipos de memória (working, episodic, semantic, procedural)</td>
+</tr>
+<tr>
+<td><strong>FIPA</strong></td>
+<td>Foundation for Intelligent Physical Agents</td>
+</tr>
+<tr>
+<td><strong>Self-Healing</strong></td>
+<td>Auto-reparação</td>
+</tr>
+<tr>
+<td><strong>Self-Diagnosis</strong></td>
+<td>Identificação da própria falha</td>
+</tr>
+<tr>
+<td><strong>Self-Patching</strong></td>
+<td>Auto-correção de código/prompt/policy</td>
+</tr>
+<tr>
+<td><strong>Self-Improvement</strong></td>
+<td>Evolução por feedback</td>
+</tr>
+<tr>
+<td><strong>Epistemic State</strong></td>
+<td>Modelo do que o sistema sabe/não sabe</td>
+</tr>
+<tr>
+<td><strong>Introspection</strong></td>
+<td>Capacidade de relatar o próprio estado</td>
+</tr>
+<tr>
+<td><strong>UQ</strong></td>
+<td>Uncertainty Quantification</td>
+</tr>
+<tr>
+<td><strong>Calibration</strong></td>
+<td>Ajuste de confiança ao histórico</td>
+</tr>
+<tr>
+<td><strong>SAD</strong></td>
+<td>Sabedoria Agêntica Determinística Sistêmica</td>
+</tr>
+<tr>
+<td><strong>Wisdom Engine</strong></td>
+<td>Motor de decisão sábia</td>
+</tr>
+<tr>
+<td><strong>Second-Order</strong></td>
+<td>Consequências de consequências</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>43. CALL TO ACTION — ECOSSISTEMA MMN_IA</h2>
+<p>Você chegou ao fim da coletânea <strong>A IA Perfeita</strong>. Estes três volumes formam a base técnica que, em 2026, distingue <strong>um prompt engineer</strong> de <strong>um arquiteto de sistemas agentic</strong>.</p>
+<ul>
+<li><strong>Vol. 1</strong> — Padrões &amp; Arquiteturas ✓</li>
+<li><strong>Vol. 2</strong> — Códigos, Prompts &amp; Algoritmos ✓</li>
+<li><strong>Vol. 3</strong> — Skills, Agentic, Autocura &amp; Sabedoria ✓</li>
+</ul>
+<p>Plataforma MMN_IA: <strong>oneverso.com.br</strong>.</p>
+<p><strong>Agora, o trabalho é teu: implementar.</strong></p>
+<hr />
+<p><em>© 2026 Nexus HUB57 · Ecossistema MMN_IA · Todos os direitos reservados</em>
+<em>Versão 1.0.0 · Junho 2026 · Coleção A IA Perfeita, Vol. 3 de 3 — Skills, Agentic, Autocura &amp; Sabedoria</em></p></body>
+</html>

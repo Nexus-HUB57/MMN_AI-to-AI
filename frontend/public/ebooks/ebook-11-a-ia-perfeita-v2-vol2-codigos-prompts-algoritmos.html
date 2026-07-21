@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A IA Perfeita — Vol. 2: Códigos, Prompts &amp; Algoritmos</title>
+  <style>
+@page { size: A4; margin: 20mm 16mm 20mm 16mm; }
+html { font-family: Inter, Arial, sans-serif; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  color: #111827;
+  line-height: 1.65;
+  font-size: 11.5pt;
+}
+h1, h2, h3, h4 {
+  color: #0f172a;
+  page-break-after: avoid;
+}
+h1 {
+  font-size: 24pt;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+}
+h2 { font-size: 17pt; margin-top: 18pt; }
+h3 { font-size: 13pt; margin-top: 14pt; }
+p { margin: 0 0 10pt 0; text-align: justify; }
+blockquote {
+  border-left: 4px solid #0ea5e9;
+  background: #eff6ff;
+  padding: 10pt 12pt;
+  margin: 12pt 0;
+}
+code { background: #f3f4f6; padding: 1pt 4pt; }
+pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 9.4pt;
+  overflow: hidden;
+}
+img {
+  max-width: 100%;
+  display: block;
+  margin: 12pt auto;
+}
+img[alt="Capa"] {
+  max-width: 70%;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #cbd5e1; padding: 6pt 8pt; vertical-align: top; }
+th { background: #f8fafc; }
+ul, ol { margin: 0 0 10pt 0; padding-left: 22pt; }
+hr { border: 0; border-top: 1px solid #cbd5e1; margin: 14pt 0; }
+</style>
+</head>
+<body><p><img alt="Capa" src="/ebooks/covers/colecao-a-ia-perfeita--11-a-ia-perfeita-v2-vol2-codigos-prompts-algoritmos.webp" /></p>
+<p><strong>A IA Perfeita — Vol. 2: Códigos, Prompts &amp; Algoritmos</strong></p>
+<p><em>Implementações completas, prompt library avançada e os algoritmos agentic que sustentam a próxima geração de sistemas autônomos</em></p>
+<p><em>Coleção A IA Perfeita — Engenharia Agentic Sistêmica • Vol. 2 de 3</em></p>
+<p><strong>Por Nexus HUB57 · Ecossistema MMN_IA</strong></p>
+<p>MMN_IA • 2026</p>
+<hr />
+<p><strong>Sobre este ebook</strong></p>
+<p>O Vol. 2 é o <strong>livro de receitas</strong> da coletânea. Onde o Vol. 1 tratou de <strong>padrões e arquiteturas</strong> em alto nível, este volume mergulha em <strong>códigos reais, prompt templates prontos para uso, e os algoritmos agentic mais importantes</strong> em produção em 2026. É referência técnica direta: copie, adapte, envie para produção.</p>
+<hr />
+<p><strong>Sumário</strong></p>
+<blockquote>
+<p><strong>•</strong> 1. Filosofia do código agentic
+<strong>•</strong> 2. Algoritmo 1 — Plan-and-Execute completo
+<strong>•</strong> 3. Algoritmo 2 — Reflexion (auto-crítica iterativa)
+<strong>•</strong> 4. Algoritmo 3 — Tree of Thoughts
+<strong>•</strong> 5. Algoritmo 4 — Self-Consistency Sampling
+<strong>•</strong> 6. Algoritmo 5 — ReWOO (Reasoning With tools Only)
+<strong>•</strong> 7. Algoritmo 6 — MRKL (Modular Reasoning, Knowledge, Language)
+<strong>•</strong> 8. Algoritmo 7 — BabyAGI
+<strong>•</strong> 9. Algoritmo 8 — AutoGPT loop
+<strong>•</strong> 10. Algoritmo 9 — CAMEL (Role-Playing)
+<strong>•</strong> 11. Algoritmo 10 — Voyager (Skill Library Growth)
+<strong>•</strong> 12. Algoritmo 11 — DSPy (declarative prompting)
+<strong>•</strong> 13. Algoritmo 12 — Constitutional AI
+<strong>•</strong> 14. Algoritmo 13 — RLHF simplificado
+<strong>•</strong> 15. Algoritmo 14 — RAG híbrido avançado
+<strong>•</strong> 16. Algoritmo 15 — Agent Memory (episódica + semântica)
+<strong>•</strong> 17. Algoritmo 16 — Self-Healing Retry com backoff exponencial
+<strong>•</strong> 18. Algoritmo 17 — Tool Router (decision tree)
+<strong>•</strong> 19. Algoritmo 18 — Critic/Refiner loop
+<strong>•</strong> 20. Algoritmo 19 — Agent Orchestrator (state machine)
+<strong>•</strong> 21. Algoritmo 20 — Streaming com cancelamento
+<strong>•</strong> 22. Prompt Library — Fundamentos
+<strong>•</strong> 23. Prompt Library — Estruturados (JSON)
+<strong>•</strong> 24. Prompt Library — Chain-of-Thought
+<strong>•</strong> 25. Prompt Library — Few-Shot
+<strong>•</strong> 26. Prompt Library — ReAct
+<strong>•</strong> 27. Prompt Library — Persona
+<strong>•</strong> 28. Prompt Library — Constitutional
+<strong>•</strong> 29. Prompt Library — RAG
+<strong>•</strong> 30. Prompt Library — Tools
+<strong>•</strong> 31. Prompt Library — Self-Critique
+<strong>•</strong> 32. Algoritmo final — A Sabedoria Engine (preview Vol. 3)
+<strong>•</strong> 33. Glossário
+<strong>•</strong> 34. Call to action</p>
+</blockquote>
+<hr />
+<h2>1. FILOSOFIA DO CÓDIGO AGENTIC</h2>
+<p>O código agentic moderno se distingue do código tradicional por <strong>três propriedades</strong>:</p>
+<ol>
+<li><strong>Estado é distribuído</strong> — conversa, memória, tools, retrieval, reflexão.</li>
+<li><strong>Fluxo é cíclico</strong> — não há "fim" definitivo; há iteração até convergência ou timeout.</li>
+<li><strong>Erro é matéria-prima</strong> — toda falha é informação para o próximo passo.</li>
+</ol>
+<p>A função do engenheiro agentic é, portanto, <strong>menos controlar e mais habilitar</strong>. Você não diz ao agente <strong>o que fazer</strong>; você constrói o <strong>palco onde ele pode decidir</strong>.</p>
+<hr />
+<h2>2. ALGORITMO 1 — PLAN-AND-EXECUTE COMPLETO</h2>
+<pre><code class="language-python">import anthropic
+import json
+from typing import Callable
+
+class PlanExecuteAgent:
+    &quot;&quot;&quot;Separa planejamento (1 chamada LLM) de execução (muitas).&quot;&quot;&quot;
+
+    def __init__(self, model=&quot;claude-sonnet-4-5&quot;):
+        self.client = anthropic.Anthropic()
+        self.model = model
+        self.tools = {}
+        self.memory = []
+
+    def register_tool(self, name, fn, schema, policy):
+        self.tools[name] = {&quot;fn&quot;: fn, &quot;schema&quot;: schema, &quot;policy&quot;: policy}
+
+    def _plan(self, goal: str) -&gt; list:
+        prompt = f&quot;&quot;&quot;Decomponha o objetivo em plano JSON.
+        Objetivo: {goal}
+        Saída:
+        [
+          {{&quot;step&quot;: 1, &quot;action&quot;: &quot;...&quot;, &quot;tool&quot;: &quot;...&quot;, &quot;args&quot;: {{}}, &quot;done_when&quot;: &quot;...&quot;}}
+        ]&quot;&quot;&quot;
+        resp = self.client.messages.create(
+            model=self.model, max_tokens=2048, messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}]
+        )
+        return json.loads(self._extract_text(resp))
+
+    def _execute_step(self, step: dict) -&gt; dict:
+        tool = self.tools[step.get(&quot;tool&quot;, &quot;_none&quot;)]
+        if not tool:
+            return {&quot;status&quot;: &quot;no_tool&quot;, &quot;step&quot;: step}
+        if not self._check_policy(tool[&quot;policy&quot;], step.get(&quot;args&quot;, {})):
+            return {&quot;status&quot;: &quot;denied&quot;, &quot;step&quot;: step}
+        try:
+            result = tool[&quot;fn&quot;](**step.get(&quot;args&quot;, {}))
+            return {&quot;status&quot;: &quot;ok&quot;, &quot;step&quot;: step, &quot;result&quot;: result}
+        except Exception as e:
+            return {&quot;status&quot;: &quot;error&quot;, &quot;step&quot;: step, &quot;error&quot;: str(e)}
+
+    def run(self, goal: str) -&gt; dict:
+        plan = self._plan(goal)
+        results = []
+        for step in plan:
+            r = self._execute_step(step)
+            results.append(r)
+            if r[&quot;status&quot;] == &quot;denied&quot;:
+                break
+        return {&quot;plan&quot;: plan, &quot;results&quot;: results}
+
+    def _check_policy(self, policy, args): return policy.allow(args)
+    def _extract_text(self, r): return r.content[0].text
+</code></pre>
+<hr />
+<h2>3. ALGORITMO 2 — REFLEXION (AUTO-CRÍTICA ITERATIVA)</h2>
+<pre><code class="language-python">class ReflexionAgent:
+    &quot;&quot;&quot;Gera, critica, refina. Aprende com a própria falha.&quot;&quot;&quot;
+
+    def __init__(self, llm, max_iter=4):
+        self.llm = llm
+        self.max_iter = max_iter
+        self.reflections = []
+
+    def run(self, task: str) -&gt; str:
+        solution = self._initial(task)
+        for i in range(self.max_iter):
+            critique = self._critique(task, solution)
+            if &quot;OK&quot; in critique.upper():
+                return solution
+            solution = self._refine(task, solution, critique)
+            self.reflections.append(critique)
+        return solution
+
+    def _initial(self, task): return self.llm.generate(f&quot;Resolva: {task}&quot;)
+    def _critique(self, task, sol): return self.llm.generate(f&quot;Critique: {task}\nSolução: {sol}\nResponda 'OK' se correto.&quot;)
+    def _refine(self, task, sol, crit): return self.llm.generate(f&quot;Refine com base na crítica: {crit}\nTarefa: {task}\nSolução atual: {sol}&quot;)
+</code></pre>
+<hr />
+<h2>4. ALGORITMO 3 — TREE OF THOUGHTS</h2>
+<pre><code class="language-python">import heapq
+
+class TreeOfThoughts:
+    &quot;&quot;&quot;Explora múltiplos caminhos, avalia, ramifica.&quot;&quot;&quot;
+
+    def __init__(self, llm, evaluator, branching=3, depth=4):
+        self.llm = llm
+        self.eval = evaluator
+        self.branching = branching
+        self.depth = depth
+
+    def solve(self, problem):
+        root = {&quot;state&quot;: problem, &quot;path&quot;: [], &quot;score&quot;: 0}
+        frontier = [(-root[&quot;score&quot;], id(root), root)]
+        best = root
+        for d in range(self.depth):
+            new_frontier = []
+            for _, _, node in frontier[:5]:  # beam search
+                children = self._expand(node)
+                for c in children:
+                    s = self.eval(c[&quot;state&quot;])
+                    c[&quot;score&quot;] = s
+                    heapq.heappush(new_frontier, (-s, id(c), c))
+                    if s &gt; best[&quot;score&quot;]:
+                        best = c
+            frontier = new_frontier
+        return best
+
+    def _expand(self, node):
+        return [{&quot;state&quot;: self.llm.generate(f&quot;Próximo passo: {node['state']}&quot;), &quot;path&quot;: node[&quot;path&quot;]+[1]} for _ in range(self.branching)]
+</code></pre>
+<hr />
+<h2>5. ALGORITMO 4 — SELF-CONSISTENCY SAMPLING</h2>
+<pre><code class="language-python">class SelfConsistency:
+    &quot;&quot;&quot;Gera N respostas, vota na maioria.&quot;&quot;&quot;
+
+    def __init__(self, llm, n=7, temperature=0.7):
+        self.llm = llm
+        self.n = n
+        self.t = temperature
+
+    def answer(self, question, choices):
+        votes = {c: 0 for c in choices}
+        for _ in range(self.n):
+            r = self.llm.generate(question, temperature=self.t)
+            for c in choices:
+                if c.lower() in r.lower():
+                    votes[c] += 1
+        return max(votes, key=votes.get)
+</code></pre>
+<hr />
+<h2>6. ALGORITMO 5 — ReWOO (REASONING WITH TOOLS ONLY)</h2>
+<pre><code class="language-python">class ReWOO:
+    &quot;&quot;&quot;Planner gera plano com placeholders de tools, executor resolve.&quot;&quot;&quot;
+
+    def plan(self, goal):
+        return self.llm.generate(f&quot;&quot;&quot;
+        Crie plano ReWOO para: {goal}
+        Formato:
+        Plan:
+        #E1 = Tool[arg1, arg2]
+        #E2 = LLM[prompt]
+        #E3 = Combine[#E1, #E2]
+        &quot;&quot;&quot;)
+
+    def execute(self, plan):
+        # resolver placeholders
+        ...
+</code></pre>
+<hr />
+<h2>7. ALGORITMO 6 — MRKL</h2>
+<pre><code class="language-python">class MRKLSystem:
+    &quot;&quot;&quot;Router + Specialist Tools.&quot;&quot;&quot;
+
+    def __init__(self, llm, specialists):
+        self.llm = llm
+        self.specialists = specialists
+
+    def run(self, query):
+        decision = self.llm.generate(f&quot;&quot;&quot;
+        Query: {query}
+        Especialistas: {list(self.specialists.keys())}
+        Qual especialista invocar? Responda: &lt;specialist&gt;:&lt;input&gt;
+        &quot;&quot;&quot;)
+        spec, inp = decision.split(&quot;:&quot;, 1)
+        return self.specialists[spec.strip()](inp.strip())
+</code></pre>
+<hr />
+<h2>8. ALGORITMO 7 — BabyAGI</h2>
+<pre><code class="language-python">class BabyAGI:
+    &quot;&quot;&quot;Loop infinito: cria tarefas, executa, prioriza, itera.&quot;&quot;&quot;
+
+    def __init__(self, llm, vector_db, tools):
+        self.llm = llm
+        self.db = vector_db
+        self.tools = tools
+        self.task_list = []
+
+    def run(self, objective):
+        self.task_list.append({&quot;id&quot;: 1, &quot;task&quot;: objective, &quot;status&quot;: &quot;open&quot;})
+        while self.task_list:
+            task = next(t for t in self.task_list if t[&quot;status&quot;] == &quot;open&quot;)
+            result = self._execute(task)
+            self.db.add({&quot;task&quot;: task[&quot;task&quot;], &quot;result&quot;: result})
+            new_tasks = self._create_new_tasks(objective, result)
+            for nt in new_tasks:
+                self.task_list.append(nt)
+            task[&quot;status&quot;] = &quot;done&quot;
+            self._reprioritize()
+
+    def _execute(self, task): return self.llm.generate(f&quot;Execute: {task['task']}&quot;)
+    def _create_new_tasks(self, obj, result): return [{&quot;id&quot;: i, &quot;task&quot;: t, &quot;status&quot;: &quot;open&quot;} for i, t in enumerate([result], start=len(self.task_list)+1)]
+    def _reprioritize(self): self.task_list.sort(key=lambda t: t[&quot;id&quot;])
+</code></pre>
+<hr />
+<h2>9. ALGORITMO 8 — AutoGPT LOOP</h2>
+<pre><code class="language-python">class AutoGPTLoop:
+    def __init__(self, llm, tools, goal):
+        self.llm = llm
+        self.tools = tools
+        self.goal = goal
+        self.history = []
+        self.iter = 0
+
+    def run(self, max_iter=20):
+        while self.iter &lt; max_iter:
+            thought = self.llm.generate(f&quot;&quot;&quot;
+            Goal: {self.goal}
+            History: {self.history[-3:]}
+            Pense: o que fazer a seguir?
+            &quot;&quot;&quot;)
+            action = self.llm.generate(f&quot;Pensamento: {thought}\nAção: &lt;tool&gt;(&lt;args&gt;)&quot;)
+            self._execute(action)
+            self.history.append({&quot;thought&quot;: thought, &quot;action&quot;: action})
+            self.iter += 1
+            if &quot;FINISH&quot; in action: break
+
+    def _execute(self, action): ...
+</code></pre>
+<hr />
+<h2>10. ALGORITMO 9 — CAMEL (Role-Playing)</h2>
+<pre><code class="language-python">class CAMEL:
+    &quot;&quot;&quot;Dois agentes (User, Assistant) colaboram em role-play.&quot;&quot;&quot;
+
+    def __init__(self, user_llm, assistant_llm):
+        self.user = user_llm
+        self.assistant = assistant_llm
+
+    def run(self, task, rounds=10):
+        history = []
+        for _ in range(rounds):
+            u = self.user.generate(f&quot;User: {task}\nHistórico: {history[-4:]}\nPróxima instrução:&quot;)
+            history.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: u})
+            a = self.assistant.generate(f&quot;Assistant: responda a: {u}\nHistórico: {history}&quot;)
+            history.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: a})
+        return history
+</code></pre>
+<hr />
+<h2>11. ALGORITMO 10 — VOYAGER (Skill Library Growth)</h2>
+<pre><code class="language-python">class Voyager:
+    &quot;&quot;&quot;Agente que aprende skills e cresce biblioteca de código.&quot;&quot;&quot;
+
+    def __init__(self, llm, sandbox):
+        self.llm = llm
+        self.sandbox = sandbox
+        self.skills = {}  # name -&gt; code
+
+    def run(self, objective):
+        while True:
+            skill_needed = self.llm.generate(f&quot;Obj: {objective}\nSkills disponíveis: {list(self.skills.keys())}\nQual skill precisamos?&quot;)
+            if skill_needed in self.skills:
+                self.sandbox.run(self.skills[skill_needed])
+            else:
+                new_skill_code = self.llm.generate(f&quot;Escreva função Python para: {skill_needed}&quot;)
+                self.skills[skill_needed] = new_skill_code
+                self.sandbox.run(new_skill_code)
+            if &quot;done&quot; in skill_needed.lower(): break
+</code></pre>
+<hr />
+<h2>12. ALGORITMO 11 — DSPy (DECLARATIVE PROMPTING)</h2>
+<pre><code class="language-python">import dspy
+
+class Summarizer(dspy.Module):
+    def __init__(self):
+        super().__init__()
+        self.summarize = dspy.ChainOfThought(&quot;document -&gt; summary&quot;)
+
+    def forward(self, document):
+        return self.summarize(document=document)
+
+# otimização automática via MIPRO
+teleprompter = dspy.MIPROv2(metric=dspy.evaluate.SemanticF1())
+optimized = teleprompter.compile(Summarizer(), trainset=trainset)
+</code></pre>
+<hr />
+<h2>13. ALGORITMO 12 — CONSTITUTIONAL AI</h2>
+<pre><code class="language-python">class ConstitutionalAI:
+    def __init__(self, llm, principles):
+        self.llm = llm
+        self.principles = principles  # [&quot;não causar dano&quot;, &quot;verdade&quot;, &quot;privacidade&quot;, ...]
+
+    def revise(self, response, critique_prompt=None):
+        critique = self.llm.generate(f&quot;&quot;&quot;
+        Avalie: {response}
+        Princípios: {self.principles}
+        A resposta viola algum? Se sim, como corrigir?
+        &quot;&quot;&quot;)
+        if &quot;viola&quot; in critique.lower():
+            return self.llm.generate(f&quot;Reescreva respeitando: {self.principles}\nOriginal: {response}\nCrítica: {critique}&quot;)
+        return response
+</code></pre>
+<hr />
+<h2>14. ALGORITMO 13 — RLHF SIMPLIFICADO</h2>
+<pre><code class="language-python">class SimpleRLHF:
+    &quot;&quot;&quot;Reward model + PPO-like update simplificado.&quot;&quot;&quot;
+
+    def __init__(self, policy, reward_model, ref_policy):
+        self.policy = policy
+        self.reward = reward_model
+        self.ref = ref_policy
+
+    def step(self, prompt, response):
+        r = self.reward.score(prompt, response)
+        kl = self._kl_divergence(self.policy, self.ref, prompt, response)
+        return r - 0.1 * kl
+</code></pre>
+<hr />
+<h2>15. ALGORITMO 14 — RAG HÍBRIDO AVANÇADO</h2>
+<pre><code class="language-python">class HybridRAG:
+    def __init__(self, bm25, dense, reranker):
+        self.bm25 = bm25
+        self.dense = dense
+        self.reranker = reranker
+
+    def retrieve(self, query, k=20, top_k=5):
+        bm25_hits = self.bm25.search(query, k=k)
+        dense_hits = self.dense.search(query, k=k)
+        # Reciprocal Rank Fusion
+        fused = self._rrf(bm25_hits, dense_hits)
+        return self.reranker.rerank(query, fused, top_k=top_k)
+
+    def _rrf(self, l1, l2, k=60):
+        scores = {}
+        for rank, doc in enumerate(l1):
+            scores[doc.id] = scores.get(doc.id, 0) + 1/(k+rank)
+        for rank, doc in enumerate(l2):
+            scores[doc.id] = scores.get(doc.id, 0) + 1/(k+rank)
+        return sorted(scores.items(), key=lambda x: -x[1])
+</code></pre>
+<hr />
+<h2>16. ALGORITMO 15 — AGENT MEMORY (EPISÓDICA + SEMÂNTICA)</h2>
+<pre><code class="language-python">class AgentMemory:
+    def __init__(self, episodic_db, semantic_db, importance_threshold=0.6):
+        self.episodic = episodic_db
+        self.semantic = semantic_db
+        self.threshold = importance_threshold
+
+    def store(self, event):
+        importance = self._score_importance(event)
+        if importance &gt; self.threshold:
+            self.episodic.add(event)
+            concepts = self._extract_concepts(event)
+            for c in concepts:
+                self.semantic.upsert(c)
+
+    def recall(self, query, k=5):
+        return self.semantic.similarity_search(query, k=k)
+</code></pre>
+<hr />
+<h2>17. ALGORITMO 16 — SELF-HEALING RETRY</h2>
+<pre><code class="language-python">import time, random
+
+def self_healing_retry(fn, max_attempts=5, base_delay=1):
+    for attempt in range(max_attempts):
+        try:
+            return fn()
+        except Exception as e:
+            if attempt == max_attempts - 1:
+                raise
+            delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+            print(f&quot;Retry {attempt+1}/{max_attempts} after {delay:.2f}s. Error: {e}&quot;)
+            time.sleep(delay)
+</code></pre>
+<hr />
+<h2>18. ALGORITMO 17 — TOOL ROUTER (DECISION TREE)</h2>
+<pre><code class="language-python">class ToolRouter:
+    def __init__(self):
+        self.tree = {}  # conditions -&gt; tool
+
+    def add_rule(self, condition_fn, tool_name):
+        self.tree[condition_fn] = tool_name
+
+    def route(self, **kwargs):
+        for cond, tool in self.tree.items():
+            if cond(kwargs):
+                return tool
+        return &quot;_default&quot;
+</code></pre>
+<hr />
+<h2>19. ALGORITMO 18 — CRITIC/REFINER LOOP</h2>
+<pre><code class="language-python">class CriticRefiner:
+    def __init__(self, generator, critic, threshold=0.8, max_iter=3):
+        self.gen = generator
+        self.crit = critic
+        self.threshold = threshold
+        self.max_iter = max_iter
+
+    def run(self, prompt):
+        out = self.gen.generate(prompt)
+        for _ in range(self.max_iter):
+            score = self.crit.score(out)
+            if score &gt;= self.threshold: return out
+            feedback = self.crit.feedback(out)
+            out = self.gen.generate(f&quot;{prompt}\nFeedback: {feedback}&quot;)
+        return out
+</code></pre>
+<hr />
+<h2>20. ALGORITMO 19 — AGENT ORCHESTRATOR (STATE MACHINE)</h2>
+<pre><code class="language-python">from enum import Enum
+
+class State(Enum):
+    IDLE = &quot;idle&quot;
+    PLANNING = &quot;planning&quot;
+    EXECUTING = &quot;executing&quot;
+    REFLECTING = &quot;reflecting&quot;
+    DONE = &quot;done&quot;
+    FAILED = &quot;failed&quot;
+
+class StateMachineOrchestrator:
+    def __init__(self, layers):
+        self.layers = layers
+        self.state = State.IDLE
+        self.context = {}
+
+    def transition(self, new_state):
+        self.state = new_state
+        # log transition
+        self.layers[&quot;tracer&quot;].trace(f&quot;state_{new_state.value}&quot;, self.context)
+
+    def run(self, goal):
+        self.transition(State.PLANNING)
+        self.context[&quot;plan&quot;] = self.layers[&quot;planner&quot;].plan(goal)
+        self.transition(State.EXECUTING)
+        for step in self.context[&quot;plan&quot;]:
+            r = self.layers[&quot;executor&quot;].execute(step)
+            self.context.setdefault(&quot;results&quot;, []).append(r)
+            if r[&quot;status&quot;] == &quot;denied&quot;:
+                self.transition(State.FAILED)
+                return
+        self.transition(State.REFLECTING)
+        self.context[&quot;reflection&quot;] = self.layers[&quot;heal&quot;].reflect(self.context)
+        self.transition(State.DONE)
+</code></pre>
+<hr />
+<h2>21. ALGORITMO 20 — STREAMING COM CANCELAMENTO</h2>
+<pre><code class="language-python">import asyncio
+
+async def stream_with_cancel(client, prompt, cancel_event):
+    async with client.messages.stream(model=&quot;claude-sonnet-4-5&quot;, messages=[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:prompt}], max_tokens=2048) as stream:
+        async for text in stream.text_stream:
+            if cancel_event.is_set():
+                await stream.close()
+                return
+            yield text
+</code></pre>
+<hr />
+<h2>22. PROMPT LIBRARY — FUNDAMENTOS</h2>
+<h3>22.1 Prompt de Sistema Canônico</h3>
+<pre><code>Você é [persona], especializado em [domínio].
+Tom: [tom]. Postura: [postura].
+Limites: [limites].
+Formato de saída: [formato].
+Responda sempre em [idioma].
+</code></pre>
+<h3>22.2 Prompt de Tarefa</h3>
+<pre><code>Tarefa: {tarefa}
+Contexto: {contexto}
+Restrições: {restrições}
+Critério de &quot;feito&quot;: {critério}
+Saída: {formato}
+</code></pre>
+<hr />
+<h2>23. PROMPT LIBRARY — ESTRUTURADOS (JSON)</h2>
+<pre><code class="language-json">{
+  &quot;role&quot;: &quot;system&quot;,
+  &quot;content&quot;: &quot;Você é o Planejador de Conteúdo do MMN_IA. Sempre responda em JSON válido com o schema: {\&quot;objetivo\&quot;: str, \&quot;plano\&quot;: [{\&quot;step\&quot;: int, \&quot;action\&quot;: str, \&quot;tool\&quot;: str, \&quot;expected_output\&quot;: str}], \&quot;riscos\&quot;: [str], \&quot;success_criteria\&quot;: [str]}&quot;
+}
+</code></pre>
+<hr />
+<h2>24. PROMPT LIBRARY — CHAIN-OF-THOUGHT</h2>
+<pre><code>Resolva passo a passo. Pense em voz alta.
+
+Problema: {problema}
+
+Passo 1: Decomponha o problema.
+Passo 2: Identifique variáveis e restrições.
+Passo 3: Aplique método.
+Passo 4: Verifique a resposta.
+</code></pre>
+<hr />
+<h2>25. PROMPT LIBRARY — FEW-SHOT</h2>
+<pre><code>Exemplo 1:
+Input: &quot;O céu é azul&quot;
+Output: {&quot;subject&quot;: &quot;céu&quot;, &quot;property&quot;: &quot;azul&quot;, &quot;polarity&quot;: &quot;positive&quot;}
+
+Exemplo 2:
+Input: &quot;O dia está chato&quot;
+Output: {&quot;subject&quot;: &quot;dia&quot;, &quot;property&quot;: &quot;chato&quot;, &quot;polarity&quot;: &quot;negative&quot;}
+
+Agora:
+Input: &quot;{input}&quot;
+Output:
+</code></pre>
+<hr />
+<h2>26. PROMPT LIBRARY — ReAct</h2>
+<pre><code>Responda no formato:
+Thought: &lt;seu raciocínio&gt;
+Action: &lt;tool&gt;(&lt;args&gt;)
+Observation: &lt;resultado&gt;
+... (repita)
+Final Answer: &lt;resposta&gt;
+</code></pre>
+<hr />
+<h2>27. PROMPT LIBRARY — PERSONA</h2>
+<pre><code>Você é o Dr. Nexus, advisor do ecossistema MMN_IA.
+Tem PhD em IA Agentic, 20 anos de experiência.
+Fala com clareza premium, sem jargão vazio.
+Cita sempre que puder.
+Recusa responder fora do escopo com elegância.
+</code></pre>
+<hr />
+<h2>28. PROMPT LIBRARY — CONSTITUTIONAL</h2>
+<pre><code>Avalie a resposta abaixo segundo estes princípios:
+1. Não causa dano.
+2. É verdadeira ou marcada como incerta.
+3. Respeita privacidade.
+4. Não discrimina.
+5. Cita fontes quando factua.
+
+Resposta: {resposta}
+Saída: {&quot;viola&quot;: [principios_violados], &quot;ok&quot;: bool, &quot;como_corrigir&quot;: str}
+</code></pre>
+<hr />
+<h2>29. PROMPT LIBRARY — RAG</h2>
+<pre><code>Você responderá APENAS com base no contexto abaixo.
+Se a resposta não estiver no contexto, diga &quot;Não sei com base nas fontes fornecidas.&quot;
+Sempre cite a fonte entre colchetes: [doc_id].
+
+Contexto:
+{retrieved_chunks}
+
+Pergunta: {query}
+
+Resposta:
+</code></pre>
+<hr />
+<h2>30. PROMPT LIBRARY — TOOLS</h2>
+<pre><code>Você tem acesso às seguintes ferramentas:
+- search(query: str) -&gt; list[dict]
+- send_email(to: str, subject: str, body: str) -&gt; dict
+- query_db(sql: str) -&gt; list[dict]
+
+Para invocar, responda:
+&lt;tool_call&gt;
+{&quot;name&quot;: &quot;tool&quot;, &quot;args&quot;: {...}}
+&lt;/tool_call&gt;
+
+Quando terminar, diga: &quot;Tarefa concluída.&quot;
+</code></pre>
+<hr />
+<h2>31. PROMPT LIBRARY — SELF-CRITIQUE</h2>
+<pre><code>Reveja sua resposta anterior segundo:
+1. Está correta?
+2. É completa?
+3. Tem fontes?
+4. Tem tom adequado?
+5. Tem ações claras?
+
+Resposta original: {resposta}
+Crítica: {crítica}
+Versão melhorada:
+</code></pre>
+<hr />
+<h2>32. ALGORITMO FINAL — A WISDOM ENGINE (PREVIEW VOL. 3)</h2>
+<pre><code class="language-python">class WisdomEngine:
+    &quot;&quot;&quot;Sabedoria = conhecimento + ética + contexto + consequência.&quot;&quot;&quot;
+
+    def __init__(self, knowledge, ethics, history):
+        self.k = knowledge
+        self.e = ethics
+        self.h = history
+
+    def judge(self, decision):
+        principles = self.k.principles_for(decision[&quot;domain&quot;])
+        ethics_score = self.e.evaluate(decision)
+        precedents = self.h.similar_cases(decision)
+        second_order = self._predict_effects(decision, precedents)
+        return {
+            &quot;decision&quot;: decision,
+            &quot;principles&quot;: principles,
+            &quot;ethics&quot;: ethics_score,
+            &quot;precedents&quot;: precedents,
+            &quot;second_order_effects&quot;: second_order,
+            &quot;recommendation&quot;: self._synthesize(principles, ethics_score, second_order),
+        }
+</code></pre>
+<p>No Vol. 3, detalhamos a Wisdom Engine completa com <strong>autoconhecimento agêntico</strong> e <strong>autossabedoria determinística</strong>.</p>
+<hr />
+<h2>33. GLOSSÁRIO</h2>
+<table>
+<thead>
+<tr>
+<th>Algoritmo</th>
+<th>Uso principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plan-and-Execute</td>
+<td>Tarefas decompostas em etapas</td>
+</tr>
+<tr>
+<td>Reflexion</td>
+<td>Auto-correção iterativa</td>
+</tr>
+<tr>
+<td>Tree of Thoughts</td>
+<td>Exploração de múltiplos caminhos</td>
+</tr>
+<tr>
+<td>Self-Consistency</td>
+<td>Voto de N amostras</td>
+</tr>
+<tr>
+<td>ReWOO</td>
+<td>Tools com placeholders</td>
+</tr>
+<tr>
+<td>MRKL</td>
+<td>Router + especialistas</td>
+</tr>
+<tr>
+<td>BabyAGI</td>
+<td>Lista infinita de tarefas</td>
+</tr>
+<tr>
+<td>AutoGPT</td>
+<td>Loop autônomo de alta agência</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>Role-play colaborativo</td>
+</tr>
+<tr>
+<td>Voyager</td>
+<td>Crescimento de skill library</td>
+</tr>
+<tr>
+<td>DSPy</td>
+<td>Prompting declarativo + otimização</td>
+</tr>
+<tr>
+<td>Constitutional AI</td>
+<td>Revisão por princípios</td>
+</tr>
+<tr>
+<td>RLHF</td>
+<td>Fine-tuning por feedback humano</td>
+</tr>
+<tr>
+<td>Hybrid RAG</td>
+<td>BM25 + dense + reranking</td>
+</tr>
+<tr>
+<td>Agent Memory</td>
+<td>Episódica + semântica</td>
+</tr>
+<tr>
+<td>Self-Healing</td>
+<td>Retry inteligente</td>
+</tr>
+<tr>
+<td>Tool Router</td>
+<td>Decision tree</td>
+</tr>
+<tr>
+<td>Critic/Refiner</td>
+<td>Loop de qualidade</td>
+</tr>
+<tr>
+<td>State Machine</td>
+<td>Orquestração cíclica</td>
+</tr>
+<tr>
+<td>Streaming</td>
+<td>Output progressivo + cancel</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>34. CALL TO ACTION — ECOSSISTEMA MMN_IA</h2>
+<p>Este ebook é o <strong>Vol. 2</strong> da coletânea <strong>A IA Perfeita</strong>.</p>
+<ul>
+<li><strong>Vol. 1</strong> — Padrões &amp; Arquiteturas (já publicado)</li>
+<li><strong>Vol. 2</strong> — Códigos, Prompts &amp; Algoritmos (este)</li>
+<li><strong>Vol. 3</strong> — Skills, Agentic, Autocura &amp; Sabedoria (em breve)</li>
+</ul>
+<p>Plataforma MMN_IA: <strong>oneverso.com.br</strong>.</p>
+<hr />
+<p><em>© 2026 Nexus HUB57 · Ecossistema MMN_IA · Todos os direitos reservados</em>
+<em>Versão 1.0.0 · Junho 2026 · Coleção A IA Perfeita, Vol. 2 de 3 — Códigos, Prompts &amp; Algoritmos</em></p></body>
+</html>

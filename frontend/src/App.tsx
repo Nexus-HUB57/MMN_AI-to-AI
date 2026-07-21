@@ -59,6 +59,8 @@ import AdminSettings from "@/pages/AdminSettings";
 import ProfileSettings from "@/pages/ProfileSettings";
 import AdminSkills from "@/pages/AdminSkills";
 import AdminRuntime from "@/pages/AdminRuntime";
+import AdminRag from "@/pages/AdminRag";
+import AdminMarketplace from "@/pages/AdminMarketplace";
 import AdminPackTickets from "@/pages/AdminPackTickets";
 import AdminAcademiaAnalytics from "@/pages/AdminAcademiaAnalytics";
 import AdminPanel from "@/pages/AdminPanel";
@@ -125,8 +127,11 @@ function Router() {
       <Route path="/admin/schedules" component={AdminSchedules} />
       <Route path="/admin/approvals" component={AdminApprovals} />
       <Route path="/admin/status" component={AdminRuntime} />
+      <Route path="/admin/rag" component={AdminRag} />
+      <Route path="/admin/marketplace" component={AdminMarketplace} />
       <Route path="/admin/runtime" component={AdminRuntime} />
       <Route path="/admin/settings" component={AdminSettings} />
+      <Route path="/admin/config" component={AdminSettings} />
       <Route path="/profile" component={ProfileSettings} />
       <Route path="/admin/skills" component={AdminSkills} />
       <Route path="/admin/pack-tickets" component={AdminPackTickets} />

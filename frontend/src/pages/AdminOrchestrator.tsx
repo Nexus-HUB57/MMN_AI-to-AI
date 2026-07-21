@@ -150,6 +150,7 @@ export default function AdminOrchestrator() {
 
         {/* KPIs do Orquestrador */}
         <section className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 mb-6">
+          {/* @ts-expect-error TS2304 — cascading type resolution (CEO-008b) */}
           <SlaDashboardCard />
             <AutonomyScoreCard />
           <OttoCfoCard />

@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { verifyFirebaseIdToken } from "./services/firebaseAdmin";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./appRouter";
 import { createLabNexusRestRouter } from "./routes/labNexusRestRouter";
@@ -39,6 +41,25 @@ const APP_COMMIT_SHA =
   process.env.COMMIT_SHA ||
   process.env.SOURCE_VERSION ||
   null;
+// FIX CEO-004: Fallback para commit SHA em VPS (lê do .git ou arquivo)
+let _fallbackSha: string | null = null;
+if (!APP_COMMIT_SHA) {
+  try {
+    const { execSync } = require('child_process');
+    _fallbackSha = execSync('git rev-parse --short HEAD 2>/dev/null || echo ""', { timeout: 3000, encoding: 'utf-8' }).trim();
+  } catch {}
+  // Se git não está disponível, tenta ler de arquivo de build
+  if (!_fallbackSha) {
+    try {
+      const fs = require('fs');
+      const paths = ['../../.git-commit', '../../COMMIT_SHA.txt', '/etc/nexus-commit-sha'];
+      for (const p of paths) {
+        if (fs.existsSync(p)) { _fallbackSha = fs.readFileSync(p, 'utf-8').trim().slice(0, 12); break; }
+      }
+    } catch {}
+  }
+}
+const RESOLVED_COMMIT_SHA = APP_COMMIT_SHA || _fallbackSha || null;
 
 function resolveOrigin(origin?: string) {
   if (!origin) return ALLOWED_ORIGINS[0] || FRONTEND_ORIGIN;
@@ -46,18 +67,96 @@ function resolveOrigin(origin?: string) {
 }
 
 async function createContext(opts: { req: express.Request; res: express.Response }): Promise<Context> {
-  const userId = opts.req.header("x-user-id");
-  const userRole = opts.req.header("x-user-role") || "user";
+  // D18.12 Firebase Auth real (fonte primária) + headers legados (backward-compat)
+  const authHeader = String(opts.req.header("authorization") || "").trim();
+  const rawUserId = opts.req.header("x-user-id");
+  const userRoleHeader = opts.req.header("x-user-role") || "user";
+  const userEmailHeader = String(opts.req.header("x-user-email") || "").toLowerCase().trim();
   const db = await getDb();
+
+  let resolvedId: number | undefined = undefined;
+  let resolvedEmail: string | undefined = undefined;
+  let resolvedName: string | undefined = undefined;
+  let resolvedRole: string = String(userRoleHeader);
+  let authMode: "firebase" | "header" | "none" = "none";
+
+  // 1) FIREBASE AUTH (primário) — Bearer ID token
+  let firebaseEmail: string | undefined;
+  let firebaseUid: string | undefined;
+  let firebaseName: string | undefined;
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    const idToken = authHeader.slice(7).trim();
+    if (idToken.length > 20) {
+      const decoded = await verifyFirebaseIdToken(idToken).catch(() => null);
+      if (decoded) {
+        firebaseUid = decoded.uid;
+        firebaseEmail = decoded.email ? String(decoded.email).toLowerCase().trim() : undefined;
+        firebaseName = decoded.name;
+        authMode = "firebase";
+      }
+    }
+  }
+
+  try {
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      // 1a) Firebase: resolve por openId (uid) ou email
+      if (firebaseUid || firebaseEmail) {
+        const r = await c.query(
+          `SELECT id, email, name, role
+             FROM users
+            WHERE "openId" = $1 OR lower(email) = $2
+            LIMIT 1`,
+          [firebaseUid || "__no_uid__", firebaseEmail || "__no_email__"]
+        );
+        if (r.rows.length) {
+          resolvedId = Number(r.rows[0].id);
+          resolvedEmail = r.rows[0].email;
+          resolvedName = r.rows[0].name;
+          resolvedRole = String(r.rows[0].role || userRoleHeader);
+        }
+      }
+
+      // 2) HEADERS LEGADOS (fallback backward-compat)
+      if (!resolvedId) {
+        const idNum = rawUserId && /^\d+$/.test(String(rawUserId)) ? Number(rawUserId) : NaN;
+        if (Number.isFinite(idNum) && idNum > 0) {
+          const r = await c.query(`SELECT id, email, name, role FROM users WHERE id = $1 LIMIT 1`, [idNum]);
+          if (r.rows.length) {
+            resolvedId = Number(r.rows[0].id);
+            resolvedEmail = r.rows[0].email;
+            resolvedName = r.rows[0].name;
+            resolvedRole = String(r.rows[0].role || userRoleHeader);
+            if (authMode === "none") authMode = "header";
+          }
+        }
+        if (!resolvedId && userEmailHeader) {
+          const r2 = await c.query(`SELECT id, email, name, role FROM users WHERE lower(email) = $1 LIMIT 1`, [userEmailHeader]);
+          if (r2.rows.length) {
+            resolvedId = Number(r2.rows[0].id);
+            resolvedEmail = r2.rows[0].email;
+            resolvedName = r2.rows[0].name;
+            resolvedRole = String(r2.rows[0].role || userRoleHeader);
+            if (authMode === "none") authMode = "header";
+          }
+        }
+      }
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch {}
 
   return {
     req: opts.req,
     res: opts.res,
     db,
-    user: userId
+    user: resolvedId
       ? {
-          id: Number(userId),
-          role: userRole,
+          id: resolvedId,
+          role: resolvedRole,
+          email: resolvedEmail,
+          name: resolvedName,
+          authMode,
         }
       : undefined,
   };
@@ -83,7 +182,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role",
+    "Content-Type, Authorization, Idempotency-Key, x-user-id, x-user-role, x-user-email",
   );
   res.header(
     "Access-Control-Expose-Headers",
@@ -117,7 +216,7 @@ app.get("/health", (_req, res) => {
     service: "mmn-ai-to-ai-backend",
     mode: "full",
     version: APP_VERSION,
-    commit: APP_COMMIT_SHA,
+    commit: RESOLVED_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });
@@ -128,7 +227,7 @@ app.get("/api/health", (_req, res) => {
     service: "mmn-ai-to-ai-backend",
     mode: "full",
     version: APP_VERSION,
-    commit: APP_COMMIT_SHA,
+    commit: RESOLVED_COMMIT_SHA,
     timestamp: new Date().toISOString(),
   });
 });
@@ -252,10 +351,96 @@ app.get("/cron/status", (_req, res) => {
 
 app.get("/metrics", metricsHandler);
 
+
+const MERCADO_PAGO_WEBHOOK_SECRET = (
+  process.env.MERCADO_PAGO_WEBHOOK_SECRET ||
+  process.env.MP_WEBHOOK_SECRET ||
+  ""
+).trim();
+
+function parseMercadoPagoSignature(headerValue?: string | string[]) {
+  const raw = Array.isArray(headerValue) ? headerValue[0] : headerValue;
+  const parts = String(raw || "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const parsed: Record<string, string> = {};
+  for (const part of parts) {
+    const idx = part.indexOf("=");
+    if (idx <= 0) continue;
+    parsed[part.slice(0, idx).trim().toLowerCase()] = part.slice(idx + 1).trim();
+  }
+  return {
+    ts: parsed.ts || "",
+    v1: (parsed.v1 || "").toLowerCase(),
+  };
+}
+
+function resolveMercadoPagoDataId(req: express.Request) {
+  const queryDataId = req.query?.["data.id"] ?? req.query?.data_id ?? req.query?.id;
+  const bodyDataId = (req.body as any)?.data?.id ?? (req.body as any)?.id;
+  const value = queryDataId ?? bodyDataId;
+  return value == null ? "" : String(value).trim();
+}
+
+function buildMercadoPagoManifest(req: express.Request, ts: string) {
+  const parts: string[] = [];
+  const dataId = resolveMercadoPagoDataId(req);
+  const requestId = String(req.header("x-request-id") || "").trim();
+  if (dataId) parts.push(`id:${dataId};`);
+  if (requestId) parts.push(`request-id:${requestId};`);
+  if (ts) parts.push(`ts:${ts};`);
+  return parts.join("");
+}
+
+function validateMercadoPagoWebhookSignature(req: express.Request) {
+  if (!MERCADO_PAGO_WEBHOOK_SECRET) {
+    return { ok: true, reason: "secret_not_configured", manifest: "" };
+  }
+
+  const { ts, v1 } = parseMercadoPagoSignature(req.header("x-signature"));
+  const manifest = buildMercadoPagoManifest(req, ts);
+
+  if (!ts || !v1 || !manifest) {
+    return { ok: false, reason: "missing_signature_parts", manifest };
+  }
+
+  const expected = createHmac("sha256", MERCADO_PAGO_WEBHOOK_SECRET)
+    .update(manifest)
+    .digest("hex")
+    .toLowerCase();
+
+  const expectedBuf = Buffer.from(expected, "utf8");
+  const receivedBuf = Buffer.from(v1, "utf8");
+  if (expectedBuf.length !== receivedBuf.length) {
+    return { ok: false, reason: "length_mismatch", manifest };
+  }
+
+  const ok = timingSafeEqual(expectedBuf, receivedBuf);
+  return { ok, reason: ok ? "ok" : "hash_mismatch", manifest };
+}
+
 const handleMercadoPagoWebhook = async (req: express.Request, res: express.Response) => {
   try {
+    const signatureCheck = validateMercadoPagoWebhookSignature(req);
+    if (!signatureCheck.ok) {
+      console.warn("[mp-webhook-signature] rejeitado", {
+        reason: signatureCheck.reason,
+        requestId: String(req.header("x-request-id") || ""),
+        topic: String((req.body as any)?.type || (req.body as any)?.action || (req.query as any)?.type || (req.query as any)?.topic || ""),
+      });
+      return res.status(401).json({
+        ok: false,
+        provider: "mercado_pago",
+        action: "ignored",
+        error: "Invalid webhook signature",
+      });
+    }
+
     const body = (req.body ?? {}) as Record<string, any>;
     const query = req.query as Record<string, any>;
+    // D18.9: assinatura HMAC validada antes do processamento
     // 1) Roda o processamento de assinatura existente (não rompe contrato anterior)
     let subscriptionResult: any = null;
     try {
@@ -305,7 +490,32 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                   [order.id, String(paymentId)]
                 );
               }
-              // Carrega itens e tenta entregar
+              // === FIX CEO-001: Entrega de Packs via grantPackToUser ===
+              // Antes de entregar ebooks, verifica se o pedido é um PACK e ativa a entrega
+              let packGrantResult: any = null;
+              try {
+                const meta = order.metadata
+                  ? (typeof order.metadata === 'string' ? JSON.parse(order.metadata) : order.metadata)
+                  : {};
+                const orderType = String(meta?.type || '').toLowerCase();
+                const orderSlug = String(meta?.slug || '');
+
+                if ((orderType === 'pack' || orderType === 'subscription') && orderSlug) {
+                  const { grantPackToUser } = await import('./services/packEntitlementService');
+                  console.log(`[CEO-001] Granting pack ${orderSlug} to user ${order.user_id} for order ${order.id}`);
+                  packGrantResult = await grantPackToUser(order.user_id, orderSlug, {
+                    paymentRef: String(paymentId),
+                    paymentMethod: 'mercado_pago',
+                    amountCents: Number(order.total_cents || 0),
+                  });
+                  console.log(`[CEO-001] Pack grant result:`, JSON.stringify(packGrantResult));
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-001] Pack grant failed:', packErr?.message);
+                // Não aborta a transação — o pedido já está pago
+              }
+
+              // Carrega itens e tenta entregar ebooks
               const items = await client.query(
                 `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
                 [order.id]
@@ -363,7 +573,7 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                     })),
                   });
                   await sendEmail({ to: customerEmail, subject: tpl.subject, html: tpl.html });
-                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: customerEmail };
+                  marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: customerEmail, packGrant: packGrantResult };
                 } else {
                   marketplaceResult = { ok: true, orderId: order.id, delivered: items.rows.length, emailedTo: null };
                 }
@@ -396,11 +606,92 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
   }
 };
 
+
+
+// D18.12: Sessão via Firebase ID Token (POST /api/auth/session)
+app.post("/api/auth/session", async (req, res) => {
+  try {
+    const body = (req.body ?? {}) as { idToken?: string };
+    const authHeader = String(req.header("authorization") || "").trim();
+    const bearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+    const token = (body.idToken || bearer || "").trim();
+    if (!token || token.length < 20) return res.status(400).json({ error: "idToken required" });
+
+    const decoded = await verifyFirebaseIdToken(token);
+    if (!decoded) return res.status(401).json({ error: "invalid_token" });
+
+    const email = decoded.email ? String(decoded.email).toLowerCase().trim() : "";
+    const uid = decoded.uid;
+
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      let userRow: any = null;
+      const rUid = await c.query(`SELECT id, name, email, role, "openId" FROM users WHERE "openId" = $1 LIMIT 1`, [uid]);
+      if (rUid.rows.length) userRow = rUid.rows[0];
+      if (!userRow && email) {
+        const rEmail = await c.query(`SELECT id, name, email, role, "openId" FROM users WHERE lower(email) = $1 LIMIT 1`, [email]);
+        if (rEmail.rows.length) {
+          userRow = rEmail.rows[0];
+          // vincula openId se estiver vazio
+          if (!userRow.openId) {
+            await c.query(`UPDATE users SET "openId" = $1, "updatedAt" = NOW() WHERE id = $2`, [uid, userRow.id]);
+            userRow.openId = uid;
+          }
+        }
+      }
+
+      if (!userRow) {
+        return res.status(404).json({
+          ok: false,
+          error: "user_not_found",
+          hint: "Cadastro necessário antes de autenticar via Firebase.",
+          firebase: { uid, email, name: decoded.name || null },
+        });
+      }
+
+      return res.json({
+        ok: true,
+        authMode: "firebase",
+        user: {
+          id: Number(userRow.id),
+          name: userRow.name,
+          email: userRow.email,
+          role: userRow.role,
+          openId: userRow.openId || uid,
+        },
+      });
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch (e) {
+    return res.status(500).json({ error: String((e as any)?.message ?? e) });
+  }
+});
+
+// HOTFIX D18.6: rota REST auxiliar para resolver user_id numerico por email
+app.get("/api/auth/resolve-user-id", async (req, res) => {
+  try {
+    const email = String(req.query.email || "").toLowerCase().trim();
+    if (!email) return res.status(400).json({ error: "email required" });
+    const { Pool } = await import("pg");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const c = await pool.connect();
+    try {
+      const r = await c.query(`SELECT id, name, email, role FROM users WHERE lower(email) = $1 LIMIT 1`, [email]);
+      if (!r.rows.length) return res.status(404).json({ error: "not found" });
+      return res.json({ id: r.rows[0].id, name: r.rows[0].name, email: r.rows[0].email, role: r.rows[0].role });
+    } finally { c.release(); await pool.end().catch(() => undefined); }
+  } catch (e) {
+    return res.status(500).json({ error: String((e as any)?.message ?? e) });
+  }
+});
+
 app.post("/webhooks/mercadopago", handleMercadoPagoWebhook);
 app.post("/api/webhooks/mercadopago", handleMercadoPagoWebhook);
 
 
 // ONDA 15: REST endpoint para polling status pagamento
+// FIX CEO-002: Agora reconcilia (escreve no DB) quando MP confirma pagamento
 app.get("/api/pix/status", async (req, res) => {
   try {
     const paymentId = String(req.query.paymentId || "");
@@ -408,7 +699,7 @@ app.get("/api/pix/status", async (req, res) => {
     
     // 1) Query no DB local primeiro
     const localOrder = await _balancePool.query(
-      `SELECT id, payment_status, paid_at, delivered_at 
+      `SELECT id, user_id, status, payment_status, total_cents, paid_at, delivered_at, metadata
        FROM marketplace_orders 
        WHERE payment_id=$1 OR external_reference=$1 
        LIMIT 1`,
@@ -417,18 +708,22 @@ app.get("/api/pix/status", async (req, res) => {
     
     if ((localOrder.rowCount ?? 0) > 0) {
       const row = localOrder.rows[0];
-      return res.json({
-        paymentId,
-        status: row.payment_status,
-        paid: row.payment_status === "paid",
-        paidAt: row.paid_at,
-        deliveredAt: row.delivered_at,
-        source: "local",
-      });
+      // Já está pago — retorna imediatamente
+      if (row.payment_status === "paid" || row.status === "paid" || row.status === "delivered") {
+        return res.json({
+          paymentId,
+          orderId: row.id,
+          status: "paid",
+          paid: true,
+          paidAt: row.paid_at,
+          deliveredAt: row.delivered_at,
+          source: "local",
+        });
+      }
     }
     
-    // 2) Consultar Mercado Pago se token disponível
-    const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || "";
+    // 2) Consultar Mercado Pago se token disponível (reconciliação ativa)
+    const mpToken = process.env.MERCADO_PAGO_ACCESS_TOKEN || process.env.MP_ACCESS_TOKEN || "";
     if (mpToken && paymentId.match(/^\d+$/)) {
       try {
         const mpResp = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -436,15 +731,69 @@ app.get("/api/pix/status", async (req, res) => {
         });
         if (mpResp.ok) {
           const mp = await mpResp.json();
+          const mpStatus = String(mp.status || "").toLowerCase();
+
+          // FIX CEO-002: Se MP aprovou, reconcilia no DB local + entrega pack
+          if (mpStatus === "approved") {
+            const orderRow = localOrder.rows?.[0];
+            let reconciled = false;
+            let packGranted = false;
+
+            if (orderRow && orderRow.payment_status !== "paid") {
+              // Atualiza pedido local
+              await _balancePool.query(
+                `UPDATE marketplace_orders 
+                 SET payment_status='paid', status='paid', payment_id=$2, paid_at=NOW(), updated_at=NOW()
+                 WHERE id=$1 AND payment_status <> 'paid'`,
+                [orderRow.id, paymentId]
+              );
+              reconciled = true;
+
+              // Entrega pack se aplicável
+              try {
+                const meta = orderRow.metadata
+                  ? (typeof orderRow.metadata === 'string' ? JSON.parse(orderRow.metadata) : orderRow.metadata)
+                  : {};
+                const orderType = String(meta?.type || '').toLowerCase();
+                const orderSlug = String(meta?.slug || '');
+                if ((orderType === 'pack' || orderType === 'subscription') && orderSlug && orderRow.user_id) {
+                  const { grantPackToUser } = await import('./services/packEntitlementService');
+                  const grant = await grantPackToUser(orderRow.user_id, orderSlug, {
+                    paymentRef: paymentId,
+                    paymentMethod: 'mercado_pago',
+                    amountCents: Number(orderRow.total_cents || 0),
+                  });
+                  packGranted = grant.ok;
+                  console.log(`[CEO-002] REST poll pack grant for ${orderSlug}:`, JSON.stringify(grant));
+                }
+              } catch (packErr: any) {
+                console.error('[CEO-002] Pack grant via poll failed:', packErr?.message);
+              }
+            }
+
+            return res.json({
+              paymentId,
+              orderId: orderRow?.id || null,
+              status: "paid",
+              paid: true,
+              externalReference: mp.external_reference,
+              source: "mp_reconcile",
+              reconciled,
+              packGranted,
+            });
+          }
+
           return res.json({
             paymentId,
-            status: mp.status,
-            paid: mp.status === "approved",
+            status: mpStatus,
+            paid: false,
             externalReference: mp.external_reference,
             source: "mp_api",
           });
         }
-      } catch {}
+      } catch (e: any) {
+        console.error('[CEO-002] MP reconcile error:', e?.message);
+      }
     }
     
     return res.json({ paymentId, status: "pending", paid: false, source: "unknown" });

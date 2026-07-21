@@ -35,6 +35,7 @@ import { cronRouter } from "./domains/cron/router";
 import { performanceRouter } from "./routers/performanceRouter";
 import { healthRouter } from "./routers/healthRouter";
 import { marketplaceProfileRouter } from "./routers/marketplaceProfileRouter";
+import { profileRouter } from "./routers/profileRouter";
 import { partnersRouter } from "./routers/partnersRouter";
 import { subscriptionsRouter } from "./domains/subscriptions/router";
 import { partnersDeliveryRouter } from "./routers/partnersDeliveryRouter";
@@ -188,7 +189,6 @@ export const appRouter = router({
         governanceLoop: true,
         multiTenant: true,
         cSuite: true,
-        nexusRag: true,
         marketplaceNexus: true,
         orchestratorAdmin: true,
       onda1: true,
@@ -217,6 +217,7 @@ export const appRouter = router({
   packs: packsRouter,
   skills: skillsRouter,
   marketplaceProfile: marketplaceProfileRouter,
+  profile: profileRouter,
   partners: partnersRouter,
   labNexus: labNexusRouter,
   academiaEad: academiaEadRouter,

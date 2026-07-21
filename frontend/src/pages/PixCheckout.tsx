@@ -370,7 +370,10 @@ export default function PixCheckout() {
         description: paymentContext.description,
         amountCents,
         returnUrl: absoluteReturnUrl,
-        payerEmail: payerEmail || user?.email || undefined,
+        // CEO-012c: NAO enviar payerEmail do frontend — o backend resolve o email real do DB via ctx.user
+        // O frontend pode ter email fake (ex: admin "equipe-restrita@nexus.internal")
+        // Enviar payerEmail apenas se o usuario NAO esta logado (checkout anonimo com intent)
+        payerEmail: (!user ? payerEmail : undefined),
         payerName: payerName || user?.name || undefined,
         payerDocument: payerDocument || undefined,
         subscriptionId: paymentContext.subscriptionId,
@@ -571,24 +574,19 @@ export default function PixCheckout() {
                     </div>
                   </div>
 
+                  {/* CEO-012c: Email oculto para usuarios logados — o backend resolve o email real do DB */}
+                  {!user && (
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-1.5">
                       <Label htmlFor="payerEmail">E-mail do comprador</Label>
-                      {user?.email ? (
-                        <div className="flex h-10 w-full items-center rounded-md border border-white/10 bg-white/5 px-3 text-sm text-slate-300">
-                          <span className="truncate">{user.email}</span>
-                          <span className="ml-auto text-xs text-emerald-400">preenchido</span>
-                        </div>
-                      ) : (
-                        <Input
-                          id="payerEmail"
-                          type="email"
-                          placeholder="seu@email.com"
-                          className="border-white/10 bg-white/5 text-white"
-                          value={payerEmail}
-                          onChange={(event) => setPayerEmail(event.target.value)}
-                        />
-                      )}
+                      <Input
+                        id="payerEmail"
+                        type="email"
+                        placeholder="seu@email.com"
+                        className="border-white/10 bg-white/5 text-white"
+                        value={payerEmail}
+                        onChange={(event) => setPayerEmail(event.target.value)}
+                      />
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="payerDocument">CPF/CNPJ para geração do checkout</Label>
@@ -601,6 +599,7 @@ export default function PixCheckout() {
                       />
                     </div>
                   </div>
+                  )}
 
                   {!hasValidAmount && (
                     <div className="flex items-start gap-2 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">

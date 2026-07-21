@@ -1,7 +1,7 @@
 # =============================================================================
 # Nexus Affil'IA'te — Deploy production via GitHub Actions (Deploy Key + SSH)
 # =============================================================================
-# Updated by CEO-010: fixed branches trigger, aligned SSH pattern
+# CEO-012: Fixed trigger (ain] -> [main]), added .env protection in rsync
 
 name: Deploy production
 on:
@@ -51,7 +51,12 @@ jobs:
 
       - name: Sync build to server
         run: |
-          rsync -az --delete \
+          rsync -az \
+            --exclude='.env' \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='database' \
             -e "ssh -p 22022" \
             ./ root@143.95.213.237:/var/www/oneverso/current/
 
@@ -65,20 +70,20 @@ jobs:
             DB_URL=\${DATABASE_URL:-\${DEPLOY_DATABASE_URL:-}}
             if [ -n \"\$DB_URL\" ]; then
               for f in database/migrations/*.sql; do
-                echo \"Applying \$f ...\"
-                psql \"\$DB_URL\" -v ON_ERROR_STOP=1 -f \"\$f\" 2>&1 | tail -5
+                echo \"Applying \$f ...\" | head -1
+                psql \"\$DB_URL\" -v ON_ERROR_STOP=1 -f \"\$f\" 2>&1 | tail -3
               done
             else
               echo 'WARNING: DATABASE_URL not available, skipping migrations'
             fi
-            pm2 reload all --update-env 2>/dev/null || true
+            pm2 restart mmn-api --update-env 2>/dev/null || pm2 start ecosystem.config.js --env production
             pm2 save 2>/dev/null || true
           "
 
       - name: Healthcheck
         run: |
-          sleep 5
+          sleep 8
           for path in /api/health; do
             code=$(curl -sS -o /dev/null -w '%{http_code}' -m 20 "https://oneverso.com.br${path}" || echo 000)
-            echo "  $path → HTTP $code"
+            echo "  $path -> HTTP $code"
           done

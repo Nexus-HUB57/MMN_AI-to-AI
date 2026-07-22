@@ -1684,6 +1684,9 @@ E essa história — **a história da humanidade aprendendo a criar inteligênci
 
 ## Dario Amodei, Daniela Amodei, Chris Olah e a Filosofia da Anthropic
 
+![Os 7 ex-OpenAI que abandonaram tudo em 2020 — a origem da Anthropic](ilustracoes/03-01-7-rebeldes.jpg)
+
+
 **Subtítulo:** *Sete ex-OpenAI que abandonaram tudo para provar que a IA pode ser poderosa E responsável — a história do Claude*
 
 **Tagline:** *"Eles poderiam ter ficado. Poderiam ter ficado ricos. Mas escolheram ir embora para defender uma ideia."*
@@ -1737,6 +1740,8 @@ Boa leitura.
 # CAPÍTULO 1
 
 ## A Pandemia de 2020 — Quando Sete Pessoas Decidiram que Não Podiam Mais Esperar
+
+
 
 ### 1.1 A OpenAI em 2020: a casa que cresceu rápido demais
 
@@ -1813,6 +1818,8 @@ Essa é a história dos sete que decidiram, na noite de dezembro de 2020, que **
 # CAPÍTULO 2
 
 ## Daniela e Dario Amodei — A Dupla que Liderou a Revolta Ética
+
+
 
 ### 2.1 Uma família italiana em São Francisco, nos anos 80
 
@@ -1894,6 +1901,9 @@ A parceria entre **Dario** e **Daniela** é, no Vale do Silício, **única**. Em
 
 ## Chris Olah e o Mistério das Caixas Pretas (Interpretabilidade, Circuits, Features)
 
+![Constitutional AI — a revolução filosófica por trás do Claude](ilustracoes/03-02-constitutional-ai.jpg)
+
+
 ### 3.1 Toronto, 1985: um menino obcecado por ver o invisível
 
 **Chris Olah** nasceu em **1985**, em **Toronto**, no Canadá, em uma família de origem europeia. O pai era engenheiro elétrico; a mãe, professora de matemática. Chris cresceu, segundo ele próprio, *"em uma casa onde 'por que' era a pergunta mais importante"*. Desde cedo, ele era o tipo de criança que desmontava brinquedos para entender como funcionavam, e que ficava frustrado quando os pais não sabiam responder às suas perguntas sobre por que o céu era azul ou por que a Lua não caía.
@@ -1963,6 +1973,8 @@ A conquista técnica da interpretabilidade na Anthropic é, em si, **um dos feit
 # CAPÍTULO 4
 
 ## A Fundação da Anthropic (Janeiro de 2021, $124M, PBC, "Race to the Top")
+
+
 
 ### 4.1 A escolha do nome: "Anthropic" — em direção ao humano
 
@@ -2047,6 +2059,8 @@ A frase, em retrospecto, era **mais do que marketing**. Era **a estrutura estrat
 # CAPÍTULO 5
 
 ## Constitutional AI e o Nascimento do Claude (2022–2023)
+
+
 
 ### 5.1 O ano de 2022: a OpenAI lança o ChatGPT, e a Anthropic responde
 
@@ -2133,6 +2147,9 @@ A persona do Claude, em 2023, **se tornou, inesperadamente, um diferencial de me
 
 ## Claude 3, 3.5 Sonnet, Sonnet 4 — A Tomada do Mercado de Código (2024)
 
+![Claude 3.5 Sonnet domina o mercado de coding em 2024](ilustracoes/03-03-claude-coding.jpg)
+
+
 ### 6.1 O ano de 2024: a Anthropic sai da defensiva
 
 Se 2023 foi o ano em que a Anthropic **existiu** (fundação, primeiros modelos, primeiros clientes), 2024 foi o ano em que a Anthropic **competiu** — e, em vários segmentos, **venceu**. O ano começou com **duas decisões estratégicas** que definiriam o resto da década:
@@ -2202,6 +2219,8 @@ A corrida, em 2026, é, portanto, **uma corrida de duas pontas**: **OpenAI e Ant
 
 ## Constitutional AI Avançado, RLHF e o Conceito de "Scalable Oversight"
 
+
+
 ### 7.1 O problema fundamental: como supervisionar uma IA mais inteligente do que o supervisor?
 
 Para entender o conceito de **"scalable oversight"** (supervisão escalável), é preciso entender um problema que, em 2023-2024, se tornou **central** no campo de AI safety: **como um humano pode supervisionar, de forma confiável, um sistema de IA que, em algum momento, será mais inteligente do que ele?**
@@ -2267,6 +2286,8 @@ A escolha estratégica da Anthropic — interpretabilidade como pilar — **pode
 # CAPÍTULO 8
 
 ## Os Modelos Soberanos, o Projeto de $40B e a Rivalidade com OpenAI (2025)
+
+
 
 ### 8.1 A virada de 2025: de "concorrente seguro" a "concorrente real"
 
@@ -2335,6 +2356,9 @@ A frase, cunhada por Dario Amodei em janeiro de 2021, **cinco anos antes**, foi,
 # CAPÍTULO 9
 
 ## Claude em 2026 — Estado da Arte, Auditoria, Responsible Scaling Policies
+
+![Chris Olah e a interpretabilidade — abrindo as caixas-pretas da IA](ilustracoes/03-04-interpretabilidade.jpg)
+
 
 ### 9.1 O estado da arte: Claude Opus 4.6, Sonnet 4.5, e Haiku 4
 
@@ -2413,6 +2437,8 @@ A frase que Dario Amodei cunhou, em 2021, *"race to the top"*, era, em 2021, **u
 
 ## Conclusão: A Filosofia que Definiu uma Empresa — Lições dos Guardiões
 
+
+
 ### 10.1 A tese central: sete pessoas, uma ideia, cinco anos de história
 
 Relendo os nove capítulos anteriores, uma tese central emerge com nitidez: **a história da Anthropic é, em primeiro lugar, a história de uma ideia**. A ideia é simples, mas profunda: **a humanidade está construindo algo que pode reconfigurar a civilização. E, se for construída sem cuidado, sem transparência, e sem responsabilidade, a humanidade vai se arrepender. A alternativa não é "construir mais devagar". A alternativa é "construir melhor" — e, com isso, mostrar que **IA poderosa E responsável não são trade-offs**.**
@@ -2474,6 +2500,8 @@ Obrigado por ler. Nos vemos no Volume 4.
 ---
 
 ## Cronologia Essencial
+
+
 
 | Data | Evento |
 |---|---|

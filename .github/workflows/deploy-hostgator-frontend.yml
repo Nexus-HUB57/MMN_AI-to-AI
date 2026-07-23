@@ -22,6 +22,7 @@ env:
   VPS_PORT: "22022"
   VPS_USER: "root"
   REMOTE_APP: "/var/www/oneverso/current"
+  PUBLIC_DIR: "/var/www/oneverso/public"
 
 jobs:
   # ---------------------------------------------------------------------------
@@ -111,16 +112,25 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no \
             "${VPS_USER}@${VPS_HOST}" \
-            "mkdir -p ${{ env.REMOTE_APP }}/frontend/dist"
+            "mkdir -p ${{ env.REMOTE_APP }}/frontend/dist ${{ env.PUBLIC_DIR }}"
 
-      - name: Rsync frontend build to VPS
+      - name: Rsync frontend build to VPS (source of truth)
         run: |
-          rsync -az --delete \
+          rsync -az \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ env.VPS_PORT }} -o StrictHostKeyChecking=no" \
             ./frontend/dist/ \
-            ${{ env.VPS_USER }}@${{ env.VPS_HOST }}:${{ env.REMOTE_APP }}/frontend/dist/
+            ${{ env.VPS_USER }}@${VPS_HOST}:${{ env.REMOTE_APP }}/frontend/dist/
 
-      - name: Reload nginx (if present)
+      - name: Rsync frontend build to Nginx public root
+        run: |
+          rsync -az --delete \
+            --exclude='academia' \
+            --exclude='ebooks' \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ env.VPS_PORT }} -o StrictHostKeyChecking=no" \
+            ./frontend/dist/ \
+            ${{ env.VPS_USER }}@${VPS_HOST}:${{ env.PUBLIC_DIR }}/
+
+      - name: Reload nginx
         run: |
           ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no \
             "${VPS_USER}@${VPS_HOST}" \
@@ -135,8 +145,9 @@ jobs:
             if [ "${{ job.status }}" = "success" ]; then
               echo "### Published"
               echo "- Portal: https://oneverso.com.br"
-              echo "- API: https://api.oneverso.com.br"
-              echo "- Method: rsync over SSH (no FTPS)"
+              echo "- Deploy path: ${{ env.PUBLIC_DIR }} (Nginx root)"
+              echo "- Source backup: ${{ env.REMOTE_APP }}/frontend/dist/"
+              echo "- Method: rsync over SSH"
             else
               echo "### Failed"
               echo "Check VPS_ROOT_PASSWORD and SSH_GITHUB secrets."

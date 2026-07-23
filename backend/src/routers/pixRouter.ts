@@ -44,7 +44,7 @@ const PIX_RECEIVER_NAME = process.env.PIX_RECEIVER_NAME ?? "MMN AI-to-AI";
 const PIX_RECEIVER_CITY = process.env.PIX_RECEIVER_CITY ?? "SAO PAULO";
 const PIX_KEY = process.env.PIX_KEY ?? "";
 const PIX_SANDBOX = process.env.PIX_SANDBOX === "true" || process.env.NODE_ENV !== "production";
-const MARKETPLACE_PIX_KEY = process.env.MARKETPLACE_PIX_KEY?.trim() || PIX_KEY || "19992691954";
+const MARKETPLACE_PIX_KEY = process.env.MARKETPLACE_PIX_KEY?.trim() || PIX_KEY || "";
 const MARKETPLACE_PIX_RECEIVER_NAME = process.env.MARKETPLACE_PIX_RECEIVER_NAME?.trim() || PIX_RECEIVER_NAME || "ONEVERSO MMN AI";
 const MARKETPLACE_PIX_RECEIVER_CITY = process.env.MARKETPLACE_PIX_RECEIVER_CITY?.trim() || PIX_RECEIVER_CITY || "SAO PAULO";
 const MARKETPLACE_PIX_BANK_LABEL = process.env.MARKETPLACE_PIX_BANK_LABEL?.trim() || "Nubank";

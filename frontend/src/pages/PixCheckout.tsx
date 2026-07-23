@@ -19,6 +19,7 @@ import {
   Info,
   LoaderCircle,
   QrCode,
+  Mail,
   ShieldCheck,
   Wallet,
 } from "lucide-react";

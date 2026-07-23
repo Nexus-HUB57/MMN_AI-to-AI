@@ -88,13 +88,13 @@ export function generatePixStaticPayload(params: PixStaticPayload): PixQrCodeRes
     .toUpperCase()
     .trim();
 
-  const descriptionPart = params.description
-    ? tlv("02", params.description.substring(0, 72))
-    : "";
-
+  // CEO-013: Description removed from tag 26 (Merchant Account Info).
+  // Per EMV PIX spec, tag 26 must ONLY contain sub-tags 00 (GUI) and 01 (PIX key).
+  // Placing description (sub-tag 02) inside tag 26 causes bank parser rejection.
+  // Description is omitted for maximum compatibility; txid in tag 62.05 serves as identifier.
   const merchantAccountInfo = tlv(
     "26",
-    tlv("00", "BR.GOV.BCB.PIX") + tlv("01", params.pixKey) + descriptionPart,
+    tlv("00", "BR.GOV.BCB.PIX") + tlv("01", params.pixKey),
   );
 
   const amountPart =

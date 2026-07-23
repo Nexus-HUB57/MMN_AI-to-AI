@@ -14,7 +14,7 @@ export interface MarketplaceCheckoutIntent {
 }
 
 export const MARKETPLACE_CHECKOUT_STORAGE_KEY = "nexus-marketplace-checkout-intent";
-export const MARKETPLACE_PIX_KEY = "19992691954";
+export const MARKETPLACE_PIX_KEY = ""; // CEO-013: Removed hardcoded CPF. Always use server-provided EVP key.
 export const MARKETPLACE_PIX_BANK_LABEL = "Nubank";
 
 function toBase64(value: string) {

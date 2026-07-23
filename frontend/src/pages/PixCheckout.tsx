@@ -265,13 +265,16 @@ export default function PixCheckout() {
     [checkoutIntent, description],
   );
 
+  // CEO-013: Use server-provided pixKey for client-side fallback (not hardcoded CPF)
+  const serverPixKey = checkoutSession?.pix?.fallback?.pixKey || undefined;
   const fallbackPixPayload = useMemo(() => {
     if (!hasValidAmount || !hasRequestedCheckout) return null;
     return generateMarketplacePixPayload({
       amountCents,
       description: paymentContext.description,
+      pixKey: serverPixKey,
     });
-  }, [amountCents, hasRequestedCheckout, hasValidAmount, paymentContext.description]);
+  }, [amountCents, hasRequestedCheckout, hasValidAmount, paymentContext.description, serverPixKey]);
 
   const pixCode = hasRequestedCheckout ? checkoutSession?.pix.qrCode || fallbackPixPayload?.qrCodePayload || null : null;
   const pixBase64 = hasRequestedCheckout ? checkoutSession?.pix.qrCodeBase64 || null : null;
@@ -575,7 +578,17 @@ export default function PixCheckout() {
                   </div>
 
                   {/* CEO-012c: Email oculto para usuarios logados — o backend resolve o email real do DB */}
-                  {!user && (
+                  {/* CEO-013: Email field — read-only badge for logged-in users, editable for anonymous */}
+                  {user?.email ? (
+                    <div className="space-y-1.5">
+                      <Label>E-mail do comprador</Label>
+                      <div className="flex h-10 w-full items-center rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 text-sm text-emerald-300">
+                        <Mail className="mr-2 h-4 w-4" />
+                        <span className="truncate">{user.email}</span>
+                        <span className="ml-auto rounded bg-emerald-500/20 px-2 py-0.5 text-xs text-emerald-400">verificado</span>
+                      </div>
+                    </div>
+                  ) : (
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-1.5">
                       <Label htmlFor="payerEmail">E-mail do comprador</Label>

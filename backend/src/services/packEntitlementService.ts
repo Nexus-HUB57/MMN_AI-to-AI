@@ -156,7 +156,79 @@ export async function grantPackToUser(
       [packSlug, userId],
     );
     const poolSlugs = pool.rows.map((r: any) => r.slug as string);
+
+    // CEO-014: Se o pool está vazio mas o usuário já possui os livros (ex.: pack-founder cobre pack-a2),
+    // registrar o grant anyway e atualizar source_pack_slug na library para atribuir corretamente.
     if (poolSlugs.length === 0) {
+      // Contar quantos livros do pack o usuário já possui
+      const ownedCount = await client.query(
+        `SELECT COUNT(*) as cnt FROM marketplace_user_library
+          WHERE user_id=$1 AND ebook_slug IN (
+            SELECT slug FROM marketplace_ebooks WHERE unlock_pack_slug=$2 AND status='active'
+          )`,
+        [userId, packSlug],
+      );
+      const alreadyOwned = Number(ownedCount.rows[0]?.cnt ?? 0);
+
+      if (alreadyOwned > 0) {
+        // CEO-014: Atualizar source_pack_slug dos livros existentes para incluir este pack
+        await client.query(
+          `UPDATE marketplace_user_library
+             SET source_pack_slug = $1,
+                 source_type = 'pack_grant',
+                 delivered = TRUE
+           WHERE user_id=$2
+             AND ebook_slug IN (
+               SELECT slug FROM marketplace_ebooks WHERE unlock_pack_slug=$3 AND status='active'
+             )
+             AND (source_pack_slug IS NULL OR source_pack_slug != $1)`,
+          [packSlug, userId, packSlug],
+        );
+
+        // Registrar o grant mesmo assim (com delivered_count = já possuídos)
+        const orderId = makeOrderId();
+        await client.query(
+          `INSERT INTO marketplace_orders (id, user_id, status, subtotal_cents, total_cents,
+                                           payment_method, payment_status, payment_id, paid_at)
+           VALUES ($1, $2, 'paid', $3, $3, $4, 'paid', $5, NOW())`,
+          [orderId, userId, opts.amountCents ?? 0, opts.paymentMethod ?? "pix", opts.paymentRef ?? null],
+        );
+        await client.query(
+          `INSERT INTO marketplace_order_items
+             (order_id, item_type, item_slug, title, unit_price_cents, quantity, pack_ebook_quota)
+           VALUES ($1, 'pack', $2, $3, $4, 1, $5)`,
+          [orderId, packSlug, `Pack ${packSlug}`, opts.amountCents ?? 0, quota],
+        );
+
+        const grantInsert = await client.query(
+          `INSERT INTO marketplace_pack_grants
+             (user_id, pack_slug, order_id, payment_ref, payment_method, amount_cents,
+              delivered_count, pool_size, status, metadata)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'granted', $9::jsonb)
+           RETURNING id`,
+          [
+            userId, packSlug, orderId, opts.paymentRef ?? null,
+            opts.paymentMethod ?? "pix", opts.amountCents ?? 0,
+            alreadyOwned, alreadyOwned,
+            JSON.stringify({ ceo014: true, alreadyOwnedFromHigherTier: true, message: `Usuario ja possuia ${alreadyOwned} ebooks do pack ${packSlug} de um pacote superior` }),
+          ],
+        );
+
+        await client.query("COMMIT");
+        return {
+          ok: true,
+          alreadyGranted: false,
+          packSlug,
+          userId,
+          delivered: alreadyOwned,
+          poolSize: alreadyOwned,
+          drawnSlugs: [],
+          grantId: grantInsert.rows[0].id,
+          orderId,
+          message: `CEO-014: Pack ${packSlug} registrado — usuario ja possuia ${alreadyOwned} ebooks (pack superior). Atribuicao atualizada.`,
+        };
+      }
+
       await client.query("ROLLBACK");
       return {
         ok: true,
@@ -166,7 +238,7 @@ export async function grantPackToUser(
         delivered: 0,
         poolSize: 0,
         drawnSlugs: [],
-        message: "Pool vazio: usuário já possui todos os e-books do pack",
+        message: "Pool vazio: usuario ja possui todos os e-books do pack",
       };
     }
 

@@ -29,42 +29,117 @@ function aspool(): PgPool {
 /**
  * Lê inventário REAL da biblioteca do usuário (marketplace_user_library)
  * — espelho da Loja e Estoque sincronizado com os Packs adquiridos.
+ * CEO-014: Refatorado com mapa de colunas lowercase (pg driver) para evitar nulls.
  */
+const DB_COL_MAP: Record<string, string[]> = {
+  slug: ["slug"],
+  title: ["title"],
+  subtitle: ["subtitle"],
+  description: ["description"],
+  costCents: ["costcents", "cost_cents"],
+  resalePriceCents: ["resalepricecents", "resale_price_cents"],
+  pages: ["pages"],
+  category: ["category"],
+  htmlPath: ["htmlpath", "html_path"],
+  pdfPath: ["pdfpath", "pdf_path"],
+  coverPath: ["coverpath", "cover_path"],
+  collectionRank: ["collection_rank"],
+  unlockPackSlug: ["unlockpackslug", "unlock_pack_slug"],
+  acquiredAt: ["acquired_at"],
+  sourceType: ["source_type"],
+};
+
+function mapRow(row: any, fields: string[]): Record<string, any> {
+  const out: Record<string, any> = {};
+  for (const field of fields) {
+    const candidates = DB_COL_MAP[field] ?? [field];
+    for (const c of candidates) {
+      if (row[c] !== undefined && row[c] !== null) {
+        out[field] = row[c];
+        break;
+      }
+    }
+    // acquired_at special: ISO string conversion
+    if (field === "acquiredAt" && out[field] && typeof out[field].toISOString === "function") {
+      out[field] = out[field].toISOString();
+    } else if (field === "acquiredAt" && !out[field]) {
+      out[field] = String(row.acquired_at ?? "");
+    }
+  }
+  return out;
+}
+
 async function resolveInventoryFromDb(userId: number): Promise<any[]> {
   try {
     const r = await aspool().query(
-      `SELECT l.ebook_slug AS slug, l.source_pack_slug AS unlockPackSlug,
+      `SELECT l.ebook_slug AS slug, l.source_pack_slug AS "unlockPackSlug",
               l.acquired_at, l.source_type,
-              e.title, e.subtitle, e.description, e.cost_cents AS costCents,
-              e.resale_price_cents AS resalePriceCents, e.pages, e.category,
-              e.html_path AS htmlPath, e.pdf_path AS pdfPath,
-              e.cover_path AS coverPath, e.collection_rank
+              e.title, e.subtitle, e.description, e.cost_cents AS "costCents",
+              e.resale_price_cents AS "resalePriceCents", e.pages, e.category,
+              e.html_path AS "htmlPath", e.pdf_path AS "pdfPath",
+              e.cover_path AS "coverPath", e.collection_rank
          FROM marketplace_user_library l
          JOIN marketplace_ebooks e ON e.slug = l.ebook_slug
         WHERE l.user_id=$1 AND l.delivered=TRUE
         ORDER BY l.acquired_at DESC`,
       [userId],
     );
-    return r.rows.map((row: any) => ({
-      slug: row.slug,
-      title: row.title,
-      subtitle: row.subtitle,
-      description: row.description,
-      costCents: row.costcents ?? row.costCents,
-      resalePriceCents: row.resalepricecents ?? row.resalePriceCents,
-      pages: row.pages,
-      category: row.category,
-      htmlPath: row.htmlpath ?? row.htmlPath,
-      pdfPath: row.pdfpath ?? row.pdfPath,
-      coverPath: row.coverpath ?? row.coverPath,
-      collectionRank: row.collection_rank,
-      unlockPackSlug: row.unlockpackslug ?? row.unlockPackSlug,
-      acquiredAt: row.acquired_at?.toISOString?.() ?? String(row.acquired_at),
-      sourceType: row.source_type,
-    }));
+    return r.rows.map((row: any) => mapRow(row, [
+      "slug", "title", "subtitle", "description", "costCents", "resalePriceCents",
+      "pages", "category", "htmlPath", "pdfPath", "coverPath", "collectionRank",
+      "unlockPackSlug", "acquiredAt", "sourceType",
+    ]));
   } catch (e) {
     console.warn("[affiliateStore] resolveInventoryFromDb falhou:", e);
     return [];
+  }
+}
+
+/**
+ * CEO-014: Resolve inventário por código NX... (vitrine pública) usando DB.
+ * Converte o código de afiliado de volta para user_id e busca no banco.
+ */
+async function resolveInventoryFromDbByCode(code: string): Promise<{ items: any[]; ownerName: string | null }> {
+  try {
+    // Extrair userId do código NX + base36
+    const codeUpper = code.toUpperCase().trim();
+    if (!codeUpper.startsWith("NX") || codeUpper.length < 3) {
+      return { items: [], ownerName: null };
+    }
+    const base36Part = codeUpper.slice(2);
+    const userId = parseInt(base36Part, 36);
+    if (isNaN(userId) || userId <= 0) {
+      return { items: [], ownerName: null };
+    }
+
+    // Buscar inventário e nome do dono em uma query
+    const r = await aspool().query(
+      `SELECT l.ebook_slug AS slug, l.source_pack_slug AS "unlockPackSlug",
+              l.acquired_at, l.source_type,
+              e.title, e.subtitle, e.description, e.cost_cents AS "costCents",
+              e.resale_price_cents AS "resalePriceCents", e.pages, e.category,
+              e.html_path AS "htmlPath", e.pdf_path AS "pdfPath",
+              e.cover_path AS "coverPath", e.collection_rank,
+              u.name AS owner_name
+         FROM marketplace_user_library l
+         JOIN marketplace_ebooks e ON e.slug = l.ebook_slug
+         JOIN users u ON u.id = l.user_id
+        WHERE l.user_id=$1 AND l.delivered=TRUE
+        ORDER BY l.acquired_at DESC
+        LIMIT 500`,
+      [userId],
+    );
+    if (r.rows.length === 0) return { items: [], ownerName: null };
+    const ownerName = r.rows[0].owner_name ?? null;
+    const items = r.rows.map((row: any) => mapRow(row, [
+      "slug", "title", "subtitle", "description", "costCents", "resalePriceCents",
+      "pages", "category", "htmlPath", "pdfPath", "coverPath", "collectionRank",
+      "unlockPackSlug", "acquiredAt", "sourceType",
+    ]));
+    return { items, ownerName };
+  } catch (e) {
+    console.warn("[affiliateStore] resolveInventoryFromDbByCode falhou:", e);
+    return { items: [], ownerName: null };
   }
 }
 
@@ -490,10 +565,22 @@ export const affiliateStoreRouter = router({
 
   /**
    * Inventário público pelo ID Indicador (vitrine compartilhada)
+   * CEO-014: Agora usa DB real (resolveInventoryFromDbByCode) em vez de JSON legado.
    */
   publicInventoryByCode: publicProcedure
     .input(z.object({ code: z.string().min(2) }))
     .query(async ({ input }) => {
+      // CEO-014: Tentar resolver do DB primeiro (fonte de verdade)
+      const dbResult = await resolveInventoryFromDbByCode(input.code);
+      if (dbResult.items.length > 0) {
+        return {
+          items: dbResult.items,
+          total: dbResult.items.length,
+          code: input.code,
+          ownerName: dbResult.ownerName,
+        };
+      }
+      // Fallback legado: perfil JSON
       const match = await findProfileByCode(input.code);
       if (!match) return { items: [], total: 0, code: input.code, ownerName: null };
       const items = await resolveInventoryForProfile(match.profile);

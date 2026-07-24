@@ -66,6 +66,8 @@ import { nikoCapitalRouter } from "./routers/nikoCapitalRouter";
 import { networkExtendedRouter } from "./routers/networkExtendedRouter";
 import { packEntitlementsRouter as packEntitlementsOnda19Router } from "./routers/packEntitlementsOnda19Router";
 import { btcCustodyRouter } from "./routers/btcCustodyRouter";
+// CEO-014: Affiliate Store Router — Minha Loja / Estoque
+import { affiliateStoreRouter } from "./routers/affiliateStoreRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -261,6 +263,8 @@ export const appRouter = router({
   networkExtended: networkExtendedRouter,
   packEntitlements: packEntitlementsOnda19Router,
   btcCustody: btcCustodyRouter,
+  // CEO-014: Minha Loja / Estoque / Vitrine pública
+  affiliateStore: affiliateStoreRouter,
 });
 
 export type AppRouter = typeof appRouter;

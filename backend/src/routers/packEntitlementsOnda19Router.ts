@@ -64,15 +64,8 @@ export const packEntitlementsRouter = router({
           affiliateId = u.rows[0]?.affiliate_id ?? null;
         }
 
-        if (!affiliateId) {
-          return {
-            ok: true,
-            hasPackA2: false,
-            reason: "no_affiliate_record",
-            activatedAt: null,
-            expiresAt: null,
-          };
-        }
+        // CEO-013d: Don't block Tier 2/3 if no affiliate record
+        // Some users may have pack grants without an affiliate record (e.g., backfill)
 
         // Buscar pack_activations do Pack A²
         const packRes = await pool.query(

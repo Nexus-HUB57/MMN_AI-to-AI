@@ -47,8 +47,27 @@ export const dashboardStatusRouter = router({
       xpRow = (res?.rows ?? res ?? [])[0] ?? null;
     } catch {}
 
+    // CEO-013d: agentActive também considera Pack A2 ownership
+    // O agente está ativo se: tem agent.status=active OU tem Pack A2 adquirido
+    let hasPackA2 = false;
+    try {
+      const packCheck = await require("../services/packEntitlementService");
+      // Check via marketplace_pack_grants
+      const pool2 = (await import("pg")).default;
+      // Simple inline check for pack grant
+      const grantRes = await ctx.db.execute(sql`
+        SELECT 1 FROM marketplace_pack_grants
+        WHERE user_id = ${ctx.user.id}
+          AND pack_slug IN ('pack-a2')
+          AND status IN ('granted','active','completed','delivered')
+        LIMIT 1
+      `);
+      const grantList = (grantRes as any).rows || (grantRes as any);
+      hasPackA2 = grantList && grantList.length > 0;
+    } catch {}
+
     return {
-      agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")),
+      agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")) || hasPackA2,
       monthlyActivationPaid: paid,
       cycleLabel: cycle,
       affiliateLevel: (affiliate as any).level || (affiliate as any).tier || "Afiliado I",

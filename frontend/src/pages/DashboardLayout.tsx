@@ -189,7 +189,15 @@ const { user, loading, logout } = useAuth();
     return location.startsWith(href);
   };
 
-  const agentStatus = "configurando" as "ativo" | "inativo" | "configurando";
+  // CEO-013d: Use dynamic status from dashboardStatus API
+  const dashStatus = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, {
+    refetchInterval: 120_000,
+    retry: false,
+  });
+  const agentStatus: "ativo" | "inativo" | "configurando" =
+    dashStatus?.data?.agentActive ? "ativo"
+    : dashStatus?.data ? "inativo"
+    : "configurando";
   const statusColors = {
     ativo: "bg-accent-green/20 text-accent-green",
     inativo: "bg-red-500/20 text-red-400",

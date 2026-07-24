@@ -6,11 +6,15 @@
  * sorteia N ebooks (Fisher-Yates auditável) e adiciona à biblioteca do usuário
  * + estoque da Loja.
  *
+ * CEO-014: Sincronizado com Protocolo_Pack (docs/planning/Protocolo_Pack).
+ * As quotas oficiais de ebooks agora vêm de packProtocolService.
+ *
  * Idempotente via tabela marketplace_pack_grants (uniq user+pack+payment_ref).
  * Usa Pool nativo do PG para evitar acoplamento com drizzle.
  */
 import crypto from "node:crypto";
 import { Pool } from "pg";
+import { PACK_PROTOCOL, getOfficialEbookQuota } from "./packProtocolService";
 let _pool: Pool | null = null;
 function getPool(): Pool {
   if (!_pool) {
@@ -21,24 +25,19 @@ function getPool(): Pool {
   return _pool;
 }
 
-/** Quota oficial de e-books por pack (segundo plano de carreira). */
-export const PACK_EBOOK_QUOTA: Record<string, number> = {
-  "pack-a2": 10,
-  "pack-a2ii": 30,
-  "pack-a2iii": 50,
-  "pack-ag": 250,
-  "pack-agii": 500,
-  "pack-agiii": 750,
-  "pack-agn": 1100,
-  "pack-agnii": 4000,
-  "pack-agniii": 6000,
-  "pack-ao": 10000,
-  "pack-aoii": 20000,
-  "pack-aoiii": 40000,
-  "pack-aa": 100000,
-  "pack-aaii": 200000,
-  "pack-aaiii": 350000,
-};
+/**
+ * CEO-014: Quota oficial de e-books por pack — SINCRONIZADA com Protocolo_Pack.
+ * Fonte de verdade: packProtocolService.ts → docs/planning/Protocolo_Pack
+ *
+ * Mantido para compatibilidade com affiliateStoreRouter e outros consumidores.
+ * Antes: quotas divergentes (AGN=1100 vs oficial=1000, etc.).
+ */
+export const PACK_EBOOK_QUOTA: Record<string, number> = Object.fromEntries(
+  Object.entries(PACK_PROTOCOL).map(([slug, p]) => [slug, p.ebookQuota]),
+);
+
+// Re-export para consumo externo
+export { PACK_PROTOCOL, getPackProtocol, getAllPackSlugs, PACK_QUOTA_DIVERGENCES } from "./packProtocolService";
 
 export interface GrantResult {
   ok: boolean;

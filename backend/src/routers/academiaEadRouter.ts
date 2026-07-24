@@ -12,6 +12,26 @@ import {
   type AcademiaLessonRow,
 } from "../services/academiaLessonsRepository";
 
+import {
+  checkUserAccess,
+} from "../services/packDeliveryService";
+
+/**
+ * CEO-015: Verifica se o usuário tem acesso à Academ'IA.
+ * Packs A² (Pack Agente Afiliado) e superiores concedem este acesso.
+ * Packs AA (IA Agentic) e superiores concedem níveis avançados.
+ */
+async function requireAcademiaAccess(ctx: any): Promise<{ hasAccess: boolean; level: string | null }> {
+  if (!ctx?.user?.id) return { hasAccess: false, level: null };
+  try {
+    return await checkUserAccess(ctx.user.id, "academia");
+  } catch {
+    console.warn("[Academia] access check failed — allowing (grace period)");
+    return { hasAccess: true, level: "standard" };
+  }
+}
+
+
 
 const contentTypeSchema = z.enum([
   "curso",

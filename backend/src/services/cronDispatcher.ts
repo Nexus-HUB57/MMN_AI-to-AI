@@ -171,8 +171,84 @@ const inlineHandlers: Record<
   network_health_check: async () => {
     console.log("[CronDispatcher] network_health_check executado (inline)");
   },
-  affiliate_activation: async () => {
-    console.log("[CronDispatcher] affiliate_activation executado (inline)");
+  // CEO-015: affiliate_activation — Real handler for monthly activation
+  // Runs monthly (1st-10th) to check pending activations and flag inactive users
+  affiliate_activation: async (payload: Record<string, unknown>) => {
+    const { Pool } = await import("pg");
+    if (!process.env.DATABASE_URL) {
+      console.error("[CronDispatcher] affiliate_activation: DATABASE_URL not configured");
+      return;
+    }
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
+    const client = await pool.connect();
+    try {
+      const now = new Date();
+      const cycle = now.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+
+      // 1. Count configured but unpaid activations for this cycle
+      const pending = await client.query(
+        `SELECT COUNT(*)::int AS total
+         FROM user_monthly_activation
+         WHERE cycle_label = $1 AND status = 'configured'`,
+        [cycle],
+      );
+      const pendingCount = pending.rows[0]?.total ?? 0;
+
+      // 2. Count paid activations for this cycle
+      const paid = await client.query(
+        `SELECT COUNT(*)::int AS total
+         FROM user_monthly_activation
+         WHERE cycle_label = $1 AND status = 'paid'`,
+        [cycle],
+      );
+      const paidCount = paid.rows[0]?.total ?? 0;
+
+      // 3. Flag users with stale configured activations from PREVIOUS cycles as delinquent
+      const staleResult = await client.query(
+        `UPDATE user_monthly_activation
+         SET status = 'expired'
+         WHERE status = 'configured'
+           AND cycle_label != $1
+           AND created_at < NOW() - INTERVAL '35 days'
+         RETURNING user_id, cycle_label`,
+        [cycle],
+      );
+      const expiredCount = staleResult.rows.length;
+
+      // 4. Insert expired users into delinquents tracking if table exists
+      for (const row of staleResult.rows) {
+        try {
+          await client.query(
+            `INSERT INTO delinquents (user_id, category, amount_cents, days_overdue, status, created_at)
+             VALUES ($1, 'monthly_activation', 0, EXTRACT(DAY FROM NOW() - created_at)::int, 'active', NOW())
+             ON CONFLICT DO NOTHING`,
+            [row.user_id],
+          );
+        } catch {
+          // delinquents table may not exist
+        }
+      }
+
+      // 5. Clean up duplicate configured entries (keep most recent)
+      await client.query(
+        `DELETE FROM user_monthly_activation d
+         USING user_monthly_activation d2
+         WHERE d.user_id = d2.user_id
+           AND d.cycle_label = d2.cycle_label
+           AND d.status = 'configured'
+           AND d2.status = 'configured'
+           AND d.id < d2.id`
+      );
+
+      console.log(
+        `[CronDispatcher] affiliate_activation: cycle="${cycle}", pending=${pendingCount}, paid=${paidCount}, expired=${expiredCount}`
+      );
+    } catch (e: any) {
+      console.error(`[CronDispatcher] affiliate_activation error: ${e.message}`);
+    } finally {
+      client.release();
+      await pool.end();
+    }
   },
   report_generation: async () => {
     console.log("[CronDispatcher] report_generation executado (inline)");

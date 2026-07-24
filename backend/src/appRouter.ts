@@ -68,6 +68,7 @@ import { packEntitlementsRouter as packEntitlementsOnda19Router } from "./router
 import { btcCustodyRouter } from "./routers/btcCustodyRouter";
 // CEO-014: Affiliate Store Router — Minha Loja / Estoque
 import { affiliateStoreRouter } from "./routers/affiliateStoreRouter";
+import { monthlyActivationRouter } from "./routers/monthlyActivationRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -265,6 +266,7 @@ export const appRouter = router({
   btcCustody: btcCustodyRouter,
   // CEO-014: Minha Loja / Estoque / Vitrine pública
   affiliateStore: affiliateStoreRouter,
+  monthlyActivation: monthlyActivationRouter,
 });
 
 export type AppRouter = typeof appRouter;

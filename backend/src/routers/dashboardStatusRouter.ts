@@ -25,6 +25,7 @@ export const dashboardStatusRouter = router({
         agentActive: false,
         monthlyActivationPaid: false,
         cycleLabel: cycleLabel(new Date()),
+        cycleDisplay: cycleLabelDisplay(new Date()),
         affiliateLevel: null,
         totalXp: 0,
         currentLevel: 1,
@@ -70,6 +71,7 @@ export const dashboardStatusRouter = router({
       agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")) || hasPackA2,
       monthlyActivationPaid: paid,
       cycleLabel: cycle,
+      cycleDisplay: cycleLabelDisplay(now),
       affiliateLevel: (affiliate as any).level || (affiliate as any).tier || "Afiliado I",
       totalXp: Number(xpRow?.totalXp ?? 0),
       currentLevel: Number(xpRow?.currentLevel ?? 1),
@@ -350,7 +352,15 @@ export const dashboardStatusRouter = router({
 });
 
 // ===== helpers =====
-function cycleLabel(d: Date) {
+// CEO-015 FIX: cycleLabel agora retorna formato locale-independent (YYYY-MM)
+// para comparação correta com to_char(..., 'YYYY-MM') no PostgreSQL.
+// O frontend deve usar cycleLabelDisplay() para labels legíveis.
+function cycleLabel(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`; // ex: "2026-07"
+}
+function cycleLabelDisplay(d: Date): string {
   return d.toLocaleString("pt-BR", { month: "long", year: "numeric" });
 }
 function monthLabel(d: Date) {
@@ -375,7 +385,7 @@ async function checkMonthlyActivationPaid(
         AND (mo.external_reference ILIKE '%monthly-activation%'
              OR mo.metadata->>'source' = 'monthly-activation'
              OR mo.metadata->>'slug' = 'monthly-activation')
-        AND to_char(COALESCE(mo.paid_at, mo.created_at), 'TMMonth YYYY') = ${cycle}
+        AND to_char(COALESCE(mo.paid_at, mo.created_at), 'YYYY-MM') = ${cycle}
       LIMIT 1
     `);
     const mpList = (mp as any).rows || (mp as any);
@@ -386,7 +396,7 @@ async function checkMonthlyActivationPaid(
       SELECT 1 FROM orders
       WHERE "affiliateId" = ${affiliateId}
         AND status IN ('paid','delivered','confirmed','approved')
-        AND to_char("createdAt", 'TMMonth YYYY') = ${cycle}
+        AND to_char("createdAt", 'YYYY-MM') = ${cycle}
       LIMIT 1
     `);
     const list = (rows as any).rows || (rows as any);
@@ -396,3 +406,4 @@ async function checkMonthlyActivationPaid(
     return false;
   }
 }
+

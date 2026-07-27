@@ -59,73 +59,73 @@ jobs:
           python3 -c "import googleapiclient, google.oauth2.credentials" >/dev/null 2>&1 || pip3 install --quiet --break-system-packages google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
           if [ ! -f secrets/youtube_token.json ]; then
             python3 - <<'PY'
-from pathlib import Path
-import json, os, shutil
+            from pathlib import Path
+            import json, os, shutil
 
-root = Path('/var/www/oneverso/current')
-out = root / 'AcademIA' / 'youtube' / 'reports' / 'youtube_token_discovery_2026-07-27.json'
-secrets_dir = root / 'secrets'
-secrets_dir.mkdir(parents=True, exist_ok=True)
-target = secrets_dir / 'youtube_token.json'
-report = {'status': 'not_found', 'source': None, 'checks': []}
+            root = Path('/var/www/oneverso/current')
+            out = root / 'AcademIA' / 'youtube' / 'reports' / 'youtube_token_discovery_2026-07-27.json'
+            secrets_dir = root / 'secrets'
+            secrets_dir.mkdir(parents=True, exist_ok=True)
+            target = secrets_dir / 'youtube_token.json'
+            report = {'status': 'not_found', 'source': None, 'checks': []}
 
-def valid_authorized_user_text(text: str):
-    try:
-        data = json.loads(text)
-    except Exception:
-        return None
-    if isinstance(data, dict) and data.get('type') == 'authorized_user' and data.get('refresh_token') and data.get('client_id') and data.get('client_secret'):
-        return data
-    return None
+            def valid_authorized_user_text(text: str):
+                try:
+                    data = json.loads(text)
+                except Exception:
+                    return None
+                if isinstance(data, dict) and data.get('type') == 'authorized_user' and data.get('refresh_token') and data.get('client_id') and data.get('client_secret'):
+                    return data
+                return None
 
-for env_name in ['YOUTUBE_TOKEN_JSON','YOUTUBE_OAUTH_TOKEN_JSON','GOOGLE_OAUTH_TOKEN_JSON','YOUTUBE_TOKEN','YOUTUBE_OAUTH_TOKEN']:
-    value = os.environ.get(env_name, '').strip()
-    if not value:
-        continue
-    data = valid_authorized_user_text(value)
-    report['checks'].append({'kind': 'env', 'name': env_name, 'valid': bool(data)})
-    if data:
-        target.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
-        report['status'] = 'materialized_from_env'
-        report['source'] = env_name
-        out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
-        raise SystemExit(0)
-
-search_roots = [Path('/var/www'), Path('/root'), Path('/home')]
-patterns = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*.json', '*token*.json', '*.txt']
-seen = set()
-for base in search_roots:
-    if not base.exists():
-        continue
-    for pat in patterns:
-        for p in base.rglob(pat):
-            try:
-                rp = str(p.resolve())
-            except Exception:
-                rp = str(p)
-            if rp in seen:
-                continue
-            seen.add(rp)
-            if p == target:
-                continue
-            try:
-                if not p.is_file() or p.stat().st_size > 2_000_000:
+            for env_name in ['YOUTUBE_TOKEN_JSON','YOUTUBE_OAUTH_TOKEN_JSON','GOOGLE_OAUTH_TOKEN_JSON','YOUTUBE_TOKEN','YOUTUBE_OAUTH_TOKEN']:
+                value = os.environ.get(env_name, '').strip()
+                if not value:
                     continue
-                text = p.read_text(encoding='utf-8', errors='ignore')
-                data = valid_authorized_user_text(text)
-                report['checks'].append({'kind': 'file', 'path': rp, 'valid': bool(data)})
+                data = valid_authorized_user_text(value)
+                report['checks'].append({'kind': 'env', 'name': env_name, 'valid': bool(data)})
                 if data:
-                    shutil.copyfile(p, target)
-                    report['status'] = 'copied_from_file'
-                    report['source'] = rp
+                    target.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+                    report['status'] = 'materialized_from_env'
+                    report['source'] = env_name
                     out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
                     raise SystemExit(0)
-            except Exception:
-                continue
 
-out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
-raise SystemExit(0)
-PY
+            search_roots = [Path('/var/www'), Path('/root'), Path('/home')]
+            patterns = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*.json', '*token*.json', '*.txt']
+            seen = set()
+            for base in search_roots:
+                if not base.exists():
+                    continue
+                for pat in patterns:
+                    for p in base.rglob(pat):
+                        try:
+                            rp = str(p.resolve())
+                        except Exception:
+                            rp = str(p)
+                        if rp in seen:
+                            continue
+                        seen.add(rp)
+                        if p == target:
+                            continue
+                        try:
+                            if not p.is_file() or p.stat().st_size > 2_000_000:
+                                continue
+                            text = p.read_text(encoding='utf-8', errors='ignore')
+                            data = valid_authorized_user_text(text)
+                            report['checks'].append({'kind': 'file', 'path': rp, 'valid': bool(data)})
+                            if data:
+                                shutil.copyfile(p, target)
+                                report['status'] = 'copied_from_file'
+                                report['source'] = rp
+                                out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+                                raise SystemExit(0)
+                        except Exception:
+                            continue
+
+            out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+            raise SystemExit(0)
+            PY
           fi
           python3 scripts/youtube/apply_channel_fixes.py AcademIA/youtube/youtube_channel_fix_actions_2026-07-27.json
           REMOTE

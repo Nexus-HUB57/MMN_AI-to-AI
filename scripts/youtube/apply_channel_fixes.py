@@ -23,6 +23,10 @@ TOKEN_ENV_CANDIDATES = [
     'YOUTUBE_TOKEN',
     'YOUTUBE_OAUTH_TOKEN',
 ]
+FILE_TOKEN_CANDIDATES = [
+    ROOT / 'secrets' / 'youtube_token.json',
+    Path('/var/www/oneverso/current/secrets/youtube_token.json'),
+]
 
 
 def load_credentials() -> Credentials:
@@ -34,14 +38,20 @@ def load_credentials() -> Credentials:
             token_json = value
             used_name = name
             break
+    if token_json is None:
+        for path in FILE_TOKEN_CANDIDATES:
+            if path.exists():
+                token_json = path.read_text(encoding='utf-8')
+                used_name = str(path)
+                break
     if not token_json:
-        raise SystemExit('Nenhum secret OAuth do YouTube encontrado nas envs candidatas: ' + ', '.join(TOKEN_ENV_CANDIDATES))
+        raise SystemExit('Nenhum secret OAuth do YouTube encontrado nas envs candidatas nem nos arquivos esperados: ' + ', '.join(TOKEN_ENV_CANDIDATES + [str(p) for p in FILE_TOKEN_CANDIDATES]))
     data = json.loads(token_json)
     creds = Credentials.from_authorized_user_info(data, scopes=data.get('scopes') or SCOPES)
     if creds.expired and creds.refresh_token:
         creds.refresh(Request())
     if not creds.valid:
-        raise SystemExit(f'Credenciais OAuth inválidas usando secret {used_name}')
+        raise SystemExit(f'Credenciais OAuth inválidas usando {used_name}')
     print(f'[auth] secret carregado via {used_name}', flush=True)
     return creds
 

@@ -49,6 +49,74 @@ jobs:
             AcademIA/youtube/youtube_channel_fix_actions_2026-07-27.json \
             "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/youtube_channel_fix_actions_2026-07-27.json"
 
+      - name: Inventory YouTube credentials on VPS
+        if: always()
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" bash -se <<'REMOTE'
+          set -e
+          cd /var/www/oneverso/current
+          mkdir -p AcademIA/youtube/reports
+          OUT=AcademIA/youtube/reports/youtube_credential_inventory_2026-07-27.txt
+          {
+            echo "# youtube credential inventory"
+            echo "host=$(hostname)"
+            echo "pwd=$(pwd)"
+            echo "## candidate canonical paths"
+            for p in \
+              /var/www/oneverso/current/secrets/youtube_token.json \
+              /var/www/oneverso/secrets/youtube_token.json \
+              /root/secrets/youtube_token.json
+            do
+              if [ -f "$p" ]; then
+                stat -c 'FOUND %n size=%s mtime=%y' "$p"
+              else
+                echo "MISSING $p"
+              fi
+            done
+            echo "## pm2 names"
+            pm2 jlist 2>/dev/null | python3 - <<'PY'
+import json,sys
+try:
+    data=json.load(sys.stdin)
+    for item in data:
+        print(item.get('name',''))
+except Exception:
+    pass
+PY
+            echo "## crontab youtube lines"
+            crontab -l 2>/dev/null | grep -Ei 'youtube|onda37|upload_academia' || true
+            echo "## log files"
+            find /var/www/oneverso/logs -maxdepth 1 -type f \( -iname 'youtube*' -o -iname '*onda37*' \) -printf '%p size=%s\n' 2>/dev/null | sort || true
+            echo "## candidate files by name"
+            find /var/www /root /home -maxdepth 6 -type f \( -iname '*youtube*token*.json' -o -iname '*oauth*token*.json' -o -iname '*google*oauth*.json' -o -iname '*token*.json' -o -iname '*.txt' -o -name '.env' -o -name '.env.*' \) 2>/dev/null | sort | while read -r f; do
+              python3 - "$f" <<'PY'
+from pathlib import Path
+import json,sys
+p=Path(sys.argv[1])
+try:
+    text=p.read_text(encoding='utf-8', errors='ignore')
+except Exception:
+    raise SystemExit(0)
+flag=False
+matches=[]
+for key in ['YOUTUBE_TOKEN_JSON','YOUTUBE_OAUTH_TOKEN_JSON','GOOGLE_OAUTH_TOKEN_JSON','YOUTUBE_TOKEN','YOUTUBE_OAUTH_TOKEN']:
+    if key in text:
+        flag=True
+        matches.append(key)
+if 'refresh_token' in text and 'client_id' in text and 'client_secret' in text:
+    flag=True
+    matches.append('authorized_user_like')
+if flag:
+    try:
+        st=p.stat()
+        print(f"CANDIDATE {p} size={st.st_size} keys={','.join(matches)}")
+    except Exception:
+        print(f"CANDIDATE {p} keys={','.join(matches)}")
+PY
+            done
+          } > "$OUT"
+          REMOTE
+
       - name: Apply channel fixes on VPS
         run: |
           ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" bash -se <<'REMOTE'
@@ -66,6 +134,9 @@ jobs:
           scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
             "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/reports/youtube_channel_fix_results_2026-07-27.json" \
             AcademIA/youtube/reports/youtube_channel_fix_results_2026-07-27.json || true
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/reports/youtube_credential_inventory_2026-07-27.txt" \
+            AcademIA/youtube/reports/youtube_credential_inventory_2026-07-27.txt || true
 
       - name: Upload report
         if: always()

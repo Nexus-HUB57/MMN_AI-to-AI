@@ -1,0 +1,55 @@
+{
+  "date": "2026-07-27",
+  "items": [
+    {
+      "video_id": "cBhbg51peQk",
+      "action": "set_private",
+      "notes": "Vídeo-teste com slides fora do padrão"
+    },
+    {
+      "video_id": "9yNu41LmXYQ",
+      "action": "set_private",
+      "notes": "Vídeo incompleto; remover de circulação"
+    },
+    {
+      "video_id": "CXglMrEOab0",
+      "action": "set_private",
+      "notes": "Upload com capa fora do padrão; remover de circulação"
+    },
+    {
+      "video_id": "DR2YwM-Xihw",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails/08-otimizacao-de-conversao-a-matematica-da-receita.png",
+      "canonical_title": "AcademIA Nexus • 08 | Otimização de Conversão — A Matemática da Receita",
+      "notes": "Aplicar thumbnail canônica do módulo 08"
+    },
+    {
+      "video_id": "wfHFfynxU6w",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails/07-judge-revisor-a-ia-que-decide-por-voce.png",
+      "canonical_title": "AcademIA Nexus • 07 | Judge Revisor — A IA que Decide por Você",
+      "notes": "Aplicar thumbnail canônica do módulo 07"
+    },
+    {
+      "video_id": "wtH1eaSpBuw",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails/06-disparando-no-whatsapp-em-escala.png",
+      "canonical_title": "AcademIA Nexus • 06 | Disparando no WhatsApp em Escala",
+      "notes": "Aplicar thumbnail canônica do módulo 06"
+    },
+    {
+      "video_id": "ssaFYNd7WgI",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails/05-skills-essenciais-copywriter-audience-segmenter.png",
+      "canonical_title": "AcademIA Nexus • 05 | Skills Essenciais — Copywriter + Audience-Segmenter",
+      "notes": "Aplicar thumbnail canônica do módulo 05"
+    },
+    {
+      "video_id": "b3Oi53XqITs",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails/04-construindo-seu-primeiro-agente-em-4-minutos.png",
+      "canonical_title": "AcademIA Nexus • 04 | Construindo Seu Primeiro Agente em 4 Minutos",
+      "notes": "Aplicar thumbnail canônica do módulo 04"
+    }
+  ]
+}

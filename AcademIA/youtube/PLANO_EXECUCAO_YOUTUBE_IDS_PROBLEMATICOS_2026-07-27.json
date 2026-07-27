@@ -1,0 +1,156 @@
+{
+  "date": "2026-07-27",
+  "task": "acoes end-to-end de saneamento do canal YouTube para IDs problemáticos reportados pelo usuário",
+  "items": [
+    {
+      "video_id": "cBhbg51peQk",
+      "issue": "slides fora do padrão",
+      "action": "privatizar",
+      "canonical_code": "00",
+      "canonical_title": "AcademIA Nexus • 00 | Boas-vindas à AcademIA Nexus",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/00-boas-vindas-a-academia-nexus.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-00-boas-vindas-ive.png",
+      "canonical_master_repo": "materiais/video-aulas/fundamental/00-boas-vindas/rebuild/video-00-00-boas-vindas-a-academia-nexus-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "txsJDc1oxps",
+          "title": "AcademIA Nexus • 00 | Boas-vindas à AcademIA Nexus",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=txsJDc1oxps"
+        }
+      ]
+    },
+    {
+      "video_id": "9yNu41LmXYQ",
+      "issue": "vídeo incompleto",
+      "action": "revisar no Studio e privatizar se órfão",
+      "canonical_code": null
+    },
+    {
+      "video_id": "CXglMrEOab0",
+      "issue": "capa errada fora dos padrões",
+      "action": "revisar no Studio e privatizar se órfão",
+      "canonical_code": null
+    },
+    {
+      "video_id": "DR2YwM-Xihw",
+      "issue": "capa errada fora dos padrões",
+      "action": "corrigir capa e manter como canônico",
+      "canonical_code": "08",
+      "canonical_title": "AcademIA Nexus • 08 | Otimização de Conversão — A Matemática da Receita",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/08-otimizacao-de-conversao-a-matematica-da-receita.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-08-otimizacao-conversao-dupla.png",
+      "canonical_master_repo": "materiais/video-aulas/master/00-otimizacao-conversao/rebuild/video-08-08-otimizacao-de-conversao-a-matematica-da-receita-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "Wn4rheukroY",
+          "title": "AcademIA Nexus • 08 | Otimização de Conversão — A Matemática da Receita",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=Wn4rheukroY"
+        },
+        {
+          "video_id": "DR2YwM-Xihw",
+          "title": "AcademIA Nexus • 08 | Otimização de Conversão — A Matemática da Receita · v2",
+          "privacy_status": "private",
+          "url": "https://www.youtube.com/watch?v=DR2YwM-Xihw"
+        }
+      ]
+    },
+    {
+      "video_id": "wfHFfynxU6w",
+      "issue": "capa errada fora dos padrões",
+      "action": "corrigir capa e manter como canônico",
+      "canonical_code": "07",
+      "canonical_title": "AcademIA Nexus • 07 | Judge Revisor — A IA que Decide por Você",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/07-judge-revisor-a-ia-que-decide-por-voce.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-07-judge-revisor-alencar.png",
+      "canonical_master_repo": "materiais/video-aulas/agente/03-judge-revisor/rebuild/video-07-07-judge-revisor-a-ia-que-decide-por-voce-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "8ykspV1wLJU",
+          "title": "AcademIA Nexus • 07 | Judge Revisor — A IA que Decide por Você",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=8ykspV1wLJU"
+        },
+        {
+          "video_id": "wfHFfynxU6w",
+          "title": "AcademIA Nexus • 07 | Judge Revisor — A IA que Decide por Você · v2",
+          "privacy_status": "private",
+          "url": "https://www.youtube.com/watch?v=wfHFfynxU6w"
+        }
+      ]
+    },
+    {
+      "video_id": "wtH1eaSpBuw",
+      "issue": "capa errada fora dos padrões",
+      "action": "corrigir capa e manter como canônico",
+      "canonical_code": "06",
+      "canonical_title": "AcademIA Nexus • 06 | Disparando no WhatsApp em Escala",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/06-disparando-no-whatsapp-em-escala.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-06-disparo-whatsapp-alencar.png",
+      "canonical_master_repo": "materiais/video-aulas/agente/02-disparo-whatsapp/rebuild/video-06-06-disparando-no-whatsapp-em-escala-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "65fqupRFcvQ",
+          "title": "AcademIA Nexus • 06 | Disparando no WhatsApp em Escala",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=65fqupRFcvQ"
+        },
+        {
+          "video_id": "wtH1eaSpBuw",
+          "title": "AcademIA Nexus • 06 | Disparando no WhatsApp em Escala · v2",
+          "privacy_status": "private",
+          "url": "https://www.youtube.com/watch?v=wtH1eaSpBuw"
+        }
+      ]
+    },
+    {
+      "video_id": "ssaFYNd7WgI",
+      "issue": "capa errada fora dos padrões",
+      "action": "corrigir capa e manter como canônico",
+      "canonical_code": "05",
+      "canonical_title": "AcademIA Nexus • 05 | Skills Essenciais — Copywriter + Audience-Segmenter",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/05-skills-essenciais-copywriter-audience-segmenter.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-05-skills-essenciais-alencar.png",
+      "canonical_master_repo": "materiais/video-aulas/agente/01-skills-essenciais/rebuild/video-05-05-skills-essenciais-copywriter-audience-segmenter-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "w_4l0ALsStc",
+          "title": "AcademIA Nexus • 05 | Skills Essenciais — Copywriter + Audience-Segmenter",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=w_4l0ALsStc"
+        },
+        {
+          "video_id": "ssaFYNd7WgI",
+          "title": "AcademIA Nexus • 05 | Skills Essenciais — Copywriter + Audience-Segmenter · v2",
+          "privacy_status": "private",
+          "url": "https://www.youtube.com/watch?v=ssaFYNd7WgI"
+        }
+      ]
+    },
+    {
+      "video_id": "b3Oi53XqITs",
+      "issue": "capa errada fora dos padrões",
+      "action": "corrigir capa e manter como canônico",
+      "canonical_code": "04",
+      "canonical_title": "AcademIA Nexus • 04 | Construindo Seu Primeiro Agente em 4 Minutos",
+      "canonical_thumbnail_repo": "AcademIA/youtube/thumbnails/04-construindo-seu-primeiro-agente-em-4-minutos.png",
+      "official_cover_repo": "producao/assets/thumbnails/capa-04-primeiro-agente-dupla.png",
+      "canonical_master_repo": "materiais/video-aulas/agente/00-primeiro-agente/rebuild/video-04-04-construindo-seu-primeiro-agente-em-4-minutos-master.mp4",
+      "published_candidates_same_code": [
+        {
+          "video_id": "zz32ZJGR7p4",
+          "title": "AcademIA Nexus • 04 | Construindo Seu Primeiro Agente em 4 Minutos",
+          "privacy_status": "unlisted",
+          "url": "https://www.youtube.com/watch?v=zz32ZJGR7p4"
+        },
+        {
+          "video_id": "b3Oi53XqITs",
+          "title": "AcademIA Nexus • 04 | Seu Primeiro Agente em 4 Minutos · v2",
+          "privacy_status": "private",
+          "url": "https://www.youtube.com/watch?v=b3Oi53XqITs"
+        }
+      ]
+    }
+  ]
+}

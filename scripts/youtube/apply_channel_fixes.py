@@ -35,7 +35,7 @@ SEARCH_PATTERNS = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*
 
 
 def _valid_authorized_user_obj(data):
-    return isinstance(data, dict) and data.get('type') == 'authorized_user' and data.get('refresh_token') and data.get('client_id') and data.get('client_secret')
+    return isinstance(data, dict) and data.get('refresh_token') and data.get('client_id') and data.get('client_secret')
 
 
 def _parse_authorized_user_text(text: str):

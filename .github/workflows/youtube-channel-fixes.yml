@@ -16,9 +16,9 @@ jobs:
       contents: read
     env:
       REMOTE_APP: /var/www/oneverso/current
-      VPS_HOST: ${{ secrets.VPS_HOST }}
-      VPS_PORT: ${{ secrets.VPS_PORT }}
-      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_HOST: "143.95.213.237"
+      VPS_PORT: "22022"
+      VPS_USER: "root"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,11 +30,11 @@ jobs:
 
       - name: Prepare SSH key
         env:
-          SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 

@@ -75,7 +75,8 @@ def main():
     lines.append('## env presence')
     for name in TOKEN_ENV_CANDIDATES:
         value = os.environ.get(name, '')
-        lines.append(f'{name}={'SET' if value else 'MISSING'}')
+        status = 'SET' if value else 'MISSING'
+        lines.append(f'{name}={status}')
     lines.append('## candidate canonical paths')
     for path in CANONICAL_FILES:
         if path.exists():

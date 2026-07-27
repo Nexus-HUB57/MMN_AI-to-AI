@@ -55,12 +55,11 @@ jobs:
           set -e
           cd /var/www/oneverso/current
           mkdir -p secrets AcademIA/youtube/reports
-          if [ -f .env ]; then set -a; . ./.env; set +a; fi
           python3 -c "import googleapiclient, google.oauth2.credentials" >/dev/null 2>&1 || pip3 install --quiet --break-system-packages google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
           if [ ! -f secrets/youtube_token.json ]; then
             python3 - <<'PY'
             from pathlib import Path
-            import json, os, shutil
+            import base64, json, os, shutil
 
             root = Path('/var/www/oneverso/current')
             out = root / 'AcademIA' / 'youtube' / 'reports' / 'youtube_token_discovery_2026-07-27.json'
@@ -69,13 +68,30 @@ jobs:
             target = secrets_dir / 'youtube_token.json'
             report = {'status': 'not_found', 'source': None, 'checks': []}
 
-            def valid_authorized_user_text(text: str):
-                try:
-                    data = json.loads(text)
-                except Exception:
-                    return None
+            def valid_authorized_user_obj(data):
                 if isinstance(data, dict) and data.get('type') == 'authorized_user' and data.get('refresh_token') and data.get('client_id') and data.get('client_secret'):
                     return data
+                return None
+
+            def valid_authorized_user_text(text: str):
+                samples = [text.strip()]
+                stripped = text.strip().strip('"').strip("'")
+                if stripped not in samples:
+                    samples.append(stripped)
+                try:
+                    decoded = base64.b64decode(stripped).decode('utf-8', errors='ignore').strip()
+                    if decoded and decoded not in samples:
+                        samples.append(decoded)
+                except Exception:
+                    pass
+                for sample in samples:
+                    try:
+                        data = json.loads(sample)
+                    except Exception:
+                        continue
+                    good = valid_authorized_user_obj(data)
+                    if good:
+                        return good
                 return None
 
             for env_name in ['YOUTUBE_TOKEN_JSON','YOUTUBE_OAUTH_TOKEN_JSON','GOOGLE_OAUTH_TOKEN_JSON','YOUTUBE_TOKEN','YOUTUBE_OAUTH_TOKEN']:
@@ -92,7 +108,7 @@ jobs:
                     raise SystemExit(0)
 
             search_roots = [Path('/var/www'), Path('/root'), Path('/home')]
-            patterns = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*.json', '*token*.json', '*.txt']
+            patterns = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*.json', '*token*.json', '*.txt', '.env', '.env.*']
             seen = set()
             for base in search_roots:
                 if not base.exists():
@@ -113,9 +129,22 @@ jobs:
                                 continue
                             text = p.read_text(encoding='utf-8', errors='ignore')
                             data = valid_authorized_user_text(text)
+                            if not data and p.name.startswith('.env'):
+                                for raw_line in text.splitlines():
+                                    line = raw_line.strip()
+                                    if not line or line.startswith('#') or '=' not in line:
+                                        continue
+                                    key, value = line.split('=', 1)
+                                    key = key.strip()
+                                    value = value.strip()
+                                    if key in ['YOUTUBE_TOKEN_JSON','YOUTUBE_OAUTH_TOKEN_JSON','GOOGLE_OAUTH_TOKEN_JSON','YOUTUBE_TOKEN','YOUTUBE_OAUTH_TOKEN']:
+                                        data = valid_authorized_user_text(value)
+                                        report['checks'].append({'kind': 'env_file', 'path': rp, 'name': key, 'valid': bool(data)})
+                                        if data:
+                                            break
                             report['checks'].append({'kind': 'file', 'path': rp, 'valid': bool(data)})
                             if data:
-                                shutil.copyfile(p, target)
+                                target.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
                                 report['status'] = 'copied_from_file'
                                 report['source'] = rp
                                 out.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')

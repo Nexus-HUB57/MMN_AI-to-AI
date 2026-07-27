@@ -194,13 +194,25 @@ def main():
                 entry['result'] = update_privacy(service, video_id, 'private')
             elif item['action'] == 'set_thumbnail':
                 thumb = ROOT / item['thumbnail_repo']
-                thumb_res = set_thumbnail(service, video_id, thumb)
-                title_res = maybe_update_title(service, video_id, item.get('canonical_title'))
+                try:
+                    thumb_res = set_thumbnail(service, video_id, thumb)
+                except Exception as e:
+                    thumb_res = {'ok': False, 'error': str(e)}
+                try:
+                    title_res = maybe_update_title(service, video_id, item.get('canonical_title'))
+                except Exception as e:
+                    title_res = {'ok': False, 'error': str(e)}
                 entry['result'] = {'thumbnail': thumb_res, 'title': title_res}
             elif item['action'] == 'set_private_and_thumbnail':
-                priv_res = update_privacy(service, video_id, 'private')
+                try:
+                    priv_res = update_privacy(service, video_id, 'private')
+                except Exception as e:
+                    priv_res = {'ok': False, 'error': str(e)}
                 thumb = ROOT / item['thumbnail_repo']
-                thumb_res = set_thumbnail(service, video_id, thumb)
+                try:
+                    thumb_res = set_thumbnail(service, video_id, thumb)
+                except Exception as e:
+                    thumb_res = {'ok': False, 'error': str(e)}
                 entry['result'] = {'privacy': priv_res, 'thumbnail': thumb_res}
             else:
                 entry['result'] = {'ok': False, 'error': f"unknown_action:{item['action']}"}

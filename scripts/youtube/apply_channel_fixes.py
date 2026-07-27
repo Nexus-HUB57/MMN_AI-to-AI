@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import base64
 import json
 import os
 import sys
@@ -26,27 +27,96 @@ TOKEN_ENV_CANDIDATES = [
 FILE_TOKEN_CANDIDATES = [
     ROOT / 'secrets' / 'youtube_token.json',
     Path('/var/www/oneverso/current/secrets/youtube_token.json'),
+    Path('/var/www/oneverso/secrets/youtube_token.json'),
+    Path('/root/secrets/youtube_token.json'),
 ]
+SEARCH_ROOTS = [Path('/var/www'), Path('/root'), Path('/home')]
+SEARCH_PATTERNS = ['*youtube*token*.json', '*oauth*token*.json', '*google*oauth*.json', '*token*.json', '*.txt', '.env', '.env.*']
+
+
+def _valid_authorized_user_obj(data):
+    return isinstance(data, dict) and data.get('type') == 'authorized_user' and data.get('refresh_token') and data.get('client_id') and data.get('client_secret')
+
+
+def _parse_authorized_user_text(text: str):
+    samples = []
+    raw = (text or '').strip()
+    if raw:
+        samples.append(raw)
+        stripped = raw.strip('"').strip("'")
+        if stripped and stripped not in samples:
+            samples.append(stripped)
+        try:
+            decoded = base64.b64decode(stripped).decode('utf-8', errors='ignore').strip()
+            if decoded and decoded not in samples:
+                samples.append(decoded)
+        except Exception:
+            pass
+    for sample in samples:
+        try:
+            data = json.loads(sample)
+        except Exception:
+            continue
+        if _valid_authorized_user_obj(data):
+            return data
+    return None
+
+
+def _discover_token_data():
+    for name in TOKEN_ENV_CANDIDATES:
+        value = os.environ.get(name, '').strip()
+        if not value:
+            continue
+        data = _parse_authorized_user_text(value)
+        if data:
+            return data, name
+    for path in FILE_TOKEN_CANDIDATES:
+        try:
+            if path.exists():
+                data = _parse_authorized_user_text(path.read_text(encoding='utf-8', errors='ignore'))
+                if data:
+                    return data, str(path)
+        except Exception:
+            continue
+    seen = set()
+    for base in SEARCH_ROOTS:
+        if not base.exists():
+            continue
+        for pattern in SEARCH_PATTERNS:
+            for path in base.rglob(pattern):
+                try:
+                    rp = str(path.resolve())
+                except Exception:
+                    rp = str(path)
+                if rp in seen:
+                    continue
+                seen.add(rp)
+                try:
+                    if not path.is_file() or path.stat().st_size > 2_000_000:
+                        continue
+                    text = path.read_text(encoding='utf-8', errors='ignore')
+                except Exception:
+                    continue
+                data = _parse_authorized_user_text(text)
+                if data:
+                    return data, rp
+                if path.name.startswith('.env'):
+                    for raw_line in text.splitlines():
+                        line = raw_line.strip()
+                        if not line or line.startswith('#') or '=' not in line:
+                            continue
+                        key, value = line.split('=', 1)
+                        if key.strip() in TOKEN_ENV_CANDIDATES:
+                            data = _parse_authorized_user_text(value.strip())
+                            if data:
+                                return data, f'{rp}:{key.strip()}'
+    return None, None
 
 
 def load_credentials() -> Credentials:
-    token_json = None
-    used_name = None
-    for name in TOKEN_ENV_CANDIDATES:
-        value = os.environ.get(name, '').strip()
-        if value:
-            token_json = value
-            used_name = name
-            break
-    if token_json is None:
-        for path in FILE_TOKEN_CANDIDATES:
-            if path.exists():
-                token_json = path.read_text(encoding='utf-8')
-                used_name = str(path)
-                break
-    if not token_json:
-        raise SystemExit('Nenhum secret OAuth do YouTube encontrado nas envs candidatas nem nos arquivos esperados: ' + ', '.join(TOKEN_ENV_CANDIDATES + [str(p) for p in FILE_TOKEN_CANDIDATES]))
-    data = json.loads(token_json)
+    data, used_name = _discover_token_data()
+    if not data:
+        raise SystemExit('Nenhum secret OAuth do YouTube encontrado nas envs candidatas nem nos arquivos/localizacoes esperados')
     creds = Credentials.from_authorized_user_info(data, scopes=data.get('scopes') or SCOPES)
     if creds.expired and creds.refresh_token:
         creds.refresh(Request())

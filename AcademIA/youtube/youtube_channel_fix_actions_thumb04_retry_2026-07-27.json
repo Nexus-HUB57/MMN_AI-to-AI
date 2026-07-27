@@ -1,0 +1,12 @@
+{
+  "date": "2026-07-27",
+  "items": [
+    {
+      "video_id": "b3Oi53XqITs",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/04-construindo-seu-primeiro-agente-em-4-minutos.jpg",
+      "canonical_title": "AcademIA Nexus • 04 | Construindo Seu Primeiro Agente em 4 Minutos",
+      "notes": "Retry cirúrgico apenas da thumbnail do módulo 04 após janela de rate limit"
+    }
+  ]
+}

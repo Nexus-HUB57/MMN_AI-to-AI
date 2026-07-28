@@ -1,0 +1,80 @@
+{
+  "date": "2026-07-28",
+  "task": "Aplicar capas oficiais do canal para os vídeos mapeados pelo usuário e preservar referências corretas canônicas",
+  "items": [
+    {
+      "video_id": "bwRwb3tghUQ",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/14-federacao-de-agentes-zero-trust.jpg",
+      "notes": "Código 14 · v2 privado · aplicar capa oficial do canal"
+    },
+    {
+      "video_id": "YaRtNYuWFqw",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/13-multi-tenant-e-white-label-na-pratica.jpg",
+      "notes": "Código 13 · aplicar capa oficial do canal"
+    },
+    {
+      "video_id": "bNZf1fl1xhw",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/12-blueprints-elite-o-jogo-do-top-10.jpg",
+      "notes": "Código 12 · aplicar capa oficial do canal"
+    },
+    {
+      "video_id": "VV2a4aZRiS4",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/11-analise-de-coortes-e-churn-a-arte-de-reter.jpg",
+      "notes": "Código 11 · aplicar capa oficial do canal"
+    },
+    {
+      "video_id": "i-hkO0TV9ak",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/09-funis-e-lifecycle-o-sistema-completo.jpg",
+      "notes": "Código 09 · aplicar capa oficial do canal"
+    },
+    {
+      "video_id": "DR2YwM-Xihw",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/08-otimizacao-de-conversao-a-matematica-da-receita.jpg",
+      "notes": "Código 08 · v2 privado · reaplicar capa oficial do canal"
+    },
+    {
+      "video_id": "b3Oi53XqITs",
+      "action": "set_thumbnail",
+      "thumbnail_repo": "AcademIA/youtube/thumbnails_yt/04-construindo-seu-primeiro-agente-em-4-minutos.jpg",
+      "notes": "Código 04 · v2 privado · reaplicar capa oficial do canal"
+    }
+  ],
+  "manual_review": [
+    {
+      "video_id": "CXglMrEOab0",
+      "issue": "ID não mapeado de forma canônica nos manifests; revisar no Studio e privatizar se órfão ou aplicar a capa da aula correta após identificação"
+    },
+    {
+      "video_id": "cBhbg51peQk",
+      "issue": "slides genéricos; API do YouTube não substitui conteúdo do vídeo existente. Ação técnica correta é retirar de circulação e usar o canônico do código 00 (txsJDc1oxps) ou reupload a partir do master oficial"
+    },
+    {
+      "label": "AcademIA Nexus 2",
+      "issue": "interpretação mais provável: código 02, canônico já existe como bSabrgNNgik em estado unlisted"
+    },
+    {
+      "label": "AcademIA Nexus 3",
+      "issue": "interpretação mais provável: código 03, canônico já existe como vkClkh6MSQQ em estado unlisted"
+    }
+  ],
+  "references": {
+    "code_05": {
+      "video_id": "ssaFYNd7WgI",
+      "url": "https://studio.youtube.com/video/ssaFYNd7WgI/edit"
+    },
+    "code_06": {
+      "video_id": "wtH1eaSpBuw",
+      "url": "https://studio.youtube.com/video/wtH1eaSpBuw/edit"
+    },
+    "code_07": {
+      "video_id": "wfHFfynxU6w",
+      "url": "https://studio.youtube.com/video/wfHFfynxU6w/edit"
+    }
+  }
+}

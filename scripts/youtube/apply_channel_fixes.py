@@ -192,6 +192,8 @@ def main():
         try:
             if item['action'] == 'set_private':
                 entry['result'] = update_privacy(service, video_id, 'private')
+            elif item['action'] == 'set_privacy':
+                entry['result'] = update_privacy(service, video_id, item['privacy_status'])
             elif item['action'] == 'set_thumbnail':
                 thumb = ROOT / item['thumbnail_repo']
                 try:

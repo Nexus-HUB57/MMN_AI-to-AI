@@ -1,0 +1,51 @@
+{
+  "date": "2026-07-28",
+  "task": "Frentes A e B — higiene de visibilidade e preparação de publicação dos canônicos 02 e 03",
+  "items": [
+    {
+      "video_id": "cBhbg51peQk",
+      "action": "set_privacy",
+      "privacy_status": "private",
+      "notes": "Frente A · retirar de circulação vídeo com slides genéricos; substituto canônico do código 00 = txsJDc1oxps"
+    },
+    {
+      "video_id": "eSSXuixQn5Q",
+      "action": "set_privacy",
+      "privacy_status": "public",
+      "notes": "Frente B · AcademIA Nexus 2 = código 02 canônico · publicar vídeo oficial do Sistema SHO"
+    },
+    {
+      "video_id": "vkClkh6MSQQ",
+      "action": "set_privacy",
+      "privacy_status": "public",
+      "notes": "Frente B · AcademIA Nexus 3 = código 03 canônico · publicar vídeo oficial do Painel do Afiliado"
+    }
+  ],
+  "manual_review": [
+    {
+      "video_id": "CXglMrEOab0",
+      "issue": "ID listado pelo usuário como vídeo com capa genérica, mas sem mapeamento canônico conclusivo nos manifests do repositório. Hipótese operacional: pode corresponder ao código 10 por eliminação do lote 08-14, porém manter revisão manual antes de qualquer mudança de visibilidade ou capa."
+    },
+    {
+      "video_id": "9yNu41LmXYQ",
+      "issue": "vídeo incompleto/órfão já identificado em auditoria anterior; manter separado desta passada A/B"
+    }
+  ],
+  "canonical_references": {
+    "code_00": {
+      "video_id": "txsJDc1oxps",
+      "title": "AcademIA Nexus • 00 | Boas-vindas à AcademIA Nexus",
+      "current_privacy_status": "unlisted"
+    },
+    "code_02": {
+      "video_id": "eSSXuixQn5Q",
+      "title": "AcademIA Nexus • 02 | O Sistema SHO (Self-Healing Orchestrator)",
+      "current_privacy_status": "unlisted"
+    },
+    "code_03": {
+      "video_id": "vkClkh6MSQQ",
+      "title": "AcademIA Nexus • 03 | Painel do Afiliado — Visão Geral da Operação",
+      "current_privacy_status": "unlisted"
+    }
+  }
+}

@@ -1,0 +1,125 @@
+name: youtube-module00-premium
+
+on:
+  workflow_dispatch:
+    inputs:
+      privacy:
+        description: 'Privacidade do novo upload (unlisted recomendado até homologação)'
+        required: true
+        default: unlisted
+        type: choice
+        options:
+          - unlisted
+          - private
+          - public
+      privatize_legacy:
+        description: 'Privatizar automaticamente cBhbg51peQk e txsJDc1oxps (exige escopo youtube.force-ssl)'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  upload-premium:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      REMOTE_APP: /var/www/oneverso/current
+      VPS_HOST: "143.95.213.237"
+      VPS_PORT: "22022"
+      VPS_USER: "root"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Prepare SSH key
+        env:
+          SSH_KEY: ${{ secrets.SSH_GITHUB }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Sync premium master and scripts to VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
+            "mkdir -p $REMOTE_APP/scripts/youtube $REMOTE_APP/AcademIA/youtube/masters $REMOTE_APP/AcademIA/youtube/thumbnails_yt $REMOTE_APP/AcademIA/youtube/descriptions $REMOTE_APP/AcademIA/youtube/reports $REMOTE_APP/secrets"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            scripts/youtube/apply_channel_fixes.py \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/scripts/youtube/apply_channel_fixes.py"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            scripts/youtube/upload_module00_premium.py \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/scripts/youtube/upload_module00_premium.py"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            AcademIA/youtube/masters/video-00-boas-vindas-a-academia-nexus-master.mp4 \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/masters/video-00-boas-vindas-a-academia-nexus-master.mp4"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            AcademIA/youtube/thumbnails_yt/00-boas-vindas-a-academia-nexus.jpg \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/thumbnails_yt/00-boas-vindas-a-academia-nexus.jpg"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            AcademIA/youtube/descriptions/00-boas-vindas-a-academia-nexus.txt \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/descriptions/00-boas-vindas-a-academia-nexus.txt"
+
+      - name: Materialize token secret on VPS
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          YOUTUBE_OAUTH_TOKEN_JSON: ${{ secrets.YOUTUBE_OAUTH_TOKEN_JSON }}
+          GOOGLE_OAUTH_TOKEN_JSON: ${{ secrets.GOOGLE_OAUTH_TOKEN_JSON }}
+        run: |
+          mkdir -p .tmp
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          out = Path('.tmp/youtube_token.json')
+          for name in ['YOUTUBE_TOKEN_JSON', 'YOUTUBE_OAUTH_TOKEN_JSON', 'GOOGLE_OAUTH_TOKEN_JSON']:
+              value = os.environ.get(name, '').strip()
+              if value:
+                  out.write_text(value, encoding='utf-8')
+                  print(f'token_materialized_from={name}')
+                  break
+          else:
+              raise SystemExit('no_token_secret_available')
+          PY
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            .tmp/youtube_token.json \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/secrets/youtube_token.json"
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
+            "chmod 600 $REMOTE_APP/secrets/youtube_token.json"
+          rm -f .tmp/youtube_token.json
+
+      - name: Upload premium module 00 on VPS
+        env:
+          PRIVACY: ${{ inputs.privacy }}
+          PRIVATIZE_LEGACY: ${{ inputs.privatize_legacy }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
+            "cd $REMOTE_APP && python3 -c 'import googleapiclient, google.oauth2.credentials' >/dev/null 2>&1 || pip3 install --quiet --break-system-packages google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2"
+          FLAG=""
+          if [ "$PRIVATIZE_LEGACY" = "true" ]; then FLAG="--privatize-legacy"; fi
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
+            "cd $REMOTE_APP && python3 scripts/youtube/upload_module00_premium.py --privacy $PRIVACY $FLAG"
+
+      - name: Fetch premium module 00 report
+        if: always()
+        run: |
+          mkdir -p AcademIA/youtube/reports
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" -o StrictHostKeyChecking=no \
+            "$VPS_USER@$VPS_HOST:$REMOTE_APP/AcademIA/youtube/reports/youtube_module00_premium_upload_2026-07-28.json" \
+            AcademIA/youtube/reports/youtube_module00_premium_upload_2026-07-28.json || true
+
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-module00-premium-report
+          path: AcademIA/youtube/reports/youtube_module00_premium_upload_2026-07-28.json
+          if-no-files-found: warn

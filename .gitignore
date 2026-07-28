@@ -699,3 +699,11 @@ Thumbs.db
 # Uploads temporários
 /tmp/nexus-upload/
 AcademIA/videos/render/
+
+# Local sandbox artifacts (never commit)
+tmp_artifacts_*/
+tmp_authctx_*/
+tmp_coverfix_*/
+tmp_fix_*/
+tmp_frontAB_*/
+tmp_harvest_*/

@@ -11,6 +11,7 @@ import ForgotPassword from "@/pages/ForgotPassword";
 import Logout from "@/pages/Logout";
 import Cadastro from "@/pages/Cadastro";
 import Dashboard from "@/pages/Dashboard";
+import DashboardV2 from "@/pages/DashboardV2";
 import Marketplaces from "@/pages/Marketplaces";
 import Estoque from "@/pages/Estoque";
 import MinhaLoja from "@/pages/MinhaLoja";
@@ -87,6 +88,7 @@ function Router() {
       <Route path="/logout" component={Logout} />
       <Route path="/cadastro" component={Cadastro} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard-v2" component={DashboardV2} />
       <Route path="/marketplaces" component={Marketplaces} />
       <Route path="/marketplaces/ebooks" component={MarketplaceEbooks} />
       <Route path="/estoque" component={Estoque} />

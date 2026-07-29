@@ -27,6 +27,7 @@ import {
   buildMarketplaceCheckoutUrl,
   formatCurrencyFromCents,
   generateMarketplacePixPayload,
+  PixKeyMissingError,
   getMarketplaceReturnUrl,
   readMarketplaceCheckoutIntent,
 } from "@/lib/marketplace-payments";
@@ -269,16 +270,66 @@ export default function PixCheckout() {
     [checkoutIntent, description],
   );
 
-  // CEO-013: Use server-provided pixKey for client-side fallback (not hardcoded CPF)
-  const serverPixKey = checkoutSession?.pix?.fallback?.pixKey || undefined;
+  // CEO-013 / PIX-FIX-2026-07-29:
+  // 1) Consome pix.config do servidor para saber se há chave EVP válida em produção.
+  // 2) Nunca gera EMV com chave vazia — bancos rejeitam com "QR Code inválido".
+  // 3) Herda merchantName/City do backend quando disponíveis.
+  const pixConfigQuery = (trpc as any).pix?.config?.useQuery
+    ? (trpc as any).pix.config.useQuery(undefined, { refetchOnWindowFocus: false, retry: false })
+    : null;
+  const pixServerConfig = pixConfigQuery?.data ?? null;
+  const serverPixKey =
+    checkoutSession?.pix?.fallback?.pixKey
+    || (pixServerConfig?.marketplaceFallback?.configured ? undefined : undefined)
+    || undefined;
+  const serverMerchantName =
+    checkoutSession?.pix?.fallback?.receiverName
+    || pixServerConfig?.marketplaceFallback?.receiverName
+    || undefined;
+  const serverMerchantCity =
+    checkoutSession?.pix?.fallback?.receiverCity
+    || pixServerConfig?.marketplaceFallback?.receiverCity
+    || undefined;
+
+  const pixKeyConfiguredOnServer = Boolean(
+    checkoutSession?.pix?.fallback?.pixKey
+    || pixServerConfig?.configured
+    || pixServerConfig?.marketplaceFallback?.configured
+  );
+
+  const [pixKeyError, setPixKeyError] = useState<string | null>(null);
   const fallbackPixPayload = useMemo(() => {
     if (!hasValidAmount || !hasRequestedCheckout) return null;
-    return generateMarketplacePixPayload({
-      amountCents,
-      description: paymentContext.description,
-      pixKey: serverPixKey,
-    });
-  }, [amountCents, hasRequestedCheckout, hasValidAmount, paymentContext.description, serverPixKey]);
+    if (!serverPixKey) return null;
+    try {
+      const payload = generateMarketplacePixPayload({
+        amountCents,
+        description: paymentContext.description,
+        pixKey: serverPixKey,
+        merchantName: serverMerchantName,
+        merchantCity: serverMerchantCity,
+      });
+      setPixKeyError(null);
+      return payload;
+    } catch (err) {
+      if (err instanceof PixKeyMissingError) {
+        setPixKeyError(
+          "Chave Pix do lojista não está configurada no servidor. Contate o suporte antes de pagar — evitando um QR Code que será rejeitado pelo seu banco."
+        );
+      } else {
+        setPixKeyError("Não foi possível gerar o QR Code. Tente novamente ou contate o suporte.");
+      }
+      return null;
+    }
+  }, [
+    amountCents,
+    hasRequestedCheckout,
+    hasValidAmount,
+    paymentContext.description,
+    serverPixKey,
+    serverMerchantName,
+    serverMerchantCity,
+  ]);
 
   const pixCode = hasRequestedCheckout ? checkoutSession?.pix.qrCode || fallbackPixPayload?.qrCodePayload || null : null;
   const pixBase64 = hasRequestedCheckout ? checkoutSession?.pix.qrCodeBase64 || null : null;
@@ -729,7 +780,26 @@ export default function PixCheckout() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
-                  <QrCodeImage payload={pixCode} base64={pixBase64} />
+                  {!pixKeyConfiguredOnServer && hasRequestedCheckout && (
+                    <div className="flex items-start gap-3 rounded-2xl border border-amber-400/40 bg-amber-500/10 p-4 text-sm text-amber-100">
+                      <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-300" />
+                      <div className="space-y-1">
+                        <p className="font-semibold text-amber-100">Chave Pix do lojista pendente de configuração</p>
+                        <p className="text-amber-200/80">
+                          O QR Code não será exibido enquanto o servidor não publicar uma chave Pix válida. Isso protege você de um código que será rejeitado pelo banco. Já notificamos o suporte; se precisar pagar agora, use o link do Mercado Pago abaixo (quando disponível).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {pixKeyError && (
+                    <div className="flex items-start gap-3 rounded-2xl border border-rose-400/40 bg-rose-500/10 p-4 text-sm text-rose-100">
+                      <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-300" />
+                      <p>{pixKeyError}</p>
+                    </div>
+                  )}
+
+                  {pixCode && <QrCodeImage payload={pixCode} base64={pixBase64} />}
 
                   {createCheckoutMutation.isPending && hasValidAmount && (
                     <div className="flex items-center gap-2 rounded-2xl border border-quantum-cyan/20 bg-quantum-cyan/10 p-3 text-sm text-quantum-cyan">

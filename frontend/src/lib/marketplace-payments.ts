@@ -220,21 +220,47 @@ function sanitizePixText(value: string, maxLength: number) {
     .trim();
 }
 
+export class PixKeyMissingError extends Error {
+  constructor() {
+    super("pix_key_missing");
+    this.name = "PixKeyMissingError";
+  }
+}
+
+function isValidPixKeyShape(candidate: string): boolean {
+  const trimmed = (candidate || "").trim();
+  if (trimmed.length < 5) return false;
+  // aceita CPF (11), CNPJ (14), telefone com +55 (12+), e-mail (contém @) ou EVP (32-36).
+  if (/^\d{11}$/.test(trimmed)) return true;
+  if (/^\d{14}$/.test(trimmed)) return true;
+  if (trimmed.includes("@") && trimmed.length >= 6) return true;
+  if (trimmed.startsWith("+") && /\d{8,}/.test(trimmed)) return true;
+  if (/^[a-fA-F0-9-]{32,36}$/.test(trimmed)) return true;
+  return false;
+}
+
 export function generateMarketplacePixPayload({
   amountCents,
   description,
   pixKey,
+  merchantName: merchantNameOverride,
+  merchantCity: merchantCityOverride,
 }: {
   amountCents: number;
   description?: string;
   pixKey?: string;
+  merchantName?: string;
+  merchantCity?: string;
 }) {
-  const merchantName = sanitizePixText("ONEVERSO MMN AI", 25);
-  const merchantCity = sanitizePixText("SAO PAULO", 15);
+  const merchantName = sanitizePixText(merchantNameOverride || "ONEVERSO MMN AI", 25);
+  const merchantCity = sanitizePixText(merchantCityOverride || "SAO PAULO", 15);
   const txid = "***";
   const amount = Math.max(0, amountCents) / 100;
-  // CEO-012: Usar chave do servidor quando disponível (via parâmetro), senão fallback hardcoded
-  const effectivePixKey = pixKey || MARKETPLACE_PIX_KEY;
+  const effectivePixKey = (pixKey || MARKETPLACE_PIX_KEY || "").trim();
+  if (!isValidPixKeyShape(effectivePixKey)) {
+    // NUNCA emitir EMV com chave vazia/curta — bancos rejeitam com "QR inválido".
+    throw new PixKeyMissingError();
+  }
   // CEO-012: Removida descrição do interior do tag 26 (causava rejeição em parsers bancários)
   // A descrição, quando necessária, deve ir em tag 62 sub-tag 05 concatenada ao txid, ou ser omitida
   const merchantAccountInfo = tlv(

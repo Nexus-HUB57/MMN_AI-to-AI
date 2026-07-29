@@ -1,0 +1,20 @@
+A/B Testing com Judge — Ciência da Experimentação
+
+Neste episódio da AcademIA Nexus, você aprende como usar hipóteses, variações e mecanismos de julgamento assistido por IA para melhorar decisões de produto e oferta.
+
+O que você vai ver neste vídeo:
+- hipóteses e variações
+- como testar com método
+- uso de judge para acelerar decisões
+
+Série: Master
+Código da aula: 10
+Canal oficial: https://www.youtube.com/@NexusAffilIAte-w9p
+Plataforma: https://oneverso.com.br/academia/ead/curso
+Portal: https://oneverso.com.br
+
+Próximo vídeo sugerido: 11 — Análise de Coortes e Churn — A Arte de Reter
+
+Se este conteúdo fez sentido, avance para a próxima aula da trilha e acompanhe a evolução da operação com IA.
+
+#AcademIANexus #OneVerso #AgentesDeIA #AutomacaoInteligente

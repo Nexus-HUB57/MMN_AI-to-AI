@@ -1,0 +1,96 @@
+name: youtube-go-live
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_ids:
+        description: 'IDs dos vídeos para tornar públicos (separados por espaço)'
+        required: true
+        type: string
+      target_privacy:
+        description: 'Privacidade alvo'
+        required: true
+        default: public
+        type: choice
+        options: [public, unlisted]
+
+jobs:
+  go-live:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Google client libs
+        run: pip install --quiet google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+
+      - name: Go Live sequence
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          VIDEO_IDS: ${{ inputs.video_ids }}
+          TARGET_PRIVACY: ${{ inputs.target_privacy }}
+        run: |
+          mkdir -p AcademIA/youtube/reports
+          python3 - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          from google.auth.transport.requests import Request
+          from google.oauth2.credentials import Credentials
+          from googleapiclient.discovery import build
+
+          data = json.loads(os.environ['YOUTUBE_TOKEN_JSON'])
+          creds = Credentials.from_authorized_user_info(data, scopes=data.get('scopes') or [
+              'https://www.googleapis.com/auth/youtube',
+              'https://www.googleapis.com/auth/youtube.force-ssl',
+          ])
+          if creds.expired and creds.refresh_token:
+              creds.refresh(Request())
+          yt = build('youtube', 'v3', credentials=creds, cache_discovery=False)
+
+          ids = os.environ['VIDEO_IDS'].split()
+          target = os.environ['TARGET_PRIVACY']
+          results = []
+          for vid in ids:
+              try:
+                  cur = yt.videos().list(part='snippet,status', id=vid).execute().get('items', [])
+                  if not cur:
+                      results.append({'video_id': vid, 'ok': False, 'error': 'video_not_found'})
+                      print(json.dumps(results[-1], ensure_ascii=False))
+                      continue
+                  snip = cur[0]['snippet']
+                  body = {
+                      'id': vid,
+                      'snippet': {k: snip[k] for k in ('title','categoryId') if k in snip} | {
+                          'description': snip.get('description',''),
+                          'tags': snip.get('tags',[]),
+                      },
+                      'status': {'privacyStatus': target, 'selfDeclaredMadeForKids': False},
+                  }
+                  r = yt.videos().update(part='snippet,status', body=body).execute()
+                  results.append({'video_id': vid, 'ok': True, 'privacy': r['status']['privacyStatus'], 'title': snip.get('title')})
+                  print(json.dumps(results[-1], ensure_ascii=False))
+                  time.sleep(2)
+              except Exception as exc:
+                  results.append({'video_id': vid, 'ok': False, 'error': str(exc)})
+                  print(json.dumps(results[-1], ensure_ascii=False))
+
+          Path('AcademIA/youtube/reports/youtube_go_live_2026-07-29.json').write_text(
+              json.dumps({'target_privacy': target, 'results': results}, ensure_ascii=False, indent=2),
+              encoding='utf-8')
+          print(f'[done] total={len(results)} ok={sum(1 for r in results if r.get("ok"))}')
+          PY
+
+      - name: Upload go-live report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-go-live-report
+          path: AcademIA/youtube/reports/youtube_go_live_2026-07-29.json
+          if-no-files-found: warn

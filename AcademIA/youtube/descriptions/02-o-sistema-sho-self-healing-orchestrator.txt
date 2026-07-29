@@ -1,0 +1,20 @@
+O Sistema SHO (Self-Healing Orchestrator)
+
+Neste episódio da AcademIA Nexus, você aprende como o mecanismo de auto-healing reduz falhas, fecha loops operacionais e aumenta resiliência em sistemas orientados por IA.
+
+O que você vai ver neste vídeo:
+- como funciona o self-healing
+- onde o SHO reduz falhas
+- qual o impacto em escalabilidade e confiança
+
+Série: Fundamentos
+Código da aula: 02
+Canal oficial: https://www.youtube.com/@NexusAffilIAte-w9p
+Plataforma: https://oneverso.com.br/academia/ead/curso
+Portal: https://oneverso.com.br
+
+Próximo vídeo sugerido: 03 — Painel do Afiliado — Visão Geral da Operação
+
+Se este conteúdo fez sentido, avance para a próxima aula da trilha e acompanhe a evolução da operação com IA.
+
+#AcademIANexus #OneVerso #AgentesDeIA #AutomacaoInteligente

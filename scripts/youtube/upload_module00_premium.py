@@ -45,6 +45,7 @@ DEFAULT_PRIVACY = 'unlisted'
 LEGACY_IDS = [
     'cBhbg51peQk',
     'txsJDc1oxps',
+    'G45HLp3c_4k',
 ]
 
 

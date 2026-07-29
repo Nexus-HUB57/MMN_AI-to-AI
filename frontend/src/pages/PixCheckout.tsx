@@ -167,7 +167,7 @@ export default function PixCheckout() {
   const [amount, setAmount] = useState(defaultAmount);
   const [description, setDescription] = useState(defaultDescription);
   const [payerName, setPayerName] = useState<string>((checkoutIntent as any)?.payerName ?? user?.name ?? "");
-  const [payerEmail, setPayerEmail] = useState((checkoutIntent as any)?.payerEmail ?? user?.email ?? "");
+  const [payerEmail, setPayerEmail] = useState((checkoutIntent as any)?.payerEmail ?? "");
   const [payerDocument, setPayerDocument] = useState(user?.cpf ?? "");
   const [copiedPixCode, setCopiedPixCode] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -231,9 +231,12 @@ export default function PixCheckout() {
   });
 
   useEffect(() => {
-    if (user?.email) setPayerEmail((current) => current && current.trim() ? current : user.email);
+    // CEO-016 FIX: Always sync email from auth context when available.
+    // Previously only set if current was empty — now always syncs on load.
+    if (user?.email) setPayerEmail(user.email);
     if (user?.cpf) setPayerDocument((current) => current || user.cpf || "");
-  }, [user?.cpf, user?.email]);
+    if (user?.name && !payerName?.trim()) setPayerName(user.name);
+  }, [user?.cpf, user?.email, user?.name]);
 
   useEffect(() => {
     if (!feedback) return;
@@ -320,11 +323,12 @@ export default function PixCheckout() {
   
   // ONDA 15: auto-gerar checkout se intent + payerEmail vem do carrinho
   const [autoTriggerCheckout, setAutoTriggerCheckout] = useState(false);
+  // CEO-016 FIX: Auto-trigger only when all required data is available.
+  // Increased delay to 800ms to allow auth context to fully resolve email/name.
   useEffect(() => {
-    if (!autoTriggerCheckout && checkoutIntent && payerEmail && payerName && amountCents > 0 && !checkoutSession) {
+    if (!autoTriggerCheckout && checkoutIntent && payerEmail && payerEmail.trim() && payerName && payerName.trim() && amountCents > 0 && !checkoutSession) {
       setAutoTriggerCheckout(true);
-      // Delay pequeno para render inicial
-      setTimeout(() => { handleGenerateCheckout(); }, 300);
+      setTimeout(() => { handleGenerateCheckout(); }, 800);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkoutIntent, payerEmail, payerName, amountCents]);
@@ -644,22 +648,73 @@ export default function PixCheckout() {
                       Gerar checkout seguro
                     </Button>
 
-                    <Button
-                      variant="outline"
-                      className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-                      disabled={!hasMercadoPagoLink || createCheckoutMutation.isPending}
-                      onClick={() => {
-                        if (!checkoutSession?.mercadoPago.initPoint) {
-                          setFeedback("O link do Mercado Pago ainda não está disponível para este item.");
-                          return;
-                        }
-                        window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
-                      }}
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Abrir checkout Mercado Pago
-                    </Button>
+                    {hasMercadoPagoLink && (
+                      <Button
+                        variant="outline"
+                        className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                        disabled={createCheckoutMutation.isPending}
+                        onClick={() => {
+                          if (!checkoutSession?.mercadoPago.initPoint) {
+                            setFeedback("O link do Mercado Pago ainda não está disponível para este item.");
+                            return;
+                          }
+                          window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
+                        }}
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Pagar com Pix, Cartão ou Saldo MP
+                      </Button>
+                    )}
                   </div>
+
+                  {/* CEO-016: Payment method options panel */}
+                  {hasRequestedCheckout && (
+                    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                      <p className="mb-3 text-sm font-medium text-white">Opções de pagamento disponíveis</p>
+                      <div className="grid gap-2 sm:grid-cols-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!pixCode) { setFeedback("Gere o checkout primeiro."); return; }
+                            handleCopyPixCode();
+                          }}
+                          className="flex items-center gap-2 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/10 px-4 py-3 text-sm text-quantum-cyan transition hover:bg-quantum-cyan/20 disabled:opacity-40"
+                          disabled={!pixCode}
+                        >
+                          <QrCode className="h-5 w-5" />
+                          <div className="text-left">
+                            <p className="font-semibold">PIX</p>
+                            <p className="text-xs opacity-70">QR Code ou cópia e cola</p>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!checkoutSession?.mercadoPago.initPoint) {
+                              setFeedback("Link MP não disponível.");
+                              return;
+                            }
+                            window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
+                          }}
+                          className="flex items-center gap-2 rounded-xl border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-200 transition hover:bg-blue-500/20 disabled:opacity-40"
+                          disabled={!hasMercadoPagoLink}
+                        >
+                          <span aria-hidden>💳</span>
+                          <div className="text-left">
+                            <p className="font-semibold">Mercado Pago</p>
+                            <p className="text-xs opacity-70">Cartão, PIX ou saldo</p>
+                          </div>
+                        </button>
+                        <div className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                          <Wallet className="h-5 w-5" />
+                          <div className="text-left">
+                            <p className="font-semibold">Saldo MP</p>
+                            <p className="text-xs opacity-70">Pague com saldo da conta</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 

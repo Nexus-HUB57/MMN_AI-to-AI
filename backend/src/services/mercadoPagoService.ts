@@ -266,9 +266,15 @@ export async function createMercadoPagoPreference(input: McPagoPreferenceInput):
         name: input.payerName,
       },
       payment_methods: {
-        // Habilita explicitamente pix, cartão, e conta MP (saldo)
-        excluded_payment_types: [], // sem exclusões
-        installments: 12,
+        // CEO-016: Habilita explicitamente pix, cartão, e conta MP (saldo)
+        excluded_payment_types: [],
+        excluded_payment_methods: [],
+        installments: { "default": 12 },
+        default_payment_methods: [
+          { type: "ticket", id: "pix" },
+          { type: "credit_card" },
+          { type: "account_money" },
+        ],
       },
       notification_url: input.notificationUrl,
       back_urls: input.backUrls,

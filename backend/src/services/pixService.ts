@@ -32,7 +32,11 @@ function crc16(data: string): string {
 // ============================================================================
 
 function tlv(id: string, value: string): string {
-  const len = String(value.length).padStart(2, "0");
+  // EMV PIX usa contagem de BYTES, não chars UTF-16.
+  // O backend Node.js usa Buffer.byteLength para calcular bytes reais (ASCII/Latin).
+  // CEO-016 FIX: anteriormente usava value.length (char count), causando QR Code inválido.
+  const bytes = Buffer.byteLength(value, "utf-8");
+  const len = String(bytes).padStart(2, "0");
   return `${id}${len}${value}`;
 }
 

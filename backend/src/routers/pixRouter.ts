@@ -403,8 +403,28 @@ export const pixRouter = router({
       const warnings: string[] = [];
       const amount = Number((input.amountCents / 100).toFixed(2));
       const runtimeUser = ctx.user as { id: number; role: string; email?: string; name?: string };
-      const payerEmail = input.payerEmail?.trim() || runtimeUser.email?.trim() || undefined;
-      const payerName = input.payerName?.trim() || runtimeUser.name?.trim() || undefined;
+      // CEO-015: DB fallback — resolve email/name from users table when ctx.user misses them
+      let _dbPayerEmail = runtimeUser.email?.trim() || undefined;
+      let _dbPayerName = runtimeUser.name?.trim() || undefined;
+      if (!_dbPayerEmail || !_dbPayerName) {
+        try {
+          const { Pool: _DpPool } = await import("pg");
+          const _dp = new _DpPool({ connectionString: process.env.DATABASE_URL });
+          const _dc = await _dp.connect();
+          try {
+            const _dr = await _dc.query(
+              `SELECT email, name FROM users WHERE id = $1 LIMIT 1`,
+              [runtimeUser.id]
+            );
+            if (_dr.rows.length) {
+              if (!_dbPayerEmail) _dbPayerEmail = _dr.rows[0].email?.trim() || undefined;
+              if (!_dbPayerName) _dbPayerName = _dr.rows[0].name?.trim() || undefined;
+            }
+          } finally { _dc.release(); await _dp.end().catch(() => undefined); }
+        } catch (_) { /* non-critical: proceed with what we have */ }
+      }
+      const payerEmail = input.payerEmail?.trim() || _dbPayerEmail || undefined;
+      const payerName = input.payerName?.trim() || _dbPayerName || undefined;
       const payerDocument = input.payerDocument?.replace(/\D/g, "") || undefined;
       const identification = payerDocument
         ? payerDocument.length === 11

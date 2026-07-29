@@ -377,7 +377,8 @@ export default function PixCheckout() {
         // CEO-012c: NAO enviar payerEmail do frontend — o backend resolve o email real do DB via ctx.user
         // O frontend pode ter email fake (ex: admin "equipe-restrita@nexus.internal")
         // Enviar payerEmail apenas se o usuario NAO esta logado (checkout anonimo com intent)
-        payerEmail: (!user ? payerEmail : undefined),
+        // CEO-015: Always send payerEmail — backend uses it + DB fallback as safety net
+        payerEmail: payerEmail || undefined,
         payerName: payerName || user?.name || undefined,
         payerDocument: payerDocument || undefined,
         subscriptionId: paymentContext.subscriptionId,

@@ -1,0 +1,12 @@
+{
+  "date": "2026-07-29",
+  "description": "Privatiza vídeos legados do módulo 00 substituídos pelo novo master premium vpz_rwGzE6E",
+  "items": [
+    {
+      "video_id": "G45HLp3c_4k",
+      "action": "set_privacy",
+      "privacy_status": "private",
+      "notes": "Módulo 00 antigo (rebuild com marcadores literais) - substituído por vpz_rwGzE6E"
+    }
+  ]
+}

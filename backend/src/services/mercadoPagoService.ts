@@ -261,15 +261,14 @@ export async function createMercadoPagoPreference(input: McPagoPreferenceInput):
         currency_id: "BRL",
         unit_price: Number((input.amountCents / 100).toFixed(2)),
       }],
-      payer: {
-        email: input.payerEmail,
-        name: input.payerName,
-      },
+      payer: input.payerEmail
+        ? { email: input.payerEmail, name: input.payerName }
+        : undefined,
       payment_methods: {
         // CEO-016: Habilita explicitamente pix, cartão, e conta MP (saldo)
         excluded_payment_types: [],
         excluded_payment_methods: [],
-        installments: { "default": 12 },
+        installments: 12,
         default_payment_methods: [
           { type: "ticket", id: "pix" },
           { type: "credit_card" },

@@ -379,7 +379,7 @@ export default function PixCheckout() {
   useEffect(() => {
     if (!autoTriggerCheckout && checkoutIntent && payerEmail && payerEmail.trim() && payerName && payerName.trim() && amountCents > 0 && !checkoutSession) {
       setAutoTriggerCheckout(true);
-      setTimeout(() => { handleGenerateCheckout(); }, 800);
+      setTimeout(() => { handleGenerateCheckout(); }, 1500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkoutIntent, payerEmail, payerName, amountCents]);
@@ -718,36 +718,40 @@ export default function PixCheckout() {
                     )}
                   </div>
 
-                  {/* CEO-016: Payment method options panel */}
+                  {/* CEO-017: Interactive payment method selector with visual feedback */}
                   {hasRequestedCheckout && (
                     <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                      <p className="mb-3 text-sm font-medium text-white">Opções de pagamento disponíveis</p>
-                      <div className="grid gap-2 sm:grid-cols-3">
+                      <p className="mb-3 text-sm font-medium text-white">Escolha a forma de pagamento</p>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        {/* PIX — QR Code copia e cola */}
                         <button
                           type="button"
                           onClick={() => {
                             if (!pixCode) { setFeedback("Gere o checkout primeiro."); return; }
                             handleCopyPixCode();
+                            setFeedback("Código PIX copiado! Cole no app do seu banco para pagar.");
                           }}
-                          className="flex items-center gap-2 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/10 px-4 py-3 text-sm text-quantum-cyan transition hover:bg-quantum-cyan/20 disabled:opacity-40"
+                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all ${pixCode ? "cursor-pointer border-quantum-cyan/40 bg-quantum-cyan/15 text-quantum-cyan hover:bg-quantum-cyan/25 hover:shadow-lg hover:shadow-quantum-cyan/10" : "cursor-not-allowed border-white/5 bg-white/5 text-slate-500 opacity-40"}`}
                           disabled={!pixCode}
                         >
-                          <QrCode className="h-5 w-5" />
+                          <QrCode className="h-5 w-5 shrink-0" />
                           <div className="text-left">
                             <p className="font-semibold">PIX</p>
-                            <p className="text-xs opacity-70">QR Code ou cópia e cola</p>
+                            <p className="text-xs opacity-70">QR Code ou copia e cola</p>
                           </div>
                         </button>
+                        {/* Mercado Pago — Cartão, PIX ou saldo */}
                         <button
                           type="button"
                           onClick={() => {
                             if (!checkoutSession?.mercadoPago.initPoint) {
-                              setFeedback("Link MP não disponível.");
+                              setFeedback("Checkout Mercado Pago indisponível. Use o PIX ou tente novamente.");
                               return;
                             }
+                            setFeedback("Abrindo checkout Mercado Pago...");
                             window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
                           }}
-                          className="flex items-center gap-2 rounded-xl border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-200 transition hover:bg-blue-500/20 disabled:opacity-40"
+                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all ${hasMercadoPagoLink ? "cursor-pointer border-blue-400/40 bg-blue-500/15 text-blue-200 hover:bg-blue-500/25 hover:shadow-lg hover:shadow-blue-500/10" : "cursor-not-allowed border-white/5 bg-white/5 text-slate-500 opacity-40"}`}
                           disabled={!hasMercadoPagoLink}
                         >
                           <span aria-hidden>💳</span>
@@ -756,14 +760,32 @@ export default function PixCheckout() {
                             <p className="text-xs opacity-70">Cartão, PIX ou saldo</p>
                           </div>
                         </button>
-                        <div className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
-                          <Wallet className="h-5 w-5" />
+                        {/* Saldo MP — abre checkout com saldo pré-selecionado */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!checkoutSession?.mercadoPago.initPoint) {
+                              setFeedback("Checkout Mercado Pago indisponível. Use o PIX ou tente novamente.");
+                              return;
+                            }
+                            setFeedback("Abrindo Mercado Pago com saldo...");
+                            window.open(checkoutSession.mercadoPago.initPoint, "_blank", "noopener,noreferrer");
+                          }}
+                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-all ${hasMercadoPagoLink ? "cursor-pointer border-emerald-400/40 bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/10" : "cursor-not-allowed border-white/5 bg-white/5 text-slate-500 opacity-40"}`}
+                          disabled={!hasMercadoPagoLink}
+                        >
+                          <Wallet className="h-5 w-5 shrink-0" />
                           <div className="text-left">
                             <p className="font-semibold">Saldo MP</p>
                             <p className="text-xs opacity-70">Pague com saldo da conta</p>
                           </div>
-                        </div>
+                        </button>
                       </div>
+                      {!hasMercadoPagoLink && (
+                        <p className="mt-3 text-xs text-slate-400">
+                          As opções Mercado Pago e Saldo MP exigem integração ativa. Use o PIX enquanto o checkout MP carrega.
+                        </p>
+                      )}
                     </div>
                   )}
                 </CardContent>

@@ -3344,6 +3344,9 @@ Que este livro sirva, mesmo que modestamente, para **manter o debate aberto** so
 
 ## *Andrej Karpathy, Fei-Fei Li, Mira Murati e a IA que Enxerga, Fala e Pensa*
 
+![Karpathy e seu curso "Neural Networks: Zero to Hero" — 3,5h, 10M views](ilustracoes/05-01-karpathy-curso.jpg)
+
+
 **Subtítulo:** Três perfis que vieram da academia, viraram lenda na indústria e moldaram a próxima geração de modelos multimodais.
 
 **Tagline:** São os construtores silenciosos. Sem eles no slide, nada de IA generativa teria acontecido tão rápido.
@@ -3357,6 +3360,8 @@ Que este livro sirva, mesmo que modestamente, para **manter o debate aberto** so
 ---
 
 ## Prefácio do Volume 5
+
+
 
 No Volume 1 conhecemos a casa-mãe (OpenAI); no Volume 2, o laboratório de jogos e ciência (DeepMind); no Volume 3, a startup que construiu *Constitutional AI* (Anthropic); no Volume 4, o ecossistema dos rebeldes e disruptores chineses e europeus. Mas havia um vazio proposital na nossa narrativa: **quem, dentro dessas instituições, transformou teoria em produto, e produto em cultura**?
 
@@ -3388,6 +3393,8 @@ Boa leitura.
 ---
 
 ## Andrej Karpathy: O Russo-Canadense que Ensinou o Mundo a Entender Transformers
+
+
 
 ### 1.1. Origens: Bratislava, Toronto, e a infância de um imigrante silencioso
 
@@ -3496,6 +3503,8 @@ A carreira dele é, em si, **a história da profissionalização da IA multimoda
 
 ## Fei-Fei Li e o ImageNet: A Mãe das IAs Modernas (14M imagens, 2009)
 
+
+
 ### 2.1. Pequim, Nova Jérsei, e a infância de uma filha de imigrantes
 
 Fei-Fei Li nasceu em **Pequim, China, em 1976**. O pai era executivo de uma empresa estatal de tecnologia; a mãe, professora. A vida em Pequim, nos anos 70 e 80, era dura — comida racionada, um apartamento pequeno, o inverno sem aquecimento central. Mas os pais tinham uma biblioteca. E, mais importante, uma crença: **a filha deles estudaria nos Estados Unidos**.
@@ -3590,6 +3599,9 @@ Fei-Fei não inventou o transformer, nem inventou o diffusion model. Mas ela inv
 
 ## Mira Murati: A Arquiteta Silenciosa do ChatGPT e do GPT-4
 
+![Fei-Fei Li e o ImageNet — 14 milhões de imagens que treinaram a IA moderna](ilustracoes/05-02-imagenet.jpg)
+
+
 ### 3.1. Tirana, Dartmouth, e a curiosidade pelas máquinas
 
 **Mira Murati** nasceu em 1988, em **Tirana, na Albânia**, filha de professores. A Albânia, em 1988, era um país comunista isolado, sob o regime de Enver Hoxha (já morto em 1985, mas sob o sucessor Ramiz Alia). A queda do regime aconteceu em 1991, com o país mergulhando em caos econômico. Mira tinha 3 anos.
@@ -3673,6 +3685,8 @@ Sua carreira mostra que, em 2022–2026, **a fronteira da IA não é mais exclus
 
 ## Stanford 2015–2017: A Forja que Gerou a Geração Transformers
 
+
+
 ### 4.1. A configuração ímpar de Stanford em 2015
 
 Em 2015, três coisas aconteceram em Stanford, no mesmo ano letivo, no mesmo prédio (Gates Computer Science Building), no mesmo corredor (3º andar), em cadeiras vizinhas:
@@ -3742,6 +3756,8 @@ Esse é, em 2024, o modelo que **Tsinghua** (Beijing), **MIT CSAIL**, **CMU MLD*
 ---
 
 ## O Nascimento do "Software 2.0" (Karpathy 2017, Manifesto)
+
+
 
 ### 5.1. O texto que mudou o vocabulário da engenharia
 
@@ -3815,6 +3831,8 @@ E, em 2026, quando alguém usa **vibe coding** (Cursor, Copilot Workspace, Repli
 
 
 ## AutoPilot, DALL·E, o Lado Visionário de Karpathy na Tesla
+
+
 
 ### 6.1. O AutoPilot como primeiro sistema de *foundation model* em produção industrial
 
@@ -3895,6 +3913,9 @@ Karpathy **não inventou** o transformer, mas **traduziu** o transformer para um
 
 ## ImageNet, AI4ALL, HAI — O Legado Humanitário de Fei-Fei Li
 
+![Mira Murati liderando a engenharia do GPT-4 e ChatGPT na OpenAI](ilustracoes/05-03-mira-gpt4.jpg)
+
+
 ### 7.1. AI4ALL: democratizar o acesso à IA
 
 Em 2017, Fei-Fei Li, **Ophir Sweeft** (ex-aluno de Stanford), **Rick Sommer** (ex-diretor do *Stanford Pre-Collegiate Studies*), e **Meredith Broussard** (NYU) fundam o **AI4ALL**, uma ONG cuja missão declarada é *"aumentar a diversidade e a inclusão em IA, especialmente entre grupos sub-representados"*.
@@ -3958,6 +3979,8 @@ Essa terceira tese — *spatial AI* — é, em 2026, a tese central da **World L
 
 
 ## Mira Murati na OpenAI: A Engenharia do GPT-4 e a Estratégia Multimodal
+
+
 
 ### 8.1. A organização interna: como a OpenAI funcionava em 2022
 
@@ -4043,6 +4066,8 @@ Em **fevereiro de 2026**, a OpenAI atinge **500 milhões de usuários ativos sem
 
 ## Pós-OpenAI 2024–2026: Eureka Labs, World Labs, Thinking Machines AI
 
+
+
 ### 9.1. Eureka Labs (Karpathy, julho de 2024 – presente)
 
 A **Eureka Labs**, fundada por Andrej Karpathy em **julho de 2024**, é uma *startup* educacional com a missão declarada de *"construir o melhor sistema educacional do mundo, e usá-lo para ensinar cada matéria"*. O modelo operacional é híbrido: cursos *open-source* (curated AI tutor included) + B2B com escolas.
@@ -4118,6 +4143,8 @@ Esses perfis, em conjunto com os três cobertos neste volume, formam **os 7-8 no
 
 ## Conclusão: Os Arquitetos e a Próxima Onda da IA Multimodal + Chamada Final à Coletânea
 
+
+
 ### 10.1. O que aprendemos com os três perfis
 
 Relendo os capítulos 1 a 9, três padrões emergem com nitidez:
@@ -4185,6 +4212,9 @@ Obrigado por ler. Nos vemos no Volume 6.
 
 ## Apêndice — Cronologia Essencial (Datas Verificadas)
 
+![O multiuniverso IA: multimodal, texto, áudio, vídeo, 3D interconectados](ilustracoes/05-04-multiverso.jpg)
+
+
 | Data | Evento | Protagonista |
 |---|---|---|
 | **1986** | Nascimento de Andrej Karpathy, Bratislava | Karpathy |
@@ -4251,6 +4281,8 @@ Obrigado por ler. Nos vemos no Volume 6.
 
 ## Glossário
 
+
+
 - **AGI** (*Artificial General Intelligence*): IA com capacidade cognitiva comparável à humana em todas as tarefas intelectuais. Definição controversa; nenhum benchmark unânime em 2026.
 - **Alignment**: campo de pesquisa que visa garantir que sistemas de IA *avançada* ajam de modo consistente com valores e intenções humanas.
 - **B200**: chip de IA da Nvidia, geração Blackwell, sucessor do H100. Lançado em 2024.
@@ -4280,6 +4312,8 @@ Obrigado por ler. Nos vemos no Volume 6.
 ---
 
 ## Leituras Recomendadas
+
+
 
 1. **Andrej Karpathy**:
    - *"Software 2.0"* (2017, blog pessoal). Curto, seminal, obrigatório.
@@ -4324,6 +4358,8 @@ Obrigado por ler. Nos vemos no Volume 6.
 ---
 
 ## Agradecimentos
+
+
 
 Este volume não seria possível sem:
 

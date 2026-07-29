@@ -1,113 +1,78 @@
 /**
- * Lab Nexus · Provider Registry
+ * providerRegistry — Lab Nexus Provider Registry
  * --------------------------------------------------------------
- * Catálogo de provedores de IA conectados ao Chat Bot do Lab Nexus.
- * Mantém as URLs oficiais e o nome da variável de ambiente que
- * carrega a API key (que NUNCA é exposta ao navegador).
+ * Registro de provedores de LLM disponíveis no Lab Nexus Sandbox.
+ * Mantém configurações de modelos, quotas e chaves de API no servidor.
  */
 
-export type LabNexusProviderId =
-  | "openai"
-  | "anthropic"
-  | "google"
-  | "deepseek"
-  | "minimax";
+export type LabNexusProviderId = "openai" | "anthropic" | "google" | "meta" | "xai";
 
 export interface LabNexusProvider {
   id: LabNexusProviderId;
-  label: string;
-  defaultModel: string;
-  availableModels: string[];
-  envKey: string;
-  envKeyFallback?: string;
-  restEndpoint: string;
-  modalities: Array<"text" | "vision" | "audio" | "image-generation" | "code" | "video">;
-  notes: string;
+  name: string;
+  models: string[];
+  maxTokens: number;
+  configured: boolean;
+  /** Quota diária por tier (estrategista / elite) */
+  dailyQuota: { estrategista: number; elite: number };
 }
 
 export const LAB_NEXUS_PROVIDERS: Record<LabNexusProviderId, LabNexusProvider> = {
   openai: {
     id: "openai",
-    label: "OpenAI · GPT",
-    defaultModel: "gpt-4o-mini",
-    availableModels: ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "o4-mini"],
-    envKey: "OPENAI_API_KEY",
-    envKeyFallback: "OPENAI_API_KEY_FALLBACK",
-    restEndpoint: "https://api.openai.com/v1/chat/completions",
-    modalities: ["text", "vision", "image-generation"],
-    notes: "Compatível com Chat Completions e Responses API.",
+    name: "OpenAI",
+    models: ["gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini"],
+    maxTokens: 128000,
+    configured: !!process.env.OPENAI_API_KEY,
+    dailyQuota: { estrategista: 50, elite: 200 },
   },
   anthropic: {
     id: "anthropic",
-    label: "Anthropic · Claude",
-    defaultModel: "claude-3-5-sonnet-latest",
-    availableModels: [
-      "claude-3-5-sonnet-latest",
-      "claude-3-5-haiku-latest",
-      "claude-3-opus-latest",
-    ],
-    envKey: "ANTHROPIC_API_KEY",
-    envKeyFallback: "ANTHROPIC_API_KEY_FALLBACK",
-    restEndpoint: "https://api.anthropic.com/v1/messages",
-    modalities: ["text", "vision"],
-    notes: "Suporta tool use e Claude Skills.",
+    name: "Anthropic",
+    models: ["claude-sonnet-4-20250514", "claude-3-5-sonnet-20241022", "claude-3-haiku-20240307"],
+    maxTokens: 200000,
+    configured: !!process.env.ANTHROPIC_API_KEY,
+    dailyQuota: { estrategista: 50, elite: 200 },
   },
   google: {
     id: "google",
-    label: "Google · Gemini",
-    defaultModel: "gemini-2.0-flash",
-    availableModels: ["gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"],
-    envKey: "GOOGLE_GEMINI_API_KEY",
-    envKeyFallback: "GOOGLE_GEMINI_API_KEY_FALLBACK",
-    restEndpoint: "https://generativelanguage.googleapis.com/v1beta",
-    modalities: ["text", "vision", "audio"],
-    notes: "Integração via Generative Language API.",
+    name: "Google DeepMind",
+    models: ["gemini-2.5-pro", "gemini-2.5-flash"],
+    maxTokens: 1000000,
+    configured: !!process.env.GOOGLE_AI_API_KEY,
+    dailyQuota: { estrategista: 30, elite: 150 },
   },
-  deepseek: {
-    id: "deepseek",
-    label: "DeepSeek",
-    defaultModel: "deepseek-chat",
-    availableModels: ["deepseek-chat", "deepseek-reasoner"],
-    envKey: "DEEPSEEK_API_KEY",
-    envKeyFallback: "DEEPSEEK_API_KEY_FALLBACK",
-    restEndpoint: "https://api.deepseek.com/v1/chat/completions",
-    modalities: ["text", "code"],
-    notes: "API compatível com formato OpenAI Chat Completions.",
+  meta: {
+    id: "meta",
+    name: "Meta AI",
+    models: ["llama-3.1-405b", "llama-3.1-70b"],
+    maxTokens: 128000,
+    configured: !!process.env.META_AI_API_KEY,
+    dailyQuota: { estrategista: 20, elite: 100 },
   },
-  minimax: {
-    id: "minimax",
-    label: "MiniMax",
-    defaultModel: "MiniMax-M2",
-    availableModels: ["MiniMax-M2", "MiniMax-M1", "MiniMax-Text-01"],
-    envKey: "MINIMAX_API_KEY",
-    envKeyFallback: "MINIMAX_API_KEY_FALLBACK",
-    restEndpoint: "https://api.minimaxi.chat/v1/text/chatcompletion_v2",
-    modalities: ["text", "audio", "video"],
-    notes: "Hub multimodal com pesos abertos (MiniMax-M1/M2).",
+  xai: {
+    id: "xai",
+    name: "xAI",
+    models: ["grok-3", "grok-3-mini"],
+    maxTokens: 131072,
+    configured: !!process.env.XAI_API_KEY,
+    dailyQuota: { estrategista: 20, elite: 100 },
   },
 };
 
-export function listLabNexusProviders(): LabNexusProvider[] {
-  return Object.values(LAB_NEXUS_PROVIDERS);
-}
-
-export function isProviderConfigured(id: LabNexusProviderId): boolean {
-  const provider = LAB_NEXUS_PROVIDERS[id];
-  if (!provider) return false;
-  return Boolean(
-    process.env[provider.envKey]?.trim() ||
-      (provider.envKeyFallback ? process.env[provider.envKeyFallback]?.trim() : ""),
-  );
-}
-
+/** Summary público sem expor chaves */
 export function getProviderPublicSummary() {
-  return listLabNexusProviders().map((provider) => ({
-    id: provider.id,
-    label: provider.label,
-    defaultModel: provider.defaultModel,
-    availableModels: provider.availableModels,
-    modalities: provider.modalities,
-    notes: provider.notes,
-    configured: isProviderConfigured(provider.id),
+  return Object.values(LAB_NEXUS_PROVIDERS).map((p) => ({
+    id: p.id,
+    name: p.name,
+    models: p.models,
+    maxTokens: p.maxTokens,
+    configured: p.configured,
+    dailyQuota: p.dailyQuota,
   }));
+}
+
+/** Retorna um provedor por ID */
+export function getProvider(id: LabNexusProviderId): LabNexusProvider | undefined {
+  return LAB_NEXUS_PROVIDERS[id];
 }

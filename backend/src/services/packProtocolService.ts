@@ -8,8 +8,10 @@
  * Cada Pack define: Produtos (ebooks, XP, Skills, PNE/SiSu),
  * Benefícios (comissões, acessos), e Ativação Mensal (valor + compensação).
  *
- * TODO: Quando o sistema tiver Skills, Academ'IA, Lab Nexus, Lib Nexus,
- * Hall de Sócios, Credenciais VIP — adicionar delivery handlers aqui.
+ * CEO-016: Delivery handlers implementados em packEntitlementService.ts.
+ * Os handlers entregam Skills e Acessos (Academ'IA, Lab Nexus, Lib, Hall, VIP)
+ * conforme definido nos benefits de cada Pack abaixo.
+ * Ver: deliverAllPackBenefits(), deliverSkillsForPack(), deliverAccessBenefitsForPack()
  */
 
 // ============================================================
@@ -663,3 +665,78 @@ export const PACK_QUOTA_DIVERGENCES: Record<string, { old: number; official: num
   "pack-aaii":   { old: 200000, official: 100000 },
   "pack-aaiii":  { old: 350000, official: 150000 },
 };
+
+
+// ============================================================
+// CEO-016: TIER ORDERING — Mapeamento hierárquico de packs
+// ============================================================
+
+/** Ordem hierárquica de packs (do menor para o maior) */
+export const PACK_TIER_ORDER: string[] = [
+  "pack-a2", "pack-a2ii", "pack-a2iii",
+  "pack-ag", "pack-agii", "pack-agiii",
+  "pack-agn", "pack-agnii", "pack-agniii",
+  "pack-ao", "pack-aoii", "pack-aoiii",
+  "pack-aa", "pack-aaii", "pack-aaiii",
+];
+
+/**
+ * Retorna o nível de acesso do usuário baseado no seu pack mais alto.
+ * Usado para tier-gating em Academ'IA, Lab Nexus, etc.
+ */
+export function resolveAccessTier(
+  ownedPackSlugs: string[],
+): { tier: string; category: string; level: string; academiaLevel: string; labAccess: boolean; vipAccess: boolean } {
+  let highestSlug = "";
+  let highestIdx = -1;
+  for (const slug of ownedPackSlugs) {
+    const idx = PACK_TIER_ORDER.indexOf(slug);
+    if (idx > highestIdx) {
+      highestIdx = idx;
+      highestSlug = slug;
+    }
+  }
+
+  const protocol = highestSlug ? PACK_PROTOCOL[highestSlug] : null;
+  if (!protocol) {
+    return {
+      tier: "iniciante",
+      category: "sem_pack",
+      level: "0",
+      academiaLevel: "none",
+      labAccess: false,
+      vipAccess: false,
+    };
+  }
+
+  const hasAcademia = protocol.benefits.some((b) => b.type === "academia");
+  const hasLab = protocol.benefits.some((b) => b.type === "lab");
+  const hasVip = protocol.benefits.some((b) => b.type === "vip");
+  const hasPleno = protocol.benefits.some((b) => b.type === "acess_pleno");
+
+  let academiaLevel = "none";
+  if (hasAcademia) {
+    const academiaBenefit = protocol.benefits.find((b) => b.type === "academia");
+    if (academiaBenefit?.description.includes("Pleno") || hasPleno) {
+      academiaLevel = "pleno";
+    } else if (academiaBenefit?.description.includes("Nível V")) {
+      academiaLevel = "nivel_v";
+    } else if (academiaBenefit?.description.includes("Nível IV")) {
+      academiaLevel = "nivel_iv";
+    } else {
+      academiaLevel = "basic";
+    }
+  }
+
+  return {
+    tier: protocol.category === "ia_agentic" ? "elite" :
+          protocol.category === "agente_orquestrador" ? "estrategista" :
+          protocol.category === "agente_generativo" ? "estrategista" :
+          protocol.category === "agente_preditivo" ? "operador" : "iniciante",
+    category: protocol.category,
+    level: protocol.level,
+    academiaLevel,
+    labAccess: hasLab,
+    vipAccess: hasVip,
+  };
+}

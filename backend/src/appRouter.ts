@@ -65,10 +65,11 @@ import { governanceLoopExecutorRouter } from "./routers/governanceLoopExecutorRo
 import { nikoCapitalRouter } from "./routers/nikoCapitalRouter";
 import { networkExtendedRouter } from "./routers/networkExtendedRouter";
 import { packEntitlementsRouter as packEntitlementsOnda19Router } from "./routers/packEntitlementsOnda19Router";
+// CEO-016: Full entitlements router restored (listMyGrants, confirmAndGrant, redeliver, adminGrant)
+import { packEntitlementsRouter } from "./routers/packEntitlementsRouter";
 import { btcCustodyRouter } from "./routers/btcCustodyRouter";
 // CEO-014: Affiliate Store Router — Minha Loja / Estoque
 import { affiliateStoreRouter } from "./routers/affiliateStoreRouter";
-import { monthlyActivationRouter } from "./routers/monthlyActivationRouter";
 
 // Bootstrap C-Suite ao carregar appRouter (idempotente)
 bootstrapCSuite().catch(() => undefined);
@@ -263,10 +264,10 @@ export const appRouter = router({
   nikoCapital: nikoCapitalRouter,
   networkExtended: networkExtendedRouter,
   packEntitlements: packEntitlementsOnda19Router,
+  packGrants: packEntitlementsRouter,
   btcCustody: btcCustodyRouter,
   // CEO-014: Minha Loja / Estoque / Vitrine pública
   affiliateStore: affiliateStoreRouter,
-  monthlyActivation: monthlyActivationRouter,
 });
 
 export type AppRouter = typeof appRouter;

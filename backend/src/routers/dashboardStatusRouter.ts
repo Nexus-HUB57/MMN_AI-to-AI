@@ -25,7 +25,6 @@ export const dashboardStatusRouter = router({
         agentActive: false,
         monthlyActivationPaid: false,
         cycleLabel: cycleLabel(new Date()),
-        cycleDisplay: cycleLabelDisplay(new Date()),
         affiliateLevel: null,
         totalXp: 0,
         currentLevel: 1,
@@ -48,30 +47,10 @@ export const dashboardStatusRouter = router({
       xpRow = (res?.rows ?? res ?? [])[0] ?? null;
     } catch {}
 
-    // CEO-013d: agentActive também considera Pack A2 ownership
-    // O agente está ativo se: tem agent.status=active OU tem Pack A2 adquirido
-    let hasPackA2 = false;
-    try {
-      const packCheck = await require("../services/packEntitlementService");
-      // Check via marketplace_pack_grants
-      const pool2 = (await import("pg")).default;
-      // Simple inline check for pack grant
-      const grantRes = await ctx.db.execute(sql`
-        SELECT 1 FROM marketplace_pack_grants
-        WHERE user_id = ${ctx.user.id}
-          AND pack_slug IN ('pack-a2')
-          AND status IN ('granted','active','completed','delivered')
-        LIMIT 1
-      `);
-      const grantList = (grantRes as any).rows || (grantRes as any);
-      hasPackA2 = grantList && grantList.length > 0;
-    } catch {}
-
     return {
-      agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")) || hasPackA2,
+      agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")),
       monthlyActivationPaid: paid,
       cycleLabel: cycle,
-      cycleDisplay: cycleLabelDisplay(now),
       affiliateLevel: (affiliate as any).level || (affiliate as any).tier || "Afiliado I",
       totalXp: Number(xpRow?.totalXp ?? 0),
       currentLevel: Number(xpRow?.currentLevel ?? 1),
@@ -352,14 +331,19 @@ export const dashboardStatusRouter = router({
 });
 
 // ===== helpers =====
-// CEO-015 FIX: cycleLabel agora retorna formato locale-independent (YYYY-MM)
-// para comparação correta com to_char(..., 'YYYY-MM') no PostgreSQL.
-// O frontend deve usar cycleLabelDisplay() para labels legíveis.
+/**
+ * CEO-015: Retorna o ciclo no formato YYYY-MM (ex.: "2026-07").
+ * Antes: usava toLocaleString("pt-BR") que produzia "julho 2026" (lowercase),
+ * mas PostgreSQL to_char('TMMonth YYYY') produzia "July     2026" (title-case + padded).
+ * A comparação nunca batia → ativação mensal sempre retornava false.
+ */
 function cycleLabel(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
-  return `${y}-${m}`; // ex: "2026-07"
+  return `${y}-${m}`;
 }
+
+/** Formato legível para exibição no dashboard (ex.: "Julho 2026") */
 function cycleLabelDisplay(d: Date): string {
   return d.toLocaleString("pt-BR", { month: "long", year: "numeric" });
 }
@@ -406,4 +390,3 @@ async function checkMonthlyActivationPaid(
     return false;
   }
 }
-

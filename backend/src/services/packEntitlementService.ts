@@ -390,3 +390,253 @@ export async function redeliverPackForUser(
     paymentMethod: "redeliver",
   });
 }
+
+
+// ============================================================
+// CEO-016: DELIVERY HANDLERS — Skills, Academ'IA, Lab Nexus, Lib, Hall, VIP
+// Referência: docs/planning/Protocolo_Pack
+// Estes handlers são chamados após grantPackToUser para entregar
+// benefícios não-ebook definidos no Protocolo Pack.
+// ============================================================
+
+export interface DeliveryResult {
+  type: string;
+  delivered: boolean;
+  details: string;
+}
+
+/**
+ * Entrega Skills conforme Protocolo Pack após compra de Pack.
+ * Cada pack define skills: { promptLevel, level1, level2, level3 }.
+ * Busca skills disponíveis na tabela `skills` por nível e atribui ao usuário.
+ */
+export async function deliverSkillsForPack(
+  userId: number,
+  packSlug: string,
+): Promise<DeliveryResult[]> {
+  const protocol = PACK_PROTOCOL[packSlug];
+  if (!protocol) return [];
+
+  const results: DeliveryResult[] = [];
+  const { skills } = protocol;
+
+  // Total de skills a atribuir por nível
+  const skillsToAssign = [
+    { level: 1, count: skills.level1 },
+    { level: 2, count: skills.level2 },
+    { level: 3, count: skills.level3 },
+  ];
+
+  const client = await getPool().connect();
+  try {
+    for (const { level, count } of skillsToAssign) {
+      if (count <= 0) continue;
+
+      // Buscar skills disponíveis deste nível que o usuário ainda não possui
+      const available = await client.query(
+        `SELECT id FROM skills
+          WHERE skill_level = $1 AND status = 'active'
+            AND id NOT IN (
+              SELECT skill_id FROM agent_skills WHERE user_id = $2
+            )
+          ORDER BY sort_order ASC
+          LIMIT $3`,
+        [level, userId, count],
+      );
+
+      // Atribuir cada skill ao usuário
+      for (const row of available.rows) {
+        try {
+          const thirtyDays = new Date();
+          thirtyDays.setDate(thirtyDays.getDate() + 30);
+
+          await client.query(
+            `INSERT INTO agent_skills (user_id, skill_id, status, acquired_at, expires_at, source_pack_slug)
+             VALUES ($1, $2, 'active', NOW(), $3, $4)
+             ON CONFLICT (user_id, skill_id) DO NOTHING`,
+            [userId, row.id, thirtyDays, packSlug],
+          );
+          results.push({
+            type: "skill",
+            delivered: true,
+            details: `Skill ID ${row.id} (nivel ${level}) atribuida via Pack ${packSlug}`,
+          });
+        } catch (e: any) {
+          results.push({
+            type: "skill",
+            delivered: false,
+            details: `Erro ao atribuir Skill ID ${row.id}: ${e.message}`,
+          });
+        }
+      }
+
+      if (available.rows.length < count) {
+        results.push({
+          type: "skill",
+          delivered: true,
+          details: `Aviso: apenas ${available.rows.length}/${count} skills nivel ${level} disponiveis para atribuicao`,
+        });
+      }
+    }
+
+    // Atualizar prompt level do agente
+    if (skills.promptLevel) {
+      try {
+        await client.query(
+          `UPDATE agents SET prompt_level = $1, updated_at = NOW()
+            WHERE user_id = $2`,
+          [skills.promptLevel, userId],
+        );
+        results.push({
+          type: "prompt_level",
+          delivered: true,
+          details: `Prompt level atualizado para "${skills.promptLevel}" via Pack ${packSlug}`,
+        });
+      } catch (e: any) {
+        results.push({
+          type: "prompt_level",
+          delivered: false,
+          details: `Erro ao atualizar prompt level: ${e.message}`,
+        });
+      }
+    }
+  } finally {
+    client.release();
+  }
+
+  return results;
+}
+
+/**
+ * Entrega benefícios de acesso (Academ'IA, Lab Nexus, Lib Nexus, Hall, VIP)
+ * conforme definido no Protocolo Pack.
+ * Cria/atualiza registros de entitlement na tabela pack_entitlements_access.
+ */
+export async function deliverAccessBenefitsForPack(
+  userId: number,
+  packSlug: string,
+): Promise<DeliveryResult[]> {
+  const protocol = PACK_PROTOCOL[packSlug];
+  if (!protocol) return [];
+
+  const results: DeliveryResult[] = [];
+  const accessBenefits = protocol.benefits.filter(
+    (b) => ["academia", "lab", "lib", "hall", "vip", "acess_pleno"].includes(b.type),
+  );
+
+  if (accessBenefits.length === 0) return results;
+
+  const client = await getPool().connect();
+  try {
+    for (const benefit of accessBenefits) {
+      try {
+        // Upsert no entitlement de acesso
+        await client.query(
+          `INSERT INTO pack_entitlements_access
+             (user_id, pack_slug, access_type, access_level, granted_at, benefit_description)
+           VALUES ($1, $2, $3, $4, NOW(), $5)
+           ON CONFLICT (user_id, pack_slug, access_type) DO UPDATE
+           SET access_level = EXCLUDED.access_level,
+               granted_at = NOW(),
+               benefit_description = EXCLUDED.benefit_description`,
+          [
+            userId,
+            packSlug,
+            benefit.type,
+            benefit.description.includes("Pleno") ? "pleno" :
+              benefit.description.match(/Nivel (IV|V)/)?.[1] || "standard",
+            benefit.description,
+          ],
+        );
+        results.push({
+          type: benefit.type,
+          delivered: true,
+          details: `Acesso "${benefit.type}" concedido via Pack ${packSlug}: ${benefit.description}`,
+        });
+      } catch (e: any) {
+        // Se tabela não existir, criar e tentar novamente
+        if (e.message?.includes("does not exist")) {
+          try {
+            await client.query(`
+              CREATE TABLE IF NOT EXISTS pack_entitlements_access (
+                id SERIAL PRIMARY KEY,
+                user_id INT NOT NULL REFERENCES users(id),
+                pack_slug VARCHAR(100) NOT NULL,
+                access_type VARCHAR(50) NOT NULL,
+                access_level VARCHAR(50) DEFAULT 'standard',
+                granted_at TIMESTAMPTZ DEFAULT NOW(),
+                benefit_description TEXT,
+                UNIQUE(user_id, pack_slug, access_type)
+              )
+            `);
+            // Retry
+            await client.query(
+              `INSERT INTO pack_entitlements_access
+                 (user_id, pack_slug, access_type, access_level, granted_at, benefit_description)
+               VALUES ($1, $2, $3, $4, NOW(), $5)
+               ON CONFLICT (user_id, pack_slug, access_type) DO UPDATE
+               SET access_level = EXCLUDED.access_level,
+                   granted_at = NOW()`,
+              [
+                userId,
+                packSlug,
+                benefit.type,
+                benefit.description.includes("Pleno") ? "pleno" :
+                  benefit.description.match(/Nivel (IV|V)/)?.[1] || "standard",
+                benefit.description,
+              ],
+            );
+            results.push({
+              type: benefit.type,
+              delivered: true,
+              details: `Acesso "${benefit.type}" concedido via Pack ${packSlug} (tabela criada): ${benefit.description}`,
+            });
+          } catch (e2: any) {
+            results.push({
+              type: benefit.type,
+              delivered: false,
+              details: `Erro persistente ao conceder acesso ${benefit.type}: ${e2.message}`,
+            });
+          }
+        } else {
+          results.push({
+            type: benefit.type,
+            delivered: false,
+            details: `Erro ao conceder acesso ${benefit.type}: ${e.message}`,
+          });
+        }
+      }
+    }
+  } finally {
+    client.release();
+  }
+
+  return results;
+}
+
+/**
+ * Função principal de entrega completa — chamada após grantPackToUser.
+ * Orquestra todos os delivery handlers do Protocolo Pack.
+ */
+export async function deliverAllPackBenefits(
+  userId: number,
+  packSlug: string,
+): Promise<{
+  skills: DeliveryResult[];
+  access: DeliveryResult[];
+  totalDelivered: number;
+  totalFailed: number;
+}> {
+  const [skillsResults, accessResults] = await Promise.all([
+    deliverSkillsForPack(userId, packSlug),
+    deliverAccessBenefitsForPack(userId, packSlug),
+  ]);
+
+  const all = [...skillsResults, ...accessResults];
+  return {
+    skills: skillsResults,
+    access: accessResults,
+    totalDelivered: all.filter((r) => r.delivered).length,
+    totalFailed: all.filter((r) => !r.delivered).length,
+  };
+}

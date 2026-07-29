@@ -1,12 +1,9 @@
 /**
  * Lab Nexus · tRPC Router
  * --------------------------------------------------------------
- * Expõe o Chat Bot Lab Nexus ao frontend via tRPC. Mantém o segredo
- * de cada provedor exclusivamente no servidor; o cliente vê apenas
- * a lista de modelos disponíveis, quota diária e a flag `configured`.
- *
- * CEO-015: Access check via packDeliveryService.checkUserAccess()
- *          — Lab Nexus requires `lab_nexus` access flag
+ * Expõe o Chat Bot Lab Nexus ao frontend via tRPC.
+ * CEO-016: Pack-level enforcement — Lab Nexus liberado apenas para
+ * packs da categoria agente_orquestrador (AO, AOII, AOIII) ou superior (AA, AAII, AAIII).
  */
 
 import { z } from "zod";
@@ -21,9 +18,8 @@ import {
   type LabNexusRole,
 } from "../services/lab-nexus/chatService";
 import { getLabNexusUsageSnapshot } from "../services/lab-nexus/usageLedger";
-import {
-  checkUserAccess,
-} from "../services/packDeliveryService";
+import { resolveAccessTier, PACK_TIER_ORDER } from "../services/packProtocolService";
+import { Pool } from "pg";
 
 const providerIdSchema = z.enum(
   Object.keys(LAB_NEXUS_PROVIDERS) as [LabNexusProviderId, ...LabNexusProviderId[]],
@@ -47,19 +43,38 @@ const chatInputSchema = z.object({
 });
 
 /**
- * CEO-015: Middleware de verificação de acesso.
- * Lab Nexus é restrito a usuários com access flag `lab_nexus`.
- * Packs AA (IA Agentic) e superiores concedem este acesso.
+ * Verifica se o usuário tem pack com acesso ao Lab Nexus.
+ * Lab Nexus é liberado a partir de Agente Orquestrador (AO) e IA Agentic (AA).
  */
-async function requireLabAccess(ctx: any): Promise<boolean> {
-  if (!ctx?.user?.id) return false;
+async function checkLabNexusAccess(userId: number): Promise<{ allowed: boolean; tier: string; message: string }> {
   try {
-    const access = await checkUserAccess(ctx.user.id, "lab_nexus");
-    return access.hasAccess;
-  } catch {
-    // Se a tabela não existe ou há erro, permitir por enquanto (grace period)
-    console.warn("[LabNexus] access check failed — allowing (grace period)");
-    return true;
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const grants = await pool.query(
+      `SELECT DISTINCT pack_slug FROM marketplace_pack_grants
+        WHERE user_id = $1 AND status = 'granted'`,
+      [userId],
+    );
+    await pool.end();
+
+    const ownedSlugs = grants.rows.map((r: any) => r.pack_slug as string);
+    const access = resolveAccessTier(ownedSlugs);
+
+    if (access.labAccess) {
+      return {
+        allowed: true,
+        tier: access.tier,
+        message: `Lab Nexus liberado para pack ${access.category} nivel ${access.level}`,
+      };
+    }
+
+    return {
+      allowed: false,
+      tier: access.tier,
+      message: `Lab Nexus requer pack Agente Orquestrador (AO+) ou IA Agentic (AA+). Pack atual: ${access.category} nivel ${access.level}`,
+    };
+  } catch (e: any) {
+    // Se houver erro na consulta, permitir com restrição (fail-open)
+    return { allowed: true, tier: "estrategista", message: `Verificação de acesso indisponível: ${e.message}` };
   }
 }
 
@@ -67,38 +82,32 @@ export const labNexusRouter = router({
   providers: publicProcedure.query(() => ({
     providers: getProviderPublicSummary(),
     permissionTiers: ["estrategista", "elite"],
+    description: "Lab Nexus liberado a partir de Agente Orquestrador (AO) ou IA Agentic (AA)",
   })),
 
   usage: protectedProcedure
     .input(z.object({ tier: tierSchema.optional() }).optional())
     .query(async ({ ctx, input }) => {
-      const hasAccess = await requireLabAccess(ctx);
-      if (!hasAccess) {
-        return {
-          usage: { used: 0, limit: 0, remaining: 0 },
-          accessDenied: true,
-          message: "Lab Nexus requer Pack AA (IA Agentic) ou superior",
-        };
-      }
+      // CEO-016: Verificar acesso baseado no pack
+      const access = await checkLabNexusAccess(ctx.user?.id);
       return {
         usage: getLabNexusUsageSnapshot({
           affiliateId: ctx.user?.id,
-          tier: input?.tier ?? "estrategista",
+          tier: access.allowed ? (input?.tier ?? access.tier) : "iniciante",
         }),
-        accessDenied: false,
+        access,
       };
     }),
 
   chat: protectedProcedure
     .input(chatInputSchema)
     .mutation(async ({ ctx, input }) => {
-      // CEO-015: Verificar acesso antes do chat
-      const hasAccess = await requireLabAccess(ctx);
-      if (!hasAccess) {
-        throw new Error("Acesso negado: Lab Nexus requer Pack AA (IA Agentic) ou superior. Adquira o Pack na seção Packs/Upgrade do Dashboard.");
+      // CEO-016: Verificar acesso antes de permitir chat
+      const access = await checkLabNexusAccess(ctx.user?.id);
+      if (!access.allowed) {
+        throw new Error(access.message);
       }
 
-      const tier = input.tier ?? "estrategista";
       return runLabNexusChat({
         providerId: input.providerId,
         model: input.model,
@@ -106,16 +115,7 @@ export const labNexusRouter = router({
         temperature: input.temperature,
         maxTokens: input.maxTokens,
         affiliateId: ctx.user?.id,
-        tier,
+        tier: input.tier ?? access.tier,
       });
     }),
-
-  /**
-   * CEO-015: Verifica se o usuário tem acesso ao Lab Nexus.
-   * Usado pelo frontend para renderizar condicionalmente a UI.
-   */
-  checkAccess: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx?.user?.id) return { hasAccess: false, level: null, packSlug: null };
-    return await checkUserAccess(ctx.user.id, "lab_nexus");
-  }),
 });

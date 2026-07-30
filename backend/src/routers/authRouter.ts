@@ -704,14 +704,22 @@ export const authRouter = router({
           }
         }
 
-        const dupRes = await client.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [input.email]);
+        // CEO-018: Hardening de e-mail duplicado por lower(email) (case-insensitive)
+        const normalizedEmail = String(input.email || "").trim().toLowerCase();
+        if (!normalizedEmail) {
+          throw new Error("Email invalido.");
+        }
+        const dupRes = await client.query(
+          "SELECT id FROM users WHERE lower(email) = $1 LIMIT 1",
+          [normalizedEmail]
+        );
         if (dupRes.rows.length > 0) {
           throw new Error("Este email ja esta cadastrado.");
         }
 
         const userIns = await client.query(
           "INSERT INTO users (\"openId\", name, email, role, is_test_data, \"createdAt\", \"updatedAt\") VALUES ($1, $2, $3, 'affiliate', false, NOW(), NOW()) RETURNING id",
-          ["signup-" + input.email.replace(/[^a-zA-Z0-9]/g, "-") + "-" + Date.now(), input.name, input.email]
+          ["signup-" + normalizedEmail.replace(/[^a-zA-Z0-9]/g, "-") + "-" + Date.now(), input.name, normalizedEmail]
         );
         const userId = userIns.rows[0].id;
 

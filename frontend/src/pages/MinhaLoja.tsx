@@ -427,10 +427,27 @@ export default function MinhaLoja() {
                           <p className="text-sm text-slate-500">Sob consulta</p>
                         )}
                       </div>
-                      <Button size="sm" className="bg-quantum-cyan/90 text-slate-900 font-semibold hover:bg-quantum-cyan"
-                        onClick={() => { addToCart(e); }}>
-                        {isPublicView ? "Comprar" : "Adicionar"}
-                      </Button>
+                      {/* CEO-018: Em Minha Loja (vista privada), estes itens ja pertencem ao estoque.
+                          A acao de "Adicionar" so faz sentido no contexto de sincronizacao do Meu Estoque,
+                          entao aqui exibimos "Comprar" na vista publica e escondemos na vista privada. */}
+                      {isPublicView ? (
+                        <Button
+                          size="sm"
+                          className="bg-quantum-cyan/90 text-slate-900 font-semibold hover:bg-quantum-cyan"
+                          disabled={!(e.resalePriceCents > 0) || !e.coverPath}
+                          onClick={() => { addToCart(e); }}>
+                          Comprar
+                        </Button>
+                      ) : (
+                        <Link href="/estoque">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-white/20 text-slate-100 hover:bg-white/10">
+                            Gerenciar
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </article>

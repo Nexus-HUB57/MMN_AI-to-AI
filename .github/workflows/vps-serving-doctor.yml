@@ -1,0 +1,95 @@
+# =============================================================================
+# VPS Serving Doctor — descobre quem atende /api/health (Nginx? Container? PM2?)
+# =============================================================================
+# Read-only. Roda no VPS via SSH e no runner via curl. Nao muda estado.
+
+name: vps-serving-doctor
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-serving-doctor
+  cancel-in-progress: true
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Public HTTP fingerprint
+        run: |
+          for path in /api /api/health /api/health/pix; do
+            echo "=== GET https://oneverso.com.br${path} ==="
+            curl -sSI -m 15 "https://oneverso.com.br${path}" || true
+            echo
+            curl -sS -m 15 "https://oneverso.com.br${path}" || true
+            echo
+          done
+
+      - name: VPS serving stack fingerprint
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          echo "=== who listens on ports (:80 :443 :3000 :3001 :3002 :8080) ==="
+          ss -lntp | awk 'NR==1 || $4 ~ /:(80|443|3000|3001|3002|8080)$/' 2>&1 || true
+          echo
+          echo "=== nginx -v && nginx -T (server_name + proxy_pass only) ==="
+          nginx -v 2>&1 || true
+          nginx -T 2>/dev/null | grep -nE 'server_name|proxy_pass|listen |location ' | head -80 || true
+          echo
+          echo "=== docker ps ==="
+          command -v docker >/dev/null && docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}' 2>&1 || echo "docker not installed"
+          echo
+          echo "=== docker inspect env (mmn / oneverso image only, redacted) ==="
+          if command -v docker >/dev/null; then
+            for c in $(docker ps --format '{{.Names}}' 2>/dev/null); do
+              img=$(docker inspect -f '{{.Config.Image}}' "$c" 2>/dev/null)
+              case "$img" in
+                *mmn*|*oneverso*|*nexus*)
+                  echo "--- container=$c image=$img ---"
+                  docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$c" 2>/dev/null \
+                    | awk -F= '{print $1}' | sort -u
+                  echo "--- health / logs tail ---"
+                  docker inspect -f '{{.State.Health.Status}}' "$c" 2>/dev/null || true
+                  docker logs --tail 40 "$c" 2>&1 | tail -40
+                  ;;
+              esac
+            done
+          fi
+          echo
+          echo "=== pm2 status ==="
+          command -v pm2 >/dev/null && pm2 status 2>&1 || echo "pm2 not installed"
+          echo
+          echo "=== node & npm versions on VPS ==="
+          node -v 2>&1 || true
+          npm -v 2>&1 || true
+          echo
+          echo "=== local health from inside VPS (bypasses nginx/cache) ==="
+          for p in 3000 3001 3002 8080; do
+            code=$(curl -sS -o /tmp/_body -w '%{http_code}' -m 5 "http://127.0.0.1:${p}/api/health" 2>/dev/null || echo 000)
+            echo "port ${p} -> HTTP ${code}"
+            head -c 300 /tmp/_body; echo
+          done
+          echo
+          echo "=== dist/index.js head (first 40 lines) ==="
+          if [ -f /var/www/oneverso/current/backend/dist/index.js ]; then
+            wc -l /var/www/oneverso/current/backend/dist/index.js
+            sed -n '1,40p' /var/www/oneverso/current/backend/dist/index.js
+          else
+            echo "no dist/index.js on VPS path"
+          fi
+          echo
+          echo "=== pm2 logs mmn-api (last 40) ==="
+          command -v pm2 >/dev/null && pm2 logs mmn-api --lines 40 --nostream 2>&1 | tail -60 || true
+          echo "=== END DIAGNOSTIC ==="
+          REMOTE

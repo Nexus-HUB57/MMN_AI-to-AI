@@ -82,11 +82,7 @@ jobs:
           MP_CSECRET_B64=$(printf '%s' "$MERCADO_PAGO_CLIENT_SECRET" | base64 -w0)
           MP_WSECRET_B64=$(printf '%s' "$MERCADO_PAGO_WEBHOOK_SECRET" | base64 -w0)
           ssh -p 22022 root@143.95.213.237 "cd /var/www/oneverso/current && \
-            if [ -f .env ]; then \
-              grep -Ev '^(MARKETPLACE_PIX_KEY|MARKETPLACE_PIX_RECEIVER_NAME|MARKETPLACE_PIX_RECEIVER_CITY|MERCADO_PAGO_ACCESS_TOKEN|MERCADO_PAGO_PUBLIC_KEY|MERCADO_PAGO_CLIENT_ID|MERCADO_PAGO_CLIENT_SECRET|MERCADO_PAGO_WEBHOOK_SECRET)=' .env > .env.tmp || true; \
-            else \
-              : > .env.tmp; \
-            fi && \
+            [ -f .env ] || : > .env && \
             printf '%s\n' \
               \"MARKETPLACE_PIX_KEY=\$(printf '%s' '${PIX_KEY_B64}' | base64 -d)\" \
               \"MARKETPLACE_PIX_RECEIVER_NAME=\$(printf '%s' '${PIX_NAME_B64}' | base64 -d)\" \
@@ -95,8 +91,8 @@ jobs:
               \"MERCADO_PAGO_PUBLIC_KEY=\$(printf '%s' '${MP_PUBKEY_B64}' | base64 -d)\" \
               \"MERCADO_PAGO_CLIENT_ID=\$(printf '%s' '${MP_CID_B64}' | base64 -d)\" \
               \"MERCADO_PAGO_CLIENT_SECRET=\$(printf '%s' '${MP_CSECRET_B64}' | base64 -d)\" \
-              \"MERCADO_PAGO_WEBHOOK_SECRET=\$(printf '%s' '${MP_WSECRET_B64}' | base64 -d)\" >> .env.tmp && \
-            mv .env.tmp .env && \
+              \"MERCADO_PAGO_WEBHOOK_SECRET=\$(printf '%s' '${MP_WSECRET_B64}' | base64 -d)\" \
+              \"COMMIT_SHA=${{ github.sha }}\" >> .env && \
             printf '%s' '${{ github.sha }}' > .git-commit && \
             if [ -f .env ]; then set -a; . ./.env; set +a; fi && \
             DB_URL=\${DATABASE_URL:-\${DEPLOY_DATABASE_URL:-}} && \

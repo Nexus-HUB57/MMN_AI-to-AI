@@ -1,0 +1,145 @@
+# =============================================================================
+# VPS Repair (one-shot) — mata processos Node orfaos, forca PM2 limpo,
+# valida /api/health contra o novo commit. Nao mexe no .env (imutavel).
+# =============================================================================
+
+name: vps-repair
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Repair VPS (kill orphans, rebind PM2, no .env changes)
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          ssh -p 22022 root@143.95.213.237 EXPECTED_COMMIT="$EXPECTED_COMMIT" 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+          echo "=== BEFORE: pm2 status ==="
+          pm2 status 2>&1 | tail -25 || true
+          echo
+          echo "=== BEFORE: sockets on :3000/:3001 ==="
+          ss -lntp 'sport = :3000 or sport = :3001' 2>&1 || true
+
+          echo
+          echo "=== Step 1: pm2 stop mmn-api (soft) ==="
+          pm2 stop mmn-api 2>&1 | tail -5 || true
+          pm2 delete mmn-api 2>&1 | tail -5 || true
+
+          echo
+          echo "=== Step 2: kill orphan Node listeners on :3000/:3001 ==="
+          for port in 3000 3001; do
+            for pid in $(ss -lntp "sport = :${port}" 2>/dev/null | awk -F 'pid=' 'NR>1{split($2,a,","); print a[1]}' | sort -u); do
+              [ -n "$pid" ] || continue
+              cmd=$(ps -p "$pid" -o comm= 2>/dev/null)
+              full=$(ps -p "$pid" -o args= 2>/dev/null | head -c 160)
+              echo "port=$port pid=$pid comm=$cmd args=${full}"
+              # so mata se for node/nodejs; nao toca em nginx, pm2 God etc.
+              case "$cmd" in
+                node|nodejs)
+                  kill -TERM "$pid" 2>&1 && echo "sent SIGTERM to $pid"
+                  ;;
+                *)
+                  echo "skip pid=$pid (comm=$cmd nao e node)"
+                  ;;
+              esac
+            done
+          done
+          sleep 3
+          for port in 3000 3001; do
+            for pid in $(ss -lntp "sport = :${port}" 2>/dev/null | awk -F 'pid=' 'NR>1{split($2,a,","); print a[1]}' | sort -u); do
+              [ -n "$pid" ] || continue
+              cmd=$(ps -p "$pid" -o comm= 2>/dev/null)
+              case "$cmd" in
+                node|nodejs)
+                  kill -KILL "$pid" 2>&1 && echo "SIGKILL pid=$pid (still bound)"
+                  ;;
+              esac
+            done
+          done
+          sleep 2
+
+          echo
+          echo "=== Step 3: sockets after cleanup ==="
+          ss -lntp 'sport = :3000 or sport = :3001' 2>&1 || true
+
+          echo
+          echo "=== Step 4: pm2 start mmn-api (from ecosystem, load .env imutavel) ==="
+          cd "$BASE"
+          # ecosystem.config.js define mmn-api; --only isola do restart dos workers
+          pm2 start ecosystem.config.js --only mmn-api --update-env 2>&1 | tail -25
+          sleep 5
+          pm2 save 2>&1 | tail -5 || true
+
+          echo
+          echo "=== AFTER: pm2 status ==="
+          pm2 status 2>&1 | tail -25 || true
+          echo
+          echo "=== AFTER: sockets on :3000/:3001 ==="
+          ss -lntp 'sport = :3000 or sport = :3001' 2>&1 || true
+
+          echo
+          echo "=== AFTER: local health from inside VPS ==="
+          for i in 1 2 3 4 5 6; do
+            body=$(curl -sS -m 5 http://127.0.0.1:3001/api/health 2>&1)
+            echo "local_try_${i}: ${body}"
+            case "$body" in *"\"ok\":true"*) break ;; esac
+            sleep 3
+          done
+
+          echo
+          echo "=== EXPECTED_COMMIT=${EXPECTED_COMMIT} ==="
+          echo "=== END REPAIR ==="
+          REMOTE
+
+      - name: Public healthcheck (must serve new commit)
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          short=$(printf '%s' "$EXPECTED_COMMIT" | cut -c1-8)
+          echo "expected_commit_short=$short"
+          ok=0
+          for i in $(seq 1 24); do
+            body=$(curl -sS -m 15 https://oneverso.com.br/api/health || echo '{}')
+            echo "poll:$i body=$body"
+            commit=$(printf '%s' "$body" | python3 -c 'import sys,json; d=json.loads(sys.stdin.read() or "{}"); print(d.get("commit",""))' 2>/dev/null)
+            echo "poll:$i observed_commit=$commit"
+            case "$commit" in
+              "$short"*|"$EXPECTED_COMMIT"*)
+                echo "MATCH commit=$commit"
+                ok=1
+                break
+                ;;
+            esac
+            sleep 5
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::/api/health ainda nao serve commit $short apos rebind."
+            exit 1
+          fi
+          echo
+          echo "=== pix healthcheck ==="
+          curl -sS -m 15 https://oneverso.com.br/api/health/pix || true

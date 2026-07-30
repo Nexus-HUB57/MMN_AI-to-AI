@@ -54,33 +54,37 @@ jobs:
           for port in 3000 3001; do
             for pid in $(ss -lntp "sport = :${port}" 2>/dev/null | awk -F 'pid=' 'NR>1{split($2,a,","); print a[1]}' | sort -u); do
               [ -n "$pid" ] || continue
-              cmd=$(ps -p "$pid" -o comm= 2>/dev/null)
-              full=$(ps -p "$pid" -o args= 2>/dev/null | head -c 160)
-              echo "port=$port pid=$pid comm=$cmd args=${full}"
-              # so mata se for node/nodejs; nao toca em nginx, pm2 God etc.
-              case "$cmd" in
-                node|nodejs)
-                  kill -TERM "$pid" 2>&1 && echo "sent SIGTERM to $pid"
+              exe=$(readlink -f "/proc/${pid}/exe" 2>/dev/null || echo "")
+              full=$(tr '\0' ' ' < /proc/${pid}/cmdline 2>/dev/null | head -c 200)
+              echo "port=${port} pid=${pid} exe=${exe} args=${full}"
+              case "$exe" in
+                */node|*/nodejs)
+                  kill -TERM "$pid" 2>&1 && echo "sent SIGTERM to ${pid}"
                   ;;
                 *)
-                  echo "skip pid=$pid (comm=$cmd nao e node)"
+                  # fallback: se o cmdline comeca com node ou aponta para dist/index.js do MMN, mata mesmo assim
+                  case "$full" in
+                    *"/backend/dist/index.js"*|node*|*/node\ *)
+                      kill -TERM "$pid" 2>&1 && echo "sent SIGTERM to ${pid} (fallback via cmdline)"
+                      ;;
+                    *)
+                      echo "skip pid=${pid} exe=${exe} args=${full}"
+                      ;;
+                  esac
                   ;;
               esac
             done
           done
+          sleep 5
+          echo "=== Step 2b: fuser -k fallback ==="
+          command -v fuser >/dev/null && {
+            fuser -k -TERM 3000/tcp 2>&1 || true
+            fuser -k -TERM 3001/tcp 2>&1 || true
+            sleep 3
+            fuser -k -KILL 3000/tcp 2>&1 || true
+            fuser -k -KILL 3001/tcp 2>&1 || true
+          } || echo "fuser nao disponivel"
           sleep 3
-          for port in 3000 3001; do
-            for pid in $(ss -lntp "sport = :${port}" 2>/dev/null | awk -F 'pid=' 'NR>1{split($2,a,","); print a[1]}' | sort -u); do
-              [ -n "$pid" ] || continue
-              cmd=$(ps -p "$pid" -o comm= 2>/dev/null)
-              case "$cmd" in
-                node|nodejs)
-                  kill -KILL "$pid" 2>&1 && echo "SIGKILL pid=$pid (still bound)"
-                  ;;
-              esac
-            done
-          done
-          sleep 2
 
           echo
           echo "=== Step 3: sockets after cleanup ==="
@@ -89,10 +93,12 @@ jobs:
           echo
           echo "=== Step 4: pm2 start mmn-api (from ecosystem, load .env imutavel) ==="
           cd "$BASE"
-          # ecosystem.config.js define mmn-api; --only isola do restart dos workers
+          pm2 flush mmn-api 2>&1 | tail -3 || true
           pm2 start ecosystem.config.js --only mmn-api --update-env 2>&1 | tail -25
-          sleep 5
+          sleep 8
           pm2 save 2>&1 | tail -5 || true
+          echo "=== Step 4b: pm2 logs mmn-api (last 30) ==="
+          pm2 logs mmn-api --lines 30 --nostream 2>&1 | tail -40 || true
 
           echo
           echo "=== AFTER: pm2 status ==="

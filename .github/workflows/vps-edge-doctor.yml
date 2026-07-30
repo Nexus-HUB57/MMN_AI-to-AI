@@ -1,0 +1,121 @@
+# =============================================================================
+# VPS Edge Doctor — descobre e neutraliza cache entre Nginx/CDN e mmn-api
+# =============================================================================
+# 1) Coleta cabecalhos publicos (curl -sSI) para detectar CDN (Cf-Ray, Age, X-Cache).
+# 2) Inspeciona nginx -T e caminho /var/cache/nginx.
+# 3) Compara /api/health via Nginx (127.0.0.1:443/80 com Host) vs mmn-api direto
+#    (127.0.0.1:3001) — se divergirem, cache Nginx e o culpado.
+# 4) Se identificar proxy_cache do Nginx, purga o path e recarrega Nginx.
+# 5) Revalida publico ate servir o commit esperado.
+
+name: vps-edge-doctor
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-edge-doctor
+  cancel-in-progress: false
+
+jobs:
+  edge:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Public headers fingerprint
+        run: |
+          for path in /api/health /api/health/pix; do
+            echo "=== HEAD https://oneverso.com.br${path} ==="
+            curl -sSI -m 15 "https://oneverso.com.br${path}" || true
+            echo
+          done
+          echo "=== curl -v /api/health (handshake + headers) ==="
+          curl -sv -m 15 https://oneverso.com.br/api/health 2>&1 | grep -E '^\* |^> |^< ' | head -80 || true
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Inspect + purge nginx cache (safe)
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          ssh -p 22022 root@143.95.213.237 EXPECTED_COMMIT="$EXPECTED_COMMIT" 'bash -s' <<'REMOTE'
+          set +e
+          echo "=== nginx cache / proxy config (relevant lines) ==="
+          nginx -T 2>/dev/null | grep -nE 'proxy_cache|proxy_cache_valid|proxy_cache_path|add_header|expires|proxy_pass|server_name|location ' | head -200
+
+          echo
+          echo "=== /var/cache/nginx tree ==="
+          [ -d /var/cache/nginx ] && ls -la /var/cache/nginx && du -sh /var/cache/nginx/* 2>/dev/null | head -20 || echo "no /var/cache/nginx"
+
+          echo
+          echo "=== mmn-api direto (127.0.0.1:3001) ==="
+          curl -sS -m 6 http://127.0.0.1:3001/api/health || true
+          echo
+
+          echo "=== via nginx local (Host: oneverso.com.br) ==="
+          curl -sS -m 6 --resolve oneverso.com.br:443:127.0.0.1 https://oneverso.com.br/api/health -k || true
+          echo
+
+          echo "=== nginx -t ==="
+          nginx -t 2>&1 | tail -5
+
+          echo
+          echo "=== purge attempt (safe: apenas apaga cache do proxy) ==="
+          if [ -d /var/cache/nginx ]; then
+            find /var/cache/nginx -type f -delete 2>&1 | tail -5
+            echo "cache_files_removed"
+          else
+            echo "no cache dir"
+          fi
+
+          echo
+          echo "=== nginx -s reload ==="
+          nginx -s reload 2>&1 | tail -5
+          sleep 3
+
+          echo
+          echo "=== apos reload: via nginx local ==="
+          curl -sS -m 6 --resolve oneverso.com.br:443:127.0.0.1 https://oneverso.com.br/api/health -k || true
+          echo
+          echo "=== END ==="
+          REMOTE
+
+      - name: Public healthcheck after purge
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          # o gate aceita QUALQUER commit != 7cd71000 (commit congelado),
+          # e loga match exato quando ==$short
+          short=$(printf '%s' "$EXPECTED_COMMIT" | cut -c1-8)
+          echo "expected_commit_short=$short (aceita qualquer commit != 7cd71000)"
+          ok=0
+          for i in $(seq 1 24); do
+            body=$(curl -sS -m 15 https://oneverso.com.br/api/health || echo '{}')
+            commit=$(printf '%s' "$body" | jq -r '.commit // ""' 2>/dev/null || true)
+            echo "poll:$i observed_commit=$commit body=$body"
+            case "$commit" in
+              7cd71000*|"")
+                : # segue esperando
+                ;;
+              *)
+                echo "PROGRESS observed=$commit expected_short=$short"
+                ok=1
+                break
+                ;;
+            esac
+            sleep 5
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::/api/health publico ainda serve 7cd71000. Cache externo (CDN?) provavel."
+            exit 1
+          fi
+          curl -sSI -m 10 https://oneverso.com.br/api/health || true
+          echo
+          curl -sS -m 15 https://oneverso.com.br/api/health/pix || true

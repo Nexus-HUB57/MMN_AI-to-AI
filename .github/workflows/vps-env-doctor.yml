@@ -1,0 +1,80 @@
+# =============================================================================
+# VPS .env Doctor — diagnostico read-only de /var/www/oneverso/current/.env
+# =============================================================================
+# CEO-018 / GO-LIVE: nao altera nada no VPS. Coleta atributos e permissoes
+# para explicar o "Operation not permitted" do Deploy production.
+
+name: vps-env-doctor
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-env-doctor
+  cancel-in-progress: true
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Inspect .env on VPS (read-only)
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+          echo "=== whoami / id ==="
+          whoami; id
+          echo
+          echo "=== base dir ==="
+          ls -ld "$BASE" || true
+          stat "$BASE" || true
+          echo
+          echo "=== .env presence ==="
+          ls -la "$BASE/.env" 2>&1 || true
+          stat "$BASE/.env" 2>&1 || true
+          echo
+          echo "=== immutable / append-only attributes (chattr flags) ==="
+          command -v lsattr >/dev/null && lsattr -d "$BASE" 2>&1 || echo "lsattr not available for base"
+          command -v lsattr >/dev/null && lsattr "$BASE/.env" 2>&1 || echo "lsattr not available for .env"
+          echo
+          echo "=== ACLs ==="
+          command -v getfacl >/dev/null && getfacl "$BASE/.env" 2>&1 || echo "getfacl not available"
+          echo
+          echo "=== filesystem / mount options ==="
+          df -T "$BASE" 2>&1 || true
+          mount | grep -E "$(df --output=target "$BASE" | tail -1)" 2>&1 || true
+          echo
+          echo "=== capability of user to write (dry) ==="
+          touch "$BASE/.env.doctor.$$" 2>&1 && rm -f "$BASE/.env.doctor.$$" && echo "CAN_CREATE_IN_DIR:yes" || echo "CAN_CREATE_IN_DIR:no"
+          echo "SHELL_TEST_OP: attempt to append (no write performed):"
+          [ -w "$BASE/.env" ] && echo ".env writable:yes" || echo ".env writable:no"
+          echo
+          echo "=== pm2 processes ==="
+          command -v pm2 >/dev/null && pm2 jlist 2>/dev/null | python3 -c 'import sys,json;
+          data=json.load(sys.stdin);
+          [print(f"name={p[\"name\"]} status={p[\"pm2_env\"][\"status\"]} restarts={p[\"pm2_env\"][\"restart_time\"]} uptime_ms={p[\"pm2_env\"].get(\"pm_uptime\",0)}") for p in data]' 2>/dev/null || pm2 status 2>&1 || echo "pm2 not available"
+          echo
+          echo "=== last 40 lines of api log (if present) ==="
+          for f in "$BASE/logs/api-error.log" "$BASE/logs/api-out.log"; do
+            [ -f "$f" ] && { echo "--- $f ---"; tail -40 "$f"; } || true
+          done
+          echo
+          echo "=== .env size / head-key names only (values redacted) ==="
+          if [ -r "$BASE/.env" ]; then
+            wc -l "$BASE/.env"
+            awk -F= '/^[A-Z_][A-Z0-9_]*=/{print $1}' "$BASE/.env" | sort -u
+          else
+            echo ".env not readable"
+          fi
+          echo "=== END DIAGNOSTIC ==="
+          REMOTE

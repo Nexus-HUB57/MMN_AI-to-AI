@@ -66,13 +66,19 @@ jobs:
             -e "ssh -p 22022" \
             backend/package.json \
             root@143.95.213.237:/var/www/oneverso/current/backend/package.json
-          # marcador de commit (o backend le _fallbackSha de ../../.git-commit / etc.)
+          # marcador de commit — o backend le ../../.git-commit RELATIVO a dist/index.js,
+          # ou seja: /var/www/oneverso/current/backend/.git-commit
           echo -n "${EXPECTED_COMMIT}" | ssh -p 22022 root@143.95.213.237 \
-            "cat > /var/www/oneverso/current/.git-commit && ls -la /var/www/oneverso/current/.git-commit"
+            "cat > /var/www/oneverso/current/backend/.git-commit && ls -la /var/www/oneverso/current/backend/.git-commit"
+          # backup no caminho raiz tambem, para logs/inspecao
+          echo -n "${EXPECTED_COMMIT}" | ssh -p 22022 root@143.95.213.237 \
+            "cat > /var/www/oneverso/current/.git-commit"
 
       - name: Rebind PM2 with new bundle
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
         run: |
-          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          ssh -p 22022 root@143.95.213.237 EXPECTED_COMMIT="${EXPECTED_COMMIT}" 'bash -s' <<'REMOTE'
           set +e
           BASE=/var/www/oneverso/current
           cd "$BASE"
@@ -116,10 +122,18 @@ jobs:
           echo "=== sockets AFTER kill ==="
           ss -lntp 'sport = :3000 or sport = :3001' 2>&1 || true
 
-          echo "=== pm2 start mmn-api ==="
+          echo "=== pm2 start mmn-api (com COMMIT_SHA injetado no ambiente do processo) ==="
           pm2 flush mmn-api 2>&1 | tail -3 || true
+          # exporta COMMIT_SHA no shell antes do start; ecosystem.config.js le SHARED_ENV via .env,
+          # e COMMIT_SHA/GITHUB_SHA setados no ambiente atual sao herdados pelo cluster.
+          export COMMIT_SHA="${EXPECTED_COMMIT}"
+          export GITHUB_SHA="${EXPECTED_COMMIT}"
+          echo "env COMMIT_SHA=${COMMIT_SHA}"
           pm2 start ecosystem.config.js --only mmn-api --update-env 2>&1 | tail -25
-          sleep 10
+          sleep 6
+          # reforca a propagacao para todos os workers do cluster
+          pm2 restart mmn-api --update-env 2>&1 | tail -10
+          sleep 6
           pm2 save 2>&1 | tail -3 || true
 
           echo "=== pm2 status ==="

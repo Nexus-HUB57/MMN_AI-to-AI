@@ -176,6 +176,11 @@ export default function AdminSettings() {
       ok: Boolean(apiStatus.shopee),
       help: "Configurar SHOPEE_AFFILIATE_ID e SHOPEE_AFFILIATE_USERNAME (Nexus SaaS · @lucasthomaz2 · ID 18325891080).",
     },
+    {
+      label: "Mercado Pago",
+      ok: Boolean(apiStatus.mercadopago),
+      help: "Configurar MERCADO_PAGO_ACCESS_TOKEN no servidor para pagamentos via Pix/cartão.",
+    },
   ];
 
   return (

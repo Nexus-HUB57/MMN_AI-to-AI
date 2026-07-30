@@ -131,8 +131,7 @@ export default function AdminApprovals() {
     {
       page: 1,
       limit: 50,
-      // status ignorado no backend hoje (D18.6)
-      },
+    },
     {
       enabled: activeTab === "processed",
     }

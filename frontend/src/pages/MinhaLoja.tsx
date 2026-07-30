@@ -421,11 +421,15 @@ export default function MinhaLoja() {
                     <div className="flex items-end justify-between pt-2">
                       <div>
                         <p className="text-[10px] uppercase tracking-wider text-slate-500">por</p>
-                        <p className="text-xl font-bold text-quantum-cyan">{BRL(e.resalePriceCents)}</p>
+                        {e.resalePriceCents > 0 ? (
+                          <p className="text-xl font-bold text-quantum-cyan">{BRL(e.resalePriceCents)}</p>
+                        ) : (
+                          <p className="text-sm text-slate-500">Sob consulta</p>
+                        )}
                       </div>
                       <Button size="sm" className="bg-quantum-cyan/90 text-slate-900 font-semibold hover:bg-quantum-cyan"
                         onClick={() => { addToCart(e); }}>
-                        Adicionar
+                        {isPublicView ? "Comprar" : "Adicionar"}
                       </Button>
                     </div>
                   </div>

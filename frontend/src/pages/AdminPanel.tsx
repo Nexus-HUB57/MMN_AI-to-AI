@@ -1,30 +1,53 @@
+import { useMemo } from "react";
+import { Link } from "wouter";
+import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
+import { Skeleton } from "components/ui/skeleton";
+import { Settings, Users, TrendingUp, DollarSign, ArrowRight } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { Settings, Users, TrendingUp, DollarSign } from "lucide-react";
+
+const BRL = (cents: number) =>
+  (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+const COLORS = ["#06b6d4", "#8b5cf6", "#f59e0b", "#10b981"];
 
 export default function AdminPanel() {
-  const mockNetworkData = [
-    { name: "Afiliados", value: 150 },
-    { name: "Líderes", value: 45 },
-    { name: "Supervisores", value: 12 },
-  ];
+  const statsQuery = trpc.admin.marketplaceStats.useQuery({ periodDays: 30 });
+  const usersQuery = trpc.admin.listUsers.useQuery({ page: 1, limit: 5 });
+  const settingsQuery = trpc.admin.getSettings.useQuery();
 
-  const COLORS = ["#3b82f6", "#10b981", "#f59e0b"];
+  const totals = statsQuery.data?.totals;
+  const byDay = statsQuery.data?.byDay ?? [];
+  const byMethod = statsQuery.data?.byMethod ?? [];
+  const totalUsers = usersQuery.data?.pagination?.total ?? 0;
 
-  const mockRevenueData = [
-    { month: "Jan", revenue: 45000, commissions: 15000 },
-    { month: "Feb", revenue: 52000, commissions: 17000 },
-    { month: "Mar", revenue: 61000, commissions: 20000 },
-    { month: "Apr", revenue: 75000, commissions: 24000 },
-    { month: "May", revenue: 89000, commissions: 28000 },
-  ];
+  const chartData = useMemo(() => {
+    if (byDay.length === 0) return [];
+    return byDay.map((d: any) => ({
+      date: d.day ? new Date(d.day).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }) : d.label || "",
+      pedidos: d.orders ?? d.count ?? 0,
+      receita: d.grossCents ? Math.round(d.grossCents / 100) : 0,
+    }));
+  }, [byDay]);
+
+  const pieData = useMemo(() => {
+    if (byMethod.length === 0) {
+      return [{ name: "Nenhum dado", value: 1 }];
+    }
+    return byMethod.map((m: any) => ({
+      name: m.method || m.label || "Outro",
+      value: m.count ?? m.orders ?? 1,
+    }));
+  }, [byMethod]);
+
+  const isLoading = statsQuery.isLoading || usersQuery.isLoading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <AdminDashboardLayout>
+      <div className="space-y-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-900 mb-2">Painel Administrativo</h1>
           <p className="text-slate-600">Gerenciar plataforma, comissões e rede de afiliados</p>
@@ -37,38 +60,62 @@ export default function AdminPanel() {
               <CardTitle className="text-sm font-medium text-slate-600">Total de Afiliados</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">207</div>
-              <p className="text-xs text-slate-500 mt-1">+12 este mês</p>
+              {isLoading ? (
+                <Skeleton className="h-9 w-24" />
+              ) : (
+                <div className="text-3xl font-bold text-slate-900">{totalUsers}</div>
+              )}
+              <p className="text-xs text-slate-500 mt-1">Usuários registrados</p>
             </CardContent>
           </Card>
 
           <Card className="border-0 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">Receita Total</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-600">Receita Total (30d)</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">R$ 322.000</div>
-              <p className="text-xs text-slate-500 mt-1">Últimos 5 meses</p>
+              {isLoading ? (
+                <Skeleton className="h-9 w-32" />
+              ) : (
+                <div className="text-3xl font-bold text-slate-900">
+                  {BRL(totals?.grossPeriodCents ?? 0)}
+                </div>
+              )}
+              <p className="text-xs text-slate-500 mt-1">Últimos 30 dias</p>
             </CardContent>
           </Card>
 
           <Card className="border-0 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">Comissões Pagas</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-600">Pedidos Pagos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">R$ 104.000</div>
-              <p className="text-xs text-slate-500 mt-1">32% da receita</p>
+              {isLoading ? (
+                <Skeleton className="h-9 w-24" />
+              ) : (
+                <div className="text-3xl font-bold text-slate-900">
+                  {totals?.paidPeriodOrders ?? 0}
+                </div>
+              )}
+              <p className="text-xs text-slate-500 mt-1">
+                {totals?.paidToday ?? 0} pagos hoje
+              </p>
             </CardContent>
           </Card>
 
           <Card className="border-0 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-slate-600">Taxa de Conversão</CardTitle>
+              <CardTitle className="text-sm font-medium text-slate-600">Compradores Únicos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">4.2%</div>
-              <p className="text-xs text-slate-500 mt-1">Visitantes → Clientes</p>
+              {isLoading ? (
+                <Skeleton className="h-9 w-24" />
+              ) : (
+                <div className="text-3xl font-bold text-slate-900">
+                  {totals?.uniqueBuyers ?? 0}
+                </div>
+              )}
+              <p className="text-xs text-slate-500 mt-1">No período de 30 dias</p>
             </CardContent>
           </Card>
         </div>
@@ -86,49 +133,61 @@ export default function AdminPanel() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle>Receita vs Comissões</CardTitle>
-                  <CardDescription>Últimos 5 meses</CardDescription>
+                  <CardTitle>Receita por dia (últimos 30 dias)</CardTitle>
+                  <CardDescription>Volume de pedidos e receita diária</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={mockRevenueData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="revenue" stroke="#3b82f6" name="Receita (R$)" />
-                      <Line type="monotone" dataKey="commissions" stroke="#10b981" name="Comissões (R$)" />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  {isLoading ? (
+                    <Skeleton className="h-[300px] w-full" />
+                  ) : chartData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                        <YAxis tick={{ fontSize: 10 }} />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="receita" stroke="#06b6d4" name="Receita (R$)" />
+                        <Line type="monotone" dataKey="pedidos" stroke="#8b5cf6" name="Pedidos" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex h-[300px] items-center justify-center text-slate-400">
+                      Nenhum dado disponível para o período selecionado.
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
               <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle>Distribuição de Perfis</CardTitle>
-                  <CardDescription>Usuários por tipo</CardDescription>
+                  <CardTitle>Distribuição por método</CardTitle>
+                  <CardDescription>Pedidos por método de pagamento</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={mockNetworkData}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, value }) => `${name}: ${value}`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {mockNetworkData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  {isLoading ? (
+                    <Skeleton className="h-[300px] w-full" />
+                  ) : (
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={pieData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, value }) => `${name}: ${value}`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {pieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -146,33 +205,39 @@ export default function AdminPanel() {
                     <div className="flex items-center gap-3">
                       <Users className="w-5 h-5 text-blue-600" />
                       <div>
-                        <p className="font-medium text-slate-900">Afiliados Ativos</p>
-                        <p className="text-sm text-slate-500">150 usuários</p>
+                        <p className="font-medium text-slate-900">Usuários Totais</p>
+                        <p className="text-sm text-slate-500">{totalUsers} usuários registrados</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">Gerenciar</Button>
+                    <Link href="/admin/network">
+                      <Button variant="outline" size="sm">Ver rede</Button>
+                    </Link>
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <TrendingUp className="w-5 h-5 text-green-600" />
                       <div>
-                        <p className="font-medium text-slate-900">Líderes</p>
-                        <p className="text-sm text-slate-500">45 usuários</p>
+                        <p className="font-medium text-slate-900">Pedidos pagos</p>
+                        <p className="text-sm text-slate-500">{totals?.paidPeriodOrders ?? 0} no período</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">Gerenciar</Button>
+                    <Link href="/admin/commissions">
+                      <Button variant="outline" size="sm">Ver comissões</Button>
+                    </Link>
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <DollarSign className="w-5 h-5 text-yellow-600" />
                       <div>
-                        <p className="font-medium text-slate-900">Supervisores</p>
-                        <p className="text-sm text-slate-500">12 usuários</p>
+                        <p className="font-medium text-slate-900">Receita bruta</p>
+                        <p className="text-sm text-slate-500">{BRL(totals?.grossPeriodCents ?? 0)}</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">Gerenciar</Button>
+                    <Link href="/admin/payments">
+                      <Button variant="outline" size="sm">Ver pagamentos</Button>
+                    </Link>
                   </div>
                 </div>
               </CardContent>
@@ -183,24 +248,29 @@ export default function AdminPanel() {
             <Card className="border-0 shadow-sm">
               <CardHeader>
                 <CardTitle>Configuração de Comissões</CardTitle>
-                <CardDescription>Definir percentuais por nível</CardDescription>
+                <CardDescription>Níveis de comissionamento da rede</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[1, 2, 3, 4, 5].map((level) => (
-                    <div key={level} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <p className="font-medium text-slate-900">Nível {level}</p>
+                  {(settingsQuery.data?.commissionLevels ?? [
+                    { level: 1, percentage: 20 },
+                    { level: 2, percentage: 10 },
+                    { level: 3, percentage: 5 },
+                    { level: 4, percentage: 2.5 },
+                    { level: 5, percentage: 1 },
+                  ]).map((level: any) => (
+                    <div key={level.level} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                      <p className="font-medium text-slate-900">Nível {level.level}</p>
                       <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          defaultValue={10 - level}
-                          className="w-16 px-2 py-1 border border-slate-300 rounded"
-                        />
-                        <span className="text-slate-600">%</span>
+                        <span className="text-slate-600 font-semibold">{level.percentage}%</span>
                       </div>
                     </div>
                   ))}
-                  <Button className="w-full mt-4">Salvar Configurações</Button>
+                  <div className="pt-2">
+                    <Link href="/admin/config">
+                      <Button className="w-full">Editar configurações avançadas <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -215,45 +285,51 @@ export default function AdminPanel() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 mb-2">
-                    Nome da Plataforma
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue="IOAID · SaaS"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
-                  />
-                </div>
+                {settingsQuery.isLoading ? (
+                  <div className="space-y-4">
+                    <Skeleton className="h-12" />
+                    <Skeleton className="h-12" />
+                    <Skeleton className="h-12" />
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-900 mb-2">
+                        Nome da Plataforma
+                      </label>
+                      <div className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-700">
+                        {settingsQuery.data?.platformName || "—"}
+                      </div>
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 mb-2">
-                    Email de Suporte
-                  </label>
-                  <input
-                    type="email"
-                    defaultValue="suporte@mmn-ai.com"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-900 mb-2">
+                        Email de Suporte
+                      </label>
+                      <div className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-700">
+                        {settingsQuery.data?.supportEmail || "—"}
+                      </div>
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 mb-2">
-                    Comissão Padrão (%)
-                  </label>
-                  <input
-                    type="number"
-                    defaultValue="10"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-900 mb-2">
+                        Profundidade Máxima da Rede
+                      </label>
+                      <div className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-700">
+                        {settingsQuery.data?.maxNetworkDepth ?? 5} níveis
+                      </div>
+                    </div>
+                  </>
+                )}
 
-                <Button className="w-full">Salvar Configurações</Button>
+                <Link href="/admin/config">
+                  <Button className="w-full mt-4">Abrir configurações completas <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                </Link>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </AdminDashboardLayout>
   );
 }

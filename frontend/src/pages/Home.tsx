@@ -287,7 +287,7 @@ export default function Home() {
           {/* Botão Cadastrar com ícone de robô IA pulsante (ativação do Agente) */}
           <Link
             href="/cadastro"
-            className="group relative inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-quantum-cyan via-quantum-violet to-quantum-purple px-3 py-1.5 text-xs font-semibold text-obsidian shadow-lg shadow-quantum-cyan/30 transition hover:opacity-90"
+            className="group relative inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-quantum-cyan via-quantum-violet to-quantum-purple px-3 py-1.5 text-xs font-semibold text-obsidian shadow-lg shadow-quantum-cyan/30 transition-all duration-300 hover:scale-105 hover:shadow-quantum-cyan/60 animate-[glow-pulse_2s_ease-in-out_infinite]"
             aria-label="Cadastrar e ativar Agente IA"
           >
             <span className="relative inline-flex h-4 w-4 items-center justify-center">

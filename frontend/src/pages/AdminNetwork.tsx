@@ -75,6 +75,20 @@ function NetworkNodeCard({ node }: { node: NetworkTreeNode }) {
   );
 }
 
+function buildTree(flatNodes: any[], depth: number = 2): any[] {
+  return flatNodes
+    .filter((n: any) => n.depth === depth)
+    .map((n: any) => ({
+      userId: n.userId,
+      name: n.name,
+      email: n.email,
+      level: (n.depth ?? 2) - 1,
+      affiliateCode: n.code,
+      status: 'active',
+      children: buildTree(flatNodes, depth + 1),
+    }));
+}
+
 export default function AdminNetwork() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
@@ -86,11 +100,9 @@ export default function AdminNetwork() {
     search: searchTerm || undefined,
   });
 
-  const networkStatsQuery = trpc.admin.getNetworkStats.useQuery();
-
   const networkTreeQuery = trpc.admin.getNetworkTree.useQuery(
     {
-      userId: selectedUserId || undefined,
+      rootUserId: selectedUserId || undefined,
       maxDepth: Number(maxDepth),
     },
     {
@@ -99,16 +111,18 @@ export default function AdminNetwork() {
   );
 
   const users = usersQuery.data?.users || [];
-  const tree = (networkTreeQuery.data || []) as NetworkTreeNode[];
+  const rawNodes = (networkTreeQuery.data as any)?.nodes || [];
+  const treeTotals = (networkTreeQuery.data as any)?.totals || {};
+  const tree = buildTree(rawNodes);
   const selectedUser = users.find((user) => user.id === selectedUserId) || null;
 
   const treeSummary = useMemo(
     () => ({
-      direct: tree.length,
-      total: countNodes(tree),
+      direct: (networkTreeQuery.data as any)?.directs ?? tree.length,
+      total: (networkTreeQuery.data as any)?.totalNodes ?? countNodes(tree),
       depth: getTreeDepth(tree),
     }),
-    [tree]
+    [tree, networkTreeQuery.data]
   );
 
   return (
@@ -130,7 +144,6 @@ export default function AdminNetwork() {
                 if (selectedUserId) {
                   networkTreeQuery.refetch();
                 }
-                networkStatsQuery.refetch();
               }}
             >
               <RefreshCw size={16} className="mr-2" />
@@ -143,25 +156,25 @@ export default function AdminNetwork() {
           <Card className="bg-white p-5 shadow-sm">
             <p className="text-sm text-slate-500">Usuários totais</p>
             <p className="mt-2 text-3xl font-semibold text-slate-900">
-              {networkStatsQuery.data?.totalUsers ?? 0}
+              {usersQuery.data?.pagination?.total ?? 0}
             </p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
             <p className="text-sm text-slate-500">Afiliados totais</p>
             <p className="mt-2 text-3xl font-semibold text-blue-700">
-              {networkStatsQuery.data?.totalAffiliates ?? 0}
+              {treeTotals.affiliates ?? usersQuery.data?.pagination?.total ?? 0}
             </p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
-            <p className="text-sm text-slate-500">Afiliados ativos</p>
+            <p className="text-sm text-slate-500">Na árvore selecionada</p>
             <p className="mt-2 text-3xl font-semibold text-green-700">
-              {networkStatsQuery.data?.activeAffiliates ?? 0}
+              {treeTotals.users ?? 0}
             </p>
           </Card>
           <Card className="bg-white p-5 shadow-sm">
             <p className="text-sm text-slate-500">Conexões registradas</p>
             <p className="mt-2 text-3xl font-semibold text-purple-700">
-              {networkStatsQuery.data?.totalConnections ?? 0}
+              {treeTotals.connections ?? 0}
             </p>
           </Card>
         </section>

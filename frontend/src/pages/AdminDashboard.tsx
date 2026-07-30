@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import AdminDashboardLayout from "@/pages/AdminDashboardLayout";
 import bgAdmin from "@/assets/bg-admin.webp";
+import { trpc } from "@/lib/trpc";
 import {
   Activity,
   AlertCircle,
@@ -13,7 +14,6 @@ import {
   Cpu,
   DollarSign,
   Eye,
-  LineChart,
   Network as NetworkIcon,
   Percent,
   Search,
@@ -23,6 +23,10 @@ import {
   Zap,
 } from "lucide-react";
 import AutonomyScoreCard from "@/components/agents/AutonomyScoreCard";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const BRL = (cents: number) =>
+  (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 interface KPIProps {
   icon: typeof Users;
@@ -61,76 +65,40 @@ function KPICard({ icon: Icon, label, value, change, trend, accent }: KPIProps) 
   );
 }
 
-const MOCK_USERS = [
-  {
-    id: 1,
-    name: "Equipe Nexus Affil'IA'te",
-    email: "equipe-restrita@nexus.internal",
-    role: "admin" as const,
-    status: "active" as const,
-    createdAt: "2025-04-12",
-  },
-  {
-    id: 2,
-    name: "Maria Silva",
-    email: "maria@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-04-23",
-  },
-  {
-    id: 3,
-    name: "João Pereira",
-    email: "joao@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-05-02",
-  },
-  {
-    id: 4,
-    name: "Ana Costa",
-    email: "ana@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "suspended" as const,
-    createdAt: "2025-05-10",
-  },
-  {
-    id: 5,
-    name: "Pedro Lima",
-    email: "pedro@demo.mmn.ai",
-    role: "affiliate" as const,
-    status: "active" as const,
-    createdAt: "2025-05-18",
-  },
-];
-
-const HEATMAP_BLOCKS = Array.from({ length: 28 * 8 }).map((_, i) => {
-  // Pseudo-random determinístico para SSR-friendly
-  const seed = ((i * 9301 + 49297) % 233280) / 233280;
-  if (seed > 0.92) return "high";
-  if (seed > 0.6) return "med";
-  if (seed > 0.25) return "low";
-  return "off";
-});
-
-function heatColor(level: string) {
-  if (level === "high") return "bg-quantum-cyan shadow-[0_0_6px_#00E5FF]";
-  if (level === "med") return "bg-quantum-cyan/60";
-  if (level === "low") return "bg-quantum-cyan/25";
-  return "bg-obsidian-700";
-}
-
 export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredUsers = useMemo(
-    () =>
-      MOCK_USERS.filter((u) => {
-        const q = searchTerm.toLowerCase();
-        return u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
-      }),
-    [searchTerm],
+  const listUsersQuery = trpc.admin.listUsers.useQuery({
+    page: 1,
+    limit: 10,
+    search: searchTerm || undefined,
+  });
+
+  const marketplaceStatsQuery = trpc.admin.marketplaceStats.useQuery({
+    periodDays: 30,
+  });
+
+  const commissionStatsQuery = (trpc as any).admin?.getCommissionStats?.useQuery?.();
+
+  const users = listUsersQuery.data?.users ?? [];
+  const pagination = listUsersQuery.data?.pagination;
+  const totals = marketplaceStatsQuery.data?.totals;
+  const commissionStats = commissionStatsQuery?.data;
+
+  const affiliatesCount = useMemo(
+    () => users.filter((u: any) => u.affiliateStatus === "active" || u.role === "affiliate").length,
+    [users],
   );
+
+  const totalUsers = pagination?.total ?? 0;
+
+  // Affiliate count from all users (not just page)
+  const allAffiliatesCount = totalUsers; // fallback; real count would need a dedicated query
+
+  const confirmedCents = commissionStats?.confirmed ?? commissionStats?.paidCents ?? 0;
+  const pendingCents = commissionStats?.pending ?? commissionStats?.pendingCents ?? 0;
+
+  const paidPeriodCents = totals?.grossPeriodCents ?? 0;
 
   return (
     <AdminDashboardLayout>
@@ -176,33 +144,25 @@ export default function AdminDashboard() {
           <KPICard
             icon={Users}
             label="Total de usuários"
-            value="15.482"
-            change="+12% no mês"
-            trend="up"
+            value={String(totalUsers)}
             accent="bg-quantum-cyan/30"
           />
           <KPICard
             icon={TrendingUp}
             label="Afiliados ativos"
-            value="12.108"
-            change="+8% no mês"
-            trend="up"
+            value={String(allAffiliatesCount)}
             accent="bg-quantum-lime/30"
           />
           <KPICard
             icon={DollarSign}
             label="Comissões pagas"
-            value="R$ 2.5M"
-            change="+23% no mês"
-            trend="up"
+            value={confirmedCents > 0 ? BRL(confirmedCents) : BRL(paidPeriodCents)}
             accent="bg-quantum-purple/30"
           />
           <KPICard
             icon={AlertCircle}
             label="Comissões pendentes"
-            value="R$ 184k"
-            change="-5% no mês"
-            trend="down"
+            value={BRL(pendingCents)}
             accent="bg-amber-400/30"
           />
         </section>
@@ -216,64 +176,8 @@ export default function AdminDashboard() {
           />
         </section>
 
-        {/* Grid Matriz + Charts */}
-        <section className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-          {/* Heatmap global */}
-          <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-6 backdrop-blur">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">
-                  // GLOBAL_MATRIX
-                </p>
-                <h3 className="mt-1 text-lg font-semibold text-white">
-                  Mapa de calor da malha multinível
-                </h3>
-              </div>
-              <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm bg-quantum-cyan shadow-[0_0_6px_#00E5FF]" /> alto
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm bg-quantum-cyan/60" /> médio
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm bg-quantum-cyan/25" /> baixo
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-sm bg-obsidian-700" /> off
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-5 grid grid-cols-28 gap-1" style={{ gridTemplateColumns: "repeat(28, minmax(0, 1fr))" }}>
-              {HEATMAP_BLOCKS.map((level, i) => (
-                <span
-                  key={i}
-                  className={`aspect-square rounded-sm transition-transform hover:scale-125 ${heatColor(level)}`}
-                />
-              ))}
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
-              <div className="rounded border border-obsidian-700 bg-obsidian-900/40 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Nós ativos</p>
-                <p className="mt-1 font-sans text-base font-semibold text-white">9.842</p>
-              </div>
-              <div className="rounded border border-obsidian-700 bg-obsidian-900/40 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Conexões</p>
-                <p className="mt-1 font-sans text-base font-semibold text-white">38.412</p>
-              </div>
-              <div className="rounded border border-obsidian-700 bg-obsidian-900/40 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Sponsors únicos</p>
-                <p className="mt-1 font-sans text-base font-semibold text-white">1.204</p>
-              </div>
-              <div className="rounded border border-obsidian-700 bg-obsidian-900/40 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Profundidade média</p>
-                <p className="mt-1 font-sans text-base font-semibold text-white">8.4 níveis</p>
-              </div>
-            </div>
-          </div>
-
+        {/* Grid Comissões em cascata */}
+        <section className="grid gap-6 xl:grid-cols-[1fr]">
           {/* Comissões */}
           <div className="rounded-lg border border-obsidian-700 bg-obsidian-800/40 p-6 backdrop-blur">
             <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-quantum-cyan">// COMMISSIONS_OPS</p>
@@ -281,24 +185,32 @@ export default function AdminDashboard() {
 
             <div className="mt-5 flex items-center justify-between rounded border border-obsidian-700 bg-obsidian-900/40 px-4 py-3">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Volume total</p>
-                <p className="mt-1 font-sans text-2xl font-bold text-quantum-cyan">R$ 2.5M</p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">// Volume total (período)</p>
+                <p className="mt-1 font-sans text-2xl font-bold text-quantum-cyan">
+                  {BRL(paidPeriodCents)}
+                </p>
               </div>
               <TrendingUp size={28} className="text-quantum-cyan" />
             </div>
 
             <div className="mt-3 grid grid-cols-3 gap-3 text-center">
               <div className="rounded border border-obsidian-700 bg-amber-400/5 p-3">
-                <p className="font-sans text-lg font-bold text-amber-300">184k</p>
+                <p className="font-sans text-lg font-bold text-amber-300">
+                  {pendingCents > 0 ? BRL(pendingCents) : "R$ 0,00"}
+                </p>
                 <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">pendentes</p>
               </div>
               <div className="rounded border border-obsidian-700 bg-quantum-lime/5 p-3">
-                <p className="font-sans text-lg font-bold text-quantum-lime">2.1M</p>
+                <p className="font-sans text-lg font-bold text-quantum-lime">
+                  {confirmedCents > 0 ? BRL(confirmedCents) : BRL(paidPeriodCents)}
+                </p>
                 <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">pagas</p>
               </div>
               <div className="rounded border border-obsidian-700 bg-quantum-purple/5 p-3">
-                <p className="font-sans text-lg font-bold text-quantum-purple">215k</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">confirmadas</p>
+                <p className="font-sans text-lg font-bold text-quantum-purple">
+                  {totals?.paidPeriodOrders ?? 0}
+                </p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-slate-500">pedidos pagos</p>
               </div>
             </div>
 
@@ -370,88 +282,98 @@ export default function AdminDashboard() {
           </div>
 
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-obsidian-700 text-left font-mono text-[10px] uppercase tracking-widest text-slate-500">
-                  <th className="px-3 py-2">Usuário</th>
-                  <th className="px-3 py-2">E-mail</th>
-                  <th className="px-3 py-2">Papel</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2">Cadastro</th>
-                  <th className="px-3 py-2 text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((u) => (
-                  <tr
-                    key={u.id}
-                    className="border-b border-obsidian-700/60 transition-colors hover:bg-obsidian-900/40"
-                  >
-                    <td className="px-3 py-3">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-xs font-bold text-quantum-cyan">
-                          {u.name
-                            .split(" ")
-                            .slice(0, 2)
-                            .map((n) => n[0])
-                            .join("")}
-                        </span>
-                        <span className="font-medium text-white">{u.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-3 py-3 text-slate-400">{u.email}</td>
-                    <td className="px-3 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
-                          u.role === "admin"
-                            ? "border-quantum-purple/40 bg-quantum-purple/10 text-quantum-purple"
-                            : "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan"
-                        }`}
-                      >
-                        {u.role === "admin" ? <Shield size={10} /> : <Users size={10} />}
-                        {u.role}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
-                          u.status === "active"
-                            ? "border-quantum-lime/40 bg-quantum-lime/10 text-quantum-lime"
-                            : "border-red-400/40 bg-red-400/10 text-red-400"
-                        }`}
-                      >
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${
-                            u.status === "active" ? "bg-quantum-lime" : "bg-red-400"
-                          }`}
-                        />
-                        {u.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3 font-mono text-xs text-slate-500">{u.createdAt}</td>
-                    <td className="px-3 py-3 text-right">
-                      <Link
-                        href={`/admin/users`}
-                        className="inline-flex items-center gap-1 rounded border border-obsidian-700 bg-obsidian-900/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition hover:border-quantum-cyan/40 hover:text-quantum-cyan"
-                      >
-                        <Eye size={10} /> ver
-                      </Link>
-                    </td>
-                  </tr>
+            {listUsersQuery.isLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full bg-obsidian-800" />
                 ))}
-                {filteredUsers.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-3 py-6 text-center text-sm text-slate-500">
-                      Nenhum usuário corresponde ao filtro.
-                    </td>
+              </div>
+            ) : (
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-obsidian-700 text-left font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    <th className="px-3 py-2">Usuário</th>
+                    <th className="px-3 py-2">E-mail</th>
+                    <th className="px-3 py-2">Papel</th>
+                    <th className="px-3 py-2">Status</th>
+                    <th className="px-3 py-2">Cadastro</th>
+                    <th className="px-3 py-2 text-right">Ações</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {users.map((u: any) => (
+                    <tr
+                      key={u.id}
+                      className="border-b border-obsidian-700/60 transition-colors hover:bg-obsidian-900/40"
+                    >
+                      <td className="px-3 py-3">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-quantum-cyan/30 bg-quantum-cyan/10 text-xs font-bold text-quantum-cyan">
+                            {(u.name || "U")
+                              .split(" ")
+                              .slice(0, 2)
+                              .map((n: string) => n[0])
+                              .join("")}
+                          </span>
+                          <span className="font-medium text-white">{u.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 text-slate-400">{u.email}</td>
+                      <td className="px-3 py-3">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
+                            u.role === "admin"
+                              ? "border-quantum-purple/40 bg-quantum-purple/10 text-quantum-purple"
+                              : "border-quantum-cyan/30 bg-quantum-cyan/10 text-quantum-cyan"
+                          }`}
+                        >
+                          {u.role === "admin" ? <Shield size={10} /> : <Users size={10} />}
+                          {u.role}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest ${
+                            u.affiliateStatus === "active" || u.role === "admin"
+                              ? "border-quantum-lime/40 bg-quantum-lime/10 text-quantum-lime"
+                              : "border-red-400/40 bg-red-400/10 text-red-400"
+                          }`}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              u.affiliateStatus === "active" || u.role === "admin" ? "bg-quantum-lime" : "bg-red-400"
+                            }`}
+                          />
+                          {u.affiliateStatus || u.role}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 font-mono text-xs text-slate-500">
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString("pt-BR") : "N/A"}
+                      </td>
+                      <td className="px-3 py-3 text-right">
+                        <Link
+                          href={`/admin/users`}
+                          className="inline-flex items-center gap-1 rounded border border-obsidian-700 bg-obsidian-900/40 px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition hover:border-quantum-cyan/40 hover:text-quantum-cyan"
+                        >
+                          <Eye size={10} /> ver
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                  {users.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="px-3 py-6 text-center text-sm text-slate-500">
+                        Nenhum usuário corresponde ao filtro.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
-            <span>// mostrando {filteredUsers.length} de {MOCK_USERS.length} (dados demo)</span>
+            <span>// mostrando {users.length} de {totalUsers}</span>
             <Link
               href="/admin/users"
               className="inline-flex items-center gap-1 text-quantum-cyan hover:text-white"

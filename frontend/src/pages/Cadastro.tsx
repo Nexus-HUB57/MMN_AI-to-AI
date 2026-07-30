@@ -106,6 +106,29 @@ export default function Cadastro() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const signUpMutation = trpc.auth.signUp.useMutation({
+    onSuccess: (data: any) => {
+      loginAsDemo("affiliate", {
+        id: String(data?.userId ?? ""),
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        cpf: formData.cpf.replace(/\D/g, ""),
+      }).then(() => {
+        ensureAffiliateMarketplaceProfile({
+          id: String(data?.userId ?? ""),
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          cpf: formData.cpf.replace(/\D/g, ""),
+        });
+        setLocation("/marketplaces");
+      });
+    },
+    onError: (error) => {
+      setErrorMessage(error.message || "Erro ao concluir cadastro.");
+      setIsSubmitting(false);
+    },
+  });
+
   const updateField = <K extends keyof FormState>(field: K, value: FormState[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrorMessage(null);
@@ -160,7 +183,7 @@ export default function Cadastro() {
     setStep((current) => (current > 1 ? ((current - 1) as 1 | 2 | 3) : current));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const error = validateStep(3);
     if (error) {
       setErrorMessage(error);
@@ -168,26 +191,13 @@ export default function Cadastro() {
     }
     setIsSubmitting(true);
     setErrorMessage(null);
-    try {
-      const user = await loginAsDemo("affiliate", {
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        cpf: formData.cpf.replace(/\D/g, ""),
-      });
-      ensureAffiliateMarketplaceProfile({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        cpf: formData.cpf.replace(/\D/g, ""),
-      });
-      setLocation("/marketplaces");
-    } catch (submitError) {
-      setErrorMessage(
-        submitError instanceof Error ? submitError.message : "Erro ao concluir cadastro.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    signUpMutation.mutate({
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+      sponsorCode: formData.sponsorCode || undefined,
+      cpf: formData.cpf.replace(/\D/g, ""),
+    });
   };
 
   const passwordStrength = (() => {
@@ -513,11 +523,11 @@ export default function Cadastro() {
                 ) : (
                   <Button
                     onClick={handleSubmit}
-                    disabled={isSubmitting || !formData.acceptTerms}
+                    disabled={signUpMutation.isPending || !formData.acceptTerms}
                     className="gradient-btn"
                   >
                     <UserPlus className="h-4 w-4 mr-1" />
-                    {isSubmitting ? "Criando conta..." : "Concluir cadastro"}
+                    {signUpMutation.isPending ? "Criando conta..." : "Concluir cadastro"}
                   </Button>
                 )}
               </div>

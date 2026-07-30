@@ -64,7 +64,12 @@ export default function AdminMaterials() {
   });
 
   const statsQuery = trpc.materials.getStats.useQuery();
-  const categoriesQuery = trpc.materials.getCategories.useQuery();
+
+  const [categories] = useState([
+    { id: 'promocao', name: 'Promoção' },
+    { id: 'educacao', name: 'Educação' },
+    { id: 'vendas', name: 'Vendas' },
+  ]);
 
   const createMutation = trpc.materials.create.useMutation({
     onSuccess: () => {
@@ -76,7 +81,7 @@ export default function AdminMaterials() {
         title: "",
         description: "",
         type: "banner",
-        category: categoriesQuery.data?.categories?.[0]?.id || "promocao",
+        category: categories[0]?.id || "promocao",
         url: "",
         status: "draft",
       });
@@ -112,7 +117,6 @@ export default function AdminMaterials() {
 
   const materials = materialsQuery.data?.materials || [];
   const pagination = materialsQuery.data?.pagination;
-  const categories = categoriesQuery.data?.categories || [];
 
   const visibleSummary = useMemo(
     () => ({
@@ -170,7 +174,7 @@ export default function AdminMaterials() {
               onClick={() => {
                 materialsQuery.refetch();
                 statsQuery.refetch();
-                categoriesQuery.refetch();
+                // categories are local state, no refetch needed
               }}
             >
               <RefreshCw size={16} className="mr-2" />

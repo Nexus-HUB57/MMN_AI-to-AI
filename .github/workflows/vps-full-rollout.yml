@@ -1,0 +1,168 @@
+# =============================================================================
+# VPS Full Rollout (one-shot)
+# =============================================================================
+# Builda backend no runner, envia backend/dist/** + backend/package.json
+# para /var/www/oneverso/current/backend/, mata orfaos, rebinda PM2 com o
+# novo bundle e valida que /api/health passa a servir o commit atual.
+# Nao mexe no .env (imutavel; ja contem MP).
+
+name: vps-full-rollout
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: production-rollout
+  cancel-in-progress: false
+
+jobs:
+  rollout:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install workspaces
+        run: |
+          npm install --workspace backend --workspace frontend \
+            --legacy-peer-deps --no-audit --no-fund
+
+      - name: Build backend (api + workers)
+        run: npm --workspace backend run build:production
+
+      - name: Sanity check dist
+        run: |
+          ls -la backend/dist/
+          wc -l backend/dist/index.js
+          head -3 backend/dist/index.js
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Ship dist to VPS
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          ssh -p 22022 root@143.95.213.237 "mkdir -p /var/www/oneverso/current/backend/dist"
+          rsync -avz --delete \
+            -e "ssh -p 22022" \
+            backend/dist/ \
+            root@143.95.213.237:/var/www/oneverso/current/backend/dist/
+          rsync -avz \
+            -e "ssh -p 22022" \
+            backend/package.json \
+            root@143.95.213.237:/var/www/oneverso/current/backend/package.json
+          # marcador de commit (o backend le _fallbackSha de ../../.git-commit / etc.)
+          echo -n "${EXPECTED_COMMIT}" | ssh -p 22022 root@143.95.213.237 \
+            "cat > /var/www/oneverso/current/.git-commit && ls -la /var/www/oneverso/current/.git-commit"
+
+      - name: Rebind PM2 with new bundle
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          echo "=== dist head on VPS ==="
+          wc -l backend/dist/index.js || true
+          md5sum backend/dist/index.js || true
+
+          echo "=== stop mmn-api ==="
+          pm2 stop mmn-api 2>&1 | tail -5
+          pm2 delete mmn-api 2>&1 | tail -5
+
+          echo "=== kill orphans on :3000/:3001 (real node exe) ==="
+          for port in 3000 3001; do
+            for pid in $(ss -lntp "sport = :${port}" 2>/dev/null | awk -F 'pid=' 'NR>1{split($2,a,","); print a[1]}' | sort -u); do
+              [ -n "$pid" ] || continue
+              exe=$(readlink -f "/proc/${pid}/exe" 2>/dev/null || echo "")
+              full=$(tr '\0' ' ' < /proc/${pid}/cmdline 2>/dev/null | head -c 200)
+              echo "port=${port} pid=${pid} exe=${exe} args=${full}"
+              case "$exe" in
+                */node|*/nodejs)
+                  kill -TERM "$pid" 2>&1 && echo "SIGTERM ${pid}"
+                  ;;
+                *)
+                  case "$full" in
+                    *"/backend/dist/index.js"*|node*)
+                      kill -TERM "$pid" 2>&1 && echo "SIGTERM ${pid} (cmdline)"
+                      ;;
+                  esac
+                  ;;
+              esac
+            done
+          done
+          sleep 4
+          command -v fuser >/dev/null && {
+            fuser -k -KILL 3000/tcp 2>&1 || true
+            fuser -k -KILL 3001/tcp 2>&1 || true
+          }
+          sleep 2
+
+          echo "=== sockets AFTER kill ==="
+          ss -lntp 'sport = :3000 or sport = :3001' 2>&1 || true
+
+          echo "=== pm2 start mmn-api ==="
+          pm2 flush mmn-api 2>&1 | tail -3 || true
+          pm2 start ecosystem.config.js --only mmn-api --update-env 2>&1 | tail -25
+          sleep 10
+          pm2 save 2>&1 | tail -3 || true
+
+          echo "=== pm2 status ==="
+          pm2 status 2>&1 | tail -20
+
+          echo "=== local health (inside VPS) ==="
+          for i in 1 2 3 4 5 6 7 8; do
+            body=$(curl -sS -m 5 http://127.0.0.1:3001/api/health 2>&1)
+            echo "local_try_${i}: ${body}"
+            case "$body" in *"\"ok\":true"*) break ;; esac
+            sleep 3
+          done
+          echo "=== END ==="
+          REMOTE
+
+      - name: Public healthcheck (must serve new commit)
+        env:
+          EXPECTED_COMMIT: ${{ github.sha }}
+        run: |
+          short=$(printf '%s' "$EXPECTED_COMMIT" | cut -c1-8)
+          echo "expected_commit_short=$short"
+          ok=0
+          for i in $(seq 1 30); do
+            body=$(curl -sS -m 15 https://oneverso.com.br/api/health || echo '{}')
+            commit=$(printf '%s' "$body" | python3 -c 'import sys,json;
+            try:
+              print(json.loads(sys.stdin.read() or "{}").get("commit",""))
+            except Exception:
+              print("")' 2>/dev/null)
+            echo "poll:$i observed_commit=$commit body=$body"
+            case "$commit" in
+              "$short"*|"$EXPECTED_COMMIT"*)
+                echo "MATCH commit=$commit"
+                ok=1
+                break
+                ;;
+            esac
+            sleep 5
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::/api/health ainda nao serve commit $short."
+            exit 1
+          fi
+          echo
+          echo "=== pix healthcheck ==="
+          curl -sS -m 15 https://oneverso.com.br/api/health/pix || true

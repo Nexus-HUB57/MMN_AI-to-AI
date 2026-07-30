@@ -63,27 +63,38 @@ jobs:
       - name: Apply pending migrations
         env:
           DEPLOY_DATABASE_URL: ${{ secrets.DEPLOY_DATABASE_URL }}
+          MARKETPLACE_PIX_KEY: ${{ secrets.MARKETPLACE_PIX_KEY }}
+          MARKETPLACE_PIX_RECEIVER_NAME: ${{ secrets.MARKETPLACE_PIX_RECEIVER_NAME }}
+          MARKETPLACE_PIX_RECEIVER_CITY: ${{ secrets.MARKETPLACE_PIX_RECEIVER_CITY }}
         run: |
-          ssh -p 22022 root@143.95.213.237 "
-            cd /var/www/oneverso/current
-            if [ -f .env ]; then set -a; source .env; set +a; fi
-            DB_URL=\${DATABASE_URL:-\${DEPLOY_DATABASE_URL:-}}
-            if [ -n \"\$DB_URL\" ]; then
-              for f in database/migrations/*.sql; do
-                echo \"Applying \$f ...\" | head -1
-                psql \"\$DB_URL\" -v ON_ERROR_STOP=1 -f \"\$f\" 2>&1 | tail -3
-              done
-            else
-              echo 'WARNING: DATABASE_URL not available, skipping migrations'
-            fi
-            pm2 restart mmn-api --update-env 2>/dev/null || pm2 start ecosystem.config.js --env production
-            pm2 save 2>/dev/null || true
-          "
+          PIX_KEY_B64=$(printf '%s' "$MARKETPLACE_PIX_KEY" | base64 -w0)
+          PIX_NAME_B64=$(printf '%s' "$MARKETPLACE_PIX_RECEIVER_NAME" | base64 -w0)
+          PIX_CITY_B64=$(printf '%s' "$MARKETPLACE_PIX_RECEIVER_CITY" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 "cd /var/www/oneverso/current && \
+            touch .env && \
+            grep -Ev '^(MARKETPLACE_PIX_KEY|MARKETPLACE_PIX_RECEIVER_NAME|MARKETPLACE_PIX_RECEIVER_CITY)=' .env > .env.tmp || true && \
+            mv .env.tmp .env && \
+            printf '%s\n' \
+              \"MARKETPLACE_PIX_KEY=\$(printf '%s' '${PIX_KEY_B64}' | base64 -d)\" \
+              \"MARKETPLACE_PIX_RECEIVER_NAME=\$(printf '%s' '${PIX_NAME_B64}' | base64 -d)\" \
+              \"MARKETPLACE_PIX_RECEIVER_CITY=\$(printf '%s' '${PIX_CITY_B64}' | base64 -d)\" >> .env && \
+            if [ -f .env ]; then set -a; . ./.env; set +a; fi && \
+            DB_URL=\${DATABASE_URL:-\${DEPLOY_DATABASE_URL:-}} && \
+            if [ -n \"\$DB_URL\" ]; then \
+              for f in database/migrations/*.sql; do \
+                echo \"Applying \$f ...\" | head -1; \
+                psql \"\$DB_URL\" -v ON_ERROR_STOP=1 -f \"\$f\" 2>&1 | tail -3; \
+              done; \
+            else \
+              echo 'WARNING: DATABASE_URL not available, skipping migrations'; \
+            fi && \
+            pm2 restart mmn-api --update-env 2>/dev/null || pm2 start ecosystem.config.js --env production && \
+            pm2 save 2>/dev/null || true"
 
       - name: Healthcheck
         run: |
           sleep 8
-          for path in /api/health; do
+          for path in /api/health /api/health/pix; do
             code=$(curl -sS -o /dev/null -w '%{http_code}' -m 20 "https://oneverso.com.br${path}" || echo 000)
             echo "  $path -> HTTP $code"
           done

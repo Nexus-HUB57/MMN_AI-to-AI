@@ -1,0 +1,141 @@
+# =============================================================================
+# VPS MP Final v4 — garante persistencia da linha MERCADO_PAGO_WEBHOOK_SECRET
+# no .env do VPS, valida hash em runtime, e so entao valida smoke via log.
+# =============================================================================
+
+name: vps-mp-final-v4
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-final-v4
+  cancel-in-progress: false
+
+jobs:
+  final:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Compute repo-secret hash
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio no repo"; exit 1; }
+          h=$(printf '%s' "$MP_SECRET" | sha256sum | awk '{print $1}')
+          echo "$h" > /tmp/repo_hash
+          echo "repo_hash=$h len=${#MP_SECRET}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Persist + validate runtime + smoke
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          REPO_HASH=$(cat /tmp/repo_hash)
+          MP_B64=$(printf '%s' "$MP_SECRET" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 REPO_HASH="$REPO_HASH" MP_B64="$MP_B64" 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          echo "=== BEFORE: lsattr .env ==="
+          lsattr .env 2>&1
+          echo "=== BEFORE: linha presente? ==="
+          grep -c '^MERCADO_PAGO_WEBHOOK_SECRET=' .env 2>/dev/null || echo 0
+
+          echo
+          echo "=== chattr -i .env ==="
+          chattr -i .env 2>&1 || true
+          lsattr .env 2>&1
+
+          echo "=== reescreve .env preservando outras linhas ==="
+          # remove qualquer versao antiga da linha, depois anexa a canonica
+          grep -v '^MERCADO_PAGO_WEBHOOK_SECRET=' .env > .env.new 2>/dev/null || : > .env.new
+          NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
+          printf 'MERCADO_PAGO_WEBHOOK_SECRET=%s\n' "$NEW_VAL" >> .env.new
+          mv .env.new .env
+          chown root:root .env
+          chmod 600 .env
+
+          echo "=== chattr +i .env ==="
+          chattr +i .env 2>&1 || true
+          lsattr .env 2>&1
+
+          echo
+          echo "=== confirma que a linha esta la e o hash bate com repo ==="
+          LINE_VAL=$(grep -E '^MERCADO_PAGO_WEBHOOK_SECRET=' .env | head -1 | sed 's/^MERCADO_PAGO_WEBHOOK_SECRET=//' | tr -d '"')
+          if [ -z "$LINE_VAL" ]; then
+            echo "::error::linha ausente apos write"; exit 1
+          fi
+          ENV_HASH=$(printf '%s' "$LINE_VAL" | sha256sum | awk '{print $1}')
+          echo "env_hash=$ENV_HASH len=${#LINE_VAL}"
+          echo "repo_hash=$REPO_HASH"
+          if [ "$ENV_HASH" != "$REPO_HASH" ]; then
+            echo "::error::env_hash != repo_hash apos write"; exit 1
+          fi
+          echo "ENV_WRITE_OK"
+
+          echo
+          echo "=== pm2 restart mmn-api --update-env ==="
+          pm2 restart mmn-api --update-env 2>&1 | tail -20
+          sleep 8
+          pm2 save 2>&1 | tail -3
+
+          echo
+          echo "=== runtime hash em /proc/<pid>/environ ==="
+          PID=$(pm2 jlist 2>/dev/null | python3 -c 'import sys,json; [print(p["pid"]) for p in json.load(sys.stdin) if p["name"]=="mmn-api" and p.get("pid")]' 2>/dev/null | head -1)
+          echo "mmn-api pid=$PID"
+          if [ -z "$PID" ] || [ ! -r "/proc/$PID/environ" ]; then
+            echo "::error::pid indisponivel apos restart"; exit 1
+          fi
+          RUN_VAL=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          if [ -z "$RUN_VAL" ]; then
+            echo "::error::runtime env ainda sem MERCADO_PAGO_WEBHOOK_SECRET"; exit 1
+          fi
+          RUN_HASH=$(printf '%s' "$RUN_VAL" | sha256sum | awk '{print $1}')
+          echo "runtime_hash=$RUN_HASH len=${#RUN_VAL}"
+          if [ "$RUN_HASH" != "$REPO_HASH" ]; then
+            echo "::error::runtime_hash != repo_hash"; exit 1
+          fi
+          echo "RUNTIME_MATCH_OK"
+
+          echo
+          echo "=== smoke local assinado ==="
+          TS=$(date +%s)
+          DID="v4-$(date +%s)"
+          RID="v4-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+          MANIFEST="id:${DID};request-id:${RID};ts:${TS};"
+          SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$RUN_VAL" -hex | awk '{print $2}')
+          echo "DID=$DID RID=$RID TS=$TS"
+          echo "MANIFEST=$MANIFEST"
+          echo "SIG_len=${#SIG}"
+
+          URL="http://127.0.0.1:3001/api/webhooks/mercadopago?data.id=${DID}&type=payment"
+          curl -sS -o /tmp/loc.out -w "http=%{http_code}\n" -m 10 \
+            -X POST -H 'Content-Type: application/json' \
+            -H "x-signature: ts=${TS},v1=${SIG}" \
+            -H "x-request-id: ${RID}" \
+            --data "{\"action\":\"payment.updated\",\"data\":{\"id\":\"${DID}\"},\"type\":\"payment\"}" \
+            "$URL"
+          echo "response_body:"; cat /tmp/loc.out; echo
+
+          sleep 3
+          echo
+          echo "=== pm2 logs mmn-api (30 linhas, filtro v4-) ==="
+          pm2 logs mmn-api --lines 30 --nostream 2>&1 | tail -80 \
+            | grep -iE 'mp-webhook|reason|manifest|hash_mismatch|v4-|aceito|"ok"' \
+            | tail -30
+
+          echo
+          echo "=== END ==="
+          REMOTE

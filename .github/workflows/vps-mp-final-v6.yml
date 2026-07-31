@@ -1,0 +1,144 @@
+# =============================================================================
+# VPS MP Final v5 — recria o processo mmn-api no PM2 para forcar releitura do
+# .env, valida o hash do segredo em runtime e executa smoke assinado sem rejeicao.
+# =============================================================================
+
+name: vps-mp-final-v6
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-final-v6
+  cancel-in-progress: false
+
+jobs:
+  final:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Compute repo-secret hash
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio no repo"; exit 1; }
+          h=$(printf '%s' "$MP_SECRET" | sha256sum | awk '{print $1}')
+          echo "$h" > /tmp/repo_hash
+          echo "repo_hash=$h len=${#MP_SECRET}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Persist + fresh start + validate + smoke
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          REPO_HASH=$(cat /tmp/repo_hash)
+          MP_B64=$(printf '%s' "$MP_SECRET" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 REPO_HASH="$REPO_HASH" MP_B64="$MP_B64" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          echo "=== ensure .env secret persisted ==="
+          lsattr .env 2>&1 || true
+          chattr -i .env 2>&1 || true
+          grep -v '^MERCADO_PAGO_WEBHOOK_SECRET=' .env > .env.new 2>/dev/null || : > .env.new
+          NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
+          printf 'MERCADO_PAGO_WEBHOOK_SECRET=%s\n' "$NEW_VAL" >> .env.new
+          mv .env.new .env
+          chown root:root .env
+          chmod 600 .env
+          chattr +i .env 2>&1 || true
+          lsattr .env 2>&1 || true
+
+          LINE_VAL=$(grep -E '^MERCADO_PAGO_WEBHOOK_SECRET=' .env | head -1 | sed 's/^MERCADO_PAGO_WEBHOOK_SECRET=//' | tr -d '"')
+          [ -n "$LINE_VAL" ] || { echo "::error::linha ausente apos write"; exit 1; }
+          ENV_HASH=$(printf '%s' "$LINE_VAL" | sha256sum | awk '{print $1}')
+          echo "env_hash=$ENV_HASH repo_hash=$REPO_HASH"
+          [ "$ENV_HASH" = "$REPO_HASH" ] || { echo "::error::env_hash != repo_hash"; exit 1; }
+
+          echo
+          echo "=== hard reload pm2 daemon + fresh ecosystem load ==="
+          COMMIT_SHA=$(cat backend/.git-commit 2>/dev/null || true)
+          pm2 save 2>/dev/null || true
+          pm2 kill 2>/dev/null || true
+          sleep 3
+          COMMIT_SHA="$COMMIT_SHA" pm2 start ecosystem.config.js
+          sleep 12
+          pm2 save 2>&1 | tail -3
+          pm2 jlist > /tmp/pm2.jlist.json
+          python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); [print({'name':p.get('name'),'pid':p.get('pid'),'status':(p.get('pm2_env') or {}).get('status'),'instances':(p.get('pm2_env') or {}).get('instances')}) for p in arr if p.get('name')=='mmn-api']"
+
+          PID=$(python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); print(next((p['pid'] for p in arr if p.get('name')=='mmn-api' and p.get('pid')), ''))")
+          [ -n "$PID" ] || { echo "::error::pid indisponivel apos start"; exit 1; }
+          [ -r "/proc/$PID/environ" ] || { echo "::error::/proc/$PID/environ indisponivel"; exit 1; }
+          RUN_VAL=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          [ -n "$RUN_VAL" ] || { echo "::error::runtime env ainda sem MERCADO_PAGO_WEBHOOK_SECRET"; exit 1; }
+          RUN_HASH=$(printf '%s' "$RUN_VAL" | sha256sum | awk '{print $1}')
+          echo "runtime_hash=$RUN_HASH repo_hash=$REPO_HASH pid=$PID"
+          [ "$RUN_HASH" = "$REPO_HASH" ] || { echo "::error::runtime_hash != repo_hash"; exit 1; }
+
+          echo
+          echo "=== flush logs before smoke ==="
+          mkdir -p logs
+          : > logs/api-out.log || true
+          : > logs/api-error.log || true
+          pm2 flush mmn-api 2>/dev/null || true
+          sleep 1
+
+          echo
+          echo "=== signed smoke local + public ==="
+          TS=$(date +%s)
+          DID="v6-$(date +%s)"
+          RID="v6-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+          MANIFEST="id:${DID};request-id:${RID};ts:${TS};"
+          SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$RUN_VAL" -hex | awk '{print $2}')
+          BODY=$(printf '{"action":"payment.updated","data":{"id":"%s"},"type":"payment"}' "$DID")
+          LURL="http://127.0.0.1:3001/api/webhooks/mercadopago?data.id=${DID}&type=payment"
+          PURL="https://oneverso.com.br/api/webhooks/mercadopago?data.id=${DID}&type=payment"
+          echo "DID=$DID"
+          echo "RID=$RID"
+          echo "MANIFEST=$MANIFEST"
+
+          curl -sS -o /tmp/local.out -w 'local_http=%{http_code}\n' -m 15 \
+            -X POST -H 'Content-Type: application/json' \
+            -H "x-signature: ts=${TS},v1=${SIG}" \
+            -H "x-request-id: ${RID}" \
+            --data "$BODY" \
+            "$LURL"
+          cat /tmp/local.out; echo
+
+          curl -sS -o /tmp/public.out -w 'public_http=%{http_code}\n' -m 20 \
+            -X POST -H 'Content-Type: application/json' \
+            -H "x-signature: ts=${TS},v1=${SIG}" \
+            -H "x-request-id: ${RID}" \
+            --data "$BODY" \
+            "$PURL"
+          cat /tmp/public.out; echo
+
+          sleep 4
+          echo
+          echo "=== recent api logs ==="
+          tail -n 120 logs/api-out.log logs/api-error.log 2>/dev/null || true
+
+          if grep -qiE 'hash_mismatch|secret_not_configured|rejeitado|rejected' logs/api-out.log logs/api-error.log 2>/dev/null; then
+            echo "::error::smoke gerou rejeicao de assinatura"; exit 1
+          fi
+
+          echo
+          echo "=== public health ==="
+          curl -fsS https://oneverso.com.br/api/health
+          echo
+          curl -fsS https://oneverso.com.br/api/health/pix
+          echo
+          echo "V6_OK"
+          REMOTE

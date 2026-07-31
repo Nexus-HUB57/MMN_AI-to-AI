@@ -1,0 +1,123 @@
+# =============================================================================
+# VPS MP Manifest Doctor v2 — extrai literal buildMercadoPagoManifest +
+# parseMercadoPagoSignature do dist/index.js, e reproduz o HMAC no proprio
+# VPS com o segredo em memoria do processo mmn-api.
+# =============================================================================
+
+name: vps-mp-manifest-doctor-v2
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-manifest-doctor-v2
+  cancel-in-progress: false
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Extract validator + reproduce HMAC on VPS
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          FILE=/var/www/oneverso/current/backend/dist/index.js
+
+          echo "=== buildMercadoPagoManifest (funcao inteira) ==="
+          LN=$(grep -nE 'function buildMercadoPagoManifest' "$FILE" | head -1 | awk -F: '{print $1}')
+          echo "found_at_line=$LN"
+          if [ -n "$LN" ]; then
+            END=$(awk -v s="$LN" 'NR>=s{print NR": "$0; if(NR>s && $0 ~ /^\}/){exit}}' "$FILE" | tail -1 | awk -F: '{print $1}')
+            [ -z "$END" ] && END=$(( LN + 60 ))
+            sed -n "${LN},${END}p" "$FILE"
+          fi
+
+          echo
+          echo "=== parseMercadoPagoSignature (funcao inteira) ==="
+          LN2=$(grep -nE 'function parseMercadoPagoSignature' "$FILE" | head -1 | awk -F: '{print $1}')
+          echo "found_at_line=$LN2"
+          if [ -n "$LN2" ]; then
+            END2=$(awk -v s="$LN2" 'NR>=s{print NR": "$0; if(NR>s && $0 ~ /^\}/){exit}}' "$FILE" | tail -1 | awk -F: '{print $1}')
+            [ -z "$END2" ] && END2=$(( LN2 + 40 ))
+            sed -n "${LN2},${END2}p" "$FILE"
+          fi
+
+          echo
+          echo "=== reproducao do HMAC via Node dentro do VPS ==="
+          PID=$(pm2 jlist 2>/dev/null | python3 -c 'import sys,json; [print(p["pid"]) for p in json.load(sys.stdin) if p["name"]=="mmn-api" and p.get("pid")]' 2>/dev/null | head -1)
+          echo "mmn-api pid=$PID"
+          if [ -z "$PID" ] || [ ! -r "/proc/$PID/environ" ]; then
+            echo "sem acesso a /proc/$PID/environ"
+            exit 0
+          fi
+          # extrai secret do proprio processo (nao vaza no log)
+          SECRET=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          if [ -z "$SECRET" ]; then
+            echo "MERCADO_PAGO_WEBHOOK_SECRET ausente no processo"
+            exit 0
+          fi
+          echo "secret_len=${#SECRET} sha256=$(printf '%s' "$SECRET" | sha256sum | awk '{print $1}')"
+
+          TS=1785507000
+          DID="repro-1785507000"
+          RID="repro-abc"
+          # tenta 5 variantes de manifesto e imprime o hash de cada uma
+          cat >/tmp/hmac_repro.js <<'JS'
+          const crypto = require('crypto');
+          const secret = process.env.SECRET;
+          const ts = process.env.TS;
+          const did = process.env.DID;
+          const rid = process.env.RID;
+          const variants = {
+            "V1 id;request-id;ts;":     `id:${did};request-id:${rid};ts:${ts};`,
+            "V2 sem id":                `request-id:${rid};ts:${ts};`,
+            "V3 sem trailing ;":        `id:${did};request-id:${rid};ts:${ts}`,
+            "V4 id-first no ;":         `id:${did};request-id:${rid};ts:${ts};`,
+            "V5 raw concat":            `${did}${rid}${ts}`,
+            "V6 mp docs":               `id:${did};request-id:${rid};ts:${ts};`,
+            "V7 url encoded ':'":       `id%3A${did}%3Brequest-id%3A${rid}%3Bts%3A${ts}%3B`,
+            "V8 space sep":             `id: ${did}; request-id: ${rid}; ts: ${ts};`,
+            "V9 no colon":              `id=${did};request-id=${rid};ts=${ts};`,
+          };
+          for (const [name, m] of Object.entries(variants)) {
+            const h = crypto.createHmac('sha256', secret).update(m).digest('hex');
+            console.log(`variant "${name}" manifest=${JSON.stringify(m)} hmac=${h}`);
+          }
+          JS
+          SECRET="$SECRET" TS="$TS" DID="$DID" RID="$RID" node /tmp/hmac_repro.js || true
+
+          echo
+          echo "=== agora dispara request assinada com V1 e captura reason no proximo log ==="
+          # calcula V1 e envia local
+          V1SIG=$(SECRET="$SECRET" TS="$TS" DID="$DID" RID="$RID" node -e '
+            const c=require("crypto"); const s=process.env.SECRET;
+            const m=`id:${process.env.DID};request-id:${process.env.RID};ts:${process.env.TS};`;
+            process.stdout.write(c.createHmac("sha256",s).update(m).digest("hex"));
+          ')
+          echo "V1_sig=$V1SIG"
+          curl -sS -o /tmp/loc.out -w 'local_http=%{http_code}\n' -m 10 \
+            -X POST -H 'Content-Type: application/json' \
+            -H "x-signature: ts=${TS},v1=${V1SIG}" \
+            -H "x-request-id: ${RID}" \
+            --data '{"action":"payment.updated","data":{"id":"'"${DID}"'"},"type":"payment"}' \
+            "http://127.0.0.1:3001/api/webhooks/mercadopago?data.id=${DID}&type=payment"
+          echo "response_body:"; cat /tmp/loc.out
+          echo
+          sleep 2
+          echo "=== pm2 logs mmn-api ultimos 20 filtrados ==="
+          pm2 logs mmn-api --lines 20 --nostream 2>&1 | tail -60 \
+            | grep -iE 'mp-webhook|reason|manifest|hash_mismatch|repro-|aceito|ok' \
+            | tail -30
+
+          echo "=== END ==="
+          REMOTE

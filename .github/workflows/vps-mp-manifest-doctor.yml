@@ -1,0 +1,126 @@
+# =============================================================================
+# VPS MP Manifest Doctor — evidencia bruta do manifesto HMAC em runtime.
+# =============================================================================
+# 1) Extrai literal do dist/index.js o bloco de validacao HMAC.
+# 2) Enumera todas as env vars *MERCADO*/*WEBHOOK*/*HMAC* do processo mmn-api
+#    e imprime hash SHA-256 (nunca imprime valor).
+# 3) strace -e trace=write no pid mmn-api por 25s, em paralelo dispara um smoke
+#    assinado; procura pela string 'manifest' nas syscalls write para revelar
+#    o manifesto real calculado pelo backend.
+# 4) Puxa pm2 logs pos-teste filtrando 'hash_mismatch' e o marcador do smoke.
+
+name: vps-mp-manifest-doctor
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-manifest-doctor
+  cancel-in-progress: false
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Compute repo-secret hash
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio"; exit 1; }
+          h=$(printf '%s' "$MP_SECRET" | sha256sum | awk '{print $1}')
+          echo "$h" > /tmp/repo_secret_sha256
+          echo "repo_secret_sha256=$h len=${#MP_SECRET}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Extract validator source + env fingerprint
+        run: |
+          REPO_HASH=$(cat /tmp/repo_secret_sha256)
+          ssh -p 22022 root@143.95.213.237 REPO_HASH="$REPO_HASH" 'bash -s' <<'REMOTE'
+          set +e
+          FILE=/var/www/oneverso/current/backend/dist/index.js
+
+          echo "=== bloco literal ao redor de mp-webhook-signature (150 linhas) ==="
+          LN=$(grep -nE 'mp-webhook-signature' "$FILE" | head -1 | awk -F: '{print $1}')
+          if [ -n "$LN" ]; then
+            START=$(( LN > 80 ? LN - 80 : 1 ))
+            END=$(( LN + 80 ))
+            sed -n "${START},${END}p" "$FILE"
+          else
+            echo "mp-webhook-signature nao encontrado no dist"
+          fi
+
+          echo
+          echo "=== busca por segredos alternativos referenciados no dist ==="
+          grep -nE 'MERCADO_PAGO[A-Z_]*SECRET|WEBHOOK[A-Z_]*SECRET|APP_WEBHOOK|X_SIGNATURE|xSignature|HMAC[A-Z_]*SECRET' "$FILE" \
+            | head -40
+
+          echo
+          echo "=== env vars do processo mmn-api (nomes + hash apenas) ==="
+          PID=$(pm2 jlist 2>/dev/null | python3 -c 'import sys,json; [print(p["pid"]) for p in json.load(sys.stdin) if p["name"]=="mmn-api" and p.get("pid")]' 2>/dev/null | head -1)
+          echo "mmn-api pid=$PID"
+          if [ -n "$PID" ] && [ -r "/proc/$PID/environ" ]; then
+            tr '\0' '\n' < /proc/$PID/environ \
+              | grep -iE '^(MERCADO|MP_|WEBHOOK|HMAC|MARKETPLACE_PIX|PIX_)' \
+              | while IFS='=' read -r K V; do
+                  H=$(printf '%s' "$V" | sha256sum | awk '{print $1}')
+                  echo "env $K sha256=$H len=${#V}"
+                done
+          fi
+
+          echo
+          echo "=== strace -e trace=write no pid $PID por 22s (procura 'manifest') ==="
+          command -v strace >/dev/null || { echo "strace ausente"; exit 0; }
+          # tenta strace no master; ele fork/exec — usa -f
+          nohup strace -f -e trace=write -s 4000 -p "$PID" > /tmp/strace_mmn.out 2>&1 &
+          STRACE_PID=$!
+          echo "strace_pid=$STRACE_PID"
+          sleep 2
+
+          # dispara um smoke em paralelo (usaremos openssl aqui mesmo)
+          MP_SECRET_FROM_ENV=$(tr '\0' '\n' < /proc/$PID/environ 2>/dev/null | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          if [ -n "$MP_SECRET_FROM_ENV" ]; then
+            TS=$(date +%s)
+            DATA_ID="doc-$(date +%s)"
+            REQ_ID="doc-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+            BODY=$(printf '{"action":"payment.updated","api_version":"v1","data":{"id":"%s"},"type":"payment"}' "$DATA_ID")
+            MANIFEST=$(printf 'id:%s;request-id:%s;ts:%s;' "$DATA_ID" "$REQ_ID" "$TS")
+            SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$MP_SECRET_FROM_ENV" -hex | awk '{print $2}')
+            echo "smoke_from_vps data_id=$DATA_ID req_id=$REQ_ID ts=$TS"
+            echo "smoke_manifest=$MANIFEST"
+            curl -sS -o /tmp/mp_local.out -w 'local_http=%{http_code}\n' -m 10 \
+              -X POST -H 'Content-Type: application/json' \
+              -H "x-signature: ts=${TS},v1=${SIG}" \
+              -H "x-request-id: ${REQ_ID}" \
+              --data "$BODY" \
+              "http://127.0.0.1:3001/api/webhooks/mercadopago?data.id=${DATA_ID}&type=payment"
+            echo "response_local:"; cat /tmp/mp_local.out
+          fi
+
+          sleep 20
+          kill -TERM "$STRACE_PID" 2>/dev/null
+          wait "$STRACE_PID" 2>/dev/null
+
+          echo
+          echo "=== strace grep manifest ==="
+          grep -aE 'manifest|hmac|hash_mismatch|x-signature|ts=|request-id|data\.id|id:' /tmp/strace_mmn.out \
+            | head -60
+
+          echo
+          echo "=== pm2 logs mmn-api last 40 (filtrado) ==="
+          pm2 logs mmn-api --lines 40 --nostream 2>&1 | tail -80 \
+            | grep -iE 'mp-webhook|reason|manifest|hash_mismatch|doc-|aceito|accepted|conciliad' \
+            | tail -40
+
+          echo
+          echo "=== END ==="
+          REMOTE

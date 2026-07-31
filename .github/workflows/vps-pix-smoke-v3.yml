@@ -1,0 +1,98 @@
+# =============================================================================
+# VPS Pix Smoke v3 — testa 3 formas de passar o payment id na query, para
+# descobrir qual delas o parser do Express deste backend enxerga em
+# req.query.<x> e usa no manifest HMAC.
+# =============================================================================
+# variantes:
+#   A) ?data.id=<id>&type=payment    (Mercado Pago real, com ponto)
+#   B) ?data_id=<id>&type=payment    (fallback previsto no codigo)
+#   C) ?id=<id>&type=payment         (ultimo fallback previsto no codigo)
+# manifest sempre: id:<id>;request-id:<req-id>;ts:<ts>;
+# HMAC:            SHA256(manifest, secret=MERCADO_PAGO_WEBHOOK_SECRET)
+
+name: vps-pix-smoke-v3
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-pix-smoke-v3
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Send three signed variants
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio"; exit 1; }
+
+          send_variant () {
+            local NAME="$1"     # A|B|C
+            local QUERY_KEY="$2"  # data.id | data_id | id
+            local TS DATA_ID REQ_ID BODY MANIFEST SIG URL HTTP_CODE
+            TS=$(date +%s)
+            DATA_ID="smokev3${NAME}-${TS}"
+            REQ_ID="smokev3${NAME}-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+            BODY=$(printf '{"action":"payment.updated","api_version":"v1","data":{"id":"%s"},"date_created":"%s","id":%s,"live_mode":false,"type":"payment","user_id":"1"}' \
+              "$DATA_ID" "$(date -u +%FT%TZ)" "$TS")
+            MANIFEST=$(printf 'id:%s;request-id:%s;ts:%s;' "$DATA_ID" "$REQ_ID" "$TS")
+            SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$MP_SECRET" -hex | awk '{print $2}')
+            URL="https://oneverso.com.br/api/webhooks/mercadopago?${QUERY_KEY}=${DATA_ID}&type=payment"
+            echo
+            echo "===== VARIANT ${NAME} (query_key=${QUERY_KEY}) ====="
+            echo "data_id=${DATA_ID}"
+            echo "req_id=${REQ_ID}"
+            echo "ts=${TS}"
+            echo "manifest=${MANIFEST}"
+            echo "url=${URL}"
+            HTTP_CODE=$(curl -sS -o "/tmp/mp_resp_${NAME}.txt" -w '%{http_code}' -m 20 \
+              -X POST \
+              -H "Content-Type: application/json" \
+              -H "User-Agent: MercadoPago Webhook (smokev3-${NAME})" \
+              -H "x-signature: ts=${TS},v1=${SIG}" \
+              -H "x-request-id: ${REQ_ID}" \
+              --data "$BODY" \
+              "$URL" || echo 000)
+            echo "http_code_${NAME}=${HTTP_CODE}"
+            echo "response_${NAME}:"; cat "/tmp/mp_resp_${NAME}.txt" || true
+            # marcador para grep no log do backend
+            echo "SMOKE_MARK_${NAME}=${DATA_ID}"
+          }
+
+          send_variant A "data.id"
+          sleep 3
+          send_variant B "data_id"
+          sleep 3
+          send_variant C "id"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Fetch mmn-api logs and interpret each variant
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          echo "=== pm2 logs mmn-api (last 200) filtrado ==="
+          pm2 logs mmn-api --lines 200 --nostream 2>&1 | tail -300 \
+            | grep -iE 'mp-webhook|hmac|signature|smokev3|aceito|accepted|conciliad|reject|rejeitado|payment|reason|manifest' \
+            | tail -120
+          echo
+          echo "=== busca por marcadores das 3 variantes ==="
+          for V in A B C; do
+            echo "--- variant ${V} ---"
+            pm2 logs mmn-api --lines 400 --nostream 2>&1 | tail -600 \
+              | grep -F "smokev3${V}" | tail -40
+          done
+          echo "=== END ==="
+          REMOTE

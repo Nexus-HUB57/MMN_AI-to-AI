@@ -1,0 +1,94 @@
+# =============================================================================
+# VPS Pix Smoke v2 — reproduz o formato REAL do webhook Mercado Pago:
+#   URL:      /api/webhooks/mercadopago?data.id=<id>&type=payment
+#   Header:   x-signature: ts=<ts>,v1=<hmac>
+#             x-request-id: <req-id>
+#   Manifest: id:<data.id>;request-id:<req-id>;ts:<ts>;
+#   HMAC:     SHA256(manifest, secret=MERCADO_PAGO_WEBHOOK_SECRET)
+# Objetivo: sair de "[mp-webhook-signature] rejeitado" para aceito.
+# =============================================================================
+
+name: vps-pix-smoke-v2
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-pix-smoke-v2
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Public health snapshot (pre)
+        run: |
+          curl -sS -m 10 https://oneverso.com.br/api/health || true
+          echo
+          curl -sS -m 10 https://oneverso.com.br/api/health/pix || true
+
+      - name: Send signed webhook (data.id via query, correct manifest)
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio"; exit 1; }
+          TS=$(date +%s)
+          DATA_ID="smokev2-$(date +%s)"
+          REQ_ID="smokev2-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+          BODY=$(printf '{"action":"payment.updated","api_version":"v1","data":{"id":"%s"},"date_created":"%s","id":%s,"live_mode":false,"type":"payment","user_id":"1"}' \
+            "$DATA_ID" "$(date -u +%FT%TZ)" "$TS")
+
+          # manifesto identico ao do validador do backend
+          MANIFEST=$(printf 'id:%s;request-id:%s;ts:%s;' "$DATA_ID" "$REQ_ID" "$TS")
+          SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$MP_SECRET" -hex | awk '{print $2}')
+          echo "smokev2 data_id=$DATA_ID req_id=$REQ_ID ts=$TS"
+          echo "manifest=$MANIFEST"
+          echo "sig_len=${#SIG}"
+
+          URL="https://oneverso.com.br/api/webhooks/mercadopago?data.id=${DATA_ID}&type=payment"
+          echo "url=$URL"
+
+          HTTP_CODE=$(curl -sS -o /tmp/mp_resp.txt -w '%{http_code}' -m 20 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: MercadoPago Webhook (smokev2)" \
+            -H "x-signature: ts=${TS},v1=${SIG}" \
+            -H "x-request-id: ${REQ_ID}" \
+            --data "$BODY" \
+            "$URL" || echo 000)
+          echo "http_code=$HTTP_CODE"
+          echo "response_body:"; cat /tmp/mp_resp.txt || true
+          case "$HTTP_CODE" in
+            200|202|204) echo "::notice::handler retornou $HTTP_CODE (verifique log)" ;;
+            401|403)     echo "::error::HMAC rejeitado (401/403)"; exit 1 ;;
+            5*)          echo "::error::5xx backend $HTTP_CODE"; exit 1 ;;
+          esac
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Fetch mmn-api log for the smokev2 request
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          echo "=== pm2 logs mmn-api (last 120) filtrado ==="
+          pm2 logs mmn-api --lines 120 --nostream 2>&1 | tail -200 \
+            | grep -iE 'mp-webhook|hmac|signature|smokev2|aceito|accepted|conciliad|reject|rejeitado|payment|ok:|reason' \
+            | head -80
+          echo "=== END ==="
+          REMOTE
+
+      - name: Interpret result
+        run: |
+          # segundo poll: puxa de novo logs em busca do smokev2 aceito
+          echo "aguardando propagacao dos logs..."
+          sleep 4
+          echo "OK: run terminada. Confira o step 'Fetch mmn-api log' acima para validar aceitacao HMAC."

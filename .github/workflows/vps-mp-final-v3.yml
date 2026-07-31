@@ -1,0 +1,134 @@
+# =============================================================================
+# VPS MP Final v3 — auto-cura do secret em memoria + extracao completa +
+# smoke local validado por log ("reason: 'ok'").
+# =============================================================================
+
+name: vps-mp-final-v3
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-final-v3
+  cancel-in-progress: false
+
+jobs:
+  final:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Compute repo-secret hash
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          [ -n "${MP_SECRET:-}" ] || { echo "::error::MP_SECRET vazio"; exit 1; }
+          echo "$(printf '%s' "$MP_SECRET" | sha256sum | awk '{print $1}')" > /tmp/repo_hash
+          echo "repo_hash=$(cat /tmp/repo_hash) len=${#MP_SECRET}"
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Cure + extract + smoke on VPS
+        run: |
+          REPO_HASH=$(cat /tmp/repo_hash)
+          ssh -p 22022 root@143.95.213.237 REPO_HASH="$REPO_HASH" 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+          FILE="$BASE/backend/dist/index.js"
+
+          get_pid() {
+            pm2 jlist 2>/dev/null | python3 -c 'import sys,json; [print(p["pid"]) for p in json.load(sys.stdin) if p["name"]=="mmn-api" and p.get("pid")]' 2>/dev/null | head -1
+          }
+          runtime_hash() {
+            local pid="$1"
+            [ -z "$pid" ] || [ ! -r "/proc/$pid/environ" ] && { echo ""; return; }
+            local val
+            val=$(tr '\0' '\n' < /proc/$pid/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+            [ -z "$val" ] && { echo ""; return; }
+            printf '%s' "$val" | sha256sum | awk '{print $1}'
+          }
+
+          PID=$(get_pid)
+          echo "== initial pid=$PID"
+          RH=$(runtime_hash "$PID")
+          echo "== initial runtime_hash=$RH"
+          echo "== repo_hash=$REPO_HASH"
+
+          if [ "$RH" != "$REPO_HASH" ]; then
+            echo "== curando (restart mmn-api --update-env, sem tocar em .env) =="
+            pm2 restart mmn-api --update-env 2>&1 | tail -20
+            sleep 6
+            PID=$(get_pid)
+            RH=$(runtime_hash "$PID")
+            echo "== apos cure pid=$PID runtime_hash=$RH"
+          fi
+
+          if [ "$RH" != "$REPO_HASH" ]; then
+            echo "::error::secret runtime ainda diferente do repo apos cure"
+            # continua mesmo assim para expor buildMercadoPagoManifest
+          else
+            echo "MATCH_SECRETS_OK"
+          fi
+
+          echo
+          echo "=== buildMercadoPagoManifest (range fixo 60 linhas) ==="
+          LN=$(grep -nE 'function buildMercadoPagoManifest' "$FILE" | head -1 | awk -F: '{print $1}')
+          echo "found_at_line=$LN"
+          if [ -n "$LN" ]; then
+            sed -n "${LN},$((LN+60))p" "$FILE"
+          fi
+
+          echo
+          echo "=== parseMercadoPagoSignature (range fixo 40 linhas) ==="
+          LN2=$(grep -nE 'function parseMercadoPagoSignature' "$FILE" | head -1 | awk -F: '{print $1}')
+          echo "found_at_line=$LN2"
+          if [ -n "$LN2" ]; then
+            sed -n "${LN2},$((LN2+40))p" "$FILE"
+          fi
+
+          echo
+          echo "=== smoke local direto no 127.0.0.1:3001 ==="
+          if [ -z "$PID" ] || [ ! -r "/proc/$PID/environ" ]; then
+            echo "sem PID/environ para calcular assinatura"
+            exit 0
+          fi
+          SECRET=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          [ -z "$SECRET" ] && { echo "sem secret runtime"; exit 0; }
+
+          TS=$(date +%s)
+          DID="final3-$(date +%s)"
+          RID="final3-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+          MANIFEST="id:${DID};request-id:${RID};ts:${TS};"
+          SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$SECRET" -hex | awk '{print $2}')
+          echo "DID=$DID RID=$RID TS=$TS"
+          echo "MANIFEST=$MANIFEST"
+          echo "SIG=$SIG"
+
+          for QK in "data.id" "data_id" "id"; do
+            echo "-- variant qk=$QK --"
+            URL="http://127.0.0.1:3001/api/webhooks/mercadopago?${QK}=${DID}&type=payment"
+            curl -sS -o /tmp/loc.out -w "http_${QK}=%{http_code}\n" -m 10 \
+              -X POST -H 'Content-Type: application/json' \
+              -H "x-signature: ts=${TS},v1=${SIG}" \
+              -H "x-request-id: ${RID}" \
+              --data "{\"action\":\"payment.updated\",\"data\":{\"id\":\"${DID}\"},\"type\":\"payment\"}" \
+              "$URL"
+            echo "body_${QK}:"; cat /tmp/loc.out; echo
+            sleep 1
+          done
+
+          echo
+          echo "=== pm2 logs mmn-api pos-smoke (30 linhas) ==="
+          sleep 2
+          pm2 logs mmn-api --lines 30 --nostream 2>&1 | tail -80 \
+            | grep -iE "mp-webhook|reason|manifest|hash_mismatch|final3-|ok|aceito" \
+            | tail -40
+          echo "=== END ==="
+          REMOTE

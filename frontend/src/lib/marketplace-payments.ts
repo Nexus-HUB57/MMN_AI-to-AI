@@ -1,6 +1,6 @@
-type MarketplaceCheckoutSource = "estoque" | "minisite" | "packs" | "marketplaces" | "subscriptions" | "checkout-manual" | string;
+type MarketplaceCheckoutSource = "estoque" | "minisite" | "minha-loja" | "packs" | "marketplaces" | "marketplace-nexus" | "subscriptions" | "checkout-manual" | string;
 
-type MarketplaceCheckoutType = "produto" | "pack" | "subscription" | string;
+type MarketplaceCheckoutType = "produto" | "pack" | "subscription" | "ebook" | string;
 
 export interface MarketplaceCheckoutIntent {
   source?: MarketplaceCheckoutSource;
@@ -9,6 +9,16 @@ export interface MarketplaceCheckoutIntent {
   name?: string;
   amountCents?: number;
   description?: string;
+  payerEmail?: string;
+  payerName?: string;
+  ownerCode?: string;
+  returnUrl?: string;
+  items?: Array<{
+    slug: string;
+    title: string;
+    priceCents: number;
+    coverPath?: string | null;
+  }>;
   subscriptionId?: string;
   termMonths?: number;
 }
@@ -48,6 +58,20 @@ function normalizeIntent(intent: MarketplaceCheckoutIntent): MarketplaceCheckout
     name: intent.name ?? "Pagamento Nexus",
     amountCents: typeof intent.amountCents === "number" ? Math.max(0, Math.round(intent.amountCents)) : undefined,
     description: intent.description ?? undefined,
+    payerEmail: intent.payerEmail ?? undefined,
+    payerName: intent.payerName ?? undefined,
+    ownerCode: intent.ownerCode ?? undefined,
+    returnUrl: intent.returnUrl ?? undefined,
+    items: Array.isArray(intent.items)
+      ? intent.items
+          .filter((item) => item && typeof item.slug === "string" && typeof item.title === "string")
+          .map((item) => ({
+            slug: item.slug,
+            title: item.title,
+            priceCents: Math.max(0, Math.round(Number(item.priceCents) || 0)),
+            coverPath: item.coverPath ?? undefined,
+          }))
+      : undefined,
     subscriptionId: intent.subscriptionId ?? undefined,
     termMonths: typeof intent.termMonths === "number" ? intent.termMonths : undefined,
   };
@@ -131,9 +155,12 @@ export function getMarketplaceReturnUrl(source?: MarketplaceCheckoutSource) {
       return "/estoque";
     case "minisite":
       return "/minisite";
+    case "minha-loja":
+      return "/minha-loja";
     case "packs":
       return "/packs";
     case "marketplaces":
+    case "marketplace-nexus":
       return "/marketplaces";
     case "subscriptions":
       return "/subscriptions";

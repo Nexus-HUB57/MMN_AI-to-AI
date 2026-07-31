@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { trpc } from "@/lib/trpc";
+import { buildMarketplaceCheckoutUrl } from "@/lib/marketplace-payments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,6 +41,10 @@ type Ebook = {
 
 const BRL = (cents: number) =>
   (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+function getStoreCartStorageKey(ownerCode: string) {
+  return `nexus-store-cart:${ownerCode || "default"}`;
+}
 
 function fallbackReferralCode(user: any): string {
   if (!user) return "";
@@ -200,14 +205,34 @@ export default function MinhaLoja() {
 
   // Carrinho
   const [cart, setCart] = useState<Array<{ slug: string; title: string; priceCents: number; coverPath?: string|null }>>([]);
+  const cartStorageKey = useMemo(() => getStoreCartStorageKey(ownerCode || "default"), [ownerCode]);
   const cartTotal = cart.reduce((a,c) => a + c.priceCents, 0);
   const cartCount = cart.length;
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(cartStorageKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      setCart(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      setCart([]);
+    }
+  }, [cartStorageKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(cartStorageKey, JSON.stringify(cart));
+    } catch {}
+  }, [cart, cartStorageKey]);
+
   function addToCart(e: Ebook) {
     setCart((prev) => [...prev, { slug: e.slug, title: e.title, priceCents: e.resalePriceCents, coverPath: e.coverPath }]);
+    setCartOpen(true);
   }
-  function removeFromCart(slug: string) {
-    setCart((prev) => prev.filter((c) => c.slug !== slug));
+  function removeFromCart(index: number) {
+    setCart((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function copyShareLink() {
@@ -229,26 +254,29 @@ export default function MinhaLoja() {
     : null;
 
   async function handlePay() {
-    if (!customerEmail.includes("@")) return;
+    if (!customerEmail.includes("@") || cart.length === 0) return;
     setProcessing(true);
     try {
-      const res = placeOrder
-        ? await placeOrder.mutateAsync({
-            ownerCode,
-            customerEmail,
-            customerName: customerName || undefined,
-            items: cart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents })),
-            amountCents: cartTotal,
-          })
-        : {
-            ok: true, orderId: "local_" + Date.now(), status: "paid",
-            message: "Pagamento Realizado com Sucesso",
-            delivery: { channel: "email", to: customerEmail, eta: "Entrega imediata por e-mail." },
-          };
-      setOrderResult(res);
+      const returnUrl = isPublicView && ownerCode ? `/minha-loja/${ownerCode}` : "/minha-loja";
+      const description = cart.length === 1
+        ? cart[0].title
+        : `${cart.length} produtos · Minha Loja`;
+      const url = buildMarketplaceCheckoutUrl({
+        source: "minha-loja",
+        type: "ebook",
+        slug: cart[0]?.slug ?? "minha-loja-checkout",
+        name: description,
+        description,
+        amountCents: cartTotal,
+        payerEmail: customerEmail,
+        payerName: customerName || undefined,
+        ownerCode: ownerCode || undefined,
+        returnUrl,
+        items: cart.map((c) => ({ slug: c.slug, title: c.title, priceCents: c.priceCents, coverPath: c.coverPath })),
+      });
       setPaymentOpen(false);
-      setCart([]);
-      setSuccessOpen(true);
+      window.location.href = url;
+      return;
     } catch (err) {
       console.error(err);
     } finally {
@@ -628,7 +656,7 @@ export default function MinhaLoja() {
                     <p className="text-sm font-semibold text-white line-clamp-2">{c.title}</p>
                     <p className="text-quantum-cyan font-bold mt-1">{BRL(c.priceCents)}</p>
                   </div>
-                  <button className="text-slate-500 hover:text-red-400 self-start" onClick={() => removeFromCart(c.slug)}>
+                  <button className="text-slate-500 hover:text-red-400 self-start" onClick={() => removeFromCart(i)}>
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
@@ -712,7 +740,7 @@ export default function MinhaLoja() {
 
               <div className="rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 p-3 text-xs text-slate-300 flex items-start gap-2">
                 <Lock className="h-4 w-4 text-quantum-cyan mt-0.5" />
-                Pagamento via Pix processado automaticamente. Confirmação em poucos segundos.
+                Você será direcionado ao Checkout Pix com os itens do carrinho preservados para concluir o pagamento com QR Code ou Mercado Pago.
               </div>
             </div>
             <div className="px-6 py-4 border-t border-white/10 grid gap-2">

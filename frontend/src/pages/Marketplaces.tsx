@@ -330,7 +330,9 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
     const desc = ebookCart.length === 1
       ? ebookCart[0].title
       : `${ebookCart.length} e-books · Marketplace Nexus`;
-    // ONDA 15 FIX: usar buildMarketplaceCheckoutUrl para persistir intent completo (base64 + localStorage)
+    const ownerCodeRef = (typeof window !== "undefined" && (localStorage.getItem("nx_ref") || "")) || "MARKETPLACE-NEXUS";
+    // PIX-FIX-2026-07-31: propagar items[], ownerCode e returnUrl no intent base64
+    // para o PixCheckout + backend enxergarem o carrinho completo (não só o primeiro slug).
     const url = buildMarketplaceCheckoutUrl({
       source: "marketplace-nexus",
       type: "ebook" as any,
@@ -340,6 +342,14 @@ function MarketplacesContent({ isPublicView }: { isPublicView: boolean }) {
       description: desc,
       payerEmail: customerEmail,
       payerName: customerName || undefined,
+      ownerCode: ownerCodeRef,
+      returnUrl: "/marketplaces",
+      items: ebookCart.map((c) => ({
+        slug: c.slug,
+        title: c.title,
+        priceCents: c.priceCents,
+        coverPath: (c as any).coverPath ?? undefined,
+      })),
     } as any);
     window.location.href = url;
   }

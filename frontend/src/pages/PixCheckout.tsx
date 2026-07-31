@@ -468,8 +468,16 @@ export default function PixCheckout() {
     }
   };
 
-  // ONDA 19: Se já possui Pack A², bloqueia recompra
-  if (packGate.blocked) {
+  // ONDA 19 + PIX-FIX-2026-07-31:
+  // O gate do Pack A² só deve bloquear quando o checkout é REALMENTE do Pack A².
+  // Para type === "ebook" | "produto" | "subscription" (ou carrinho misto) o gate é ignorado —
+  // caso contrário o usuário com Pack A² já ativo não consegue comprar e-books.
+  const intentType = (checkoutIntent?.type ?? "").toLowerCase();
+  const intentSlug = (checkoutIntent?.slug ?? "").toLowerCase();
+  const isPackA2Intent =
+    intentType === "pack" &&
+    (intentSlug === "pack-a2" || intentSlug === "pack_a2" || intentSlug.includes("agente-afiliado") || intentSlug.includes("agente_afiliado"));
+  if (packGate.blocked && isPackA2Intent) {
     return (
       <DashboardLayout>
         <div className="mx-auto max-w-4xl space-y-6 p-6">

@@ -1,0 +1,123 @@
+# =============================================================================
+# VPS MP Signature Doctor — descobre o formato exato do manifesto HMAC exigido
+# pelo backend em producao e revela qual segredo esta ATIVO no processo mmn-api.
+# =============================================================================
+# 1) Extrai o valor de MERCADO_PAGO_WEBHOOK_SECRET carregado em memoria pelo
+#    processo mmn-api (via pm2 env <id>), mascarando o valor no log.
+# 2) Extrai o formato do manifesto usado pelo validador HMAC no dist/index.js
+#    do VPS (grep por "mp-webhook-signature", "id:", "request-id:", "ts:").
+# 3) Compara com o segredo do repo (MERCADO_PAGO_WEBHOOK_SECRET) apenas por
+#    HASH SHA-256 (nunca imprime segredo).
+
+name: vps-mp-signature-doctor
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-mp-signature-doctor
+  cancel-in-progress: false
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Compute repo-secret hash (never print value)
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          if [ -z "${MP_SECRET:-}" ]; then
+            echo "::error::MERCADO_PAGO_WEBHOOK_SECRET vazio no repo"
+            exit 1
+          fi
+          h=$(printf '%s' "$MP_SECRET" | sha256sum | awk '{print $1}')
+          len=${#MP_SECRET}
+          echo "repo_secret_sha256=${h}"
+          echo "repo_secret_len=${len}"
+          echo "$h" > /tmp/repo_secret_sha256
+          echo "$len" > /tmp/repo_secret_len
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Inspect running process env + validator source
+        run: |
+          REPO_HASH=$(cat /tmp/repo_secret_sha256)
+          REPO_LEN=$(cat /tmp/repo_secret_len)
+          ssh -p 22022 root@143.95.213.237 REPO_HASH="$REPO_HASH" REPO_LEN="$REPO_LEN" 'bash -s' <<'REMOTE'
+          set +e
+          BASE=/var/www/oneverso/current
+
+          echo "=== pm2 status ==="
+          pm2 status 2>&1 | tail -20
+
+          echo
+          echo "=== extract MERCADO_PAGO_WEBHOOK_SECRET from live mmn-api process (hash only) ==="
+          # descobrir pid do mmn-api master (nao worker)
+          PID=$(pm2 jlist 2>/dev/null | python3 -c 'import sys,json; [print(p["pid"]) for p in json.load(sys.stdin) if p["name"]=="mmn-api" and p.get("pid")]' 2>/dev/null | head -1)
+          if [ -z "$PID" ] || [ "$PID" = "0" ]; then
+            echo "::warning::pid mmn-api indisponivel"
+          else
+            # /proc/<pid>/environ eh NULL-separated; extrai apenas a chave desejada
+            if [ -r "/proc/$PID/environ" ]; then
+              VAL=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+              if [ -n "$VAL" ]; then
+                RUN_HASH=$(printf '%s' "$VAL" | sha256sum | awk '{print $1}')
+                RUN_LEN=${#VAL}
+                echo "runtime_secret_sha256=${RUN_HASH}"
+                echo "runtime_secret_len=${RUN_LEN}"
+                echo "repo_secret_sha256=${REPO_HASH}"
+                echo "repo_secret_len=${REPO_LEN}"
+                if [ "$RUN_HASH" = "$REPO_HASH" ]; then
+                  echo "MATCH_SECRETS: repo == runtime (o segredo em memoria eh o do repo)"
+                else
+                  echo "MISMATCH_SECRETS: repo != runtime (o segredo em memoria eh DIFERENTE do repo)"
+                fi
+              else
+                echo "MERCADO_PAGO_WEBHOOK_SECRET ausente no environ do pid=$PID"
+              fi
+            else
+              echo "/proc/$PID/environ nao legivel (permissoes)"
+            fi
+          fi
+
+          echo
+          echo "=== source do validador HMAC (search dist/index.js) ==="
+          FILE=/var/www/oneverso/current/backend/dist/index.js
+          if [ -f "$FILE" ]; then
+            grep -nE 'mp-webhook-signature|x-signature|hmac|createHmac|manifest|MERCADO_PAGO_WEBHOOK_SECRET|request-id|ts=|data\.id' "$FILE" | head -60
+            echo
+            echo "=== 30 linhas ao redor da primeira ocorrencia do manifest ==="
+            grep -n 'mp-webhook-signature\|manifest' "$FILE" | head -1 | awk -F: '{print $1}' | while read LN; do
+              [ -n "$LN" ] && sed -n "$((LN-15)),$((LN+30))p" "$FILE"
+            done
+          else
+            echo "dist/index.js ausente"
+          fi
+
+          echo
+          echo "=== .env do VPS (hash da linha MERCADO_PAGO_WEBHOOK_SECRET, sem imprimir valor) ==="
+          if [ -r "$BASE/.env" ]; then
+            LINE=$(grep -E '^MERCADO_PAGO_WEBHOOK_SECRET=' "$BASE/.env" | head -1 | sed 's/^MERCADO_PAGO_WEBHOOK_SECRET=//' | tr -d '"')
+            if [ -n "$LINE" ]; then
+              ENV_HASH=$(printf '%s' "$LINE" | sha256sum | awk '{print $1}')
+              ENV_LEN=${#LINE}
+              echo "env_secret_sha256=${ENV_HASH}"
+              echo "env_secret_len=${ENV_LEN}"
+            else
+              echo "MERCADO_PAGO_WEBHOOK_SECRET ausente em $BASE/.env"
+            fi
+          fi
+
+          echo
+          echo "=== chattr do .env ==="
+          lsattr "$BASE/.env" 2>&1
+          echo "=== END DIAGNOSTIC ==="
+          REMOTE

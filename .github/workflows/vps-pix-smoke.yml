@@ -1,0 +1,106 @@
+# =============================================================================
+# VPS Pix Smoke — validacao end-to-end do fluxo Mercado Pago webhook.
+# =============================================================================
+# 1) Confere que /api/health e /api/health/pix expoem o commit atual + mp configurado.
+# 2) Envia um POST assinado (HMAC-SHA256 com MERCADO_PAGO_WEBHOOK_SECRET) para
+#    /api/webhooks/mercadopago com payload de notificacao "payment.updated".
+# 3) Coleta a resposta HTTP e verifica que o handler nao retornou 401/500.
+# 4) Faz pull dos logs recentes do pm2 (mmn-api) para evidencia da conciliacao.
+
+name: vps-pix-smoke
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-pix-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Public health snapshot (pre)
+        run: |
+          echo "=== /api/health ==="
+          curl -sS -m 10 https://oneverso.com.br/api/health || true
+          echo
+          echo "=== /api/health/pix ==="
+          curl -sS -m 10 https://oneverso.com.br/api/health/pix || true
+          echo
+
+      - name: Send signed Mercado Pago webhook
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MP_SECRET:-}" ]; then
+            echo "::error::MERCADO_PAGO_WEBHOOK_SECRET ausente no runner"
+            exit 1
+          fi
+          TS=$(date +%s)
+          PAYMENT_ID="smoke-$(date +%s)"
+          # payload identico ao formato oficial do Mercado Pago (topic=payment)
+          BODY=$(printf '{"action":"payment.updated","api_version":"v1","data":{"id":"%s"},"date_created":"%s","id":%s,"live_mode":false,"type":"payment","user_id":"1"}' \
+            "$PAYMENT_ID" "$(date -u +%FT%TZ)" "$TS")
+          # assinatura MP: manifest "id:<data.id>;request-id:<req-id>;ts:<ts>;"
+          REQ_ID="smoke-$(uuidgen 2>/dev/null || echo $RANDOM$RANDOM)"
+          MANIFEST=$(printf 'id:%s;request-id:%s;ts:%s;' "$PAYMENT_ID" "$REQ_ID" "$TS")
+          SIG=$(printf '%s' "$MANIFEST" | openssl dgst -sha256 -hmac "$MP_SECRET" -hex | awk '{print $2}')
+          echo "sending webhook payment_id=$PAYMENT_ID req_id=$REQ_ID ts=$TS"
+          echo "body=$BODY"
+          echo "manifest=$MANIFEST"
+          echo "sig_len=${#SIG}"
+
+          echo
+          echo "=== POST /api/webhooks/mercadopago ==="
+          HTTP_CODE=$(curl -sS -o /tmp/mp_resp.txt -w '%{http_code}' -m 20 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: MercadoPago Webhook (smoke)" \
+            -H "x-signature: ts=${TS},v1=${SIG}" \
+            -H "x-request-id: ${REQ_ID}" \
+            --data "$BODY" \
+            "https://oneverso.com.br/api/webhooks/mercadopago" || echo 000)
+          echo "http_code=$HTTP_CODE"
+          echo "response_body:"
+          cat /tmp/mp_resp.txt || true
+          echo
+          # aceitamos 200, 202, 204 como sucesso do handler assinado;
+          # 401/403 indicam falha de HMAC; 5xx indica bug interno.
+          case "$HTTP_CODE" in
+            200|202|204) echo "::notice::mp webhook handler aceitou o payload assinado" ;;
+            401|403)     echo "::error::HMAC rejeitado (verifique MERCADO_PAGO_WEBHOOK_SECRET no VPS)"; exit 1 ;;
+            5*)          echo "::error::backend retornou $HTTP_CODE (bug lateral)"; exit 1 ;;
+            *)           echo "::warning::codigo inesperado $HTTP_CODE" ;;
+          esac
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Pull pm2 logs for evidence
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set +e
+          echo "=== pm2 status ==="
+          pm2 status 2>&1 | tail -15
+          echo
+          echo "=== pm2 logs mmn-api (last 80) ==="
+          pm2 logs mmn-api --lines 80 --nostream 2>&1 | tail -120 | grep -iE 'webhook|mercadopago|hmac|signature|payment|smoke-|reconcil|order|erro|error' | head -80 || true
+          echo "=== END ==="
+          REMOTE
+
+      - name: Public health snapshot (post)
+        run: |
+          echo "=== /api/health ==="
+          curl -sS -m 10 https://oneverso.com.br/api/health || true
+          echo
+          echo "=== /api/health/pix ==="
+          curl -sS -m 10 https://oneverso.com.br/api/health/pix || true

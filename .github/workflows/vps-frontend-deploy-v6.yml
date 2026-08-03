@@ -1,0 +1,108 @@
+# =============================================================================
+# VPS Frontend Deploy v6 — usa Authorization: Bearer <PAT> (formato GitHub API)
+# como http.extraHeader, com GIT_TERMINAL_PROMPT=0 para eliminar o prompt de
+# Username e ignorar qualquer credential cache antigo do VPS.
+# =============================================================================
+
+name: vps-frontend-deploy-v6
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-frontend-deploy-v6
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Pull + build frontend + reload mmn-api
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+          VPS_GH_PAT: ${{ secrets.VPS_GH_PAT }}
+        run: |
+          set -euo pipefail
+          MP_B64=$(printf '%s' "$MP_SECRET" | base64 -w0)
+          PAT_B64=$(printf '%s' "$VPS_GH_PAT" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 MP_B64="$MP_B64" PAT_B64="$PAT_B64" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          echo "=== limpar credenciais antigas do git ==="
+          PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
+          [ -n "$PAT_VAL" ] || { echo "::error::PAT vazio"; exit 1; }
+          git config --unset-all credential.helper 2>/dev/null || true
+          git config --global --unset-all credential.helper 2>/dev/null || true
+          : > ~/.git-credentials 2>/dev/null || true
+          git remote set-url origin "https://github.com/Nexus-HUB57/MMN_AI-to-AI.git"
+          echo "remote_now=$(git remote get-url origin)"
+
+          echo
+          echo "=== git fetch via Authorization: Bearer PAT ==="
+          # Formato oficial do GitHub para PAT em Git-over-HTTPS.
+          # http.extraHeader com Bearer dispensa user/password no URL.
+          git \
+            -c credential.helper= \
+            -c "http.https://github.com/.extraHeader=Authorization: Bearer ${PAT_VAL}" \
+            fetch origin main
+          git reset --hard origin/main
+          NEW_SHA=$(git rev-parse HEAD)
+          echo "commit_now=$NEW_SHA"
+          echo "$NEW_SHA" > backend/.git-commit
+
+          echo
+          echo "=== install workspaces (backend + frontend) ==="
+          npm run install:deploy 2>&1 | tail -8
+
+          echo
+          echo "=== build frontend (vite) ==="
+          npm run build:frontend 2>&1 | tail -30
+          ls -lh frontend/dist/index.html
+          FRONT_HASH=$(sha256sum frontend/dist/index.html | awk '{print $1}')
+          echo "frontend_index_hash=$FRONT_HASH"
+
+          echo
+          echo "=== assets em frontend/dist ==="
+          ls -la frontend/dist | head -6
+
+          echo
+          echo "=== reload mmn-api mantendo secret MP ==="
+          NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
+          [ -n "$NEW_VAL" ] || { echo "::error::MP secret vazio"; exit 1; }
+          MERCADO_PAGO_WEBHOOK_SECRET="$NEW_VAL" COMMIT_SHA="$NEW_SHA" \
+            pm2 restart mmn-api --update-env
+          sleep 8
+          pm2 jlist > /tmp/pm2.jlist.json
+          python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); [print({'name':p.get('name'),'pid':p.get('pid'),'status':(p.get('pm2_env') or {}).get('status'),'restart':(p.get('pm2_env') or {}).get('restart_time')}) for p in arr if p.get('name')=='mmn-api']"
+
+          PID=$(python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); print(next((p['pid'] for p in arr if p.get('name')=='mmn-api' and p.get('pid')), ''))")
+          [ -n "$PID" ] || { echo "::error::pid indisponivel apos restart"; exit 1; }
+          RUN_VAL=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          [ -n "$RUN_VAL" ] || { echo "::error::runtime env sem MERCADO_PAGO_WEBHOOK_SECRET apos restart"; exit 1; }
+          echo "runtime_mp_secret_present=1 pid=$PID"
+
+          echo
+          echo "=== health check publico ==="
+          curl -fsS https://oneverso.com.br/api/health | head -c 400; echo
+          curl -fsS https://oneverso.com.br/api/health/pix | head -c 400; echo
+
+          echo
+          echo "=== hash do bundle publico ==="
+          PUB_HTML=$(curl -fsS https://oneverso.com.br/ | sha256sum | awk '{print $1}' || true)
+          echo "public_index_hash=$PUB_HTML local_index_hash=$FRONT_HASH"
+
+          echo "FRONTEND_DEPLOY_OK commit=$NEW_SHA"
+          REMOTE

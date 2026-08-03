@@ -520,12 +520,31 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                 `SELECT item_slug, title, unit_price_cents FROM marketplace_order_items WHERE order_id=$1`,
                 [order.id]
               );
-              for (const it of items.rows) {
+              // P0-FIX-2026-08-03: quando marketplace_order_items esta vazio
+              // (checkout via Mercado Pago que so gravou metadata.items), lemos
+              // os slugs da propria metadata do pedido para nao perder entrega.
+              let deliverySlugs: Array<{ slug: string; title?: string; priceCents?: number }> = items.rows.map((r: any) => ({
+                slug: r.item_slug,
+                title: r.title,
+                priceCents: Number(r.unit_price_cents || 0),
+              }));
+              if (deliverySlugs.length === 0) {
+                try {
+                  const meta2 = order.metadata
+                    ? (typeof order.metadata === 'string' ? JSON.parse(order.metadata) : order.metadata)
+                    : {};
+                  const metaItems = Array.isArray(meta2?.items) ? meta2.items : [];
+                  deliverySlugs = metaItems
+                    .filter((it: any) => it && typeof it.slug === 'string' && it.slug.length > 0)
+                    .map((it: any) => ({ slug: String(it.slug), title: it.title, priceCents: Number(it.priceCents || 0) }));
+                } catch (_) { /* metadata invalida = sem items extras */ }
+              }
+              for (const it of deliverySlugs) {
                 await client.query(
                   `INSERT INTO marketplace_user_library (user_id, ebook_slug, source_order_id, source_type, delivered, acquired_at)
                    VALUES ($1, $2, $3, 'ebook', TRUE, NOW())
                    ON CONFLICT DO NOTHING`,
-                  [order.user_id, it.item_slug, order.id]
+                  [order.user_id, it.slug, order.id]
                 );
               }
               await client.query(

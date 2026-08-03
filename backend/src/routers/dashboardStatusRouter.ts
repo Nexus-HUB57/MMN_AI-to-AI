@@ -37,6 +37,28 @@ export const dashboardStatusRouter = router({
     const yearMonth = cycle;
     const paid = await checkMonthlyActivationPaid(ctx.db, affiliate.id, yearMonth);
 
+    // P0-FIX-2026-08-03: agentActive tambem verdadeiro quando o usuario possui
+    // pack-a2 ativo (ou pack superior). O sintoma reportado foi "luz vermelha
+    // no header mesmo com Pack A2 comprado", porque o campo agents.status nao
+    // vinha 'active' apos o webhook do MP concluir o pagamento.
+    let hasActivePack = false;
+    try {
+      const packRes: any = await ctx.db.execute(
+        `SELECT 1 FROM pack_activations WHERE user_id=$1 AND status='active' LIMIT 1`,
+        [ctx.user.id] as any
+      );
+      hasActivePack = (packRes?.rows ?? packRes ?? []).length > 0;
+      if (!hasActivePack) {
+        const libRes: any = await ctx.db.execute(
+          `SELECT 1 FROM marketplace_user_library WHERE user_id=$1 LIMIT 1`,
+          [ctx.user.id] as any
+        );
+        hasActivePack = (libRes?.rows ?? libRes ?? []).length > 0;
+      }
+    } catch (_) {
+      /* tabelas ausentes = nao promove agentActive */
+    }
+
     // XP (paridade R$1 = 1XP)
     let xpRow: any = null;
     try {
@@ -48,7 +70,7 @@ export const dashboardStatusRouter = router({
     } catch {}
 
     return {
-      agentActive: !!(agent && (agent.status === "active" || agent.status === "ATIVO")),
+      agentActive: hasActivePack || !!(agent && (agent.status === "active" || agent.status === "ATIVO")),
       monthlyActivationPaid: paid,
       cycleLabel: cycle,
       affiliateLevel: (affiliate as any).level || (affiliate as any).tier || "Afiliado I",

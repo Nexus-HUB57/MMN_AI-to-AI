@@ -643,6 +643,72 @@ export const affiliateStoreRouter = router({
       orders.push(record);
       await writeOrders(orders);
 
+      // P0-FIX-2026-08-03: alem do JSON legado, grava em marketplace_orders +
+      // marketplace_order_items + marketplace_user_library do banco (fonte de
+      // verdade que myInventory consulta). Sem isso, o afiliado que comprou
+      // via Minha Loja ficava com estoque vazio mesmo com pagamento ok.
+      try {
+        const { Pool: _StorePool } = await import("pg");
+        const _sp = new _StorePool({ connectionString: process.env.DATABASE_URL });
+        const _sc = await _sp.connect();
+        try {
+          let buyerUserId: number | null = null;
+          const uRes = await _sc.query(
+            `SELECT id FROM users WHERE lower(email)=lower($1) LIMIT 1`,
+            [input.customerEmail]
+          );
+          buyerUserId = uRes.rows?.[0]?.id ?? null;
+
+          if (buyerUserId) {
+            await _sc.query("BEGIN");
+            await _sc.query(
+              `INSERT INTO marketplace_orders
+                 (id, user_id, status, subtotal_cents, discount_cents, total_cents,
+                  payment_method, payment_status, external_reference, metadata, created_at, updated_at)
+               VALUES ($1,$2,'paid',$3,0,$3,'pix','approved',$4,$5::jsonb,NOW(),NOW())
+               ON CONFLICT (id) DO NOTHING`,
+              [
+                orderId,
+                buyerUserId,
+                input.amountCents,
+                `store:${input.ownerCode}:${buyerUserId}:${Date.now()}`,
+                JSON.stringify({
+                  source: "minha-loja",
+                  type: "ebook",
+                  ownerCode: input.ownerCode,
+                  customerEmail: input.customerEmail,
+                  customerName: input.customerName,
+                  items: input.items,
+                }),
+              ]
+            );
+            for (const it of input.items) {
+              await _sc.query(
+                `INSERT INTO marketplace_order_items
+                   (order_id, item_slug, title, unit_price_cents, quantity)
+                 VALUES ($1,$2,$3,$4,1)
+                 ON CONFLICT DO NOTHING`,
+                [orderId, it.slug, it.title, it.priceCents]
+              );
+              await _sc.query(
+                `INSERT INTO marketplace_user_library
+                   (user_id, ebook_slug, source_order_id, source_type, delivered, acquired_at)
+                 VALUES ($1,$2,$3,'ebook',TRUE,NOW())
+                 ON CONFLICT DO NOTHING`,
+                [buyerUserId, it.slug, orderId]
+              );
+            }
+            await _sc.query("COMMIT");
+          }
+        } catch (persistErr) {
+          try { await _sc.query("ROLLBACK"); } catch {}
+          console.warn("[placeStoreOrder] persist DB failed:", (persistErr as any)?.message);
+        } finally {
+          _sc.release();
+          await _sp.end().catch(() => undefined);
+        }
+      } catch (_) { /* pg indisponivel = mantem so JSON legado */ }
+
       // Log evento no diretório de logs (para auditoria de entrega)
       try {
         const logPath = path.resolve(process.cwd(), "logs", "store-deliveries.log");

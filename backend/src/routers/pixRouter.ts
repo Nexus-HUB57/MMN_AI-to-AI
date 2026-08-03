@@ -387,6 +387,13 @@ export const pixRouter = router({
         payerEmail: z.string().email().optional(),
         payerName: z.string().max(120).optional(),
         payerDocument: z.string().max(18).optional(),
+        ownerCode: z.string().max(40).optional(),
+        items: z.array(z.object({
+          slug: z.string().min(1).max(140),
+          title: z.string().min(1).max(180),
+          priceCents: z.number().int().min(0),
+          coverPath: z.string().max(240).optional().nullable(),
+        })).max(50).optional(),
         subscriptionId: z.string().min(1).optional(),
         termMonths: z.union([
           z.literal(6),
@@ -615,6 +622,8 @@ export const pixRouter = router({
                   name: input.name,
                   payerEmail,
                   payerName,
+                  ownerCode: input.ownerCode,
+                  items: Array.isArray(input.items) ? input.items : undefined,
                   subscriptionId: input.subscriptionId,
                   termMonths: input.termMonths,
                 }),

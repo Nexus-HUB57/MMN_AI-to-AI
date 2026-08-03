@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/DashboardLayout";
+import BinaryTreeGraph from "@/components/BinaryTreeGraph";
 import { Users, Package, Calendar, TrendingUp, RefreshCw, ChevronRight } from "lucide-react";
 
 /**
@@ -197,6 +198,29 @@ export default function Network() {
           <StatusDot active={false} label="Sem Pack" />
           <StatusDot active={true} label="Ativação OK" />
           <StatusDot active={false} label="Inadimplente" />
+        </div>
+
+        {/* Grafo binario classico (P0-FIX-2026-08-03) */}
+        <div className="rounded-lg border border-obsidian-700 bg-obsidian-900/30 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+              // BINARY_GRAPH
+            </p>
+            <span className="font-mono text-[10px] tabular-nums text-slate-500">
+              {directs.length} diretos · profundidade {(data as any)?.maxDepth ?? 5}
+            </span>
+          </div>
+          {isLoading ? (
+            <div className="py-10 text-center text-sm text-slate-400 animate-pulse">Renderizando árvore...</div>
+          ) : (
+            <BinaryTreeGraph
+              root={data?.root || { name: rootName }}
+              nodes={((data as any)?.nodes && Array.isArray((data as any).nodes)
+                ? (data as any).nodes
+                : directs) as any}
+              maxDepth={4}
+            />
+          )}
         </div>
 
         {/* Directs */}

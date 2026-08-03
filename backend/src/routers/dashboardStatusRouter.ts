@@ -49,6 +49,16 @@ export const dashboardStatusRouter = router({
       );
       hasActivePack = (packRes?.rows ?? packRes ?? []).length > 0;
       if (!hasActivePack) {
+        // P0-FIX-2026-08-03: aceita marketplace_pack_grants como sinal, alem
+        // de marketplace_user_library. Cobre o caso em que o Pack A2 foi pago
+        // e o reconciler ja criou o grant, mas ainda nao sorteou ebooks.
+        const grantRes: any = await ctx.db.execute(
+          `SELECT 1 FROM marketplace_pack_grants WHERE user_id=$1 AND status='granted' LIMIT 1`,
+          [ctx.user.id] as any
+        );
+        hasActivePack = (grantRes?.rows ?? grantRes ?? []).length > 0;
+      }
+      if (!hasActivePack) {
         const libRes: any = await ctx.db.execute(
           `SELECT 1 FROM marketplace_user_library WHERE user_id=$1 LIMIT 1`,
           [ctx.user.id] as any

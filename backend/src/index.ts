@@ -552,6 +552,19 @@ const handleMercadoPagoWebhook = async (req: express.Request, res: express.Respo
                 [order.id]
               );
               await client.query("COMMIT");
+
+              // P0-FIX-2026-08-03: sweep focado deste order_id apos COMMIT
+              // (fast-path do reconciler). Garante entrega + XP mesmo se algum
+              // branch acima nao inseriu (ex.: pack sem items em order_items).
+              try {
+                const { reconcileMarketplaceDeliveries } = await import("./services/packDeliveryReconciler");
+                reconcileMarketplaceDeliveries({ orderId: order.id })
+                  .then((r) => console.log(`[webhook-mp] reconcile order=${order.id} packs=${r.packsGranted} ebooks=${r.ebooksDelivered}`))
+                  .catch((e) => console.warn("[webhook-mp] reconcile err:", e?.message));
+              } catch (recErr: any) {
+                console.warn("[webhook-mp] reconciler indisponivel:", recErr?.message);
+              }
+
               // D17-bullmq-enqueue : enfileira processamento da comissão
               try {
                 const { enqueueCommissionProcessing } = await import("./config/queue");
@@ -2014,5 +2027,16 @@ app.listen(PORT, () => {
   console.log(`MMN AI-to-AI backend full ativo em http://localhost:${PORT}`);
   if (HAS_PUBLIC_BUNDLE) {
     console.log(`[HTTP] Frontend estático servindo de ${PUBLIC_DIR}`);
+  }
+  // P0-FIX-2026-08-03: sweep automatico de entrega de pack/ebooks.
+  // Roda 1 vez ~4s apos boot + a cada 5 min, e tambem e' chamado no final
+  // do webhook MP para o order_id que acabou de ser pago (fast-path).
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { startPackDeliveryReconciler } = require("./services/packDeliveryReconciler");
+    startPackDeliveryReconciler();
+    console.log("[boot] packDeliveryReconciler ativo (boot + 5min)");
+  } catch (e: any) {
+    console.warn("[boot] packDeliveryReconciler falhou ao iniciar:", e?.message);
   }
 });

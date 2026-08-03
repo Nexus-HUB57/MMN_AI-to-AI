@@ -312,6 +312,32 @@ export async function grantPackToUser(
 
     await client.query("COMMIT");
 
+    // P0-FIX-2026-08-03: paridade R$1 = 1 XP.
+    // Sem isso, o Dashboard mostrava 0 XP mesmo apos aquisicao do Pack A2.
+    // addXP e' idempotente-por-sourceId (paymentRef ou orderId), entao o sweep
+    // do reconciler nao dobra XP quando re-processa o mesmo pedido.
+    try {
+      const amountReais = Math.floor((opts.amountCents ?? 0) / 100);
+      if (amountReais > 0) {
+        const { addXP } = await import("./xpService");
+        const { getAffiliateByUserId } = await import("../../../database/schemas/db");
+        const affiliate = await getAffiliateByUserId(userId);
+        if (affiliate?.id) {
+          await addXP(
+            affiliate.id,
+            amountReais,
+            "sale",
+            `Aquisicao do ${packSlug.toUpperCase()}`,
+            opts.paymentRef ?? orderId,
+          ).catch((xpErr: any) => {
+            console.warn("[grantPackToUser] addXP falhou:", xpErr?.message);
+          });
+        }
+      }
+    } catch (xpImportErr: any) {
+      console.warn("[grantPackToUser] modulo XP indisponivel:", xpImportErr?.message);
+    }
+
     return {
       ok: true,
       alreadyGranted: false,

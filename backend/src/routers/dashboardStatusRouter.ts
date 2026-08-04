@@ -43,8 +43,16 @@ export const dashboardStatusRouter = router({
     // vinha 'active' apos o webhook do MP concluir o pagamento.
     let hasActivePack = false;
     try {
+      // P0-FIX-2026-08-04: pack_activations usa affiliate_id (nao user_id).
+      // Mesma query que checkPackA2Ownership usa com sucesso — era por isso
+      // que o gate mostrava "Pack A2 ativo 23/07" e o getStatus via vermelho.
       const packRes: any = await ctx.db.execute(
-        `SELECT 1 FROM pack_activations WHERE user_id=$1 AND status='active' LIMIT 1`,
+        `SELECT 1
+           FROM pack_activations pa
+           JOIN affiliates af ON af.id = pa.affiliate_id
+          WHERE af."userId" = $1
+            AND pa.status IN ('active','paid','completed')
+          LIMIT 1`,
         [ctx.user.id] as any
       );
       hasActivePack = (packRes?.rows ?? packRes ?? []).length > 0;
@@ -424,7 +432,23 @@ async function checkMonthlyActivationPaid(
     const mpRecentList = (mpRecent as any).rows || (mpRecent as any);
     if (mpRecentList && mpRecentList.length > 0) return true;
 
-    // 2) Fallback: tabela orders (compatibilidade)
+    // 2) P0-FIX-2026-08-04: user_monthly_activation — tabela real onde
+    // monthlyActivationRouter grava o ciclo pago. Sem este fallback a
+    // ativacao mensal paga via Pix nunca aparecia no Dashboard.
+    try {
+      const uma = await db.execute(sql`
+        SELECT 1 FROM user_monthly_activation uma
+        JOIN affiliates a2 ON a2."userId" = uma.user_id
+        WHERE a2.id = ${affiliateId}
+          AND uma.status IN ('paid','active','completed','approved')
+          AND COALESCE(uma.paid_at, uma.created_at) > NOW() - INTERVAL '40 days'
+        LIMIT 1
+      `);
+      const umaList = (uma as any).rows || (uma as any);
+      if (umaList && umaList.length > 0) return true;
+    } catch (_) { /* tabela ausente */ }
+
+    // 3) Fallback: tabela orders (compatibilidade)
     const rows = await db.execute(sql`
       SELECT 1 FROM orders
       WHERE "affiliateId" = ${affiliateId}

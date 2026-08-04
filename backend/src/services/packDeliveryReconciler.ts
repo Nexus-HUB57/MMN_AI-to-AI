@@ -41,6 +41,30 @@ export interface ReconcilerReport {
   focusedOrderId: string | null;
 }
 
+/**
+ * Mapeia o code de activation_packs (A², A2, AG, AGN, AA, etc.) e/ou o nome
+ * do pack para o slug oficial de PACK_PROTOCOL (pack-a2, pack-ag, ...).
+ */
+function mapPackCodeToSlug(code: string, name: string): string | null {
+  const c = (code || "").toUpperCase().replace(/\s+/g, "").replace("²", "2").replace("III", "3").replace("II", "2");
+  const n = (name || "").toLowerCase();
+  // heuristica por nome primeiro (mais robusta que code)
+  if (/a2|agente afiliado|afiliado a/i.test(n)) return "pack-a2";
+  if (/afiliado preditivo|preditivo/i.test(n)) return "pack-ap";
+  if (/agente generativo|generativo/i.test(n)) return "pack-ag";
+  if (/agente nexus|nexus/i.test(n)) return "pack-agn";
+  if (/agente orquestrador|orquestrador/i.test(n)) return "pack-ao";
+  if (/agente autonomo|autonomo/i.test(n)) return "pack-aa";
+  // por code (fallback)
+  if (c.startsWith("A2")) return "pack-a2";
+  if (c.startsWith("AP")) return "pack-ap";
+  if (c.startsWith("AGN")) return "pack-agn";
+  if (c.startsWith("AG")) return "pack-ag";
+  if (c.startsWith("AO")) return "pack-ao";
+  if (c.startsWith("AA")) return "pack-aa";
+  return null;
+}
+
 async function parseMeta(raw: unknown): Promise<any> {
   if (!raw) return {};
   if (typeof raw === "string") {
@@ -193,6 +217,65 @@ export async function reconcileMarketplaceDeliveries(opts?: {
       } catch (e: any) {
         report.errors += 1;
         console.warn(`[packDeliveryReconciler] falha em ${row.id}:`, e?.message);
+      }
+    }
+
+    // P0-FIX-2026-08-04: BACKFILL por pack_activations (fonte onde o Pack A2
+    // de 23/07 realmente esta, conforme checkPackA2Ownership). Pedidos pagos
+    // antes do patch ?pack=pack-a2 ficaram com slug checkout-manual e nunca
+    // eram alcancados pelo scan de marketplace_orders. Aqui varremos
+    // pack_activations ativas que NAO tem grant e NAO tem ebooks na biblioteca
+    // e entregamos o pack completo (e-books + XP via grantPackToUser).
+    if (!opts?.orderId) {
+      try {
+        const orphanActs = await client.query(
+          `SELECT pa.id AS activation_id, pa.affiliate_id, af."userId" AS user_id,
+                  ap.code AS pack_code, ap.name AS pack_name, ap.price_cents,
+                  pa.activated_at
+             FROM pack_activations pa
+             JOIN affiliates af ON af.id = pa.affiliate_id
+             LEFT JOIN activation_packs ap ON ap.id = pa.pack_id
+            WHERE pa.status IN ('active','paid','completed')
+              AND pa.activated_at > NOW() - INTERVAL '90 days'
+            ORDER BY pa.activated_at ASC
+            LIMIT 1000`
+        );
+        for (const act of orphanActs.rows) {
+          const code = String(act.pack_code || "");
+          // mapeia code (A², A2, AG, etc.) -> slug (pack-a2, pack-ag, ...)
+          const slug = mapPackCodeToSlug(code, String(act.pack_name || ""));
+          if (!slug) continue;
+          const uid = Number(act.user_id);
+          if (!uid) continue;
+
+          // ja tem grant para esse slug?
+          const hasGrant = await client.query(
+            `SELECT 1 FROM marketplace_pack_grants WHERE user_id=$1 AND pack_slug=$2 LIMIT 1`,
+            [uid, slug]
+          );
+          // ja tem ebooks do pack na biblioteca?
+          const hasLib = await client.query(
+            `SELECT 1 FROM marketplace_user_library WHERE user_id=$1 AND source_pack_slug=$2 LIMIT 1`,
+            [uid, slug]
+          );
+          if ((hasGrant.rowCount ?? 0) > 0 && (hasLib.rowCount ?? 0) > 0) continue;
+
+          const paymentRef = `backfill:pack-activation:${act.activation_id}`;
+          const { grantPackToUser } = await import("./packEntitlementService");
+          const g = await grantPackToUser(uid, slug, {
+            paymentRef,
+            paymentMethod: "pix",
+            amountCents: Number(act.price_cents || 0),
+          });
+          if (g?.ok) {
+            report.packsGranted += 1;
+            report.ebooksDelivered += Number(g?.delivered || 0);
+            console.log(`[packDeliveryReconciler] backfill pack ${slug} -> user ${uid} delivered=${g?.delivered}`);
+          }
+        }
+      } catch (bfErr: any) {
+        report.errors += 1;
+        console.warn("[packDeliveryReconciler] backfill pack_activations err:", bfErr?.message);
       }
     }
   } catch (e: any) {

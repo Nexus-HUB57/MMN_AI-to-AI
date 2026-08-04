@@ -123,6 +123,26 @@ export function readMarketplaceCheckoutIntent(): MarketplaceCheckoutIntent | nul
     }
   }
 
+  // 2a. P0-FIX-2026-08-04: formato ?pack=pack-a2 (link de ativacao vindo do
+  // Dashboard / NexusJourneyClarifier / PartnersActivationWizard). Sem este
+  // fallback o PixCheckout abria como "checkout avulso" sem type=pack, e o
+  // backend gravava metadata.type errado — o webhook MP e o reconciler nunca
+  // entregavam o pack, nem XP, nem ebooks na biblioteca.
+  const packParam = params.get("pack");
+  if (packParam && /^pack-[a-z0-9]+$/i.test(packParam)) {
+    const packIntent: MarketplaceCheckoutIntent = {
+      source: "marketplaces",
+      type: "pack",
+      slug: packParam,
+      name: "Pack Agente Afiliado A²",
+      amountCents: 1000,
+      description: "Pack de entrada. Ativa seu Agente IA e libera o primeiro catalogo.",
+    } as any;
+    const normalized = normalizeIntent(packIntent);
+    persistIntent(normalized);
+    return normalized;
+  }
+
   // 2. Fallback: query params soltos (amountCents, description, payerEmail, source, name, slug)
   const amountCentsParam = params.get("amountCents");
   const descriptionParam = params.get("description");

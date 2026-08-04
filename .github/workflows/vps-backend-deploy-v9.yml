@@ -1,0 +1,108 @@
+# =============================================================================
+# VPS Backend Deploy v9 — compila backend/dist (esbuild + workers) no VPS antes
+# do pm2 restart. O v8 so buildava o frontend, entao os patches de backend
+# (getStatus, reconciler, XP, webhook) ficavam como TS sem compilar e o mmn-api
+# continuava rodando o dist/index.js antigo.
+# =============================================================================
+
+name: vps-backend-deploy-v9
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-backend-deploy-v9
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Pull + build backend + frontend + reload mmn-api
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+          VPS_GH_PAT: ${{ secrets.VPS_GH_PAT }}
+        run: |
+          set -euo pipefail
+          MP_B64=$(printf '%s' "$MP_SECRET" | base64 -w0)
+          PAT_B64=$(printf '%s' "$VPS_GH_PAT" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 MP_B64="$MP_B64" PAT_B64="$PAT_B64" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          echo "=== git fetch (fallback URL com token) ==="
+          PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
+          [ -n "$PAT_VAL" ] || { echo "::error::PAT vazio"; exit 1; }
+          git config --unset-all credential.helper 2>/dev/null || true
+          git remote set-url origin "https://github.com/Nexus-HUB57/MMN_AI-to-AI.git"
+          set +e
+          git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" ls-remote origin HEAD
+          LS_RC=$?
+          set -e
+          if [ "$LS_RC" != "0" ]; then
+            git -c credential.helper= fetch "https://x-access-token:${PAT_VAL}@github.com/Nexus-HUB57/MMN_AI-to-AI.git" main
+            git reset --hard FETCH_HEAD
+          else
+            git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" fetch origin main
+            git reset --hard origin/main
+          fi
+          NEW_SHA=$(git rev-parse HEAD)
+          echo "commit_now=$NEW_SHA"
+          echo "$NEW_SHA" > backend/.git-commit
+
+          echo
+          echo "=== install workspaces ==="
+          npm run install:deploy 2>&1 | tail -6
+
+          echo
+          echo "=== build BACKEND (esbuild + workers) ==="
+          npm run build:backend 2>&1 | tail -15
+          ls -lh backend/dist/index.js backend/dist/workers/*.js
+          BACK_HASH=$(sha256sum backend/dist/index.js | awk '{print $1}')
+          echo "backend_dist_hash=$BACK_HASH"
+          # confirma que o reconciler compilou para o dist
+          grep -c "packDeliveryReconciler\|startPackDeliveryReconciler" backend/dist/index.js || echo "::warning::reconciler NAO encontrado em dist"
+
+          echo
+          echo "=== build FRONTEND (vite) ==="
+          npm run build:frontend 2>&1 | tail -15
+          ls -lh frontend/dist/index.html
+
+          echo
+          echo "=== reload mmn-api + workers mantendo secret MP ==="
+          NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
+          [ -n "$NEW_VAL" ] || { echo "::error::MP secret vazio"; exit 1; }
+          MERCADO_PAGO_WEBHOOK_SECRET="$NEW_VAL" COMMIT_SHA="$NEW_SHA" pm2 restart mmn-api --update-env
+          sleep 10
+          pm2 jlist > /tmp/pm2.jlist.json
+          python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); [print({'name':p.get('name'),'pid':p.get('pid'),'status':(p.get('pm2_env') or {}).get('status')}) for p in arr]"
+          PID=$(python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); print(next((p['pid'] for p in arr if p.get('name')=='mmn-api' and p.get('pid')), ''))")
+          [ -n "$PID" ] || { echo "::error::pid mmn-api indisponivel"; exit 1; }
+          RUN_VAL=$(tr '\0' '\n' < /proc/$PID/environ | awk -F= '/^MERCADO_PAGO_WEBHOOK_SECRET=/{print substr($0,index($0,"=")+1)}')
+          [ -n "$RUN_VAL" ] || { echo "::error::runtime sem MERCADO_PAGO_WEBHOOK_SECRET"; exit 1; }
+          echo "runtime_mp_secret_present=1 pid=$PID"
+
+          echo
+          echo "=== verificar reconciler no boot log ==="
+          sleep 8
+          pm2 logs mmn-api --lines 40 --nostream 2>/dev/null | grep -Ei "reconciler|packDelivery|boot sweep" | tail -8 || echo "(reconciler ainda nao logou — boot sweep roda ~4s apos listen)"
+
+          echo
+          echo "=== health check publico ==="
+          curl -fsS https://oneverso.com.br/api/health | head -c 400; echo
+          curl -fsS https://oneverso.com.br/api/health/pix | head -c 400; echo
+
+          echo "BACKEND_DEPLOY_OK commit=$NEW_SHA dist=$BACK_HASH"
+          REMOTE

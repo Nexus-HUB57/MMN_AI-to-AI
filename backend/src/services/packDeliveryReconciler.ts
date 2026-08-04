@@ -285,6 +285,54 @@ export async function reconcileMarketplaceDeliveries(opts?: {
         report.errors += 1;
         console.warn("[packDeliveryReconciler] backfill pack_activations err:", bfErr?.message);
       }
+
+      // P0-FIX-2026-08-04: 3a FONTE — grants ativos (marketplace_pack_grants)
+      // SEM e-books na biblioteca. Esta e' a fonte que alimenta o card
+      // "Pack A2 ativo" do checkPackA2Ownership (fallback 2): o grant existe
+      // mas os e-books nunca foram sorteados/entregues. Re-entrega idempotente
+      // com paymentRef unico por grant (nao duplica nem dobra XP, pois
+      // amountCents=0 no backfill).
+      try {
+        const orphanGrants = await client.query(
+          `SELECT pg.id AS grant_id, pg.user_id, pg.pack_slug, pg.amount_cents,
+                  (SELECT COUNT(*) FROM marketplace_user_library mul
+                    WHERE mul.user_id=pg.user_id AND mul.source_pack_slug=pg.pack_slug) AS owned
+             FROM marketplace_pack_grants pg
+            WHERE pg.status IN ('granted','active','completed','delivered')
+              AND pg.created_at > NOW() - INTERVAL '180 days'
+            ORDER BY pg.created_at ASC
+            LIMIT 1000`
+        );
+        for (const og of orphanGrants.rows) {
+          const uid = Number(og.user_id);
+          const slug = String(og.pack_slug || "");
+          const owned = Number(og.owned || 0);
+          if (!uid || !slug) continue;
+          // so re-entrega se o pack nao tem NENHUM ebook na biblioteca
+          if (owned > 0) continue;
+          const paymentRef = `backfill:grant:${og.grant_id}`;
+          try {
+            const { grantPackToUser } = await import("./packEntitlementService");
+            const g = await grantPackToUser(uid, slug, {
+              paymentRef,
+              paymentMethod: "backfill",
+              amountCents: 0,
+            });
+            if (g?.ok && Number(g?.delivered || 0) > 0) {
+              report.ebooksDelivered += Number(g.delivered);
+              console.log(`[packDeliveryReconciler] backfill-grant ${slug} -> user ${uid} delivered=${g.delivered}`);
+            } else {
+              console.log(`[packDeliveryReconciler] backfill-grant SKIP ${slug} user=${uid} ok=${g?.ok} msg=${g?.message}`);
+            }
+          } catch (ge: any) {
+            report.errors += 1;
+            console.warn(`[packDeliveryReconciler] backfill-grant err ${slug} user=${uid}:`, ge?.message);
+          }
+        }
+      } catch (ogErr: any) {
+        report.errors += 1;
+        console.warn("[packDeliveryReconciler] backfill grants err:", ogErr?.message);
+      }
     }
   } catch (e: any) {
     report.errors += 1;

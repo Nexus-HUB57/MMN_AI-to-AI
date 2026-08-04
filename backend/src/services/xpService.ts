@@ -10,7 +10,9 @@ import { nanoid } from 'nanoid';
 
 // XP multipliers based on source
 const XP_MULTIPLIERS = {
-  sale: 10, // 10 XP per BRL of sale
+  // P0-FIX-2026-08-04: paridade oficial R$1 = 100 XP (anunciada na UI do
+  // Dashboard "paridade R$1 = 100 XP"). Era 10, gerando XP 10x menor.
+  sale: 100, // 100 XP per BRL of sale
   commission: 5, // 5 XP per BRL of commission
   bonus: 15, // 15 XP per BRL of bonus
   network: 3, // 3 XP per BRL from network sales
@@ -92,6 +94,24 @@ export async function addXP(
   sourceId?: string
 ): Promise<{ xpRecord: typeof affiliateXP.$inferSelect; transaction: typeof xpTransactions.$inferSelect }> {
   const db = await requireDb();
+
+  // P0-FIX-2026-08-04: idempotencia por (affiliateId, sourceId).
+  // Webhook do MP + sweeps do reconciler podem reprocessar o mesmo pagamento;
+  // sem este guard o XP dobrava a cada reprocessamento.
+  if (sourceId) {
+    try {
+      const dup = await db
+        .select({ id: xpTransactions.id })
+        .from(xpTransactions)
+        .where(and(eq(xpTransactions.affiliateId, affiliateId), eq(xpTransactions.sourceId, sourceId)))
+        .limit(1);
+      if (dup && dup.length > 0) {
+        const record = await getOrCreateAffiliateXP(affiliateId);
+        return { xpRecord: record, transaction: null as any };
+      }
+    } catch (_) { /* tabela ausente = segue sem guard */ }
+  }
+
   const currentXP = await getOrCreateAffiliateXP(affiliateId);
 
   // Calculate XP amount based on source

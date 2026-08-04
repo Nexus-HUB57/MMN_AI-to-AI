@@ -333,6 +333,50 @@ export async function reconcileMarketplaceDeliveries(opts?: {
         report.errors += 1;
         console.warn("[packDeliveryReconciler] backfill grants err:", ogErr?.message);
       }
+
+      // P0-FIX-2026-08-04: RECOMPUTE de XP. O totalXp de affiliate_xp nao
+      // refletia a soma real de xp_transactions (ex.: 100 vs 2100 reais de
+      // transacoes). Recalcula totalXp/currentLevel/monthlyXp para afiliados
+      // cujo totalXp diverge da soma das transacoes. Idempotente e seguro nos
+      // sweeps de 5min (so atualiza quando ha divergencia).
+      try {
+        const xpFix = await client.query(
+          `WITH sums AS (
+             SELECT t."affiliateId" AS aff_id,
+                    COALESCE(SUM(t.amount), 0) AS real_total
+               FROM xp_transactions t
+              GROUP BY t."affiliateId"
+           ), divergent AS (
+             SELECT x."affiliateId", x."totalXp", s.real_total
+               FROM affiliate_xp x
+               JOIN sums s ON s.aff_id = x."affiliateId"
+              WHERE x."totalXp" <> s.real_total
+           ), monthly_sums AS (
+             SELECT t."affiliateId" AS aff_id,
+                    COALESCE(SUM(t.amount), 0) AS real_month
+               FROM xp_transactions t
+              WHERE t."createdAt" > NOW() - INTERVAL '30 days'
+              GROUP BY t."affiliateId"
+           )
+           UPDATE affiliate_xp x
+              SET "totalXp"  = (SELECT real_total FROM sums s WHERE s.aff_id = x."affiliateId"),
+                  "monthlyXp" = COALESCE((SELECT real_month FROM monthly_sums m WHERE m.aff_id = x."affiliateId"), 0),
+                  "currentLevel" = (
+                    SELECT COALESCE(MAX(cl.level), 1) FROM career_levels cl
+                     WHERE cl."minXp" <= (SELECT real_total FROM sums s WHERE s.aff_id = x."affiliateId")
+                  ),
+                  "updatedAt" = NOW()
+            WHERE x."affiliateId" IN (SELECT aff_id FROM divergent)
+            RETURNING x."affiliateId"`
+        );
+        const fixed = xpFix.rowCount ?? 0;
+        if (fixed > 0) {
+          console.log(`[packDeliveryReconciler] XP recompute: ${fixed} afiliados corrigidos (totalXp divergia da soma das transacoes)`);
+        }
+      } catch (xpErr: any) {
+        report.errors += 1;
+        console.warn("[packDeliveryReconciler] XP recompute err:", xpErr?.message);
+      }
     }
   } catch (e: any) {
     report.errors += 1;

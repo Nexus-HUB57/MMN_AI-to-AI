@@ -407,6 +407,23 @@ async function checkMonthlyActivationPaid(
     const mpList = (mp as any).rows || (mp as any);
     if (mpList && mpList.length > 0) return true;
 
+    // P0-FIX-2026-08-04: se o ciclo atual nao bate (ex.: pagamento de Julho
+    // via Pix MP ficou em ciclo diferente do computado), aceita o ultimo
+    // pagamento de monthly-activation dos ultimos 40 dias como adimplente.
+    const mpRecent = await db.execute(sql`
+      SELECT 1 FROM marketplace_orders mo
+      JOIN affiliates a ON a."userId" = mo.user_id
+      WHERE a.id = ${affiliateId}
+        AND mo.payment_status IN ('paid','approved')
+        AND (mo.external_reference ILIKE '%monthly-activation%'
+             OR mo.metadata->>'source' = 'monthly-activation'
+             OR mo.metadata->>'slug' = 'monthly-activation')
+        AND COALESCE(mo.paid_at, mo.created_at) > NOW() - INTERVAL '40 days'
+      LIMIT 1
+    `);
+    const mpRecentList = (mpRecent as any).rows || (mpRecent as any);
+    if (mpRecentList && mpRecentList.length > 0) return true;
+
     // 2) Fallback: tabela orders (compatibilidade)
     const rows = await db.execute(sql`
       SELECT 1 FROM orders

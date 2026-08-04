@@ -86,8 +86,16 @@ async function reconcileOne(
   let packsGranted = 0;
   let ebooksDelivered = 0;
 
-  // Pack / subscription -> grantPackToUser (idempotente por payment_ref).
-  if ((orderType === "pack" || orderType === "subscription") && orderSlug) {
+  // P0-FIX-2026-08-04: detecta pack pelo SLUG independente do type.
+  // Pedidos pagos antes do patch do frontend (?pack=pack-a2) foram gravados
+  // com metadata.type errado (ex.: "produto"), entao a condicao por type nunca
+  // os alcancava — o sweep lia 21 pedidos e entregava 0. Qualquer pedido cujo
+  // slug bate com um pack conhecido (pack-*) e' tratado como pack.
+  const looksLikePack =
+    /^pack-[a-z0-9]+$/i.test(orderSlug) ||
+    orderType === "pack" ||
+    orderType === "subscription";
+  if (looksLikePack && orderSlug) {
     const existing = await c.query(
       `SELECT 1 FROM marketplace_pack_grants
         WHERE user_id=$1 AND pack_slug=$2
@@ -161,7 +169,7 @@ export async function reconcileMarketplaceDeliveries(opts?: {
          FROM marketplace_orders
         ${where}
         ORDER BY created_at ASC
-        LIMIT 500`,
+        LIMIT 2000`,
       params,
     );
     for (const row of rs.rows) {

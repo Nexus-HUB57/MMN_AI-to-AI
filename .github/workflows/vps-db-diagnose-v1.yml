@@ -1,0 +1,91 @@
+# =============================================================================
+# VPS DB Diagnose v1 — consultas read-only no Postgres do VPS para mapear por
+# que os usuarios de teste (lucasmpthomaz / lucasmpthomaz2) nao receberam
+# pack-a2: grants existem? pool de ebooks existe? biblioteca? XP? ativacoes?
+# NAO altera nada — so le e loga.
+# =============================================================================
+
+name: vps-db-diagnose-v1
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-db-diagnose-v1
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Run read-only DB diagnostics
+        run: |
+          set -euo pipefail
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+          DBURL=$(grep -E '^DATABASE_URL=' .env | head -1 | sed 's/^DATABASE_URL=//' | tr -d '"')
+          [ -n "$DBURL" ] || { echo "::error::DATABASE_URL ausente no .env"; exit 1; }
+
+          Q() {
+            echo
+            echo "===== $1 ====="
+            psql "$DBURL" -c "$2" 2>&1 || echo "(query falhou)"
+          }
+
+          Q "1. Usuarios de teste" \
+            "SELECT id, name, email, role, cpf FROM users WHERE email ILIKE '%lucasmpthomaz%' ORDER BY id;"
+
+          Q "2. Affiliates desses usuarios" \
+            "SELECT a.id AS affiliate_id, a.\"userId\", u.email FROM affiliates a JOIN users u ON u.id = a.\"userId\" WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY a.id;"
+
+          Q "3. marketplace_pack_grants desses usuarios" \
+            "SELECT pg.id, pg.user_id, pg.pack_slug, pg.status, pg.delivered_count, pg.pool_size, pg.payment_ref, pg.amount_cents, pg.created_at FROM marketplace_pack_grants pg JOIN users u ON u.id = pg.user_id WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY pg.created_at;"
+
+          Q "4. Grants pack-a2 globais (owned=0 na biblioteca)" \
+            "SELECT pg.id, pg.user_id, pg.pack_slug, pg.status, (SELECT COUNT(*) FROM marketplace_user_library mul WHERE mul.user_id=pg.user_id AND mul.source_pack_slug=pg.pack_slug) AS owned FROM marketplace_pack_grants pg WHERE pg.pack_slug ILIKE 'pack-a2%' ORDER BY pg.user_id LIMIT 40;"
+
+          Q "5. POOL de ebooks por unlock_pack_slug (contagem)" \
+            "SELECT unlock_pack_slug, status, COUNT(*) FROM marketplace_ebooks GROUP BY unlock_pack_slug, status ORDER BY unlock_pack_slug, status;"
+
+          Q "6. Biblioteca (marketplace_user_library) dos usuarios de teste" \
+            "SELECT mul.user_id, u.email, mul.ebook_slug, mul.source_type, mul.source_pack_slug, mul.delivered, mul.acquired_at FROM marketplace_user_library mul JOIN users u ON u.id = mul.user_id WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY mul.user_id, mul.acquired_at LIMIT 50;"
+
+          Q "7. Contagem da biblioteca por usuario" \
+            "SELECT mul.user_id, u.email, COUNT(*) FROM marketplace_user_library mul JOIN users u ON u.id = mul.user_id WHERE u.email ILIKE '%lucasmpthomaz%' GROUP BY mul.user_id, u.email;"
+
+          Q "8. pack_activations ligadas a esses affiliates" \
+            "SELECT pa.id, pa.affiliate_id, a.\"userId\", u.email, pa.pack_id, pa.status, pa.activated_at FROM pack_activations pa JOIN affiliates a ON a.id = pa.affiliate_id JOIN users u ON u.id = a.\"userId\" WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY pa.activated_at NULLS LAST;"
+
+          Q "9. activation_packs (catalogo)" \
+            "SELECT id, code, name, status FROM activation_packs ORDER BY id LIMIT 30;"
+
+          Q "10. affiliate_xp dos usuarios" \
+            "SELECT x.id, x.\"affiliateId\", a.\"userId\", u.email, x.\"totalXp\", x.\"currentLevel\", x.\"monthlyXp\" FROM affiliate_xp x JOIN affiliates a ON a.id = x.\"affiliateId\" JOIN users u ON u.id = a.\"userId\" WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY x.\"affiliateId\";"
+
+          Q "11. xp_transactions recentes" \
+            "SELECT t.id, t.\"affiliateId\", t.amount, t.source, t.\"sourceId\", t.description, t.\"createdAt\" FROM xp_transactions t JOIN affiliates a ON a.id = t.\"affiliateId\" JOIN users u ON u.id = a.\"userId\" WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY t.\"createdAt\" DESC LIMIT 20;"
+
+          Q "12. marketplace_orders dos usuarios (status + metadata)" \
+            "SELECT mo.id, mo.user_id, u.email, mo.status, mo.payment_status, mo.total_cents, mo.payment_method, mo.external_reference, mo.metadata::text AS meta, mo.created_at, mo.paid_at FROM marketplace_orders mo JOIN users u ON u.id = mo.user_id WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY mo.created_at DESC LIMIT 15;"
+
+          Q "13. user_monthly_activation" \
+            "SELECT uma.id, uma.user_id, u.email, uma.status, uma.cycle, uma.paid_at, uma.created_at FROM user_monthly_activation uma JOIN users u ON u.id = uma.user_id WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY uma.created_at DESC LIMIT 10;"
+
+          Q "14. agentes (agents.status) dos usuarios" \
+            "SELECT ag.id, ag.\"userId\", u.email, ag.status, ag.name FROM agents ag JOIN users u ON u.id = ag.\"userId\" WHERE u.email ILIKE '%lucasmpthomaz%' ORDER BY ag.id LIMIT 10;"
+
+          echo
+          echo "DIAGNOSE_OK"
+          REMOTE

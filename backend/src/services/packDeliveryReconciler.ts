@@ -236,17 +236,21 @@ export async function reconcileMarketplaceDeliveries(opts?: {
              JOIN affiliates af ON af.id = pa.affiliate_id
              LEFT JOIN activation_packs ap ON ap.id = pa.pack_id
             WHERE pa.status IN ('active','paid','completed')
-              AND pa.activated_at > NOW() - INTERVAL '90 days'
-            ORDER BY pa.activated_at ASC
+              AND (pa.activated_at IS NULL OR pa.activated_at > NOW() - INTERVAL '120 days')
+            ORDER BY pa.activated_at ASC NULLS LAST
             LIMIT 1000`
         );
         for (const act of orphanActs.rows) {
           const code = String(act.pack_code || "");
           // mapeia code (A², A2, AG, etc.) -> slug (pack-a2, pack-ag, ...)
           const slug = mapPackCodeToSlug(code, String(act.pack_name || ""));
-          if (!slug) continue;
           const uid = Number(act.user_id);
-          if (!uid) continue;
+          if (!slug || !uid) {
+            // P0-FIX-2026-08-04: logar ativacao nao-mapeada para diagnosticar
+            // por que o backfill nao entregou (code/nome fora das heuristicas).
+            console.log(`[packDeliveryReconciler] backfill SKIP id=${act.activation_id} code="${code}" name="${act.pack_name}" slug=${slug} uid=${uid}`);
+            continue;
+          }
 
           // ja tem grant para esse slug?
           const hasGrant = await client.query(
@@ -258,7 +262,11 @@ export async function reconcileMarketplaceDeliveries(opts?: {
             `SELECT 1 FROM marketplace_user_library WHERE user_id=$1 AND source_pack_slug=$2 LIMIT 1`,
             [uid, slug]
           );
-          if ((hasGrant.rowCount ?? 0) > 0 && (hasLib.rowCount ?? 0) > 0) continue;
+          if ((hasGrant.rowCount ?? 0) > 0 && (hasLib.rowCount ?? 0) > 0) {
+            console.log(`[packDeliveryReconciler] backfill JA_ENTREGUE ${slug} user=${uid}`);
+            continue;
+          }
+          console.log(`[packDeliveryReconciler] backfill PENDENTE ${slug} user=${uid} grant=${hasGrant.rowCount} lib=${hasLib.rowCount}`);
 
           const paymentRef = `backfill:pack-activation:${act.activation_id}`;
           const { grantPackToUser } = await import("./packEntitlementService");

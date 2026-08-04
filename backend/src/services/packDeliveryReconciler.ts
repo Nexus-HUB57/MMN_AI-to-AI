@@ -339,37 +339,60 @@ export async function reconcileMarketplaceDeliveries(opts?: {
       // transacoes). Recalcula totalXp/currentLevel/monthlyXp para afiliados
       // cujo totalXp diverge da soma das transacoes. Idempotente e seguro nos
       // sweeps de 5min (so atualiza quando ha divergencia).
+      // P0-FIX-2026-08-04 (rev2): recompute em JS simples — a versao com CTE
+      // falhava em producao com "column aff_id does not exist" (escopo de CTE
+      // dentro de subquery do SET). Aqui: somas por affiliateId em 2 SELECTs
+      // simples + UPDATE por linha apenas quando totalXp diverge. Volume de
+      // afiliados e' pequeno (centenas), seguro nos sweeps de 5min.
       try {
-        const xpFix = await client.query(
-          `WITH sums AS (
-             SELECT t."affiliateId" AS aff_id,
-                    COALESCE(SUM(t.amount), 0) AS real_total
-               FROM xp_transactions t
-              GROUP BY t."affiliateId"
-           ), divergent AS (
-             SELECT x."affiliateId", x."totalXp", s.real_total
-               FROM affiliate_xp x
-               JOIN sums s ON s.aff_id = x."affiliateId"
-              WHERE x."totalXp" <> s.real_total
-           ), monthly_sums AS (
-             SELECT t."affiliateId" AS aff_id,
-                    COALESCE(SUM(t.amount), 0) AS real_month
-               FROM xp_transactions t
-              WHERE t."createdAt" > NOW() - INTERVAL '30 days'
-              GROUP BY t."affiliateId"
-           )
-           UPDATE affiliate_xp x
-              SET "totalXp"  = (SELECT real_total FROM sums s WHERE s.aff_id = x."affiliateId"),
-                  "monthlyXp" = COALESCE((SELECT real_month FROM monthly_sums m WHERE m.aff_id = x."affiliateId"), 0),
-                  "currentLevel" = (
-                    SELECT COALESCE(MAX(cl.level), 1) FROM career_levels cl
-                     WHERE cl."minXp" <= (SELECT real_total FROM sums s WHERE s.aff_id = x."affiliateId")
-                  ),
-                  "updatedAt" = NOW()
-            WHERE x."affiliateId" IN (SELECT d."affiliateId" FROM divergent d)
-            RETURNING x."affiliateId"`
+        const totalsRs = await client.query(
+          `SELECT t."affiliateId" AS aff_id, COALESCE(SUM(t.amount),0)::int AS real_total
+             FROM xp_transactions t GROUP BY t."affiliateId"`
         );
-        const fixed = xpFix.rowCount ?? 0;
+        const monthRs = await client.query(
+          `SELECT t."affiliateId" AS aff_id, COALESCE(SUM(t.amount),0)::int AS real_month
+             FROM xp_transactions t
+            WHERE t."createdAt" > NOW() - INTERVAL '30 days'
+            GROUP BY t."affiliateId"`
+        );
+        const xpRows = await client.query(
+          `SELECT "affiliateId", "totalXp", "currentLevel", "monthlyXp" FROM affiliate_xp`
+        );
+        const levelsRs = await client
+          .query(`SELECT level, "minXp" FROM career_levels ORDER BY "minXp" ASC`)
+          .catch(() => ({ rows: [] as any[] }));
+
+        const totalMap = new Map<number, number>();
+        for (const r of totalsRs.rows) totalMap.set(Number(r.aff_id), Number(r.real_total));
+        const monthMap = new Map<number, number>();
+        for (const r of monthRs.rows) monthMap.set(Number(r.aff_id), Number(r.real_month));
+        const levelFor = (xp: number): number => {
+          let lvl = 1;
+          for (const l of levelsRs.rows) {
+            if (xp >= Number(l.minXp ?? l.minxp ?? 0)) lvl = Number(l.level);
+            else break;
+          }
+          return lvl;
+        };
+
+        let fixed = 0;
+        for (const row of xpRows.rows) {
+          const affId = Number(row.affiliateId ?? row.affiliateid);
+          const realTotal = totalMap.get(affId) ?? 0;
+          const realMonth = monthMap.get(affId) ?? 0;
+          const curTotal = Number(row.totalXp ?? row.totalxp ?? 0);
+          const curLevel = Number(row.currentLevel ?? row.currentlevel ?? 1);
+          const curMonth = Number(row.monthlyXp ?? row.monthlyxp ?? 0);
+          const newLevel = levelFor(realTotal);
+          if (curTotal === realTotal && curLevel === newLevel && curMonth === realMonth) continue;
+          await client.query(
+            `UPDATE affiliate_xp
+                SET "totalXp"=$2, "monthlyXp"=$3, "currentLevel"=$4, "updatedAt"=NOW()
+              WHERE "affiliateId"=$1`,
+            [affId, realTotal, realMonth, newLevel]
+          );
+          fixed += 1;
+        }
         if (fixed > 0) {
           console.log(`[packDeliveryReconciler] XP recompute: ${fixed} afiliados corrigidos (totalXp divergia da soma das transacoes)`);
         }

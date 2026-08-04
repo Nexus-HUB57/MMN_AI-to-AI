@@ -366,7 +366,7 @@ export async function reconcileMarketplaceDeliveries(opts?: {
                      WHERE cl."minXp" <= (SELECT real_total FROM sums s WHERE s.aff_id = x."affiliateId")
                   ),
                   "updatedAt" = NOW()
-            WHERE x."affiliateId" IN (SELECT aff_id FROM divergent)
+            WHERE x."affiliateId" IN (SELECT d."affiliateId" FROM divergent d)
             RETURNING x."affiliateId"`
         );
         const fixed = xpFix.rowCount ?? 0;

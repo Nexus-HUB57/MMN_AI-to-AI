@@ -230,7 +230,7 @@ export async function reconcileMarketplaceDeliveries(opts?: {
       try {
         const orphanActs = await client.query(
           `SELECT pa.id AS activation_id, pa.affiliate_id, af."userId" AS user_id,
-                  ap.code AS pack_code, ap.name AS pack_name, ap.price_cents,
+                  ap.code AS pack_code, ap.name AS pack_name,
                   pa.activated_at
              FROM pack_activations pa
              JOIN affiliates af ON af.id = pa.affiliate_id
@@ -265,7 +265,7 @@ export async function reconcileMarketplaceDeliveries(opts?: {
           const g = await grantPackToUser(uid, slug, {
             paymentRef,
             paymentMethod: "pix",
-            amountCents: Number(act.price_cents || 0),
+            amountCents: 0,
           });
           if (g?.ok) {
             report.packsGranted += 1;

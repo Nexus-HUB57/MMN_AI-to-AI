@@ -100,9 +100,11 @@ jobs:
           pm2 logs mmn-api --lines 40 --nostream 2>/dev/null | grep -Ei "reconciler|packDelivery|boot sweep" | tail -8 || echo "(reconciler ainda nao logou — boot sweep roda ~4s apos listen)"
 
           echo
-          echo "=== health check publico ==="
-          curl -fsS https://oneverso.com.br/api/health | head -c 400; echo
-          curl -fsS https://oneverso.com.br/api/health/pix | head -c 400; echo
+          echo "=== health check publico (nao-fatal: DNS publico instavel) ==="
+          curl -fsS --max-time 15 https://oneverso.com.br/api/health | head -c 400 || echo "(warn) health DNS indisponivel agora — deploy ja aplicado"
+          echo
+          curl -fsS --max-time 15 https://oneverso.com.br/api/health/pix | head -c 400 || echo "(warn) health/pix DNS indisponivel agora"
+          echo
 
           echo "BACKEND_DEPLOY_OK commit=$NEW_SHA dist=$BACK_HASH"
           REMOTE

@@ -280,6 +280,33 @@ export const adminRouter = router({
     };
   }),
 
+
+  /**
+   * D19.01: getNetworkStats — Contagem real de afiliados para o Dashboard Admin
+   * Retorna total de afiliados ativos da tabela affiliates (não usa fallback para totalUsers)
+   */
+  getNetworkStats: adminProcedure.query(async ({ ctx }) => {
+    const [activeResult] = await ctx.db
+      .select({ count: count() })
+      .from(affiliates)
+      .where(eq(affiliates.status, "active"));
+
+    const [totalResult] = await ctx.db
+      .select({ count: count() })
+      .from(affiliates);
+
+    const [totalUsersResult] = await ctx.db
+      .select({ count: count() })
+      .from(users)
+      .where(sql`COALESCE("users"."is_test_data", FALSE) = FALSE`);
+
+    return {
+      totalUsers: Number(totalUsersResult?.count ?? 0),
+      activeAffiliates: Number(activeResult?.count ?? 0),
+      totalAffiliates: Number(totalResult?.count ?? 0),
+    };
+  }),
+
   /**
    * Estatísticas de comissões
    */

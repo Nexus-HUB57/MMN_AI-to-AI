@@ -78,25 +78,22 @@ export default function AdminDashboard() {
     periodDays: 30,
   });
 
-  const commissionStatsQuery = trpc.admin.getCommissionStats.useQuery();
+  const networkStatsQuery = trpc.admin.getNetworkStats.useQuery();
 
   const users = listUsersQuery.data?.users ?? [];
   const pagination = listUsersQuery.data?.pagination;
   const totals = marketplaceStatsQuery.data?.totals;
-  const commissionStats = commissionStatsQuery?.data;
+  // Comissões via commissionsRouter (publicProcedure)
+  const commissionStatsQuery = trpc.commissions.getStats.useQuery();
 
-  const affiliatesCount = useMemo(
-    () => users.filter((u: any) => u.affiliateStatus === "active" || u.role === "affiliate").length,
-    [users],
-  );
+  const networkStats = networkStatsQuery?.data;
 
-  const totalUsers = pagination?.total ?? 0;
 
-  // Affiliate count from all users (not just page)
-  const allAffiliatesCount = affiliatesCount > 0 ? affiliatesCount : totalUsers; // active affiliates from current page, fallback to total
+  const totalUsers = networkStats?.totalUsers ?? pagination?.total ?? 0;
+  const allAffiliatesCount = networkStats?.activeAffiliates ?? 0;
 
-  const confirmedCents = commissionStats?.confirmed ?? commissionStats?.paidCents ?? 0;
-  const pendingCents = commissionStats?.pending ?? commissionStats?.pendingCents ?? 0;
+  const confirmedCents = commissionStatsQuery?.data?.paid ?? 0;
+  const pendingCents = commissionStatsQuery?.data?.pending ?? 0;
 
   const paidPeriodCents = totals?.grossPeriodCents ?? 0;
 

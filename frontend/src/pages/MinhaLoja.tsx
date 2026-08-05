@@ -462,7 +462,7 @@ export default function MinhaLoja() {
                         <Button
                           size="sm"
                           className="bg-quantum-cyan/90 text-slate-900 font-semibold hover:bg-quantum-cyan"
-                          disabled={!(e.resalePriceCents > 0) || !e.coverPath}
+                          disabled={!(e.resalePriceCents > 0)}
                           onClick={() => { addToCart(e); }}>
                           Comprar
                         </Button>

@@ -78,7 +78,7 @@ export default function AdminDashboard() {
     periodDays: 30,
   });
 
-  const commissionStatsQuery = (trpc as any).admin?.getCommissionStats?.useQuery?.();
+  const commissionStatsQuery = trpc.admin.getCommissionStats.useQuery();
 
   const users = listUsersQuery.data?.users ?? [];
   const pagination = listUsersQuery.data?.pagination;
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
   const totalUsers = pagination?.total ?? 0;
 
   // Affiliate count from all users (not just page)
-  const allAffiliatesCount = totalUsers; // fallback; real count would need a dedicated query
+  const allAffiliatesCount = affiliatesCount > 0 ? affiliatesCount : totalUsers; // active affiliates from current page, fallback to total
 
   const confirmedCents = commissionStats?.confirmed ?? commissionStats?.paidCents ?? 0;
   const pendingCents = commissionStats?.pending ?? commissionStats?.pendingCents ?? 0;

@@ -790,10 +790,12 @@ export default function Home() {
             </span>
           </div>
         </div>
+        {/* Secciones adicionales - movidas antes del footer */
+                <HomePersonasAcademia />
+                <HomeCalendarioIA />
+
       </footer>
 
-        <HomePersonasAcademia />
-        <HomeCalendarioIA />
       </div>
   );
 }

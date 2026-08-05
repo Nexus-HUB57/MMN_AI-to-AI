@@ -254,6 +254,27 @@ async function validateAdminCredentials(email: string, password: string) {
   );
 }
 
+async function resolveExistingAffiliateByEmail(email: string) {
+  if (typeof fetch === "undefined") return null;
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!normalizedEmail) return null;
+
+  try {
+    const resp = await fetch(`/api/auth/resolve-user-id?email=${encodeURIComponent(normalizedEmail)}`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || (typeof data.id !== "number" && typeof data.id !== "string")) return null;
+    return {
+      id: String(data.id),
+      name: typeof data.name === "string" && data.name.trim() ? data.name : normalizedEmail.split("@")[0],
+      email: typeof data.email === "string" && data.email.trim() ? data.email : normalizedEmail,
+      role: typeof data.role === "string" ? data.role : "affiliate",
+    };
+  } catch {
+    return null;
+  }
+}
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -304,6 +325,43 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || loading || !user || user.role === "admin" || !user.email) return;
+    let cancelled = false;
+
+    void (async () => {
+      const resolved = await resolveExistingAffiliateByEmail(user.email);
+      if (cancelled) return;
+
+      if (!resolved) {
+        setUser(null);
+        persistUser(null);
+        window.localStorage.removeItem(SOCIAL_TOKEN_KEY);
+        window.localStorage.removeItem("mmn-ai-resolved-user-id");
+        return;
+      }
+
+      const normalizedStoredEmail = user.email.trim().toLowerCase();
+      const normalizedResolvedEmail = resolved.email.trim().toLowerCase();
+      if (String(user.id) !== String(resolved.id) || normalizedStoredEmail !== normalizedResolvedEmail) {
+        const syncedUser: User = {
+          ...user,
+          id: String(resolved.id),
+          name: resolved.name || user.name,
+          email: resolved.email || user.email,
+          role: "affiliate",
+        };
+        setUser(syncedUser);
+        persistUser(syncedUser);
+        window.localStorage.setItem("mmn-ai-resolved-user-id", String(resolved.id));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loading, user]);
 
   const loginAsDemo = async (role: "admin" | "affiliate", overrides?: Partial<User>) => {
     if (role === "admin") {
@@ -396,24 +454,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       throw new Error("Informe seu nome para acessar o painel do afiliado.");
     }
 
+    const resolved = normalizedEmail ? await resolveExistingAffiliateByEmail(normalizedEmail) : null;
+    if (!resolved) {
+      throw new Error("Usuário não encontrado após o reset go-live. Faça um novo cadastro antes de acessar.");
+    }
+
     const nextUser = buildAffiliateUser({
-      name,
-      email: normalizedEmail || AFFILIATE_DEMO_USER.email,
+      id: String(resolved.id),
+      name: resolved.name || name,
+      email: resolved.email || normalizedEmail,
     });
     setUser(nextUser);
     persistUser(nextUser);
-    // HOTFIX D18.6: resolve user_id numerico real via API para evitar fallback fantasma
-    if (nextUser.email) {
-      try {
-        const resp = await fetch(`/api/auth/resolve-user-id?email=${encodeURIComponent(nextUser.email.toLowerCase())}`);
-        if (resp.ok) {
-          const j = await resp.json();
-          if (j && typeof j.id === "number") {
-            window.localStorage.setItem("mmn-ai-resolved-user-id", String(j.id));
-          }
-        }
-      } catch {}
-    }
+    window.localStorage.setItem("mmn-ai-resolved-user-id", String(resolved.id));
     ensureAffiliateMarketplaceProfile({
       id: nextUser.id,
       name: nextUser.name,
@@ -476,6 +529,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       window.localStorage.removeItem(ADMIN_TOKEN_KEY);
       window.localStorage.removeItem(ADMIN_LOCKOUT_KEY);
       window.localStorage.removeItem(SOCIAL_TOKEN_KEY);
+      window.localStorage.removeItem("mmn-ai-resolved-user-id");
     }
   };
 

@@ -127,10 +127,10 @@ export default function AdminSettings() {
           .map(([key, value]) => `• ${key}: ${value}`)
           .join("\n");
         const accepted = window.confirm(
-          `Este reset irá remover SOMENTE dados operacionais de teste.\n\n${details || 'Nenhum dado de teste encontrado.'}\n\nUsuários/admins reais serão preservados.\n\nClique OK para continuar.`
+          `Este reset irá executar um FULL RESET do Go Live.\n\n${details || 'Nenhum registro encontrado nas tabelas monitoradas.'}\n\nTodos os usuários e toda a cascata operacional relacionada serão apagados.\n\nClique OK para continuar.`
         );
         if (!accepted) return;
-        const typed = window.prompt('Digite exatamente RESETAR GO LIVE para confirmar o reset controlado.');
+        const typed = window.prompt('Digite exatamente RESETAR GO LIVE para confirmar o FULL RESET.');
         if ((typed || '').trim() !== 'RESETAR GO LIVE') {
           toast.error('Confirmação inválida. Nenhuma alteração foi aplicada.');
           return;
@@ -414,7 +414,7 @@ export default function AdminSettings() {
             </Button>
           </div>
           <p className="mt-3 text-xs text-red-700">
-            Escopo atual do reset go-live: comissões, saldos, pedidos de teste, progresso e visualizações. Usuários e admins reais são preservados.
+            Escopo atual do reset go-live: FULL RESET com remoção de usuários, afiliados, pedidos, biblioteca, grants, XP, ativações, agents e demais dados operacionais relacionados.
           </p>
         </Card>
       </div>

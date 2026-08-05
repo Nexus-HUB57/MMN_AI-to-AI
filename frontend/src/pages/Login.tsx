@@ -45,18 +45,9 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
     setLoading(provider); setSocialError(null);
     try {
       const { trpc: trpcClient } = await import("@/lib/trpc");
-      let session: any = null;
-      try {
-        session = await trpcClient.auth.socialLoginNative.mutate({
-          provider: KEYS[provider], email: email.trim(), name: name.trim() || undefined,
-        });
-      } catch {
-        session = {
-          sessionId: `local-social-${provider}-${Date.now()}`,
-          tokenId: `local-token-${Date.now()}`,
-          user: { id: Date.now(), name: name.trim() || email.split("@")[0], email, role: "affiliate", picture: null },
-        };
-      }
+      const session = await trpcClient.auth.socialLoginNative.mutate({
+        provider: KEYS[provider], email: email.trim(), name: name.trim() || undefined,
+      });
       window.dispatchEvent(new CustomEvent("mmn:social-login", {
         detail: {
           provider, uid: `${KEYS[provider]}:${email.toLowerCase()}`, email,
@@ -66,7 +57,7 @@ function SocialLoginButtons({ disabled }: SocialLoginButtonsProps) {
       setModal(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      setSocialError(`Nao foi possivel entrar com ${provider}: ${msg.split("\n")[0]}`);
+      setSocialError(`Nao foi possivel entrar com ${provider}: ${msg.split("\n")[0]}. Se o reset foi executado, faça um novo cadastro antes de acessar.`);
     } finally {
       setLoading(null);
     }

@@ -751,15 +751,35 @@ export const adminRouter = router({
   }),
 
   previewGoLiveReset: adminProcedure.query(async () => {
-    const tables = ['users', 'affiliates', 'commissions', 'payments'];
+    const tables = [
+      'users',
+      'affiliates',
+      'commissions',
+      'payments',
+      'marketplace_orders',
+      'marketplace_order_items',
+      'marketplace_user_library',
+      'marketplace_pack_grants',
+      'marketplace_pack_drawings',
+      'affiliate_xp',
+      'xp_transactions',
+      'user_monthly_activation',
+      'pack_activations',
+      'agents',
+    ];
     const counts: Record<string, number> = {};
     for (const table of tables) {
       try {
-        const result = await pool.query(`SELECT COUNT(*)::int AS count FROM ${table} WHERE COALESCE(is_test_data, FALSE) = TRUE`);
+        const result = await pool.query(`SELECT COUNT(*)::int AS count FROM ${table}`);
         counts[table] = Number(result.rows[0]?.count ?? 0);
-      } catch { counts[table] = 0; }
+      } catch {
+        counts[table] = 0;
+      }
     }
-    return { counts, destructiveScope: 'Somente registros explicitamente marcados is_test_data=true.' };
+    return {
+      counts,
+      destructiveScope: 'FULL RESET: apaga todos os usuarios e toda a cascata operacional relacionada.',
+    };
   }),
 
   resetGoLiveOperationalData: adminProcedure

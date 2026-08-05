@@ -1,0 +1,64 @@
+# =============================================================================
+# VPS Users Diagnose v1 — consultas read-only para mapear por que cadastros
+# antigos reaparecem apos o reset: quantos users tem is_test_data=true vs
+# false, e quem sao os usuarios "antigos" que persistem.
+# =============================================================================
+
+name: vps-users-diagnose-v1
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-users-diagnose-v1
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Run read-only users diagnostics
+        run: |
+          set -euo pipefail
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+          DBURL=$(grep -E '^DATABASE_URL=' .env | head -1 | sed 's/^DATABASE_URL=//' | tr -d '"')
+          [ -n "$DBURL" ] || { echo "::error::DATABASE_URL ausente"; exit 1; }
+          Q() { echo; echo "===== $1 ====="; psql "$DBURL" -c "$2" 2>&1 || echo "(query falhou)"; }
+
+          Q "1. users por is_test_data" \
+            "SELECT COALESCE(is_test_data,FALSE) AS is_test, COUNT(*) FROM users GROUP BY 1 ORDER BY 1;"
+
+          Q "2. TODOS os users (id, email, role, is_test, created)" \
+            "SELECT id, email, role, COALESCE(is_test_data,FALSE) AS is_test, \"createdAt\" FROM users ORDER BY id LIMIT 60;"
+
+          Q "3. affiliates por is_test_data" \
+            "SELECT COALESCE(is_test_data,FALSE) AS is_test, COUNT(*) FROM affiliates GROUP BY 1 ORDER BY 1;"
+
+          Q "4. payments por is_test_data" \
+            "SELECT COALESCE(is_test_data,FALSE) AS is_test, COUNT(*) FROM payments GROUP BY 1 ORDER BY 1;"
+
+          Q "5. commissions por is_test_data" \
+            "SELECT COALESCE(is_test_data,FALSE) AS is_test, COUNT(*) FROM commissions GROUP BY 1 ORDER BY 1;"
+
+          Q "6. tabelas que TEM coluna is_test_data" \
+            "SELECT table_name FROM information_schema.columns WHERE column_name='is_test_data' ORDER BY table_name;"
+
+          Q "7. admin_audit_events (ultimos resets)" \
+            "SELECT id, action, actor_email, created_at FROM admin_audit_events ORDER BY created_at DESC LIMIT 10;"
+
+          echo
+          echo "USERS_DIAGNOSE_OK"
+          REMOTE

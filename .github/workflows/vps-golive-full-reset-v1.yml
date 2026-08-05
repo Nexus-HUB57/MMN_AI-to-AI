@@ -1,0 +1,108 @@
+# =============================================================================
+# VPS GoLive Full Reset v1 — FULL WIPE do banco (todos os usuarios + cascata
+# completa) + deploy do backend com o resetGoLiveOperationalData corrigido.
+#
+# CONFIRMADO PELO USUARIO: apagar TODOS os 11 usuarios (full reset) + cascata
+# completa (users, affiliates, commissions, payments, marketplace_orders,
+# library, grants, XP, ativacoes, agents).
+#
+# Executa o reset via psql direto (nao depende de sessao admin logada),
+# depois compila backend+frontend, reinicia mmn-api e roda diagnostico final.
+# =============================================================================
+
+name: vps-golive-full-reset-v1
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vps-golive-full-reset-v1
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Full wipe + build + reload
+        env:
+          MP_SECRET: ${{ secrets.MERCADO_PAGO_WEBHOOK_SECRET }}
+          VPS_GH_PAT: ${{ secrets.VPS_GH_PAT }}
+        run: |
+          set -euo pipefail
+          MP_B64=$(printf '%s' "$MP_SECRET" | base64 -w0)
+          PAT_B64=$(printf '%s' "$VPS_GH_PAT" | base64 -w0)
+          ssh -p 22022 root@143.95.213.237 MP_B64="$MP_B64" PAT_B64="$PAT_B64" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          BASE=/var/www/oneverso/current
+          cd "$BASE"
+
+          DBURL=$(grep -E '^DATABASE_URL=' .env | head -1 | sed 's/^DATABASE_URL=//' | tr -d '"')
+          [ -n "$DBURL" ] || { echo "::error::DATABASE_URL ausente"; exit 1; }
+
+          WIPE_SQL="TRUNCATE TABLE xp_transactions, affiliate_xp, marketplace_user_library, marketplace_pack_drawings, marketplace_pack_grants, marketplace_order_items, marketplace_orders, user_monthly_activation, pack_activations, agents, payments, commissions, affiliates, users RESTART IDENTITY CASCADE;"
+
+          COUNT_TABLES="users affiliates commissions payments marketplace_orders marketplace_order_items marketplace_user_library marketplace_pack_grants affiliate_xp xp_transactions user_monthly_activation agents pack_activations"
+
+          echo "=== SNAPSHOT PRE-RESET ==="
+          for T in $COUNT_TABLES; do
+            C=$(psql "$DBURL" -Atc "SELECT COUNT(*) FROM $T" 2>/dev/null || echo "ERR")
+            printf "  %-32s %s\n" "$T" "$C"
+          done
+
+          echo
+          echo "=== FULL WIPE (TRUNCATE CASCADE — confirmado) ==="
+          psql "$DBURL" -c "$WIPE_SQL"
+          echo "wipe_executed=1"
+
+          echo
+          echo "=== SNAPSHOT POS-RESET ==="
+          for T in $COUNT_TABLES; do
+            C=$(psql "$DBURL" -Atc "SELECT COUNT(*) FROM $T" 2>/dev/null || echo "ERR")
+            printf "  %-32s %s\n" "$T" "$C"
+          done
+
+          echo
+          echo "=== DEPLOY backend + frontend ==="
+          PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
+          git config --unset-all credential.helper 2>/dev/null || true
+          git remote set-url origin "https://github.com/Nexus-HUB57/MMN_AI-to-AI.git"
+          set +e
+          git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" ls-remote origin HEAD
+          LS_RC=$?
+          set -e
+          if [ "$LS_RC" != "0" ]; then
+            git -c credential.helper= fetch "https://x-access-token:${PAT_VAL}@github.com/Nexus-HUB57/MMN_AI-to-AI.git" main
+            git reset --hard FETCH_HEAD
+          else
+            git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" fetch origin main
+            git reset --hard origin/main
+          fi
+          NEW_SHA=$(git rev-parse HEAD)
+          echo "commit_now=$NEW_SHA"
+          echo "$NEW_SHA" > backend/.git-commit
+
+          npm run install:deploy 2>&1 | tail -5
+          npm run build:backend 2>&1 | tail -12
+          ls -lh backend/dist/index.js
+          npm run build:frontend 2>&1 | tail -8
+
+          NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
+          MERCADO_PAGO_WEBHOOK_SECRET="$NEW_VAL" COMMIT_SHA="$NEW_SHA" pm2 restart mmn-api --update-env
+          sleep 10
+          pm2 jlist > /tmp/pm2.jlist.json
+          python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); [print({'name':p.get('name'),'pid':p.get('pid'),'status':(p.get('pm2_env') or {}).get('status')}) for p in arr if p.get('name')=='mmn-api']"
+
+          echo
+          echo "GOLIVE_FULL_RESET_OK commit=$NEW_SHA"
+          REMOTE

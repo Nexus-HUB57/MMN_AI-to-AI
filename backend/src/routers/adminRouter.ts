@@ -708,24 +708,83 @@ export const adminRouter = router({
   resetGoLiveOperationalData: adminProcedure
     .input(z.object({ confirmationText: z.literal('RESETAR GO LIVE') }))
     .mutation(async ({ ctx }) => {
+      // P0-FIX-2026-08-05: FULL RESET com cascata completa.
+      // Comportamento anterior estava quebrado em 3 frentes:
+      //   1) so apagava WHERE is_test_data=TRUE (todos os usuarios tinham
+      //      is_test_data=false => deletava 0 registros);
+      //   2) payments/commissions NAO tem coluna is_test_data => erro SQL
+      //      abortava a transacao inteira (ROLLBACK silencioso);
+      //   3) admin_audit_events pode nao existir => falha extra.
+      // Agora: full wipe com cascata em ordem filha->mae, tolerante por tabela
+      // (uma tabela ausente/sem coluna nao derruba as demais), e auditoria
+      // tolerante (cria admin_audit_events se faltar).
       const client = await pool.connect();
       const deleted: Record<string, number> = {};
+      const errors: Record<string, string> = {};
+
+      // Ordem importa por FK: filhos primeiro, depois pais.
+      const CASCADE_ORDER = [
+        'xp_transactions',
+        'affiliate_xp',
+        'marketplace_user_library',
+        'marketplace_pack_drawings',
+        'marketplace_pack_grants',
+        'marketplace_order_items',
+        'marketplace_orders',
+        'user_monthly_activation',
+        'pack_activations',
+        'agents',
+        'payments',
+        'commissions',
+        'affiliates',
+        'users',
+      ];
+
       try {
-        await client.query('BEGIN');
-        for (const table of ['commissions', 'payments', 'affiliates', 'users']) {
-          const result = await client.query(`DELETE FROM ${table} WHERE COALESCE(is_test_data, FALSE) = TRUE`);
-          deleted[table] = result.rowCount ?? 0;
+        // Auditoria: garante tabela (tolerante se ja existir)
+        try {
+          await client.query(
+            `CREATE TABLE IF NOT EXISTS admin_audit_events (
+               id SERIAL PRIMARY KEY,
+               action VARCHAR(120) NOT NULL,
+               actor_email VARCHAR(200),
+               target_type VARCHAR(80),
+               target_id VARCHAR(120),
+               metadata JSONB,
+               created_at TIMESTAMPTZ DEFAULT NOW()
+             )`
+          );
+        } catch (e: any) {
+          errors['admin_audit_events:create'] = e?.message;
         }
-        await client.query(
-          'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
-          ['go_live.test_data_reset', ctx.user.email ?? null, 'go_live', 'controlled_reset', JSON.stringify({ deleted })],
-        );
-        await client.query('COMMIT');
-        return { ok: true, deleted };
-      } catch (error) {
-        await client.query('ROLLBACK');
-        throw error;
-      } finally { client.release(); }
+
+        // Cada DELETE em autocommit isolado (sem transacao global) — no PG,
+        // um erro dentro de transacao aborta TODAS as queries seguintes, e o
+        // objetivo aqui e' tolerancia por tabela.
+        for (const table of CASCADE_ORDER) {
+          try {
+            const result = await client.query(`DELETE FROM ${table}`);
+            deleted[table] = result.rowCount ?? 0;
+          } catch (e: any) {
+            errors[table] = e?.message;
+            deleted[table] = -1;
+          }
+        }
+
+        // Auditoria do reset
+        try {
+          await client.query(
+            'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
+            ['go_live.full_reset', ctx.user.email ?? null, 'go_live', 'full_reset', JSON.stringify({ deleted, errors })],
+          );
+        } catch (e: any) {
+          errors['admin_audit_events:insert'] = e?.message;
+        }
+
+        return { ok: Object.keys(errors).length === 0, deleted, errors };
+      } finally {
+        client.release();
+      }
     }),
 
 });

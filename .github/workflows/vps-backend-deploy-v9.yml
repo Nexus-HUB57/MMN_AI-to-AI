@@ -55,6 +55,14 @@ jobs:
             echo "stale_index_lock_removed=0"
           fi
 
+          echo "=== validar integridade do index atual ==="
+          if git status --porcelain >/dev/null 2>&1; then
+            echo "corrupt_index_removed=0"
+          else
+            rm -f .git/index
+            echo "corrupt_index_removed=1"
+          fi
+
           echo "=== git fetch (fallback URL com token) ==="
           PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
           [ -n "$PAT_VAL" ] || { echo "::error::PAT vazio"; exit 1; }
@@ -66,12 +74,14 @@ jobs:
           set -e
           if [ "$LS_RC" != "0" ]; then
             git -c credential.helper= fetch "https://x-access-token:${PAT_VAL}@github.com/Nexus-HUB57/MMN_AI-to-AI.git" main
+            rm -f .git/index
             git reset --hard FETCH_HEAD
           else
             git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" fetch origin main
+            rm -f .git/index
             git reset --hard origin/main
           fi
-          git clean -fd
+          git clean -fd 2>/dev/null || true
           NEW_SHA=$(git rev-parse HEAD)
           echo "commit_now=$NEW_SHA"
           echo "$NEW_SHA" > backend/.git-commit

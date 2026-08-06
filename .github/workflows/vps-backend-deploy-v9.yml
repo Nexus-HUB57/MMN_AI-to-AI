@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: vps-backend-deploy-v9
+  group: vps-oneverso-deploy
   cancel-in-progress: false
 
 jobs:
@@ -41,6 +41,11 @@ jobs:
           export GIT_TERMINAL_PROMPT=0
           BASE=/var/www/oneverso/current
           cd "$BASE"
+
+          echo "=== adquirir lock de deploy compartilhado no VPS ==="
+          exec 200>/tmp/oneverso-deploy.lock
+          flock -w 900 200 || { echo "::error::timeout aguardando lock de deploy"; exit 1; }
+          echo "deploy_lock_acquired=1"
 
           echo "=== destravar repo git se sobrou index.lock ==="
           if [ -f .git/index.lock ]; then
@@ -136,7 +141,16 @@ jobs:
           echo "=== reload mmn-api + workers mantendo secret MP ==="
           NEW_VAL=$(printf '%s' "$MP_B64" | base64 -d)
           [ -n "$NEW_VAL" ] || { echo "::error::MP secret vazio"; exit 1; }
+          set +e
           MERCADO_PAGO_WEBHOOK_SECRET="$NEW_VAL" COMMIT_SHA="$NEW_SHA" pm2 restart mmn-api --update-env
+          PM2_RC=$?
+          if [ "$PM2_RC" != "0" ]; then
+            echo "(warn) pm2 restart rc=$PM2_RC — tentando reload como fallback"
+            MERCADO_PAGO_WEBHOOK_SECRET="$NEW_VAL" COMMIT_SHA="$NEW_SHA" pm2 reload mmn-api --update-env
+            PM2_RC=$?
+          fi
+          set -e
+          [ "$PM2_RC" = "0" ] || { echo "::error::pm2 restart/reload falhou rc=$PM2_RC"; exit 1; }
           sleep 10
           pm2 jlist > /tmp/pm2.jlist.json
           python3 -c "import json; arr=json.load(open('/tmp/pm2.jlist.json')); [print({'name':p.get('name'),'pid':p.get('pid'),'status':(p.get('pm2_env') or {}).get('status')}) for p in arr]"

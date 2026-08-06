@@ -63,24 +63,52 @@ jobs:
             echo "corrupt_index_removed=1"
           fi
 
-          echo "=== git fetch (fallback URL com token) ==="
+          echo "=== limpar credenciais / extraHeaders antigos ==="
           PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
           [ -n "$PAT_VAL" ] || { echo "::error::PAT vazio"; exit 1; }
+
           git config --unset-all credential.helper 2>/dev/null || true
+          git config --global --unset-all credential.helper 2>/dev/null || true
+          : > ~/.git-credentials 2>/dev/null || true
+          git config --unset-all http.extraHeader 2>/dev/null || true
+          git config --unset-all "http.https://github.com/.extraHeader" 2>/dev/null || true
+          git config --global --unset-all http.extraHeader 2>/dev/null || true
+          git config --global --unset-all "http.https://github.com/.extraHeader" 2>/dev/null || true
+
           git remote set-url origin "https://github.com/Nexus-HUB57/MMN_AI-to-AI.git"
+          echo "remote_now=$(git remote get-url origin)"
+          echo "gitversion=$(git --version)"
+
+          echo
+          echo "=== git ls-remote sanity (Authorization: Bearer) ==="
           set +e
-          git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" ls-remote origin HEAD
+          git \
+            -c credential.helper= \
+            -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" \
+            ls-remote origin HEAD
           LS_RC=$?
           set -e
+          echo "ls_remote_rc=$LS_RC"
+
           if [ "$LS_RC" != "0" ]; then
-            git -c credential.helper= fetch "https://x-access-token:${PAT_VAL}@github.com/Nexus-HUB57/MMN_AI-to-AI.git" main
-            rm -f .git/index
-            git reset --hard FETCH_HEAD
+            echo
+            echo "=== fallback: URL com user:token ==="
+            git \
+              -c credential.helper= \
+              fetch "https://x-access-token:${PAT_VAL}@github.com/Nexus-HUB57/MMN_AI-to-AI.git" main
           else
-            git -c credential.helper= -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" fetch origin main
-            rm -f .git/index
-            git reset --hard origin/main
+            git \
+              -c credential.helper= \
+              -c "http.extraHeader=Authorization: Bearer ${PAT_VAL}" \
+              fetch origin main
           fi
+
+          rm -f .git/index.lock .git/index
+          git reset --hard FETCH_HEAD 2>/dev/null || git reset --hard origin/main 2>/dev/null || {
+            echo "=== retry reset apos limpar lock/index ==="
+            rm -f .git/index.lock .git/index
+            git reset --hard FETCH_HEAD 2>/dev/null || git reset --hard origin/main
+          }
           git clean -fd 2>/dev/null || true
           NEW_SHA=$(git rev-parse HEAD)
           echo "commit_now=$NEW_SHA"

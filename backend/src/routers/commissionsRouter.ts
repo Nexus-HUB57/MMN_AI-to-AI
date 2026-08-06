@@ -13,9 +13,13 @@ import {
   getAffiliateCommissions,
   getCommissionAmount,
   getCommissionDetails,
-  getCommissionStats,
   listCommissions,
 } from "../domains/commissions/service";
+import { Pool } from "pg";
+import { count } from "drizzle-orm";
+import { commissions } from "../../../database/schemas/schema-final";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 /**
  * Commissions Router - Gestão de comissões
@@ -113,7 +117,31 @@ export const commissionsRouter = router({
       };
     }),
 
-  getStats: publicProcedure.query(async () => getCommissionStats()),
+  getStats: publicProcedure.query(async () => {
+    try {
+      const [paidResult] = await pool.query(
+        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE'
+      );
+      const [pendingResult] = await pool.query(
+        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE'
+      );
+      const [confirmedResult] = await pool.query(
+        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE'
+      );
+      const [totalResult] = await pool.query(
+        'SELECT COUNT(*)::int as cnt FROM commissions WHERE COALESCE(is_test_data, FALSE) = FALSE'
+      );
+      return {
+        paid: Number(paidResult?.total ?? 0),
+        pending: Number(pendingResult?.total ?? 0),
+        confirmed: Number(confirmedResult?.total ?? 0),
+        total: Number(totalResult?.cnt ?? 0),
+      };
+    } catch (err) {
+      // Fallback to zero if table doesn't exist or query fails
+      return { paid: 0, pending: 0, confirmed: 0, total: 0 };
+    }
+  }),
 
   getByAffiliate: protectedProcedure
     .input(

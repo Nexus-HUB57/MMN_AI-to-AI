@@ -41,6 +41,19 @@ jobs:
           BASE=/var/www/oneverso/current
           cd "$BASE"
 
+          echo "=== destravar repo git se sobrou index.lock ==="
+          if [ -f .git/index.lock ]; then
+            if pgrep -af "git" >/tmp/git_ps.txt 2>/dev/null && grep -q "$BASE" /tmp/git_ps.txt; then
+              echo "::error::Repositorio ocupado por outro processo git ativo em $BASE"
+              cat /tmp/git_ps.txt || true
+              exit 1
+            fi
+            rm -f .git/index.lock
+            echo "stale_index_lock_removed=1"
+          else
+            echo "stale_index_lock_removed=0"
+          fi
+
           echo "=== limpar credenciais / extraHeaders antigos ==="
           PAT_VAL=$(printf '%s' "$PAT_B64" | base64 -d)
           [ -n "$PAT_VAL" ] || { echo "::error::PAT vazio"; exit 1; }
@@ -82,6 +95,7 @@ jobs:
           fi
 
           git reset --hard FETCH_HEAD 2>/dev/null || git reset --hard origin/main
+          git clean -fd
           NEW_SHA=$(git rev-parse HEAD)
           echo "commit_now=$NEW_SHA"
           echo "$NEW_SHA" > backend/.git-commit

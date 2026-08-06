@@ -49,6 +49,18 @@ export default function AdminSettings() {
     },
   });
 
+  // Career Plan Configuration
+  const careerPlanQuery = trpc.admin.getCareerPlanConfig.useQuery();
+  const updateCareerPlanMutation = trpc.admin.updateCareerPlanConfig.useMutation({
+    onSuccess: () => {
+      toast.success("Configuração do Plano de Carreira salva com sucesso");
+      careerPlanQuery.refetch();
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Erro ao salvar Plano de Carreira");
+    },
+  });
+
   const previewGoLiveResetMutation = trpc.admin.previewGoLiveReset.useMutation();
 
   const resetGoLiveOperationalDataMutation = trpc.admin.resetGoLiveOperationalData.useMutation({

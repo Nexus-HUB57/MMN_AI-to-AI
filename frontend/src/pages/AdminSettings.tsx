@@ -401,6 +401,147 @@ export default function AdminSettings() {
           </div>
         </Card>
 
+        {/* ─── Plano de Carreira — Bônus OnePack ─── */}
+        <Card className="p-6 bg-white">
+          <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-gray-900">
+            <BookOpen size={18} className="text-purple-600" />
+            Plano de Carreira — Bônus OnePack
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Valores em R$ por pack vendido na Minha Loja. Configurado conforme o Plano de Carreira do Afiliado.
+            {careerPlanQuery.isLoading && <Skeleton className="h-4 w-32 inline-block ml-2" />}
+          </p>
+          {careerPlanQuery.data ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="bg-purple-50">
+                    <th className="text-left p-2 border border-purple-200 font-semibold">Pack</th>
+                    <th className="text-left p-2 border border-purple-200 font-semibold">Bônus (R$)</th>
+                    <th className="text-left p-2 border border-purple-200 font-semibold">Tier Mínimo do Vendedor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries((careerPlanQuery.data as any).onepack_bonus || {})
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([slug, rule]: [string, any]) => (
+                      <tr key={slug} className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-mono font-semibold">{slug}</td>
+                        <td className="p-2 border border-gray-200">
+                          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-800 font-semibold">
+                            R$ {(rule.bonus_cents / 100).toFixed(2).replace('.', ',')}
+                          </span>
+                        </td>
+                        <td className="p-2 border border-gray-200 text-gray-500 text-xs">{rule.seller_tier}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <p className="mt-3 text-xs text-gray-400">
+                Fonte: docs/planning/Plano de Carreira do Afiliado · Clube de Vantagens · Bônus #2
+              </p>
+            </div>
+          ) : (
+            <div className="text-center py-4 text-gray-400 text-sm">Carregando dados do Plano de Carreira...</div>
+          )}
+        </Card>
+
+        {/* ─── Plano de Carreira — Bônus de Consumo ─── */}
+        <Card className="p-6 bg-white">
+          <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-gray-900">
+            <BookOpen size={18} className="text-indigo-600" />
+            Plano de Carreira — Bônus de Consumo
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Percentuais de participação no volume mensal de ativações por nível do Networking Operacional (N.O).
+          </p>
+          {careerPlanQuery.data ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="bg-indigo-50">
+                    <th className="text-left p-2 border border-indigo-200 font-semibold">Qualificação</th>
+                    <th className="text-left p-2 border border-indigo-200 font-semibold">Regra de Participação por Nível</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries((careerPlanQuery.data as any).consumption_bonus || {})
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([tier, rules]: [string, any]) => (
+                      <tr key={tier} className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-mono font-semibold whitespace-nowrap">{tier}</td>
+                        <td className="p-2 border border-gray-200">
+                          <div className="flex flex-wrap gap-1">
+                            {(rules || []).map((r: any, i: number) => (
+                              <span key={i} className="inline-flex items-center rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-800">
+                                Nível {r.n}: {r.pct}%
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <p className="mt-3 text-xs text-gray-400">
+                Fonte: docs/planning/Plano de Carreira do Afiliado · Clube de Vantagens · Bônus #3
+              </p>
+            </div>
+          ) : (
+            <div className="text-center py-4 text-gray-400 text-sm">Carregando dados do Plano de Carreira...</div>
+          )}
+        </Card>
+
+        {/* ─── Plano de Carreira — Bônus N.O ─── */}
+        <Card className="p-6 bg-white">
+          <h3 className="text-lg font-semibold flex items-center gap-2 mb-2 text-gray-900">
+            <BookOpen size={18} className="text-amber-600" />
+            Plano de Carreira — Bônus N.O (Networking Operacional)
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Bônus pago ao qualificador quando um novo Agente Orquestrador é formado em sua rede.
+          </p>
+          {careerPlanQuery.data && (careerPlanQuery.data as any).no_bonus ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="bg-amber-50">
+                    <th className="text-left p-2 border border-amber-200 font-semibold">Qualificador</th>
+                    <th className="text-left p-2 border border-amber-200 font-semibold">Novo Orquestrador</th>
+                    <th className="text-left p-2 border border-amber-200 font-semibold">Bônus (R$)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries((careerPlanQuery.data as any).no_bonus || {})
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([key, rule]: [string, any]) => {
+                      const [qualifier, newMember] = key.split("->");
+                      return (
+                        <tr key={key} className="hover:bg-gray-50">
+                          <td className="p-2 border border-gray-200 font-mono text-sm">{qualifier}</td>
+                          <td className="p-2 border border-gray-200 font-mono text-sm">{newMember}</td>
+                          <td className="p-2 border border-gray-200">
+                            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-amber-800 font-semibold">
+                              R$ {(rule.bonus_cents / 100).toFixed(2).replace('.', ',')}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+              <p className="mt-3 text-xs text-gray-400">
+                Fonte: docs/planning/Plano de Carreira do Afiliado · Clube de Vantagens · Bônus #4
+              </p>
+            </div>
+          ) : (
+            <div className="text-center py-4 text-gray-400 text-sm">
+              Nenhum bônus N.O configurado ou dados ainda carregando...
+            </div>
+          )}
+        </Card>
+
+
         {/* Danger Zone */}
         <Card className="p-6 bg-red-50 border-red-200">
           <h3 className="text-lg font-semibold mb-4 text-red-900">Zona de Perigo</h3>

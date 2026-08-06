@@ -120,16 +120,16 @@ export const commissionsRouter = router({
   getStats: publicProcedure.query(async () => {
     try {
       const [paidResult] = await pool.query(
-        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE'
+        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [pendingResult] = await pool.query(
-        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE'
+        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [confirmedResult] = await pool.query(
-        'SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE'
+        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [totalResult] = await pool.query(
-        'SELECT COUNT(*)::int as cnt FROM commissions WHERE COALESCE(is_test_data, FALSE) = FALSE'
+        "SELECT COUNT(*)::int as cnt FROM commissions WHERE COALESCE(is_test_data, FALSE) = FALSE"
       );
       return {
         paid: Number(paidResult?.total ?? 0),
@@ -137,12 +137,10 @@ export const commissionsRouter = router({
         confirmed: Number(confirmedResult?.total ?? 0),
         total: Number(totalResult?.cnt ?? 0),
       };
-    } catch (err) {
-      // Fallback to zero if table doesn't exist or query fails
+    } catch {
       return { paid: 0, pending: 0, confirmed: 0, total: 0 };
     }
   }),
-
   getByAffiliate: protectedProcedure
     .input(
       z.object({

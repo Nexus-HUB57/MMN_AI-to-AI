@@ -675,7 +675,7 @@ export const adminRouter = router({
   updateSettings: adminProcedure
     .input(z.object({
       platformName: z.string().trim().min(2).max(120).optional(),
-      supportEmail: z.string().email().optional(),
+      supportEmail: z.string().trim().email().or(z.literal("")).optional(),
       maxNetworkDepth: z.number().int().min(1).max(20).optional(),
       compressionEnabled: z.boolean().optional(),
       matrix: z.object({ maxDirectsPerNode: z.number().int().min(1).max(20), maxDepth: z.number().int().min(1).max(20), compressionEnabled: z.boolean() }).optional(),
@@ -695,6 +695,117 @@ export const adminRouter = router({
         ['settings.updated', ctx.user.email ?? null, 'platform_settings', 'go_live', JSON.stringify({ updated: Object.keys(input) })],
       );
       return { ok: true, updated: Object.keys(input), persistedAt: merged.updatedAt };
+    }),
+
+
+  // =========================================================================
+  // Career Plan Configuration — Plano de Carreira do Afiliado
+  // =========================================================================
+  getCareerPlanConfig: adminProcedure.query(async () => {
+    try {
+      const result = await pool.query(
+        'SELECT setting_value FROM platform_settings WHERE setting_key = $1',
+        ['career_plan_config']
+      );
+      return result.rows[0]?.setting_value ?? {
+        onepack_bonus: {},
+        consumption_bonus: {},
+        no_bonus: {},
+        inspiration_bonus: {},
+      };
+    } catch {
+      return { onepack_bonus: {}, consumption_bonus: {}, no_bonus: {}, inspiration_bonus: {} };
+    }
+  }),
+
+  updateCareerPlanConfig: adminProcedure
+    .input(z.object({
+      onepack_bonus: z.record(z.string(), z.object({
+        bonus_cents: z.number().int().min(0),
+        seller_tier: z.string(),
+        pack_price_cents: z.number().int().min(0).optional(),
+      })).optional(),
+      consumption_bonus: z.record(z.string(), z.array(z.object({
+        n: z.number().int().min(1),
+        pct: z.number().min(0).max(100),
+      }))).optional(),
+      no_bonus: z.record(z.string(), z.object({
+        bonus_cents: z.number().int().min(0),
+      })).optional(),
+      inspiration_bonus: z.record(z.string(), z.object({
+        share_pct: z.number().min(0).max(100),
+        min_purchase_cents: z.number().int().min(0),
+        max_purchase_cents: z.number().int().min(0),
+        credential: z.string(),
+      })).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await pool.query(
+        'SELECT setting_value FROM platform_settings WHERE setting_key = $1',
+        ['career_plan_config']
+      );
+      const current = result.rows[0]?.setting_value ?? {};
+      const merged = { ...current, ...input };
+      await pool.query(
+        `INSERT INTO platform_settings (setting_key, setting_value, updated_by, updated_at)
+         VALUES ($1, $2::jsonb, $3, NOW())
+         ON CONFLICT (setting_key) DO UPDATE SET
+           setting_value = EXCLUDED.setting_value,
+           updated_by = EXCLUDED.updated_by,
+           updated_at = NOW()`,
+        ['career_plan_config', JSON.stringify(merged), ctx.user.email ?? String(ctx.user.id)],
+      );
+      await pool.query(
+        'INSERT INTO admin_audit_events (action, actor_email, target_type, target_id, metadata) VALUES ($1, $2, $3, $4, $5::jsonb)',
+        ['career_plan_config.updated', ctx.user.email ?? null, 'platform_settings', 'career_plan_config',
+         JSON.stringify({ updated: Object.keys(input) })],
+      );
+      return { ok: true, updated: Object.keys(input) };
+    }),
+
+  /** Calculate OnePack bonus for a given seller tier and pack slug */
+  calculateOnePackBonus: adminProcedure
+    .input(z.object({
+      sellerTier: z.string(),
+      packSlug: z.string(),
+    }))
+    .query(async ({ input }) => {
+      const result = await pool.query(
+        'SELECT setting_value FROM platform_settings WHERE setting_key = $1',
+        ['career_plan_config']
+      );
+      const config = result.rows[0]?.setting_value ?? {};
+      const onepack = (config.onepack_bonus || {}) as Record<string, any>;
+      const packConfig = onepack[input.packSlug];
+      if (!packConfig) return { bonus_cents: 0, reason: "pack_not_found" };
+      return { bonus_cents: packConfig.bonus_cents ?? 0, seller_tier: packConfig.seller_tier };
+    }),
+
+  /** Calculate consumption bonus for a given tier and monthly volumes per level */
+  calculateConsumptionBonus: adminProcedure
+    .input(z.object({
+      sellerTier: z.string(),
+      monthlyVolumes: z.array(z.object({ level: z.number().int(), totalCents: z.number().int() })),
+    }))
+    .query(async ({ input }) => {
+      const result = await pool.query(
+        'SELECT setting_value FROM platform_settings WHERE setting_key = $1',
+        ['career_plan_config']
+      );
+      const config = result.rows[0]?.setting_value ?? {};
+      const consumption = (config.consumption_bonus || {}) as Record<string, any>;
+      const tierRules = consumption[input.sellerTier] as Array<{n: number, pct: number}> | undefined;
+      if (!tierRules) return { total_bonus_cents: 0, breakdown: [], reason: "tier_not_found" };
+      let totalCents = 0;
+      const breakdown: Array<{level: number, volumeCents: number, pct: number, bonusCents: number}> = [];
+      for (const rule of tierRules) {
+        const vol = input.monthlyVolumes.find(v => v.level === rule.n);
+        const volumeCents = vol?.totalCents ?? 0;
+        const bonusCents = Math.floor(volumeCents * rule.pct / 100);
+        totalCents += bonusCents;
+        breakdown.push({ level: rule.n, volumeCents, pct: rule.pct, bonusCents });
+      }
+      return { total_bonus_cents: totalCents, breakdown };
     }),
 
   setAffiliateOperationalStatus: adminProcedure

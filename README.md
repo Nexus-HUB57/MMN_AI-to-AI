@@ -18,20 +18,20 @@
   <img src="https://img.shields.io/badge/versão-1.0.0-green?style=flat-square" alt="Versão" />
 </p>
 
-<h1 align="center">Nexus Affil'IA'te — AI-to-AI</h1>
+<h1 align="center">🤖 Nexus Affil'IA'te — AI-to-AI</h1>
 
 <p align="center">
   <strong>Infraestrutura Operacional de Inteligência Distribuída</strong><br/>
-  Plataforma de Marketing de Afiliados impulsionada por Agentes de IA autônomos
+  Plataforma de Marketing de Afiliados impulsionada por Agentes de IA autônomos · SaaS Early-Stage
 </p>
 
 ---
 
-## Sobre o Projeto
+## 📖 Sobre o Projeto
 
-O **Nexus Affil'IA'te** é um ecossistema SaaS que une **Multilevel Marketing (MMN)** com **Agentes de IA autônomos** operando 24/7 em uma arquitetura AI-to-AI. A plataforma evoluiu de um sistema legado PHP para uma stack moderna full-stack, mantendo compatibilidade com dados existentes.
+O **Nexus Affil'IA'te** é um ecossistema SaaS que une **Multilevel Marketing (MMN)** com **Agentes de IA autônomos** operando 24/7 em uma arquitetura *AI-to-AI*. A plataforma evoluiu de um sistema legado PHP para uma stack moderna full-stack, mantendo compatibilidade com dados existentes.
 
-> **Diferencial Principal** — Nao é apenas uma plataforma MMN tradicional, mas uma **infraestrutura operacional de agentes autônomos de IA** aplicados a marketing, vendas e operação distribuída.
+> **Diferencial Principal** — Não é apenas uma plataforma MMN tradicional, mas uma **infraestrutura operacional de agentes autônomos de IA** aplicados a marketing, vendas e operação distribuída.
 
 **Modelo Híbrido**: Intervenção humana propositiva + Agentes IA 100% autônomos no operacional, seguindo o **SHO — Sistema Híbrido de Orquestração** em evolução contínua para **AOI — Autonomous Operational Intelligence**.
 
@@ -39,7 +39,7 @@ O **Nexus Affil'IA'te** é um ecossistema SaaS que une **Multilevel Marketing (M
 
 ---
 
-## Arquitetura
+## 🏗️ Arquitetura
 
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
@@ -59,37 +59,37 @@ O **Nexus Affil'IA'te** é um ecossistema SaaS que une **Multilevel Marketing (M
 
 ---
 
-## Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 <details>
-<summary>Arvore de diretorios</summary>
+<summary>📂 Clique para expandir</summary>
 
 ```
 MMN_AI-to-AI/
 ├── frontend/                   # React 18 + Vite + Tailwind + tRPC Client
-│   └── src/pages/              # 90+ paginas (Admin, Dashboard, Marketplace...)
+│   └── src/pages/              # 90+ páginas (Admin, Dashboard, Marketplace...)
 ├── backend/                    # Node.js + tRPC + Drizzle + Workers
 │   └── src/
 │       ├── routers/            # 60+ routers tRPC
 │       ├── workers/            # BullMQ workers (content, commissions, orders, marketplace)
-│       ├── services/           # Logica de negocio
+│       ├── services/           # Lógica de negócio
 │       ├── integrations/       # Hotmart, Shopee, WhatsApp, Resend, Facebook
-│       ├── agentic/            # Orquestracao de Agentes IA
+│       ├── agentic/            # Orquestração de Agentes IA
 │       ├── genkit/             # Google Genkit flows
 │       └── drizzle/schema.ts   # Schema central
 ├── database/schemas/           # Schemas Drizzle (16+ arquivos)
 ├── infra/                      # Docker Compose, deploy scripts
 ├── mobile/                     # Expo (React Native)
-├── docs/                       # Documentacao
+├── docs/                       # Documentação
 ├── tests/                      # Vitest (unit + integration)
 ├── deploy/                     # Scripts de deploy (Hostgator VPS)
-├── packs/                      # Definicao de Packs / Ativacoes
-├── AcademIA/                   # Conteudo EAD
+├── packs/                      # Definição de Packs / Ativações
+├── AcademIA/                   # Conteúdo EAD
 ├── ai/                         # Scripts e configs de IA
-├── scripts/                    # Utilitarios
+├── scripts/                    # Utilitários
 ├── ecosystem.config.js         # PM2 config (API + 4 workers)
 ├── drizzle.config.ts           # Drizzle Kit config
-├── .env.example                # Template de variaveis de ambiente
+├── .env.example                # Template de variáveis de ambiente
 ├── pnpm-workspace.yaml         # Workspaces (frontend, backend, mobile)
 └── package.json                # Monorepo root
 ```
@@ -98,110 +98,126 @@ MMN_AI-to-AI/
 
 ---
 
-## Funcionalidades Principais
+## ⚡ Funcionalidades Principais
 
-### Admin Dashboard
-Painel administrativo completo com gestao de usuarios, rede, comissoes, aprovacoes, materiais, agendamentos, governanca e orquestracao de agentes.
+### 🎛️ Admin Dashboard
+Painel administrativo completo com gestão de usuários, rede, comissões, aprovações, materiais, agendamentos, governança e orquestração de agentes.
 
-### Gestao de Rede (MMN)
-Estrutura de rede multinivel com codigo de afiliado, patrocinador, visualizacao em arvore, relatorios de profundidade e metricas de ativacao mensal.
+### 🌐 Gestão de Rede (MMN)
+Estrutura de rede multinível com código de afiliado, patrocinador, visualização em árvore, relatórios de profundidade e métricas de ativação mensal.
 
-### Sistema de Comissoes & Plano de Carreira
-Calculo automatico de comissoes multinivel com 5 faixas de carreira, bonus de ativacao, bonus de profundidade e bonus especiais. Processamento via BullMQ worker dedicado.
+### 💰 Sistema de Comissões & Plano de Carreira
+Cálculo automático de comissões multinível com 5 faixas de carreira, bônus de ativação, bônus de profundidade e bônus especiais. Processamento via BullMQ worker dedicado.
 
-### Marketplace Nexus
-Integracao com **Hotmart** e **Shopee Afiliados** — sync automatico de produtos, analise de tendencias (trending score, sazonalidade, lucratividade), margens de afiliado e loja personalizada.
+### 🛒 Marketplace Nexus
+Integração com **Hotmart** e **Shopee Afiliados** — sync automático de produtos, análise de tendências (trending score, sazonalidade, lucratividade), margens de afiliado e loja personalizada.
 
-### Pix Checkout
-Sistema de checkout via Pix para ativacoes de pacotes, com geracao de QR Code, controle de expiracao e confirmacao de pagamento.
+### 💳 Pix Checkout
+Sistema de checkout via Pix para ativações de pacotes, com geração de QR Code, controle de expiração e confirmação de pagamento.
 
-### Agentes IA — Lab Nexus
-Plataforma de criacao e gestao de agentes autonomos de IA com skills configuraveis, runtime de execucao, orquestracao de goals e metricas de performance. Integracao com OpenAI, Genkit e LangChain.
+### 🤖 Agentes IA — Lab Nexus
+Plataforma de criação e gestão de agentes autônomos de IA com skills configuráveis, runtime de execução, orquestração de goals e métricas de performance. Integração com OpenAI, Genkit e LangChain.
 
-### Academia EAD
-Plataforma de ensino a distancia com modulos, aulas, rastreamento de progresso e certificacoes para capacitacao de afiliados.
+### 📚 Academia EAD
+Plataforma de ensino a distância com módulos, aulas, rastreamento de progresso e certificações para capacitação de afiliados.
 
-### Sistema de Packs
-Pacotes de ativacao com entitlements, upgrades de agentes e liberacao progressiva de funcionalidades conforme o plano.
+### 📦 Sistema de Packs
+Pacotes de ativação com entitlements, upgrades de agentes e liberação progressiva de funcionalidades conforme o plano.
 
-### Geracao de Conteudo IA
-Hub de criacao de conteudo para redes sociais com templates, agendamento de posts, analise de engajamento e dispatch para WhatsApp, Facebook e e-mail.
-
----
-
-## Plano de Carreira
-
-A plataforma possui 5 faixas de progressao com recompensas crescentes:
-
-| Faixa | Titulo | Descricao |
-|-------|--------|----------|
-| 1 | **Agente Afiliado** | Entrada no ecossistema — acesso basico ao marketplace e ferramentas |
-| 2 | **Agente Conector** | Rede em crescimento — bonus de profundidade N2 habilitado |
-| 3 | **Agente Gestor** | Gestao de equipe — bonus de lideranca e materiais avancados |
-| 4 | **Agente Estrategista** | Estrategia avancada — Lab Nexus completo e orquestracao IA |
-| 5 | **Agente Agentic IA** | Nivel maximo — acesso total, comissoes maximizadas, API aberta |
-
-**Tipos de Bonus:**
-- **Bonus Direto** — Comissao sobre vendas pessoais
-- **Bonus de Profundidade** — Comissoes multinivel (N1 a N5)
-- **Bonus de Ativacao** — Recompensa por metas de rede
-- **Bonus de Lideranca** — Premiacao por performance da equipe
-- **Bonus Especial** — Incentivos sazonais e campanhas
+### 📊 Geração de Conteúdo IA
+Hub de criação de conteúdo para redes sociais com templates, agendamento de posts, análise de engajamento e dispatch para WhatsApp, Facebook e e-mail.
 
 ---
 
-## Configuracao e Deploy
+## 📈 Plano de Carreira
 
-### Pre-requisitos
+A plataforma possui 5 faixas de progressão com recompensas crescentes:
+
+| Faixa | Título | Descrição |
+|-------|--------|-----------|
+| 1 | **Agente Afiliado** | Entrada no ecossistema — acesso básico ao marketplace e ferramentas |
+| 2 | **Agente Conector** | Rede em crescimento — bônus de profundidade N2 habilitado |
+| 3 | **Agente Gestor** | Gestão de equipe — bônus de liderança e materiais avançados |
+| 4 | **Agente Estrategista** | Estratégia avançada — Lab Nexus completo e orquestração IA |
+| 5 | **Agente Agentic IA** | Nível máximo — acesso total, comissões maximizadas, API aberta |
+
+**Tipos de Bônus:**
+- **Bônus Direto** — Comissão sobre vendas pessoais
+- **Bônus de Profundidade** — Comissões multinível (N1 a N5)
+- **Bônus de Ativação** — Recompensa por metas de rede
+- **Bônus de Liderança** — Premiação por performance da equipe
+- **Bônus Especial** — Incentivos sazonais e campanhas
+
+---
+
+## 🔧 Configuração e Deploy
+
+### Pré-requisitos
 - **Node.js** >= 20
 - **PostgreSQL** 15+
 - **Redis** (opcional, standalone funciona sem)
 - **pnpm** ou **npm** 9+
 
-### Instalacao
+### Instalação
 
 ```bash
+# Clonar o repositório
 git clone https://github.com/Nexus-HUB57/MMN_AI-to-AI.git
 cd MMN_AI-to-AI
+
+# Instalar dependências dos workspaces
 npm run install:workspaces
+
+# Copiar e configurar variáveis de ambiente
 cp .env.example .env
+# Editar .env com suas credenciais
+
+# Push do schema no banco
 npm run db:push
 ```
 
-### Variaveis de Ambiente Principais
+### Variáveis de Ambiente Principais
 
-| Variavel | Descricao | Obrigatoria |
+| Variável | Descrição | Obrigatória |
 |----------|-----------|-------------|
 | `NODE_ENV` | `development` / `production` | Sim |
 | `PORT` | Porta do backend (default: 3000) | Sim |
 | `DATABASE_URL` | Connection string PostgreSQL | Sim |
-| `REDIS_URL` | Connection string Redis | Nao* |
-| `ADMIN_SESSION_SECRET` | Chave secreta para sessoes admin | Sim |
+| `REDIS_URL` | Connection string Redis | Não* |
+| `ADMIN_SESSION_SECRET` | Chave secreta para sessões admin | Sim |
 | `ADMIN_EMAIL_SHA256` | SHA256 do email admin autorizado | Sim |
 | `ADMIN_PASSWORD_SHA256` | SHA256 da senha admin autorizada | Sim |
 | `FIREBASE_PROJECT_ID` | Projeto Firebase | Sim |
 | `FIREBASE_CLIENT_EMAIL` | Service account Firebase | Sim |
 | `FIREBASE_PRIVATE_KEY` | Chave privada Firebase | Sim |
-| `OPENAI_API_KEY` | API Key OpenAI (para Agentes IA) | Nao** |
+| `OPENAI_API_KEY` | API Key OpenAI (para Agentes IA) | Não** |
 | `VITE_FIREBASE_API_KEY` | Firebase Client SDK | Sim |
 | `VITE_TRPC_URL` | URL do backend tRPC | Sim |
 
-> \* Standalone funciona sem Redis, mas filas BullMQ nao operam.  
-> \*\* Sem OpenAI, o sistema usa heuristica como fallback.
+> \* Standalone funciona sem Redis, mas filas BullMQ não operam.  
+> \*\* Sem OpenAI, o sistema usa heurística como fallback.
 
 ### Desenvolvimento Local
 
 ```bash
-npm run dev                # Frontend + Backend simultaneamente
-npm run dev:frontend       # Vite na porta 5173
-npm run dev:backend        # tRPC na porta 3000
-npm run db:studio          # Visualizador de banco
+# Iniciar frontend + backend simultaneamente
+npm run dev
+
+# Ou separadamente
+npm run dev:frontend   # Vite na porta 5173
+npm run dev:backend    # tRPC na porta 3000
+
+# Drizzle Studio (visualizador de banco)
+npm run db:studio
 ```
 
-### Build de Producao
+### Build de Produção
 
 ```bash
+# Build frontend (Vite) + backend (esbuild)
 npm run build:production
+
+# Iniciar com PM2 (cluster mode, 2 instâncias API + 4 workers)
 pm2 start ecosystem.config.js --env production
 ```
 
@@ -209,7 +225,7 @@ pm2 start ecosystem.config.js --env production
 
 O `ecosystem.config.js` configura 5 processos:
 
-| Processo | Script | Modo | Instancias |
+| Processo | Script | Modo | Instâncias |
 |----------|--------|------|------------|
 | `mmn-api` | `backend/dist/index.js` | cluster | 2 |
 | `mmn-worker-content` | `contentGenerationWorker.js` | fork | 1 |
@@ -229,71 +245,71 @@ pm2 startup        # Auto-start no boot
 
 ---
 
-## API — Visao Geral tRPC
+## 🔌 API — Visão Geral tRPC
 
-A API e servida via **tRPC v11** em `/api/trpc`. Principais routers:
+A API é servida via **tRPC v11** em `/api/trpc`. Principais routers:
 
-| Router | Descricao |
-|--------|----------|
-| `admin` | Dashboard, gestao de usuarios, rede, pagamentos |
-| `adminAuth` | Autenticacao admin (SHA256 session) |
+| Router | Descrição |
+|--------|-----------|
+| `admin` | Dashboard, gestão de usuários, rede, pagamentos |
+| `adminAuth` | Autenticação admin (SHA256 session) |
 | `auth` | Login/registro via Firebase Auth |
-| `commissions` | Calculo e listagem de comissoes |
-| `network` / `networkExtended` | Arvore de indicacoes, metricas de rede |
-| `marketplace` / `marketplaceNexus` | Produtos, tendencias, sync de marketplaces |
-| `payments` / `pix` / `pixHistory` | Checkout Pix, saques, historico |
-| `labNexus` | Criacao e gestao de Agentes IA |
-| `agentRuntime` / `agentSkills` | Execucao e skills de agentes |
-| `agentic` / `orchestration` | Orquestracao e goals de agentes |
-| `packs` / `packEntitlements` | Sistema de pacotes e ativacoes |
+| `commissions` | Cálculo e listagem de comissões |
+| `network` / `networkExtended` | Árvore de indicações, métricas de rede |
+| `marketplace` / `marketplaceNexus` | Produtos, tendências, sync de marketplaces |
+| `payments` / `pix` / `pixHistory` | Checkout Pix, saques, histórico |
+| `labNexus` | Criação e gestão de Agentes IA |
+| `agentRuntime` / `agentSkills` | Execução e skills de agentes |
+| `agentic` / `orchestration` | Orquestração e goals de agentes |
+| `packs` / `packEntitlements` | Sistema de pacotes e ativações |
 | `academiaEad` / `academiaPublic` | Plataforma EAD |
-| `contentGeneration` / `aiContentHub` | Geracao de conteudo com IA |
+| `contentGeneration` / `aiContentHub` | Geração de conteúdo com IA |
 | `social` / `postScheduler` | Postagem em redes sociais |
-| `users` / `profile` | Perfil e dados do usuario |
+| `users` / `profile` | Perfil e dados do usuário |
 | `upgrades` / `skills` / `skillsMarketplace` | Upgrades e marketplace de skills |
 | `health` | Health check do sistema |
-| `dropshipping` | Gestao de dropshipping |
+| `dropshipping` | Gestão de dropshipping |
 | `billing` | Faturamento e assinaturas |
 
 ---
 
-## Banco de Dados — Tabelas Principais
+## 🗄️ Banco de Dados — Tabelas Principais
 
-| Tabela | Descricao |
-|--------|----------|
-| `users` | Usuarios do sistema (Firebase Auth + legado) |
-| `affiliates` | Dados de afiliado (codigo, patrocinador, comissoes, pontos) |
-| `network` | Relacoes de rede (userId, sponsorId, nivel) |
-| `commissions` | Registro de comissoes (nivel, fonte, status) |
-| `bonuses` | Bonus especiais (tipo, valor, status) |
+| Tabela | Descrição |
+|--------|-----------|
+| `users` | Usuários do sistema (Firebase Auth + legado) |
+| `affiliates` | Dados de afiliado (código, patrocinador, comissões, pontos) |
+| `network` | Relações de rede (userId → sponsorId, nível) |
+| `commissions` | Registro de comissões (nível, fonte, status) |
+| `bonuses` | Bônus especiais (tipo, valor, status) |
 | `products` | Produtos sincronizados de marketplaces |
 | `orders` | Pedidos de vendas (Hotmart, Shopee) |
 | `payments` / `pix_history` | Pagamentos e saques via Pix |
-| `marketplace_accounts` | Credenciais de integracao com marketplaces |
-| `marketplace_products_ext` | Produtos estendidos com metricas de tendencia |
-| `product_trends` | Analise de tendencia (score, sazonalidade, demanda) |
+| `marketplace_accounts` | Credenciais de integração com marketplaces |
+| `marketplace_products_ext` | Produtos estendidos com métricas de tendência |
+| `product_trends` | Análise de tendência (score, sazonalidade, demanda) |
 | `affiliate_margins` | Margens e estimativa de ganhos por afiliado |
-| `agents` | Agentes IA de cada usuario (status, score, estrategia) |
-| `activation_packs` / `pack_activations` | Pacotes e ativacoes de features |
-| `content_templates` / `scheduled_posts` | Templates de conteudo e agendamentos |
-| `generated_content` / `content_analytics` | Conteudo gerado por IA e metricas |
-| `orchestration_goals` / `orchestration_tasks` | Orquestracao de agentes IA |
-| `job_logs` / `performance_metrics` | Logs e metricas de workers BullMQ |
-| `notifications` | Centro de notificacoes |
+| `agents` | Agentes IA de cada usuário (status, score, estratégia) |
+| `activation_packs` / `pack_activations` | Pacotes e ativações de features |
+| `content_templates` / `scheduled_posts` | Templates de conteúdo e agendamentos |
+| `generated_content` / `content_analytics` | Conteúdo gerado por IA e métricas |
+| `orchestration_goals` / `orchestration_tasks` | Orquestração de agentes IA |
+| `job_logs` / `performance_metrics` | Logs e métricas de workers BullMQ |
+| `notifications` | Centro de notificações |
 | `materials` | Materiais de marketing para download |
-| `upgrades` / `agent_upgrades` | Upgrades disponiveis e ativados |
+| `upgrades` / `agent_upgrades` | Upgrades disponíveis e ativados |
 
 ---
 
-## Equipe
+## 👥 Equipe
 
 **Nexus Affil'IA'te** — Desenvolvido pela equipe [Nexus-HUB57](https://github.com/Nexus-HUB57)
 
-> Plataforma em evolucao continua · SaaS Early-Stage · White-Label Ready
+> Plataforma em evolução contínua · SaaS Early-Stage · White-Label Ready
 
 ---
 
 <p align="center">
   <strong>Nexus Affil'IA'te — AI-to-AI</strong><br/>
-  <em>Transformando marketing de afiliados com inteligência autonoma distribuida</em>
+  <em>Transformando marketing de afiliados com inteligência autônoma distribuída</em>
 </p>

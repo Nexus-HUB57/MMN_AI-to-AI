@@ -280,7 +280,7 @@ export default function PixCheckout() {
   const pixServerConfig = pixConfigQuery?.data ?? null;
   const serverPixKey =
     checkoutSession?.pix?.fallback?.pixKey
-    || (pixServerConfig?.marketplaceFallback?.configured ? undefined : undefined)
+    || (pixServerConfig?.marketplaceFallback?.pixKey)
     || undefined;
   const serverMerchantName =
     checkoutSession?.pix?.fallback?.receiverName

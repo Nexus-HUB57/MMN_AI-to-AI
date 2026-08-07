@@ -1,8 +1,8 @@
 import { adminProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { eq, desc, asc, and, gte, lte, count, sql, inArray } from "drizzle-orm";
-import { users, affiliates, commissions, payments, network, orders, products } from "../../../database/schemas/schema-final";
+import { eq, desc, and, gte, lte, count, sql } from "drizzle-orm";
+import { users, affiliates, commissions, payments, orders } from "../../../database/schemas/schema-final";
 import { Pool } from "pg";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });

@@ -283,23 +283,25 @@ export const adminRouter = router({
   /**
    * Estatísticas de comissões
    */
-  getCommissionStats: adminProcedure.query(async ({ ctx }) => {
-    const allCommissions = await ctx.db.select().from(commissions);
-
-    const stats = {
-      total: allCommissions.reduce((sum, c) => sum + c.amount, 0),
-      pending: allCommissions.filter(c => c.status === "pending").reduce((sum, c) => sum + c.amount, 0),
-      confirmed: allCommissions.filter(c => c.status === "confirmed").reduce((sum, c) => sum + c.amount, 0),
-      paid: allCommissions.filter(c => c.status === "paid").reduce((sum, c) => sum + c.amount, 0),
-      count: {
-        total: allCommissions.length,
-        pending: allCommissions.filter(c => c.status === "pending").length,
-        confirmed: allCommissions.filter(c => c.status === "confirmed").length,
-        paid: allCommissions.filter(c => c.status === "paid").length,
-      },
-    };
-
-    return stats;
+  getCommissionStats: adminProcedure.query(async () => {
+    try {
+      const [paidRes] = await pool.query<{ sum: string | null }>(
+        `SELECT COALESCE(SUM(amount), 0) AS sum FROM commissions WHERE status = 'paid'`,
+      );
+      const [pendingRes] = await pool.query<{ sum: string | null }>(
+        `SELECT COALESCE(SUM(amount), 0) AS sum FROM commissions WHERE status = 'pending'`,
+      );
+      const [confirmedRes] = await pool.query<{ sum: string | null }>(
+        `SELECT COALESCE(SUM(amount), 0) AS sum FROM commissions WHERE status = 'confirmed'`,
+      );
+      return {
+        paid: Number(paidRes.sum) || 0,
+        pending: Number(pendingRes.sum) || 0,
+        confirmed: Number(confirmedRes.sum) || 0,
+      };
+    } catch {
+      return { paid: 0, pending: 0, confirmed: 0 };
+    }
   }),
 
   // ============ PAYMENTS ============

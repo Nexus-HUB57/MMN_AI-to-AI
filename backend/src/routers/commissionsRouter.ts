@@ -16,8 +16,6 @@ import {
   listCommissions,
 } from "../domains/commissions/service";
 import { Pool } from "pg";
-import { count } from "drizzle-orm";
-import { commissions } from "../../../database/schemas/schema-final";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -120,13 +118,13 @@ export const commissionsRouter = router({
   getStats: publicProcedure.query(async () => {
     try {
       const [paidResult] = await pool.query(
-        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE"
+        "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [pendingResult] = await pool.query(
-        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE"
+        "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [confirmedResult] = await pool.query(
-        "SELECT COALESCE(SUM(amount_cents), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE"
+        "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
       const [totalResult] = await pool.query(
         "SELECT COUNT(*)::int as cnt FROM commissions WHERE COALESCE(is_test_data, FALSE) = FALSE"

@@ -221,6 +221,32 @@ A plataforma possui **15 tiers de progressão** organizados em 4 categorias, com
 
 ---
 
+## 📅 Calendário de Eventos
+
+A plataforma possui um calendário integrado (`/content/calendar`) com eventos oficiais, treinamentos e marcos do ecossistema. Gerenciado via `ContentCalendar.tsx` + backend `cronRouter.ts`.
+
+### Eventos Oficiais Agendados
+
+| Data | Evento | Tipo | Plataforma |
+|------|--------|------|------------|
+| 10/08/2026 | Abertura Janela de Saque — Agosto/26 | Marco | Internal |
+| 15/08/2026 | Lancamento Oficial Nexus Affil'IA | Lancamento | YouTube |
+| 18/08/2026 | Live Q&A — Perguntas dos Afiliados | Q&A | Instagram |
+| 20/08/2026 | Webinar: Plano de Carreira — Bonus e Comissoes | Webinar | Zoom |
+| 25/08/2026 | Treinamento: Como vender packs OnePack | Treinamento | YouTube |
+| 01/09/2026 | Encontro de Lideres da Rede N.O. | Reuniao | Zoom |
+| 05/09/2026 | Abertura Ciclo Comissoes — Setembro | Marco | Internal |
+| 10/09/2026 | Hackathon Nexus AI — Construa seu Agente | Hackathon | Discord |
+| 15/09/2026 | Workshop: Academia IA — Criacao de Conteudo | Workshop | YouTube |
+| 01/10/2026 | Lancamento Bonus #5 Inspiracao | Lancamento | Internal |
+| 10/10/2026 | Fechamento Ciclo Comissoes — Agosto | Marco | Internal |
+| 15/10/2026 | Convencao Nexus Anual 2026 | Convencao | YouTube |
+
+> **Tipos de evento**: Lancamento, Webinar, Treinamento, Reuniao, Marco, Workshop, Hackathon, Convencao, Q&A. Cada tipo possui cor e badge especificos no calendario visual.
+
+
+---
+
 ## 🔧 Configuração e Deploy
 
 ### Pré-requisitos

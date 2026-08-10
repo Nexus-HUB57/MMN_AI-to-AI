@@ -1055,11 +1055,6 @@ export default function Dashboard() {
             <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
             <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">ao vivo</span>
           </div>
-          <NotificationCenter />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 my-6">
         <AcademiaPersonalTrail />
         <AcademiaWhatsNew />
       </div>

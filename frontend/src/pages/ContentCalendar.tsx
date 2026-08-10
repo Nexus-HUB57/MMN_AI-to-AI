@@ -61,6 +61,145 @@ export default function ContentCalendar() {
     imageUrl: '',
   });
 
+
+  // ============================================================
+  // NEXUS PLATFORM EVENTS — Calendario de Eventos da Plataforma
+  // ============================================================
+  const NEXUS_EVENTS = [
+    {
+      id: "evt-001",
+      title: "Lancamento Oficial Nexus Affil'IA",
+      description: "Evento de lancamento da plataforma para afiliados e parceiros",
+      date: "2026-08-15",
+      time: "19:00",
+      type: "launch" as const,
+      platform: "youtube",
+      status: "agendado",
+    },
+    {
+      id: "evt-002",
+      title: "Webinar: Plano de Carreira — Bônus e Comissoes",
+      description: "Explicacao detalhada dos 9 tipos de bonus do plano de carreira",
+      date: "2026-08-20",
+      time: "20:00",
+      type: "webinar" as const,
+      platform: "zoom",
+      status: "agendado",
+    },
+    {
+      id: "evt-003",
+      title: "Live Treinamento: Como vender packs OnePack",
+      description: "Treinamento pratico para afiliados venderem os packs da plataforma",
+      date: "2026-08-25",
+      time: "19:30",
+      type: "training" as const,
+      platform: "youtube",
+      status: "agendado",
+    },
+    {
+      id: "evt-004",
+      title: "Encontro de Lideres da Rede N.O.",
+      description: "Reuniao mensal de alinhamento para lideres de rede qualificados",
+      date: "2026-09-01",
+      time: "18:00",
+      type: "meeting" as const,
+      platform: "zoom",
+      status: "agendado",
+    },
+    {
+      id: "evt-005",
+      title: "Abertura do Ciclo de Comissoes — Setembro",
+      description: "Inicio do novo ciclo de comissoes e bonus do mes",
+      date: "2026-09-05",
+      time: "00:00",
+      type: "milestone" as const,
+      platform: "internal",
+      status: "agendado",
+    },
+    {
+      id: "evt-006",
+      title: "Hackathon Nexus AI — Construa seu Agente",
+      description: "Competicao para criar agentes de IA especializados para a rede",
+      date: "2026-09-10",
+      time: "09:00",
+      type: "hackathon" as const,
+      platform: "discord",
+      status: "agendado",
+    },
+    {
+      id: "evt-007",
+      title: "Workshop: Academia IA — Criacao de Conteudo",
+      description: "Workshop sobre como usar a Academia IA para criar conteudo de vendas",
+      date: "2026-09-15",
+      time: "19:00",
+      type: "workshop" as const,
+      platform: "youtube",
+      status: "agendado",
+    },
+    {
+      id: "evt-008",
+      title: "Fechamento Ciclo Comissoes — Agosto",
+      description: "Encerramento e consolidacao das comissoes do mes de agosto",
+      date: "2026-09-10",
+      time: "23:59",
+      type: "milestone" as const,
+      platform: "internal",
+      status: "agendado",
+    },
+    {
+      id: "evt-009",
+      title: "Convencao Nexus Anual 2026",
+      description: "Evento anual de reconhecimento, premios e lancamento de novos recursos",
+      date: "2026-10-15",
+      time: "10:00",
+      type: "convention" as const,
+      platform: "youtube",
+      status: "agendado",
+    },
+    {
+      id: "evt-010",
+      title: "Lancamento Bônus #5 Inspiracao",
+      description: "Ativacao do quinto tipo de bonus do plano de carreira",
+      date: "2026-10-01",
+      time: "12:00",
+      type: "launch" as const,
+      platform: "internal",
+      status: "agendado",
+    },
+    {
+      id: "evt-011",
+      title: "Live Q&A — Perguntas dos Afiliados",
+      description: "Sessao de perguntas e respostas ao vivo com a equipe Nexus",
+      date: "2026-08-18",
+      time: "20:00",
+      type: "qa" as const,
+      platform: "instagram",
+      status: "agendado",
+    },
+    {
+      id: "evt-012",
+      title: "Abertura Janela de Saque — Agosto/26",
+      description: "Periodo oficial para solicitacao de saques de comissoes",
+      date: "2026-08-10",
+      time: "00:00",
+      type: "milestone" as const,
+      platform: "internal",
+      status: "agendado",
+    },
+  ];
+
+  const EVENT_TYPES: Record<string, { label: string; color: string; bg: string }> = {
+    launch: { label: "Lancamento", color: "text-purple-700", bg: "bg-purple-100 border-purple-300" },
+    webinar: { label: "Webinar", color: "text-blue-700", bg: "bg-blue-100 border-blue-300" },
+    training: { label: "Treinamento", color: "text-green-700", bg: "bg-green-100 border-green-300" },
+    meeting: { label: "Reuniao", color: "text-amber-700", bg: "bg-amber-100 border-amber-300" },
+    milestone: { label: "Marco", color: "text-cyan-700", bg: "bg-cyan-100 border-cyan-300" },
+    workshop: { label: "Workshop", color: "text-rose-700", bg: "bg-rose-100 border-rose-300" },
+    hackathon: { label: "Hackathon", color: "text-indigo-700", bg: "bg-indigo-100 border-indigo-300" },
+    convention: { label: "Convencao", color: "text-violet-700", bg: "bg-violet-100 border-violet-300" },
+    qa: { label: "Q&A", color: "text-pink-700", bg: "bg-pink-100 border-pink-300" },
+  };
+
   // Fetch posts from social router
   const { data: allPosts = [], refetch } = trpc.social.getContentCalendar.useQuery({});
 
@@ -227,7 +366,7 @@ export default function ContentCalendar() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Calendário de Posts</h1>
-            <p className="text-slate-600 mt-1">Gerencie e visualize todas as suas postagens agendadas</p>
+            <p className="text-slate-600 mt-1">Eventos da plataforma, postagens agendadas e marcos do ecossistema</p>
           </div>
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -411,6 +550,52 @@ export default function ContentCalendar() {
                   <TabsTrigger value="month">Mês</TabsTrigger>
                 </TabsList>
               </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+
+
+        {/* Nexus Platform Events */}
+        <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-900">
+              <CalendarIcon className="w-5 h-5" />
+              Calendario de Eventos Nexus Affil'IA
+            </CardTitle>
+            <CardDescription className="text-purple-700">
+              Eventos oficiais, lancamentos, treinamentos e marcos da plataforma
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {NEXUS_EVENTS
+                .sort((a, b) => new Date(`${a.date}T${a.time}`).getTime() - new Date(`${b.date}T${b.time}`).getTime())
+                .map((event) => {
+                  const evtType = EVENT_TYPES[event.type] || EVENT_TYPES.meeting;
+                  const eventDate = new Date(`${event.date}T${event.time}`);
+                  const isPast = eventDate < new Date();
+                  return (
+                    <div
+                      key={event.id}
+                      className={`rounded-lg border p-4 transition-all hover:shadow-lg ${evtType.bg} ${isPast ? 'opacity-60' : ''}`}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <Badge variant="outline" className={evtType.bg + ' ' + evtType.color}>
+                          {evtType.label}
+                        </Badge>
+                        <span className="text-[10px] text-slate-500 uppercase">
+                          {event.platform}
+                        </span>
+                      </div>
+                      <h3 className="font-semibold text-slate-900 text-sm mb-1">{event.title}</h3>
+                      <p className="text-xs text-slate-600 mb-2">{event.description}</p>
+                      <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <Clock className="w-3 h-3" />
+                        {format(eventDate, "dd/MM/yyyy 'as' HH:mm", { locale: ptBR })}
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </CardContent>
         </Card>

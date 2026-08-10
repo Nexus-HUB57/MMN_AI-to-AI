@@ -291,7 +291,8 @@ export default function Dashboard() {
   // -------------------------------------------------------------------------
   // Em produção este valor virá de `trpc.payments.getAvailableBalance`.
   // Por enquanto consolidamos o saldo disponível mock (R$).
-  const totalBalanceBrl = 3450.0;
+  // TODO: integrar com trpc.payments.getAvailableBalance quando disponivel
+  const totalBalanceBrl = 0;
   const totalBalanceLocked = totalBalanceBrl * 0.35; // 35% retido no ciclo até fechamento da janela
   const totalBalanceAvailable = totalBalanceBrl - totalBalanceLocked;
 
@@ -1053,7 +1054,7 @@ export default function Dashboard() {
         <div className="ux-glass ux-lift rounded-2xl p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
-            <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">ao vivo</span>
+            <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">beta</span>
           </div>
         <AcademiaPersonalTrail />
         <AcademiaWhatsNew />

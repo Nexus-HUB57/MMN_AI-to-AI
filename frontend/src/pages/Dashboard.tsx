@@ -46,10 +46,17 @@ import AcademiaPopular from "../components/AcademiaPopular";
 import AffiliateStatusLights from "@/components/AffiliateStatusLights";
 import NexusJourneyClarifier from "@/components/NexusJourneyClarifier";
 function RealCostCenter() {
-  const cost = (trpc as any).dashboardStatus?.getCostHistory?.useQuery?.(
-    { months: 12 },
-    { refetchInterval: 60_000, retry: false }
-  );
+  // TODO: connect to trpc.dashboardStatus.getCostHistory when available
+  const cost: any = { isLoading: true, data: null };
+  try {
+    if ((trpc as any).dashboardStatus?.getCostHistory?.useQuery) {
+      const cost = (trpc as any).dashboardStatus.getCostHistory.useQuery(
+        { months: 12 },
+        { refetchInterval: 60_000, retry: false }
+      );
+    }
+  } catch {}
+  // Fallback: show loading state until procedure is available
   if (cost?.isLoading) {
     return <div className="text-sm text-slate-400 animate-pulse">Carregando central de custos...</div>;
   }

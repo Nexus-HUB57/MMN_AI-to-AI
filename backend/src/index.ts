@@ -120,6 +120,9 @@ async function createContext(opts: { req: express.Request; res: express.Response
       }
 
       // 2) HEADERS LEGADOS (fallback backward-compat)
+  // ⚠️ SECURITY: Este fallback deve ser REMOVIDO em produção.
+  // Apenas Firebase ID tokens devem autenticar requisições.
+  // TODO(SECURITY): Remover blocos 122-144 quando o frontend migrar para Firebase-only.
       if (!resolvedId) {
         const idNum = rawUserId && /^\d+$/.test(String(rawUserId)) ? Number(rawUserId) : NaN;
         if (Number.isFinite(idNum) && idNum > 0) {

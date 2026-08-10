@@ -15,14 +15,10 @@
   <br/>
   <img src="https://img.shields.io/badge/Plataforma-MMN_+__IA-blueviolet?style=for-the-badge" alt="MMN + AI" />
   <img src="https://img.shields.io/badge/Licença-Privada-red?style=flat-square" alt="Licença" />
-  <img src="https://img.shields.io/badge/versão-1.2.5-green?style=flat-square" alt="Versão" />
+  <img src="https://img.shields.io/badge/versão-1.0.0-green?style=flat-square" alt="Versão" />
 </p>
 
 <h1 align="center">🤖 Nexus Affil'IA'te — AI-to-AI</h1>
-
-<p align="center">
-  <sub><code>v1.2.5</code> · <code>build 22966807</code> · <code>2026-08-10</code></sub>
-</p>
 
 <p align="center">
   <strong>Infraestrutura Operacional de Inteligência Distribuída</strong><br/>
@@ -133,117 +129,24 @@ Hub de criação de conteúdo para redes sociais com templates, agendamento de p
 
 ---
 
-## 📈 Plano de Carreira do Afiliado
+## 📈 Plano de Carreira
 
-A plataforma possui **15 tiers de progressão** organizados em 4 categorias, com **9 tipos de bônus** progressivos.
+A plataforma possui 5 faixas de progressão com recompensas crescentes:
 
-### Tiers de Progressão
+| Faixa | Título | Descrição |
+|-------|--------|-----------|
+| 1 | **Agente Afiliado** | Entrada no ecossistema — acesso básico ao marketplace e ferramentas |
+| 2 | **Agente Conector** | Rede em crescimento — bônus de profundidade N2 habilitado |
+| 3 | **Agente Gestor** | Gestão de equipe — bônus de liderança e materiais avançados |
+| 4 | **Agente Estrategista** | Estratégia avançada — Lab Nexus completo e orquestração IA |
+| 5 | **Agente Agentic IA** | Nível máximo — acesso total, comissões maximizadas, API aberta |
 
-| Nível | Título | Categoria | Requisitos |
-|-------|--------|-----------|------------|
-| 1 | **Afiliado I** | Base | Cadastro completo na plataforma |
-| 2 | **Afiliado II** | Base | 5 indicações diretas ativas |
-| 3 | **Afiliado III** | Base | 10 indicações + R$ 500 em vendas pessoais |
-| 4 | **Prata I** | Prata | 25 indicações + R$ 2.000 em vendas |
-| 5 | **Prata II** | Prata | 50 indicações + R$ 5.000 em vendas |
-| 6 | **Prata III** | Prata | 100 indicações + R$ 10.000 em vendas |
-| 7 | **Ouro I** | Ouro | Rede com 500+ membros + R$ 25.000 volume |
-| 8 | **Ouro II** | Ouro | Rede com 1.000+ membros + R$ 50.000 volume |
-| 9 | **Ouro III** | Ouro | Rede com 2.500+ membros + R$ 100.000 volume |
-| 10 | **Diamante I** | Diamante | Rede com 5.000+ membros + R$ 250.000 volume |
-| 11 | **Diamante II** | Diamante | Rede com 10.000+ membros + R$ 500.000 volume |
-| 12 | **Diamante III** | Diamante | Rede com 25.000+ membros + R$ 1M volume |
-| 13 | **Agente I** | Agentic | Qualificação completa + orquestração ativa |
-| 14 | **Agente II** | Agentic | 3 sub-redes qualificadas |
-| 15 | **Agente III** | Agentic | Nível máximo — governança da rede |
-
-### 9 Tipos de Bônus
-
-| # | Bônus | Descrição | Status |
-|---|-------|-----------|--------|
-| **#1** | **Revenda** | 100% do lucro sobre produtos vendidos diretamente | ✅ Ativo |
-| **#2** | **OnePack** | Lucro por venda de packs (14 packs, R$ 2,50 a R$ 7.500 por tier) | ✅ Ativo |
-| **#3** | **Consumo** | 1,5% a 4% por nível da rede N.O. (12 níveis de profundidade) | ✅ Ativo |
-| **#4** | **N.O. (Network Orchestration)** | Bonificação fixa por qualificação de novos membros (R$ 500 a R$ 2.000) | ✅ Ativo |
-| **#5** | **Inspiração** | Bônus por referências de alto impacto | 🔜 Roadmap |
-| **#6** | **Grafo** | Bônus por densidade e conectividade da rede | 🔜 Roadmap |
-| **#7** | **Corp** | Bônus corporativo para equipes empresariais | 🔜 Roadmap |
-| **#8** | **HARP'IA** | Bônus por retenção e recorrência | 🔜 Roadmap |
-| **#9** | **Nexus** | Bônus máximo — participação nos lucros da plataforma | 🔜 Roadmap |
-
-#### Bônus #2 — OnePack (Detalhes)
-
-| Pack | Nome | Preço | Tier Mínimo |
-|------|------|-------|-------------|
-| Pack A1 | Starter | R$ 49,90 | Afiliado I |
-| Pack A2 | Plus | R$ 97,00 | Afiliado I |
-| Pack B1 | Pro | R$ 197,00 | Afiliado II |
-| Pack B2 | Pro+ | R$ 397,00 | Prata I |
-| Pack C1 | Business | R$ 597,00 | Prata II |
-| Pack C2 | Business+ | R$ 997,00 | Prata III |
-| Pack D1 | Enterprise | R$ 1.997,00 | Ouro I |
-| Pack D2 | Enterprise+ | R$ 2.997,00 | Ouro II |
-| Pack E1 | Premium | R$ 4.997,00 | Ouro III |
-| Pack E2 | Premium+ | R$ 7.497,00 | Diamante I |
-| Pack F1 | Exclusive | R$ 14.997,00 | Diamante II |
-| Pack F2 | Ultra | R$ 24.997,00 | Diamante III |
-| Pack G1 | Legendary | R$ 49.997,00 | Agente II |
-| Pack G2 | Nexus Black | R$ 99.997,00 | Agente III |
-
-#### Bônus #3 — Consumo (12 Níveis)
-
-| Nível N.O. | Percentual | Acumulado Máx. |
-|-----------|-----------|----------------|
-| Nível 1 | 1,5% | 1,5% |
-| Nível 2 | 1,5% | 3,0% |
-| Nível 3 | 2,0% | 5,0% |
-| Nível 4 | 2,0% | 7,0% |
-| Nível 5 | 2,5% | 9,5% |
-| Nível 6 | 2,5% | 12,0% |
-| Nível 7 | 3,0% | 15,0% |
-| Nível 8 | 3,0% | 18,0% |
-| Nível 9 | 3,5% | 21,5% |
-| Nível 10 | 3,5% | 25,0% |
-| Nível 11 | 4,0% | 29,0% |
-| Nível 12 | 4,0% | 33,0% |
-
-#### Bônus #4 — N.O. (Network Orchestration)
-
-| Qualificador | Novo Membro | Bônus |
-|-------------|------------|-------|
-| Agente I+ | Afiliado | R$ 500 |
-| Agente II+ | Prata | R$ 800 |
-| Diamante I+ | Ouro | R$ 1.200 |
-| Diamante II+ | Diamante | R$ 1.500 |
-| Agente III | Agente I | R$ 2.000 |
-
-> **Motor de Cálculo**: `backend/src/domains/commissions/commissionEngine.ts` — Implementação pure-function com 247 linhas, sem efeitos colaterais, com `CAREER_TIERS`, `PACKS`, `NO_BONUS_TABLE` e funções `calculateOnePackBonus()`, `calculateConsumptionBonus()`, `calculateNOBonus()`.
-
----
-
-## 📅 Calendário de Eventos
-
-A plataforma possui um calendário integrado (`/content/calendar`) com eventos oficiais, treinamentos e marcos do ecossistema. Gerenciado via `ContentCalendar.tsx` + backend `cronRouter.ts`.
-
-### Eventos Oficiais Agendados
-
-| Data | Evento | Tipo | Plataforma |
-|------|--------|------|------------|
-| 10/08/2026 | Abertura Janela de Saque — Agosto/26 | Marco | Internal |
-| 15/08/2026 | Lancamento Oficial Nexus Affil'IA | Lancamento | YouTube |
-| 18/08/2026 | Live Q&A — Perguntas dos Afiliados | Q&A | Instagram |
-| 20/08/2026 | Webinar: Plano de Carreira — Bonus e Comissoes | Webinar | Zoom |
-| 25/08/2026 | Treinamento: Como vender packs OnePack | Treinamento | YouTube |
-| 01/09/2026 | Encontro de Lideres da Rede N.O. | Reuniao | Zoom |
-| 05/09/2026 | Abertura Ciclo Comissoes — Setembro | Marco | Internal |
-| 10/09/2026 | Hackathon Nexus AI — Construa seu Agente | Hackathon | Discord |
-| 15/09/2026 | Workshop: Academia IA — Criacao de Conteudo | Workshop | YouTube |
-| 01/10/2026 | Lancamento Bonus #5 Inspiracao | Lancamento | Internal |
-| 10/10/2026 | Fechamento Ciclo Comissoes — Agosto | Marco | Internal |
-| 15/10/2026 | Convencao Nexus Anual 2026 | Convencao | YouTube |
-
-> **Tipos de evento**: Lancamento, Webinar, Treinamento, Reuniao, Marco, Workshop, Hackathon, Convencao, Q&A. Cada tipo possui cor e badge especificos no calendario visual.
-
+**Tipos de Bônus:**
+- **Bônus Direto** — Comissão sobre vendas pessoais
+- **Bônus de Profundidade** — Comissões multinível (N1 a N5)
+- **Bônus de Ativação** — Recompensa por metas de rede
+- **Bônus de Liderança** — Premiação por performance da equipe
+- **Bônus Especial** — Incentivos sazonais e campanhas
 
 ---
 
@@ -278,7 +181,7 @@ npm run db:push
 | Variável | Descrição | Obrigatória |
 |----------|-----------|-------------|
 | `NODE_ENV` | `development` / `production` | Sim |
-| `PORT` | Porta do backend (produção: 3001, dev: 3000) | Sim |
+| `PORT` | Porta do backend (default: 3000) | Sim |
 | `DATABASE_URL` | Connection string PostgreSQL | Sim |
 | `REDIS_URL` | Connection string Redis | Não* |
 | `ADMIN_SESSION_SECRET` | Chave secreta para sessões admin | Sim |
@@ -302,7 +205,7 @@ npm run dev
 
 # Ou separadamente
 npm run dev:frontend   # Vite na porta 5173
-npm run dev:backend    # tRPC na porta 3001 (produção) / 3000 (dev)
+npm run dev:backend    # tRPC na porta 3000
 
 # Drizzle Studio (visualizador de banco)
 npm run db:studio
@@ -367,28 +270,6 @@ A API é servida via **tRPC v11** em `/api/trpc`. Principais routers:
 | `health` | Health check do sistema |
 | `dropshipping` | Gestão de dropshipping |
 | `billing` | Faturamento e assinaturas |
-| `cron` | Agendador de tarefas e jobs recorrentes |
-| `affiliateStore` | Loja do afiliado (produtos próprios + externos) |
-
-### Motor de Comissões (`commissionEngine.ts`)
-
-Arquivo: `backend/src/domains/commissions/commissionEngine.ts` (247 linhas)
-
-```
-CAREER_TIERS (15 tiers) ──► canSellPack(tier, packSlug)
-PACKS (14 packs)        ──► calculateOnePackBonus(sellerTier, packSlug, config, isActive)
-NO_BONUS_TABLE (6 rules) ──► calculateNOBonus(qualifierTier, newMemberTier, config)
-                            ──► calculateConsumptionBonus(sellerTier, monthlyVolumes, config, isActive)
-TIER_ORDER / getTierRank() ──► Utilidades de hierarquia
-```
-
-Design: **Pure functions**, zero efeitos colaterais, determinístico. O engine recebe configurações do `platform_settings` (via `admin.getCareerPlanConfig`) e calcula bônus sem acessar banco diretamente. Isso permite testes unitários sem mock de DB e auditoria determinística.
-
-Integração com tRPC:
-- `admin.getCareerPlanConfig` — Lê configurações atuais do DB
-- `admin.updateCareerPlanConfig` — Atualiza configurações (admin-only)
-- `admin.calculateOnePackBonus` — Calcula bônus OnePack para um tier/pack específico
-- `admin.calculateConsumptionBonus` — Calcula bônus Consumo para um tier/volumes
 
 ---
 
@@ -420,44 +301,190 @@ Integração com tRPC:
 
 ---
 
-
----
-
-## 🔒 Auditoria de Segurança
-
-Varredura cirúrgica realizada em 10/08/2026 identificando **117 questões** (16 críticas, 31 altas, 34 médias, 36 baixas).
-
-### Itens Corrigidos
-| ID | Severidade | Correção |
-|----|-----------|----------|
-| SEC-01 | CRÍTICO | `commissions.getStats` movido de `publicProcedure` para `adminProcedure` — dados financeiros não são mais expostos publicamente |
-| SEC-02 | ALTO | `await` adicionado em `getCommissionAmount()` no `publishCommissionPaid` — Promise não era resolvida antes do envio |
-| SEC-03 | ALTO | Destruturação de `pool.query()` corrigida para `poolRes.rows[0]` — padrão seguro e explícito |
-| SEC-04 | MÉDIO | Warning de segurança adicionado ao fallback de autenticação por headers (`x-user-id`/`x-user-role`) — deve ser removido quando frontend migrar para Firebase-only |
-| SEC-05 | BAIXO | `useMemo` não utilizado removido de `AdminDashboard.tsx` |
-| SEC-06 | BAIXO | Skeleton rows corrigido para 10 (matching table `limit: 10`) |
-| SEC-07 | MÉDIO | `DashboardXpBadge` e `RealCostCenter` — hooks React removidos de chamadas via optional chaining (violava Rules of Hooks, causava erro de build) |
-| SEC-08 | MÉDIO | Dados financeiros mock no Dashboard (`totalBalanceBrl = 3450`) zerados e marcados como pendentes de integração com API real |
-| SEC-09 | BAIXO | Labels "ao vivo" no Dashboard substituídas por "beta" — dados não são tempo real |
-
-### Backlog de Segurança (planejado)
-- [ ] Remover fallback de autenticação por headers (C-01: risco de impersonação)
-- [ ] Consolidar pools PostgreSQL (atualmente 3+ por worker × 6 workers = 180+ conexões)
-- [ ] Mover `placeStoreOrder` para verificar pagamento real Pix antes de entregar (C-04)
-- [ ] Adicionar `timingSafeEqual` em `checkPublicKey` (H-07)
-- [ ] Migrar JSON file stores (`store-orders.json`, `store-external-products.json`) para PostgreSQL
-- [ ] Ativar `strict: true` no TypeScript (ambos frontend e backend)
-- [ ] Adicionar índices nas tabelas `network(sponsorId)`, `commissions(affiliateId, status)`, `affiliates(sponsorId)`
-- [ ] Adicionar code splitting com `React.lazy()` no frontend (bundle atual > 500KB)
-- [ ] Rewriter queries N+1 na network tree (recursive CTEs)
-- [ ] Adicionar autenticação nos endpoints REST `/api/admin/*` e `/api/marketplace/*`
----
-
 ## 👥 Equipe
 
 **Nexus Affil'IA'te** — Desenvolvido pela equipe [Nexus-HUB57](https://github.com/Nexus-HUB57)
 
 > Plataforma em evolução contínua · SaaS Early-Stage · White-Label Ready
+## 🔒 Auditoria de Segurança (10/08/2026)
+
+Varredura cirúrgica identificou **117 questões** (16 críticas, 31 altas, 34 médias, 36 baixas).
+
+### Correções Aplicadas
+
+| ID | Severidade | Correção |
+|----|-----------|----------|
+| SEC-01 | CRÍTICO | `commissions.getStats` movido para `adminProcedure` |
+| SEC-02 | ALTO | `await` adicionado em `getCommissionAmount()` |
+| SEC-03 | ALTO | Destruturação `pool.query()` corrigida para `rows[0]` |
+| SEC-04 | MÉDIO | Warning de segurança no header auth fallback |
+| SEC-05 | MÉDIO | Hooks React removidos de optional chaining (esbuild fix) |
+| SEC-06 | MÉDIO | Dados financeiros mock zerados no Dashboard |
+| SEC-07 | BAIXO | `useMemo` não utilizado removido |
+| SEC-08 | BAIXO | Skeleton rows corrigido (5 → 10) |
+| SEC-09 | BAIXO | Labels "ao vivo" → "beta" |
+
+### Backlog de Segurança
+
+- [ ] Remover fallback de autenticação por headers (`x-user-id`/`x-user-role`)
+- [ ] Consolidar pools PostgreSQL (180+ conexões ociosas com 6 workers)
+- [ ] Verificar pagamento real Pix antes de entregar em `placeStoreOrder`
+- [ ] Adicionar `timingSafeEqual` em `checkPublicKey`
+- [ ] Migrar JSON file stores para PostgreSQL
+- [ ] Ativar `strict: true` no TypeScript
+- [ ] Adicionar índices: `network(sponsorId)`, `commissions(affiliateId, status)`, `affiliates(sponsorId)`
+- [ ] Code splitting com `React.lazy()` (bundle > 500KB)
+- [ ] Rewriter queries N+1 na network tree (recursive CTEs)
+- [ ] Adicionar autenticação nos endpoints REST `/api/admin/*`
+
+---
+
+## 📈 Plano de Carreira Detalhado
+
+A plataforma possui **15 tiers** de progressão em 4 categorias e **9 tipos de bônus**.
+
+<details>
+<summary>📋 Tiers de Progressão (15 níveis)</summary>
+
+| Nível | Título | Categoria |
+|-------|--------|-----------|
+| 1 | Afiliado I | Base |
+| 2 | Afiliado II | Base |
+| 3 | Afiliado III | Base |
+| 4 | Prata I | Prata |
+| 5 | Prata II | Prata |
+| 6 | Prata III | Prata |
+| 7 | Ouro I | Ouro |
+| 8 | Ouro II | Ouro |
+| 9 | Ouro III | Ouro |
+| 10 | Diamante I | Diamante |
+| 11 | Diamante II | Diamante |
+| 12 | Diamante III | Diamante |
+| 13 | Agente I | Agentic |
+| 14 | Agente II | Agentic |
+| 15 | Agente III | Agentic |
+
+</details>
+
+<details>
+<summary>💎 9 Tipos de Bônus</summary>
+
+| # | Bônus | Descrição | Status |
+|---|-------|-----------|--------|
+| #1 | Revenda | 100% do lucro sobre vendas diretas | ✅ Ativo |
+| #2 | OnePack | Lucro por venda de 14 packs (R$ 2,50 a R$ 7.500) | ✅ Ativo |
+| #3 | Consumo | 1,5% a 4% por nível da rede N.O. (12 níveis) | ✅ Ativo |
+| #4 | N.O. | Bonificação por qualificação (R$ 500 a R$ 2.000) | ✅ Ativo |
+| #5 | Inspiração | Referências de alto impacto | 🔜 Roadmap |
+| #6 | Grafo | Densidade e conectividade da rede | 🔜 Roadmap |
+| #7 | Corp | Equipes empresariais | 🔜 Roadmap |
+| #8 | HARP'IA | Retenção e recorrência | 🔜 Roadmap |
+| #9 | Nexus | Participação nos lucros | 🔜 Roadmap |
+
+</details>
+
+<details>
+<summary>📦 Bônus #2 — OnePack (14 packs)</summary>
+
+| Pack | Nome | Preço | Tier Mín. |
+|------|------|-------|-----------|
+| A1 | Starter | R$ 49,90 | Afiliado I |
+| A2 | Plus | R$ 97,00 | Afiliado I |
+| B1 | Pro | R$ 197,00 | Afiliado II |
+| B2 | Pro+ | R$ 397,00 | Prata I |
+| C1 | Business | R$ 597,00 | Prata II |
+| C2 | Business+ | R$ 997,00 | Prata III |
+| D1 | Enterprise | R$ 1.997,00 | Ouro I |
+| D2 | Enterprise+ | R$ 2.997,00 | Ouro II |
+| E1 | Premium | R$ 4.997,00 | Ouro III |
+| E2 | Premium+ | R$ 7.497,00 | Diamante I |
+| F1 | Exclusive | R$ 14.997,00 | Diamante II |
+| F2 | Ultra | R$ 24.997,00 | Diamante III |
+| G1 | Legendary | R$ 49.997,00 | Agente II |
+| G2 | Nexus Black | R$ 99.997,00 | Agente III |
+
+</details>
+
+<details>
+<summary>📊 Bônus #3 — Consumo (12 níveis)</summary>
+
+| Nível N.O. | % | Acumulado |
+|-----------|---|-----------|
+| 1 | 1,5% | 1,5% |
+| 2 | 1,5% | 3,0% |
+| 3 | 2,0% | 5,0% |
+| 4 | 2,0% | 7,0% |
+| 5 | 2,5% | 9,5% |
+| 6 | 2,5% | 12,0% |
+| 7 | 3,0% | 15,0% |
+| 8 | 3,0% | 18,0% |
+| 9 | 3,5% | 21,5% |
+| 10 | 3,5% | 25,0% |
+| 11 | 4,0% | 29,0% |
+| 12 | 4,0% | 33,0% |
+
+</details>
+
+<details>
+<summary>🎯 Bônus #4 — N.O. (Network Orchestration)</summary>
+
+| Qualificador | Novo Membro | Bônus |
+|-------------|------------|-------|
+| Agente I+ | Afiliado | R$ 500 |
+| Agente II+ | Prata | R$ 800 |
+| Diamante I+ | Ouro | R$ 1.200 |
+| Diamante II+ | Diamante | R$ 1.500 |
+| Agente III | Agente I | R$ 2.000 |
+
+> **Motor**: `backend/src/domains/commissions/commissionEngine.ts` — Pure functions, 247 linhas.
+
+</details>
+
+---
+
+## 📅 Calendário de Eventos da Plataforma
+
+Integrado em `/content/calendar` — gerenciado via `ContentCalendar.tsx` + `cronRouter.ts`.
+
+| Data | Evento | Tipo | Plataforma |
+|------|--------|------|------------|
+| 10/08 | Abertura Janela de Saque — Agosto | Marco | Internal |
+| 15/08 | Lançamento Oficial Nexus Affil'IA | Lançamento | YouTube |
+| 18/08 | Live Q&A — Perguntas dos Afiliados | Q&A | Instagram |
+| 20/08 | Webinar: Plano de Carreira | Webinar | Zoom |
+| 25/08 | Treinamento: Como vender packs OnePack | Treinamento | YouTube |
+| 01/09 | Encontro de Lideres da Rede N.O. | Reunião | Zoom |
+| 05/09 | Abertura Ciclo Comissões — Setembro | Marco | Internal |
+| 10/09 | Hackathon Nexus AI — Construa seu Agente | Hackathon | Discord |
+| 15/09 | Workshop: Academia IA | Workshop | YouTube |
+| 01/10 | Lançamento Bônus #5 Inspiração | Lançamento | Internal |
+| 15/10 | Convenção Nexus Anual 2026 | Convenção | YouTube |
+
+---
+
+## 🏗️ Motor de Comissões — Arquitetura
+
+```
+commissionsRouter.ts
+  ├── getStats (adminProcedure) — stats financeiros protegidos
+  ├── list / getById — listagem de comissões
+  ├── updateStatus — aprovação/rejeição com auditoria
+  └── approveBatch — aprovação em lote
+
+commissionEngine.ts (pure functions)
+  ├── CAREER_TIERS[15] — definição de tiers
+  ├── PACKS[14] — packs com preço e tier mínimo
+  ├── NO_BONUS_TABLE[6] — regras de bonificação N.O.
+  ├── calculateOnePackBonus() — bônus por venda de pack
+  ├── calculateConsumptionBonus() — bônus por consumo da rede
+  └── calculateNOBonus() — bônus por qualificação
+
+adminRouter.ts
+  ├── getCareerPlanConfig — lê config do DB
+  ├── updateCareerPlanConfig — atualiza config
+  ├── calculateOnePackBonus — calcula para tier/pack específico
+  └── calculateConsumptionBonus — calcula para tier/volumes
+```
 
 ---
 

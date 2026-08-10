@@ -66,7 +66,6 @@ export default function ContentCalendar() {
   // NEXUS PLATFORM EVENTS — Calendario de Eventos da Plataforma
   // ============================================================
   const NEXUS_EVENTS = [
-    // === AGOSTO 2026 ===
     {
       id: "evt-001",
       title: "Abertura Janela de Saque — Agosto/26",
@@ -107,11 +106,10 @@ export default function ContentCalendar() {
       platform: "youtube",
       status: "agendado",
     },
-    // === SETEMBRO 2026 ===
     {
       id: "evt-005",
       title: "Fechamento Ciclo Comissoes — Agosto",
-      description: "Encerramento e consolidacao das comissoes do mes de agosto. Janela de saque encerra.",
+      description: "Encerramento e consolidacao das comissoes do mes de agosto",
       date: "2026-09-05",
       time: "23:59",
       type: "milestone" as const,
@@ -131,7 +129,7 @@ export default function ContentCalendar() {
     {
       id: "evt-007",
       title: "Encontro de Lideres da Rede N.O.",
-      description: "Reuniao mensal de alinhamento estrategico para lideres de rede qualificados",
+      description: "Reuniao mensal de alinhamento para lideres de rede qualificados",
       date: "2026-09-08",
       time: "18:00",
       type: "meeting" as const,
@@ -140,8 +138,8 @@ export default function ContentCalendar() {
     },
     {
       id: "evt-008",
-      title: "Workshop: Academia IA — Criacao de Conteudo Automatizado",
-      description: "Workshop sobre como usar a Academia IA para gerar conteudo de vendas com agentes IA",
+      title: "Workshop: Academia IA — Criacao de Conteudo",
+      description: "Workshop sobre como usar a Academia IA para gerar conteudo de vendas",
       date: "2026-09-15",
       time: "19:00",
       type: "workshop" as const,
@@ -151,18 +149,17 @@ export default function ContentCalendar() {
     {
       id: "evt-009",
       title: "Hackathon Nexus AI — Construa seu Agente",
-      description: "Competicao para criar agentes de IA especializados para a rede de afiliados",
+      description: "Competicao para criar agentes de IA especializados para a rede",
       date: "2026-09-20",
       time: "09:00",
       type: "hackathon" as const,
       platform: "discord",
       status: "agendado",
     },
-    // === OUTUBRO 2026 ===
     {
       id: "evt-010",
       title: "Abertura Janela de Saque — Setembro/26",
-      description: "Periodo oficial para solicitacao de saques de comissoes consolidadas de setembro",
+      description: "Periodo oficial para solicitacao de saques consolidados de setembro",
       date: "2026-10-05",
       time: "00:00",
       type: "milestone" as const,
@@ -172,7 +169,7 @@ export default function ContentCalendar() {
     {
       id: "evt-011",
       title: "Lancamento Bônus #5 Inspiracao",
-      description: "Ativacao do quinto tipo de bonus do plano de carreira — bonus por referencias de alto impacto",
+      description: "Ativacao do quinto tipo de bonus — bonus por referencias de alto impacto",
       date: "2026-10-10",
       time: "12:00",
       type: "launch" as const,
@@ -182,7 +179,7 @@ export default function ContentCalendar() {
     {
       id: "evt-012",
       title: "Convencao Nexus Anual 2026",
-      description: "Evento anual de reconhecimento, premiacoes de top afiliados e lancamento de novos recursos",
+      description: "Evento anual de reconhecimento e lancamento de novos recursos da plataforma",
       date: "2026-10-15",
       time: "10:00",
       type: "convention" as const,
@@ -191,8 +188,8 @@ export default function ContentCalendar() {
     },
     {
       id: "evt-013",
-      title: "Webinar: Novidades da Plataforma Q4/2026",
-      description: "Apresentacao das novidades para o ultimo trimestre: bonus #6 Grafo, melhorias no Lab Nexus",
+      title: "Webinar: Novidades Q4/2026",
+      description: "Novidades do ultimo trimestre: bonus Grafo, melhorias no Lab Nexus e roadmap",
       date: "2026-10-22",
       time: "20:00",
       type: "webinar" as const,
@@ -209,7 +206,7 @@ export default function ContentCalendar() {
       platform: "internal",
       status: "agendado",
     },
-  ];
+  ]
 
   const EVENT_TYPES: Record<string, { label: string; color: string; bg: string }> = {
     launch: { label: "Lancamento", color: "text-purple-700", bg: "bg-purple-100 border-purple-300" },

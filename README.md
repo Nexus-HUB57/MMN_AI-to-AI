@@ -307,6 +307,7 @@ A API é servida via **tRPC v11** em `/api/trpc`. Principais routers:
 
 > Plataforma em evolução contínua · SaaS Early-Stage · White-Label Ready
 
+
 ## 🔒 Auditoria de Segurança (10/08/2026)
 
 Varredura cirúrgica identificou **117 questões** (16 críticas, 31 altas, 34 médias, 36 baixas).
@@ -489,6 +490,7 @@ adminRouter.ts
   ├── calculateOnePackBonus — calcula para tier/pack específico
   └── calculateConsumptionBonus — calcula para tier/volumes
 ```
+
 ---
 
 <p align="center">

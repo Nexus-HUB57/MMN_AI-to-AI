@@ -1063,6 +1063,11 @@ export default function Dashboard() {
             <h3 className="text-emerald-300 text-sm font-semibold tracking-wide">🔔 Notificações</h3>
             <span className="text-[10px] uppercase tracking-widest text-slate-500 ux-pulse-soft">beta</span>
           </div>
+          <NotificationCenter />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 my-6">
         <AcademiaPersonalTrail />
         <AcademiaWhatsNew />
       </div>
@@ -1077,12 +1082,11 @@ export default function Dashboard() {
 
 // D15-XP-card component
 function DashboardXpBadge() {
-  const status: any = (trpc as any).dashboardStatus?.getStatus?.useQuery?.(undefined, { retry: false });
-  const totalXp = Number(status?.data?.totalXp || 0);
-  const monthlyXp = Number(status?.data?.monthlyXp || 0);
-  const currentLevel = Number(status?.data?.currentLevel || 1);
-  // Paridade D15: R$1 = 100 XP
-  const totalXpScaled = totalXp; // já vem em unidade XP correta do backend (multiplicado * 100)
+  // NOTE: XP data will come from trpc.dashboardStatus.getStatus when backend procedure exists
+  const totalXp = 0;
+  const monthlyXp = 0;
+  const currentLevel = 1;
+  const totalXpScaled = totalXp;
   return (
     <div className="mt-3 rounded-xl border border-quantum-cyan/30 bg-quantum-cyan/5 px-4 py-3">
       <div className="flex items-baseline justify-between">

@@ -491,6 +491,7 @@ adminRouter.ts
   └── calculateConsumptionBonus — calcula para tier/volumes
 ```
 
+
 ---
 
 <p align="center">

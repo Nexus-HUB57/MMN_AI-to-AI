@@ -65,7 +65,7 @@ export const commissionsRouter = router({
         await publishCommissionPaid(
           String(input.id),
           `manual-${input.id}`,
-          getCommissionAmount(input.id),
+          await getCommissionAmount(input.id),
           {
             source: "commissions.updateStatus",
             notes: input.notes,
@@ -115,20 +115,24 @@ export const commissionsRouter = router({
       };
     }),
 
-  getStats: publicProcedure.query(async () => {
+  getStats: adminProcedure.query(async () => {
     try {
-      const [paidResult] = await pool.query(
+      const paidRes = await pool.query(
         "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'paid' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
-      const [pendingResult] = await pool.query(
+      const paidResult = paidRes.rows[0];
+      const pendingRes = await pool.query(
         "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'pending' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
-      const [confirmedResult] = await pool.query(
+      const pendingResult = pendingRes.rows[0];
+      const confirmedRes = await pool.query(
         "SELECT COALESCE(SUM(amount), 0) as total FROM commissions WHERE status = 'confirmed' AND COALESCE(is_test_data, FALSE) = FALSE"
       );
-      const [totalResult] = await pool.query(
+      const confirmedResult = confirmedRes.rows[0];
+      const totalRes = await pool.query(
         "SELECT COUNT(*)::int as cnt FROM commissions WHERE COALESCE(is_test_data, FALSE) = FALSE"
       );
+      const totalResult = totalRes.rows[0];
       return {
         paid: Number(paidResult?.total ?? 0),
         pending: Number(pendingResult?.total ?? 0),

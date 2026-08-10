@@ -306,6 +306,7 @@ A API é servida via **tRPC v11** em `/api/trpc`. Principais routers:
 **Nexus Affil'IA'te** — Desenvolvido pela equipe [Nexus-HUB57](https://github.com/Nexus-HUB57)
 
 > Plataforma em evolução contínua · SaaS Early-Stage · White-Label Ready
+
 ## 🔒 Auditoria de Segurança (10/08/2026)
 
 Varredura cirúrgica identificou **117 questões** (16 críticas, 31 altas, 34 médias, 36 baixas).
@@ -444,21 +445,24 @@ A plataforma possui **15 tiers** de progressão em 4 categorias e **9 tipos de b
 
 ## 📅 Calendário de Eventos da Plataforma
 
-Integrado em `/content/calendar` — gerenciado via `ContentCalendar.tsx` + `cronRouter.ts`.
+Integrado em `/content/calendar` — `ContentCalendar.tsx` + `cronRouter.ts`.
 
 | Data | Evento | Tipo | Plataforma |
 |------|--------|------|------------|
 | 10/08 | Abertura Janela de Saque — Agosto | Marco | Internal |
-| 15/08 | Lançamento Oficial Nexus Affil'IA | Lançamento | YouTube |
 | 18/08 | Live Q&A — Perguntas dos Afiliados | Q&A | Instagram |
-| 20/08 | Webinar: Plano de Carreira | Webinar | Zoom |
-| 25/08 | Treinamento: Como vender packs OnePack | Treinamento | YouTube |
-| 01/09 | Encontro de Lideres da Rede N.O. | Reunião | Zoom |
-| 05/09 | Abertura Ciclo Comissões — Setembro | Marco | Internal |
-| 10/09 | Hackathon Nexus AI — Construa seu Agente | Hackathon | Discord |
-| 15/09 | Workshop: Academia IA | Workshop | YouTube |
-| 01/10 | Lançamento Bônus #5 Inspiração | Lançamento | Internal |
+| 22/08 | Webinar: Plano de Carreira — Bônus e Comissões | Webinar | Zoom |
+| 27/08 | Treinamento: Como vender packs OnePack | Treinamento | YouTube |
+| 05/09 | Fechamento Ciclo Comissões — Agosto | Marco | Internal |
+| 06/09 | Abertura Ciclo Comissões — Setembro | Marco | Internal |
+| 08/09 | Encontro de Lideres da Rede N.O. | Reunião | Zoom |
+| 15/09 | Workshop: Academia IA — Criação de Conteúdo | Workshop | YouTube |
+| 20/09 | Hackathon Nexus AI — Construa seu Agente | Hackathon | Discord |
+| 05/10 | Abertura Janela de Saque — Setembro | Marco | Internal |
+| 10/10 | Lançamento Bônus #5 Inspiração | Lançamento | Internal |
 | 15/10 | Convenção Nexus Anual 2026 | Convenção | YouTube |
+| 22/10 | Webinar: Novidades Q4/2026 | Webinar | Zoom |
+| 31/10 | Fechamento Ciclo Comissões — Setembro | Marco | Internal |
 
 ---
 
@@ -485,7 +489,6 @@ adminRouter.ts
   ├── calculateOnePackBonus — calcula para tier/pack específico
   └── calculateConsumptionBonus — calcula para tier/volumes
 ```
-
 ---
 
 <p align="center">

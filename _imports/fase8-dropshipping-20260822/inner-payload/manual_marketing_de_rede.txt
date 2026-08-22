@@ -1,0 +1,193 @@
+﻿==================================
+Marketing de rede
+==================================
+
+-----------------------------------
+- Links de acesso ao sistema:
+-----------------------------------
+
+:: Área aberta:
+http://seusite/
+
+:: Mini site:
+http://seusite/?id=xxxxxxxxx
+
+:: Área de clientes:
+http://seusite/clientes/
+Usuário: demo (será de acordo com os cadastro feito)
+senha: demo (será de acordo com os cadastro feito)
+
+
+:: Área administrativa:
+http://seusite/adm/
+Usuário: admin
+senha: admin
+Assim que logar troque a senha por segurança.
+
+
+--------------------------
+- Área aberta do site:
+--------------------------
+A área aberta permite aos visitantes acessar esse sistema, cadastrar e efetuar login na área de associados(clientes)
+
+--------------------------
+- Mini site dos associados
+--------------------------
+O minisite é o próprio site geral que mostra o nome e o ID do associados e todos que se cadastrarem por ele vai cair como indicado do associado indicador.
+
+http://seusite/?id=xxxxxxxxx
+
+--------------------------
+- Painel administrativo
+--------------------------
+Nele os adminstradores dos sites terão total controle para configuração geral, alteração de layout e gerencia de pagamentos.
+
+..................................
+:: Configuração do sistema de marketing
+..................................
+
+Esse sistema está preparado para funcionar de diversas maneiras, tudo a fazer é configurar da forma que você quiser abaixo segue as configurações possíveis.
+
+> Níveis e comissão - Nesta opção você irá definir a forma que seu sistema irá funcionar. (lá possui mais detalhes)
+
+Há 3 formas distintas para configurar: Marketing de rede, Marketing linear e Marketing de consumo
+
+---------------------------------
+Marketing de rede
+---------------------------------
+Nesse sistema os associados vão se cadastrando em forma de rede até o limite de lateralidade permitido. Ou seja, se a lateralidade (número máximo de individuos que se pode indicar) é atingida, a indicação passa para um associado da frente que ainda não preenchou seu número máximo de indicados. Não sendo matriz forçada cada pessoa poderá indicar ilimitados individuos que todos ficaram como indicados diretos.
+E as comissões pode ter até 15 níveis na porcentagem que você quiser para cada nível o que irá gerar um grande lucro para todos os associados.
+
+---------------------------------
+Marketing linear
+---------------------------------
+Neste sistema o que importa é a posição numa fila e não quem indicou, assim não forma rede, somente uma fila em ordem de chegada. Pode-se comissionar por indicação e quando atingir o lugar de primeiro da fila após tanto clientes cadastrados.
+
+Operação: O funcionamento é bem, tudo é atualizado em tempo real, sem trabalho adicional ao administrador, simples:
+- Os clientes se cadastram e pagam a adesão (tudo automático);
+- Você confirma o pagamento no Inserir|Identificar|Conferir - isso irá mudar automaticamente o status para ativo e comissionar o indicador;
+- A cada XX número de pagamento entre em: Comissão Linear e comissiona o primeiro da lista;
+- Efetua a transferência do dinheiro ganho para o cliente.
+
+---------------------------------
+Marketing de consumo
+---------------------------------
+O marketing de consumo pode ser de duas formas, o associado ganha por consumir em determido estabelecimento ou por consumir numa loja virtual integrada (deverá adquirir a loja virtual separadamente)
+
+> Bônus e Prêmios - Neste local você irá definir os bônus extras e prêmios que os clientes irão ganhar (é opcional)
+> Tipos de associados - Neste local você pode definir hierarquia entre os associados ou número de quotas/posições
+
+
+..................................
+:: Configuração geral do sistema
+..................................
+
+> CRON - Automação - Serve para realizar algumas tarefas automaticamente.
+> Editar layout - Definir de forma simples o layout em modo HTML
+> Meta-tag / Título - Configurações gerais do site
+> Mensagens - são os textos dos e-mails semi-automáticos
+> Departamentos - configura os e-mails do seu site
+> Forma de pagamento - nesta opção você define todas as formas de pagamento que serão aceitas, boleto, cartão, deposito transferência, pagseguro, paypal etc
+
+Clientes
+> Listar/editar/excluir - excluir e editar clientes já cadastrados
+> Adicionar - adicionar manualmente clientes
+
+Administradores
+> Listar/editar/excluir - gerenciar administradores existentes
+> Adicionar - adicionar novos administradores
+
+Sobre este sistema
+> Informar Bugs - você poderá informar os bugs aos desenvolvedores
+> Sugestão - indicar sugestões aos desenvolvedores
+> Site do fabricante - link do site do fabricante
+> Suporte - solcitar suporte na utilização
+> Manual - links para este manual geral
+
+..................................
+:: Pagamentos
+..................................
+
+A parte de pagamentos é semi-automática e serve para você e o cliente ter um maior controle financeiro. Para isso é preciso inserir cada RECEITA (Pagamento feito pelo cliente) no sistema, inserir opcionalmente a PROMESSA (Informação de que o cliente pagou - dados do recibo) e CONFERIR o pagamento, neste momento as comissões serão calculadas automaticamente e inseridas e o status e data de validade é alterada de forma automática também. Segue o passo a passo:
+
+ [Inserir] - serve para inserir todos os pagamentos efetuados pelos clientes. Esses dados também serviram como recibos que serão mostrados na área do cliente, portanto é importante que ele seja correto e completo para evitar transtornos com os clientes. Deve ser inserido um a um e dados para serem colocados são:
+
+Banco: Instituição em que foi pago;
+Número: é o número do cliente/conta/id ou o Nosso número do boleto sem o prefixo ele deve conte 8 dígitos obrigatoriamente, exceto os pagametnos por depósito/transferência você terá essa número, insirá-o para que a receita já vá identificada. Caso seja depósito ou transferência e se você já sabe quem é o cliente verifique o número dele na opção de buscar clientes e já insira. Caso não saiba pode ser inserido depois;
+Forma: selecione caso tenha;
+Data: data em que o pagamento foi realizado, não é a data da confirmação;
+Valor: coloque o valor;
+Ag.: agência do cliente caso e tenha;
+Conta: conta do cliente caso tenha.
+
+ [Identificar] Essa opção somente serve para identificar as receitas que foram inseridas sem número do cliente. Nesta opção irá aparecer em amarelo as RECEITAS inseridas por você que não possuem o NÚMERO e em vermelhor as PROMESSAS inseridas pelos clientes na área deles. Tudo a fazer nesta parte é associar uma RECEITA com uma PROMESSA ou então simplesmente adicionar o NÚMERO/BOLETO para que a receita passe a ser identifica e fique pronta para confirmação. Caso o cliente tenha inserido mais de uma vez simplesmente clique no [X] para excluir.
+
+ [Conferir] Esta é a última etapa da confirmação do pagamento, é onde irá mudar o status, a data de vencimento, caso tenha, vai comissionar, caso preciso, e vai gerar o recibo.
+
+ [Extrato] Serve para ver todos os pagamentos realizados pelos clientes.
+
+
+
+..................................
+:: Gerenciamento do sistema de marketing
+..................................
+O gerencimento é bem simples pois o sistema é semi-automático. Em resumo:
+
+- Você instala e configura o sistema na internet
+- Os clientes se cadastram indicam outros e efetuam os pagamentos
+- Você confirmar os pagamentos comissionando os associados
+- Você remunera os associados
+
+ > Indicação em Rede  - mostra a rede de indicações
+ > Comissão Linear - serve para ir comissionando os cliente no sistema de marketing linear.
+ > Remuneração - mostra os valores a serem pagos para os associados
+ > Bonificação linear - Formas extras para bonificar os associados
+ > Bônus aniversário - Dá bônus na data de aniverário do cliente.
+ > Novos cadastros - clientes que ainda não pagaram
+ > Inadimplentes - quem não está dia, caso você cobre mensalidade
+ > Top Patrocinador - mostra por mês ou total o números de indicados dos associados
+
+Divulgação/material
+ > Banners - adiciona banners para os clientes usarem
+ > Links - links para os clientes divulgarem
+ > Mensagens - Edite a mensagem que ser enviado no e-mail marketing pelos clientes: 14. Marketing: Convite para associação
+  
+Arquivos/E-books
+Caso queira disponibiliazar ebooks ou material complementar para os associados ativos use esta opção de gerenciar os arquivos
+ > Estatísticas 
+ > 10 + Novos 
+ > 10 + Baixados 
+ > 10 + Votados 
+ > Adicionar categoria 
+ > Modificar categoria 
+ > Remover categoria 
+ > Adicionar arquivo 
+ > Modificar arquivo 
+ > Remover arquivo  
+
+--------------------------
+- Painel dos associados/clientes
+--------------------------
+Nele os clientes podem se associar, efetuar pagamentos, emitir boleto, ver recibos etc
+
+Conta virtual:
+[Conta virtual] - mostra as comissões
+[Indicados Ativos - inativos] Lista os indicados
+[Efetuar pagamento] - dados para efetuar pagamento
+[Confirmar pagamento] - formulário para confirmar pagamentos
+[Recibos] - mostra recibos dos pagamentos
+[Cancelar] - opção para cancelar a conta
+
+Divulgação de sua rede:
+[Divulgação por e-mail] - divulgação do sistema com e-mails semi-automáticos
+[Divulgação por Banner] - dados do banner para divulgação em sites
+[Divulgação por Links] - links para divulgar em sites
+
+Ajuda e material complementar:
+[Suporte] - formulário para suporte
+[Manual] - manual para entendimento do sistema
+
+
+...........................
+Sobre BUGS e melhorias:
+Caso verifique bugs, nos informe que iremos acertar de imediato. Melhorias serão analisadas para possível adição.

@@ -1,0 +1,14 @@
+BODY {
+	font-family: Tahoma, Arial;
+	font-size: small;
+	text-align: justify;
+}
+
+A {
+	color: Blue;
+	text-decoration: none;
+}
+
+A:HOVER {
+	text-decoration: none;
+}

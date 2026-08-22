@@ -1,0 +1,308 @@
+2017-05-11 4:29:18 - INFO --> Starting transaction log
+2017-05-10 23:29:18 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 23:29:18 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 23:29:18 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 23:29:18 - NOTICE --> Parameters sent; array (
+  'processorID' => '1',
+  'referenceNum' => 'TestBoleto123',
+  'chargeTotal' => '10.00',
+  'bname' => 'Fulano de Tal',
+  'customerIdExt' => '111.111.111-11',
+  'number' => 1494469758,
+  'expirationDate' => '2020-12-25',
+  'instructions' => 'Sr. Caixa, não receber após vencimento.;Não receber pagamento com cheque.',
+  'cvvNumber' => '',
+)
+2017-05-10 23:29:18 - INFO --> XML has been generated
+2017-05-10 23:29:19 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 23:29:20 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-10 23:29:20 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-11 4:38:53 - INFO --> Starting transaction log
+2017-05-10 23:38:53 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 23:38:53 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 23:38:53 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 23:38:53 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '',
+  'chargeTotal' => '',
+  'bname' => '',
+  'customerIdExt' => '',
+  'number' => 1494470333,
+  'expirationDate' => '',
+  'instructions' => '',
+  'cvvNumber' => '',
+)
+2017-05-10 23:38:53 - INFO --> XML has been generated
+2017-05-10 23:38:54 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 23:38:54 - INFO --> XML Response received
+2017-05-10 23:38:54 - NOTICE --> Parsed parameters received; array (
+  'errorCode' => '1',
+  'errorMsg' => 'Schema validation for the vertical SA for the incoming transaction xml failed. Reason Parser Error: URI=null Line=1: cvc-datatype-valid.1.2.1: \'\' is not a valid value for \'date\'.',
+)
+2017-05-11 4:38:54 - INFO --> Starting transaction log
+2017-05-10 23:38:54 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 23:38:54 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 23:38:54 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 23:38:54 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '',
+  'chargeTotal' => '',
+  'bname' => '',
+  'customerIdExt' => '',
+  'number' => 1494470334,
+  'expirationDate' => '',
+  'instructions' => '',
+  'cvvNumber' => '',
+)
+2017-05-10 23:38:54 - INFO --> XML has been generated
+2017-05-10 23:38:55 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 23:38:55 - INFO --> XML Response received
+2017-05-10 23:38:55 - NOTICE --> Parsed parameters received; array (
+  'errorCode' => '1',
+  'errorMsg' => 'Schema validation for the vertical SA for the incoming transaction xml failed. Reason Parser Error: URI=null Line=1: cvc-datatype-valid.1.2.1: \'\' is not a valid value for \'date\'.',
+)
+2017-05-11 4:45:03 - INFO --> Starting transaction log
+2017-05-10 23:45:03 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 23:45:03 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 23:45:03 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 23:45:03 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '',
+  'chargeTotal' => '',
+  'bname' => '',
+  'customerIdExt' => '',
+  'number' => 1494470703,
+  'expirationDate' => '2017-05-15',
+  'instructions' => '',
+  'cvvNumber' => '',
+)
+2017-05-10 23:45:03 - INFO --> XML has been generated
+2017-05-10 23:45:05 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 23:45:05 - INFO --> XML Response received
+2017-05-10 23:45:05 - NOTICE --> Parsed parameters received; array (
+  'errorCode' => '1',
+  'errorMsg' => 'Schema validation for the vertical SA for the incoming transaction xml failed. Reason Parser Error: URI=null Line=1: cvc-datatype-valid.1.2.1: \'\' is not a valid value for \'decimal\'.',
+)
+2017-05-11 5:18:54 - INFO --> Starting transaction log
+2017-05-11 0:18:54 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:18:54 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:18:54 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:18:54 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '44445678',
+  'chargeTotal' => '77.95',
+  'bname' => 'nome de teste',
+  'customerIdExt' => '255363463-34',
+  'number' => 1494472734,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/serviços (44445678)',
+  'cvvNumber' => '',
+)
+2017-05-11 0:18:54 - INFO --> XML has been generated
+2017-05-11 0:18:56 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:18:56 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-11 0:18:56 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-11 5:21:01 - INFO --> Starting transaction log
+2017-05-11 0:21:01 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:21:01 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:21:01 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:21:01 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '44445678',
+  'chargeTotal' => '77.95',
+  'bname' => 'nome de teste',
+  'customerIdExt' => '255363463-34',
+  'number' => '1494******',
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/serviços (44445678)',
+  'cvvNumber' => '',
+)
+2017-05-11 0:21:01 - INFO --> XML has been generated
+2017-05-11 0:21:10 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:21:10 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-11 0:21:10 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-11 5:22:34 - INFO --> Starting transaction log
+2017-05-11 0:22:34 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:22:34 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:22:34 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:22:34 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '44445678',
+  'chargeTotal' => '77.95',
+  'bname' => 'nome de teste',
+  'customerIdExt' => '255363463-34',
+  'number' => 1494472954,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 44445678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:22:34 - INFO --> XML has been generated
+2017-05-11 0:22:36 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:22:36 - INFO --> XML Response received
+2017-05-11 0:22:36 - NOTICE --> Parsed parameters received; array (
+  'authCode' => '',
+  'orderID' => '',
+  'referenceNum' => '',
+  'transactionID' => '',
+  'transactionTimestamp' => '1494472956',
+  'responseCode' => '1024',
+  'responseMessage' => 'INVALID REQUEST',
+  'avsResponseCode' => '',
+  'cvvResponseCode' => '',
+  'processorCode' => '',
+  'processorMessage' => '',
+  'errorMessage' => 'Request is invalid and can not be processed.',
+)
+2017-05-11 5:24:52 - INFO --> Starting transaction log
+2017-05-11 0:24:52 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:24:52 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:24:52 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:24:52 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => '',
+  'customerIdExt' => '',
+  'number' => 1494473092,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:24:52 - INFO --> XML has been generated
+2017-05-11 0:24:53 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:24:53 - INFO --> XML Response received
+2017-05-11 0:24:53 - NOTICE --> Parsed parameters received; array (
+  'authCode' => '',
+  'orderID' => '',
+  'referenceNum' => '',
+  'transactionID' => '',
+  'transactionTimestamp' => '1494473093',
+  'responseCode' => '1024',
+  'responseMessage' => 'INVALID REQUEST',
+  'avsResponseCode' => '',
+  'cvvResponseCode' => '',
+  'processorCode' => '',
+  'processorMessage' => '',
+  'errorMessage' => 'Request is invalid and can not be processed.',
+)
+2017-05-11 5:26:12 - INFO --> Starting transaction log
+2017-05-11 0:26:12 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:26:12 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:26:12 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:26:12 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => 'nome de testee',
+  'customerIdExt' => '255.363.463-34',
+  'number' => 1494473172,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:26:12 - INFO --> XML has been generated
+2017-05-11 0:26:17 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:26:17 - INFO --> XML Response received
+2017-05-11 0:26:17 - NOTICE --> Parsed parameters received; array (
+  'authCode' => '',
+  'orderID' => '',
+  'referenceNum' => '',
+  'transactionID' => '',
+  'transactionTimestamp' => '1494473176',
+  'responseCode' => '1024',
+  'responseMessage' => 'INVALID REQUEST',
+  'avsResponseCode' => '',
+  'cvvResponseCode' => '',
+  'processorCode' => '',
+  'processorMessage' => '',
+  'errorMessage' => 'Request is invalid and can not be processed.',
+)
+2017-05-11 5:29:41 - INFO --> Starting transaction log
+2017-05-11 0:29:41 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:29:41 - NOTICE --> Setting enviroment to "TEST"
+2017-05-11 0:29:41 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:29:41 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => 'nome de testee',
+  'customerIdExt' => '255.363.463-34',
+  'number' => 1494473381,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:29:41 - INFO --> XML has been generated
+2017-05-11 0:29:43 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:29:43 - INFO --> XML Response received
+2017-05-11 0:29:43 - NOTICE --> Parsed parameters received; array (
+  'authCode' => '',
+  'orderID' => '',
+  'referenceNum' => '',
+  'transactionID' => '',
+  'transactionTimestamp' => '1494473383',
+  'responseCode' => '1024',
+  'responseMessage' => 'INVALID REQUEST',
+  'avsResponseCode' => '',
+  'cvvResponseCode' => '',
+  'processorCode' => '',
+  'processorMessage' => '',
+  'errorMessage' => 'Request is invalid and can not be processed.',
+)
+2017-05-11 5:30:03 - INFO --> Starting transaction log
+2017-05-11 0:30:03 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:30:03 - NOTICE --> Setting enviroment to "LIVE"
+2017-05-11 0:30:03 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:30:03 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => 'nome de testee',
+  'customerIdExt' => '255.363.463-34',
+  'number' => 1494473403,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:30:03 - INFO --> XML has been generated
+2017-05-11 0:30:06 - INFO --> Sending XML to https://api.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:30:06 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-11 0:30:06 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-11 5:30:40 - INFO --> Starting transaction log
+2017-05-11 0:30:40 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:30:40 - NOTICE --> Setting enviroment to "LIVE"
+2017-05-11 0:30:40 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:30:40 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => 'nome de testee',
+  'customerIdExt' => '255.363.463-34',
+  'number' => 1494473440,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:30:40 - INFO --> XML has been generated
+2017-05-11 0:30:42 - INFO --> Sending XML to https://api.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:30:42 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-11 0:30:42 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-11 5:30:57 - INFO --> Starting transaction log
+2017-05-11 0:30:57 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-11 0:30:57 - NOTICE --> Setting enviroment to "LIVE"
+2017-05-11 0:30:57 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-11 0:30:57 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => '12345678',
+  'chargeTotal' => '13.88',
+  'bname' => 'nome de testee',
+  'customerIdExt' => '255.363.463-34',
+  'number' => 1494473457,
+  'expirationDate' => '2017-05-16',
+  'instructions' => 'Produtos/servicos 12345678',
+  'cvvNumber' => '',
+)
+2017-05-11 0:30:57 - INFO --> XML has been generated
+2017-05-11 0:31:01 - INFO --> Sending XML to https://api.maxipago.net/UniversalAPI/postXML
+2017-05-11 0:31:01 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-11 0:31:01 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26

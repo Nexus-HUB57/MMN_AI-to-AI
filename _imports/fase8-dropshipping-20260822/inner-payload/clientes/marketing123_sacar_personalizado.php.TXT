@@ -1,0 +1,5 @@
+<?
+///////////////
+//para utilizar esse arquivo altere o nome dele retirando o .TXT e mantendo o restante: marketing123_sacar_personalizado.php
+//assim ele será incluido na página de pagamentos, ele deve ficar dentro da pasta clientes
+?>

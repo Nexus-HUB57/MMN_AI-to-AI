@@ -1,0 +1,55 @@
+<?php
+session_name("aberto");
+session_start ();
+
+
+//include ("inc123/area123_config123.php");
+
+//$_SESSION = array();
+/*
+session_unregister(email);
+session_unregister(password);
+session_unregister(permissao);
+session_unregister(numero);
+session_unregister($email);
+session_unregister($password);
+session_unregister($permissao);
+session_unregister($numero);
+$_SESSION[$email] = null;
+$_SESSION[$password] = null;
+$_SESSION[$permissao] = null;
+$_SESSION[$numero] = null;
+$_SESSION[$cpf] = null;
+$_SESSION[email] = null;
+$_SESSION[password] = null;
+$_SESSION[permissao] = null;
+$_SESSION[numero] = null;
+$_SESSION[cpf] = null;
+
+$_SESSION[] = null;
+*/
+@$session = $_SESSION[loja123];
+@$_SESSION = array();
+//print_r($_SESSION);
+@$_SESSION[loja123] = $session ;
+@$_SESSION[DESCONTO] = null;
+@$_SESSION[DESCONTO] = "";
+
+//adicionar para solucionar problema com pedidos com mesmo nome 2018/11/12
+$_SESSION = array();
+
+// Is the user using HTTPS?
+$urldir = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) ? 'https://' : 'http://';
+// Complete the URL
+$urldir .= $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF'])."/";
+
+$urldirindex = "".$urldir."index.php";
+$urldircad = "".$urldir."clientes_cadastrar.php";
+if ($_GET[cadastrar]) {
+	header ("Location: $urldircad"); // Redirect the user
+ } else {
+header ("Location: $urldirindex"); // Redirect the user
+}
+//mysqli_close ($link); // Close the database connection for security reasons
+
+?>

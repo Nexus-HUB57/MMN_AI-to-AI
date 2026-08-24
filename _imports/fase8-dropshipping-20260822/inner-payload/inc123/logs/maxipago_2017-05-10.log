@@ -1,0 +1,78 @@
+2017-05-10 5:39:40 - INFO --> Starting transaction log
+2017-05-10 5:39:40 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 5:39:40 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 5:39:40 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 5:39:40 - NOTICE --> Parameters sent; array (
+  'processorID' => '12',
+  'referenceNum' => 'TestBoleto123',
+  'chargeTotal' => '10.00',
+  'bname' => 'Fulano de Tal',
+  'customerIdExt' => '111.111.111-11',
+  'number' => '1494******',
+  'expirationDate' => '2020-12-25',
+  'instructions' => 'Sr. Caixa, não receber após vencimento.;Não receber pagamento com cheque.',
+  'cvvNumber' => '',
+)
+2017-05-10 5:39:40 - INFO --> XML has been generated
+2017-05-10 5:39:41 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 5:39:41 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-10 5:39:41 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-10 5:45:53 - INFO --> Starting transaction log
+2017-05-10 5:45:53 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 5:45:53 - NOTICE --> Setting enviroment to "TEST"
+2017-05-10 5:45:53 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 5:45:54 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => 'TestBoleto123',
+  'chargeTotal' => '10.00',
+  'bname' => 'Fulano de Tal',
+  'customerIdExt' => '111.111.111-11',
+  'number' => 1494387953,
+  'expirationDate' => '2020-12-25',
+  'instructions' => 'Sr. Caixa, não receber após vencimento.;Não receber pagamento com cheque.',
+  'cvvNumber' => '',
+)
+2017-05-10 5:45:54 - INFO --> XML has been generated
+2017-05-10 5:45:54 - INFO --> Sending XML to https://testapi.maxipago.net/UniversalAPI/postXML
+2017-05-10 5:45:54 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-10 5:45:54 - CRIT --> String could not be parsed as XML in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 30
+2017-05-10 5:46:24 - INFO --> Starting transaction log
+2017-05-10 5:46:24 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 5:46:24 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 5:46:24 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => 'TestBoleto123',
+  'chargeTotal' => '10.00',
+  'bname' => 'Fulano de Tal',
+  'customerIdExt' => '111.111.111-11',
+  'number' => 1494387984,
+  'expirationDate' => '2020-12-25',
+  'instructions' => 'Sr. Caixa, não receber após vencimento.;Não receber pagamento com cheque.',
+  'cvvNumber' => '',
+)
+2017-05-10 5:46:24 - INFO --> XML has been generated
+2017-05-10 5:46:24 - INFO --> Sending XML to /UniversalAPI/postXML
+2017-05-10 5:46:24 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-10 5:46:24 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-10 5:46:58 - INFO --> Starting transaction log
+2017-05-10 5:46:58 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 5:46:58 - CRIT --> [maxiPago Class error] Invalid environment. maxiPago_ServiceBase::setEnvironment accepts either "TEST" or "LIVE" in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\ServiceBase.php on line 38
+2017-05-10 5:47:11 - INFO --> Starting transaction log
+2017-05-10 5:47:11 - NOTICE --> Setting credentials "100" and "21g8********************"
+2017-05-10 5:47:11 - NOTICE --> Setting enviroment to "LIVE"
+2017-05-10 5:47:11 - NOTICE --> Calling method maxiPago::boletoSale
+2017-05-10 5:47:11 - NOTICE --> Parameters sent; array (
+  'processorID' => '11',
+  'referenceNum' => 'TestBoleto123',
+  'chargeTotal' => '10.00',
+  'bname' => 'Fulano de Tal',
+  'customerIdExt' => '111.111.111-11',
+  'number' => 1494388031,
+  'expirationDate' => '2020-12-25',
+  'instructions' => 'Sr. Caixa, não receber após vencimento.;Não receber pagamento com cheque.',
+  'cvvNumber' => '',
+)
+2017-05-10 5:47:11 - INFO --> XML has been generated
+2017-05-10 5:47:11 - INFO --> Sending XML to https://api.maxipago.net/UniversalAPI/postXML
+2017-05-10 5:47:11 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26
+2017-05-10 5:47:11 - CRIT --> [maxiPago Class] Connection error with maxiPago! server in C:\Users\alfor\Portal123.com\Softwares\dinheiro123\inc123\maxipago\maxipago\Request.php on line 26

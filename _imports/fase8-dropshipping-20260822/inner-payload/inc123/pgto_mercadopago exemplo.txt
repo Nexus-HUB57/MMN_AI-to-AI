@@ -1,0 +1,62 @@
+<?php
+require_once "lib/mercadopago.php";
+$mp = new MP("xxxxxxxxx", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+
+
+$payment_info = $mp->get_payment_info($_GET["id"]);
+
+
+switch($payment_info["response"]["collection"]["status"]){
+case "approved"    : $status = "Pagamento Efetuado";	//O pagamento foi aprovado e creditado.
+break;
+case "pending"	   : $status = "Aguardando Pagamento";    //O usuário não concluiu o processo de pagamento.
+break;
+case "in_process"  : $status = "Aguardando Pagamento";	//O pagamento está sendo analisado.
+break;
+case "rejected"	   : $status = "Cancelado"; //O pagamento foi recusado. O usuário pode tentar novamente.
+break;
+case "refunded"    : $status = "Devolvido";//(estado terminal)	O pagamento foi devolvido ao usuário.
+break;
+case "cancelled"   : $status = "Cancelado";//(estado terminal)	O pagamento foi cancelado por superar o tempo necessário para ser efetuado ou por alguma das partes.
+break;
+case "in_mediation": $status = "Disputa"; //	Foi iniciada uma disputa para o pagamento.
+break;
+}
+//// data da compra
+$date = substr($payment_info["response"]["collection"]["date_created"],0,10); //formato original 2012-10-28T16:43:36.000-02:00
+$data_correta = explode("-",$date);
+$data_compra = $data_correta[2]."/". $data_correta[1] ."/".$data_correta[0];
+ 
+// data da atualização
+$date2 = substr($payment_info["response"]["collection"]["last_modified"],0,10); //formato original 2012-10-28T16:43:36.000-02:00
+$data_correta2 = explode("-",$date2);
+$data_update = $data_correta2[2]."/". $data_correta2[1] ."/".$data_correta2[0];
+//------------------------------------
+
+$cod         = $payment_info["response"]["collection"]["id"];
+$ref         = $payment_info["response"]["collection"]["external_reference"];
+$data_compra = $date;
+$data_update = $date2;
+$produto     = $payment_info["response"]["collection"]["reason"] ;
+$valor       = $payment_info["response"]["collection"]["transaction_amount"];
+$status      = $status;
+$comprador   = $payment_info["response"]["collection"]["payer"]["first_name"];
+$apelido     = $payment_info["response"]["collection"]["payer"]["nickname"];
+$email       = $payment_info["response"]["collection"]["payer"]["email"] ;
+$forma       = $payment_info["response"]["collection"]["payment_type"];
+
+
+$host_bda ="xxx";
+$usuario_bda ="xx";
+$senha_bda ="xx"; 
+$banco_bda="xx";
+$logdonatea = new mysqli($host_bda, $usuario_bda ,$senha_bda ,$banco_bda );
+if (mysqli_connect_errno()) {die('Não foi possí­vel conectar-se ao banco de dados: ' . mysqli_connect_error()); exit();}
+
+$sql="INSERT INTO `mercadolivre`(`id`, `codigotransacao`, `ref`, `datacompra`, `dataatualiza`, `produto`, `valor`, `status`, `nome`, `apelidoml`, `email`, `formapagamento`) 
+VALUES ('','".$cod."','".$ref."','".$data_compra."','".$data_update."','".$produto."','".$valor."','".$status."'
+,'".$comprador."','".$apelido."','".$email."','".$forma."')";
+$executa=mysqli_query($logdonatea,$sql);
+
+
+?>

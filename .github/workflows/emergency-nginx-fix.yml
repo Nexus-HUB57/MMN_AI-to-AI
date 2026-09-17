@@ -1,0 +1,244 @@
+# Emergency Nginx fix for oneverso.com.br
+name: emergency-nginx-fix
+on:
+  workflow_dispatch:
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_GITHUB }}
+
+      - name: Trust host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22022 -H 143.95.213.237 >> ~/.ssh/known_hosts
+
+      - name: Fix Nginx config and restart
+        run: |
+          ssh -p 22022 root@143.95.213.237 'bash -s' <<'REMOTE'
+          set -e
+          echo "=== STEP 1: Check current nginx configs ==="
+          ls -la /etc/nginx/sites-enabled/ 2>&1 || true
+          cat /etc/nginx/sites-enabled/oneverso.com.br.conf 2>&1 || echo "oneverso config NOT FOUND in sites-enabled!"
+
+          echo
+          echo "=== STEP 2: Create proper nginx config ==="
+          # Check where frontend dist actually is
+          ls -la /var/www/oneverso/current/frontend/dist/index.html 2>/dev/null && echo "Frontend dist: OK" || echo "Frontend dist: MISSING"
+          ls -la /var/www/oneverso/public/index.html 2>/dev/null && echo "Public dir: OK" || echo "Public dir: MISSING"
+
+          # Create symlink if needed: public -> current/frontend/dist
+          if [ ! -d /var/www/oneverso/public ]; then
+            mkdir -p /var/www/oneverso
+            ln -sf /var/www/oneverso/current/frontend/dist /var/www/oneverso/public
+            echo "Created symlink: /var/www/oneverso/public -> current/frontend/dist"
+          fi
+
+          # Ensure the config file exists with proper settings
+          cat > /etc/nginx/sites-available/oneverso.com.br.conf << 'NGINXCONF'
+          server {
+            listen 80;
+            listen [::]:80;
+            server_name oneverso.com.br www.oneverso.com.br;
+
+            root /var/www/oneverso/public;
+            index index.html;
+
+            client_max_body_size 25M;
+
+            location / {
+              try_files $uri /index.html;
+            }
+
+            location /api/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /trpc/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /health {
+              proxy_pass http://127.0.0.1:3001/api/health;
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            access_log /var/log/nginx/oneverso-access.log;
+            error_log /var/log/nginx/oneverso-error.log warn;
+          }
+
+          # HTTPS server - redirect to HTTPS or serve directly
+          server {
+            listen 443 ssl http2;
+            listen [::]:443 ssl http2;
+            server_name oneverso.com.br www.oneverso.com.br;
+
+            ssl_certificate /etc/ssl/certs/oneverso.com.br.crt;
+            ssl_certificate_key /etc/ssl/private/oneverso.com.br.key;
+
+            root /var/www/oneverso/public;
+            index index.html;
+
+            client_max_body_size 25M;
+
+            location / {
+              try_files $uri /index.html;
+            }
+
+            location /api/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /trpc/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /health {
+              proxy_pass http://127.0.0.1:3001/api/health;
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            access_log /var/log/nginx/oneverso-access.log;
+            error_log /var/log/nginx/oneverso-error.log warn;
+          }
+          NGINXCONF
+
+          echo "Nginx config written."
+
+          echo
+          echo "=== STEP 3: Check SSL certs ==="
+          ls -la /etc/ssl/certs/oneverso* 2>/dev/null || echo "No custom SSL cert found"
+          ls -la /etc/ssl/private/oneverso* 2>/dev/null || echo "No custom SSL key found"
+          ls -la /etc/letsencrypt/live/oneverso.com.br/ 2>/dev/null || echo "No Let's Encrypt cert"
+
+          # If no SSL certs, remove the HTTPS block and add HTTP-only with certbot
+          if [ ! -f /etc/ssl/certs/oneverso.com.br.crt ] && [ ! -d /etc/letsencrypt/live/oneverso.com.br ]; then
+            echo "No SSL certs - writing HTTP-only config"
+            cat > /etc/nginx/sites-available/oneverso.com.br.conf << 'NGINXHTTP'
+          server {
+            listen 80;
+            listen [::]:80;
+            server_name oneverso.com.br www.oneverso.com.br;
+
+            root /var/www/oneverso/public;
+            index index.html;
+
+            client_max_body_size 25M;
+
+            location / {
+              try_files $uri /index.html;
+            }
+
+            location /api/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /trpc/ {
+              proxy_pass http://127.0.0.1:3001;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_read_timeout 300s;
+              proxy_send_timeout 300s;
+            }
+
+            location /health {
+              proxy_pass http://127.0.0.1:3001/api/health;
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            access_log /var/log/nginx/oneverso-access.log;
+            error_log /var/log/nginx/oneverso-error.log warn;
+          }
+          NGINXHTTP
+          fi
+
+          echo
+          echo "=== STEP 4: Enable site ==="
+          ln -sf /etc/nginx/sites-available/oneverso.com.br.conf /etc/nginx/sites-enabled/oneverso.com.br.conf
+          echo "Symlink created"
+
+          echo
+          echo "=== STEP 5: Test nginx config ==="
+          nginx -t 2>&1
+
+          echo
+          echo "=== STEP 6: Reload nginx ==="
+          systemctl reload nginx 2>&1 || systemctl restart nginx 2>&1
+          echo "Nginx reloaded"
+
+          echo
+          echo "=== STEP 7: Verify ==="
+          sleep 2
+          echo "Local health:"
+          curl -s http://127.0.0.1:3001/api/health 2>&1
+          echo
+          echo "HTTP test (localhost with Host header):"
+          curl -s -H "Host: oneverso.com.br" -o /dev/null -w "HTTP %{http_code} Size %{size_download}b\n" http://127.0.0.1/ 2>&1
+          echo "HTTPS test (external):"
+          curl -sk -o /dev/null -w "HTTP %{http_code} Size %{size_download}b\n" https://oneverso.com.br/ 2>&1 || echo "HTTPS still failing"
+          echo "HTTP test (external):"
+          curl -s -o /dev/null -w "HTTP %{http_code} Size %{size_download}b\n" http://oneverso.com.br/ 2>&1 || echo "HTTP still failing"
+          echo
+          echo "=== DONE ==="
+          REMOTE
